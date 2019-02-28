@@ -6,4 +6,4 @@
   Copyright © 2016年 qpidnetwork. All rights reserved.
 */
 
-"LOCAL_ERROR_CODE_TIMEOUT" = "Trouble connecting to the server, please try again later.";
+"LOCAL_ERROR_CODE_TIMEOUT" = "Trouble connecting to the server. Please try again later.";

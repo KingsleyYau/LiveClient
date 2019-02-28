@@ -56,8 +56,8 @@
     self.paddingX = 0;
     self.paddingY = 0;
     
-    self.itemWidth = SCREEN_WIDTH * 0.25;
-    self.itemHeight = SCREEN_WIDTH * 0.22;
+    self.itemWidth = self.collectionView.frame.size.width / 4;
+    self.itemHeight = self.collectionView.frame.size.width / 4;
     self.itemSpace = 0;
     self.lineSpace = 0;
     
@@ -80,7 +80,7 @@
     // 计算边距
     self.paddingX = [UIScreen mainScreen].bounds.size.width - (self.lineItemCount * (self.itemWidth + self.itemSpace));
     
-    self.paddingX = self.paddingX / 2;
+    self.paddingX = 0;
     
     // 计算总行数
     if( self.lineItemCount > 0 ) {

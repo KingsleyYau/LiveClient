@@ -81,7 +81,8 @@
     // 创建新的
     cell.imageViewLoader = [LSImageViewLoader loader];
     // 加载
-    [cell.imageViewLoader refreshCachedImage:cell.ladyImage options:SDWebImageRefreshCached imageUrl:item.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [cell.imageViewLoader refreshCachedImage:cell.ladyImage options:SDWebImageRefreshCached imageUrl:item.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     
     if (item.unreadCount > 0) {
         cell.unreadCountIcon.text = [NSString stringWithFormat:@"%ld",(long)item.unreadCount];

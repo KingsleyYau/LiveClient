@@ -25,6 +25,9 @@
     self.liveFriendHead.layer.masksToBounds = YES;
     self.liveFriendHead.layer.borderColor = [UIColor whiteColor].CGColor;
     self.liveFriendHead.layer.borderWidth = 1;
+    
+    self.scheduledTimeView.layer.cornerRadius = 8;
+    self.scheduledTimeView.layer.masksToBounds = YES;
 }
 
 + (NSString *)cellIdentifier {
@@ -43,11 +46,13 @@
     
     // 加载
     [self.imageViewLoader loadImageWithImageView:self.chatHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    
     self.chatName.text = item.userName;
+    
     [self updateNameFrame:item.userName];
     
-    NSString * newStr = @"";
-    //是否inChat
+//    NSString * newStr = @"";
+//    //是否inChat
 //    if (item.isInChat) {
 //        self.msgStatus.text = @"[New]";
 //        [self updateMsgFrame:self.msgStatus.text];
@@ -56,13 +61,20 @@
 //    }
 //    else
 //    {
-        self.msgStatus.text = @"[Invitation]";
-        [self updateMsgFrame:self.msgStatus.text];
-        self.chatName.textColor = [UIColor blackColor];
-        self.onlineImage.image = nil;
+//        self.msgStatus.text = @"[Invitation]";
+//        [self updateMsgFrame:self.msgStatus.text];
+//        self.chatName.textColor = [UIColor blackColor];
+//        self.onlineImage.image = nil;
 //    }
     
-    self.chatMsg.attributedText = [self parseMessageTextEmotion:item.contentStr newMessage:newStr font:self.chatMsg.font];
+   // self.chatMsg.attributedText = [self parseMessageTextEmotion:item.contentStr newMessage:newStr font:self.chatMsg.font];
+    
+    self.chatMsg.text = item.contentStr;
+    
+    self.countdownLabel.text = @"Chat Now";
+    
+    self.colorView.backgroundColor = COLOR_WITH_16BAND_RGB(0x21A225);
+    self.scheduledTimeView.backgroundColor = COLOR_WITH_16BAND_RGB(0x5BC563);
 }
 
 - (void)loadLiveNotificationViewUI:(LSMainNotificaitonModel *)item {
@@ -74,6 +86,15 @@
     self.liveName.text = [NSString stringWithFormat:@"%@'s circle",item.userName];
     
     self.liveMsg.text = item.contentStr;
+    
+    self.countdownLabel.text = @"Hang-out";
+    
+    CGRect msgRect = self.liveMsg.frame;
+    msgRect.size.width = self.tx_width - msgRect.origin.x - self.scheduledTimeView.tx_width - 20;
+    self.liveMsg.frame = msgRect;
+    
+    self.colorView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFC1615);
+    self.scheduledTimeView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFDAC0D);
 }
 
 - (void)updateNameFrame:(NSString *)name
@@ -88,9 +109,9 @@
     nameRect.size.width = w + 10;
     self.chatName.frame = nameRect;
     
-    CGRect iconRect = self.onlineImage.frame;
-    iconRect.origin.x = nameRect.origin.x + w + 10;
-    self.onlineImage.frame = iconRect;
+    CGRect msgRect = self.chatMsg.frame;
+    msgRect.size.width = self.tx_width - msgRect.origin.x - self.scheduledTimeView.tx_width - 20;
+    self.chatMsg.frame = msgRect;
 }
 
 - (void)updateMsgFrame:(NSString *)msg {
@@ -120,18 +141,18 @@
     
     CGFloat countdownTime = [LSMainNotificationManager manager].timeOutNum;
     
-    CGFloat percent = self.frame.size.width / countdownTime;
-
+    CGFloat percent = self.scheduledTimeView.frame.size.width / countdownTime;
+    
     NSInteger times = self.time - self.countdownTime;
-
-    self.colorView.frame = CGRectMake(0, 0,self.frame.size.width - ((countdownTime - times) * percent), 5);
+    
+    self.colorView.frame = CGRectMake(0, 0,self.scheduledTimeView.frame.size.width - ((countdownTime - times) * percent), self.scheduledTimeView.frame.size.height);
     
     [self performSelector:@selector(countdown) withObject:nil afterDelay:1];
 }
 
 #pragma mark - 自动替换表情
 - (NSAttributedString *)parseMessageTextEmotion:(NSString *)text newMessage:(NSString *)message font:(UIFont *)font {
-    NSMutableAttributedString *attributeString = nil;
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
     if (text != nil) {
         attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     }

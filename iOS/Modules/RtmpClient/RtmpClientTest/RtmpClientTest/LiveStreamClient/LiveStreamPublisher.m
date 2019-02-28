@@ -20,7 +20,9 @@
 #define VIDEO_CAPTURE_HEIGHT 640
 #define VIDEO_CAPTURE_FPS 30
 
-@interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate>
+@interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate> {
+    GPUImageFilter *_customFilter;
+}
 
 @property (strong) NSString *_Nonnull url;
 @property (strong) NSString *_Nullable recordH264FilePath;
@@ -56,6 +58,7 @@
  */
 @property (nonatomic, strong) LFGPUImageBeautyFilter *beautyFilter;
 //@property (nonatomic, strong) GPUImageBeautifyFilter* beautyFilter;
+
 /**
  裁剪滤镜
  */
@@ -121,7 +124,6 @@
         // 创建美颜滤镜
         self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
         self.beautyFilter.beautyLevel = 0.5;
-        // self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
         
         // 创建裁剪滤镜
         // 目标比例
@@ -315,23 +317,7 @@
     if (_publishView != publishView) {
         _publishView = publishView;
 
-        [self.cropFilter removeAllTargets];
-
-        if (_beauty) {
-            [self.cropFilter addTarget:self.beautyFilter];
-            [self.beautyFilter addTarget:self.output];
-            
-            if (_publishView) {
-                [self.beautyFilter addTarget:_publishView];
-            }
-
-        } else {
-            [self.cropFilter addTarget:self.output];
-
-            if (_publishView) {
-                [self.cropFilter addTarget:_publishView];
-            }
-        }
+        [self installFilter];
     }
 }
 
@@ -340,26 +326,46 @@
     if (_beauty != beauty) {
         _beauty = beauty;
 
-        [self.cropFilter removeAllTargets];
+        [self installFilter];
+    }
+}
 
-        if (_beauty) {
-            [self.cropFilter addTarget:self.beautyFilter];
-            [self.beautyFilter addTarget:self.output];
-            if (_publishView) {
-                [self.beautyFilter addTarget:_publishView];
-            }
+- (GPUImageFilter *)customFilter {
+    return _customFilter;
+}
 
-        } else {
-            if (_publishView) {
-                [self.cropFilter addTarget:self.output];
-                [self.cropFilter addTarget:_publishView];
-            }
-        }
+- (void)setCustomFilter:(GPUImageFilter *)customFilter {
+    // TODO:切换美颜
+    if (_customFilter != customFilter) {
+        _customFilter = customFilter;
+        
+        [self installFilter];
     }
 }
 
 - (BOOL)mute {
     return self.publisher.mute;
+}
+
+- (void)installFilter {
+    // TODO:组装滤镜
+    [self.cropFilter removeAllTargets];
+    [self.beautyFilter removeAllTargets];
+    [self.customFilter removeAllTargets];
+    
+    GPUImageFilter *filter = self.cropFilter;
+    if (_beauty) {
+        [self.cropFilter addTarget:self.beautyFilter];
+        filter = self.beautyFilter;
+    }
+    if( _customFilter ) {
+        [filter addTarget:_customFilter];
+        filter = _customFilter;
+    }
+    if (_publishView) {
+        [filter addTarget:_publishView];
+    }
+    [filter addTarget:self.output];
 }
 
 - (void)setMute:(BOOL)mute {
@@ -467,12 +473,7 @@
         self.videoCaptureSession.frameRate = VIDEO_CAPTURE_FPS;
         // TODO:6.组装滤镜
         [self.videoCaptureSession addTarget:self.cropFilter];
-        if (_beauty) {
-            [self.cropFilter addTarget:self.beautyFilter];
-            [self.beautyFilter addTarget:self.output];
-        } else {
-            [self.cropFilter addTarget:self.output];
-        }
+        [self installFilter];
     }
 }
 

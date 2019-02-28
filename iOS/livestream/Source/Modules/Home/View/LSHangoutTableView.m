@@ -43,7 +43,7 @@
 
 #pragma mark - 列表界面回调 (UITableViewDataSource / UITableViewDelegate)
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0;
+    return 0.01;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -55,20 +55,28 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [HangoutListCell cellHeight];
+    CGFloat height = 476;
+    LSHangoutListItemObject *item = [self.items objectAtIndex:indexPath.row];
+    if (item.invitationMsg.length > 0) {
+      height = [HangoutListCell cellHeight];
+    }
+    return height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *tableViewCell = nil;
     HangoutListCell *cell = [HangoutListCell getUITableViewCell:tableView];
     cell.hangoutDelegate = self;
+    
     tableViewCell = cell;
     
     // 数据填充
     LSHangoutListItemObject *item = [self.items objectAtIndex:indexPath.row];
-    [cell setScrollLabelViewText:[NSString stringWithFormat:@"%@'s circle has %d friends",item.nickName,(int)item.friendsInfoList.count]];
+//    [cell setScrollLabelViewText:[NSString stringWithFormat:@"%@'s circle has %d friends",item.nickName,(int)item.friendsInfoList.count]];
     
-    [cell setHangoutHeadList:item.friendsInfoList];
+    cell.anchorName.text = item.nickName;
+    [cell loadFriendData:item.friendsInfoList];
+    [cell loadInviteMsg:item.invitationMsg];
     // 头像
     cell.imageViewHeader.image = nil;
     [cell.imageViewLoader stop];
@@ -78,14 +86,15 @@
                                 placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
     
     cell.hangoutButton.tag = indexPath.row + 88;
+    cell.tag = indexPath.row + 888;
     
     return tableViewCell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {    
-    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didShowItem:)]) {
-        [self.tableViewDelegate tableView:self didShowItem:indexPath];
-    }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didShowItem:)]) {
+//        [self.tableViewDelegate tableView:self didShowItem:indexPath];
+//    }
 }
 
 - (void)hangoutListCellDidHangout:(NSInteger)row {
@@ -95,6 +104,21 @@
         LSHangoutListItemObject *item = [self.items objectAtIndex:row];
         
         [self.tableViewDelegate tableView:self didClickHangout:item];
+    }
+}
+
+- (void)hangoutListCellDidAchorPhoto:(NSInteger)row {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didShowItem:)]) {
+        NSIndexPath *currentLadyIndex = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableViewDelegate tableView:self didShowItem:currentLadyIndex];
+    }
+}
+
+- (void)hangoutListCell:(HangoutListCell *)cell didClickAchorFriendPhoto:(NSInteger)row {
+    if([self.tableViewDelegate respondsToSelector:@selector(tableView:didClickHangoutFriendCardMsg:)]){
+        LSHangoutListItemObject *listItem = [self.items objectAtIndex:cell.tag - 888];
+        LSFriendsInfoItemObject *item = [listItem.friendsInfoList objectAtIndex:row];
+        [self.tableViewDelegate tableView:self didClickHangoutFriendCardMsg:item];
     }
 }
 @end

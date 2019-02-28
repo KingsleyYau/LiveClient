@@ -66,7 +66,8 @@
                         finishHandler:^(LSUserInfoModel *_Nonnull item) {
                             dispatch_async(dispatch_get_main_queue(), ^{
 
-                                [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                                [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                                }];
                             });
                         }];
 }

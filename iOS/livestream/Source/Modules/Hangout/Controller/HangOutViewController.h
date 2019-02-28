@@ -23,11 +23,6 @@
 @property (nonatomic, copy) NSString *inviteAnchorId;
 @property (nonatomic, copy) NSString *inviteAnchorName;
 
-// 当前直播间中的主播队列
-@property (nonatomic, strong) NSMutableArray<IMLivingAnchorItemObject *> *anchorArray;
-// 当前直播间中已收礼物列表
-@property (nonatomic, strong) NSMutableArray<IMRecvGiftItemObject *> *roomGiftList;
-
 // 窗口底部界面
 @property (weak, nonatomic) IBOutlet UIView *videoBottomView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoBottomViewTop;
@@ -73,6 +68,8 @@
 #pragma mark - 输入框控件
 // 发送栏
 @property (nonatomic, weak) IBOutlet UIView *inputMessageView;
+// 聊天框背景
+@property (weak, nonatomic) IBOutlet UIView *chatBackgroundView;
 // 输入栏
 @property (weak, nonatomic) IBOutlet HangoutSendBarView *hangoutSendBarView;
 // 聊天按钮
@@ -84,5 +81,11 @@
 // 输入框高度约束
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *inputMessageViewHeight;
 
+// 主播/礼物队列 添加对象
+- (void)anchorArrayAddObject:(IMLivingAnchorItemObject *)obj;
+- (void)roomGiftListAddObject:(IMRecvGiftItemObject *)obj;
+
+// 更新子视图界面显示
+- (void)upDateChildView:(NSString *)anchorId;
 
 @end

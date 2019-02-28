@@ -193,7 +193,8 @@
             
             cell.nameLabel.text = obj.anchorNcikName;
             
-            [[LSImageViewLoader loader] refreshCachedImage:cell.ladyHeadView options:SDWebImageRefreshCached imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+            [[LSImageViewLoader loader] refreshCachedImage:cell.ladyHeadView options:SDWebImageRefreshCached imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+            }];
             
             cell.ladyLabel.text = NSLocalizedStringFromSelf(@"Only_broadcaster");
             // 公开

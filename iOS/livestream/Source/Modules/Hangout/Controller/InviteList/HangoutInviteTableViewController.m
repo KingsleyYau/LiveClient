@@ -11,6 +11,7 @@
 
 #import "LSSessionRequestManager.h"
 #import "LSGetCanHangoutAnchorListRequest.h"
+#import "LSGetHangoutFriendsRequest.h"
 
 #define PageSize 50
 
@@ -33,10 +34,7 @@
 @property (nonatomic, strong) NSMutableArray *items;
 // 接口管理器
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
-// 当前页数
-@property (nonatomic, assign) NSInteger pageIndex;
-// 能否上拉获取更多
-@property (nonatomic, assign) BOOL canMore;
+
 @end
 
 @implementation HangoutInviteTableViewController
@@ -54,14 +52,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
 
     [self showMaskView:YES showNolist:YES showRetry:YES];
     
     // 去除列表多余分割线
     self.tableView.tableFooterView = [[UIView alloc] init];
     // 初始化列表上下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -71,11 +68,6 @@
     }
 
     [super viewDidAppear:animated];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - 数据逻辑
@@ -90,91 +82,39 @@
 
 - (void)pullDownRefresh {
     // TODO:下拉刷新
-    self.canMore = YES;
     self.view.userInteractionEnabled = NO;
-    [self getListRequest:NO];
+    [self getListRequest];
 }
 
-- (void)pullUpRefresh {
-    // TODO:上拉更多
-    self.view.userInteractionEnabled = NO;
-    [self getListRequest:YES];
-}
-
-- (BOOL)getListRequest:(BOOL)loadMore {
-    NSLog(@"HangoutInviteTableViewController::getListRequest( loadMore : %@, type : %ld, anchorId : %@ )", BOOL2YES(loadMore), (long)self.inviteType, self.anchorId);
+- (BOOL)getListRequest {
     BOOL bFlag = NO;
-
-    LSGetCanHangoutAnchorListRequest *request = [[LSGetCanHangoutAnchorListRequest alloc] init];
-    if (!loadMore) {
-        // 刷最新
-        self.pageIndex = 0;
-    } else {
-        // 刷更多
-    }
-
-    // 邀请类型
-    request.type = self.inviteType;
-    request.anchorId = self.anchorId ? self.anchorId : @"";
-    // 每页最大纪录数
-    request.start = (int)(self.pageIndex * PageSize);
-    request.step = (int)PageSize;
-
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LSHangoutAnchorItemObject *> *_Nullable array) {
+    LSGetHangoutFriendsRequest *request = [[LSGetHangoutFriendsRequest alloc] init];
+    request.anchorId = self.anchorId;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *anchorId, NSArray<LSHangoutAnchorItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"HangoutInviteTableViewController::getListRequest( [获取邀请列表, %@], loadMore : %@, type : %ld, anchorId : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)self.inviteType, self.anchorId, (long)array.count);
+            // 停止头部
+            [self.tableView finishPullDown:NO];
             if (success) {
-                // 增加页数
-                self.pageIndex++;
-
-                // 禁止上拉
-                if (!array || array.count < PageSize) {
-                    self.canMore = NO;
-                }
-
-                if (!loadMore) {
-                    // 停止头部
-                    [self.tableView finishPullDown:NO];
-                    // 清空列表
-                    [self.items removeAllObjects];
-                } else {
-                    // 停止底部
-                    [self.tableView finishPullUp:YES];
-                }
-
+                // 清空列表
+                [self.items removeAllObjects];
                 // 增加列表
                 if (array && array.count > 0) {
                     [self.items addObjectsFromArray:array];
                     [self showMaskView:YES showNolist:YES showRetry:YES];
                 } else {
-                    // 显示无列表
-                    if (!loadMore) {
-                        [self showMaskView:NO showNolist:NO showRetry:YES];
-                    }
+                    [self showMaskView:NO showNolist:NO showRetry:YES];
                 }
-
                 // 刷新界面
                 [self.tableView reloadData];
-
+                
             } else {
-                if (!loadMore) {
-                    // 停止头部
-                    [self.tableView finishPullDown:NO];
-                    
-                    // 显示请求失败
-                    [self showMaskView:NO showNolist:YES showRetry:NO];
-                } else {
-                    // 停止底部
-                    [self.tableView finishPullUp:YES];
-                }
+                // 显示请求失败
+                [self showMaskView:NO showNolist:YES showRetry:NO];
             }
-
             self.view.userInteractionEnabled = YES;
         });
     };
-
     bFlag = [self.sessionManager sendRequest:request];
-
     return bFlag;
 }
 
@@ -214,17 +154,20 @@
 
     if (indexPath.row < self.items.count) {
         LSHangoutAnchorItemObject *item = [self.items objectAtIndex:indexPath.row];
-        [cell.imageViewLoader refreshCachedImage:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [cell.imageViewLoader refreshCachedImage:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        }];
         cell.labelName.text = item.nickName;
         cell.labelDesc.text = [NSString stringWithFormat:@"%dyrs / %@", item.age, item.country, nil];
 
         if (item.onlineStatus == ONLINE_STATUS_LIVE) {
-            cell.buttonInvite.backgroundColor = BUTTON_INVITE_ENABLE_COLOR;
+            [cell.buttonInvite setBackgroundImage:[UIImage imageNamed:@"Live_Line_Icon"] forState:UIControlStateNormal];
             cell.buttonInvite.enabled = YES;
+            cell.onlineView.hidden = NO;
         } else {
             // 主播不在线
-            cell.buttonInvite.backgroundColor = BUTTON_INVITE_DISABLE_COLOR;
+            [cell.buttonInvite setBackgroundImage:[self createImageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             cell.buttonInvite.enabled = NO;
+            cell.onlineView.hidden = YES;
         }
         
         cell.buttonInvite.tag = indexPath.row;
@@ -233,6 +176,17 @@
     }
 
     return tableViewCell;
+}
+
+- (UIImage*)createImageWithColor:(UIColor*)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
 }
 
 - (void)didHangoutInviteAnchor:(id)sender {
@@ -255,10 +209,6 @@
 #pragma mark - 列表上下拉回调
 - (void)pullDownRefresh:(UIScrollView *)scrollView {
     [self pullDownRefresh];
-}
-
-- (void)pullUpRefresh:(UIScrollView *)scrollView {
-    [self pullUpRefresh];
 }
 
 - (void)showMaskView:(BOOL)isShow showNolist:(BOOL)showNolist showRetry:(BOOL)showRetry {

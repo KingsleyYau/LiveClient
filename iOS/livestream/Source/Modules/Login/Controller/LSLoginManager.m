@@ -305,7 +305,7 @@ static LSLoginManager *loginManager = nil;
                     if (self.loginBlock) {
                          ErrorType errType = success ? ErrorType_Success : ErrorType_UnknowError;
                          if (!success) {
-                              if (errnum == HTTP_LCC_ERR_INVITE_TIMEOUT) {
+                              if (errnum == HTTP_LCC_ERR_CONNECTFAIL) {
                                    // TODO:网络错误
                                    errType = ErrorType_NetworkError;
                               } else if (errnum == HTTP_LCC_ERR_PLOGIN_ENTER_VERIFICATION || errnum == HTTP_LCC_ERR_PLOGIN_VERIFICATION_WRONG) {

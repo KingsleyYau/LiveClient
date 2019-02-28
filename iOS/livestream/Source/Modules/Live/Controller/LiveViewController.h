@@ -64,8 +64,10 @@
 #pragma mark - 邀请私密直播控件
 @property (weak, nonatomic) IBOutlet UIView *startOneView;
 @property (weak, nonatomic) IBOutlet UIButton *startOneBtn;
-@property (weak, nonatomic) IBOutlet UIButton *showPublicTipBtn;
+@property (weak, nonatomic) IBOutlet UIButton *startHangoutBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneViewHeigh;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneBtnX;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *startHangoutBtnX;
 
 #pragma mark - 倒计时关闭直播间控件
 @property (weak, nonatomic) IBOutlet UIView *countdownView;

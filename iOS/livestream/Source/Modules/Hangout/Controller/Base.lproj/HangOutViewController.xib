@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,6 +19,7 @@
                 <outlet property="chatAudienceView" destination="QYc-Rq-FyF" id="YHM-GQ-QDC"/>
                 <outlet property="chatAudienceViewLeading" destination="NPI-3e-bfH" id="iqZ-Nq-EwK"/>
                 <outlet property="chatAudienceViewWidth" destination="DAE-z2-bQY" id="LK0-Al-Igu"/>
+                <outlet property="chatBackgroundView" destination="EML-nr-lgG" id="bMc-NH-zD3"/>
                 <outlet property="chatBtn" destination="CKa-LU-Lzo" id="hk3-Az-kiS"/>
                 <outlet property="giftBtn" destination="Wft-pB-94y" id="41E-yY-7RM"/>
                 <outlet property="hangoutSendBarView" destination="HVN-pp-FHs" id="u7l-LS-9KR"/>
@@ -154,20 +159,24 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8fP-8N-PoD" userLabel="Input Message View">
                     <rect key="frame" x="0.0" y="619" width="375" height="48"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EML-nr-lgG" userLabel="Chat Background View">
+                            <rect key="frame" x="20" y="5" width="286" height="38"/>
+                            <color key="backgroundColor" red="0.25490196078431371" green="0.25490196078431371" blue="0.25490196078431371" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QYc-Rq-FyF">
-                            <rect key="frame" x="8" y="10" width="77" height="28"/>
+                            <rect key="frame" x="28" y="10" width="77" height="28"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ All" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAm-O2-N9I">
-                                    <rect key="frame" x="5" y="6.5" width="46" height="14.5"/>
+                                    <rect key="frame" x="5" y="5.5" width="46" height="17"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="46" id="5tg-BI-5e3"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_SelectNum_Up" translatesAutoresizingMaskIntoConstraints="NO" id="tkt-hK-8NO">
-                                    <rect key="frame" x="56" y="6" width="12" height="16"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Book_select_icon" translatesAutoresizingMaskIntoConstraints="NO" id="tkt-hK-8NO">
+                                    <rect key="frame" x="56" y="11.5" width="12" height="5"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="12" id="4xb-Bg-Gmp"/>
                                     </constraints>
@@ -176,7 +185,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="77" height="28"/>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" red="0.019607843137254902" green="0.7803921568627451" blue="0.45882352941176469" alpha="0.81000000000000005" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="mkf-wp-HXP" firstAttribute="leading" secondItem="QYc-Rq-FyF" secondAttribute="leading" id="4sP-Qt-R58"/>
                                 <constraint firstAttribute="width" constant="77" id="DAE-z2-bQY"/>
@@ -191,15 +200,15 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVN-pp-FHs" customClass="HangoutSendBarView">
-                            <rect key="frame" x="95" y="0.0" width="280" height="48"/>
+                            <rect key="frame" x="115" y="0.0" width="260" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CKa-LU-Lzo">
-                            <rect key="frame" x="95" y="8" width="224" height="32"/>
+                            <rect key="frame" x="115" y="8" width="191" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="J5L-Lq-8bY"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <state key="normal" title="Say something...">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="0.62" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
@@ -208,10 +217,9 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wft-pB-94y" userLabel="Gift Button">
-                            <rect key="frame" x="329" y="4" width="36" height="36"/>
+                            <rect key="frame" x="326" y="4" width="39" height="40"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="36" id="NNI-MM-AYb"/>
-                                <constraint firstAttribute="width" secondItem="Wft-pB-94y" secondAttribute="height" multiplier="1:1" id="d08-BX-6dX"/>
+                                <constraint firstAttribute="width" constant="39" id="NNI-MM-AYb"/>
                             </constraints>
                             <state key="normal" image="Live_Gift_HangOut"/>
                             <connections>
@@ -219,25 +227,29 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.11" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="HVN-pp-FHs" firstAttribute="height" secondItem="8fP-8N-PoD" secondAttribute="height" id="21w-DY-7iB"/>
+                        <constraint firstAttribute="bottom" secondItem="EML-nr-lgG" secondAttribute="bottom" constant="5" id="2ib-ls-jQC"/>
                         <constraint firstItem="HVN-pp-FHs" firstAttribute="leading" secondItem="CKa-LU-Lzo" secondAttribute="leading" id="4Dc-cY-59D"/>
-                        <constraint firstItem="Wft-pB-94y" firstAttribute="leading" secondItem="CKa-LU-Lzo" secondAttribute="trailing" constant="10" id="5mh-CO-ifA"/>
+                        <constraint firstItem="Wft-pB-94y" firstAttribute="leading" secondItem="CKa-LU-Lzo" secondAttribute="trailing" constant="20" id="5mh-CO-ifA"/>
                         <constraint firstItem="HVN-pp-FHs" firstAttribute="trailing" secondItem="8fP-8N-PoD" secondAttribute="trailing" id="6NL-r3-QAu"/>
                         <constraint firstItem="CKa-LU-Lzo" firstAttribute="leading" secondItem="QYc-Rq-FyF" secondAttribute="trailing" constant="10" id="6ti-ps-Y3J"/>
-                        <constraint firstItem="Wft-pB-94y" firstAttribute="bottom" secondItem="CKa-LU-Lzo" secondAttribute="bottom" id="CbN-Rw-S9j"/>
                         <constraint firstItem="HVN-pp-FHs" firstAttribute="top" secondItem="8fP-8N-PoD" secondAttribute="top" id="H3O-xJ-A1Y"/>
-                        <constraint firstItem="QYc-Rq-FyF" firstAttribute="leading" secondItem="8fP-8N-PoD" secondAttribute="leading" constant="8" id="I1K-4X-wf6"/>
+                        <constraint firstItem="Wft-pB-94y" firstAttribute="centerY" secondItem="8fP-8N-PoD" secondAttribute="centerY" id="Miy-3l-1zw"/>
                         <constraint firstAttribute="height" constant="48" id="Pzs-ko-eeJ"/>
                         <constraint firstAttribute="bottom" secondItem="QYc-Rq-FyF" secondAttribute="bottom" constant="10" id="YFr-QO-NVX"/>
                         <constraint firstItem="QYc-Rq-FyF" firstAttribute="top" secondItem="8fP-8N-PoD" secondAttribute="top" constant="10" id="YM2-4G-kw1"/>
                         <constraint firstItem="CKa-LU-Lzo" firstAttribute="centerY" secondItem="8fP-8N-PoD" secondAttribute="centerY" id="aR1-we-rjz"/>
+                        <constraint firstItem="CKa-LU-Lzo" firstAttribute="trailing" secondItem="EML-nr-lgG" secondAttribute="trailing" id="kUc-Vs-VmN"/>
+                        <constraint firstItem="EML-nr-lgG" firstAttribute="top" secondItem="8fP-8N-PoD" secondAttribute="top" constant="5" id="nvO-vH-Rcl"/>
+                        <constraint firstItem="EML-nr-lgG" firstAttribute="leading" secondItem="8fP-8N-PoD" secondAttribute="leading" constant="20" id="pAF-lN-Mdp"/>
+                        <constraint firstItem="QYc-Rq-FyF" firstAttribute="leading" secondItem="EML-nr-lgG" secondAttribute="leading" constant="8" id="pV0-nd-JdR"/>
                         <constraint firstItem="Wft-pB-94y" firstAttribute="trailing" secondItem="8fP-8N-PoD" secondAttribute="trailing" constant="-10" id="yl7-Vn-7PX"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lWy-es-wFI" userLabel="Open Control Button">
-                    <rect key="frame" x="333" y="577" width="32" height="32"/>
+                    <rect key="frame" x="326" y="570" width="39" height="39"/>
                     <state key="normal" image="Live_More_HangOut"/>
                     <connections>
                         <action selector="openControlAction:" destination="-1" eventType="touchUpInside" id="w4N-sc-b6g"/>
@@ -261,12 +273,13 @@
                 <constraint firstItem="b5z-fa-Fgu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="mru-IR-MW6"/>
                 <constraint firstItem="vns-Wk-gDI" firstAttribute="leading" secondItem="GWH-zB-D25" secondAttribute="leading" id="vSf-0r-S8J"/>
             </constraints>
+            <point key="canvasLocation" x="24.5" y="51.5"/>
         </view>
     </objects>
     <resources>
-        <image name="Live_Gift_HangOut" width="37" height="37"/>
-        <image name="Live_More_HangOut" width="32" height="32"/>
+        <image name="Book_select_icon" width="8" height="5"/>
+        <image name="Live_Gift_HangOut" width="39" height="40"/>
+        <image name="Live_More_HangOut" width="39" height="39"/>
         <image name="Live_Msg_UnRead" width="9" height="5"/>
-        <image name="Live_SelectNum_Up" width="16" height="16"/>
     </resources>
 </document>

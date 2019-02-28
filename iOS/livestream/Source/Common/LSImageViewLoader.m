@@ -111,7 +111,7 @@
     }
 }
 
-- (void)refreshCachedImage:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage {
+- (void)refreshCachedImage:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(SDWebImageCallBack)finishHandler {
 //    self.view = imageView;
 //    [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:url] options:option progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
 //
@@ -126,8 +126,7 @@
     self.view = imageView;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
-        UIImage *image =  [[YYImageCache sharedCache] getImageForKey:url];
-        
+        UIImage *image = [[YYImageCache sharedCache] getImageForKey:url];
         if (!image) {
             image = placeholderImage;
         }
@@ -135,11 +134,9 @@
                            completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
                                dispatch_async(dispatch_get_main_queue(), ^{
                                    if (image) {
-                                       
-                                       [[YYImageCache sharedCache] setImage:image forKey:[NSString stringWithFormat:@"%@",url]];
-                                       
                                        [self displayImage:image];
                                    }
+                                   finishHandler(image);
                                });
                            }];
     });

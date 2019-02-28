@@ -1,34 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSHangoutListViewController">
             <connections>
+                <outlet property="noDataIcon" destination="M71-0u-sGA" id="I6f-at-zLu"/>
+                <outlet property="noDataTips" destination="DAw-Oe-njo" id="hpX-mi-ztT"/>
                 <outlet property="tableView" destination="giP-7i-EJN" id="3eK-HM-tVZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="giP-7i-EJN" customClass="LSHangoutTableView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="giP-7i-EJN" customClass="LSHangoutTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Common_NoDataIcon" translatesAutoresizingMaskIntoConstraints="NO" id="M71-0u-sGA">
+                    <rect key="frame" x="162.66666666666666" y="197" width="88" height="88"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="88" id="DJo-lM-9av"/>
+                        <constraint firstAttribute="width" secondItem="M71-0u-sGA" secondAttribute="height" multiplier="1:1" id="THB-tN-GB2"/>
+                    </constraints>
+                </imageView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Hang-out circles are online at them moment. Please check back later." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DAw-Oe-njo">
+                    <rect key="frame" x="20" y="305" width="374" height="38.333333333333314"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.92941176469999998" green="0.92549019610000005" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="M71-0u-sGA" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="5zQ-hC-WEa"/>
+                <constraint firstAttribute="bottom" secondItem="giP-7i-EJN" secondAttribute="bottom" id="7Nq-Z2-dfN"/>
+                <constraint firstItem="DAw-Oe-njo" firstAttribute="centerX" secondItem="M71-0u-sGA" secondAttribute="centerX" id="LTV-JI-eGl"/>
+                <constraint firstAttribute="trailing" secondItem="DAw-Oe-njo" secondAttribute="trailing" constant="20" id="SwY-N8-KTx"/>
+                <constraint firstItem="M71-0u-sGA" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="197" id="Ych-8l-Vch"/>
+                <constraint firstItem="giP-7i-EJN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="iR2-ia-k5W"/>
+                <constraint firstItem="DAw-Oe-njo" firstAttribute="top" secondItem="M71-0u-sGA" secondAttribute="bottom" constant="20" id="nKK-ug-KjZ"/>
+                <constraint firstItem="DAw-Oe-njo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="qDo-ac-uTg"/>
+                <constraint firstAttribute="trailing" secondItem="giP-7i-EJN" secondAttribute="trailing" id="wUl-ne-2T9"/>
+                <constraint firstItem="giP-7i-EJN" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="yIE-gb-8LO"/>
+            </constraints>
             <point key="canvasLocation" x="138.40000000000001" y="154.27286356821591"/>
         </view>
     </objects>
+    <resources>
+        <image name="Common_NoDataIcon" width="82" height="77"/>
+    </resources>
 </document>

@@ -29,20 +29,10 @@
 
 @property (strong, nonatomic) LiveRoom *liveRoom;
 
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
-
-@property (weak, nonatomic) IBOutlet UIImageView *allImageViewOne;
-
-@property (weak, nonatomic) IBOutlet UIImageView *allImageViewTwo;
-
-@property (weak, nonatomic) IBOutlet UIImageView *allImageViewThree;
-
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-
-@property (weak, nonatomic) IBOutlet LSCheckButton *selectBtn;
-
+// 是否私密发送开关
 @property (weak, nonatomic) IBOutlet UISwitch *switchBtn;
-
+// 信用点
+@property (weak, nonatomic) IBOutlet UILabel *creditLabel;
 
 @property (weak, nonatomic) id<HangoutGiftViewControllerDelegate> giftDelegate;
 

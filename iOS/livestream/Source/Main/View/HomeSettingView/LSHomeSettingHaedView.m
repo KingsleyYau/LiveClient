@@ -65,7 +65,8 @@
 - (void)updateUserInfo {
     self.nameLabel.text = [LSLoginManager manager].loginItem.nickName;
     
-    [[LSImageViewLoader loader] refreshCachedImage:self.headView options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+    [[LSImageViewLoader loader] refreshCachedImage:self.headView options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     
     self.userIdLabel.text = [LSLoginManager manager].loginItem.userId;
     

@@ -11,16 +11,20 @@
 #import "LSImageViewLoader.h"
 #import "LiveModule.h"
 #import "HangOutPreViewController.h"
-#import "LiveModule.h"
 #import "LiveUrlHandler.h"
 #import "LiveMutexService.h"
 #import "LSAddCreditsViewController.h"
+#import "HangOutPreAnchorPhotoCell.h"
 
-@interface HangOutFinshViewController ()
+@interface HangOutFinshViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewWidth;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UIButton *startAgainBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addCreditBtn;
+
+@property (nonatomic, strong) NSMutableArray *anchorArray;
 
 @end
 
@@ -32,10 +36,18 @@
 
 - (void)initCustomParam {
     [super initCustomParam];
+    
+    self.anchorArray = [[NSMutableArray alloc] init];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UINib *cellNib = [UINib nibWithNibName:@"HangOutPreAnchorPhotoCell" bundle:[LiveBundle mainBundle]];
+    [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:[HangOutPreAnchorPhotoCell cellIdentifier]];
+    
+    self.collectionViewWidth.constant = self.anchorArray.count * 100;
+    [self.collectionView reloadData];
     
     self.headImageView.layer.cornerRadius = self.headImageView.frame.size.height / 2;
     self.headImageView.layer.masksToBounds = YES;
@@ -47,10 +59,34 @@
     self.addCreditBtn.layer.cornerRadius = self.addCreditBtn.frame.size.height / 2;
     self.addCreditBtn.layer.masksToBounds = YES;
     self.addCreditBtn.hidden = YES;
-    
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
 }
 
+- (void)anchorArrayAddObject:(LSUserInfoModel *)obj {
+    [self.anchorArray addObject:obj];
+}
+
+#pragma mark - UICollectionViewDataSource
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.anchorArray.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    LSUserInfoModel *item = self.anchorArray[indexPath.row];
+    HangOutPreAnchorPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[HangOutPreAnchorPhotoCell cellIdentifier] forIndexPath:indexPath];
+    
+    IMLivingAnchorItemObject *obj = [[IMLivingAnchorItemObject alloc] init];
+    obj.anchorId = item.userId;
+    obj.nickName = item.nickName;
+    obj.photoUrl = item.photoUrl;
+    [cell setupCellDate:obj];
+    return cell;
+}
+
+#pragma mark - 界面显示
 - (void)showErrorCredieBtn:(BOOL)hiddenCredit starAgain:(BOOL)hiddenStart errmsg:(NSString *)errmsg {
     self.startAgainBtn.hidden = hiddenStart;
     self.addCreditBtn.hidden = hiddenCredit;
@@ -74,12 +110,13 @@
 }
 
 - (IBAction)startAgainAction:(id)sender {
-//    [LiveUrlHandler shareInstance].url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:@"" nickName:@""];
-
-//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
     [nvc forceToDismissAnimated:NO completion:nil];
     [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
+    
+    LSUserInfoModel *item = self.anchorArray.firstObject;
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:item.userId anchorName:item.nickName hangoutAnchorId:@"" hangoutAnchorName:@""];
+    [[LiveUrlHandler shareInstance] handleOpenURL:url];
 }
 
 - (IBAction)addCreditAciton:(id)sender {
@@ -88,7 +125,6 @@
 }
 
 - (IBAction)closeAciton:(id)sender {
-//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
     [nvc forceToDismissAnimated:YES completion:nil];
 }

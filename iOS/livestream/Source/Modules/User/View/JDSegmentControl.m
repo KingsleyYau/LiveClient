@@ -52,7 +52,6 @@
         _noNumUnreadlabel = noNumUnreadlabel;
         
         [self setTitleColor:kNormalColor forState:UIControlStateNormal];
-        self.titleLabel.font = [UIFont systemFontOfSize:12];
         [self setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:lineView];
         [self addSubview:label];
@@ -108,6 +107,7 @@
         
         CGFloat oldW = 0;
         CGFloat symmetryW =  frame.size.width/titles.count;
+        CGFloat btnFontSize = (int)titles.count > 2?14:16;
         for (int i = 0; i < titles.count; i ++) {
             CGFloat x = [array[i] floatValue] + oldW;
             oldW = x;
@@ -115,11 +115,11 @@
             JDUnreadButton *button = nil;
             
             if (isSymmetry) {
-              button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(i*symmetryW, 0, symmetryW, frame.size.height)];;
+              button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(i*symmetryW, 0, symmetryW, frame.size.height)];
             }
             else
             {
-              button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(x, 0, [array[i+1] floatValue], frame.size.height)];;
+              button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(x, 0, [array[i+1] floatValue], frame.size.height)];
             }
            
             
@@ -142,6 +142,7 @@
             // 设置对应的tag
             button.tag = i + 88;
             [button setTitle:titles[i] forState:UIControlStateNormal];
+            button.titleLabel.font = [UIFont systemFontOfSize:btnFontSize];
             [button addTarget:self action:@selector(buttonChoosed:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:button];
 

@@ -233,6 +233,11 @@ public class LSPublisher {
                     if( isRuning ) {
                         publisher.PushVideoFrame(data, size, width, height);
                     }
+
+//					// 通知外部监听
+//					if( statusCallback != null ) {
+//						statusCallback.onVideoCapture(lsPublisher, data, size, width, height);
+//					}
                 }
 
 				@Override

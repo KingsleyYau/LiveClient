@@ -264,6 +264,8 @@ extern int srs_rtmp_bandwidth_check(srs_rtmp_t rtmp,
 #define SRS_RTMP_TYPE_VIDEO 9
 // 18 = script data
 #define SRS_RTMP_TYPE_SCRIPT 18
+// 20 = command data
+#define SRS_RTMP_TYPE_COMMAND 20
 /**
 * read a audio/video/script-data packet from rtmp stream.
 * @param type, output the packet type, macros:
@@ -608,6 +610,8 @@ typedef double srs_amf0_number;
 extern srs_amf0_t srs_amf0_parse(char* data, int size, int* nparsed);
 extern srs_amf0_t srs_amf0_create_string(const char* value);
 extern srs_amf0_t srs_amf0_create_number(srs_amf0_number value);
+extern srs_amf0_t srs_amf0_create_boolean(bool bFlag);
+extern srs_amf0_t srs_amf0_create_null();
 extern srs_amf0_t srs_amf0_create_ecma_array();
 extern srs_amf0_t srs_amf0_create_strict_array();
 extern srs_amf0_t srs_amf0_create_object();

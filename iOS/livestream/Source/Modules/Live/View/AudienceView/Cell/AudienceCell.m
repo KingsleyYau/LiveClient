@@ -40,7 +40,8 @@
     
      self.imageLoader = [LSImageViewLoader loader];
     [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
-                        placeholderImage:audienModel.image];
+                        placeholderImage:audienModel.image finishHandler:^(UIImage *image) {
+                        }];
     
     if (audienModel.isHasTicket) {
         self.showIcon.hidden = NO;

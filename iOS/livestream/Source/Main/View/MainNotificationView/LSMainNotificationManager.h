@@ -12,7 +12,7 @@
 
 - (void)mainNotificationManagerShowNotificaitonView;
 
-- (void)mainNotificationManagerHideNotificaitonView:(NSInteger)row;
+- (void)mainNotificationManagerHideNotificaitonView;
 
 - (void)mainNotificationManagerRemoveNotificaitonView;
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -70,7 +70,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From : Randy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9X-JG-h51" userLabel="From Name Label">
                                     <rect key="frame" x="97" y="13" width="102" height="20"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                    <nil key="textColor"/>
+                                    <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9aD-Oj-A6r" userLabel="To Me Label">
@@ -213,7 +213,7 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="FQg-Mt-SqC"/>
                                     </constraints>
-                                    <state key="normal" title="send">
+                                    <state key="normal" title="Send">
                                         <color key="titleColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -279,7 +279,7 @@
                     </constraints>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" red="1" green="0.78431372549019607" blue="0.85490196078431369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.99607843137254903" green="0.92941176470588238" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="6hc-2v-PIo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3gU-f2-Dxx"/>
                 <constraint firstItem="6hc-2v-PIo" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="FLm-H9-RL8"/>

@@ -1,0 +1,20 @@
+
+/* Class = "UIButton"; normalTitle = "Check All"; ObjectID = "W0h-qC-Srx"; */
+"W0h-qC-Srx.normalTitle" = "Check All";
+
+/* Class = "UIButton"; selectedTitle = "Check All"; ObjectID = "W0h-qC-Srx"; */
+"W0h-qC-Srx.selectedTitle" = "Check All";
+
+/* Class = "UIButton"; normalTitle = "Add Credits"; ObjectID = "j2e-G6-v2F"; */
+"j2e-G6-v2F.normalTitle" = "Add Credits";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "llY-OE-Tgo"; */
+"llY-OE-Tgo.text" = "Label";
+
+/* Class = "UILabel"; text = "Send Secretly"; ObjectID = "o3m-Ob-IR7"; */
+"o3m-Ob-IR7.text" = "Send Secretly";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "zrS-ue-Flg"; */
+"zrS-ue-Flg.text" = "Label";
+
+"SEND_TO" = "Send to";

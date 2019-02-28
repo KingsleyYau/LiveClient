@@ -13,24 +13,33 @@
 @protocol HangoutListCellDelegate <NSObject>
 @optional
 - (void)hangoutListCellDidHangout:(NSInteger)row;
+- (void)hangoutListCellDidAchorPhoto:(NSInteger)row;
+- (void)hangoutListCell:(HangoutListCell *)cell didClickAchorFriendPhoto:(NSInteger)row;
 @end
 @interface HangoutListCell : UITableViewCell
 
 @property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewHeader;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
-@property (nonatomic, strong) TXScrollLabelView *scrollLabelView;
-@property (weak, nonatomic) IBOutlet UIView *titleView;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (nonatomic, strong) NSMutableArray *animationArray;
 @property (weak, nonatomic) IBOutlet UIButton *hangoutButton;
-/** 代理 */
 @property (nonatomic, weak) id<HangoutListCellDelegate> hangoutDelegate;
+@property (weak, nonatomic) IBOutlet UIView *friendView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *friendWidth;
+@property (weak, nonatomic) IBOutlet UIView *hangoutContentView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *inviteMsgHeight;
+@property (weak, nonatomic) IBOutlet UILabel *inviteMsg;
+@property (weak, nonatomic) IBOutlet UIView *actionView;
+@property (weak, nonatomic) IBOutlet UILabel *anchorName;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;
 + (id)getUITableViewCell:(UITableView*)tableView;
-- (void)setScrollLabelViewText:(NSString *)text;
-- (void)setHangoutHeadList:(NSArray *)list;
+
+
+- (void)loadInviteMsg:(NSString *)msg;
+
+- (void)loadFriendData:(NSArray *)items;
 @end
 
  

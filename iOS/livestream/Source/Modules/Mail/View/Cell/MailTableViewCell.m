@@ -79,7 +79,8 @@
 
 - (void)updataMailCell:(LSHttpLetterListItemObject *)obj {
     // 加载
-    [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     self.anchorNameLabel.text = obj.anchorNickName;
     
     self.contentLabel.text = [NSString stringWithFormat:@"...%@...",obj.letterBrief];
@@ -113,7 +114,8 @@
 
 - (void)updataOutBoxMailCell:(LSHttpLetterListItemObject *)obj {
     // 加载
-    [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     self.anchorNameLabel.text = obj.anchorNickName;
     
     self.contentLabel.text = [NSString stringWithFormat:@"...%@...",obj.letterBrief];

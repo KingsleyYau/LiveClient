@@ -264,7 +264,6 @@
         }else {
             [[LiveModule module].serviceManager handleOpenURL:url];
         }
-        [[LiveModule module].serviceManager handleOpenURL:url];
         result = NO;
         // 如果是含有打开类型则执行对应操作
     } else if ([urlStr containsString:@"opentype"]) {

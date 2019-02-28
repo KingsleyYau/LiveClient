@@ -11,19 +11,22 @@
 #import "LSGoogleAnalyticsViewController.h"
 @interface HangOutPreViewController : LSGoogleAnalyticsViewController
 
-
-@property (weak, nonatomic) IBOutlet UIButton *closeBtn;
-
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
-
-@property (weak, nonatomic) IBOutlet UILabel *tipLabel;
-
-@property (weak, nonatomic) IBOutlet UIButton *retryButton;
-
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingView;
-
+/**
+ 私密直播间跳转时才有值
+ */
 @property (copy, nonatomic) NSString *roomId;
+
+/**
+ 好友推荐跳转时 为被推荐人主播ID和名称
+ 非好友推荐跳转时 为被邀请主播ID和名称
+ */
 @property (copy, nonatomic) NSString *inviteAnchorId;
 @property (copy, nonatomic) NSString *inviteAnchorName;
+
+/**
+ 推荐好友时使用 (推荐人ID和名称)
+ */
+@property (copy, nonatomic) NSString *hangoutAnchorId;
+@property (copy, nonatomic) NSString *hangoutAnchorName;
 
 @end

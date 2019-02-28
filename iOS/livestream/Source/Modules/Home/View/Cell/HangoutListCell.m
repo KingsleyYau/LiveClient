@@ -7,6 +7,7 @@
 //
 
 #import "HangoutListCell.h"
+#import "LSShadowView.h"
 
 @implementation HangoutListCell
 
@@ -15,7 +16,7 @@
 }
 
 + (NSInteger)cellHeight {
-    return screenSize.width;
+    return 500;
 }
 
 + (id)getUITableViewCell:(UITableView*)tableView {
@@ -29,7 +30,15 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         [cell setExclusiveTouch:YES];
+
+        // 多人互动邀请按钮阴影
+        cell.hangoutContentView.layer.cornerRadius = 10.0f;
+        cell.hangoutContentView.layer.masksToBounds = YES;
         
+        LSShadowView *shadow = [[LSShadowView alloc] init];
+        [shadow showShadowAddView:cell.hangoutButton];
+        
+        // 头像底部阴影
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0xD4000000).CGColor, (__bridge id)[UIColor clearColor].CGColor];
         gradientLayer.locations = @[@0.0, @1.0];
@@ -65,79 +74,115 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    self.hangoutButton.layer.cornerRadius = self.hangoutButton.frame.size.height/2;
+    
+    self.hangoutButton.layer.cornerRadius = self.hangoutButton.frame.size.height /2.0f;
     self.hangoutButton.layer.masksToBounds = YES;
+    
+    // 添加头部点击事件
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPhoto:)];
+    self.imageViewHeader.userInteractionEnabled = YES;
+    self.bottomView.userInteractionEnabled = YES;
+    [self.imageViewHeader addGestureRecognizer:tap];
+    [self.bottomView addGestureRecognizer:tap];
 }
 
-- (void)setScrollLabelViewText:(NSString *)text
-{
-    if (!self.scrollLabelView) {
-        CGSize size = self.titleView.frame.size;
-        self.scrollLabelView = [TXScrollLabelView scrollWithTitle:text type:TXScrollLabelViewTypeLeftRight velocity:1 options:UIViewAnimationOptionCurveEaseInOut];
-        self.scrollLabelView.frame = CGRectMake(0, 0, size.width, 30);
-        self.scrollLabelView.scrollInset = UIEdgeInsetsMake(0, 10 , 0, 10);
-        self.scrollLabelView.scrollSpace = 20;
-        self.scrollLabelView.textAlignment = NSTextAlignmentCenter;
-        self.scrollLabelView.backgroundColor = [UIColor clearColor];
-        self.scrollLabelView.font = [UIFont systemFontOfSize:18];
-        [self.titleView addSubview:self.scrollLabelView];
+- (void)tapPhoto:(UITapGestureRecognizer *)gesture {
+    if (self.hangoutDelegate && [self.hangoutDelegate respondsToSelector:@selector(hangoutListCellDidAchorPhoto:)]) {
+        NSInteger row = self.tag - 888;
+        [self.hangoutDelegate hangoutListCellDidAchorPhoto:row];
+    }
+}
 
-        [self.scrollLabelView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.titleView);
-        }];
+
+- (void)loadInviteMsg:(NSString *)msg {
+    NSLog(@"HangoutListCell::loadInviteMsg %@",msg);
+    if (msg.length > 0) {
+        NSLog(@"msg :%@",msg);
+        self.inviteMsg.text = [NSString stringWithFormat:@"\"%@\"",msg];
+        self.inviteMsgHeight.constant = 34;
+
+    }else {
+        self.inviteMsgHeight.constant = 0;
+        self.inviteMsg.text = @"";
+    }
+}
+
+
+- (void)loadFriendData:(NSArray *)items {
+    
+    CGFloat w = (screenSize.width - 25 - 20) / 5.0f;
+    CGFloat spacing = 5.0f;
+    CGFloat friendViewWidth = 0;
+    NSInteger num = 0;
+    // 最多显示5个
+    if (items.count >= 5) {
+        friendViewWidth = 5 * w;
+        num = 5;
+    } else {
+        friendViewWidth = items.count * w;
+        num = items.count;
+    }
+    
+    // 超过宽度为最大宽度
+    if (friendViewWidth >= screenSize.width - 20) {
+        friendViewWidth = screenSize.width - 20;
+    }
+    self.friendWidth.constant = friendViewWidth;
+    CGFloat itemSize = w - 5.0f;
+    
+    // 添加对应的view
+    for (int i = 0; i < num; i++) {
         
-        CGSize textSize = [text sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:18]}];
-        if (textSize.width > self.scrollLabelView.frame.size.width) {
-          [self.scrollLabelView beginScrolling];
-        }
+        LSFriendsInfoItemObject * item = items[i];
+        
+        UIView * headView = [[UIView alloc]initWithFrame:CGRectMake(w * i + spacing, 0, itemSize, itemSize)];
+        [self.friendView addSubview:headView];
+        
+        UIImageView * headImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, itemSize, itemSize)];
+        headImage.layer.cornerRadius = itemSize /2.0f;
+        headImage.layer.borderWidth = 2;
+        headImage.layer.borderColor = [UIColor clearColor].CGColor;
+        headImage.layer.masksToBounds = YES;
+        headImage.contentMode = UIViewContentModeScaleAspectFill;
+        headImage.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEDF1);
+        headImage.userInteractionEnabled = YES;
+        [headView addSubview:headImage];
+        headImage.tag = i;
+        [headImage addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(headImageTap:)]];
+        
+        [[LSImageViewLoader loader] loadImageWithImageView:headImage options:0 imageUrl:item.anchorImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
     }
+    
 }
 
-- (void)setHangoutHeadList:(NSArray *)list {
-    
-    NSArray * data = list;
-    if (list.count > 3) {
-        data = [list subarrayWithRange:NSMakeRange(0, 3)];
-    }
-    
-    int unm = (int)data.count + 1;
-    CGFloat x = self.titleView.frame.size.width/2 - (unm * 25)/2 + 25;
-    for (int i = 0; i < unm; i++) {
-        if (i == unm - 1) {
-            UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(x+i*25, self.scrollLabelView.tx_bottom + 10, 40, 40)];
-            label.layer.cornerRadius = 20;
-            label.layer.masksToBounds = YES;
-            label.layer.borderColor = [UIColor whiteColor].CGColor;
-            label.layer.borderWidth = 2;
-            label.backgroundColor = [UIColor lightGrayColor];
-            label.text = @"...";
-            label.textAlignment = NSTextAlignmentCenter;
-            label.font = [UIFont systemFontOfSize:15];
-            [self.titleView addSubview:label];
-        }
-        else {
-            UIImageView * headImage = [[UIImageView alloc]initWithFrame:CGRectMake(x+i*25, self.scrollLabelView.tx_bottom + 10, 40, 40)];
-            headImage.layer.cornerRadius = 20;
-            headImage.layer.masksToBounds = YES;
-            headImage.layer.borderColor = [UIColor whiteColor].CGColor;
-            headImage.layer.borderWidth = 2;
-            headImage.backgroundColor = [UIColor grayColor];
-            [self.titleView addSubview:headImage];
-            
-            LSFriendsInfoItemObject * obj = [data objectAtIndex:i];
-            [ [LSImageViewLoader loader] loadImageWithImageView:headImage
-                                                        options:0
-                                                       imageUrl:obj.anchorImg
-                                               placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
-        }
+- (void)headImageTap:(UITapGestureRecognizer *)gesture {
+    // 添加颜色渐变动画
+    [gesture.view.layer addAnimation:[self addBorderAnimation] forKey:@"borderColor"];
+    if (self.hangoutDelegate && [self.hangoutDelegate respondsToSelector:@selector(hangoutListCell:didClickAchorFriendPhoto:)]) {
+        NSInteger row = gesture.view.tag;
+        [self.hangoutDelegate hangoutListCell:self didClickAchorFriendPhoto:row];
     }
 }
-
 
 - (IBAction)hangoutButtonDid:(UIButton *)sender {
     if (self.hangoutDelegate && [self.hangoutDelegate respondsToSelector:@selector(hangoutListCellDidHangout:)]) {
         NSInteger row = sender.tag - 88;
         [self.hangoutDelegate hangoutListCellDidHangout:row];
     }
+}
+
+
+// 添加颜色渐变动画
+- (CABasicAnimation *)addBorderAnimation {
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"borderColor"];
+    animation.fromValue = (id)[UIColor clearColor].CGColor;
+    animation.toValue = (id)COLOR_WITH_16BAND_RGB(0xFF6D00).CGColor;
+    animation.autoreverses = YES;
+    animation.duration = 0.3;
+    animation.repeatCount = 1;
+    animation.removedOnCompletion = YES;
+    animation.fillMode = kCAFillModeForwards;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    return animation;
 }
 @end

@@ -27,6 +27,7 @@
 		50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF94213641E900FB374D /* ImageCVPixelBufferInput.m */; };
 		50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF96213641E900FB374D /* LiveStreamSession.m */; };
 		50DAEFAD2136468600FB374D /* common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50DAEFAC2136468600FB374D /* common.xcconfig */; };
+		50E5E69D2216978D00D66072 /* LSImageVibrateFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E5E69C2216978D00D66072 /* LSImageVibrateFilter.m */; };
 		50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BF81E94F46100116A4B /* VideoToolbox.framework */; };
 		50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BFA1E94F46A00116A4B /* AVFoundation.framework */; };
 		8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */; };
@@ -97,6 +98,8 @@
 		50DAEFA12136429E00FB374D /* CommonDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonDefine.h; sourceTree = "<group>"; };
 		50DAEFA22136436100FB374D /* RtmpClientTest-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RtmpClientTest-PrefixHeader.pch"; sourceTree = "<group>"; };
 		50DAEFAC2136468600FB374D /* common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
+		50E5E69B2216978D00D66072 /* LSImageVibrateFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSImageVibrateFilter.h; sourceTree = "<group>"; };
+		50E5E69C2216978D00D66072 /* LSImageVibrateFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSImageVibrateFilter.m; sourceTree = "<group>"; };
 		50F18BF81E94F46100116A4B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		50F18BFA1E94F46A00116A4B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RtmpClientTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -226,6 +229,8 @@
 				50DAEF8E213641E900FB374D /* LiveStreamPublisher.m */,
 				50DAEF91213641E900FB374D /* LiveStreamSession.h */,
 				50DAEF96213641E900FB374D /* LiveStreamSession.m */,
+				50E5E69B2216978D00D66072 /* LSImageVibrateFilter.h */,
+				50E5E69C2216978D00D66072 /* LSImageVibrateFilter.m */,
 			);
 			path = LiveStreamClient;
 			sourceTree = "<group>";
@@ -413,6 +418,7 @@
 				50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */,
 				50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */,
 				50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */,
+				50E5E69D2216978D00D66072 /* LSImageVibrateFilter.m in Sources */,
 				50DAEF9A213641E900FB374D /* LiveStreamPublisher.m in Sources */,
 				5067DECF21ABDF3900D9E30F /* PlayViewController.m in Sources */,
 				50C9948E1E8F911E001E1355 /* main.m in Sources */,

@@ -1,5 +1,5 @@
 package net.qdating.dectection;
 
 public interface ILSFaceDetectorCallbackJni {
-	void onDetectedFace(int x, int y, int width, int height);
+	void onDetectedFace(byte[] data, int size, int x, int y, int width, int height);
 }

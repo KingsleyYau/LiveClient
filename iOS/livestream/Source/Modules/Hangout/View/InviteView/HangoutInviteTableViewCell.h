@@ -20,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelDesc;
 #pragma mark - 邀请操作
 @property (weak, nonatomic) IBOutlet LSHighlightedButton *buttonInvite;
+@property (weak, nonatomic) IBOutlet UIView *onlineView;
+
 
 + (NSString *)identifier;
 + (NSInteger)height;

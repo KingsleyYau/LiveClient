@@ -1646,6 +1646,10 @@ public:
     bool is_aggregate();
 public:
     /**
+     create a amf0 command header, set the size and stream_id.
+     */
+    void initialize_amf0_command(int size, int stream);
+    /**
      * create a amf0 script header, set the size and stream_id.
      */
     void initialize_amf0_script(int size, int stream);
@@ -2189,6 +2193,8 @@ enum SrsCodecFlvTag
     SrsCodecFlvTagVideo = 9,
     // 18 = script data
     SrsCodecFlvTagScript = 18,
+    // 20 = command
+    SrsCodecFlvTagCmd = 20,
 };
 
 /**
@@ -13882,6 +13888,18 @@ bool SrsMessageHeader::is_aggregate()
     return message_type == RTMP_MSG_AggregateMessage;
 }
 
+void SrsMessageHeader::initialize_amf0_command(int size, int stream)
+{
+    message_type = RTMP_MSG_AMF0CommandMessage;
+    payload_length = (int32_t)size;
+    timestamp_delta = (int32_t)0;
+    timestamp = (int64_t)0;
+    stream_id = (int32_t)stream;
+    
+    // amf0 script use connection2 chunk-id
+    perfer_cid = RTMP_CID_OverConnection2;
+}
+    
 void SrsMessageHeader::initialize_amf0_script(int size, int stream)
 {
     message_type = RTMP_MSG_AMF0DataMessage;
@@ -28891,6 +28909,15 @@ int srs_do_rtmp_create_msg(char type, u_int32_t timestamp, char* data, int size,
             srs_freep(msg);
             return ret;
         }
+    } else if (type == SrsCodecFlvTagCmd) {
+        SrsMessageHeader header;
+        header.initialize_amf0_command(size, stream_id);
+        
+        msg = new SrsSharedPtrMessage();
+        if ((ret = msg->create(&header, data, size)) != ERROR_SUCCESS) {
+            srs_freep(msg);
+            return ret;
+        }
     } else {
         ret = ERROR_STREAM_CASTER_FLV_TAG;
         srs_error("rtmp unknown tag type=%#x. ret=%d", type, ret);
@@ -34041,6 +34068,12 @@ int srs_rtmp_go_packet(Context* context, SrsCommonMessage* msg,
             return ret;
         }
         *got_msg = false;
+    } else if (msg->header.is_amf0_command() || msg->header.is_amf3_command()) {
+        *type = SRS_RTMP_TYPE_COMMAND;
+        *data = (char*)msg->payload;
+        *size = (int)msg->size;
+        // detach bytes from packet.
+        msg->payload = NULL;
     } else {
         *type = msg->header.message_type;
         *data = (char*)msg->payload;
@@ -34837,7 +34870,17 @@ srs_amf0_t srs_amf0_create_number(srs_amf0_number value)
 {
     return SrsAmf0Any::number(value);
 }
-
+    
+srs_amf0_t srs_amf0_create_boolean(bool bFlag)
+{
+    return SrsAmf0Any::boolean(bFlag);
+}
+    
+srs_amf0_t srs_amf0_create_null()
+{
+    return SrsAmf0Any::null();
+}
+    
 srs_amf0_t srs_amf0_create_ecma_array()
 {
     return SrsAmf0Any::ecma_array();

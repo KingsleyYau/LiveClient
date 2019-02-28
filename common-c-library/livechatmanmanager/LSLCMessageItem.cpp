@@ -43,6 +43,7 @@ LSLCMessageItem::LSLCMessageItem()
 	m_systemItem = NULL;
 	m_customItem = NULL;
     m_magicIconItem = NULL;
+    m_autoInviteItem = NULL;
 
 	m_userItem = NULL;
     
@@ -422,6 +423,19 @@ LSLCMagicIconItem* LSLCMessageItem::GetMagicIconItem() const
     return m_magicIconItem;
 }
 
+//  设置自动邀请item alex 2019－01-28
+void LSLCMessageItem::SetAutoInviteItem(LSLCAutoInviteItem* theAutoInviteItem)
+{
+    if (NULL != theAutoInviteItem && m_autoInviteItem == NULL) {
+        m_autoInviteItem = theAutoInviteItem;
+    }
+}
+//  获取自动邀请item alex 2019－01-28
+LSLCAutoInviteItem* LSLCMessageItem::GetAutoInviteItem() const
+{
+    return m_autoInviteItem;
+}
+
 // 设置用户item
 void LSLCMessageItem::SetUserItem(LSLCUserItem* theUserItem)
 {
@@ -473,6 +487,11 @@ void LSLCMessageItem::Clear()
 	m_customItem = NULL;
     
     m_magicIconItem = NULL;
+    
+    if (m_autoInviteItem != NULL) {
+        delete m_autoInviteItem;
+        m_autoInviteItem = NULL;
+    }
 
 	m_userItem = NULL;
 }

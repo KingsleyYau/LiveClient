@@ -57,12 +57,10 @@ JNIEXPORT void JNICALL Java_net_qdating_dectection_LSFaceDetectorJni_Destroy
 }
 
 JNIEXPORT void JNICALL Java_net_qdating_dectection_LSFaceDetectorJni_DetectPicture
-  (JNIEnv *env, jobject thiz, jlong jdetector, jint width, jint height, jbyteArray dataByteArray) {
+  (JNIEnv *env, jobject thiz, jlong jdetector, jbyteArray dataByteArray, jint size, jint width, jint height) {
     LSFaceDetector* detector = (LSFaceDetector *)jdetector;
 
-    int len = env->GetArrayLength(dataByteArray);
     jbyte* data = env->GetByteArrayElements(dataByteArray, 0);
 
-    detector->FilterPicture(width, height, (const char *)data, len);
-
+    detector->DetectFaces((const char *)data, size, width, height);
 }

@@ -28,7 +28,8 @@
 @property (nonatomic, assign) CGFloat time;
 @property (nonatomic, assign) CGFloat countdownTime;
 @property (weak, nonatomic) IBOutlet UIView *colorView;
-
+@property (weak, nonatomic) IBOutlet UIView *scheduledTimeView;
+@property (weak, nonatomic) IBOutlet UILabel *countdownLabel;
 @property (nonatomic, strong) LSImageViewLoader* imageViewLoader;
 + (NSString *)cellIdentifier;
 

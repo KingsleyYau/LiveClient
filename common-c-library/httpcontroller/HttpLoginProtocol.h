@@ -1002,6 +1002,7 @@
 #define LIVEROOM_GETUSERINFO_ANCHORINFO_ANCHORTYPE              "anchor_type"
 #define LIVEROOM_GETUSERINFO_ANCHORINFO_ISLIVE                  "is_live"
 #define LIVEROOM_GETUSRRINFO_ANCHORINFO_INTRODUCTION            "introduction"
+#define LIVEROOM_GETUSRRINFO_ANCHORINFO_ROOM_PHOTOURL           "room_photourl"
 
 /* 6.11.获取分享链接 */
 /* 接口路径 */
@@ -1358,6 +1359,7 @@
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_ANCHORID                              "anchor_id"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_NICKNAME                              "nickname"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_PHOTOURL                              "photourl"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AVATAR_IMG                            "avatar_img"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AGE                                   "age"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_COUNTRY                               "country"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_ONLINESTATUS                          "online_status"

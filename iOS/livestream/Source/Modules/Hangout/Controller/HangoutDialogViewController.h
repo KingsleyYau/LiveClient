@@ -8,12 +8,16 @@
 
 #import "LSViewController.h"
 #import "LSHangoutListItemObject.h"
+@class HangoutDialogViewController;
+@protocol HangoutDialogViewControllerDelegate <NSObject>
+@optional
+- (void)hangoutDialogViewController:(HangoutDialogViewController *)vc didClickHangoutBtn:(UIButton *)sender;
+@end
 
 @interface HangoutDialogViewController : LSViewController
 /** 主播id */
 @property (nonatomic, copy) NSString *anchorId;
 @property (weak, nonatomic) IBOutlet UIButton *hangOutNowBtn;
-@property (weak, nonatomic) IBOutlet UIView *bgView;
 @property (weak, nonatomic) IBOutlet UIImageView *anchorImageView;
 @property (weak, nonatomic) IBOutlet UILabel *anchorInviteTips;
 @property (weak, nonatomic) IBOutlet UICollectionView *friendView;
@@ -22,5 +26,11 @@
 @property (nonatomic, copy) NSString *anchorName;
 /** 好友数据 */
 @property (nonatomic, strong) LSHangoutListItemObject *item;
+/** 是否使用链接跳转 */
+@property (nonatomic, assign) BOOL useUrlHandler;
+/** 代理 */
+@property (nonatomic, weak) id<HangoutDialogViewControllerDelegate> dialogDelegate;
+@property (weak, nonatomic) IBOutlet UIView *anchorContentView;
+
 - (void)showhangoutView;
 @end

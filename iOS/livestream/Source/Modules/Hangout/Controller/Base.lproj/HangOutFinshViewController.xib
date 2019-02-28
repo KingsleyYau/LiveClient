@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HangOutFinshViewController">
             <connections>
                 <outlet property="addCreditBtn" destination="1Nq-FC-Thh" id="c7x-8b-LIR"/>
-                <outlet property="headImageView" destination="b43-QK-FoU" id="vL9-zx-2ta"/>
+                <outlet property="collectionView" destination="fnY-FX-LAO" id="VFL-if-bFW"/>
+                <outlet property="collectionViewWidth" destination="voY-wh-13b" id="DUu-Mg-M6I"/>
                 <outlet property="startAgainBtn" destination="sNF-iS-2gd" id="HD1-Hu-U5i"/>
                 <outlet property="tipLabel" destination="j8E-R2-Dw5" id="KJi-WO-qJq"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -24,28 +25,32 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b43-QK-FoU">
-                    <rect key="frame" x="125.5" y="102" width="123" height="123"/>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fnY-FX-LAO">
+                    <rect key="frame" x="137" y="150" width="100" height="110"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="b43-QK-FoU" secondAttribute="height" multiplier="1:1" id="W8I-ys-Wq5"/>
-                        <constraint firstAttribute="height" constant="123" id="kVE-zk-WGb"/>
+                        <constraint firstAttribute="height" constant="110" id="ZJ3-Xt-qvS"/>
+                        <constraint firstAttribute="width" constant="100" id="voY-wh-13b"/>
                     </constraints>
-                </imageView>
+                    <collectionViewLayout key="collectionViewLayout" id="Bd0-mh-QZl" customClass="HangoutAnchorLayout"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="I6i-I9-q1F"/>
+                        <outlet property="delegate" destination="-1" id="M0X-8g-3Tg"/>
+                    </connections>
+                </collectionView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tip" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8E-R2-Dw5">
-                    <rect key="frame" x="20" y="289" width="335" height="16"/>
+                    <rect key="frame" x="20" y="290" width="335" height="16"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sNF-iS-2gd" userLabel="Start Again Button">
-                    <rect key="frame" x="98" y="338" width="178" height="35"/>
-                    <color key="backgroundColor" red="0.019607843140000001" green="0.78039215689999997" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sNF-iS-2gd" userLabel="Start Again Button">
+                    <rect key="frame" x="20" y="339" width="335" height="44"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="178" id="LkI-A6-g9b"/>
-                        <constraint firstAttribute="height" constant="35" id="a5E-4K-Ng7"/>
+                        <constraint firstAttribute="height" constant="44" id="9zi-Bb-0zE"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                    <state key="normal" title="Start Hang-Out Again">
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                    <state key="normal" title="Start Hang-Out Again" image="HangoutList_banner_hangoutIcon" backgroundImage="Live_Line_Icon">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
@@ -53,13 +58,9 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Nq-FC-Thh" userLabel="Add Credit Button">
-                    <rect key="frame" x="122" y="338" width="131" height="35"/>
+                    <rect key="frame" x="20" y="339" width="335" height="44"/>
                     <color key="backgroundColor" red="1" green="0.4431372549" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="35" id="DHW-kW-DEy"/>
-                        <constraint firstAttribute="width" constant="131" id="M8f-qc-QkS"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <state key="normal" title="Add Credit">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
@@ -81,15 +82,20 @@
             </subviews>
             <color key="backgroundColor" red="0.25490196078431371" green="0.25490196078431371" blue="0.25490196078431371" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="b43-QK-FoU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="102" id="1o5-7o-F8p"/>
-                <constraint firstItem="j8E-R2-Dw5" firstAttribute="top" secondItem="b43-QK-FoU" secondAttribute="bottom" constant="64" id="8U4-6l-Ldv"/>
+                <constraint firstItem="1Nq-FC-Thh" firstAttribute="trailing" secondItem="sNF-iS-2gd" secondAttribute="trailing" id="4d7-vl-Hht"/>
+                <constraint firstItem="1Nq-FC-Thh" firstAttribute="height" secondItem="sNF-iS-2gd" secondAttribute="height" id="9kc-ug-VGu"/>
                 <constraint firstAttribute="trailing" secondItem="j8E-R2-Dw5" secondAttribute="trailing" constant="20" id="IB8-G7-OAf"/>
                 <constraint firstItem="dN2-bZ-UsY" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="25" id="OwC-Oa-OZY"/>
+                <constraint firstItem="1Nq-FC-Thh" firstAttribute="leading" secondItem="sNF-iS-2gd" secondAttribute="leading" id="Pni-lt-Pph"/>
                 <constraint firstItem="1Nq-FC-Thh" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="SUa-gK-AOB"/>
                 <constraint firstItem="j8E-R2-Dw5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Zif-XH-eiy"/>
-                <constraint firstItem="b43-QK-FoU" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="a2a-uW-1pd"/>
+                <constraint firstItem="sNF-iS-2gd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="a6c-BI-m7d"/>
                 <constraint firstItem="j8E-R2-Dw5" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="aet-tg-pUk"/>
+                <constraint firstItem="fnY-FX-LAO" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="cTE-Rf-9An"/>
                 <constraint firstItem="sNF-iS-2gd" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="cye-ih-RrN"/>
+                <constraint firstAttribute="trailing" secondItem="sNF-iS-2gd" secondAttribute="trailing" constant="20" id="hXg-79-Tdc"/>
+                <constraint firstItem="j8E-R2-Dw5" firstAttribute="top" secondItem="fnY-FX-LAO" secondAttribute="bottom" constant="30" id="mim-C7-qQy"/>
+                <constraint firstItem="fnY-FX-LAO" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="150" id="n2b-6j-F0y"/>
                 <constraint firstAttribute="trailing" secondItem="dN2-bZ-UsY" secondAttribute="trailing" constant="20" id="ppg-J4-HW1"/>
                 <constraint firstItem="sNF-iS-2gd" firstAttribute="top" secondItem="j8E-R2-Dw5" secondAttribute="bottom" constant="33" id="vfP-1e-poq"/>
                 <constraint firstItem="1Nq-FC-Thh" firstAttribute="top" secondItem="j8E-R2-Dw5" secondAttribute="bottom" constant="33" id="zD9-BB-fvW"/>
@@ -97,6 +103,8 @@
         </view>
     </objects>
     <resources>
+        <image name="HangoutList_banner_hangoutIcon" width="27" height="27"/>
+        <image name="Live_Line_Icon" width="3" height="3"/>
         <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
     </resources>
 </document>

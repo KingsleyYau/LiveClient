@@ -485,17 +485,20 @@
     self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s",self.liveRoom.userName];
     
     // TODO:刷新女士头像
-    [self.ladyImageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.ladyImageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     
     // TODO:刷新亲密度男士头像
     WeakObject(self, weakSelf);
     [[LSUserInfoManager manager] getUserInfo:self.loginManager.loginItem.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.intimacyManImageViewLoader refreshCachedImage:weakSelf.intimacyManImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+            [weakSelf.intimacyManImageViewLoader refreshCachedImage:weakSelf.intimacyManImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+            }];
         });
     }];
     // TODO:刷新亲密度女士头像
-    [self.intimacyLadyImageViewLoader refreshCachedImage:self.intimacyLadyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.intimacyLadyImageViewLoader refreshCachedImage:self.intimacyLadyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     // TODO:刷新亲密度
     NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d", self.liveRoom.imLiveRoom.loveLevel];
     UIImage *image = [UIImage imageNamed:imageName];

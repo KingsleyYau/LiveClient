@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 //- (void)tableView:(HotTableView *)tableView didShowItem:(LiveRoomInfoItemObject *)item;
 - (void)tableView:(LSHangoutTableView *)tableView didShowItem:(NSIndexPath *)index;
 - (void)tableView:(LSHangoutTableView *)tableView didClickHangout:(LSHangoutListItemObject *)item;
+- (void)tableView:(LSHangoutTableView *)tableView didClickHangoutFriendCardMsg:(LSFriendsInfoItemObject *)item;
 @end
 
 @interface LSHangoutTableView : UITableView<UITableViewDataSource, UITableViewDelegate>

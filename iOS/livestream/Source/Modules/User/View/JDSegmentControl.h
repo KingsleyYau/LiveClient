@@ -22,7 +22,6 @@
 
 @property (nonatomic, strong) UIColor * textNormalColor;
 
-
 + (CGFloat)getSegmentControlW:(NSArray *)titles;
 
 - (void)selectButtonTag:(NSInteger)tag;

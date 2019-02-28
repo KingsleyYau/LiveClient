@@ -66,7 +66,8 @@
     self.headImageView.layer.cornerRadius = 49;
     self.headImageView.layer.masksToBounds = YES;
 
-    [self.ladyImageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.ladyImageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
 
     [self.backgroundImageloader loadImageWithImageView:self.backgroundImageView
                                                options:0
@@ -264,7 +265,8 @@
     [cell.imageViewLoader refreshCachedImage:cell.imageView
                                      options:SDWebImageRefreshCached
                                     imageUrl:item.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                            }];
 
     cell.nameLabel.text = item.nickName;
 

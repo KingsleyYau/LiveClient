@@ -26,10 +26,10 @@ static const int HTTPErrorTypeArray[] = {
     // 客户端定义的错误
     HTTP_LCC_ERR_PROTOCOLFAIL,       // 协议解析失败（服务器返回的格式不正确）
     HTTP_LCC_ERR_CONNECTFAIL,        // 连接服务器失败/断开连接
-    HTTP_LCC_ERR_CHECKVERFAIL,       // 检测版本号失败（可能由于版本过低导致）
-    
-    HTTP_LCC_ERR_SVRBREAK,           // 服务器踢下线
-    HTTP_LCC_ERR_INVITE_TIMEOUT,     // 邀请超时
+//    HTTP_LCC_ERR_CHECKVERFAIL,       // 检测版本号失败（可能由于版本过低导致）
+//
+//    HTTP_LCC_ERR_SVRBREAK,           // 服务器踢下线
+//    HTTP_LCC_ERR_INVITE_TIMEOUT,     // 邀请超时
     
     // 服务器返回错误
     HTTP_LCC_ERR_ROOM_FULL,           // 房间人满
@@ -2723,6 +2723,7 @@ public:
         anchorItem.anchorType = userItem.anchorInfo.anchorType;
         anchorItem.isLive = userItem.anchorInfo.isLive;
         anchorItem.introduction = [NSString stringWithUTF8String:userItem.anchorInfo.introduction.c_str()];
+        anchorItem.roomPhotoUrl = [NSString stringWithUTF8String:userItem.anchorInfo.roomPhotoUrl.c_str()];
         item.anchorInfo = anchorItem;
         
         GetUserInfoFinishHandler handler = nil;
@@ -3545,6 +3546,7 @@ public:
             item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
+            item.avatarImg = [NSString stringWithUTF8String:(*iter).avatarImg.c_str()];
             item.age = (*iter).age;
             item.country = [NSString stringWithUTF8String:(*iter).country.c_str()];
             item.onlineStatus = (*iter).onlineStatus;

@@ -35,7 +35,9 @@
         self.hangoutBtnWidth.constant = DESGIN_TRANSFORM_3X(self.hangoutBtnWidth.constant);
     }
     self.hangoutBtn.layer.cornerRadius = self.hangoutBtn.frame.size.height / 2;
+    self.hangoutBtn.layer.masksToBounds = YES;
     self.openBtn.layer.cornerRadius = self.openBtn.frame.size.height / 2;
+    self.hangoutBtn.layer.masksToBounds = YES;
     self.layer.cornerRadius = 5;
     self.layer.masksToBounds = YES;
 }
@@ -55,7 +57,8 @@
 - (void)updataChatMessage:(MsgItem *)item {
     self.msgItem = item;
     if (item.msgType == MsgType_Knock) {
-        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:item.knockItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"]];
+        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:item.knockItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
+        }];
         self.nameLabel.text = item.knockItem.nickName;
         self.ageLabel.text = [NSString stringWithFormat:@"%dyrs / ",item.knockItem.age];
         self.countryLabel.text = item.knockItem.country;
@@ -63,7 +66,8 @@
         self.openBtn.hidden = NO;
         
     } else if (item.msgType == MsgType_Recommend) {
-        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:item.recommendItem.friendPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"]];
+        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:item.recommendItem.friendPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
+        }];
         self.nameLabel.text = item.recommendItem.friendNickName;
         self.ageLabel.text = [NSString stringWithFormat:@"%dyrs / ",item.recommendItem.friendAge];
         self.countryLabel.text = item.recommendItem.friendCountry;

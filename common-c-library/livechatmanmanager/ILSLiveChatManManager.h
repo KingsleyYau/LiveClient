@@ -13,6 +13,7 @@
 #include <manrequesthandler/LSLiveChatRequestLiveChatDefine.h>
 #include <manrequesthandler/item/LSLCOther.h>
 #include <manrequesthandler/item/LSLCMagicIconConfig.h>
+#include "LSLCAutoInviteItem.h"
 
 class ILSLiveChatManManagerListener
 {

@@ -14,6 +14,9 @@
 #import "LiveUrlHandler.h"
 #import "LiveModule.h"
 #import "AnchorPersonalViewController.h"
+#import "LSShadowView.h"
+#import "LSAnchorCardViewController.h"
+
 
 @interface HangoutDialogViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property (strong, nonatomic) UIVisualEffectView *effectView;
@@ -27,29 +30,55 @@
 
 /** 好友列表 */
 @property (nonatomic, strong) NSArray<LSHangoutAnchorItemObject *> *friendArray;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivity;
+@property (weak, nonatomic) IBOutlet UIButton *retryBtn;
 
 @end
 
 @implementation HangoutDialogViewController
 
+- (LSHangoutListItemObject *)item {
+    if (_item == nil) {
+        _item = [[LSHangoutListItemObject alloc] init];
+    }
+    
+    return _item;
+}
+
+- (void)initCustomParam {
+    [super initCustomParam];
+    self.useUrlHandler = YES;
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //    self.item = [[LSHangoutListItemObject alloc] init];
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     //    // Do any additional setup after loading the view from its nib.
-    //    self.hangOutNowBtn.layer.cornerRadius = self.hangOutNowBtn.frame.size.height / 2;
-    //    self.hangOutNowBtn.layer.masksToBounds = YES;
-    //    self.bgView.layer.cornerRadius = 5;
-    //    self.bgView.layer.masksToBounds = YES;
-    //
+    
+    self.hangOutNowBtn.layer.cornerRadius = self.hangOutNowBtn.frame.size.height / 2.0f;
+    self.hangOutNowBtn.layer.masksToBounds = YES;
+    LSShadowView *shadow = [[LSShadowView alloc] init];
+    [shadow showShadowAddView:self.hangOutNowBtn];
+    
+    
     self.anchorImageView.layer.cornerRadius = self.anchorImageView.frame.size.width * 0.5;
     self.anchorImageView.layer.masksToBounds = YES;
+    
+    self.anchorImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.anchorImageView.layer.borderWidth = 2.0f;
+    
     self.friendView.dataSource = self;
     self.friendView.delegate = self;
+    self.friendView.layer.cornerRadius = 4.0f;
+    self.friendView.layer.masksToBounds = YES;
+    self.friendView.contentInset = UIEdgeInsetsMake(0, 14, 0, 0);
+    self.friendView.delaysContentTouches = NO;
     
     UINib *nib = [UINib nibWithNibName:@"LSHangoutFriendCollectionViewCell" bundle:[LiveBundle mainBundle] ];
     [self.friendView registerNib:nib forCellWithReuseIdentifier:[LSHangoutFriendCollectionViewCell cellIdentifier]];
-
+    
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideView)];
     self.dismissSpaceView.userInteractionEnabled = YES;
     [self.dismissSpaceView addGestureRecognizer:tap];
@@ -57,10 +86,21 @@
     UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToHideView:)];
     [swipe setDirection:UISwipeGestureRecognizerDirectionDown];
     [self.dismissSpaceView addGestureRecognizer:swipe];
-    UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    
+    self.anchorContentView.userInteractionEnabled = YES;
+    [self.anchorContentView addGestureRecognizer:swipe];
+    
+    UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     self.effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-    self.effectView.frame = self.bgImageView.bounds;
+    CGRect frame = self.bgImageView.bounds;
+    frame.size.width = screenSize.width;
+    self.effectView.frame = frame;
     [self.bgImageView addSubview:self.effectView];
+    [self.bgImageView sendSubviewToBack:self.effectView];
+    
+    LSShadowView *shadow1 = [[LSShadowView alloc] init];
+    [shadow1 showShadowAddView:self.anchorContentView];
+    
     
     [self reloadPersonBaseMsg];
 }
@@ -72,11 +112,10 @@
 
 - (void)hideView {
     [UIView animateWithDuration:0.3 animations:^{
-        //        self.topDistance.constant = screenSize.height;
+        self.view.frame = CGRectMake(0, screenSize.height, screenSize.width, screenSize.height);
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.3 animations:^{
-            self.view.frame = CGRectMake(0, screenSize.height, screenSize.width, screenSize.height);
-        }];
+        [self.view  removeFromSuperview];
+        [self removeFromParentViewController];
     }];
 }
 
@@ -90,12 +129,6 @@
     
 }
 
-//- (void)reloadView {
-//    [self getUserInfo];
-//
-//}
-
-
 - (void)getUserInfo {
     [[LSUserInfoManager manager] getUserInfo:self.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -103,6 +136,7 @@
             self.item.anchorId = self.anchorId;
             self.item.avatarImg = item.photoUrl;
             [self reloadPersonBaseMsg];
+            [self loadAchorImage];
         });
     }];
 }
@@ -112,35 +146,44 @@
     NSMutableAttributedString *attrbuteStr = [[NSMutableAttributedString alloc] initWithString:hangout];
     NSRange nameRange = [hangout rangeOfString:self.anchorName];
     [attrbuteStr addAttributes:@{
-                                 NSFontAttributeName : [UIFont systemFontOfSize:16],
-                                 NSForegroundColorAttributeName : [UIColor orangeColor]
+                                 NSFontAttributeName : [UIFont boldSystemFontOfSize:16],
+                                 NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0xFFAA00)
                                  } range:nameRange];
     self.anchorInviteTips.attributedText = attrbuteStr;
     
     self.anchorNameFriend.text = [NSString stringWithFormat:@"%@'s Friend",self.anchorName];
-    self.inviteHangoutTips.text = [NSString stringWithFormat:@"Once you enter %@’s live video Hang-out room, you will see more information about her friends and be able to invite them to hang out together.",self.anchorName];
+    NSString *exceedName = @"";
+    if (self.anchorName.length > 12) {
+        exceedName = [NSString stringWithFormat:@"%@...%@",[self.anchorName substringToIndex:3],[self.anchorName substringFromIndex:self.anchorName.length - 3]];
+    }else {
+        exceedName = self.anchorName;
+    }
     
+    self.inviteHangoutTips.text = [NSString stringWithFormat:@"Click Start buton below, you will first enter %@'s Hang-out room. Then, through your or %@'s invitation, %@'s friends will join the Hang-out.",exceedName,exceedName,exceedName];
+
+}
+
+- (void)loadAchorImage {
     LSImageViewLoader *loader =  [LSImageViewLoader loader];
     WeakObject(self, weakSelf);
-    [loader sdWebImageLoadView:self.anchorImageView options:SDWebImageRefreshCached imageUrl:self.item.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-        
+    [loader refreshCachedImage:self.anchorImageView options:SDWebImageRefreshCached imageUrl:self.item.avatarImg  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (image) {
                 weakSelf.bgImageView.image = image;
             }
         });
     }];
-    
 }
 
 
 - (void)reloadFriendView {
     
     //    // TODO:刷新推荐列表
-    self.friendViewWidth.constant = [LSHangoutFriendCollectionViewCell cellWidth] * self.friendArray.count + ((self.friendArray.count - 1) * 20 + 10);
+    self.friendViewWidth.constant = [LSHangoutFriendCollectionViewCell cellWidth] * self.friendArray.count + ((self.friendArray.count + 1) * 14);
     //
-    if (self.friendViewWidth.constant > screenSize.width * 0.9) {
-        self.friendViewWidth.constant = screenSize.width * 0.9;
+    if (self.friendViewWidth.constant > screenSize.width - 22) {
+        self.friendViewWidth.constant = screenSize.width - 22;
+        self.friendView.contentInset = UIEdgeInsetsMake(0, 7, 0, 7);
     }
     [self.friendView reloadData];
 }
@@ -149,13 +192,17 @@
     LSSessionRequestManager *sessionManager = [LSSessionRequestManager manager];
     BOOL bflag = NO;
     LSGetHangoutFriendsRequest *request = [[LSGetHangoutFriendsRequest alloc] init];
-    request.anchorId = self.item.anchorId;
+    request.anchorId = self.anchorId;
+    self.loadingActivity.hidden = NO;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *anchorId, NSArray<LSHangoutAnchorItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"HangoutDialogViewController::getFriendList( [获取好友列表], arrayCount : %ld ,success : %@ errmsg : %@)", (long)array.count,BOOL2YES(success), errmsg);
+            self.loadingActivity.hidden = YES;
             if (success) {
                 self.friendArray = array;
                 [self reloadFriendView];
-                
+            }else {
+                self.retryBtn.hidden = NO;
             }
         });
     };
@@ -184,12 +231,11 @@
         cell.onlineWidth.constant = 0;
         cell.onlineView.hidden = YES;
     }
-    cell.imageView.image = nil;
     [cell.imageViewLoader stop];
     [cell.imageViewLoader loadImageWithImageView:cell.imageView
                                          options:0
-                                        imageUrl:item.photoUrl
-                                placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                                        imageUrl:item.avatarImg
+                                placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"]];
     
     
     return cell;
@@ -197,11 +243,33 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     LSHangoutAnchorItemObject *item = [self.friendArray objectAtIndex:indexPath.row];
-    AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
-    vc.anchorId = item.anchorId;
-//    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
-    [self.navigationController pushViewController:vc animated:YES];
+    LSAnchorCardViewController *vc = [[LSAnchorCardViewController alloc] initWithNibName:nil bundle:nil];
+    vc.anchorPhotourl = item.avatarImg;
+    vc.userId = item.anchorId;
+    vc.nickName = item.nickName;
+    [vc showAnchorCardView];
 }
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    LSHangoutFriendCollectionViewCell *cell = (LSHangoutFriendCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.layer.borderColor = [UIColor clearColor].CGColor;
+}
+
+//当cell高亮时返回是否高亮
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)colView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell* cell = [colView cellForItemAtIndexPath:indexPath];
+    cell.layer.borderColor = COLOR_WITH_16BAND_RGB(0xFF6D00).CGColor;
+}
+
+- (void)collectionView:(UICollectionView *)colView  didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell* cell = [colView cellForItemAtIndexPath:indexPath];
+    cell.layer.borderColor = [UIColor clearColor].CGColor;
+}
+
 
 - (void)showhangoutView {
     [self getUserInfo];
@@ -215,5 +283,36 @@
     }];
 }
 
+- (IBAction)hangoutBtnAction:(id)sender {
+    [[LiveModule module].analyticsManager reportActionEvent:InviteHangOut eventCategory:EventCategoryBroadcast];
+    [self.view  removeFromSuperview];
+    [self removeFromParentViewController];
+    if (self.useUrlHandler) {
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:self.item.anchorId anchorName:self.item.nickName hangoutAnchorId:@"" hangoutAnchorName:@""];
+        [[LiveModule module].serviceManager handleOpenURL:url];
+    }else {
+        if ([self.dialogDelegate respondsToSelector:@selector(hangoutDialogViewController:didClickHangoutBtn:)]) {
+            [self.dialogDelegate hangoutDialogViewController:self didClickHangoutBtn:sender];
+        }
+    }
+    
+}
+- (IBAction)retryAction:(id)sender {
+    self.retryBtn.hidden = YES;
+    [self getFriendList];
+}
 
+// 添加颜色渐变动画
+- (CABasicAnimation *)addBorderAnimation {
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"borderColor"];
+    animation.fromValue = (id)[UIColor clearColor].CGColor;
+    animation.toValue = (id)COLOR_WITH_16BAND_RGB(0xFF6D00).CGColor;
+    animation.autoreverses = YES;
+    animation.duration = 0.3;
+    animation.repeatCount = 1;
+    animation.removedOnCompletion = YES;
+    animation.fillMode = kCAFillModeForwards;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    return animation;
+}
 @end

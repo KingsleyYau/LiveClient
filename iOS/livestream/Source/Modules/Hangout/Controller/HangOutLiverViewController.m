@@ -118,6 +118,7 @@
     }
     
     [self stopPlay];
+    self.player = nil;
 }
 
 - (void)initCustomParam {
@@ -313,12 +314,6 @@
 - (void)stopPlay {
     NSLog(@"HangOutLiverViewController::stopPlay()");
     [self.player stop];
-}
-
-- (void)resetPlayer {
-    NSLog(@"HangOutLiverViewController::resetPlayer()");
-    [self.player stop];
-    self.player = nil;
 }
 
 - (void)setThePlayMute:(BOOL)isMute {
@@ -619,7 +614,18 @@
     [self playTipIconAnimation];
     self.tipMessageLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITING_ANCHOR"),self.liveRoom.userName];
     
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    if (!self.liveRoom.photoUrl.length) {
+        [self.userInfoManager getUserInfo:self.anchorItem.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            self.liveRoom.photoUrl = item.photoUrl;
+            [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                
+            }];
+        }];
+    } else {
+        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+            
+        }];
+    }
 }
 
 // 开门请求成功 等待服务器返回
@@ -639,11 +645,24 @@
     [self playTipIconAnimation];
     self.tipMessageLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ANCHOR_IS_COMING"),self.liveRoom.userName];
     
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    if (!self.liveRoom.photoUrl.length) {
+        [self.userInfoManager getUserInfo:self.anchorItem.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            self.liveRoom.photoUrl = item.photoUrl;
+            [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                
+            }];
+        }];
+    } else {
+        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+            
+        }];
+    }
 }
 
 // 主播正在从其他直播间进入
 - (void)showAnchorEnterCountdown:(NSInteger)sec {
+    self.liveType = LIVETYPE_COUNTDOWN;
+    self.tipMessageViewTop.constant = 16;
     self.tipMessageView.hidden = NO;
     self.headImageView.hidden = NO;
     self.maskView.hidden = NO;
@@ -656,7 +675,16 @@
     self.tipIconViewWidth.constant = 0;
     [self.tipIconView stopAnimating];
     
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    if (!self.liveRoom.photoUrl.length) {
+        [self.userInfoManager getUserInfo:self.anchorItem.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            self.liveRoom.photoUrl = item.photoUrl;
+            [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+            }];
+        }];
+    } else {
+        [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        }];
+    }
     
     self.timeOut = sec;
     WeakObject(self, weakSelf);
@@ -671,19 +699,17 @@
 - (void)showAnchorLoading {
     self.sendGiftManager.toUid = self.liveRoom.userId;
     
-    self.videoLoadingView.hidden = NO;
     self.nameShadowView.hidden = NO;
     self.nameLabel.hidden = NO;
     self.giftCountView.hidden = NO;
     self.nameLabel.text = self.liveRoom.userName;
     
+    self.videoLoadingView.hidden = YES;
     self.tipMessageView.hidden = YES;
     self.headImageView.hidden = YES;
     self.cancelButton.hidden = YES;
     self.inviteButton.hidden = YES;
     self.maskView.hidden = YES;
-    // 播流
-    [self play];
 }
 
 // 进入直播间状态界面
@@ -715,6 +741,14 @@
             
         case LIVEANCHORSTATUS_ONLINE:{
             self.liveType = LIVETYPE_ONLIVRROOM;
+            // 在线
+            [self showAnchorLoading];
+            // 播流
+            [self play];
+        }break;
+        
+        case LIVEANCHORSTATUS_UNKNOW:{
+            self.liveType = LIVETYPE_INVITING;
             // 在线
             [self showAnchorLoading];
         }break;
@@ -780,6 +814,8 @@
         self.timeOut = 0;
         // 显示正在加载视频
         [self showAnchorLoading];
+        // 播流
+        [self play];
     }
 }
 
@@ -928,7 +964,8 @@
         if (!self.liveRoom.photoUrl.length) {
             [self.userInfoManager getUserInfo:anchorItem.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                 self.liveRoom.photoUrl = item.photoUrl;
-                [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                }];
             }];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1127,6 +1164,8 @@
             
             // 主播加载视频中
             [self showAnchorLoading];
+            // 播流
+            [self play];
         });
     }
 }

@@ -20,6 +20,8 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.shadowColor = [UIColor blackColor];
+        self.shadowOpacity = 0.3;
+        self.shadowRadius = 3;
     }
     return self;
 }
@@ -35,8 +37,9 @@
     
     self.layer.cornerRadius = view.layer.cornerRadius;
     self.layer.shadowColor = self.shadowColor.CGColor;
-    self.layer.shadowOffset = CGSizeMake(0, 1);
-    self.layer.shadowOpacity = 0.3;
+    self.layer.shadowOffset = CGSizeMake(0, 0);
+    self.layer.shadowOpacity = self.shadowOpacity;
+    self.layer.shadowRadius = self.shadowRadius;
     
      [self.radiusView addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:nil];
 }

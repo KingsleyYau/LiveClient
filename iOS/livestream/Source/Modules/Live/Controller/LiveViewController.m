@@ -43,7 +43,7 @@
 #import "DialogChoose.h"
 #import "DialogTip.h"
 #import "DialogWarning.h"
-
+#import "LSShadowView.h"
 #define RECORD_START @"!record=1!"
 #define RECORD_STOP @"!record=0!"
 
@@ -484,8 +484,21 @@
 - (void)hiddenStartOneView {
     // 默认隐藏邀请私密控件
     self.startOneViewHeigh.constant = 0;
+
+    self.startOneBtn.layer.cornerRadius = self.startOneBtn.tx_height/2;
+    self.startOneBtn.layer.masksToBounds = YES;
+    
+    self.startHangoutBtn.layer.cornerRadius = self.startHangoutBtn.tx_height/2;
+    self.startHangoutBtn.layer.masksToBounds = YES;
+    
+    LSShadowView * shadowView = [[LSShadowView alloc]init];
+    [shadowView showShadowAddView:self.startOneBtn];
+    
+    LSShadowView * shadowView1 = [[LSShadowView alloc]init];
+    [shadowView1 showShadowAddView:self.startHangoutBtn];
+    
     self.startOneBtn.hidden = YES;
-    self.showPublicTipBtn.hidden = YES;
+    self.startHangoutBtn.hidden = YES;
 }
 
 - (void)showRoomTipView:(NSString *)tip isReject:(BOOL)isReject {
@@ -531,16 +544,16 @@
     [[LiveUrlHandler shareInstance] handleOpenURL:url];
 }
 
-- (IBAction)showPublicTipAction:(id)sender {
-    if ([self.liveDelegate respondsToSelector:@selector(showHangoutTipView:)]) {
-        [self.liveDelegate showHangoutTipView:self];
-    }
-}
-
 - (IBAction)showRewardView:(id)sender {
     [[LiveModule module].analyticsManager reportActionEvent:VipBroadcastClickReward eventCategory:EventCategoryBroadcast];
     if ([self.liveDelegate respondsToSelector:@selector(bringRewardViewInTop:)]) {
         [self.liveDelegate bringRewardViewInTop:self];
+    }
+}
+
+- (IBAction)startHangoutBtnDid:(UIButton *)sender {
+    if ([self.liveDelegate respondsToSelector:@selector(showHangoutTipView:)]) {
+        [self.liveDelegate showHangoutTipView:self];
     }
 }
 
@@ -871,7 +884,8 @@
                         finishHandler:^(LSUserInfoModel *_Nonnull item) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 // 当前用户
-                                [weakSelf.headImageLoader refreshCachedImage:giftComboView.iconImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+                                [weakSelf.headImageLoader refreshCachedImage:giftComboView.iconImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+                                }];
                             });
                         }];
 
@@ -1033,7 +1047,8 @@
     [self.userInfoManager getUserInfo:bgItem.userId
                         finishHandler:^(LSUserInfoModel *_Nonnull item) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [weakSelf.headImageLoader refreshCachedImage:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+                                [weakSelf.headImageLoader refreshCachedImage:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+                                }];
                             });
                         }];
 
@@ -1574,7 +1589,7 @@
                                 if (weakSelf.isRecommend) {
                                     weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:weakSelf.liveRoom.userId hangoutAnchorName:weakSelf.liveRoom.userName];
                                 } else {
-                                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:nil hangoutAnchorName:nil];
+                                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:@"" hangoutAnchorName:@""];
                                 }
                             }
                         } break;
@@ -2201,7 +2216,7 @@
                 if (weakSelf.isRecommend) {
                     weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:weakSelf.liveRoom.userId hangoutAnchorName:weakSelf.liveRoom.userName];
                 } else {
-                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:nil hangoutAnchorName:nil];
+                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:@"" hangoutAnchorName:@""];
                 }
                 
             } break;

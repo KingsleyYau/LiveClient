@@ -7,7 +7,6 @@
 //
 
 #import "HotHeadViewCell.h"
-
 @interface HotHeadViewCell ()
 
 @end

@@ -122,6 +122,7 @@ LSLiveChatManManager::LSLiveChatManManager()
 	m_photoMgr = new LSLCPhotoManager;		// 图片管理器
 	m_videoMgr = new LSLCVideoManager;		// 视频管理器
     m_magicIconMgr = new LSLCMagicIconManager; //小高级表情管理器
+    m_autoInviteFilter = NULL; // 自动邀请过滤器
 
 	// 用户管理器
 	m_userMgr = new LSLCUserManager;			// 用户管理器
@@ -459,6 +460,12 @@ bool LSLiveChatManManager::Init(list<string> ipList
                                                                 );
         
         m_liveChatCamshareManager->SetMinCamshareBalance(minCamshareBalance);
+        
+        if (m_autoInviteFilter) {
+            delete m_autoInviteFilter;
+            m_autoInviteFilter = NULL;
+        }
+        m_autoInviteFilter = new LSLCAutoInviteFilter(this, m_client);
 
     }
     
@@ -724,6 +731,23 @@ void LSLiveChatManManager::SetUserOnlineStatusWithLccErrType(LSLCUserItem* userI
     else if (LSLIVECHAT_LCC_ERR_SIDEOFFLINE == errType) {
         SetUserOnlineStatus(userItem, USTATUS_OFFLINE_OR_HIDDEN);
     }
+}
+
+// 自动过滤器回调自动邀请消息到livechatmanmanager
+void LSLiveChatManManager::OnAutoInviteFilterCallback(LSLCAutoInviteItem* autoInviteItem, const string& message) {
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLiveChatManManager::OnAutoInviteFilterCallback(autoInviteItem : %p, message : %s, m_inviteMgr : %p) begin", autoInviteItem, message.c_str(), m_inviteMgr);
+    LSLCMessageItem* item = NULL;
+    //自动邀请过滤完成回调，插入自动邀请消息列表
+    if(m_inviteMgr != NULL){
+        m_inviteMgr->HandleAutoInviteMessage(m_msgIdBuilder.GetAndIncrement(), autoInviteItem, message);
+        item = m_inviteMgr->GetInviteMessage();
+    }
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLiveChatManManager::OnAutoInviteFilterCallback(m_listener : %p, item : %p)", m_listener, item);
+    // 回调
+    if (NULL != m_listener && NULL != item) {
+        m_listener->OnRecvMessage(item);
+    }
+        FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLiveChatManManager::OnAutoInviteFilterCallback(autoInviteItem : %p, message : %s, m_inviteMgr : %p) end", autoInviteItem, message.c_str(), m_inviteMgr);
 }
 
 // 是否自动重登录
@@ -1895,6 +1919,20 @@ bool LSLiveChatManManager::IsRecvInviteRisk(bool charge, TALK_MSG_TYPE msgType, 
     return result;
 }
 
+// 判断能不能接收邀请（ps：上面那个也有判断能不能接收邀请， 还包含聊天权限处理）这个是android处理，自动邀请也根据android
+bool LSLiveChatManManager::IsRecvMessageLimited(const string& userId) {
+    bool result = false;
+    // 添加用户到列表中（若列表中用户不存在）
+    LSLCUserItem* userItem = m_userMgr->GetUserItem(userId);
+    if (NULL != userItem) {
+        if (!IsHandleRecvOpt() && (userItem->m_chatType == LC_CHATTYPE_INVITE || userItem->m_chatType == LC_CHATTYPE_OTHER)) {
+            result = true;
+        }
+    }
+
+    return result;
+}
+
 // -------- 回调获取聊天列表处理 ---------
 // livechat的获取聊天列表处理
 void LSLiveChatManManager::OnGetTalkListLiveChatProc(const TalkListInfo& talkListInfo)
@@ -2764,6 +2802,9 @@ void LSLiveChatManManager::OnGetUserInfo(int seq, const string& inUserId, LSLIVE
             FileLog("LiveChatManager", "CamShareManager::OnGetUserInfo userName:%s, server:%s"
                     , userInfo.userName.c_str(), userInfo.server.c_str());
             m_myServer = userInfo.server;
+            if (m_autoInviteFilter) {
+                m_autoInviteFilter->OnGetUserInfoUpdate(userInfo);
+            }
         }
         else {
             // 若用户已经存在，则更新用户信息
@@ -2899,13 +2940,14 @@ void LSLiveChatManManager::OnRecvMessage(const string& toId, const string& fromI
     }
 
 	// 判断是否邀请消息
-	LSLCInviteManager::HandleInviteMsgType handleType = m_inviteMgr->IsToHandleInviteMsg(fromId, charge, msgType);
-	if (handleType == LSLCInviteManager::HANDLE) {
+	LSLCNormalInviteManager::HandleInviteMsgType handleType = m_inviteMgr->IsToHandleInviteMsg(fromId, charge, msgType);
+	if (handleType == LSLCNormalInviteManager::HANDLE) {
 		// 处理邀请消息
-		item = m_inviteMgr->HandleInviteMessage(m_msgIdBuilder, toId, fromId, fromName, inviteId, charge, ticket, msgType, message, inviteType);
+		m_inviteMgr->HandleInviteMessage(m_msgIdBuilder, toId, fromId, fromName, inviteId, charge, ticket, msgType, message, inviteType);
+        item = m_inviteMgr->GetInviteMessage();
         
 	}
-	else if (handleType == LSLCInviteManager::PASS) {
+	else if (handleType == LSLCNormalInviteManager::PASS) {
 		// 添加用户到列表中（若列表中用户不存在）
 		LSLCUserItem* userItem = m_userMgr->GetUserItem(fromId);
 		if (NULL == userItem) {
@@ -3354,6 +3396,26 @@ void LSLiveChatManManager::OnRecvMagicIcon(const string& toId, const string& fro
     
 }
 
+// 接收自动邀请消息，livchatmanmanager进行处理
+void LSLiveChatManManager::OnRecvAutoInviteMsg(const string& womanId, const string& manId, const string& key) {
+    FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvAutoInviteMsg(womanId : %s, manId : %s) begin", womanId.c_str(), manId.c_str());
+    // 判断是否有接收邀请风控
+    if (IsRecvMessageLimited(womanId)) {
+     FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvAutoInviteMsg(womanId : %s, manId : %s) is RecvMessageLimited end", womanId.c_str(), manId.c_str());
+        return;
+    }
+    // 联系人过滤
+    if (m_contactMgr->IsExist(womanId)) {
+      FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvAutoInviteMsg(womanId : %s, manId : %s) is IsExist contact end", womanId.c_str(), manId.c_str());
+        return;
+    }
+    // 条件过滤
+    if (m_autoInviteFilter != NULL) {
+        m_autoInviteFilter->FilterAutoInvite(womanId, manId, key);
+    }
+    FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvAutoInviteMsg(womanId : %s, manId : %s) end", womanId.c_str(), manId.c_str());
+}
+
 string LSLiveChatManManager::GetLogPath()
 {
 	return m_dirPath + LOG_DIR;
@@ -3534,6 +3596,7 @@ void LSLiveChatManManager::OnQueryChatRecordMutiple(long requestId, bool success
 
 
 
+
 void LSLiveChatManManager::OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg)
 {
 	LSLCMessageItem* item = m_photoMgr->GetAndRemoveRequestItem(requestId);
@@ -3702,6 +3765,18 @@ void LSLiveChatManManager::OnGetMagicIconConfig(long requestId, bool success, co
     }
     m_magicIconMgr->m_magicIconConfigReqId = HTTPREQUEST_INVALIDREQUESTID;
     FileLog("LiveChatManager", "LiveChatManager::OnGetMagicIconConfig() OnMagicIconCongig end");
+}
+
+void LSLiveChatManManager::OnUploadPopLadyAutoInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& userId, const string& msg, const string& key, const string& inviteId) {
+    if (err == LSLIVECHAT_LCC_ERR_SUCCESS && !userId.empty() && m_userMgr != NULL) {
+        // 添加用户到列表中（若列表中用户不存在）
+        LSLCUserItem* userItem = m_userMgr->GetUserItem(userId);
+        if (NULL == userItem) {
+            FileLog("LiveChatManager", "LiveChatManager::OnUploadPopLadyAutoInvite() fail, userId:%s", userId.c_str());
+            return;
+        }
+        userItem->m_inviteId = inviteId;
+    }
 }
 
 // ------------------- ILSLiveChatRequestOtherControllerCallback -------------------

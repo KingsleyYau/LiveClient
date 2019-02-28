@@ -31,40 +31,45 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
     // 填充固定分栏
-    NSMutableArray<JTSegmentItem *> *array = [NSMutableArray array];
-    JTSegmentItem *item = nil;
-    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Online")];
-    [array addObject:item];
-    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Following")];
-    [array addObject:item];
-    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Watched")];
-    [array addObject:item];
-    self.sliderFixArray = array;
+//    NSMutableArray<JTSegmentItem *> *array = [NSMutableArray array];
+//    JTSegmentItem *item = nil;
+//    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Online")];
+//    [array addObject:item];
+//    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Following")];
+//    [array addObject:item];
+//    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Watched")];
+//    [array addObject:item];
+//    self.sliderFixArray = array;
+//
+//    // 填充固定分页内容
+//    HangoutInviteTableViewController *vc0 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
+//    vc0.inviteType = HANGOUTANCHORLISTTYPE_ONLINEANCHOR;
+//    [self addChildViewController:vc0];
+//
+//    HangoutInviteTableViewController *vc1 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
+//    vc1.inviteType = HANGOUTANCHORLISTTYPE_FOLLOW;
+//    [self addChildViewController:vc1];
+//
+//    HangoutInviteTableViewController *vc2 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
+//    vc2.inviteType = HANGOUTANCHORLISTTYPE_WATCHED;
+//    [self addChildViewController:vc2];
+//
+//    self.vcFixArray = [NSArray arrayWithObjects:vc0, vc1, vc2, nil];
     
-    // 填充固定分页内容
-    HangoutInviteTableViewController *vc0 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-    vc0.inviteType = HANGOUTANCHORLISTTYPE_ONLINEANCHOR;
-    [self addChildViewController:vc0];
-    
-    HangoutInviteTableViewController *vc1 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-    vc1.inviteType = HANGOUTANCHORLISTTYPE_FOLLOW;
-    [self addChildViewController:vc1];
-    
-    HangoutInviteTableViewController *vc2 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-    vc2.inviteType = HANGOUTANCHORLISTTYPE_WATCHED;
-    [self addChildViewController:vc2];
-    
-    self.vcFixArray = [NSArray arrayWithObjects:vc0, vc1, vc2, nil];
-    
-    // 初始化分栏
-    [self setupSegment];
+    UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:effectView];
+    [self.view sendSubviewToBack:effectView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // 初始化分栏
+    [self setupSegment];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -80,16 +85,17 @@
 //    self.segment = [[JTSegmentControl alloc] initWithFrame:frame];
     self.segment = [[JTSegmentControl alloc] init];
     self.segment.frame = frame;
-    self.segment.sliderViewColor = COLOR_WITH_16BAND_RGB(0x05c775);
-    self.segment.font = [UIFont systemFontOfSize:12];
-    self.segment.selectedFont = [UIFont systemFontOfSize:12];
+    UIImage *image = [self gradientImageWithColors:@[COLOR_WITH_16BAND_RGB(0xFD5552), COLOR_WITH_16BAND_RGB(0xFF8700)] rect:CGRectMake(0, 0, SCREEN_WIDTH, 3)];
+    self.segment.sliderViewColor = [UIColor colorWithPatternImage:image];
+    self.segment.font = [UIFont systemFontOfSize:16];
+    self.segment.selectedFont = [UIFont systemFontOfSize:16];
     self.segment.itemTextColor = [UIColor blackColor];
     self.segment.itemBackgroundColor = [UIColor clearColor];
-    self.segment.itemSelectedTextColor = COLOR_WITH_16BAND_RGB(0x05c775);
+    self.segment.itemSelectedTextColor = COLOR_WITH_16BAND_RGB(0xff5756);
     self.segment.itemSelectedBackgroundColor = [UIColor clearColor];
     self.segment.bounces = YES;
-    self.segment.autoAdjustWidth = YES;
-//    self.segment.itemWidthCustom = 100;
+//    self.segment.autoAdjustWidth = YES;
+    self.segment.itemWidthCustom = self.segmentView.frame.size.width;
     self.segment.delegate = self;
     
     [self.segmentView addSubview:self.segment];
@@ -111,7 +117,6 @@
             
             // 填充好友分页内容
             HangoutInviteTableViewController *vc = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-            vc.inviteType = HANGOUTANCHORLISTTYPE_FRIEND;
             vc.anchorId = item.anchorId;
             [self addChildViewController:vc];
             [viewControllers addObject:vc];
@@ -174,6 +179,29 @@
         self.curIndex = index;
         [self.segment moveTo:index animated:YES];
     }
+}
+
+- (UIImage *)gradientImageWithColors:(NSArray *)colors rect:(CGRect)rect {
+    if (!colors.count || CGRectEqualToRect(rect, CGRectZero)) {
+        return nil;
+    }
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    
+    gradientLayer.frame = rect;
+    gradientLayer.startPoint = CGPointMake(0, 0);
+    gradientLayer.endPoint = CGPointMake(1, 0);
+    NSMutableArray *mutColors = [NSMutableArray arrayWithCapacity:colors.count];
+    for (UIColor *color in colors) {
+        [mutColors addObject:(__bridge id)color.CGColor];
+    }
+    gradientLayer.colors = [NSArray arrayWithArray:mutColors];
+    
+    UIGraphicsBeginImageContextWithOptions(gradientLayer.frame.size, gradientLayer.opaque, 0);
+    [gradientLayer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return outputImage;
 }
 
 @end

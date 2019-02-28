@@ -206,14 +206,14 @@ static LSImManager *imManager = nil;
                 // 断线重登陆
 
                 // 查询邀请状态
-                [self getInviteInfo:^(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg, ImInviteIdItemObject *Item, ImAuthorityItemObject *priv) {
+                [self getInviteInfo:^(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg, ImInviteIdItemObject *item, ImAuthorityItemObject *priv) {
                     if (success) {
                         // 成功获取到邀请状态
                         dispatch_async(dispatch_get_main_queue(), ^{
                             for (NSValue *value in self.delegates) {
                                 id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
                                 if ([delegate respondsToSelector:@selector(onRecvInviteReply:)]) {
-                                    [delegate onRecvInviteReply:Item];
+                                    [delegate onRecvInviteReply:item];
                                 }
                             }
                         });
@@ -697,7 +697,7 @@ static LSImManager *imManager = nil;
 
 #pragma mark - 视频互动
 - (BOOL)controlManPush:(NSString *)roomId control:(IMControlType)control finishHandler:(ControlManPushHandler)finishHandler {
-    NSLog(@"LSImManager::sendTalent( [发送视频互动], roomId : %@, control : %d )", roomId, control);
+    NSLog(@"LSImManager::controlManPush( [发送视频互动], roomId : %@, control : %d )", roomId, control);
     BOOL bFlag = NO;
 
     @synchronized(self) {
@@ -877,6 +877,10 @@ static LSImManager *imManager = nil;
             }
         }
     }
+    
+    // 修改全局直播间
+    [LiveGobalManager manager].liveRoom = nil;
+    
     return bFlag;
 }
 
@@ -893,7 +897,7 @@ static LSImManager *imManager = nil;
 }
 
 - (BOOL)sendHangoutGift:(NSString *)roomId nickName:(NSString *)nickName toUid:(NSString *)toUid giftId:(NSString *)giftId giftName:(NSString *)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate finishHandler:(SendHangoutGiftHandler)finishHandler {
-    NSLog(@"LSImManager::sendGift( [发送多人互动, 直播间礼物消息], roomId : %@, nickName : %@, giftId : %@ )", roomId, nickName, giftId);
+    NSLog(@"LSImManager::sendHangoutGift( [发送多人互动, 直播间礼物消息], roomId : %@, nickName : %@, giftId : %@ )", roomId, nickName, giftId);
     BOOL bFlag = NO;
 
     @synchronized(self) {

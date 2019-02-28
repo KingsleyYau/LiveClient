@@ -154,7 +154,8 @@ typedef enum : NSUInteger {
             NSLog(@"LSSendMailViewController::getLiverInfo( 获取用户信息回调 userId : %@, photoUrl : %@ nickName: %@)", item.userId, item.photoUrl,item.nickName);
             if (item.photoUrl.length > 0) {
                 weakSelf.photoUrl = item.photoUrl;
-                [[LSImageViewLoader loader] refreshCachedImage:weakSelf.headImage options:0 imageUrl:weakSelf.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                [[LSImageViewLoader loader] refreshCachedImage:weakSelf.headImage options:0 imageUrl:weakSelf.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                }];
             }
             self.onlineView.hidden = !item.isOnline;
         });

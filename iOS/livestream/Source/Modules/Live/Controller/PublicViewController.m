@@ -217,18 +217,50 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
 
-    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM || !self.liveRoom.priv.isHasOneOnOneAuth) {
+    //是否节目直播间
+    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
         // 隐藏立即私密邀请控件
         self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
     }
-    else
-    {
-        // 设置邀请私密按钮
-        self.playVC.liveVC.startOneViewHeigh.constant = 40;
-        self.playVC.liveVC.startOneBtn.hidden = NO;
-        self.playVC.liveVC.startOneView.hidden = NO;
-        self.playVC.liveVC.showPublicTipBtn.hidden = YES;
+    else {
+        //没有立即私密权限和多人互动权限
+        if (!self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.isHangoutRisk) {
+            // 隐藏立即私密邀请控件
+            self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+        }
+        //有立即私密权限，没有多人互动权限
+        else if (self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.isHangoutRisk) {
+            self.playVC.liveVC.startOneViewHeigh.constant = 40;
+            self.playVC.liveVC.startOneView.hidden = NO;
+            self.playVC.liveVC.startOneBtn.hidden = NO;
+            self.playVC.liveVC.startHangoutBtn.hidden = YES;
+            self.playVC.liveVC.startOneBtnX.constant = 0;
+        }
+        //没有立即私密权限，有多人互动权限
+        else if (!self.liveRoom.priv.isHasOneOnOneAuth && ![LSLoginManager manager].loginItem.isHangoutRisk) {
+            self.playVC.liveVC.startOneViewHeigh.constant = 40;
+            self.playVC.liveVC.startOneView.hidden = NO;
+            self.playVC.liveVC.startOneBtn.hidden = YES;
+            self.playVC.liveVC.startHangoutBtn.hidden = NO;
+            self.playVC.liveVC.startHangoutBtnX.constant = 0;
+        }
+        else {
+           //有立即私密权限，有多人互动权限，默认UI
+        }
     }
+    
+//    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM || !self.liveRoom.priv.isHasOneOnOneAuth) {
+//        // 隐藏立即私密邀请控件
+//        self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+//    }
+//    else
+//    {
+//        // 设置邀请私密按钮
+//        self.playVC.liveVC.startOneViewHeigh.constant = 40;
+//        self.playVC.liveVC.startOneBtn.hidden = NO;
+//        self.playVC.liveVC.startOneView.hidden = NO;
+//
+//    }
 
     //    self.playVC.chooseGiftListView.frame.origin = CGPointMake(self.playVC.chooseGiftListView.frame.origin.x, SCREEN_HEIGHT);
     // 立即私密按钮

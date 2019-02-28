@@ -48,6 +48,11 @@ typedef enum LiveStreamType {
 @property (nonatomic, assign) BOOL mute;
 
 /**
+ 自定义滤镜
+ */
+@property (strong) GPUImageFilter *customFilter;
+
+/**
  当前推送URL
  */
 @property (strong, readonly) NSString * _Nonnull url;

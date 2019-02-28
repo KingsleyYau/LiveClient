@@ -26,4 +26,14 @@ public interface ILSPublisherStatusCallback {
 	 * @param error 错误码
 	 */
 	public void onVideoCaptureError(LSPublisher publisher, int error);
+
+//	/***
+//	 * 录制到视频帧回调
+//	 * @param publisher 推流器
+//	 * @param data 数据
+//	 * @param size 数据大小
+//	 * @param width 图像宽
+//	 * @param height 图像高
+//	 */
+//	public void onVideoCapture(LSPublisher publisher, final byte[] data, int size, final int width, final int height);
 }

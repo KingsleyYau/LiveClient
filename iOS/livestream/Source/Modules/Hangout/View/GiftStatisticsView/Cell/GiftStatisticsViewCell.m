@@ -47,7 +47,7 @@
         self.giftNumView.hidden = NO;
     }
     if (num > 99) {
-        self.giftNumLabel.text = [NSString stringWithFormat:@"99+"];
+        self.giftNumLabel.text = [NSString stringWithFormat:@"..."];
     } else {
         self.giftNumLabel.text = [NSString stringWithFormat:@"%d",num];
     }

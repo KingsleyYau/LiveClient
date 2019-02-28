@@ -19,6 +19,7 @@
 #import "LSOutOfPoststampView.h"
 #import "DialogTip.h"
 #import "LSGreetingsDetailTableViewCell.h"
+#import "LSShadowView.h"
 
 #import "LSSessionRequestManager.h"
 #import "LSGetLoiDetailRequest.h"
@@ -151,9 +152,12 @@ typedef enum : NSUInteger {
     
     self.title = NSLocalizedStringFromSelf(@"TITLE");
     
+    // 系统返回按钮样式
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [backBtn addTarget:self action:@selector(backToAction:) forControlEvents:UIControlEventTouchUpInside];
     [backBtn setImage:[UIImage imageNamed:@"Navigation_Back_Button"] forState:UIControlStateNormal];
+    backBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [backBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 12, 0, 0)];
     backBtn.frame = CGRectMake(0, 0, 44, 44);
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
@@ -181,7 +185,8 @@ typedef enum : NSUInteger {
     self.wkWebView.scrollView.scrollEnabled = NO;
 
     // 头像
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     // 姓名
     self.fromeNameLabel.text = self.letterItem.anchorNickName;
     // 发信时间
@@ -256,6 +261,9 @@ typedef enum : NSUInteger {
     
     self.replySendBtn.layer.cornerRadius = 5;
     self.replySendBtn.layer.masksToBounds = YES;
+    
+    LSShadowView * shadowView = [[LSShadowView alloc]init];
+    [shadowView showShadowAddView:self.replySendBtn];
 }
 
 - (void)setupTextView {

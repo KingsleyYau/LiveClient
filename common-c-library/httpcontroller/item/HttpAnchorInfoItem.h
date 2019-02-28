@@ -41,6 +41,11 @@ public:
                 introduction = root[LIVEROOM_GETUSRRINFO_ANCHORINFO_INTRODUCTION].asString();
             }
             
+            /* roomPhotoUrl */
+            if( root[LIVEROOM_GETUSRRINFO_ANCHORINFO_ROOM_PHOTOURL].isString() ) {
+                roomPhotoUrl = root[LIVEROOM_GETUSRRINFO_ANCHORINFO_ROOM_PHOTOURL].asString();
+            }
+            
         }
 	}
 
@@ -49,6 +54,7 @@ public:
 		anchorType = ANCHORLEVELTYPE_UNKNOW;
 		isLive = false;
         introduction = "";
+        roomPhotoUrl = "";
 	}
 
 	virtual ~HttpAnchorInfoItem() {
@@ -60,11 +66,13 @@ public:
      * anchorType           主播类型
      * isLive               是否正在公开直播（0：否，1：是）
      * introduction         主播个人介绍
+     * roomPhotoUrl         主播封面
      */
 	string address;
 	AnchorLevelType anchorType;
     bool isLive;
     string introduction;
+    string roomPhotoUrl;
 };
 
 #endif /* HTTPANCHORINFOITEM_H_ */

@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LSShadowView : UIView
 @property (nonatomic, strong) UIColor * shadowColor;
+@property (nonatomic, assign) CGFloat shadowOpacity;
+@property (nonatomic, assign) CGFloat shadowRadius;
+
 - (void)showShadowAddView:(UIView*)view;
 @end
 

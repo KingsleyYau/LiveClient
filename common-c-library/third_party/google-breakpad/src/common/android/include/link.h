@@ -39,6 +39,8 @@
 #if !defined(__aarch64__) && !defined(__x86_64__) && \
     !(defined(__mips__) && _MIPS_SIM == _ABI64)
 
+#if !defined(_ANDROID_NDK_VERSION) || (_ANDROID_NDK_VERSION < 16)
+
 #ifdef __cplusplus
 extern "C" {
 #endif  // __cplusplus
@@ -65,6 +67,8 @@ struct link_map {
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus
+
+#endif	// _ANDROID_NDK_VERSION
 
 #endif  // !defined(__aarch64__) && !defined(__x86_64__)
 

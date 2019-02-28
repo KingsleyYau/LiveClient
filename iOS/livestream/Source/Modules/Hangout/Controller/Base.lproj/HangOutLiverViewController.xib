@@ -14,6 +14,7 @@
             <connections>
                 <outlet property="cancelButton" destination="DE4-h7-yHK" id="rpP-uD-a49"/>
                 <outlet property="comboGiftView" destination="Fao-PN-lS8" id="TK4-H3-yPh"/>
+                <outlet property="firstIcon" destination="OX9-Ui-efh" id="F6Q-W6-GdO"/>
                 <outlet property="giftCountView" destination="4rb-PB-Qyw" id="qWx-Wc-5ae"/>
                 <outlet property="giftCountViewWidth" destination="ard-kb-xbS" id="DiK-Gh-RVU"/>
                 <outlet property="headImageView" destination="xLr-pH-5ki" id="Nmd-Q3-0hk"/>
@@ -45,7 +46,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" red="0.25490196078431371" green="0.25490196078431371" blue="0.25490196078431371" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Loading_Video_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="3mp-AT-AQW" userLabel="Video Loading View">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Loading_Video_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="3mp-AT-AQW" userLabel="Video Loading View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rb-PB-Qyw" userLabel="Gift Count View" customClass="GiftStatisticsView">
@@ -67,38 +68,38 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="51"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FLY-A2-Npi" userLabel="Anchor Name Label">
-                    <rect key="frame" x="5" y="5" width="365" height="14.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <rect key="frame" x="5" y="5" width="325" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjf-rb-4cd" userLabel="Invite Button">
-                    <rect key="frame" x="167" y="498.5" width="41" height="41"/>
+                    <rect key="frame" x="170" y="493.5" width="35" height="35"/>
                     <state key="normal" image="Live_Invite_HangOut"/>
                     <connections>
                         <action selector="inviteAction:" destination="-1" eventType="touchUpInside" id="5Uv-VC-oaJ"/>
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="xLr-pH-5ki" userLabel="Liver Head View">
-                    <rect key="frame" x="145" y="498.5" width="85" height="85"/>
+                    <rect key="frame" x="145" y="493.5" width="85" height="85"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="xLr-pH-5ki" secondAttribute="height" multiplier="1:1" id="bb8-sH-ray"/>
                         <constraint firstAttribute="width" constant="85" id="shz-Yv-RXN"/>
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6fA-Vg-Tua" userLabel="Tip Message View">
-                    <rect key="frame" x="132" y="599.5" width="111" height="14.5"/>
+                    <rect key="frame" x="119.5" y="594.5" width="137" height="19.5"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Liver_Invite_To_1" translatesAutoresizingMaskIntoConstraints="NO" id="BDa-Qj-BrH" userLabel="Tip Icon Image View">
-                            <rect key="frame" x="0.0" y="0.0" width="14" height="14"/>
+                            <rect key="frame" x="0.0" y="3" width="14" height="14"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="BDa-Qj-BrH" secondAttribute="height" multiplier="1:1" id="csI-HV-Lod"/>
                                 <constraint firstAttribute="width" constant="14" id="rnz-Z2-ZiH"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invite Broadcast" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBx-hC-ddw" userLabel="Tip Message Label">
-                            <rect key="frame" x="20" y="0.0" width="91" height="14.5"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <rect key="frame" x="20" y="0.0" width="117" height="19.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -127,6 +128,9 @@
                         <action selector="cancelInviteAction:" destination="-1" eventType="touchUpInside" id="fbL-bi-Cks"/>
                     </connections>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Hangout_LiveRoom_First_Anchor" translatesAutoresizingMaskIntoConstraints="NO" id="OX9-Ui-efh">
+                    <rect key="frame" x="344" y="5" width="24" height="24"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="0.25490196079999999" green="0.25490196079999999" blue="0.25490196079999999" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -140,12 +144,14 @@
                 <constraint firstAttribute="bottom" secondItem="yJr-mr-iFQ" secondAttribute="bottom" id="GkB-sM-UmX"/>
                 <constraint firstAttribute="trailing" secondItem="4rb-PB-Qyw" secondAttribute="trailing" id="Jw0-Pn-zBv"/>
                 <constraint firstAttribute="trailing" secondItem="7ao-gU-hhE" secondAttribute="trailing" id="LJg-de-lP6"/>
+                <constraint firstItem="OX9-Ui-efh" firstAttribute="top" secondItem="lGa-aH-WAC" secondAttribute="top" constant="5" id="Lgj-oU-lg6"/>
                 <constraint firstItem="3mp-AT-AQW" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Njx-QB-gHW"/>
                 <constraint firstItem="xLr-pH-5ki" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Nxv-MY-4Ed"/>
                 <constraint firstItem="6fA-Vg-Tua" firstAttribute="top" secondItem="xLr-pH-5ki" secondAttribute="bottom" constant="16" id="O9y-si-XKA"/>
                 <constraint firstItem="3mp-AT-AQW" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OWR-bW-i2h"/>
-                <constraint firstAttribute="trailing" secondItem="FLY-A2-Npi" secondAttribute="trailing" constant="5" id="Rfy-VG-rG0"/>
+                <constraint firstAttribute="trailing" secondItem="FLY-A2-Npi" secondAttribute="trailing" constant="45" id="Rfy-VG-rG0"/>
                 <constraint firstItem="FLY-A2-Npi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="5" id="THr-E0-SGA"/>
+                <constraint firstItem="OX9-Ui-efh" firstAttribute="trailing" secondItem="lGa-aH-WAC" secondAttribute="trailing" constant="-7" id="UIT-8W-pBF"/>
                 <constraint firstAttribute="trailing" secondItem="Fao-PN-lS8" secondAttribute="trailing" id="Uog-du-AP1"/>
                 <constraint firstAttribute="trailing" secondItem="yJr-mr-iFQ" secondAttribute="trailing" id="Urn-OV-W3v"/>
                 <constraint firstItem="vjf-rb-4cd" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="X1z-te-flx"/>
@@ -168,7 +174,8 @@
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
-        <image name="Live_Invite_HangOut" width="41" height="41"/>
+        <image name="Hangout_LiveRoom_First_Anchor" width="24" height="24"/>
+        <image name="Live_Invite_HangOut" width="35" height="35"/>
         <image name="Live_Liver_Invite_To_1" width="10" height="10"/>
         <image name="Live_Loading_Video_HangOut" width="187" height="187"/>
         <image name="Live_Name_Shadow_HangOut" width="3" height="51"/>

@@ -316,7 +316,8 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
         NSLog(@"ChatViewController::getLiverInfo( 获取用户信息回调 userId : %@, photoUrl : %@ nickName: %@)", item.userId, item.photoUrl,item.nickName);
         if (item.photoUrl.length > 0) {
             weakSelf.photoURL = item.photoUrl;
-            [[LSImageViewLoader loader] refreshCachedImage:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:weakSelf.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+            [[LSImageViewLoader loader] refreshCachedImage:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:weakSelf.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+            }];
             weakSelf.titleView.personName.text = item.nickName;
             weakSelf.firstName = item.nickName;
         }

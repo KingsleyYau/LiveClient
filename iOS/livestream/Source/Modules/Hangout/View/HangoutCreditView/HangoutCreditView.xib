@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HangoutCreditView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="234"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="gB8-RO-OH8">
+                    <rect key="frame" x="152" y="18" width="70" height="70"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="btY-HE-wrU"/>
+                        <constraint firstAttribute="width" secondItem="gB8-RO-OH8" secondAttribute="height" multiplier="1:1" id="itd-L7-fJb"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User_leave_10" translatesAutoresizingMaskIntoConstraints="NO" id="Cq5-OG-YZd">
+                    <rect key="frame" x="174" y="77" width="26" height="11"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hq9-Da-eJO" userLabel="Name ID LV View">
+                    <rect key="frame" x="155.5" y="102" width="65.5" height="24"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brady" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MKS-L0-i6l">
+                            <rect key="frame" x="0.0" y="3.5" width="41" height="17"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZCy-OW-j0e">
+                            <rect key="frame" x="50" y="5.5" width="15.5" height="14.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="ZCy-OW-j0e" firstAttribute="leading" secondItem="MKS-L0-i6l" secondAttribute="trailing" constant="9" id="2xy-5T-zxm"/>
+                        <constraint firstItem="ZCy-OW-j0e" firstAttribute="centerY" secondItem="hq9-Da-eJO" secondAttribute="centerY" id="JPf-XZ-1xD"/>
+                        <constraint firstAttribute="trailing" secondItem="ZCy-OW-j0e" secondAttribute="trailing" id="MID-6s-rhX"/>
+                        <constraint firstItem="MKS-L0-i6l" firstAttribute="leading" secondItem="hq9-Da-eJO" secondAttribute="leading" id="SK0-aI-NO7"/>
+                        <constraint firstItem="MKS-L0-i6l" firstAttribute="centerY" secondItem="hq9-Da-eJO" secondAttribute="centerY" id="cbQ-io-uN5"/>
+                        <constraint firstAttribute="height" constant="24" id="kT2-iC-EA4"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJf-6x-PrQ">
+                    <rect key="frame" x="108.5" y="136" width="159.5" height="17"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <attributedString key="attributedText">
+                        <fragment content="My Balance:">
+                            <attributes>
+                                <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content=" ">
+                            <attributes>
+                                <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="0.00 credits">
+                            <attributes>
+                                <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="NSColor" red="1" green="0.44313725490196076" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ime-Jp-vHS">
+                    <rect key="frame" x="50" y="169" width="275" height="44"/>
+                    <color key="backgroundColor" red="1" green="0.44313725490196076" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="cSU-gm-z2g"/>
+                    </constraints>
+                    <state key="normal" title="Add Credit">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="userRecharge:" destination="iN0-l3-epB" eventType="touchUpInside" id="ZVH-Qy-SvL"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WFe-Kl-3q9" userLabel="Close Button">
+                    <rect key="frame" x="335" y="0.0" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="65Q-69-guG"/>
+                        <constraint firstAttribute="width" secondItem="WFe-Kl-3q9" secondAttribute="height" multiplier="1:1" id="rss-wO-sfe"/>
+                    </constraints>
+                    <state key="normal" image="Live_Btn_Cancel"/>
+                    <connections>
+                        <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="GJm-te-GtT"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="gB8-RO-OH8" firstAttribute="bottom" secondItem="Cq5-OG-YZd" secondAttribute="bottom" id="8kd-oj-oOg"/>
+                <constraint firstItem="gB8-RO-OH8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="18" id="DgF-49-0v7"/>
+                <constraint firstItem="Cq5-OG-YZd" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="NIz-wm-dcI"/>
+                <constraint firstAttribute="bottom" secondItem="Ime-Jp-vHS" secondAttribute="bottom" constant="21" id="PsD-5W-d0F"/>
+                <constraint firstAttribute="trailing" secondItem="WFe-Kl-3q9" secondAttribute="trailing" id="Qu2-HM-biC"/>
+                <constraint firstItem="hq9-Da-eJO" firstAttribute="top" secondItem="gB8-RO-OH8" secondAttribute="bottom" constant="14" id="REo-OL-a4U"/>
+                <constraint firstItem="MJf-6x-PrQ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="VPe-y3-fE2"/>
+                <constraint firstItem="gB8-RO-OH8" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ZSE-93-Gg4"/>
+                <constraint firstItem="WFe-Kl-3q9" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="cMl-dJ-QgR"/>
+                <constraint firstItem="MJf-6x-PrQ" firstAttribute="top" secondItem="hq9-Da-eJO" secondAttribute="bottom" constant="10" id="fj9-JP-7ns"/>
+                <constraint firstItem="hq9-Da-eJO" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="fqk-SF-Btg"/>
+                <constraint firstAttribute="trailing" secondItem="Ime-Jp-vHS" secondAttribute="trailing" constant="50" id="fwc-oP-2i0"/>
+                <constraint firstItem="Ime-Jp-vHS" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="nRf-Mx-Wlq"/>
+                <constraint firstItem="Ime-Jp-vHS" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uoe-NP-EWX"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="balanceLabel" destination="MJf-6x-PrQ" id="uzb-0O-l6V"/>
+                <outlet property="closeButton" destination="WFe-Kl-3q9" id="bwr-vz-bbV"/>
+                <outlet property="nameLabel" destination="MKS-L0-i6l" id="z8p-9q-IO0"/>
+                <outlet property="rechargeBtn" destination="Ime-Jp-vHS" id="DoE-xQ-79W"/>
+                <outlet property="userHeadImageView" destination="gB8-RO-OH8" id="Juf-XE-kFL"/>
+                <outlet property="userIdLabel" destination="ZCy-OW-j0e" id="xMl-40-edu"/>
+                <outlet property="userLVImageView" destination="Cq5-OG-YZd" id="gHU-Lq-9p5"/>
+            </connections>
+            <point key="canvasLocation" x="26.5" y="51.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Default_Img_Man_Circyle" width="75" height="75"/>
+        <image name="Live_Btn_Cancel" width="17" height="17"/>
+        <image name="User_leave_10" width="26" height="11"/>
+    </resources>
+</document>

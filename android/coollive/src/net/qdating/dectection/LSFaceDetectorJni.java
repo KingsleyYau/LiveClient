@@ -66,18 +66,18 @@ public class LSFaceDetectorJni implements ILSFaceDetectorCallbackJni {
 	 * @param height	图片高度
 	 * @param data		图片数据
 	 */
-	public void DetectPicture(int width, int height, byte[] data) {
+	public void DetectPicture(byte[] data, int size, int width, int height) {
 		if( detector != INVALID_OBJECT ) {
-			DetectPicture(detector, width, height, data);
+			DetectPicture(detector, data, size, width, height);
 		}
 	}
-	public native void DetectPicture(long detector, int width, int height, byte[] data);
+	public native void DetectPicture(long detector, byte[] data, int size, int width, int height);
 
 	@Override
-	public void onDetectedFace(int x, int y, int width, int height) {
+	public void onDetectedFace(byte[] data, int size, int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		if( callback != null ) {
-			callback.onDetectedFace(this, x, y, width, height);
+			callback.onDetectedFace(this, data, size, x, y, width, height);
 		}
 	}
 }

@@ -15,64 +15,64 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="HangOutOpenDoorCell">
-            <rect key="frame" x="0.0" y="0.0" width="200" height="70"/>
+            <rect key="frame" x="0.0" y="0.0" width="200" height="75"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="200" height="69.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="200" height="74.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wac-ID-nOi" userLabel="Background Color View">
-                        <rect key="frame" x="0.0" y="0.0" width="200" height="69.5"/>
-                        <color key="backgroundColor" red="0.019607843137254902" green="0.7803921568627451" blue="0.45882352941176469" alpha="1" colorSpace="calibratedRGB"/>
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="74.5"/>
+                        <color key="backgroundColor" red="1" green="0.90196078431372551" blue="0.89803921568627454" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="200" id="mZO-f0-uB9"/>
                         </constraints>
                     </view>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4Kv-zN-OJu">
-                        <rect key="frame" x="0.0" y="0.0" width="69.5" height="69.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="74.5" height="74.5"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="4Kv-zN-OJu" secondAttribute="height" multiplier="1:1" id="NRH-9C-WEZ"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="76o-iQ-GPe">
-                        <rect key="frame" x="75.5" y="8" width="111.5" height="14.5"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <rect key="frame" x="80.5" y="6" width="106.5" height="17"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                        <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24yrs / " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kua-A8-xfb">
-                        <rect key="frame" x="75" y="23" width="43" height="14.5"/>
+                        <rect key="frame" x="80" y="23.5" width="43" height="14.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ukraine" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17d-PM-rnb">
-                        <rect key="frame" x="118" y="23" width="43.5" height="14.5"/>
+                        <rect key="frame" x="123" y="23.5" width="43.5" height="14.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98y-se-1a1">
-                        <rect key="frame" x="75" y="41.5" width="119" height="24"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98y-se-1a1">
+                        <rect key="frame" x="80" y="41" width="113" height="28"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="24" id="2he-we-kZ1"/>
-                            <constraint firstAttribute="width" constant="119" id="wsR-IK-5pv"/>
+                            <constraint firstAttribute="height" constant="28" id="2he-we-kZ1"/>
+                            <constraint firstAttribute="width" constant="113" id="wsR-IK-5pv"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <state key="normal" title="Hang-out Now">
-                            <color key="titleColor" red="0.019607843140000001" green="0.78039215689999997" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                        <state key="normal" title="Invite Now" image="HangoutList_banner_hangoutIcon" backgroundImage="Live_Line_Icon">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </state>
                         <connections>
                             <action selector="hangoutAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="MS3-uX-l4k"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCM-76-AEi">
-                        <rect key="frame" x="75" y="41.5" width="119" height="24"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <state key="normal" title="Open Door">
-                            <color key="titleColor" red="0.019607843140000001" green="0.78039215689999997" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCM-76-AEi">
+                        <rect key="frame" x="80" y="41" width="113" height="28"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                        <state key="normal" title="Open Door" image="HangoutList_banner_hangoutIcon" backgroundImage="Live_Line_Icon">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </state>
                         <connections>
                             <action selector="openAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="5zE-WI-cUY"/>
@@ -91,12 +91,12 @@
                     <constraint firstItem="Kua-A8-xfb" firstAttribute="leading" secondItem="76o-iQ-GPe" secondAttribute="leading" id="HSi-vf-2mI"/>
                     <constraint firstItem="Wac-ID-nOi" firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="17d-PM-rnb" secondAttribute="trailing" constant="5" id="JP9-hE-bRa"/>
                     <constraint firstItem="17d-PM-rnb" firstAttribute="leading" secondItem="Kua-A8-xfb" secondAttribute="trailing" id="Tl8-19-7SR"/>
+                    <constraint firstItem="76o-iQ-GPe" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="6" id="TqI-2P-Ltd"/>
                     <constraint firstItem="4Kv-zN-OJu" firstAttribute="top" secondItem="Wac-ID-nOi" secondAttribute="top" id="aGl-DU-79t"/>
                     <constraint firstItem="Wac-ID-nOi" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="bG3-Hr-5DR"/>
                     <constraint firstAttribute="bottom" secondItem="Wac-ID-nOi" secondAttribute="bottom" id="gEm-8w-yyu"/>
                     <constraint firstItem="4Kv-zN-OJu" firstAttribute="leading" secondItem="Wac-ID-nOi" secondAttribute="leading" id="kFr-J6-qJA"/>
-                    <constraint firstItem="76o-iQ-GPe" firstAttribute="top" secondItem="Wac-ID-nOi" secondAttribute="topMargin" id="nfT-fW-nP3"/>
-                    <constraint firstItem="98y-se-1a1" firstAttribute="top" secondItem="Kua-A8-xfb" secondAttribute="bottom" constant="4" id="q7O-oI-g5p"/>
+                    <constraint firstItem="98y-se-1a1" firstAttribute="top" secondItem="Kua-A8-xfb" secondAttribute="bottom" constant="3" id="q7O-oI-g5p"/>
                     <constraint firstItem="YCM-76-AEi" firstAttribute="width" secondItem="98y-se-1a1" secondAttribute="width" id="qf7-qx-VgE"/>
                     <constraint firstItem="17d-PM-rnb" firstAttribute="centerY" secondItem="Kua-A8-xfb" secondAttribute="centerY" id="qne-uW-wjg"/>
                     <constraint firstItem="Wac-ID-nOi" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="uFL-05-gFY"/>
@@ -115,4 +115,8 @@
             <point key="canvasLocation" x="25" y="51.5"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="HangoutList_banner_hangoutIcon" width="27" height="27"/>
+        <image name="Live_Line_Icon" width="3" height="3"/>
+    </resources>
 </document>

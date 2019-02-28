@@ -78,7 +78,8 @@
     [self setupCornerRadius];
     
     // 头像
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     // 姓名
     self.nameLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"TO_NAME"),self.letterItem.anchorNickName];
     // 发信时间信件ID

@@ -7,12 +7,12 @@
 		<key>LSUIWidgetBundle.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>19</integer>
 		</dict>
 		<key>UIWidget.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>14</integer>
+			<integer>18</integer>
 		</dict>
 	</dict>
 </dict>

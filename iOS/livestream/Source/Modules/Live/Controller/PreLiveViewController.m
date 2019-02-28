@@ -210,7 +210,8 @@ typedef enum PreLiveStatus {
     
     // 刷新女士头像
     if ( self.liveRoom.photoUrl.length > 0 ) {
-        [self.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [self.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        }];
     } else {
         // 请求并缓存主播信息
         WeakObject(self, weakSelf);
@@ -218,7 +219,8 @@ typedef enum PreLiveStatus {
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 刷新女士头像
                 weakSelf.liveRoom.photoUrl = item.photoUrl;
-                [weakSelf.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                [weakSelf.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                }];
                 // 刷新女士名字
                 weakSelf.liveRoom.userName = item.nickName;
                 weakSelf.ladyNameLabel.text = item.nickName;
@@ -1293,7 +1295,8 @@ typedef enum PreLiveStatus {
     [cell.imageViewLoader refreshCachedImage:cell.imageView
                                          options:SDWebImageRefreshCached
                                         imageUrl:item.photoUrl
-                                placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                            }];
     
     cell.nameLabel.text = item.nickName;
     return cell;

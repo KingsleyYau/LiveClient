@@ -270,7 +270,8 @@ typedef enum ShowButtonType {
     
     // 刷新女士头像
     if ( self.liveRoom.photoUrl.length > 0 ) {
-        [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        }];
     } else {
         // 请求并缓存主播信息
         if (self.liveRoom.userId.length > 0) {
@@ -279,7 +280,8 @@ typedef enum ShowButtonType {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 刷新女士头像
                     weakSelf.liveRoom.photoUrl = item.photoUrl;
-                    [weakSelf.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                    [weakSelf.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                    }];
                     // 刷新女士名字
                     weakSelf.liveRoom.userName = item.nickName;
                     weakSelf.nameLabel.text = item.nickName;

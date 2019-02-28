@@ -150,7 +150,7 @@
 
 #pragma mark - 自动替换表情
 - (NSAttributedString *)parseMessageTextEmotion:(NSString *)text newMessage:(NSString *)message font:(UIFont *)font {
-    NSMutableAttributedString *attributeString = nil;
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
     if (text != nil) {
         attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     }

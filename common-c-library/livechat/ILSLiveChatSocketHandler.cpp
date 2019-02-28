@@ -11,9 +11,9 @@
 //#include <netinet6/in6.h>
 #include <string.h>
 #include "common/IPAddress.h"
-#ifndef WIN32
-#include <sys/signal.h>
-#endif
+//#ifndef WIN32
+//#include <sys/signal.h>
+//#endif
 
 typedef enum IPStack {
     V4IP_IPV4_ONLY,

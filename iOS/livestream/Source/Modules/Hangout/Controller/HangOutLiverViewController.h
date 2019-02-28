@@ -18,6 +18,7 @@
 typedef enum {
     LIVETYPE_ONLIVRROOM,
     LIVETYPE_INVITING,
+    LIVETYPE_COUNTDOWN,
     LIVETYPE_CANCELLING,
     LIVETYPE_OPENINGDOOR,
     LIVETYPE_OUTLIEROOM
@@ -67,6 +68,8 @@ typedef enum {
 
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
+@property (weak, nonatomic) IBOutlet UIImageView *firstIcon;
+
 @property (nonatomic, assign) NSInteger index;
 
 #pragma mark - 吧台礼物数量记录队列
@@ -83,7 +86,7 @@ typedef enum {
 @property (weak, nonatomic) id <HangOutLiverViewControllerDelegate> inviteDelegate;
 
 #pragma mark - 停止播流 置空播放器
-- (void)resetPlayer;
+- (void)stopPlay;
 
 #pragma mark - 获取/设置播流声音
 - (void)setThePlayMute:(BOOL)isMute;

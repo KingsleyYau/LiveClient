@@ -214,7 +214,8 @@ typedef enum : NSUInteger {
     self.wkWebView.scrollView.scrollEnabled = NO;
 
     // 头像
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     // 姓名
     self.nameLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"FROM_ANCHOR"),self.letterItem.anchorNickName];
     // 发信时间信件ID
@@ -321,7 +322,7 @@ typedef enum : NSUInteger {
     self.replyTextView.layer.cornerRadius = 5;
     self.replyTextView.layer.masksToBounds = YES;
     
-    self.replySendBtn.layer.cornerRadius = 8;
+    self.replySendBtn.layer.cornerRadius = 5;
     self.replySendBtn.layer.masksToBounds = YES;
     
     LSShadowView * shadowView = [[LSShadowView alloc]init];

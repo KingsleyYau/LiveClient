@@ -44,7 +44,8 @@
     [self.headBackground addGestureRecognizer:tapBg];
     [self.headImage addGestureRecognizer:tap];
     
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImage options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+    [[LSImageViewLoader loader] refreshCachedImage:self.headImage options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+    }];
 }
 
 - (IBAction)backBtnDid:(id)sender {

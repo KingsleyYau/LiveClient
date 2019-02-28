@@ -38,10 +38,10 @@
 - (void)reloadStyle {
     if (self.selectCell) {
         self.layer.borderWidth = 1;
-        self.layer.borderColor = Color(5, 199, 117, 1).CGColor;
+        self.layer.borderColor = COLOR_WITH_16BAND_RGB(0xff7100).CGColor;
     }else {
-        self.layer.borderWidth = 0;
-        self.layer.borderColor = Color(5, 199, 117, 1).CGColor;
+        self.layer.borderWidth = 1;
+        self.layer.borderColor = COLOR_WITH_16BAND_RGB(0x666666).CGColor;
     }
 }
 

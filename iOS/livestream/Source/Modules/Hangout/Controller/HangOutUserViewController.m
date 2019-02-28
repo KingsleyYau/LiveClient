@@ -87,6 +87,8 @@
 // 大礼物控件底部约束
 @property (strong) MASConstraint *bigAnimationViewBottom;
 
+@property (nonatomic, strong) LSTimer *showTimer;
+
 @end
 
 @implementation HangOutUserViewController
@@ -148,6 +150,9 @@
     
     // 初始化是否方法界面标识位
     self.isBoostView = NO;
+    
+    // 初始化显示计时器
+    self.showTimer = [[LSTimer alloc] init];
 }
 
 - (void)viewDidLoad {
@@ -564,6 +569,18 @@
     }
 }
 
+- (void)hiddenBackgroundView {
+    if (!self.startPush) {
+        self.backgroundView.hidden = YES;
+        self.closeBackgroundBtn.hidden = YES;
+        self.startCloseBtn.hidden = YES;
+        
+        if (self.showTimer) {
+            [self.showTimer stopTimer];
+        }
+    }
+}
+
 #pragma mark - 手势事件 (单击屏幕)
 - (void)addSingleTap {
     if (self.singleTap == nil) {
@@ -586,6 +603,14 @@
     self.closeBackgroundBtn.hidden = NO;
     self.startCloseBtn.hidden = NO;
     [self.view bringSubviewToFront:self.startCloseBtn];
+    
+    if (!self.showTimer) {
+        self.showTimer = [[LSTimer alloc] init];
+    }
+    WeakObject(self, weakSelf);
+    [self.showTimer startTimer:dispatch_get_main_queue() timeInterval:3.0 * NSEC_PER_SEC starNow:NO action:^{
+        [weakSelf hiddenBackgroundView];
+    }];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -627,11 +652,7 @@
 
 #pragma mark - 界面事件
 - (IBAction)closeBackgroundAction:(id)sender {
-    if (!self.startPush) {
-        self.backgroundView.hidden = YES;
-        self.closeBackgroundBtn.hidden = YES;
-        self.startCloseBtn.hidden = YES;
-    }
+    [self hiddenBackgroundView];
 }
 
 - (IBAction)startAndCloseAction:(id)sender {

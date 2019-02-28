@@ -12,7 +12,7 @@
 "LRN-0m-Ifr.text" = "Label";
 
 /* Class = "UIButton"; normalTitle = "send"; ObjectID = "TRy-Ik-E8D"; */
-"TRy-Ik-E8D.normalTitle" = "send";
+"TRy-Ik-E8D.normalTitle" = "Send";
 
 /* Class = "UILabel"; text = "You are replying to this mail bu Post Stamps(1 stamp).If you wish to use Qpid Credits instead,please tap here."; ObjectID = "WuC-aW-Hg6"; */
 "WuC-aW-Hg6.text" = "You are replying to this mail bu Post Stamps (1 stamp).If you wish to use Qpid Credits instead,please tap here.";

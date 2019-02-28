@@ -10,7 +10,7 @@
 #import "LiveUrlHandler.h"
 
 @interface QNLiveChatLocalPushManager()<LSLiveChatManagerListenerDelegate>
-@property (nonatomic, strong) LSLCLiveChatMsgItemObject * msgObj;
+@property (nonatomic, strong) NSMutableArray * msgArray;
 @end
 
 @implementation QNLiveChatLocalPushManager
@@ -30,6 +30,7 @@
 {
     if(self = [super init] ) {
         [[LSLiveChatManagerOC manager]addDelegate:self];
+        self.msgArray = [NSMutableArray array];
     }
     
     return self;
@@ -97,7 +98,7 @@
 
 - (void)pushMessageFromLady:(LSLCLiveChatMsgItemObject *)msgObj
 {
-    self.msgObj = msgObj;
+    [self.msgArray addObject:msgObj];
     [[LSLiveChatManagerOC manager] getUserInfo:msgObj.fromId];
     
 }
@@ -107,39 +108,60 @@
         if (!userInfo) {
             return;
         }
-        if ([self.msgObj.fromId isEqualToString:userId]) {
-            NSString * message = [self getPushMessage:self.msgObj fromUserName:userInfo.userName];
-            if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-                if ([[LSLiveChatManagerOC manager]isChatingUserInChatState:self.msgObj.fromId]) {
-                    
-                    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
-                    
-                    UILocalNotification *notification = [[UILocalNotification alloc]init];
-                    notification.alertBody = [NSString stringWithFormat:@"%@: %@",userInfo.userName,message];
-                    notification.userInfo = @{@"jumpurl":[[[LiveUrlHandler shareInstance]createLiveChatByanchorId:self.msgObj.fromId anchorName:userInfo.userName] absoluteString]};
-                    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-                        UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
-                        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type categories:nil];
-                        [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
-                        notification.repeatInterval = NSCalendarUnitDay;
-                    }else{
-                        notification.repeatInterval = NSCalendarUnitDay;
-                    }
-                    
-                    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+        int row = 0;
+        BOOL isDelete = NO;
+        for (int i = 0; i < self.msgArray.count; i++) {
+            row = i;
+            LSLCLiveChatMsgItemObject * msgItem = [self.msgArray objectAtIndex:i];
+            if ([msgItem.fromId isEqualToString:userId]) {
+                isDelete = YES;
+                NSString * message = [self getPushMessage:msgItem fromUserName:userInfo.userName];
+                if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+                    [self backgroundApp:msgItem msg:message userInfo:userInfo];
                 }
+                else {
+                    [self activeApp:msgItem msg:message userInfo:userInfo userID:userId];
+                }
+                break;
             }
-            else {
-                LSLCLiveChatUserItemObject * userItem = [[LSLiveChatManagerOC manager]getUserWithId:userId];
-                userItem.imageUrl = userInfo.avatarImg;
-                userItem.userName = userInfo.userName;
-                
-                if ([self.delegate respondsToSelector:@selector(liveChatPushManager:andMsgItem:formLady:)]) {
-                    [self.delegate liveChatPushManager:message andMsgItem:self.msgObj formLady:userItem];
-                }
+        }
+        if (isDelete) {
+            @synchronized (self.msgArray) {
+                [self.msgArray removeObjectAtIndex:row];
             }
         }
     });
+}
+
+- (void)activeApp:(LSLCLiveChatMsgItemObject *)msgItem msg:(NSString *)message userInfo:(LSLCLiveChatUserInfoItemObject *)userInfo userID:(NSString *)userId {
+    LSLCLiveChatUserItemObject * userItem = [[LSLiveChatManagerOC manager]getUserWithId:userId];
+    userItem.imageUrl = userInfo.avatarImg;
+    userItem.userName = userInfo.userName;
+    
+    if ([self.delegate respondsToSelector:@selector(liveChatPushManager:andMsgItem:formLady:)]) {
+        [self.delegate liveChatPushManager:message andMsgItem:msgItem formLady:userItem];
+    }
+}
+
+- (void)backgroundApp:(LSLCLiveChatMsgItemObject *)msgItem msg:(NSString *)message userInfo:(LSLCLiveChatUserInfoItemObject *)userInfo  {
+    if ([[LSLiveChatManagerOC manager]isChatingUserInChatState:msgItem.fromId]) {
+        
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+        
+        UILocalNotification *notification = [[UILocalNotification alloc]init];
+        notification.alertBody = [NSString stringWithFormat:@"%@: %@",userInfo.userName,message];
+        notification.userInfo = @{@"jumpurl":[[[LiveUrlHandler shareInstance]createLiveChatByanchorId:msgItem.fromId anchorName:userInfo.userName] absoluteString]};
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
+            UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type categories:nil];
+            [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
+            notification.repeatInterval = NSCalendarUnitDay;
+        }else{
+            notification.repeatInterval = NSCalendarUnitDay;
+        }
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    }
 }
 
 @end

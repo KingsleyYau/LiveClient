@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="EDG-WN-cyy">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="EDG-WN-cyy">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zY1-nO-hY8">
@@ -39,7 +39,7 @@
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l6F-mq-78Y" userLabel="Close Camera Button">
-                    <rect key="frame" x="167" y="313" width="41" height="41"/>
+                    <rect key="frame" x="166.5" y="312.5" width="42" height="42"/>
                     <state key="normal" image="Live_Open_Camera"/>
                     <connections>
                         <action selector="startAndCloseAction:" destination="-1" eventType="touchUpInside" id="8HL-4o-L0P"/>
@@ -100,6 +100,6 @@
         </view>
     </objects>
     <resources>
-        <image name="Live_Open_Camera" width="41" height="41"/>
+        <image name="Live_Open_Camera" width="42" height="42"/>
     </resources>
 </document>

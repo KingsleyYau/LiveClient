@@ -11,9 +11,9 @@
 #import "LSMainNotificaitonModel.h"
 #import "MainNotificaitonCell.h"
 #import "LiveUrlHandler.h"
-@interface MainNotificaitonView ()<UICollectionViewDelegate,UICollectionViewDataSource>
-@property (nonatomic, strong) UICollectionView * collectinView;
-@property (nonatomic, assign) NSInteger nowRow;
+#import "TYCyclePagerView.h"
+@interface MainNotificaitonView ()<TYCyclePagerViewDataSource, TYCyclePagerViewDelegate>
+@property (nonatomic, strong) TYCyclePagerView *pagerView;
 @end
 
 @implementation MainNotificaitonView
@@ -35,52 +35,52 @@
 }
 
 - (void)createUI {
-    self.nowRow = 0;
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    self.collectinView = [[UICollectionView alloc]initWithFrame:self.bounds collectionViewLayout:layout];
-    self.collectinView.backgroundColor = [UIColor clearColor];
-    self.collectinView.pagingEnabled = YES;
-    self.collectinView.showsVerticalScrollIndicator = NO;
-    self.collectinView.showsHorizontalScrollIndicator = NO;
-    self.collectinView.delegate = self;
-    self.collectinView.dataSource = self;
-    [self addSubview:self.collectinView];
-     [self.collectinView registerNib:[UINib nibWithNibName:@"MainNotificaitonCell" bundle:[LiveBundle mainBundle]] forCellWithReuseIdentifier:[MainNotificaitonCell cellIdentifier]];
+    self.pagerView = [[TYCyclePagerView alloc]initWithFrame:self.bounds];
+    self.pagerView.backgroundColor = [UIColor clearColor];
+    self.pagerView.isInfiniteLoop = NO;
+    self.pagerView.autoScrollInterval = 0;
+    self.pagerView.dataSource = self;
+    self.pagerView.delegate = self;
+    [self addSubview:self.pagerView];
+    
+     [self.pagerView registerNib:[UINib nibWithNibName:@"MainNotificaitonCell" bundle:[LiveBundle mainBundle]] forCellWithReuseIdentifier:[MainNotificaitonCell cellIdentifier]];
 }
 
 - (void)reloadData {
-    [self.collectinView reloadData];
+    [self.pagerView reloadData];
     
-    if (self.nowRow == 0 && [LSMainNotificationManager manager].items.count > 1) {
-        [self.collectinView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.nowRow + 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
+    if (self.pagerView.curIndex == 0 && [LSMainNotificationManager manager].items.count > 1) {
+        [self.pagerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.pagerView.curIndex + 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
     }
     
-    [self.collectinView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+    [self.pagerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
 }
 
-- (void)deleteCollectionViewRow:(NSInteger)row {
+- (void)deleteCollectionViewRow {
     
-    if ([LSMainNotificationManager manager].items.count > 0) {
-         [self.collectinView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.nowRow - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
-        [self.collectinView reloadData];
-    }}
-
-#pragma mark collectionView代理方法
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
+    if ([LSMainNotificationManager manager].items.count > 0 && self.pagerView.curIndex == [LSMainNotificationManager manager].items.count) {
+         [self.pagerView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.pagerView.curIndex - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+        [self performSelector:@selector(uiReloadData) withObject:nil afterDelay:0.3];
+    }else {
+      [self.pagerView.collectionView reloadData];
+    }
 }
 
-//每个section的item个数
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (void)uiReloadData {
+    [self.pagerView.collectionView reloadData];
+}
+
+#pragma mark - TYCyclePagerViewDataSource
+
+- (NSInteger)numberOfItemsInPagerView:(TYCyclePagerView *)pageView {
     return [LSMainNotificationManager manager].items.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    MainNotificaitonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[MainNotificaitonCell cellIdentifier] forIndexPath:indexPath];
+- (UICollectionViewCell *)pagerView:(TYCyclePagerView *)pagerView cellForItemAtIndex:(NSInteger)index {
+    MainNotificaitonCell *cell = [pagerView dequeueReusableCellWithReuseIdentifier:[MainNotificaitonCell cellIdentifier] forIndex:index];
     
-    LSMainNotificaitonModel * model = [[LSMainNotificationManager manager].items objectAtIndex:indexPath.row];
- 
+    LSMainNotificaitonModel * model = [[LSMainNotificationManager manager].items objectAtIndex:index];
+    NSLog(@"=======%@===%d===%d",model.contentStr,[LSMainNotificationManager manager].items.count,index);
     if (model.msgType == MsgStatus_Chat) {
         cell.chatNotificationView.hidden = NO;
         cell.liveNotificationView.hidden = YES;
@@ -93,44 +93,31 @@
     }
     
     [cell startCountdown:model.createTime];
-    
     return cell;
 }
 
-//设置每个item的尺寸
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(self.frame.size.width, self.frame.size.height);
+- (TYCyclePagerViewLayout *)layoutForPagerView:(TYCyclePagerView *)pageView {
+    TYCyclePagerViewLayout *layout = [[TYCyclePagerViewLayout alloc]init];
+    layout.itemSize = CGSizeMake(CGRectGetWidth(pageView.frame)*0.85, self.frame.size.height);
+    layout.itemSpacing = 10;
+    //layout.minimumAlpha = 0.3;
+    layout.itemHorizontalCenter = YES;
+    return layout;
 }
 
-//设置每个item水平间距
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
-}
-
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)pagerView:(TYCyclePagerView *)pageView didSelectedItemCell:(__kindof UICollectionViewCell *)cell atIndex:(NSInteger)index {
     
-    self.nowRow = indexPath.row;
-}
-
-//点击item方法
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
- 
-    LSMainNotificaitonModel * model = [[LSMainNotificationManager manager].items objectAtIndex:indexPath.row];
+    LSMainNotificaitonModel * model = [[LSMainNotificationManager manager].items objectAtIndex:index];
     if (model.msgType == MsgStatus_Chat) {
         NSURL * url = [[LiveUrlHandler shareInstance]createLiveChatByanchorId:model.userId anchorName:model.userName];
         [[LiveUrlHandler shareInstance]handleOpenURL:url];
     }
     else {
-        NSURL * url = [[LiveUrlHandler shareInstance]createUrlToHangoutByRoomId:nil anchorId:model.userId anchorName:model.userName hangoutAnchorId:nil hangoutAnchorName:nil];
+        NSURL * url = [[LiveUrlHandler shareInstance]createUrlToHangoutByRoomId:@"" anchorId:model.userId anchorName:model.userName hangoutAnchorId:@"" hangoutAnchorName:@""];
         [[LiveUrlHandler shareInstance]handleOpenURL:url];
         
     }
-    [[LSMainNotificationManager manager] selectedShowArrayRow:indexPath.row];
+    [[LSMainNotificationManager manager] selectedShowArrayRow:index];
 }
 
 @end

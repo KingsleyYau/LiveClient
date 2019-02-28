@@ -25,7 +25,6 @@
 @end
 
 @interface HangoutInviteTableViewController : LSGoogleAnalyticsViewController
-@property (nonatomic, assign) HangoutAnchorListType inviteType;
 @property (nonatomic, strong) NSString *anchorId;
 @property (nonatomic, weak) id<HangoutInviteDelegate> inviteDelegate;
 // 刷新新数据

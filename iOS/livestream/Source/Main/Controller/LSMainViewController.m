@@ -197,10 +197,6 @@ typedef enum AlertType {
     LSHotViewController *vcHot = [[LSHotViewController alloc] initWithNibName:nil bundle:nil];
     [self addChildViewController:vcHot];
     
-    //多人互动列表
-    LSHangoutListViewController * hangoutVC = [[LSHangoutListViewController alloc]initWithNibName:nil bundle:nil];
-    [self addChildViewController:hangoutVC];
-    
     // 主播Follow列表
     LSFollowingViewController *vcFollow = [[LSFollowingViewController alloc] initWithNibName:nil bundle:nil];
     vcFollow.followVCDelegate = self;
@@ -210,8 +206,17 @@ typedef enum AlertType {
     vcShowList.showDelegate = self;
     [self addChildViewController:vcShowList];
     
-    self.viewControllers = [NSArray arrayWithObjects:vcHot, hangoutVC, vcFollow, vcShowList, nil];
-    
+    if ([LSLoginManager manager].loginItem.isHangoutRisk) {
+        self.viewControllers = [NSArray arrayWithObjects:vcHot, vcFollow, vcShowList, nil];
+    }else {
+        
+        //多人互动列表
+        LSHangoutListViewController * hangoutVC = [[LSHangoutListViewController alloc]initWithNibName:nil bundle:nil];
+        [self addChildViewController:hangoutVC];
+        
+        self.viewControllers = [NSArray arrayWithObjects:vcHot, hangoutVC, vcFollow, vcShowList, nil];
+    }
+
     self.pagingScrollView.pagingViewDelegate = self;
     
     self.hangoutTipView = [[StartHangOutTipView alloc] init];
@@ -418,7 +423,14 @@ typedef enum AlertType {
 }
 
 - (NSArray *)setUpDataSource {
-    return @[ @"DISCOVER",@"HANG-OUT", @"FOLLOW", @"CALENDAR" ];
+    NSArray * title = [NSArray array];
+    if ([LSLoginManager manager].loginItem.isHangoutRisk) {
+        title = @[@"DISCOVER",@"FOLLOW", @"CALENDAR"];
+    }
+    else {
+        title = @[@"DISCOVER",@"HANG-OUT", @"FOLLOW", @"CALENDAR"];
+    }
+    return title;
 }
 
 #pragma mark - LiveHeaderScrollviewDelegate
@@ -712,14 +724,14 @@ typedef enum AlertType {
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openHangout:(NSString *)roomId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName hangoutAnchorId:(NSString *)hangoutAnchorId hangoutAnchorName:(NSString *)hangoutAnchorName {
     // TODO:收到通知进入多人互动直播间
-    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 进入多人互动直播间], roomId : %@, anchorId : %@, anchorName : %@ )", roomId, anchorId, anchorName);
+    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 进入多人互动直播间], roomId : %@, anchorId : %@, anchorName : %@, hangoutAnchorId : %@, hangoutAnchorName : %@ )", roomId, anchorId, anchorName, hangoutAnchorId, hangoutAnchorName);
     
     HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
     vc.roomId = roomId;
     vc.inviteAnchorId = anchorId;
     vc.inviteAnchorName = anchorName;
-//    vc.hangoutAnchorId = hangoutAnchorId;
-//    vc.hangoutAnchorName = hangoutAnchorName;
+    vc.hangoutAnchorId = hangoutAnchorId;
+    vc.hangoutAnchorName = hangoutAnchorName;
     
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
@@ -920,8 +932,9 @@ typedef enum AlertType {
     HangoutDialogViewController *vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
     vc.anchorId = anchorId;
     vc.anchorName = anchorName;
-    [self.navigationController addChildViewController:vc];
-    [self.navigationController.view addSubview:vc.view];
+    UIViewController *topVc = [LiveModule module].moduleVC.navigationController;
+    [topVc addChildViewController:vc];
+    [topVc.view addSubview:vc.view];
     [vc showhangoutView];
 }
 
@@ -959,7 +972,7 @@ typedef enum AlertType {
 - (void)mainNotificationManagerShowNotificaitonView {
     
     if (!self.mainNotificaitonView) {
-        self.mainNotificaitonView = [[MainNotificaitonView alloc]initWithFrame:CGRectMake(-screenSize.width, self.view.frame.size.height - 78, screenSize.width, 68)];
+        self.mainNotificaitonView = [[MainNotificaitonView alloc]initWithFrame:CGRectMake(-screenSize.width, self.view.frame.size.height - 88, screenSize.width, 78)];
         [self.view addSubview:self.mainNotificaitonView];
         
         [UIView animateWithDuration:0.3 animations:^{
@@ -972,9 +985,9 @@ typedef enum AlertType {
     [self.mainNotificaitonView reloadData];
 }
 
-- (void)mainNotificationManagerHideNotificaitonView:(NSInteger)row {
+- (void)mainNotificationManagerHideNotificaitonView {
     
-    [self.mainNotificaitonView deleteCollectionViewRow:row];
+    [self.mainNotificaitonView deleteCollectionViewRow];
 }
 
 - (void)mainNotificationManagerRemoveNotificaitonView {

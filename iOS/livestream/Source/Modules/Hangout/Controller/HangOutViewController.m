@@ -35,7 +35,7 @@
 #import "MsgTableViewCell.h"
 #import "HangOutOpenDoorCell.h"
 #import "BigGiftAnimationView.h"
-#import "CreditView.h"
+#import "HangoutCreditView.h"
 #import "HangoutGiftViewController.h"
 #import "HangoutInvitePageViewController.h"
 #import "HangOutFinshViewController.h"
@@ -72,12 +72,17 @@
 
 #define OpenDoorHeight 71
 
-#define GiftViewHeight (SCREEN_WIDTH * 0.45 + 110)
+#define GiftViewHeight ((SCREEN_WIDTH - 40) / 2 + 220)
 #define InvitePageViewHeight (SCREEN_WIDTH * 0.45 + 110)
 
 @interface HangOutViewController ()<IMManagerDelegate, IMLiveRoomManagerDelegate, HangOutLiverViewControllerDelegate,
                                     HangoutSendBarViewDelegate, LSCheckButtonDelegate, MsgTableViewCellDelegate, HangOutControlViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, HangOutOpenDoorCellDelegate
-                                        ,HangoutGiftViewControllerDelegate, CreditViewDelegate, HangoutInviteDelegate, LiveGobalManagerDelegate, HangOutUserViewControllerDelegate, UIAlertViewDelegate>
+                                        ,HangoutGiftViewControllerDelegate, HangoutCreditViewDelegate, HangoutInviteDelegate, LiveGobalManagerDelegate, HangOutUserViewControllerDelegate, UIAlertViewDelegate>
+
+// 当前直播间中的主播队列
+@property (nonatomic, strong) NSMutableArray<IMLivingAnchorItemObject *> *anchorArray;
+// 当前直播间中已收礼物列表
+@property (nonatomic, strong) NSMutableArray<IMRecvGiftItemObject *> *roomGiftList;
 
 // 管理空闲主播窗口队列
 @property (nonatomic, strong) NSMutableArray<HangOutLiverViewController *> *hangoutArray;
@@ -183,7 +188,7 @@
 @property (nonatomic, strong) SendGiftTheQueueManager *sendGiftManager;
 
 // balanceView 充值view
-@property (nonatomic, strong) CreditView *creditView;
+@property (nonatomic, strong) HangoutCreditView *creditView;
 @property (nonatomic, assign) int creditOffset;
 @property (strong) MASConstraint *creditViewBottom;
 
@@ -244,6 +249,12 @@
 - (void)initCustomParam {
     [super initCustomParam];
     
+    // 初始化当前直播间中的主播队列
+    self.anchorArray = [[NSMutableArray alloc] init];
+    
+    // 初始化当前直播间中已收礼物列表
+    self.roomGiftList = [[NSMutableArray alloc] init];
+    
     // 初始化控制器队列
     self.hangoutArray = [[NSMutableArray alloc] init];
     
@@ -260,6 +271,8 @@
     
     // 初始化后台管理器
     [[LiveGobalManager manager] addDelegate:self];
+    // 标记正在hangout中
+    [LiveGobalManager manager].isHangouting = YES;
     
     // 初始化请求管理器
     self.sessionManager = [LSSessionRequestManager manager];
@@ -297,9 +310,6 @@
     // 初始化发送礼物管理器
     self.sendGiftManager = [SendGiftTheQueueManager manager];
     self.sendGiftManager.toUid = @"";
-    
-    // 标记正在hangout中
-    [LiveGobalManager manager].isHangouting = YES;
     
     // 注册大礼物结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animationWhatIs:) name:@"GiftAnimationIsOver" object:nil];
@@ -444,6 +454,14 @@
     self.giftAnimationView = nil;
 }
 
+- (void)anchorArrayAddObject:(IMLivingAnchorItemObject *)obj {
+    [self.anchorArray addObject:obj];
+}
+
+- (void)roomGiftListAddObject:(IMRecvGiftItemObject *)obj {
+    [self.roomGiftList addObject:obj];
+}
+
 #pragma mark - 创建窗口界面
 - (void)setupChildViewVC {
     
@@ -461,6 +479,7 @@
                     make.bottom.left.equalTo(self.videoBottomView);
                     make.width.height.equalTo(@(length));
                 }];
+                liverVC.firstIcon.hidden = YES;
             }break;
                 
             case 2:{
@@ -468,6 +487,7 @@
                     make.top.right.equalTo(self.videoBottomView);
                     make.width.height.equalTo(@(length));
                 }];
+                liverVC.firstIcon.hidden = YES;
             }break;
                 
             default:{
@@ -475,6 +495,7 @@
                     make.top.left.equalTo(self.videoBottomView);
                     make.width.height.equalTo(@(length));
                 }];
+                liverVC.firstIcon.hidden = NO;
             }break;
         }
         [self.hangoutArray addObject:liverVC];
@@ -514,6 +535,19 @@
     
     // 初始化是否私密
     self.isPrivate = self.giftVC.switchBtn.isOn;
+}
+
+// 接收过渡页回调 更新显示
+- (void)upDateChildView:(NSString *)anchorId {
+    HangOutLiverViewController *liverVC = [self.hangoutDic objectForKey:anchorId];
+    if (liverVC) {
+        for (IMLivingAnchorItemObject *obj in self.anchorArray) {
+            if ([obj.anchorId isEqualToString:anchorId] && [liverVC getTheLiveType] != LIVETYPE_COUNTDOWN) {
+                liverVC.anchorItem = obj;
+                [liverVC showEnterRoomType];
+            }
+        }
+    }
 }
 
 #pragma mark - 获取所有礼物列表 刷新窗口统计礼物控件
@@ -640,15 +674,14 @@
     }];
     [self.invitePageVC.view layoutSubviews];
     
-    if (self.chatAnchorArray.count > 0) {
+    if (self.anchorArray.count > 0) {
+        IMLivingAnchorItemObject *obj = self.anchorArray.firstObject;
         NSMutableArray *anchors = [[NSMutableArray alloc] init];
-        for (LSUserInfoModel *model in self.chatAnchorArray) {
-            HangoutInviteAnchor *item = [[HangoutInviteAnchor alloc] init];
-            item.anchorName = model.nickName;
-            item.anchorId = model.userId;
-            item.photoUrl = item.photoUrl;
-            [anchors addObject:item];
-        }
+        HangoutInviteAnchor *item = [[HangoutInviteAnchor alloc] init];
+        item.anchorName = obj.nickName;
+        item.anchorId = obj.anchorId;
+        item.photoUrl = item.photoUrl;
+        [anchors addObject:item];
         self.invitePageVC.anchorIdArray = anchors;
     } else {
         self.invitePageVC.anchorIdArray = nil;
@@ -658,10 +691,9 @@
 #pragma mark - 信用点详情界面
 - (void)initCreditView {
     self.creditOffset = 0;
-    self.creditView = [CreditView creditView];
+    self.creditView = [HangoutCreditView creditView];
     self.creditView.delegate = self;
     self.creditView.hidden = YES;
-    self.creditView.backButton.hidden = YES;
     [self.view addSubview:self.creditView];
 }
 
@@ -687,12 +719,12 @@
                             }];
 }
 
-#pragma mark -  CreditViewDelegate
-- (void)creditViewCloseAction:(CreditView *)creditView {
+#pragma mark -  HangoutCreditViewDelegate
+- (void)creditViewCloseAction:(HangoutCreditView *)creditView {
     [self closeCreditView];
 }
 
-- (void)rechargeCreditAction:(CreditView *)creditView {
+- (void)rechargeCreditAction:(HangoutCreditView *)creditView {
     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -712,6 +744,7 @@
 #pragma mark - HangOutControlViewDelegate
 - (void)closeControlView:(HangOutControlView *)view {
     // TODO:关闭控制台界面
+    self.openControlBtn.hidden = NO;
     self.controlView.hidden = YES;
     self.backgroundBtn.hidden = YES;
 }
@@ -752,9 +785,13 @@
 
 - (void)endHangOutLiveRoom:(HangOutControlView *)view {
     // TODO:关闭Hangout直播间
-//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismissAnimated:YES completion:nil];
+    
+    // 发送退出多人互动直播间
+    if (self.liveRoom.roomId.length > 0) {
+        [self.imManager leaveHangoutRoom:self.liveRoom.roomId finishHandler:nil];
+    }
+    // 显示结束页
+    [self stopLiveWithErrtype:HANGOUTERROR_NORMAL errMsg:NSLocalizedStringFromSelf(@"HANGOUT_IS_ENDED")];
 }
 
 #pragma mark - 文本和表情输入控件管理
@@ -766,6 +803,9 @@
     self.inputMessageView.layer.shadowRadius = 1.0f;
     [self showInputMessageView];
     
+    self.chatBackgroundView.layer.cornerRadius = self.chatBackgroundView.frame.size.height / 2;
+    self.chatBackgroundView.layer.masksToBounds = YES;
+    
     // 聊天输入框
     self.hangoutSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB_ALPHA(0x9EFFFFFF);
     self.hangoutSendBarView.inputTextField.textColor = COLOR_WITH_16BAND_RGB(0xffffff);
@@ -776,6 +816,8 @@
 - (void)showInputMessageView {
     self.chatBtn.hidden = NO;
     self.giftBtn.hidden = NO;
+    self.chatBackgroundView.hidden = NO;
+    self.inputMessageView.backgroundColor = [UIColor clearColor];
     
     self.hangoutSendBarView.hidden = YES;
 }
@@ -783,6 +825,8 @@
 - (void)hideInputMessageView {
     self.chatBtn.hidden = YES;
     self.giftBtn.hidden = YES;
+    self.chatBackgroundView.hidden = YES;
+    self.inputMessageView.backgroundColor = COLOR_WITH_16BAND_RGB(0x414141);
     
     self.hangoutSendBarView.hidden = NO;
 }
@@ -825,8 +869,8 @@
     
     [self.buttonBar removeAllButton];
     
-    UIImage *normalImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB_ALPHA(0xCE05C775) imageRect:CGRectMake(0, 0, 1, 1)];
-    UIImage *selectImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0x0B7041) imageRect:CGRectMake(0, 0, 1, 1)];
+    UIImage *normalImage = [self createImageWithColor:Color(255, 255, 255, 1)];
+    UIImage *selectImage = [self gradientImageWithColors:@[COLOR_WITH_16BAND_RGB(0xFD5552), COLOR_WITH_16BAND_RGB(0xFF8700)] rect:CGRectMake(0, 0, 77, 30)];
     NSMutableArray *chatNameArray = [[NSMutableArray alloc] init];
     [chatNameArray addObjectsFromArray:audienceArray];
     
@@ -843,29 +887,71 @@
         UIButton *firstNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         objc_setAssociatedObject(firstNumBtn, @"userid", model.userId, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [firstNumBtn setTitle:title forState:UIControlStateNormal];
-        [firstNumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        firstNumBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+        [firstNumBtn setTitleColor:COLOR_WITH_16BAND_RGB(0x383838) forState:UIControlStateNormal];
+        [firstNumBtn setTitleColor:COLOR_WITH_16BAND_RGB(0xffffff) forState:UIControlStateSelected];
+        [firstNumBtn setBackgroundImage:normalImage forState:UIControlStateNormal];
+        [firstNumBtn setBackgroundImage:selectImage forState:UIControlStateSelected];
+        
+        firstNumBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         firstNumBtn.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [firstNumBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         if ([self.chatUserId isEqualToString:model.userId] || (!self.chatUserId && !model.userId)) {
-            [firstNumBtn setBackgroundImage:selectImage forState:UIControlStateNormal];
+            firstNumBtn.selected = YES;
         } else {
-            [firstNumBtn setBackgroundImage:normalImage forState:UIControlStateNormal];
+            firstNumBtn.selected = NO;
         }
         [firstNumBtn addTarget:self action:@selector(selectFirstNum:) forControlEvents:UIControlEventTouchUpInside];
         [items addObject:firstNumBtn];
     }
     self.buttonBar.items = items;
     [self.buttonBar reloadData:YES];
-    self.buttonBarHeight = 22 * (int)chatNameArray.count;
+    self.buttonBarHeight = 30 * (int)chatNameArray.count;
 }
 
 - (void)selectFirstNum:(id)sender {
     UIButton *btn = sender;
     self.chatUserId = objc_getAssociatedObject(btn, @"userid");
+    for (UIButton *button in self.buttonBar.items) {
+        NSString *userid = objc_getAssociatedObject(button, @"userid");
+        button.selected = [userid isEqualToString:self.chatUserId];
+    }
     NSString *name = [btn.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@""];
     self.audienceNameLabel.text = [NSString stringWithFormat:@"@ %@",name];
     [self hiddenButtonBar];
+}
+
+- (UIImage *) createImageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
+
+- (UIImage *)gradientImageWithColors:(NSArray *)colors rect:(CGRect)rect {
+    if (!colors.count || CGRectEqualToRect(rect, CGRectZero)) {
+        return nil;
+    }
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    
+    gradientLayer.frame = rect;
+    gradientLayer.startPoint = CGPointMake(0, 0);
+    gradientLayer.endPoint = CGPointMake(1, 0);
+    NSMutableArray *mutColors = [NSMutableArray arrayWithCapacity:colors.count];
+    for (UIColor *color in colors) {
+        [mutColors addObject:(__bridge id)color.CGColor];
+    }
+    gradientLayer.colors = [NSArray arrayWithArray:mutColors];
+    
+    UIGraphicsBeginImageContextWithOptions(gradientLayer.frame.size, gradientLayer.opaque, 0);
+    [gradientLayer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return outputImage;
 }
 
 #pragma mark - LSCheckButtonDelegate
@@ -1304,7 +1390,7 @@
         for (int index = 0; index < self.anchorArray.count; index++) {
             
             IMLivingAnchorItemObject *obj = self.anchorArray[index];
-            if (obj.anchorStatus == LIVEANCHORSTATUS_ONLINE) {
+            if (obj.anchorStatus == LIVEANCHORSTATUS_ONLINE || obj.anchorStatus == LIVEANCHORSTATUS_UNKNOW) {
                 // 添加聊天@列表
                 LSUserInfoModel *model = [[LSUserInfoModel alloc] init];
                 model.userId = obj.anchorId;
@@ -1347,8 +1433,6 @@
         }
         // 遍历完 更新数组
         [self updataAnchorArray:self.chatAnchorArray];
-    } else {
-        self.anchorArray = [[NSMutableArray alloc] init];
     }
 }
 
@@ -1388,8 +1472,6 @@
                 [liverVC showGiftCount:(NSMutableArray *)obj.buyforList];
             }
         }
-    } else {
-        self.roomGiftList = [[NSMutableArray alloc] init];
     }
 }
 
@@ -1707,14 +1789,14 @@
         for (NSString *key in keys) {
             HangOutLiverViewController *liverVC = [self.hangoutDic objectForKey:key];
             // 停止拉流/置空
-            [liverVC resetPlayer];
+            [liverVC stopPlay];
             liverVC.liveRoom = nil;
         }
     }
     if (self.hangoutArray.count > 0) {
         for (HangOutLiverViewController *liverVC in self.hangoutArray) {
             // 停止拉流/置空
-            [liverVC resetPlayer];
+            [liverVC stopPlay];
             liverVC.liveRoom = nil;
         }
     }
@@ -1731,7 +1813,7 @@
         for (NSString *key in keys) {
             HangOutLiverViewController *liverVC = [self.hangoutDic objectForKey:key];
             // 停止拉流/置空
-            [liverVC resetPlayer];
+            [liverVC stopPlay];
             liverVC.liveRoom = nil;
         }
     }
@@ -1753,6 +1835,7 @@
 - (IBAction)openControlAction:(id)sender {
     self.backgroundBtn.hidden = NO;
     self.controlView.hidden = NO;
+    self.openControlBtn.hidden = YES;
     [self.view bringSubviewToFront:self.controlView];
 }
 
@@ -1854,6 +1937,7 @@
 /** 显示礼物列表 **/
 - (void)showGiftView {
     [self updataAnchorArray:self.chatAnchorArray];
+    self.giftVC.creditLabel.text = [NSString stringWithFormat:@"%.2f",self.creditManager.mCredit];
     self.backgroundBtn.hidden = NO;
     self.giftVC.view.hidden = NO;
     [self.view bringSubviewToFront:self.giftVC.view];
@@ -1888,7 +1972,6 @@
 
 /** 显示邀请主播列表 **/
 - (void)showInvitePageView {
-    [self updataAnchorArray:self.chatAnchorArray];
     [self.invitePageVC reloadData];
     self.backgroundBtn.hidden = NO;
     self.invitePageVC.view.hidden = NO;
@@ -1977,6 +2060,9 @@
     [self.bigGiftArray removeAllObjects];
     [self.view sendSubviewToBack:self.giftAnimationView];
     HangOutFinshViewController *finshVC = [[HangOutFinshViewController alloc] initWithNibName:nil bundle:nil];
+    for (LSUserInfoModel *obj in self.chatAnchorArray) {
+        [finshVC anchorArrayAddObject:obj];
+    }
     [self addChildViewController:finshVC];
     [self.view addSubview:finshVC.view];
     [self.view bringSubviewToFront:finshVC.view];
@@ -1989,6 +2075,7 @@
     
     // 清空直播间信息
     self.liveRoom = nil;
+    [LiveGobalManager manager].liveRoom = nil;
 }
 
 #pragma mark - 手势事件 (单击屏幕)
@@ -2031,6 +2118,9 @@
         [self hiddenButtonBar];
     }
     self.controlView.hidden = YES;
+    if (self.openControlBtn.hidden) {
+        self.openControlBtn.hidden = NO;
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -2047,7 +2137,7 @@
 - (void)getLeftCreditRequest {
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit, int coupon, double postStamp) {
-        NSLog(@"HangOutViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon:%d, postStamp:%d)", success, (long)errnum, errmsg, credit, coupon, postStamp);
+        NSLog(@"HangOutViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon:%d, postStamp:%f)", success, (long)errnum, errmsg, credit, coupon, postStamp);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (success) {
@@ -2160,27 +2250,27 @@
         if (errType == LCC_ERR_SUCCESS) {
             
             if (self.liveRoom.roomId.length > 0) {
-                [self.imManager enterHangoutRoom:self.liveRoom.roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull Item) {
+                [self.imManager enterHangoutRoom:self.liveRoom.roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                       NSLog(@"HangOutViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", BOOL2SUCCESS(success), errType, errMsg, Item.roomId);
+                       NSLog(@"HangOutViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", BOOL2SUCCESS(success), errType, errMsg, item.roomId);
                         if (success) {
-                            if (Item.roomType == ROOMTYPE_HANGOUTROOM) {
+                            if (item.roomType == ROOMTYPE_HANGOUTROOM) {
                                 self.liveRoom.roomType = LiveRoomType_Hang_Out;
                             }
-                            self.liveRoom.hangoutLiveRoom = Item;
-                            if (Item.otherAnchorList.count > 0) {
+                            self.liveRoom.hangoutLiveRoom = item;
+                            if (item.otherAnchorList.count > 0) {
                                 [self.anchorArray removeAllObjects];
-                                [self.anchorArray addObjectsFromArray:Item.otherAnchorList];
+                                [self.anchorArray addObjectsFromArray:item.otherAnchorList];
                                 [self enterRoomAnchorList];
                             }
-                            if (Item.buyforList.count > 0) {
+                            if (item.buyforList.count > 0) {
                                 [self.roomGiftList removeAllObjects];
-                                [self.roomGiftList addObjectsFromArray:Item.buyforList];
+                                [self.roomGiftList addObjectsFromArray:item.buyforList];
                                 [self showBugforList];
                             }
                             
                             // 重置男士推流
-                            self.userVC.liveRoom.publishUrlArray = Item.pushUrl;
+                            self.userVC.liveRoom.publishUrlArray = item.pushUrl;
                             [self.userVC reloadVideoStatus];
                             
                         } else {
@@ -2380,16 +2470,22 @@
 
 - (void)onRecvEnterHangoutRoomNotice:(IMRecvEnterRoomItemObject *)item {
     BOOL isAnchor = item.isAnchor;
-    BOOL isEqualUser = [item.userId isEqualToString:self.loginManager.loginItem.userId];
     BOOL isEqualRoom = [item.roomId isEqualToString:self.liveRoom.roomId];
-
+    BOOL isFirstAnchor = NO;
+    IMLivingAnchorItemObject *obj = self.anchorArray.firstObject;
+    if ([obj.anchorId isEqualToString:item.userId]) {
+        isFirstAnchor = YES;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"HangOutViewController::onRecvEnterHangoutRoomNotice( [接收观众/主播进入多人互动直播间] roomId : %@, userId : %@,"
-              "nickName : %@, anchorId : %@ )",item.roomId, item.userId, item.nickName, item.userId);
-        // 插入入场消息
-        [self addJoinMessageNickName:item.nickName fromId:item.userId];
+              "nickName : %@, isAnchor : %d )",item.roomId, item.userId, item.nickName, item.isAnchor);
+        if (isEqualRoom && !isFirstAnchor) {
+            // 插入入场消息
+            [self addJoinMessageNickName:item.nickName fromId:item.userId];
+        }
         
-        if (isAnchor && !isEqualUser && isEqualRoom) {
+        if (isAnchor && isEqualRoom) {
             // 储存本地主播信息
             LSUserInfoModel *model = [[LSUserInfoModel alloc] init];
             model.userId = item.userId;
@@ -2417,11 +2513,16 @@
     BOOL isAnchor = item.isAnchor;
     BOOL isEqualUser = [item.userId isEqualToString:self.loginManager.loginItem.userId];
     BOOL isEqualRoom = [item.roomId isEqualToString:self.liveRoom.roomId];
+    BOOL isFirstAnchor = NO;
+    IMLivingAnchorItemObject *obj = self.anchorArray.firstObject;
+    if ([obj.anchorId isEqualToString:item.userId]) {
+        isFirstAnchor = YES;
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (isAnchor && !isEqualUser && isEqualRoom) {
+        if (isAnchor && !isEqualUser && isEqualRoom && !isFirstAnchor) {
             NSLog(@"HangOutViewController::onRecvLeaveHangoutRoomNotice( [接收观众/主播退出多人互动直播间] roomId : %@, userId : %@, nickName : %@,"
-                  "errNo : %d, errMsg : %@, anchorId : %@ )", item.roomId, item.userId, item.nickName, item.errNo, item.errMsg, item.userId);
+                  "errNo : %d, errMsg : %@, isAnchor : %d )", item.roomId, item.userId, item.nickName, item.errNo, item.errMsg, item.isAnchor);
             
             MsgItem *msgModel = [[MsgItem alloc] init];
             msgModel.msgType = MsgType_Announce;
@@ -2451,6 +2552,7 @@
             // 设置余额及返点信息管理器
             if (credit >= 0) {
                 [self.creditManager setCredit:credit];
+                self.giftVC.creditLabel.text = [NSString stringWithFormat:@"%.2f",self.creditManager.mCredit];
             }
         }
     });
@@ -2464,6 +2566,7 @@
             if (credit >= 0) {
                 // 更新信用点
                 [self.creditManager setCredit:credit];
+                self.giftVC.creditLabel.text = [NSString stringWithFormat:@"%.2f",self.creditManager.mCredit];
             }
         } else {
             [self showdiaLog:errMsg];
@@ -2629,8 +2732,6 @@
         item.photoUrl = model.photoUrl;
         [array addObject:item];
     }
-    self.invitePageVC.anchorIdArray = array;
-    [self.invitePageVC reloadData];
 }
 
 @end

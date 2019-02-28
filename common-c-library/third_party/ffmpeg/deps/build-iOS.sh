@@ -33,10 +33,8 @@ function configure_i386 {
 	export ARCH=i386
 	export HOST=$ARCH-apple-darwin
 	
-	#toolchain=$(xcrun --sdk $PLATFORM -f clang)
+	toolchain=$(xcrun --sdk $PLATFORM -f clang)
 	#export CROSS_COMPILE_PREFIX="`dirname $toolchain`/"
-	
-	export EXTRA_CFLAGS=""
 	
 	configure_prefix
 }
@@ -49,10 +47,8 @@ function configure_x86_64 {
 	export ARCH=x86_64
 	export HOST=$ARCH-apple-darwin
 	
-	#toolchain=$(xcrun --sdk $PLATFORM -f clang)
+	toolchain=$(xcrun --sdk $PLATFORM -f clang)
 	#export CROSS_COMPILE_PREFIX="`dirname $toolchain`/"
-	
-	export EXTRA_CFLAGS=""
 	
 	configure_prefix
 }
@@ -189,15 +185,12 @@ function build_ffmpeg {
     				--disable-asm \
 						--disable-encoders \
 				    --enable-encoder=libx264 \
-				    --enable-encoder=mjpeg \
 				    --enable-encoder=libfdk_aac \
 				    --disable-decoders \
 				    --enable-decoder=libx264 \
-				    --enable-decoder=mjpeg \
 				    --enable-decoder=libfdk_aac \
     				--disable-demuxers \
     				--enable-demuxer=h264 \
-    				--enable-demuxer=mjpeg \
     				--disable-parsers \
     				--enable-parser=h264
     				$CONFIG_PARAM \
@@ -237,7 +230,7 @@ function combine {
 
 # Start Build
 BUILD_ARCH=(armv7 arm64 i386 x86_64)
-#BUILD_ARCH=(i386 x86_64)
+#BUILD_ARCH=(armv7)
 
 echo "# Starting building..."
 
@@ -245,7 +238,7 @@ for var in ${BUILD_ARCH[@]};do
 	configure_$var
 	show_enviroment
 	echo "# Starting building for $ARCH..."
-	#build_fdk_aac || exit 1
+	build_fdk_aac || exit 1
 	build_x264 || exit 1
 	build_ffmpeg || exit 1
 	echo "# Build for $ARCH finish"

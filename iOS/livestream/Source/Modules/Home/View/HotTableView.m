@@ -48,7 +48,7 @@
 
 #pragma mark - 列表界面回调 (UITableViewDataSource / UITableViewDelegate)
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0;
+    return 0.01;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -148,20 +148,7 @@
             cell.liveStatus.animationRepeatCount = 0;
             cell.liveStatus.animationDuration = 0.6;
             [cell.liveStatus startAnimating];
-            
-            if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType])
-            {
-                //显示Free
-                [cell.viewPublicFeeBtn setImage:[UIImage imageNamed:@"Home_HotAndFollow_Btn_ViewNow_Free"] forState:UIControlStateNormal];
-                cell.viewBtnTopDistance.constant = 2;
-            }
-            else
-            {
-                //不显示Free
-                [cell.viewPublicFeeBtn setImage:[UIImage imageNamed:@"Home_HotAndFollow_Btn_ViewNow"] forState:UIControlStateNormal];
-                cell.viewBtnTopDistance.constant = 90;
-            }
-            
+
             //显示节目名字
             if (item.showInfo.showTitle.length > 0)
             {
@@ -173,8 +160,21 @@
             else
             {
                 cell.titleView.hidden = YES;
-                cell.viewBtnTopDistance.constant = 2;
+                cell.viewBtnTopDistance.constant = 9;
             }
+            
+            if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType])
+            {
+                //显示Free
+                cell.freeIcon.hidden = NO;
+            }
+            else
+            {
+                //不显示Free
+                cell.freeIcon.hidden = YES;
+            }
+            
+        
         }
         else if (item.roomType == HTTPROOMTYPE_COMMONPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_NOLIVEROOM )
         {
@@ -187,14 +187,12 @@
                 
                 if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                     //显示Free
-                    [cell.vipPrivateBtn setImage:[UIImage imageNamed:@"Home_HotAndFollow_Btn_StartVipPrivateBroadcastAnimaition_Free"] forState:UIControlStateNormal];
-                    cell.viewBtnTopDistance.constant = 2;
+                    cell.freeIcon.hidden = NO;
                 }
                 else
                 {
                     //不显示Free
-                    [cell.vipPrivateBtn setImage:[UIImage imageNamed:@"Home_HotAndFollow_Btn_StartVipPrivateBroadcastAnimaition"] forState:UIControlStateNormal];
-                    cell.viewBtnTopDistance.constant = 9;
+                    cell.freeIcon.hidden = YES;
                 }
                 
             }

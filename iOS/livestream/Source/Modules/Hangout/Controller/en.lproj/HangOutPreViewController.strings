@@ -1,0 +1,17 @@
+
+/* Class = "UIButton"; normalTitle = "Add Credits"; ObjectID = "3kC-b3-k1m"; */
+"3kC-b3-k1m.normalTitle" = "Add Credits";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "eTn-6U-HPz"; */
+"eTn-6U-HPz.text" = "Label";
+
+/* Class = "UILabel"; text = "Hang-out is billed at 0.3 credits per minute per broadcaster."; ObjectID = "pi0-hT-kU2"; */
+"pi0-hT-kU2.text" = "Hang-out is billed at 0.3 credits per minute per broadcaster.";
+
+"INVITE_ANCHOR" = "Inviting %@ to join Hang-out.";
+
+"NO_CREDIT" = "You have insufficient credits to send the invitation.";
+
+"INVITE_REJECT" = "%@ is not responding. Please try again later.";
+
+"INVITE_BUSY" = "Sorry, the broadcaster is busy at the moment. Please try again later.";

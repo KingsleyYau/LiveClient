@@ -26,10 +26,10 @@ JNIEXPORT void JNICALL Java_net_qdating_dectection_LSFaceDetectorJni_Destroy
 /*
  * Class:     net_qdating_dectection_LSFaceDetectorJni
  * Method:    DetectPicture
- * Signature: (JII[B)V
+ * Signature: (J[BIII)V
  */
 JNIEXPORT void JNICALL Java_net_qdating_dectection_LSFaceDetectorJni_DetectPicture
-  (JNIEnv *, jobject, jlong, jint, jint, jbyteArray);
+  (JNIEnv *, jobject, jlong, jbyteArray, jint, jint, jint);
 
 #ifdef __cplusplus
 }

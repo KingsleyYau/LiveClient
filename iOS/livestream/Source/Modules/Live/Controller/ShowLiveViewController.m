@@ -186,16 +186,36 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
     
-    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM || !self.liveRoom.priv.isHasOneOnOneAuth) {
+    //是否节目直播间
+    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
         // 隐藏立即私密邀请控件
         self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
     }
-    else
-    {
-        // 设置邀请私密按钮
-        self.playVC.liveVC.startOneViewHeigh.constant = 40;
-        self.playVC.liveVC.startOneBtn.hidden = NO;
-        self.playVC.liveVC.startOneView.hidden = NO;
+    else {
+        //没有立即私密权限和多人互动权限
+        if (!self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.isHangoutRisk) {
+            // 隐藏立即私密邀请控件
+            self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+        }
+        //有立即私密权限，没有多人互动权限
+        else if (self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.isHangoutRisk) {
+            self.playVC.liveVC.startOneViewHeigh.constant = 40;
+            self.playVC.liveVC.startOneView.hidden = NO;
+            self.playVC.liveVC.startOneBtn.hidden = NO;
+            self.playVC.liveVC.startHangoutBtn.hidden = YES;
+            self.playVC.liveVC.startOneBtnX.constant = 0;
+        }
+        //没有立即私密权限，有多人互动权限
+        else if (!self.liveRoom.priv.isHasOneOnOneAuth && ![LSLoginManager manager].loginItem.isHangoutRisk) {
+            self.playVC.liveVC.startOneViewHeigh.constant = 40;
+            self.playVC.liveVC.startOneView.hidden = NO;
+            self.playVC.liveVC.startOneBtn.hidden = YES;
+            self.playVC.liveVC.startHangoutBtn.hidden = NO;
+            self.playVC.liveVC.startHangoutBtnX.constant = 0;
+        }
+        else {
+            //有立即私密权限，有多人互动权限，默认UI
+        }
     }
     
     // 立即私密按钮
@@ -283,7 +303,8 @@
     } else {
         self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s",self.liveRoom.httpLiveRoom.nickName];
     }
-    [self.ladyImageLoader refreshCachedImage:self.laddyHeadImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.ladyImageLoader refreshCachedImage:self.laddyHeadImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
     
     //    NSString *audienceNum = [NSString stringWithFormat:@"(%d/%d)", self.liveRoom.imLiveRoom.fansNum, self.liveRoom.imLiveRoom.maxFansiNum];
 }

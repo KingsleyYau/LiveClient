@@ -8,6 +8,7 @@
 
 #import "HotTableViewCell.h"
 #import "LiveBundle.h"
+#import "LSShadowView.h"
 #import <YYText.h>
 
 @implementation HotTableViewCell
@@ -29,6 +30,37 @@
         cell.imageViewHeader.image = nil;
         cell.labelRoomTitle.text = @"";
         [cell setExclusiveTouch:YES];
+        
+        cell.sendMailBtn.layer.cornerRadius = cell.sendMailBtn.frame.size.height * 0.5f;
+        cell.sendMailBtn.layer.masksToBounds = YES;
+        cell.vipPrivateBtn.layer.cornerRadius = cell.vipPrivateBtn.frame.size.height * 0.5f;
+        cell.vipPrivateBtn.layer.masksToBounds = YES;
+        cell.bookPrivateBtn.layer.cornerRadius = cell.bookPrivateBtn.frame.size.height * 0.5f;
+        cell.bookPrivateBtn.layer.masksToBounds = YES;
+        cell.chatNowBtn.layer.cornerRadius = cell.chatNowBtn.frame.size.height * 0.5f;
+        cell.chatNowBtn.layer.masksToBounds = YES;
+        cell.viewPublicFeeBtn.layer.cornerRadius = cell.viewPublicFeeBtn.frame.size.height * 0.5f;
+        cell.viewPublicFeeBtn.layer.masksToBounds = YES;
+        cell.viewPublicFreeBtn.layer.cornerRadius = cell.viewPublicFreeBtn.frame.size.height * 0.5f;
+        cell.viewPublicFreeBtn.layer.masksToBounds = YES;
+        
+        LSShadowView *shadow = [[LSShadowView alloc] init];
+        [shadow showShadowAddView:cell.sendMailBtn];
+        
+        LSShadowView *shadow1 = [[LSShadowView alloc] init];
+        [shadow1 showShadowAddView:cell.vipPrivateBtn];
+        
+        LSShadowView *shadow2 = [[LSShadowView alloc] init];
+        [shadow2 showShadowAddView:cell.bookPrivateBtn];
+        
+        LSShadowView *shadow3 = [[LSShadowView alloc] init];
+        [shadow3 showShadowAddView:cell.chatNowBtn];
+        
+        LSShadowView *shadow4 = [[LSShadowView alloc] init];
+        [shadow4 showShadowAddView:cell.viewPublicFeeBtn];
+        
+        LSShadowView *shadow5 = [[LSShadowView alloc] init];
+        [shadow5 showShadowAddView:cell.viewPublicFreeBtn];
         
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0xD4000000).CGColor, (__bridge id)[UIColor clearColor].CGColor];

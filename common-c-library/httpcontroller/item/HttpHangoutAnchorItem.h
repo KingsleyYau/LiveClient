@@ -35,6 +35,10 @@ public:
             if (root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_PHOTOURL].isString()) {
                 photoUrl = root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_PHOTOURL].asString();
             }
+            /* avatarImg */
+            if (root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AVATAR_IMG].isString()) {
+                avatarImg = root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AVATAR_IMG].asString();
+            }
             /* age */
             if (root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AGE].isNumeric()) {
                 age = root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AGE].asInt();
@@ -71,7 +75,8 @@ public:
      * 多人互动的主播列表结构体
      * anchorId         主播ID
      * nickName         昵称
-     * photoUrl         头像
+     * photoUrl         主播封面url
+     * avatarImg        主播头像url
      * age              年龄
      * country		    国家
      * onlineStatus     在线状态（ONLINE_STATUS_OFFLINE：离线，ONLINE_STATUS_LIVE：在线）
@@ -79,6 +84,7 @@ public:
     string   anchorId;
     string   nickName;
     string   photoUrl;
+    string   avatarImg;
     int      age;
     string   country;
     OnLineStatus onlineStatus;

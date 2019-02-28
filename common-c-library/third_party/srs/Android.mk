@@ -15,6 +15,7 @@ LOCAL_MODULE := srs_librtmp
 LOCAL_MODULE_FILENAME := libsrs_librtmp
 
 LOCAL_CPPFLAGS  := -std=gnu++98
+LOCAL_CPPFLAGS  += -frtti
 
 REAL_PATH := $(realpath $(LOCAL_PATH))
 LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))

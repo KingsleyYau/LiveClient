@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *anchorName;
 @property (weak, nonatomic) IBOutlet UIView *onlineView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *onlineWidth;
+@property (weak, nonatomic) IBOutlet UIView *shadowView;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellWidth;

@@ -92,18 +92,35 @@
 	        android:layout_width="180dp"
 	        android:layout_height="180dp"
 	        android:layout_alignParentLeft="true"
-			android:visibility="invisible"
+			android:visibility="visible"
         />
-		<Button
-			android:id="@+id/button300"
-			android:layout_width="70dp"
-			android:layout_height="40dp"
-			android:text="Mute"
-			android:textSize="12dp"
-			android:textAllCaps="false"
+
+		<LinearLayout
+			android:id="@+id/layoutButtons300"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentTop="true"
-			/>
+			android:gravity="left"
+			android:orientation="horizontal">
+
+			<Button
+				android:id="@+id/button300"
+				android:layout_width="70dp"
+				android:layout_height="40dp"
+				android:text="Mute"
+				android:textSize="12dp"
+				android:textAllCaps="false"
+				/>
+			<Button
+				android:id="@+id/button301"
+				android:layout_width="70dp"
+				android:layout_height="40dp"
+				android:text="Filter"
+				android:textSize="12dp"
+				android:textAllCaps="false"
+				/>
+		</LinearLayout>
 
         <android.opengl.GLSurfaceView
 	        android:id="@+id/surfaceViewPublish"
@@ -125,18 +142,25 @@
 
 			<Button
 				android:id="@+id/button400"
-				android:layout_width="70dp"
+				android:layout_width="60dp"
 				android:layout_height="40dp"
 				android:text="Mute"
 				android:textAllCaps="false"
-				android:textSize="12dp" />
+				android:textSize="11dp" />
 			<Button
 				android:id="@+id/button401"
-				android:layout_width="70dp"
+				android:layout_width="60dp"
 				android:layout_height="40dp"
 				android:text="Rotate"
 				android:textAllCaps="false"
-				android:textSize="12dp" />
+				android:textSize="11dp" />
+			<Button
+				android:id="@+id/button402"
+				android:layout_width="60dp"
+				android:layout_height="40dp"
+				android:text="Filter"
+				android:textAllCaps="false"
+				android:textSize="11dp" />
 		</LinearLayout>
 
     </RelativeLayout>

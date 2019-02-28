@@ -309,7 +309,7 @@
 
 #pragma mark - 富文本
 - (NSAttributedString *)parseMessageTextEmotion:(NSString *)text font:(UIFont *)font {
-    NSMutableAttributedString *attributeString = nil;
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
     if (text != nil) {
         attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     }

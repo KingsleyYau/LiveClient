@@ -250,7 +250,8 @@ typedef enum {
 - (void)setUpProfilePhoto {
     
     self.imageViewLoader = [LSImageViewLoader loader];
-    [self.imageViewLoader refreshCachedImage:self.profilePhoto options:SDWebImageRefreshCached imageUrl:self.personalItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+    [self.imageViewLoader refreshCachedImage:self.profilePhoto options:SDWebImageRefreshCached imageUrl:self.personalItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+    }];
 
 
     

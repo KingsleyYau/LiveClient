@@ -50,7 +50,8 @@
     }
     
     [self.imageLoader refreshCachedImage:self.userHeadImageView options:SDWebImageRefreshCached imageUrl:userInfo.photoUrl
-                        placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+                        placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+                        }];
     
     NSString *imageName = [NSString stringWithFormat:@"User_leave_%d",[LSLoginManager manager].loginItem.level];
     self.userLVImageView.image = [UIImage imageNamed:imageName];

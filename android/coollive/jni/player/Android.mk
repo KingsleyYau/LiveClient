@@ -32,7 +32,8 @@ LOCAL_LDFLAGS := -L$(LIBRARY_THIRDY_PARTY_PATH)/ffmpeg/android/lib/$(TARGET_ARCH
 					-lswresample \
 					-lpostproc \
 					-lx264 \
-					-lfdk-aac
+					-lfdk-aac \
+					-Wl,--gc-sections
 		
 LOCAL_STATIC_LIBRARIES += rtmpdump
 LOCAL_STATIC_LIBRARIES += androidcommon

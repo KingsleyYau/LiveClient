@@ -68,8 +68,15 @@
     
     [self setTableHeadView];
     
-    self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon",@"Setting_Greetings_Icon"];
-    self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail",@"Hang-out"];
+    if ([LSLoginManager manager].loginItem.isHangoutRisk) {
+        self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon"];
+        self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail"];
+    } else {
+        self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon",@"LS_Setting_HangOut_Icon"];
+        self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail",@"Hang-out"];
+    }
+//    self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon",@"Setting_Greetings_Icon"];
+//    self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail",@"Hang-out"];
     
     self.imageArray = @[@"Setting_Ticket_Icon",@"Setting_Bookings_Icon",@"Setting_BackPack_Icon"];
     self.headArray = @[@"My Show Tickets",@"My Bookings",@"My Backpack"];

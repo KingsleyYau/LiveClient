@@ -57,6 +57,7 @@
 #undef mxcsr_mask
 #endif
 
+#if !defined(_ANDROID_NDK_VERSION) || (_ANDROID_NDK_VERSION < 16)
 #ifdef __i386__
 #ifdef __cplusplus
 extern "C" {
@@ -66,5 +67,6 @@ typedef struct user_fxsr_struct user_fpxregs_struct;
 }  // extern "C"
 #endif  // __cplusplus
 #endif  // __i386__
+#endif	// _ANDROID_NDK_VERSION
 
 #endif  // GOOGLE_BREAKPAD_COMMON_ANDROID_INCLUDE_SYS_USER_H

@@ -13,6 +13,8 @@
 #import "LiveStreamPlayer.h"
 #import "LiveStreamPublisher.h"
 
+#import "LSImageVibrateFilter.h"
+
 @interface StreamViewController ()
 
 @property (strong) NSArray<LiveStreamPlayer *> *playerArray;
@@ -57,7 +59,9 @@
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
-
+    LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
+    self.publisher.customFilter = vibrateFilter;
+    
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.17:19351/live/max", nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 

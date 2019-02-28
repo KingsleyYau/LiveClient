@@ -48,10 +48,10 @@ typedef enum {
     // 客户端定义的错误
     HTTP_LCC_ERR_PROTOCOLFAIL = -10001,   // 协议解析失败（服务器返回的格式不正确）
     HTTP_LCC_ERR_CONNECTFAIL = -10002,    // 连接服务器失败/断开连接
-    HTTP_LCC_ERR_CHECKVERFAIL = -10003,   // 检测版本号失败（可能由于版本过低导致）
+    //HTTP_LCC_ERR_CHECKVERFAIL = -10003,   // 检测版本号失败（可能由于版本过低导致）
     
-    HTTP_LCC_ERR_SVRBREAK = -10004,       // 服务器踢下线
-    HTTP_LCC_ERR_INVITE_TIMEOUT = -10005, // 邀请超时
+    //HTTP_LCC_ERR_SVRBREAK = -10004,       // 服务器踢下线
+    //HTTP_LCC_ERR_INVITE_TIMEOUT = -10005, // 邀请超时
     // 服务器返回错误
     HTTP_LCC_ERR_ROOM_FULL = 10023,   // 房间人满
     HTTP_LCC_ERR_NO_CREDIT = 10025,   // 信用点不足

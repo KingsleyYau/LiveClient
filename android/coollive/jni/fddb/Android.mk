@@ -15,7 +15,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := opencv
 LOCAL_MODULE_FILENAME := libopencv_java3
 LOCAL_SRC_FILES := libs/$(TARGET_ARCH_ABI)/libopencv_java3.so
-include $(PREBUILT_SHARED_LIBRARY)
+#include $(PREBUILT_SHARED_LIBRARY)
 
 # Build own face-detection lib
 include $(CLEAR_VARS)
@@ -45,4 +45,4 @@ LOCAL_SHARED_LIBRARIES = opencv
 REAL_PATH := $(realpath $(LOCAL_PATH))
 LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))
 
-include $(BUILD_SHARED_LIBRARY)
+#include $(BUILD_SHARED_LIBRARY)

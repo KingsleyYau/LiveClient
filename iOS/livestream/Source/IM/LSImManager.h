@@ -149,7 +149,7 @@ typedef void (^EnterPublicRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSStr
 /**
  发送观众退出直播间
 
- @param roomId 直播间Id
+ @param liveRoom 直播间Id
  @return YES:成功/NO:失败
  */
 - (BOOL)leaveRoom:(LiveRoom *)liveRoom;
@@ -181,7 +181,7 @@ typedef void (^InstantInviteUserReportHandler)(BOOL success, LCC_ERR_TYPE errTyp
  */
 - (BOOL)InstantInviteUserReport:(NSString *)inviteId isShow:(BOOL)isShow finishHandler:(InstantInviteUserReportHandler)finishHandler;
 
-typedef void (^GetIMInviteInfoHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg, ImInviteIdItemObject *Item, ImAuthorityItemObject *priv);
+typedef void (^GetIMInviteInfoHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg, ImInviteIdItemObject *item, ImAuthorityItemObject *priv);
 /**
  获取指定立即私密邀请信息
  *  param finishHandler 处理回调
@@ -252,7 +252,7 @@ typedef void (^ControlManPushHandler)(BOOL success, LCC_ERR_TYPE errType, NSStri
 - (BOOL)controlManPush:(NSString *)roomId control:(IMControlType)control finishHandler:(ControlManPushHandler)finishHandler;
 
 // ------------- 多人互动 -------------
-typedef void (^EnterHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg, IMHangoutRoomItemObject *Item);
+typedef void (^EnterHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg, IMHangoutRoomItemObject *item);
 /**
  *  10.3.观众新建/进入多人互动直播间接口
  *

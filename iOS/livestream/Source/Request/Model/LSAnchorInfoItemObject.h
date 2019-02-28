@@ -15,10 +15,12 @@
  * anchorType           主播类型
  * isLive               是否正在公开直播（0：否，1：是）
  * introduction         主播个人介绍
+ * roomPhotoUrl         主播封面
  */
 @property (nonatomic, copy) NSString* _Nonnull address;
 @property (nonatomic, assign) AnchorLevelType anchorType;
 @property (nonatomic, assign) BOOL isLive;
 @property (nonatomic, copy) NSString* _Nonnull introduction;
+@property (nonatomic, copy) NSString* _Nonnull roomPhotoUrl;
 
 @end

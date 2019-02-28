@@ -33,6 +33,9 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 @property (nonatomic, strong) NSMutableArray * showArray;
 @property (nonatomic, strong) NSTimer * timer;
 @property (nonatomic, strong) NSMutableArray * hangoutArray;
+@property (nonatomic, assign) BOOL isRequestEnd;
+@property (nonatomic, strong) NSMutableArray * hangoutListArray;
+@property (nonatomic, assign) NSInteger time;
 @end
 
 @implementation LSMainNotificationManager
@@ -51,8 +54,10 @@ static LSMainNotificationManager* mainNotificationManager = nil;
         self.cacheArray = [NSMutableArray array];
         self.showArray = [NSMutableArray array];
         self.hangoutArray = [NSMutableArray array];
+        self.hangoutListArray = [NSMutableArray array];
        [QNLiveChatLocalPushManager sharedInstance].delegate = self;
        [[LSImManager manager] addDelegate:self];
+        self.isRequestEnd = YES;
     }
     return self;
 }
@@ -71,6 +76,7 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 - (void)countdown {
     
     if (self.showArray.count == 0 && self.cacheArray.count == 0) {
+        NSLog(@"LSMainNotificationManager::没有气泡和缓存数据，停止倒计时");
         [self stopCountdown];
         if ([self.delegate respondsToSelector:@selector(mainNotificationManagerRemoveNotificaitonView)]) {
             [self.delegate mainNotificationManagerRemoveNotificaitonView];
@@ -87,6 +93,7 @@ static LSMainNotificationManager* mainNotificationManager = nil;
             for (int i = 0; i < self.showArray.count; i++) {
                 LSMainNotificaitonModel * model = self.showArray[i];
                 if ([[NSDate date]timeIntervalSince1970] - [self timeOutNum] > model.createTime) {
+                    NSLog(@"LSMainNotificationManager::countdown 气泡显示到期 userId:%@ msgType:%@",model.userId,model.msgType==MsgStatus_Chat?@"Chat":@"Hangout");
                     isTimeOut = YES;
                     row = i;
                     break;
@@ -97,12 +104,13 @@ static LSMainNotificationManager* mainNotificationManager = nil;
                 
                 if (self.showArray.count > 0) {
                     //刷新UI
-                    [self hideTimeoutNotificaitonView:row];
+                    [self hideTimeoutNotificaitonView];
                 }
             }
-            
-            if (self.showArray.count < SHOW_MAX_NUM) {
-                 [self showNotificaitonView];
+            self.time++;
+            if (self.showArray.count < SHOW_MAX_NUM && self.time > 5) {
+                self.time = 0;
+                [self showNotificaitonView];
             }
         }
     }
@@ -110,7 +118,7 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 
 
 - (CGFloat)timeOutNum {
-    return self.showArray.count == 1?TIMEOUT:TIMEOUT+DELAY_TIME;
+    return TIMEOUT;
 }
 
 - (NSArray *)items {
@@ -119,10 +127,12 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 
 //插入缓存通知数据
 - (void)insertCacheNotificaiton:(LSMainNotificaitonModel *)model {
-    @synchronized (self) {
+    @synchronized (self.cacheArray) {
         if (self.cacheArray.count > CACHE_MAX_NUM) {
+            NSLog(@"LSMainNotificationManager::cacheArray超过最大数，删除第一条数据");
             [self.cacheArray removeObjectAtIndex:0];
         }
+        NSLog(@"LSMainNotificationManager::插入缓存数据 userId:%@ msgType:%@ msg:%@",model.userId,model.msgType==MsgStatus_Chat?@"Chat":@"Hangout",model.contentStr);
         [self.cacheArray addObject:model];
     }
     //开始倒计时
@@ -147,16 +157,16 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 
 //添加到显示数组并回调显示UI
 - (void)addDataToShowArrayAndCallbackDelegate:(LSMainNotificaitonModel *)model {
+    NSLog(@"LSMainNotificationManager::添加到显示数组并回调显示UI Msg:%@",model.contentStr);
     //可显示
     @synchronized (self) {
-        model.createTime = [[NSDate date] timeIntervalSince1970];
         [self.showArray addObject:model];
         [self.cacheArray removeObject:model];
         if (model.msgType == MsgStatus_Hangout) {
             [self.hangoutArray addObject:model];
         }
     }
-    [self delayCallbackDelegate];
+    [self delayCallbackDelegate:model];
 }
 
 //删除没用的缓存消息
@@ -169,10 +179,12 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 }
 
 //延时通知
-- (void)delayCallbackDelegate {
+- (void)delayCallbackDelegate:(LSMainNotificaitonModel *)model {
     CGFloat delay = self.showArray.count == 1?0:DELAY_TIME;
     __weak typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        model.createTime = [[NSDate date] timeIntervalSince1970];
+        NSLog(@"LSMainNotificationManager::延时了%0.fs 显示气泡  Msg:%@ userId:%@ msgType:%@ time:%ld",delay,model.contentStr,model.userId,model.msgType==MsgStatus_Chat?@"Chat":@"Hangout",(long)model.createTime);
         //刷新UI
         if ([weakSelf.delegate respondsToSelector:@selector(mainNotificationManagerShowNotificaitonView)]) {
             [weakSelf.delegate mainNotificationManagerShowNotificaitonView];
@@ -189,6 +201,7 @@ static LSMainNotificationManager* mainNotificationManager = nil;
                 [self addDataToShowArrayAndCallbackDelegate:model];
             }else {
                 //删除没用的缓存消息
+                NSLog(@"LSMainNotificationManager::liveChat缓存数据超过最大数，删除第一条数据");
                 [self removeCacheFirstObject];
             }
         }else {
@@ -197,30 +210,35 @@ static LSMainNotificationManager* mainNotificationManager = nil;
                 for (LSMainNotificaitonModel * item in self.hangoutArray) {
                     if ([item.userId isEqualToString:model.userId] && item.createTime + 600 < [[NSDate date] timeIntervalSince1970]) {
                         //10分鐘内顯示过該主播的邀请
-                        NSLog(@"LSMainNotificationManager::showNotificaitonView  10分鐘内顯示过該主播的邀请，不插入气泡");
+                        NSLog(@"LSMainNotificationManager::showNotificaitonView  10分鐘内顯示过該主播hangout邀请，不插入气泡");
                         //删除没用的缓存消息
                         [self removeCacheFirstObject];
                         return;
                     }
                 }
                 
-                LSAutoInvitationHangoutLiveDisplayRequest * request = [[LSAutoInvitationHangoutLiveDisplayRequest alloc]init];
-                request.anchorId = model.userId;
-                request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                         NSLog(@"LSMainNotificationManager::showNotificaitonView LSAutoInvitationHangoutLiveDisplayRequest hangout消息是否显示 %@",BOOL2SUCCESS(success));
-                        if (success) {
-                            [self addDataToShowArrayAndCallbackDelegate:model];
-                        }else {
-                            //删除没用的缓存消息
-                            [self removeCacheFirstObject];
-                        }
-                    });
-                };
-                [[LSSessionRequestManager manager]sendRequest:request];
+                if (self.isRequestEnd) {
+                    self.isRequestEnd = NO;
+                    LSAutoInvitationHangoutLiveDisplayRequest * request = [[LSAutoInvitationHangoutLiveDisplayRequest alloc]init];
+                    request.anchorId = model.userId;
+                    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.isRequestEnd = YES;
+                            NSLog(@"LSMainNotificationManager::showNotificaitonView LSAutoInvitationHangoutLiveDisplayRequest hangout消息是否显示 %@",BOOL2SUCCESS(success));
+                            if (success) {
+                                [self addDataToShowArrayAndCallbackDelegate:model];
+                            }else {
+                                //删除没用的缓存消息
+                                [self removeCacheFirstObject];
+                            }
+                        });
+                    };
+                    [[LSSessionRequestManager manager]sendRequest:request];
+                }
             }
             else {
                 //删除没用的缓存消息
+                NSLog(@"LSMainNotificationManager::hangout缓存数据超过最大数，删除第一条数据");
                 [self removeCacheFirstObject];
             }
         }
@@ -228,19 +246,21 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 }
 
 //删除过期气泡
-- (void)hideTimeoutNotificaitonView:(NSInteger)row {
-    
-    if ([self.delegate respondsToSelector:@selector(mainNotificationManagerHideNotificaitonView:)]) {
-        [self.delegate mainNotificationManagerHideNotificaitonView:row];
+- (void)hideTimeoutNotificaitonView {
+    NSLog(@"LSMainNotificationManager::hideTimeoutNotificaitonView 移除气泡");
+    if ([self.delegate respondsToSelector:@selector(mainNotificationManagerHideNotificaitonView)]) {
+        [self.delegate mainNotificationManagerHideNotificaitonView];
     }
 }
 
 //点击选中气泡并移除
 - (void)selectedShowArrayRow:(NSInteger)row {
+    LSMainNotificaitonModel * model = [self.showArray objectAtIndex:row];
+    NSLog(@"LSMainNotificationManager::selectedShowArrayRow 选中气泡 userId:%@ msgType:%@",model.userId,model.msgType==MsgStatus_Chat?@"Chat":@"Hangout");
     @synchronized (self.showArray) {
         [self.showArray removeObjectAtIndex:row];
     }
-    [self hideTimeoutNotificaitonView:row];
+    [self hideTimeoutNotificaitonView];
 }
 
 #pragma mark - 收到liveChat消息
@@ -249,6 +269,7 @@ static LSMainNotificationManager* mainNotificationManager = nil;
     if ([[LSLiveChatManagerOC manager] isChatingUserInChatState:userItem.userId]) {
         return;
     }
+    NSLog(@"LSMainNotificationManager::liveChatPushManager Msg:%@ userId:%@",msg,userItem.userId);
     
     if (userItem.chatType == LC_CHATTYPE_INVITE) {
         [[LiveModule module].analyticsManager reportActionEvent:ShowLiveChatInvitation eventCategory:EventCategoryLiveChat];
@@ -269,6 +290,8 @@ static LSMainNotificationManager* mainNotificationManager = nil;
 - (void)onRecvHandoutInviteNotice:(IMHangoutInviteItemObject *)item {
     
     NSLog(@"LSMainNotificationManager::onRecvHandoutInviteNotice anchorNickName: %@,anchorId : %@ InviteMessage: %@",item.anchorNickName,item.anchorId,item.InviteMessage);
+    [self.hangoutListArray addObject:item];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         LSGetHangoutFriendsRequest * request = [[LSGetHangoutFriendsRequest alloc]init];
         request.anchorId = item.anchorId;
@@ -276,16 +299,21 @@ static LSMainNotificationManager* mainNotificationManager = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSLog(@"LSMainNotificationManager::LSGetHangoutFriendsRequest:%@,errnum : %d, errmsg : %@",BOOL2SUCCESS(success),errnum,errmsg);
                 if (array.count > 0) {
-                    int r = arc4random() % [array count];
-                    LSHangoutAnchorItemObject * ojb = [array objectAtIndex:r];
-                    LSMainNotificaitonModel * model = [[LSMainNotificaitonModel alloc]init];
-                    model.userName = item.anchorNickName;
-                    model.userId = item.anchorId;
-                    model.photoUrl = item.avatarImg;
-                    model.contentStr = item.InviteMessage;
-                    model.msgType = MsgStatus_Hangout;
-                    model.friendUrl = ojb.photoUrl;
-                    [self insertCacheNotificaiton:model];
+                    for (IMHangoutInviteItemObject * hangoutItem in self.hangoutListArray) {
+                        if ([hangoutItem.anchorId isEqualToString:anchorId]) {
+                            int r = arc4random() % [array count];
+                            LSHangoutAnchorItemObject * ojb = [array objectAtIndex:r];
+                            LSMainNotificaitonModel * model = [[LSMainNotificaitonModel alloc]init];
+                            model.userName = hangoutItem.anchorNickName;
+                            model.userId = hangoutItem.anchorId;
+                            model.photoUrl = hangoutItem.avatarImg;
+                            model.contentStr = hangoutItem.InviteMessage;
+                            model.msgType = MsgStatus_Hangout;
+                            model.friendUrl = ojb.photoUrl;
+                            [self insertCacheNotificaiton:model];
+                            break;
+                        }
+                    }
                 }
             });
         };

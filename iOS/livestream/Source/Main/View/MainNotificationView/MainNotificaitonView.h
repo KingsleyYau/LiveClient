@@ -14,7 +14,7 @@
 
 - (void)reloadData;
 
-- (void)deleteCollectionViewRow:(NSInteger)row;
+- (void)deleteCollectionViewRow;
 @end
 
  

@@ -50,7 +50,10 @@
 #define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
 #define ViewBoundsSize self.view.bounds.size
 
-#define IS_IPHONE_X ([[UIApplication sharedApplication] statusBarFrame].size.height != 20.0f) ? YES : NO
+#define IS_IPHONE_X (State_Bar_H != 20.0f) ? YES : NO
+
+#define State_Bar_H (![[UIApplication sharedApplication] isStatusBarHidden] ? [[UIApplication sharedApplication] statusBarFrame].size.height : (IS_IPHONEX_SET ? 44.f : 20.f)) // 根据是否隐藏导航栏 判断导航栏高度
+#define IS_IPHONEX_SET (SCREEN_HEIGHT == 812.f || SCREEN_HEIGHT == 896.f) // 是否是iPhoneX系列手机
 
 #define deviceTokenStringKEY @"deviceTokenString"
 #define DialogTag -1

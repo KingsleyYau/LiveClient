@@ -29,6 +29,7 @@
 #include "LSLiveChatCamshareManager.h"
 #include "LSLiveChatSessionManager.h"
 #include "LSLiveChatSender.h"
+#include "LSLCAutoInviteFilter.h"
 
 #include <list>
 #include <string>
@@ -160,6 +161,8 @@ public:
 public:
     // 改变用户状态
     void SetUserOnlineStatusWithLccErrType(LSLCUserItem* userItem, LSLIVECHAT_LCC_ERR_TYPE errType) override;
+    // 自动过滤器回调自动邀请消息到livechatmanmanager
+    void OnAutoInviteFilterCallback(LSLCAutoInviteItem* autoInviteItem, const string& message) override;
 private:
     // 改变用户状态
     void SetUserOnlineStatus(LSLCUserItem* userItem, USER_STATUS_TYPE statusType);
@@ -373,6 +376,8 @@ private:
     
    // --------- 风控操作 ---------
     bool IsRecvInviteRisk(bool charge, TALK_MSG_TYPE msgType, INVITE_TYPE inviteType);
+    // 判断能不能接收邀请（ps：上面那个也有判断能不能接收邀请， 还包含聊天权限处理）这个是android处理，自动邀请也根据android
+    bool IsRecvMessageLimited(const string& userId);
     
     
     
@@ -437,6 +442,7 @@ private:
 	virtual void OnGetFeeRecentContactList(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const list<string>& userList) override;
 	virtual void OnGetLadyChatInfo(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const list<string>& chattingList, const list<string>& chattingInviteIdList, const list<string>& missingList, const list<string>& missingInviteIdList) override;
 	virtual void OnPlayVideo(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, int ticket) override;
+    virtual void  OnUploadPopLadyAutoInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& userId, const string& msg, const string& key, const string& inviteId) override;
     
 	// 服务器主动请求
 	virtual void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message,INVITE_TYPE inviteType) override;
@@ -457,7 +463,8 @@ private:
 	virtual void OnRecvIdentifyCode(const unsigned char* data, long dataLen) override;
 	virtual void OnRecvVideo(const string& toId, const string& fromId, const string& fromName, const string& inviteId, const string& videoId, const string& sendId, bool charge, const string& videoDesc, int ticket) override;
 	virtual void OnRecvShowVideo(const string& toId, const string& fromId, const string& fromName, const string& inviteId, const string& videoId, const string& sendId, bool charge, const string& videoDec, int ticket) override;
-	void OnRecvMagicIcon(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& iconId) override;
+	virtual void OnRecvMagicIcon(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& iconId) override;
+    virtual void OnRecvAutoInviteMsg(const string& womanId, const string& manId, const string& key) override;
 
 	// ------------------- ILSLiveChatRequestLiveChatControllerCallback -------------------
 private:
@@ -516,7 +523,8 @@ private:
 	LSLCVideoManager*		m_videoMgr;		// 视频管理器
     //添加小高级管理器 alex 2016－09-09
     LSLCMagicIconManager* m_magicIconMgr; //小高级表情管理器
-
+    LSLCAutoInviteFilter* m_autoInviteFilter; // 自动邀请过滤器
+ 
 	// 用户管理器
 	LSLCUserManager*		m_userMgr;		// 用户管理器
 	LSLCInviteManager*	m_inviteMgr;	// 邀请管理器

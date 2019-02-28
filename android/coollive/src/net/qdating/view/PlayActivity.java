@@ -15,7 +15,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 
-import net.qdating.dectection.LSFaceDetectorJni;
+import net.qdating.dectection.ILSFaceDetectorStatusCallback;
+import net.qdating.dectection.LSFaceDetector;
 import net.qdating.filter.LSImageBeautyFilter;
 import net.qdating.filter.LSImageColorFilter;
 import net.qdating.filter.LSImageFilter;
@@ -25,6 +26,7 @@ import net.qdating.filter.LSImageMosaicFilter;
 import net.qdating.filter.LSImageVibrateFilter;
 import net.qdating.filter.LSImageWaterMarkFilter;
 import net.qdating.player.ILSPlayerStatusCallback;
+import net.qdating.player.LSVideoPlayer;
 import net.qdating.publisher.ILSPublisherStatusCallback;
 import net.qdating.utils.Log;
 
@@ -41,7 +43,7 @@ import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.utils.CrashHandler;
 
-public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback {
+public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback, ILSFaceDetectorStatusCallback {
 	String filePath = "/sdcard";
 	private String[] playH264File = {
 			"",//"/sdcard/coollive/play0.h264",
@@ -95,6 +97,12 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private LSImageBeautyFilter beautyFilter = null;
 	private LSImageWaterMarkFilter waterMarkFilter = null;
 
+	private LSFaceDetector faceDetector = new LSFaceDetector();
+	private LSVideoPlayer previewPlayer = new LSVideoPlayer();
+	private LSImageGroupFilter previewGroupFilter = new LSImageGroupFilter();
+	private LSImageWaterMarkFilter previewWaterMarkFilter = null;
+
+	private int previewWaterMarkDisappearFrame = 15;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,8 +117,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		File logDir = new File(filePath);
 		deleteAllFiles(logDir);
 
-//		CrashHandler.newInstance(PlayActivity.this);
-//		CrashHandlerJni.SetCrashLogDirectory(filePath);
+		CrashHandler.newInstance(PlayActivity.this);
+		CrashHandlerJni.SetCrashLogDirectory(filePath);
 
 		handler = new Handler();
 		
@@ -132,7 +140,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		surfaceViewsScale = new boolean[surfaceViews.length];
 
 		players = new LSPlayer[surfaceViews.length];
-		for(int i = 0; i < surfaceViews.length; i++) {
+//		for(int i = 0; i < surfaceViews.length; i++) {
+		for(int i = 0; i < surfaceViews.length - 1; i++) {
 			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
 
@@ -142,6 +151,19 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 		}
 //		players[0].playUrl(playerUrls[0], "", playH264File[0], playAACFile[0]);
+
+		// 人面识别测试
+		previewPlayer.init(surfaceViews[2], FillMode.FillModeAspectRatioFit);
+		previewWaterMarkFilter = new LSImageWaterMarkFilter();
+		File previewImgFile = new File("/sdcard/input/watermark2.png");
+		if(previewImgFile.exists()) {
+			Bitmap bitmap = BitmapFactory.decodeFile(previewImgFile.getAbsolutePath());
+			previewWaterMarkFilter.updateBmpFrame(bitmap);
+		}
+		previewWaterMarkFilter.setWaterMarkRect(0f, 0f, 0f, 0f);
+		previewGroupFilter.addFilter(previewWaterMarkFilter);
+		previewPlayer.setCustomFilter(previewGroupFilter);
+		faceDetector.setCallback(this);
 
 		// 推送相关
 		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
@@ -174,10 +196,11 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			waterMarkFilter.setWaterMarkRect(0.05f, 0.75f, 0.2f, 0.2f);
 
 			groupFilter.addFilter(beautyFilter);
-			groupFilter.addFilter(vibrateFilter);
-			groupFilter.addFilter(waterMarkFilter);
+//			groupFilter.addFilter(vibrateFilter);
+//			groupFilter.addFilter(waterMarkFilter);
 
 			publisher.setCustomFilter(groupFilter);
+
 //			publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 		} else {
 			surfaceViewPublish.setVisibility(View.INVISIBLE);
@@ -208,6 +231,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			// TODO Auto-generated method stub
 			if( publisher != null && supportPublish ) {
 				String publishUrl = editTextPublish.getText().toString();
+//				faceDetector.start();
 				publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 			}
 			}
@@ -258,6 +282,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if( publisher != null && supportPublish ) {
+				if( faceDetector != null ) {
+					faceDetector.stop();
+				}
 				publisher.stop();
 			}
 			}
@@ -630,5 +657,28 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	@Override
 	public void onVideoCaptureError(LSPublisher publisher, int error) {
 		Log.e(LSConfig.TAG, String.format("PlayActivity::onVideoCaptureError( publisher : 0x%x, error : %d )", publisher.hashCode(), error));
+	}
+
+//	@Override
+//	public void onVideoCapture(LSPublisher publisher, final byte[] data, int size, final int width, final int height) {
+////		previewPlayer.renderVideoFrame(data, size, width, height);
+//		faceDetector.detectPicture(data, size, width, height);
+//	}
+
+	@Override
+	public void onDetectedFace(byte[] data, int size, int x, int y, int width, int height) {
+		synchronized (this) {
+			if( width > 0 && height > 0 ) {
+				previewWaterMarkDisappearFrame = 15;
+				previewWaterMarkFilter.setWaterMarkRect(x / 240f, y / 240f, width / 240f, height / 240f);
+			} else {
+				previewWaterMarkDisappearFrame--;
+				if( previewWaterMarkDisappearFrame <= 0 ) {
+					previewWaterMarkFilter.setWaterMarkRect(x / 240f, y / 240f, width / 240f, height / 240f);
+				}
+			}
+
+			previewPlayer.renderVideoFrame(data, size, 240, 240);
+		}
 	}
 }

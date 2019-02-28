@@ -10,17 +10,17 @@
 #import "GetFollowListRequest.h"
 #import "HomeVouchersManager.h"
 #import "StartHangOutTipView.h"
-#import "StartHangOutWithFriendView.h"
 #import "LSGetHangoutOnlineAnchorRequest.h"
 #import "AnchorPersonalViewController.h"
 #import "HangoutDialogViewController.h"
 #import "LSHangoutListHeadView.h"
 #import "LiveModule.h"
+#import "LSAnchorCardViewController.h"
 #define PageSize 10
 
 @interface LSHangoutListViewController () <UIScrollViewRefreshDelegate, LSHangoutTableViewDelegate,LSHangoutListHeadViewDelegate>
 
-@property (nonatomic, strong) NSArray *items;
+@property (nonatomic, strong) NSMutableArray *items;
 
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 /**
@@ -32,6 +32,8 @@
  */
 @property (nonatomic, assign) BOOL isFirstLogin;
 
+@property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
+@property (weak, nonatomic) IBOutlet UILabel *noDataTips;
 @property (nonatomic, strong) LSHangoutListHeadView *headView;
 @end
 
@@ -44,11 +46,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.items = [NSArray array];
-    self.sessionManager = [LSSessionRequestManager manager];
+    if (@available(iOS 11, *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
+    self.items = [NSMutableArray array];
+    self.sessionManager = [LSSessionRequestManager manager];
+    // 初始化下拉
+    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
     [self setupTableView];
+//    [self setupTableHeaderView];
+    
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -57,11 +69,17 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self viewDidAppearGetList:NO];
-
+//    [self setupTableHeaderView];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self setupTableHeaderView];
 }
 
 - (void)initCustomParam {
@@ -71,6 +89,7 @@
     // 是否刷新数据
     self.isLoadData = NO;
 }
+
 #pragma mark - HTTP登录调用
 - (void)setupLoadData:(BOOL)isLoadData {
     self.isLoadData = isLoadData;
@@ -91,29 +110,73 @@
     }
 }
 
- 
+
 - (void)setupTableView {
-    // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
-    
-//    LSHangoutListHeadView *view = [[LSHangoutListHeadView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 90)];
-//    view.hangoutHeadDelegate = self;
-//    self.tableView.tableHeaderView = view;
-    
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
-    
     self.tableView.tableViewDelegate = self;
 }
 
-//- (void)LSHangoutListHeadViewDidShowMore:(LSHangoutListHeadView *)view {
-//    view.moreContentViewHeight.constant = 30;
-//    view.moreContentView.hidden = NO;
-//    view.frame = CGRectMake(0, 0, screenSize.width, 180);
-//    [self.tableView setTableHeaderView:view];
-//}
+
+- (void)setupTableHeaderView {
+    NSString *showHangoutListTips = [[NSUserDefaults standardUserDefaults] objectForKey:@"ShowHangoutListTips"];
+    
+    if (!(showHangoutListTips && showHangoutListTips.length > 0)) {
+        LSHangoutListHeadView *view = [[LSHangoutListHeadView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 110)];
+        view.hangoutHeadDelegate = self;
+        view.moreContentViewHeight.constant = 0;
+        view.moreContentView.hidden = YES;
+        self.tableView.tableHeaderView = view;
+    }
+}
+
+
+- (void)LSHangoutListHeadViewDidShowMore:(LSHangoutListHeadView *)view {
+    view.moreContentViewHeight.constant = 44;
+    view.moreContentView.hidden = NO;
+    view.frame = CGRectMake(0, 0, screenSize.width, 270);
+    [self.tableView setTableHeaderView:view];
+}
+
+- (void)LSHangoutListHeadViewDidHideMore:(LSHangoutListHeadView *)view {
+    view.moreContentViewHeight.constant = 0;
+    view.moreContentView.hidden = YES;
+    view.frame = CGRectMake(0, 0, screenSize.width, 110);
+    [self.tableView setTableHeaderView:view];
+}
+
+- (void)LSHangoutListHeadViewDidGetTips:(LSHangoutListHeadView *)view {
+    if (view.notShowBtn.selected == YES) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"show" forKey:@"ShowHangoutListTips"];
+        [self.tableView setTableHeaderView:nil];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"ShowHangoutListTips"];
+        view.showMoreBtn.selected = NO;
+        [self LSHangoutListHeadViewDidHideMore:view];
+    }
+    
+}
+
+// 显示没有数据页面
+- (void)showTipsContent {
+    self.noDataTips.hidden = NO;
+    self.noDataIcon.hidden = NO;
+    
+}
+
+- (void)hideNoDataTipsContent {
+    self.noDataTips.hidden = YES;
+    self.noDataIcon.hidden = YES;
+}
+
+
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
+    self.failView.hidden = YES;
+    // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
+    [self.tableView startPullDown:YES];
+}
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
@@ -130,29 +193,32 @@
 #pragma mark 数据逻辑
 - (void)getListRequest {
     LSGetHangoutOnlineAnchorRequest *request = [[LSGetHangoutOnlineAnchorRequest alloc] init];
+    [self hideNoDataTipsContent];
     // 调用接口
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSHangoutListItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSFollowingViewController::getListRequest( [%@], count : %ld )", BOOL2SUCCESS(success), (long)array.count);
-                if (success) {
-                    self.failView.hidden = YES;
-                    self.isLoadData = NO;
-                    self.items = array;
-                    if (self.items.count == 0) {
-                        //显示没有数据页面
-                    }
-                } else {
-                    self.failView.hidden = NO;
-                    self.isLoadData = YES;
+            NSLog(@"LSHangoutListViewController::getListRequest( [%@], count : %ld )", BOOL2SUCCESS(success), (long)array.count);
+            
+            if (success) {
+                self.failView.hidden = YES;
+                self.isLoadData = NO;
+                [self.items addObjectsFromArray:array];
+                if (self.items.count == 0) {
+                    //显示没有数据页面
+                    [self showTipsContent];
                 }
-                 // 停止头部
-                 [self.tableView finishPullDown:YES];
-                [self reloadData];
-                self.view.userInteractionEnabled = YES;
+            } else {
+                // 停止头部
+                [self.items removeAllObjects];
+                self.failView.hidden = NO;
+            }
+            [self.tableView finishPullDown:NO];
+            [self reloadData];
+            self.view.userInteractionEnabled = YES;
         });
     };
     
-   [self.sessionManager sendRequest:request];
+    [self.sessionManager sendRequest:request];
 }
 
 - (void)reloadData {
@@ -161,7 +227,7 @@
 }
 
 - (void)tableView:(LSHangoutTableView *)tableView didShowItem:(NSIndexPath *)index {
-    
+    // TODO: 主播资料页点击
     LSHangoutListItemObject * item = [self.items objectAtIndex:index.row];
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = item.anchorId;
@@ -170,20 +236,26 @@
 }
 
 - (void)tableView:(LSHangoutTableView *)tableView didClickHangout:(LSHangoutListItemObject *)item {
+    // TODO: 多人互动弹窗
     HangoutDialogViewController *vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
     vc.item = item;
     vc.anchorId = item.anchorId;
     vc.anchorName = item.nickName;
-    UIViewController *topVc = [LiveModule module].moduleVC.navigationController.topViewController;
+    UIViewController *topVc = [LiveModule module].moduleVC.navigationController;
     [topVc addChildViewController:vc];
     [topVc.view addSubview:vc.view];
-//    [self.navigationController addChildViewController:vc];
-//    [self.navigationController.view addSubview:vc.view];
     [vc showhangoutView];
-//    StartHangOutWithFriendView *view = [[StartHangOutWithFriendView alloc] init];
-//    view.item = item;
-//    [view showMainHangoutTip:self.navigationController.view];
-//
-//    [view reloadFriendView];
+    
 }
+
+- (void)tableView:(LSHangoutTableView *)tableView didClickHangoutFriendCardMsg:(LSFriendsInfoItemObject *)item {
+    // 好友卡片弹窗
+    LSAnchorCardViewController *vc = [[LSAnchorCardViewController alloc] initWithNibName:nil bundle:nil];
+    vc.anchorPhotourl = item.coverImg;
+    vc.userId = item.anchorId;
+    vc.nickName = item.nickName;
+    [vc showAnchorCardView];
+}
+
+
 @end

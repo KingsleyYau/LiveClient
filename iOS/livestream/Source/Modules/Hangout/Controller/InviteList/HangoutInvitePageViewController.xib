@@ -22,20 +22,20 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c2P-nk-wvU" userLabel="Segment">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="36"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="36" id="ZQd-aN-Abu"/>
+                        <constraint firstAttribute="height" constant="40" id="ZQd-aN-Abu"/>
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3XX-oX-XsY" customClass="LSPZPagingScrollView">
-                    <rect key="frame" x="0.0" y="36" width="375" height="631"/>
+                    <rect key="frame" x="0.0" y="40" width="375" height="627"/>
                     <connections>
                         <outlet property="pagingViewDelegate" destination="-1" id="bPD-Ar-xxH"/>
                     </connections>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="c2P-nk-wvU" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Ih7-D1-VyC"/>
                 <constraint firstItem="c2P-nk-wvU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="LMj-ju-d8D"/>

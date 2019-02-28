@@ -20,9 +20,9 @@ public class LSFaceDetector {
         }
     }
 
-    private DetectorThread detectorThreads[] = new DetectorThread[3];
+    private DetectorThread detectorThreads[] = new DetectorThread[2];
     private int detectorThreadIndex;
-    private LSFaceDetectorJni detectors[] = new LSFaceDetectorJni[3];
+    private LSFaceDetectorJni detectors[] = new LSFaceDetectorJni[2];
 
     private ILSFaceDetectorStatusCallback callback = null;
 
@@ -46,10 +46,10 @@ public class LSFaceDetector {
             detectors[i] = new LSFaceDetectorJni();
             detectors[i].Create(new ILSFaceDetectorCallback() {
                 @Override
-                public void onDetectedFace(LSFaceDetectorJni detector, int x, int y, int width, int height) {
-                    Log.i(LSConfig.TAG, String.format("LSFaceDetector::onDetectedFace( x : %d, y : %d, width : %d, height : %d )", x, y, width, height));
+                public void onDetectedFace(LSFaceDetectorJni detector, byte[] data, int size, int x, int y, int width, int height) {
+                    Log.i(LSConfig.TAG, String.format("LSFaceDetector::onDetectedFace( detector : 0x%x, size : %d, x : %d, y : %d, width : %d, height : %d )", detector.hashCode(), size, x, y, width, height));
                     if( callback != null ) {
-                        callback.onDetectedFace(x, y, width, height);
+                        callback.onDetectedFace(data, size, x, y, width, height);
                     }
                 }
             });
@@ -67,17 +67,22 @@ public class LSFaceDetector {
         Log.i(LSConfig.TAG, String.format("LSFaceDetector::stop( this : 0x%x )", hashCode()));
 
         for(int i = 0; i < detectorThreads.length; i++) {
-            detectorThreads[i].interrupt();
+            if( detectorThreads[i] != null ) {
+                detectorThreads[i].interrupt();
+            }
         }
     }
 
-    public void detectPicture(final byte[] data, final int width, final int height) {
+    public void detectPicture(final byte[] data, final int size, final int width, final int height) {
         final int index = detectorThreadIndex++ % detectorThreads.length;
-        detectorThreads[index].handler.post(new Runnable() {
-            @Override
-            public void run() {
-                detectors[index].DetectPicture(width, height, data);
-            }
-        });
+        if( detectorThreads[index] != null && detectorThreads[index].handler != null ) {
+            detectorThreads[index].handler.post(new Runnable() {
+                @Override
+                public void run() {
+                Log.d(LSConfig.TAG, String.format("LSFaceDetector::detectPicture( detector : 0x%x, size : %d, width : %d, height : %d )", detectors[index].hashCode(), size, width, height));
+                detectors[index].DetectPicture(data, size, width, height);
+                }
+            });
+        }
     }
 }

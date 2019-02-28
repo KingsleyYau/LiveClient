@@ -17,6 +17,7 @@
 
 #include <common/KLog.h>
 
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -29,6 +30,7 @@ namespace coollive {
 LSFaceDetector::LSFaceDetector(jobject jniCallback) {
 	// TODO Auto-generated constructor stub
 	detector = get_frontal_face_detector();
+    //deserialize("/sdcard/input/shape_predictor_68_face_landmarks.dat") >> sp;
 
 	JNIEnv* env;
 	bool isAttachThread;
@@ -40,7 +42,7 @@ LSFaceDetector::LSFaceDetector(jobject jniCallback) {
 
 		jclass jniCallbackCls = env->GetObjectClass(mJniCallback);
 		// 反射方法
-		string signure = "(IIII)V";
+		string signure = "([BIIIII)V";
 		jmethodID jMethodID = env->GetMethodID(
 				jniCallbackCls,
 				"onDetectedFace",
@@ -48,6 +50,8 @@ LSFaceDetector::LSFaceDetector(jobject jniCallback) {
 				);
 		mJniOnDetectedFaceMethodID = jMethodID;
 	}
+
+	dataByteArray = NULL;
 
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
@@ -66,20 +70,25 @@ LSFaceDetector::~LSFaceDetector() {
 		mJniCallback = NULL;
 	}
 
+	if( dataByteArray != NULL ) {
+		env->DeleteGlobalRef(dataByteArray);
+		dataByteArray = NULL;
+	}
+
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
 }
 
-void LSFaceDetector::FilterPicture(int width, int height, const char *data, int len) {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "LSFaceDetector::FilterPicture( "
+void LSFaceDetector::DetectFaces(const char *data, int size, int width, int height) {
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "LSFaceDetector::DetectFaces( "
+            "size : %d, "
     		"width : %d, "
-    		"height : %d, "
-    		"len : %d "
+    		"height : %d "
     		")",
     		width,
     		height,
-    		len
+    		size
     		);
 
     cv::Mat imgCV(cv::Size(width, height), CV_8UC4, (void *)data);
@@ -101,14 +110,15 @@ void LSFaceDetector::FilterPicture(int width, int height, const char *data, int 
         dlib::rectangle face;
 
         if( faces.size() > 0 ) {
-            FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSFaceDetector::FilterPicture( [Face Dectected], %d )", faces.size());
+            FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSFaceDetector::DetectFaces( [Face Dectected], size : %d )", faces.size());
 
             for(int i = 0; i < faces.size(); i++) {
                 FileLevelLog("rtmpdump", KLog::LOG_MSG,
-                		"LSFaceDetector::FilterPicture( [Face %d], x : %d, y : %d, width : %d, height : %d )",
+                		"LSFaceDetector::DetectFaces( [Face %d], x : %d, y : %d, width : %d, height : %d )",
 						i, faces[i].left(), faces[i].top(), faces[i].width(), faces[i].height()
 						);
                 face = faces[i];
+
                 break;
             }
         }
@@ -117,7 +127,26 @@ void LSFaceDetector::FilterPicture(int width, int height, const char *data, int 
         if( mJniCallback != NULL ) {
             // 回调
             if( mJniOnDetectedFaceMethodID ) {
-                env->CallVoidMethod(mJniCallback, mJniOnDetectedFaceMethodID, face.left(), face.top(), face.width(), face.height());
+                // 创建新Buffer
+                if( dataByteArray != NULL ) {
+                    int oldLen = env->GetArrayLength(dataByteArray);
+                    if( oldLen < size) {
+                        env->DeleteGlobalRef(dataByteArray);
+                        dataByteArray = NULL;
+                    }
+                }
+
+                if( dataByteArray == NULL ) {
+                    jbyteArray localDataByteArray = env->NewByteArray(size);
+                    dataByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+                    env->DeleteLocalRef(localDataByteArray);
+                }
+
+                if( dataByteArray != NULL ) {
+                    env->SetByteArrayRegion(dataByteArray, 0, size, (const jbyte *)data);
+                }
+
+                env->CallVoidMethod(mJniCallback, mJniOnDetectedFaceMethodID, dataByteArray, size, face.left(), face.top(), face.width(), face.height());
             }
         }
 
@@ -126,7 +155,7 @@ void LSFaceDetector::FilterPicture(int width, int height, const char *data, int 
         }
     }
 
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "LSFaceDetector::FilterPicture( [Finish] )");
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "LSFaceDetector::DetectFaces( [Finish] )");
 }
 
 } /* namespace coollive */

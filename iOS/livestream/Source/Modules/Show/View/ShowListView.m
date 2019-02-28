@@ -84,7 +84,8 @@
     if (!self.imageViewLoader) {
         self.imageViewLoader = [LSImageViewLoader loader];
     }
-    [self.imageViewLoader refreshCachedImage:self.headImage options:0 imageUrl:item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.imageViewLoader refreshCachedImage:self.headImage options:0 imageUrl:item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    }];
 
     [self.bgImageViewLoader stop];
     if (!self.bgImageViewLoader) {

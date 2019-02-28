@@ -16,7 +16,7 @@
 }
 
 + (NSInteger)height {
-    return 56;
+    return 68;
 }
 
 + (id)cell:(UITableView *)tableView {
@@ -46,6 +46,14 @@
     self.labelName.text = @"";
     self.labelDesc.text = @"";
     
+    self.onlineView.layer.borderWidth = 1;
+    self.onlineView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.onlineView.layer.cornerRadius = self.onlineView.frame.size.height / 2;
+    self.onlineView.layer.masksToBounds = YES;
+    
+    self.buttonInvite.layer.cornerRadius = self.buttonInvite.frame.size.height / 2;
+    self.buttonInvite.layer.masksToBounds = YES;
+    
 //    self.buttonInvite.contentEdgeInsets = UIEdgeInsetsMake(6, 20, 6, 20);
     [self.buttonInvite setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
 }
@@ -62,7 +70,7 @@
     self.imageViewHeader.layer.cornerRadius = self.imageViewHeader.frame.size.height / 2;
     
 //    [self.buttonInvite sizeToFit];
-    self.buttonInvite.layer.cornerRadius = self.buttonInvite.frame.size.height / 2;
+    
 }
 
 @end

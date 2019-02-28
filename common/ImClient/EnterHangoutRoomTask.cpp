@@ -14,7 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ENTERHANGOUTROOM_ROOMID_PARAM           "roomid"
+#define ENTERHANGOUTROOM_ROOMID_PARAM           "room_id"
 EnterHangoutRoomTask::EnterHangoutRoomTask(void)
 {
     m_listener = NULL;

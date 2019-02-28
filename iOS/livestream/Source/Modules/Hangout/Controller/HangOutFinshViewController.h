@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
+#import "LSImManager.h"
+#import "LSUserInfoManager.h"
 
 typedef enum {
     HANGOUTERROR_NORMAL,
@@ -20,5 +22,7 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UIImageView *headImageView;
 
 - (void)showError:(HANGOUTERROR)error errMsg:(NSString *)errMsg;
+
+- (void)anchorArrayAddObject:(LSUserInfoModel *)obj;
 
 @end
