@@ -23,14 +23,27 @@ function configure_toolchain {
 	    --platform=$ANDROID_API --install-dir=$TOOLCHAIN 
 }
 
+function configure_toolchain_prefix {
+	export CC="${CROSS_COMPILE_PREFIX}gcc --sysroot=${SYSROOT}"
+	export CXX="${CROSS_COMPILE_PREFIX}g++ --sysroot=${SYSROOT}"
+	export AR="${CROSS_COMPILE_PREFIX}ar"
+	export LD="${CROSS_COMPILE_PREFIX}ld"
+	#export AS="${CROSS_COMPILE_PREFIX}as"
+	export NM="${CROSS_COMPILE_PREFIX}nm"
+	export RANLIB="${CROSS_COMPILE_PREFIX}ranlib"
+	export STRIP="${CROSS_COMPILE_PREFIX}strip"
+}
+
 function configure_prefix {
 	export PREFIX=$(pwd)/out.android/$ARCH_ABI
 
 	export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
 	export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
 
-	export EXTRA_CFLAGS="-I$PREFIX/include" 
-	export EXTRA_LDFLAGS="-L$PREFIX/lib"
+	export EXTRA_CFLAGS="-I$PREFIX/include $EXTRA_CFLAGS"
+	export EXTRA_LDFLAGS="-L$PREFIX/lib $EXTRA_LDFLAGS"
+	
+	configure_toolchain_prefix
 }
 
 function configure_arm {
@@ -43,10 +56,11 @@ function configure_arm {
 	export ANDROID_EABI="arm-linux-androideabi-$TOOLCHAIN_VERSION"
 	export CROSS_COMPILE="arm-linux-androideabi-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
+	export EXTRA_CFLAGS="-ffunction-sections -fdata-sections"
 		
 	export CONFIG_PARAM=""
 
-	export OPTIMIZE_CFLAGS="-marm -march=armv5"
+	export OPTIMIZE_CFLAGS=""
 
 	configure_prefix
 }
@@ -61,7 +75,7 @@ function configure_armv7a {
 	export ANDROID_EABI="arm-linux-androideabi-$TOOLCHAIN_VERSION"
 	export CROSS_COMPILE="arm-linux-androideabi-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
-	export EXTRA_CFLAGS="$EXTRA_CFLAGS -mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=armv7-a "
+	export EXTRA_CFLAGS="-ffunction-sections -fdata-sections"
 	
 	export CONFIG_PARAM=""
 
@@ -80,6 +94,7 @@ function configure_arm64 {
 	export ANDROID_EABI="aarch64-linux-android-$TOOLCHAIN_VERSION"
 	export CROSS_COMPILE="aarch64-linux-android-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
+	export EXTRA_CFLAGS="-ffunction-sections -fdata-sections"
 	
 	export CONFIG_PARAM=""
 	
@@ -98,10 +113,29 @@ function configure_x86 {
 	export ANDROID_EABI="x86-$TOOLCHAIN_VERSION"
 	export CROSS_COMPILE="i686-linux-android-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
+	export EXTRA_CFLAGS="-ffunction-sections -fdata-sections"
 
 	export CONFIG_PARAM="--disable-asm"
 
 	export OPTIMIZE_CFLAGS="-m32"
+
+	configure_prefix
+}
+
+function configure_x86_64 {
+	export ANDROID_API=android-21
+	export TOOLCHAIN_VERSION=4.9
+	
+	export ARCH_ABI=x86_64
+	export ARCH=x86_64
+	export ANDROID_ARCH=arch-x86_64
+	export ANDROID_EABI="x86_64-$TOOLCHAIN_VERSION"
+	export CROSS_COMPILE="x86_64-linux-android-"
+	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
+
+	export CONFIG_PARAM="--disable-asm"
+
+	#export OPTIMIZE_CFLAGS="-m32"
 
 	configure_prefix
 }
@@ -126,80 +160,73 @@ function show_enviroment {
 
  
 function build_x264 {
-	echo "# Start building x264 for $ARCH_ABI"
+	echo "# Building [libx264] for $ARCH_ABI"
 	
 	cd x264
+	
+	export CFLAGS="$OPTIMIZE_CFLAGS"
+
 	./configure \
-				--prefix=$PREFIX \
-				--sysroot=$SYSROOT \
-    		--cross-prefix=$CROSS_COMPILE_PREFIX \
-    		--extra-cflags=$EXTRA_CFLAGS \
-				--extra-ldflags=$EXTRA_LDFLAGS \
+				--prefix="$PREFIX" \
+				--sysroot="$SYSROOT" \
+    		--cross-prefix="$CROSS_COMPILE_PREFIX" \
+    		--extra-cflags="$EXTRA_CFLAGS" \
+				--extra-ldflags="$EXTRA_LDFLAGS" \
 				--host=$ARCH-linux \
 				--enable-static \
 				--enable-pic \
 				--disable-cli \
 				$CONFIG_PARAM \
 				|| exit 1
-				#--disable-asm \ android must build arm64 without this param, only bulid x86 with this param
+				#--disable-asm \ ffmpeg will link some asm method, so x264(arm64) must be built without this param, but x264(x86) must be built with this param
     		
     		
 	make clean || exit 1
 	make || exit 1
 	make install || exit 1
-	
+		
 	cd ..
-	echo "# Build x264 finish for $ARCH_ABI"
+	echo "# Build [libx264] finish for $ARCH_ABI"
 }
 
 function build_fdk_aac {
-	echo "# Start building fdk-aac for $ARCH_ABI"
-	
-	export CC="${CROSS_COMPILE_PREFIX}gcc --sysroot=${SYSROOT}"
-	export CXX="${CROSS_COMPILE_PREFIX}g++ --sysroot=${SYSROOT}"
-	export AR="${CROSS_COMPILE_PREFIX}ar"
-	export LD="${CROSS_COMPILE_PREFIX}ld"
-	export AS="${CROSS_COMPILE_PREFIX}as"
-	export NM="${CROSS_COMPILE_PREFIX}nm"
-	export RANLIB="${CROSS_COMPILE_PREFIX}ranlib"
-	export STRIP="${CROSS_COMPILE_PREFIX}strip"
-	
-	export CFLAGS=$OPTIMIZE_CFLAGS
-	export LDFLAGS="-Wl,-rpath-link=$SYSROOT/usr/lib -L$SYSROOT/usr/lib -nostdlib -lc -lm -ldl -llog"
-		
-	export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig/
-  export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/
-    
+	echo "# Building [libfdk-aac] for $ARCH_ABI"
+	    
 	cd fdk-aac-0.1.5
 	
+	export CFLAGS="$EXTRA_CFLAGS $OPTIMIZE_CFLAGS"
+
 	./configure \
 				--prefix=$PREFIX \
 				--host=$ARCH-linux \
 				--enable-static \
 				--disable-shared \
 				--with-pic \
-				$CONFIG_PARAM \
-				|| exit 1
-    		
+				|| exit 1 
     		
 	make clean || exit 1
 	make || exit 1
 	make install || exit 1
 	
 	cd ..
-	echo "# Build fdk-aac finish for $ARCH_ABI"
+	echo "# Build [libfdk-aac] finish for $ARCH_ABI"
 }
 
 function build_ffmpeg {
-	echo "# Start building ffmpeg for $ARCH_ABI"
+	echo "# Building [libffmpeg] for $ARCH_ABI"
 	FFMPEG="ffmpeg-$VERSION"
 	cd $FFMPEG
 	
 	# build
+	rm -f config.log
+	
+	export CFLAGS="$OPTIMIZE_CFLAGS"
+	export LDFLAGS=""
+	
 	./configure \
-						--prefix=$PREFIX \
-						--extra-cflags=$EXTRA_CFLAGS \
-						--extra-ldflags=$EXTRA_LDFLAGS \
+						--prefix="$PREFIX" \
+						--extra-cflags="$EXTRA_CFLAGS" \
+						--extra-ldflags="$EXTRA_LDFLAGS" \
 						--target-os=linux \
 						--enable-cross-compile \
 						--sysroot=$SYSROOT \
@@ -243,7 +270,7 @@ function build_ffmpeg {
 	make install || exit 1
 
 	cd ..
-	echo "# Build ffmpeg finish for $ARCH_ABI"
+	echo "# Build [libffmpeg] finish for $ARCH_ABI"
 }
 
 function build_ffmpeg_so {
@@ -261,8 +288,8 @@ function build_ffmpeg_so {
 }
 
 # Start Build
-BUILD_ARCH=(arm armv7a x86 arm64)
-#BUILD_ARCH=(arm64)
+BUILD_ARCH=(arm armv7a arm64 x86 x86_64)
+#BUILD_ARCH=(arm)
 
 echo "# Starting building..."
 
@@ -271,8 +298,8 @@ for var in ${BUILD_ARCH[@]};do
 	show_enviroment
 	configure_toolchain
 	echo "# Starting building for $ARCH_ABI..."
-	#build_fdk_aac || exit 1
 	build_x264 || exit 1
+	build_fdk_aac || exit 1
 	build_ffmpeg || exit 1
 	echo "# Starting building for $ARCH_ABI finish..."
 done
