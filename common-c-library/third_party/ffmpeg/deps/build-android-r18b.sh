@@ -2,18 +2,16 @@
 # ffmpeg build script for android
 # Author:	Max.Chiu
 # Description: asm
-# NDK version should be r10e
+# NDK version should be r18
 
 # Config version
 VERSION=2.8.7
 #VERSION=3.2.1
 
 # Configure enviroment
-export ANDROID_NDK_ROOT="/Applications/Android/android-ndk"
-export TOOLCHAIN=$(pwd)/toolchain
+export ANDROID_NDK_ROOT="/Applications/Android/android-sdks-studio/ndk-bundle"
+export TOOLCHAIN=$(pwd)/toolchain_new
 export SYSROOT=$TOOLCHAIN/sysroot
-#export ANDROID_API=android-21
-#export TOOLCHAIN_VERSION=4.9
 
 function reset {
 	export EXTRA_CFLAGS=""
@@ -54,26 +52,8 @@ function configure_prefix {
 	configure_toolchain_prefix
 }
 
-function configure_arm {
-	export ANDROID_API=android-9
-	export TOOLCHAIN_VERSION=4.9
-	
-	export ARCH_ABI=armeabi
-	export ARCH=arm
-	export ANDROID_ARCH=arch-arm
-	export ANDROID_EABI="arm-linux-androideabi-$TOOLCHAIN_VERSION"
-	export CROSS_COMPILE="arm-linux-androideabi-"
-	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
-		
-	export CONFIG_PARAM=""
-
-	export OPTIMIZE_CFLAGS=""
-
-	configure_prefix
-}
-
 function configure_armv7a {
-	export ANDROID_API=android-9
+	export ANDROID_API=android-16
 	export TOOLCHAIN_VERSION=4.9
 	
 	export ARCH_ABI=armeabi-v7a
@@ -109,7 +89,7 @@ function configure_arm64 {
 }
 
 function configure_x86 {
-	export ANDROID_API=android-9
+	export ANDROID_API=android-16
 	export TOOLCHAIN_VERSION=4.9
 	
 	export ARCH_ABI=x86
@@ -238,6 +218,7 @@ function build_ffmpeg {
     				--arch=$ARCH \
 						--disable-shared \
 						--enable-static \
+						--disable-indev=v4l2 \
 						--enable-gpl \
 						--enable-libx264 \
 						--enable-nonfree \
@@ -292,8 +273,8 @@ function build_ffmpeg_so {
 }
 
 # Start Build
-BUILD_ARCH=(arm armv7a arm64 x86 x86_64)
-#BUILD_ARCH=(x86_64)
+BUILD_ARCH=(armv7a arm64 x86 x86_64)
+#BUILD_ARCH=(armv7a)
 
 echo "# Starting building..."
 
