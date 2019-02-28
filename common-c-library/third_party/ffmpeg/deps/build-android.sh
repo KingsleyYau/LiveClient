@@ -14,6 +14,13 @@ export SYSROOT=$TOOLCHAIN/sysroot
 #export ANDROID_API=android-21
 #export TOOLCHAIN_VERSION=4.9
 
+function reset {
+	export EXTRA_CFLAGS=""
+	export EXTRA_LDFLAGS=""
+	export CFLAGS=""
+	export LDFLAGS=""
+}
+
 function configure_toolchain {
 	if [ -d $TOOLCHAIN ]; then
 		rm -rf $TOOLCHAIN
@@ -21,11 +28,6 @@ function configure_toolchain {
 	$ANDROID_NDK_ROOT/build/tools/make-standalone-toolchain.sh \
 	    --toolchain=$ANDROID_EABI \
 	    --platform=$ANDROID_API --install-dir=$TOOLCHAIN 
-	
-	export EXTRA_CFLAGS=""
-	export EXTRA_LDFLAGS=""
-	export CFLAGS=""
-	export LDFLAGS=""
 }
 
 function configure_toolchain_prefix {
@@ -140,7 +142,7 @@ function configure_x86_64 {
 
 	export CONFIG_PARAM="--disable-asm"
 
-	#export OPTIMIZE_CFLAGS="-m32"
+	export OPTIMIZE_CFLAGS="-m64"
 
 	configure_prefix
 }
@@ -299,6 +301,7 @@ BUILD_ARCH=(arm armv7a arm64 x86 x86_64)
 echo "# Starting building..."
 
 for var in ${BUILD_ARCH[@]};do
+	reset
 	configure_$var
 	show_enviroment
 	configure_toolchain
