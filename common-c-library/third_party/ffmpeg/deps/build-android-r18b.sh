@@ -2,7 +2,7 @@
 # ffmpeg build script for android
 # Author:	Max.Chiu
 # Description: asm
-# NDK version should be r18
+# NDK version should be r18b
 
 # Config version
 VERSION=2.8.7

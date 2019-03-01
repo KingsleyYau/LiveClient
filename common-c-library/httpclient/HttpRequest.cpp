@@ -25,8 +25,8 @@ protected:
 		bool bFlag = mpHttpRequest->mHttpClient.Request(&mpHttpRequest->mEntiy);
         if( mpHttpRequest->mpIHttpRequestCallback != NULL ) {
             FileLevelLog(LIVESHOW_HTTP_LOG,
-                         KLog::LOG_MSG,
-                         "HttpRequest::StartRequest( "
+                         KLog::LOG_WARNING,
+                         "HttpRequest::onRun( "
                          "request : %p, "
                          "url : %s, "
                          "respond : %s "

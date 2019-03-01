@@ -21,7 +21,7 @@
 
 using namespace std;
 
-static long long g_handleTimeInterval = 3* 60 * 1000;	// 处理邀请时间间隔(25s)
+static long long g_handleTimeInterval = 3* 60;	// 处理邀请时间间隔(25s)
 
 LSLCAutoInviteInviteManager::LSLCAutoInviteInviteManager(LSLCUserManager* userMgr)
 {
@@ -113,7 +113,7 @@ void LSLCAutoInviteInviteManager::RemoveOverTimeAutoInvite() {
     for (AutoInviteList::const_iterator iter = tempList.begin(); iter != tempList.end(); iter++) {
         LSLCMessageItem* item = (*iter);
         if (item != NULL) {
-            if (item->m_createTime + g_handleTimeInterval >= getCurrentTime()) {
+            if (item->m_createTime + g_handleTimeInterval >= getCurrentTime()/1000) {
                 delete item;
                 item = NULL;
             } else {

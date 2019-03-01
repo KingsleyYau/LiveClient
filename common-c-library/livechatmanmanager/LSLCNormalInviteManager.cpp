@@ -20,7 +20,7 @@
 
 using namespace std;
 
-static long long g_handleTimeInterval = 25 * 1000;	// 处理邀请时间间隔(25s)
+static long long g_handleTimeInterval = 25;	// 处理邀请时间间隔(25s)
 static int g_maxNoRandomCount = 10;					// 最大非随机处理数（最多多少次就要有一次随机）
 
 LSLCNormalInviteManager::LSLCNormalInviteManager()
@@ -190,7 +190,7 @@ void LSLCNormalInviteManager::RemoveOverTimeInvite()
 				LCMessageList::iterator msgIter = userItem->m_msgList.begin();
 				LSLCMessageItem* item = (*msgIter);
 				long long currentTime = getCurrentTime();
-				if (item->m_createTime + g_handleTimeInterval >= currentTime) {
+				if (item->m_createTime + g_handleTimeInterval >= currentTime/1000) {
 					removeFlag = false;
 				}
 			}
@@ -242,8 +242,6 @@ void LSLCNormalInviteManager::HandleInviteMessage(
 	LSLCMessageItem* item = NULL;
 
 	LockInviteUsersList();
-
-
 
 	// 插入到列表
 	{
