@@ -40,47 +40,60 @@ rm -f $REPORT_FILE
 
 if [ "$PARAM_TYPE" == "android" ];then
 	find $PARAM_DIR -type f > $TMP_FILE
-	cat $TMP_FILE | while read line
+	cat $TMP_FILE | while read LINE
 	do
-		EXTENSION=${line##*.}
+		EXTENSION=${LINE##*.}
 		if [ "$EXTENSION" == "dmp" ];then
 			# Handle with C++ Dump
 			mkdir -p $OUTPUT_DIR/c
-			cp -f $line $OUTPUT_DIR/c
-			echo "c++ : $line" >> $REPORT_FILE
+			cp -f $LINE $OUTPUT_DIR/c
+			echo "c++ : $LINE" >> $REPORT_FILE
 		else
 			# Handle with Java Exception
-			WHOLE_EX=`cat $line | grep "Exception"`
-			VER=`cat $line | grep "versionCode" | awk -F ' = ' '{print $NF}'`
+			WHOLE_EX=`cat $LINE | grep "Exception"`
+			VER=`cat $LINE | grep "versionCode" | awk -F ' = ' '{print $NF}'`
 			
 			if [ ! "$WHOLE_EX" == "" ];then
 				EX=`echo $WHOLE_EX | awk -F ': ' '{print $1}'` 
 				mkdir -p $OUTPUT_DIR/"$VER"_"$EX"
-				cp -f $line $OUTPUT_DIR/"$VER"_"$EX"
-				echo "$EX : $line" >> $REPORT_FILE
+				cp -f $LINE $OUTPUT_DIR/"$VER"_"$EX"
+				echo "$EX : $LINE" >> $REPORT_FILE
 			fi
 		fi
 	done
 elif [ "$PARAM_TYPE" == "iOS" ];then
 	find $PARAM_DIR -type f > $TMP_FILE
-	cat $TMP_FILE | while read line
+	cat $TMP_FILE | while read LINE
 	do
 		# Handle with Object-C Exception
-		WHOLE_EX=`cat $line | grep "ExecptionName"`
-		VER=`cat $line | grep -v "System-Version\|CFBundleVersion\|Versions" | grep "Version" | awk -F ' = ' '{print $NF}'`
+		WHOLE_EX=`cat $LINE | grep "ExecptionName"`
+		VER=`cat $LINE | grep -v "System-Version\|CFBundleVersion\|Versions" | grep "Version" | awk -F ' = ' '{print $NF}'`
 		
 		if [ ! "$WHOLE_EX" == "" ];then
 			EX=`echo $WHOLE_EX | awk -F ' = ' '{print $NF}'` 
-			mkdir -p $OUTPUT_DIR/"$VER"_"$EX"
-			cp -f $line $OUTPUT_DIR/"$VER"_"$EX"
-			BASE_ADDR=`cat $line | grep "dating.app/dating" | awk -F ' ' '{print $1}'`
-			#FRAME_ADDR=`cat $line | grep ".*\(0x[a-zA-Z0-9]*\).*[+] [0-9]*" | awk -F ' ' '{print $3}'`
+			
+			# Create output folder
+			DES_DIR=$OUTPUT_DIR/"$VER"_"$EX"
+			mkdir -p $DES_DIR
+			
+			# Copy crash dump to output folder
+			DES_FILE_NAME=`echo $LINE | awk -F '/' '{print $NF}'`
+			DES_FILE_NAME=$DES_DIR/$DES_FILE_NAME
+			cp -f $LINE $DES_FILE_NAME
+			
+			# Change dump address to code
+			BASE_ADDR=`cat $DES_FILE_NAME | grep "dating.app/dating" | awk -F ' ' '{print $1}'`
+			FRAME_ADDR=`cat $DES_FILE_NAME | grep ".*\(0x[a-zA-Z0-9]*\).*[+] [0-9]*" | awk -F ' ' '{print $3}'`
 			#atos -o dating.app.dSYM/Contents/Resources/DWARF/dating -arch arm64 -l $BASE_ADDR $FRAME_ADDR
-			#CMD="atos -o dating.app.dSYM/Contents/Resources/DWARF/dating -arch arm64 -l $BASE_ADDR"
-			#CMD="echo \1 $BASE_ADDR "
-			#echo "sed -e \"s/.*\(0x[a-zA-Z0-9]*\).*[+] [0-9]*/$($CMD)/g\" $line"
-			#cat $line | awk '/.*0x[a-zA-Z0-9]*.*[+] [0-9]*/ {rcmd=cmd" "$3;result=system(rcmd)}' cmd="$CMD"
-			echo "$EX : $line" >> $REPORT_FILE
+			# Separate [FRAME_ADDR] with Space into [FRAME_ARRAY]
+			FRAME_ARRAY=(${FRAME_ADDR// /})
+			FRAME_ARRAY_NUM=${#FRAME_ARRAY[@]}   
+			for ((i=0; i<$FRAME_ARRAY_NUM; i++)) {
+					FRAME_ITEM=${FRAME_ARRAY[$i]};
+					STACK=`atos -o $VER/dating.app.dSYM/Contents/Resources/DWARF/dating -arch arm64 -l $BASE_ADDR $FRAME_ITEM`
+					sed -i '' -e 's/^\([[:space:]*]'"$i"'[[:space:]*].*\)0x[a-zA-Z0-9]*.*[+] [0-9]*/\1'"$STACK"'/g' $DES_FILE_NAME
+			}
+			echo "$EX : $DES_FILE_NAME" >> $REPORT_FILE
 		fi
 	done
 fi
