@@ -11,8 +11,9 @@
 #import "HangoutGiftLayout.h"
 #import "LiveBundle.h"
 #import "LiveRoomGiftModel.h"
+#import "LSTimer.h"
 
-@interface HangoutNormalGiftView ()<UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate>
+@interface HangoutNormalGiftView ()<UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, HangoutGiftCellCollectionViewCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
@@ -27,8 +28,6 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingView;
 
 @property (strong, nonatomic) LSGiftManager *loadManager;
-
-@property (nonatomic, assign) NSInteger indextPathRow;
 
 @end
 
@@ -61,8 +60,6 @@
     
     // 隐藏提示界面
     self.maskView.hidden = YES;
-    
-    self.indextPathRow = -1;
 }
 
 - (void)scrollPageControlAction:(UIPageControl *)sender {
@@ -90,27 +87,11 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     HangoutGiftCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[HangoutGiftCellCollectionViewCell cellIdentifier] forIndexPath:indexPath];
-
+    cell.delegate = self;
+    
     LSGiftManagerItem *item = self.giftArray[indexPath.row];
+    [cell setHighlightButtonTag:indexPath.row];
     [cell updataCellViewItem:item];
-    
-    BOOL isIndexPath = NO;
-    if (self.indextPathRow == indexPath.row || (self.indextPathRow == -1 && indexPath.row == 0)) {
-        isIndexPath = YES;
-    } else {
-        isIndexPath = NO;
-    }
-    
-    // 默认选中第一个
-    if (isIndexPath) {
-        cell.selectCell = YES;
-        self.isCellSelect = YES;
-        self.selectCellItem = [self.loadManager getGiftItemWithId:item.giftId];
-    } else {
-        cell.selectCell = NO;
-    }
-    
-    [cell reloadStyle];
     
     // 刷新页数 小高表布局
     HangoutGiftLayout *layout = (HangoutGiftLayout *)self.collectionView.collectionViewLayout;
@@ -120,21 +101,9 @@
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    self.indextPathRow = indexPath.row;
-    [self.collectionView reloadData];
-    
-    [UIView setAnimationsEnabled:NO];
-    [collectionView performBatchUpdates:^{
-        [collectionView reloadData];
-    } completion:^(BOOL finished) {
-         [UIView setAnimationsEnabled:YES];
-    }];
-    
-
-    LSGiftManagerItem *item = self.giftArray[indexPath.row];
-    
+#pragma mark - HangoutGiftCellCollectionViewCellDelegate
+- (void)sendGiftToAnchor:(NSInteger)index {
+    LSGiftManagerItem *item = self.giftArray[index];
     if ([self.delegate respondsToSelector:@selector(hangoutNormalCollectionDidSelectItem:giftView:)]) {
         [self.delegate hangoutNormalCollectionDidSelectItem:item giftView:self];
     }
@@ -150,8 +119,11 @@
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    // 滑动隐藏选择按钮
+#pragma mark - Action
+- (IBAction)retryListAction:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(hangoutNormalGiftRetry)]) {
+        [self.delegate hangoutNormalGiftRetry];
+    }
 }
 
 #pragma mark - 界面显示/隐藏

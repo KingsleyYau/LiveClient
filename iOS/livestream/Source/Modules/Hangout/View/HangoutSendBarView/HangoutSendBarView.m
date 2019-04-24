@@ -12,7 +12,7 @@
 #define PlaceholderFontSize 13
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
 
-#define MaxInputCount 70
+#define MaxInputCount 140
 
 @implementation HangoutSendBarView
 
@@ -59,7 +59,7 @@
     NSString *wholeString = textField.text;
     NSInteger wholeStringLength = wholeString.length - range.length + string.length;
     
-    if (wholeStringLength >= MaxInputCount) {
+    if (wholeStringLength > MaxInputCount) {
         // 超过字符限制
         bFlag = NO;
     }

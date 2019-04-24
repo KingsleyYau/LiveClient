@@ -28,9 +28,13 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This lets you take photos right from within Qdating.</string>
+	<string>This app requires to access your camera to show image on profile and send via chat.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This lets you send Voice Messages, and record videos with sound.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>QDating needs your consent to access the album.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>QDating needs your consent to access the album.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -62,8 +66,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 	<key>Version</key>
-	<string>100</string>
+	<string>138</string>
 </dict>
 </plist>

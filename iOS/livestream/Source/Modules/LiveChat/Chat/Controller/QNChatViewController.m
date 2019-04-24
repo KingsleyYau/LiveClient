@@ -8,14 +8,14 @@
 
 #import "QNChatViewController.h"
 
-#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 #import <AVFoundation/AVFoundation.h>
 
 #import "Masonry.h"
 
 #import "LSAddCreditsViewController.h"
 #import "AnchorPersonalViewController.h"
-//#import "ChatSecretPhotoViewController.h"
+#import "LSChatAccessoryListViewController.h"
 
 #import "QNChatTextLadyTableViewCell.h"
 #import "QNChatTextSelfTableViewCell.h"
@@ -32,21 +32,28 @@
 #import "QNChatVoiceTableViewCell.h"
 #import "QNChatVoiceSelfTableViewCell.h"
 #import "QNChatMoonFeeTableViewCell.h"
+#import "LSChatVideoLadyTableViewCell.h"
 
 #import "QNChatEmotionKeyboardView.h"
 #import "QNChatEmotionChooseView.h"
 //#import "ChatEmotionListView.h"
-//#import "ChatPhotoView.h"
-//#import "ChatPhoneAlbumPhoto.h"
+
+#import "LSChatPhotoView.h"
+#import "LSChatPhoneAlbumPhoto.h"
+#import "LSChatPhotoDataManager.h"
+#import "LSChatAlbumListViewController.h"
+#import "LSChatPhotoPreviewViewController.h"
+#import "LSChatSecretPhotoViewController.h"
+#import "LSRecentWatchViewController.h"
 
 #import "LSLadyRecentContactObject.h"
 #import "LSLCLiveChatMsgProcResultObject.h"
 #import "QNMessage.h"
 
+#import "LSUserInfoManager.h"
 #import "LSLiveChatManagerOC.h"
 #import "QNContactManager.h"
 //#import "MonthFeeManager.h"
-#import "LSUserInfoManager.h"
 
 //#import "LadyDetailMsgManager.h"
 #import "LSImageViewLoader.h"
@@ -59,6 +66,10 @@
 
 #import "DialogTip.h"
 #import "LiveModule.h"
+#import "LiveStreamSession.h"
+
+#import "SelectNumButton.h"
+#import "LSShadowView.h"
 
 #define ADD_CREDIT_URL @"ADD_CREDIT_URL"
 
@@ -68,7 +79,8 @@
 #define SystemMessageFontSize 16
 #define WarningMessageFontSize 16
 #define MessageGrayColor [LSColor colorWithIntRGB:180 green:180 blue:180 alpha:255]
-#define halfWidth self.view.frame.size.width * 0.5f
+#define halfHight 140
+#define halfWidth 99
 #define PreloadPhotoCount 10
 #define maxInputCount 200
 
@@ -92,17 +104,15 @@ typedef enum AlertPayType {
     AlertTypePayMonthFee
 } AlertPayType;
 
-@interface QNChatViewController () <UIAlertViewDelegate, ChatTextSelfDelegate,
-LSLiveChatManagerListenerDelegate,
-LSCheckButtonDelegate, ChatEmotionChooseViewDelegate, TTTAttributedLabelDelegate, ChatTextViewDelegate,
-//MonthFeeManagerDelegate,
-ChatMoonFeeTableViewCellDelegate,
-ChatLargeEmotionSelfTableViewCellDelegate, ChatEmotionKeyboardViewDelegate, ChatSmallEmotionViewDelegate, ChatSmallEmotionSelfTableViewCellDelegate, ChatNormalSmallEmotionViewDelegate, UIScrollViewDelegate,
-ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCellDelegate, ChatAudioPlayerDelegate, UIActionSheetDelegate> {
+@interface QNChatViewController () <ChatTextSelfDelegate, LSLiveChatManagerListenerDelegate, LSCheckButtonDelegate,         ChatEmotionChooseViewDelegate, TTTAttributedLabelDelegate, ChatTextViewDelegate, ChatPhotoViewDelegate, ChatPhotoDataManagerDelegate, ChatPhotoLadyTableViewCellDelegate,
+                                    ChatPhotoSelfTableViewCellDelegate, ChatMoonFeeTableViewCellDelegate,
+                                    ChatLargeEmotionSelfTableViewCellDelegate, ChatEmotionKeyboardViewDelegate, ChatSmallEmotionViewDelegate, ChatSmallEmotionSelfTableViewCellDelegate, ChatNormalSmallEmotionViewDelegate, UIScrollViewDelegate,
+                                    ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCellDelegate, ChatAudioPlayerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ChatVideoLadyTableViewCellDelegate> {
     CGRect _orgFrame;
 }
 #pragma mark - 界面
 @property (nonatomic, strong) QNChatTitleView *titleView;
+@property (nonatomic, strong) LSImageViewLoader *titleViewLoader;
 /**
  *  表情选择器键盘
  */
@@ -137,6 +147,10 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
  相册图片路径
  */
 @property (atomic, strong) NSMutableArray *photoPathArray;
+
+/** 照片相册 */
+@property (nonatomic, strong) LSChatPhotoView *photoView;
+
 /** 消息数据 */
 @property (nonatomic, strong) LSLCLiveChatMsgItemObject *msgItem;
 
@@ -174,6 +188,18 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
 @property (nonatomic, assign) BOOL isEndChat;
 
+// 多功能按钮
+@property (strong, nonatomic) SelectNumButton *buttonBar;
+@property (strong, nonatomic) NSMutableArray *buttonBarTitles;
+@property (strong, nonatomic) NSMutableArray *buttonBarIcons;
+/*
+ *  多功能按钮约束
+ */
+@property (strong, nonatomic) MASConstraint *buttonBarTop;
+@property (assign, nonatomic) int buttonBarHeight;
+// 关闭多功能按钮
+@property (strong, nonatomic) UIButton *closeButtonBarBtn;
+
 @end
 
 @implementation QNChatViewController
@@ -181,13 +207,22 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [self.liveChatManager removeDelegate:self];
     //清空自定义消息
     [self clearCustomMessage];
-    [[LSImageViewLoader loader] stop];
+    [self.titleViewLoader stop];
     [self.audioPlayer removNotification];
     [self.audioPlayer removDelegate];
+
+    [[LSChatPhotoDataManager manager] removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.buttonBarTitles = [[NSMutableArray alloc] init];
+    self.buttonBarIcons = [[NSMutableArray alloc] init];
+    UIImage *image = [UIImage imageNamed:@"Chat_List_Recent_Watched"];
+    [self.buttonBarIcons addObject:image];
+    image = [UIImage imageNamed:@"Chat_List_End_Chat"];
+    [self.buttonBarIcons addObject:image];
 
     //监听进入后台
     __weak typeof(self) weakSelf = self;
@@ -201,15 +236,14 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
                                                           [weakSelf voiceButtonTouchUpInside];
                                                       }
                                                   }];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
     // 防止在锁定照片跳转过来隐藏了导航栏
-    self.navigationController.navigationBarHidden = NO;
-
+    self.isShowNavBar = YES;
+    
     // 添加键盘事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -225,8 +259,10 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
             [self.liveChatManager checkTryTicket:self.womanId];
         }
     }
-        // 更新聊天列表未读数
-        [[QNContactManager manager] updateReadMsg:self.womanId];
+    // 更新聊天列表未读数
+    [[QNContactManager manager] updateReadMsg:self.womanId];
+    self.tableView.contentInset = UIEdgeInsetsZero;
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -237,6 +273,7 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [super viewWillDisappear:animated];
     // 关闭输入框
     [self closeAllInputView];
+    [self hideButtonBar];
 
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
@@ -246,6 +283,10 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [self.voiceImageView removeFromSuperview];
     [self voiceButtonTouchUpOutside];
     [self.audioPlayer stopSound];
+}
+
+- (void)reflashNavigationBar {
+    //不需要调用，防止tableView偏移
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -265,7 +306,7 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
     self.liveChatManager = [LSLiveChatManagerOC manager];
     [self.liveChatManager addDelegate:self];
-    
+
     // 加载普通表情
     [self reloadEmotion];
     // 加载小高级表情
@@ -278,6 +319,14 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
     // 初始化自定义消息列表
     self.msgCustomDict = [NSMutableDictionary dictionary];
+
+    [[LSChatPhotoDataManager manager] addDelegate:self];
+    [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
+}
+
+- (NSString *)identification {
+    NSString *identification = self.womanId;
+    return identification;
 }
 
 - (void)setupNavigationBar {
@@ -287,7 +336,7 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     self.titleView = [[QNChatTitleView alloc] initWithFrame:CGRectMake(0, 0, 150, 44)];
     self.titleView.personName.text = self.firstName;
     self.titleView.personName.textColor = COLOR_WITH_16BAND_RGB(0x0099FF);
-    
+
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showLadyDetail)];
     [self.titleView addGestureRecognizer:singleTap];
 
@@ -305,35 +354,41 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [settingBtn setImage:[UIImage imageNamed:@"LS_Nav_More"] forState:UIControlStateNormal];
     settingBtn.frame = CGRectMake(rightcontainVew.frame.size.width - 40, 0, 40, 40);
     [rightcontainVew addSubview:settingBtn];
-    
-    UIBarButtonItem * barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightcontainVew];
-    
+
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightcontainVew];
     self.navigationItem.rightBarButtonItem = barButtonItem;
-    
+
     // 获取用户信息
-    __weak typeof(self) weakSelf = self;
-    [[LSUserInfoManager manager]getLiverInfo:self.womanId finishHandler:^(LSUserInfoModel * _Nonnull item) {
-        NSLog(@"ChatViewController::getLiverInfo( 获取用户信息回调 userId : %@, photoUrl : %@ nickName: %@)", item.userId, item.photoUrl,item.nickName);
-        if (item.photoUrl.length > 0) {
-            weakSelf.photoURL = item.photoUrl;
-            [[LSImageViewLoader loader] refreshCachedImage:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:weakSelf.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-            }];
-            weakSelf.titleView.personName.text = item.nickName;
-            weakSelf.firstName = item.nickName;
-        }
-    }];
+    WeakObject(self, weakSelf);
+    self.titleView.personIcon.image = [UIImage imageNamed:@"Default_Img_Lady_Circyle"];
+    self.titleViewLoader = [LSImageViewLoader loader];
+    [[LSUserInfoManager manager] getUserInfo:weakSelf.womanId
+                               finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                   [weakSelf.titleViewLoader loadImageWithImageView:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+                                   weakSelf.titleView.personName.text = item.nickName;
+                                   weakSelf.firstName = item.nickName;
+                               }];
 }
 
 - (void)setupContainView {
     [super setupContainView];
-
     [self setupTableView];
     [self setupInputView];
     [self setupEmotionInputView];
-    
+    [self setupPhotoView];
+    [self setupButtonBar];
+
     self.audioPlayer = [QNChatAudioPlayer sharedInstance];
     self.audioPlayer.delegate = self;
     self.voiceManager = [[QNChatVoiceManager alloc] init];
+    
+    self.closeButtonBarBtn = [[UIButton alloc] init];
+    self.closeButtonBarBtn.hidden = YES;
+    [self.closeButtonBarBtn addTarget:self action:@selector(closeButtonBarAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.closeButtonBarBtn];
+    [self.closeButtonBarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
 
 - (void)setupTableView {
@@ -358,6 +413,11 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     self.emotionBtn.selectedChangeDelegate = self;
     [self.emotionBtn setImage:[UIImage imageNamed:@"LS_Chat-EmotionGray"] forState:UIControlStateNormal];
     [self.emotionBtn setImage:[UIImage imageNamed:@"LS_Chat-EmotionBlue"] forState:UIControlStateSelected];
+
+    // 私密照输入
+    self.photoBtn.selectedChangeDelegate = self;
+    [self.photoBtn setImage:[UIImage imageNamed:@"LS_Chat-Keyboard-PhotoGray"] forState:UIControlStateNormal];
+    [self.photoBtn setImage:[UIImage imageNamed:@"LS_Chat-Keyboard-PhotoBlue"] forState:UIControlStateSelected];
 
     [self.voiceButton addTarget:self action:@selector(voiceButtonTouchDown) forControlEvents:UIControlEventTouchDown];
     [self.voiceButton addTarget:self action:@selector(voiceButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
@@ -402,15 +462,159 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     }
 }
 
+/**
+ *  初始化私密照选择器
+ */
+- (void)setupPhotoView {
+    if (self.photoView == nil) {
+        self.photoView = [LSChatPhotoView PhotoView:self];
+        self.photoView.delegate = self;
+        self.photoView.isCamShare = NO;
+        [self.view addSubview:self.photoView];
+        [self.photoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view.mas_left);
+            make.right.equalTo(self.view.mas_right);
+            make.height.equalTo(self.chatEmotionKeyboardView.mas_height);
+            make.top.equalTo(self.inputMessageView.mas_bottom).offset(0);
+        }];
+        self.photoView.hidden = YES;
+    }
+}
+
 - (void)showLadyDetail {
     //TODO:风控
-        //if (![[RiskControlManager manager] isRiskControlType:RiskType_Ladyprofile]) {
- 
-            AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
-            vc.anchorId = self.womanId;
-            vc.enterRoom = 1;
-            [self.navigationController pushViewController:vc animated:YES];
-        //}
+    //if (![[RiskControlManager manager] isRiskControlType:RiskType_Ladyprofile]) {
+
+    AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
+    vc.anchorId = self.womanId;
+    vc.enterRoom = 1;
+    [self.navigationController pushViewController:vc animated:YES];
+    //}
+}
+
+#pragma mark - 初始化多功能按钮
+- (void)setupButtonBar {
+    self.buttonBarHeight = 0;
+    self.buttonBar = [[SelectNumButton alloc] init];
+    [self.view addSubview:self.buttonBar];
+    [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@(self.buttonBarHeight));
+        make.width.equalTo(@(196));
+        make.right.equalTo(self.view.mas_right).offset(-20);
+        self.buttonBarTop = make.bottom.equalTo(self.view.mas_top);
+    }];
+    self.buttonBar.isVertical = YES;
+    self.buttonBar.clipsToBounds = YES;
+    self.buttonBar.layer.cornerRadius = 3;
+    self.buttonBar.layer.masksToBounds = YES;    
+
+    LSShadowView *shadowView = [[LSShadowView alloc] init];
+    shadowView.shadowColor = COLOR_WITH_16BAND_RGB(0x000000);
+    [shadowView showShadowAddView:self.buttonBar];
+}
+
+#pragma mark - 多功能按钮
+- (void)setupButtonBar:(NSMutableArray *)titles {
+    UIImage *whiteImage = [LSUIImageFactory createImageWithColor:[UIColor whiteColor] imageRect:CGRectMake(0, 0, 1, 1)];
+    UIImage *blueImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0xf7cd3a) imageRect:CGRectMake(0, 0, 1, 1)];
+
+    NSMutableArray *items = [NSMutableArray array];
+    for (int i = 0; i < titles.count; i++) {
+        NSString *title = [NSString stringWithFormat:@"%@", titles[i]];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+
+        UIImage *image = self.buttonBarIcons[i];
+        [button setImage:image forState:UIControlStateNormal];
+        [button setImage:image forState:UIControlStateSelected];
+        [button setImageEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
+
+        [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setTitle:title forState:UIControlStateNormal];
+        [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+
+        [button setBackgroundImage:whiteImage forState:UIControlStateNormal];
+        [button setBackgroundImage:blueImage forState:UIControlStateSelected];
+        [button addTarget:self action:@selector(floatBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+        button.tag = i;
+        [items addObject:button];
+    }
+    self.buttonBar.items = items;
+    [self.buttonBar reloadData:YES];
+}
+
+- (void)floatBtnAction:(id)sender {
+    UIButton *btn = sender;
+    if (btn.tag) {
+        if (self.isEndChat) {
+            if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+                [self.liveChatManager endTalk:self.womanId];
+                [[QNContactManager manager] removeChatLastMsg:self.womanId];
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"InChat_Tip")];
+            } else {
+                if ([self.liveChatManager isInManInviteCanCancel:self.womanId]) {
+                    [self.liveChatManager endTalk:self.womanId];
+                    [[QNContactManager manager] removeChatLastMsg:self.womanId];
+                    [self.navigationController popViewControllerAnimated:YES];
+                } else {
+                    [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"on2min")];
+                }
+            }
+        }
+    } else {
+        LSRecentWatchViewController *vc = [[LSRecentWatchViewController alloc] initWithNibName:nil bundle:nil];
+        vc.womanId = self.womanId;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (void)showButtonBar {
+    self.closeButtonBarBtn.hidden = NO;
+    [self.view bringSubviewToFront:self.closeButtonBarBtn];
+    
+    // 删除底部约束
+    [self.buttonBarTop uninstall];
+    self.buttonBarHeight = 45 * (int)self.buttonBarTitles.count;
+    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@(self.buttonBarHeight));
+        self.buttonBarTop = make.top.equalTo(self.view.mas_top).offset(10);
+    }];
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         [self.view layoutIfNeeded];
+                         self.buttonBar.alpha = 1;
+                     }
+                     completion:^(BOOL finished){
+                         [self.view bringSubviewToFront:self.buttonBar];
+                     }];
+}
+
+- (void)hideButtonBar {
+    self.closeButtonBarBtn.hidden = YES;
+    // 删除底部约束
+    [self.buttonBarTop uninstall];
+    self.buttonBarHeight = 0;
+    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@(self.buttonBarHeight));
+        self.buttonBarTop = make.bottom.equalTo(self.view.mas_top);
+    }];
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         [self.view layoutIfNeeded];
+                         self.buttonBar.alpha = 0;
+                     }
+                     completion:^(BOOL finished){
+
+                     }];
+}
+
+- (void)closeButtonBarAction:(id)sender {
+    [self hideButtonBar];
 }
 
 #pragma mark - 键盘和底部输入控件管理
@@ -431,6 +635,7 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 }
 
 - (void)showKeyboardView {
+    [self hideButtonBar];
     // 显示系统键盘
     [self addSingleTap];
 
@@ -439,8 +644,9 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 }
 
 - (void)showEmotionView {
+    [self hideButtonBar];
     [self addSingleTap];
-
+    self.photoView.hidden = YES;
     self.chatEmotionKeyboardView.hidden = NO;
 
     // 关闭系统键盘
@@ -466,6 +672,10 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
         self.emotionBtn.selected = NO;
         [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
     }
+    if (self.photoBtn.selected == YES) {
+        self.photoBtn.selected = NO;
+        [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
+    }
     // 关闭系统键盘
     [self.textView resignFirstResponder];
 }
@@ -475,22 +685,33 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [self closeAllInputView];
 
     NSString *endChatStr = @"";
-        if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
-            //在聊显示EndChat
-            endChatStr = NSLocalizedStringFromSelf(@"EndChat");
-            self.isEndChat = YES;
-        } else if (![self.liveChatManager isInManInvite:self.womanId]) {
-            //非男士主动邀请
-            endChatStr = NSLocalizedStringFromSelf(@"EndChat");
-            self.isEndChat = YES;
-        } else {
-            //男士主动邀请
-            endChatStr = NSLocalizedStringFromSelf(@"Cancel invitation");
-            self.isEndChat = NO;
-        }
+    if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+        //在聊显示EndChat
+        endChatStr = NSLocalizedStringFromSelf(@"EndChat");
+        self.isEndChat = YES;
+    } else if (![self.liveChatManager isInManInvite:self.womanId]) {
+        //非男士主动邀请
+        endChatStr = NSLocalizedStringFromSelf(@"EndChat");
+        self.isEndChat = YES;
+    } else {
+        //男士主动邀请
+        endChatStr = NSLocalizedStringFromSelf(@"Cancel invitation");
+        self.isEndChat = NO;
+    }
 
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:endChatStr, nil];
-    [actionSheet showInView:self.view];
+    if (self.buttonBarHeight) {
+        [self hideButtonBar];
+    } else {
+        [self.buttonBarTitles removeAllObjects];
+        [self.buttonBarTitles addObject:NSLocalizedStringFromSelf(@"Recent Watched")];
+        [self.buttonBarTitles addObject:endChatStr];
+
+        [self setupButtonBar:self.buttonBarTitles];
+        [self showButtonBar];
+    }
+
+    //    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:endChatStr, nil];
+    //    [actionSheet showInView:self.view];
 }
 
 - (void)sendMsgAction:(id)sender {
@@ -501,6 +722,38 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     }
 }
 
+/**
+ *  显示私密照选择器
+ */
+- (void)showVisualableStylePhoto {
+    [self hideButtonBar];
+    [self addSingleTap];
+
+    [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
+
+    self.photoView.hidden = NO;
+    self.chatEmotionKeyboardView.hidden = YES;
+    // 关闭系统键盘
+    [self.textView resignFirstResponder];
+
+    if (self.inputMessageViewBottom.constant != -self.photoView.frame.size.height) {
+        // 未显示则显示
+        [self moveInputBarWithKeyboardHeight:self.photoView.frame.size.height withDuration:0.25];
+    }
+}
+
+/**
+ *  关闭相册图片选择
+ */
+- (void)closePhotoView {
+    [self.photoView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(self.inputMessageView.mas_width);
+        make.height.equalTo(@0);
+        make.top.equalTo(self.inputMessageView.mas_bottom).offset(0);
+    }];
+    [self.photoView layoutIfNeeded];
+}
+
 #pragma mark - 点击消息提示按钮
 - (void)chatTextSelfRetryButtonClick:(QNChatTextSelfTableViewCell *)cell {
     NSIndexPath *path = [self.tableView indexPathForCell:cell];
@@ -508,45 +761,38 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 }
 
 #pragma mark - 点击弹窗提示
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)clickAlertViewButton:(NSInteger)index {
+    [self hideButtonBar];
     [self closeAllInputView];
-
-    NSInteger index = alertView.tag;
+    
     if (index < self.msgArray.count) {
         QNMessage *msg = [self.msgArray objectAtIndex:index];
-                LSLCLiveChatMsgProcResultObject *procResult = msg.liveChatMsgItemObject.procResult;
+        LSLCLiveChatMsgProcResultObject *procResult = msg.liveChatMsgItemObject.procResult;
         
-                if (procResult) {
-                    switch (procResult.errType) {
-                        case LSLIVECHAT_LCC_ERR_FAIL:
-                        case LSLIVECHAT_LCC_ERR_NOTRANSORAGENTFOUND: // 没有找到翻译或机构
-                        case LSLIVECHAT_LCC_ERR_BLOCKUSER:           // 对方为黑名单用户（聊天）
-                        case LSLIVECHAT_LCC_ERR_SIDEOFFLINE:
-                        case LSLIVECHAT_LCC_ERR_NOMONEY: {
-                            // 重新获取当前女士用户状态
-                            LSLCLiveChatUserItemObject *user = [self.liveChatManager getUserWithId:self.womanId];
-                            if (user) {
-                                if (user.statusType == USTATUS_ONLINE) {
-                                    // 用户重新在线, 重发
-                                    if (buttonIndex != alertView.cancelButtonIndex) {
-                                        [self reSendMsg:index];
-                                    }
-                                } else {
-                                    // 用户不在线 发EMF
-                                    if (buttonIndex != alertView.cancelButtonIndex) {
-                                        
-                                    }
-                                }
-                            }
-                        } break;
-                        default: {
-                            // 其他未处理错误, 重发
-                            if (buttonIndex != alertView.cancelButtonIndex) {
-                                [self reSendMsg:index];
-                            }
-                        } break;
+        if (procResult) {
+            switch (procResult.errType) {
+                case LSLIVECHAT_LCC_ERR_FAIL:
+                case LSLIVECHAT_LCC_ERR_NOTRANSORAGENTFOUND: // 没有找到翻译或机构
+                case LSLIVECHAT_LCC_ERR_BLOCKUSER:           // 对方为黑名单用户（聊天）
+                case LSLIVECHAT_LCC_ERR_SIDEOFFLINE:
+                case LSLIVECHAT_LCC_ERR_NOMONEY: {
+                    // 重新获取当前女士用户状态
+                    LSLCLiveChatUserItemObject *user = [self.liveChatManager getUserWithId:self.womanId];
+                    if (user) {
+                        if (user.statusType == USTATUS_ONLINE) {
+                            // 用户重新在线, 重发
+                            [self reSendMsg:index];
+                        } else {
+                            // 用户不在线 发EMF
+                        }
                     }
-                }
+                } break;
+                default: {
+                    // 其他未处理错误, 重发
+                    [self reSendMsg:index];
+                } break;
+            }
+        }
     } else {
         switch (index) {
             case AlertType200Limited: {
@@ -583,15 +829,51 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
 #pragma mark - 表情按钮选择回调
 - (void)selectedChanged:(id)sender {
-    [self.textView endEditing:YES];
-    UIButton *emotionBtn = (UIButton *)sender;
-    if (emotionBtn.selected == YES) {
-        // 弹出底部emotion的键盘
-        [self showEmotionView];
-        
+    if ([sender isEqual:self.photoBtn]) {
+        // 取消按钮点击
+        [self.textView endEditing:YES];
+
+        UIButton *photoBtn = (UIButton *)sender;
+        // 不允许访问相册,弹出提示
+        PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
+        if (photoAuthorStatus == PHAuthorizationStatusRestricted || photoAuthorStatus == PHAuthorizationStatusDenied) {
+            //            NSString *photoLibraryAllow = NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil);
+            NSString *photoLibraryAllow = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil)];
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:photoLibraryAllow preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self clickAlertViewButton:AlertTypePhotoAllow];
+            }];
+            [alertVC addAction:closeAC];
+            [self presentViewController:alertVC animated:YES completion:nil];
+            return;
+        } else if (photoAuthorStatus == PHAuthorizationStatusNotDetermined) {
+            [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
+            photoBtn.selected = NO;
+            return;
+        } else {
+            // 允许访问相册,允许按钮操作弹出相册栏
+            if (photoBtn.selected == YES) {
+                self.emotionBtn.selected = NO;
+                // 显示相册
+                [self showVisualableStylePhoto];
+
+            } else {
+                // 切换成系统的的键盘
+                [self showKeyboardView];
+            }
+        }
     } else {
-        // 切换成系统的的键盘
-        [self showKeyboardView];
+        [self.textView endEditing:YES];
+        UIButton *emotionBtn = (UIButton *)sender;
+        if (emotionBtn.selected == YES) {
+            self.photoBtn.selected = NO;
+            // 弹出底部emotion的键盘
+            [self showEmotionView];
+
+        } else {
+            // 切换成系统的的键盘
+            [self showKeyboardView];
+        }
     }
 }
 
@@ -623,9 +905,12 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     } else {
         // 必须开聊才能发送图片
         NSString *inChatTips = NSLocalizedStringFromSelf(@"Tips_InChat_Emotion");
-        UIAlertView *chatAlertView = [[UIAlertView alloc] initWithTitle:nil message:inChatTips delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
-        chatAlertView.tag = AlertTypeInChatAllow;
-        [chatAlertView show];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:inChatTips preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self clickAlertViewButton:AlertTypeInChatAllow];
+        }];
+        [alertVC addAction:okAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
     }
 }
 
@@ -761,6 +1046,148 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [self handleErrorMsg:path.row];
 }
 
+#pragma mark - 选择私密照回调
+- (void)chatPhotoViewOpenCam {
+    // 手机能否打开相机
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        // 查询相机权限
+        [[LiveStreamSession session] checkVideo:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                    // 点击打开相机
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.allowsEditing = NO;
+                    imagePicker.delegate = self;
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    [self presentViewController:imagePicker animated:YES completion:nil];
+                } else {
+                    // 无权限
+                    NSString *cameraAllow = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil)];
+                    //                    NSString *cameraAllow = NSLocalizedString(@"Tips_Camera_Allow", nil);
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:cameraAllow preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [self clickAlertViewButton:AlertTypeCameraAllow];
+                    }];
+                    [alertVC addAction:closeAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
+                }
+            });
+        }];
+    } else {
+        NSString *disableCamera = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_Camera_Allow", nil)];
+        //                NSString *disableCamera = NSLocalizedString(@"Tips_Camera_Allow", nil);
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:disableCamera preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self clickAlertViewButton:AlertTypeCameraDisable];
+        }];
+        [alertVC addAction:closeAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }
+}
+
+- (void)chatPhotoViewOpenAlbumList {
+    LSChatAlbumListViewController *vc = [[LSChatAlbumListViewController alloc] initWithNibName:nil bundle:nil];
+    vc.firstname = self.firstName;
+    vc.photoURL = self.photoURL;
+    LSNavigationController *nav = [[LSNavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)chatPhotoView:(LSChatPhotoView *)chatPhotoView didViewSelectItem:(NSInteger)item {
+    LSChatPhotoPreviewViewController *vc = [[LSChatPhotoPreviewViewController alloc] initWithNibName:nil bundle:nil];
+    vc.photoIndex = item;
+    vc.isFormChatVC = YES;
+    LSNavigationController *nav = [[LSNavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)chatPhotoView:(LSChatPhotoView *)chatPhotoView didSendSelectItem:(NSInteger)item {
+
+    LSChatPhoneAlbumPhoto *albumPhoto = [[LSChatPhotoDataManager manager].photoPathArray objectAtIndex:item];
+    if (albumPhoto.originalPath.length > 0) { //如果本地有缓存路径，直接发送
+        [self sendPhoto:albumPhoto.originalPath];
+    } else {
+        
+        [[PHImageManager defaultManager] requestImageForAsset:albumPhoto.asset
+                                                   targetSize:PHImageManagerMaximumSize
+                                                  contentMode:PHImageContentModeAspectFill
+                                                      options:nil
+                                                resultHandler:^(UIImage *result, NSDictionary *info) {
+                                                    if (result) {
+                                                        
+                                                        if (result.size.width > result.size.height) {
+                                                            //横图
+                                                            if (result.size.width > 1280) {
+                                                                result = [result scaleWithFixedWidth:1280];
+                                                            }
+                                                        } else {
+                                                            //竖图
+                                                            if (result.size.height > 1280) {
+                                                                result = [result scaleWithFixedHeight:1280];
+                                                            }
+                                                        }
+                                                        NSString *path = [[LSChatPhotoDataManager manager] getOriginalPhotoPath:result andImageName:albumPhoto.fileName];
+                                                        albumPhoto.originalPath = path;
+                                                        [self sendPhoto:albumPhoto.originalPath];
+                                                    }
+                                                }];
+    }
+}
+
+- (void)showChatPhotoTips {
+    // 必须开聊才能发送图片
+    NSString *inChatTips = NSLocalizedStringFromSelf(@"Tips_InChat_Photo");
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:inChatTips preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self clickAlertViewButton:AlertTypeInChatAllow];
+    }];
+    [alertVC addAction:okAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+#pragma mark - 相册管理器回调
+- (void)chatPhotoDataManagerReloadData {
+    [self.photoView reloadData];
+}
+
+- (void)onChoosePhotoURL:(NSString *)url {
+    [self sendPhoto:url];
+}
+#pragma mark - 相册逻辑
+/**
+ *  拍摄完图片回调
+ *
+ *  @param picker 相机控制
+ *  @param info   图片的相关信息
+ */
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
+
+    LSFileCacheManager *fileCacheManager = [LSFileCacheManager manager];
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    UIImage *fixOrientationImage = [image fixOrientation];
+    fixOrientationImage = [fixOrientationImage imageCompressForSize:1280];
+
+    //    NSString *path = [fileCacheManager imageUploadCachePath:fixOrientationImage fileName:[NSString stringWithFormat:@"CHAT%ld", time(NULL) * 1000]];
+    NSString *path = [fileCacheManager imageUploadSCompressSizeCachePath:fixOrientationImage fileName:[NSString stringWithFormat:@"CHAT%ld", time(NULL) * 1000]];
+    __weak typeof(self) weakSelf = self;
+    // 拍照完成后取消动画,并在消失完成之后才调用发送照片以解决动画冲突导致消息刷新不能自动滑动到最底部
+    [picker dismissViewControllerAnimated:NO
+                               completion:^{
+                                   [weakSelf sendPhoto:path];
+                               }];
+
+    [[LSChatPhotoDataManager manager] synchronousSaveImageWithPhotosWithImage:image];
+}
+
+/**
+ *  结束操作
+ *
+ *  @param picker 相机控制
+ */
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - 更新联系人逻辑
 - (void)updateRecents:(LSLCLiveChatMsgItemObject *)msg {
     // 更新最近联系人数据
@@ -778,74 +1205,74 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     if (index < self.msgArray.count) {
         QNMessage *msg = [self.msgArray objectAtIndex:index];
 
-                // 删除旧信息, 只改数据
-                [self.liveChatManager removeHistoryMessage:self.womanId msgId:msg.msgId];
-                [self.msgArray removeObjectAtIndex:index];
-        
-                // 刷新列表
-                [self.tableView beginUpdates];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                [self.tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
-                [self.tableView endUpdates];
-        
-                @synchronized(self) {
-                    NSMutableArray *warnningMsg = [NSMutableArray array];
-                    for (QNMessage *msg in self.msgArray) {
-                        if (msg.type == MessageTypeWarningTips) {
-                            [self.liveChatManager removeHistoryMessage:self.womanId msgId:msg.msgId];
-                            [warnningMsg addObject:msg];
-                            break;
-                        }
-                    }
-        
-                    NSMutableArray *warnningMsgIndex = [NSMutableArray array];
-                    for (int i = 0; i < self.msgArray.count; i++) {
-                        QNMessage *msg = [self.msgArray objectAtIndex:i];
-                        if (msg.type == MessageTypeWarningTips) {
-                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                            [warnningMsgIndex addObject:indexPath];
-                            break;
-                        }
-                    }
-        
-                    [self.msgArray removeObjectsInArray:warnningMsg];
-                    [self.tableView beginUpdates];
-                    [self.tableView deleteRowsAtIndexPaths:warnningMsgIndex withRowAnimation:UITableViewRowAnimationFade];
-                    [self.tableView endUpdates];
+        // 删除旧信息, 只改数据
+        [self.liveChatManager removeHistoryMessage:self.womanId msgId:msg.msgId];
+        [self.msgArray removeObjectAtIndex:index];
+
+        // 刷新列表
+        [self.tableView beginUpdates];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView endUpdates];
+
+        @synchronized(self) {
+            NSMutableArray *warnningMsg = [NSMutableArray array];
+            for (QNMessage *msg in self.msgArray) {
+                if (msg.type == MessageTypeWarningTips) {
+                    [self.liveChatManager removeHistoryMessage:self.womanId msgId:msg.msgId];
+                    [warnningMsg addObject:msg];
+                    break;
                 }
-        
-                // 重新发送
-                switch (msg.type) {
-                    case MessageTypeText: {
-                        [self sendMsg:msg.text];
-                    } break;
-                    case MessageTypePhoto: {
-                       // [self sendPhoto:msg.liveChatMsgItemObject.secretPhoto.srcFilePath];
-                    } break;
-                    case MessageTypeSmallEmotion: {
-                        [self sendSmallEmotion:msg.liveChatMsgItemObject.magicIconMsg.magicIconId];
-        
-                    } break;
-                    case MessageTypeLargeEmotion: {
-                       // [self sendLargeEmotion:msg.liveChatMsgItemObject.emotionMsg.emotionId];
-                    } break;
-                    case MessageTypeVoice: {
-                        [self sendVoice:msg.liveChatMsgItemObject.voiceMsg.filePath time:msg.liveChatMsgItemObject.voiceMsg.timeLength];
-                    } break;
-                    default:
-                        break;
+            }
+
+            NSMutableArray *warnningMsgIndex = [NSMutableArray array];
+            for (int i = 0; i < self.msgArray.count; i++) {
+                QNMessage *msg = [self.msgArray objectAtIndex:i];
+                if (msg.type == MessageTypeWarningTips) {
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                    [warnningMsgIndex addObject:indexPath];
+                    break;
                 }
+            }
+
+            [self.msgArray removeObjectsInArray:warnningMsg];
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:warnningMsgIndex withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView endUpdates];
+        }
+
+        // 重新发送
+        switch (msg.type) {
+            case MessageTypeText: {
+                [self sendMsg:msg.text];
+            } break;
+            case MessageTypePhoto: {
+                [self sendPhoto:msg.liveChatMsgItemObject.secretPhoto.srcFilePath];
+            } break;
+            case MessageTypeSmallEmotion: {
+                [self sendSmallEmotion:msg.liveChatMsgItemObject.magicIconMsg.magicIconId];
+
+            } break;
+            case MessageTypeLargeEmotion: {
+                // [self sendLargeEmotion:msg.liveChatMsgItemObject.emotionMsg.emotionId];
+            } break;
+            case MessageTypeVoice: {
+                [self sendVoice:msg.liveChatMsgItemObject.voiceMsg.filePath time:msg.liveChatMsgItemObject.voiceMsg.timeLength];
+            } break;
+            default:
+                break;
+        }
     }
 }
 
 - (BOOL)isEmpty:(NSString *)str {
-    // 判断内容是否全部为空格  yes 全部为空格  no 不是
+    // 判断内容是否全部为空格或系统语音录入中的富文本  yes 全部为空格  no 不是
     if (!str) {
         return true;
     } else {
         NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
         NSString *trimedString = [str stringByTrimmingCharactersInSet:set];
-        if ([trimedString length] == 0) {
+        if ([trimedString length] == 0 || [trimedString isEqualToString:@"\U0000fffc"]) {
             return true;
         } else {
             return false;
@@ -854,113 +1281,138 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 }
 
 - (void)sendMsg:(NSString *)text {
-     //TODO:发送文本
-        if ([self isEmpty:text]) {
-            [self.textView setText:@""];
-            [self.textView setNeedsDisplay];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedStringFromSelf(@"Send_Error_Tips_Space") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
-            return;
-        }
-    
-        // 去除掉首尾的空白字符和换行字符
-        text = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        text = [text stringByReplacingOccurrencesOfString:@"\r" withString:@""];
-        text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    
-        // 发送消息
-        LSLCLiveChatMsgItemObject *msg = [self.liveChatManager sendTextMsg:self.womanId text:text];
+    //TODO:发送文本
+    if ([self isEmpty:text]) {
+        [self.textView setText:@""];
+        [self.textView setNeedsDisplay];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"Send_Error_Tips_Space") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:cancelAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
+        return;
+    }
+
+    // 去除掉首尾的空白字符和换行字符
+    text = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    text = [text stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+
+    // 发送消息
+    LSLCLiveChatMsgItemObject *msg = [self.liveChatManager sendTextMsg:self.womanId text:text];
+    if (msg != nil) {
+        NSLog(@"QNChatViewController::sendMsg( 发送文本消息 : %@, msgId : %ld )", text, (long)msg.msgId);
+
+        // 更新最近联系人数据
+        [self updateRecents:msg];
+
+    } else {
+        NSLog(@"QNChatViewController::sendMsg( 发送文本消息 : %@, 失败 )", text);
+    }
+
+    // 刷新输入框
+    [self.textView setText:@""];
+    // 刷新默认提示
+    [self.textView setNeedsDisplay];
+    // 刷新列表
+    [self insertData:msg scrollToEnd:YES animated:YES];
+}
+
+- (void)sendPhoto:(NSString *)filePath {
+    if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+        //发送私密照
+        [self closeAllInputView];
+        LSLCLiveChatMsgItemObject *msg = nil;
+        msg = [self.liveChatManager sendPhoto:self.womanId PhotoPath:filePath];
         if (msg != nil) {
-            NSLog(@"ChatViewController::sendMsg( 发送文本消息 : %@, msgId : %ld )", text, (long)msg.msgId);
-    
+            NSLog(@"QNChatViewController::sendPhoto( 发送私密照消息 : %@, msgId : %ld )", msg.secretPhoto.srcFilePath, (long)msg.msgId);
+            
             // 更新最近联系人数据
             [self updateRecents:msg];
-    
+            // 刷新列表, 拉到最低
+            [self insertData:msg scrollToEnd:YES animated:YES];
+            
         } else {
-            NSLog(@"ChatViewController::sendMsg( 发送文本消息 : %@, 失败 )", text);
+            NSLog(@"QNChatViewController::sendPhoto( 发送私密照消息 : %@, 失败 )", msg.secretPhoto.srcFilePath);
         }
-    
-        // 刷新输入框
-        [self.textView setText:@""];
-        // 刷新默认提示
-        [self.textView setNeedsDisplay];
-        // 刷新列表
-        [self insertData:msg scrollToEnd:YES animated:YES];
+    }
+    else {
+        [self showChatPhotoTips];
+    }
 }
 
 - (void)sendVoice:(NSString *)filePath time:(int)time {
     [[LiveModule module].analyticsManager reportActionEvent:SendLivechatVoiceMessage eventCategory:EventCategoryLiveChat];
-        // TODO:发送语音
-        if (filePath) {
-            LSLCLiveChatMsgItemObject *msg = nil;
-            msg = [self.liveChatManager sendVoice:self.womanId voicePath:filePath fileType:@"mp3" timeLength:time];
-            if (msg != nil) {
-                NSLog(@"ChatViewController::sendVoice( 发送语音消息 : %@, msgId : %ld )", msg.voiceMsg.filePath, (long)msg.msgId);
-    
-                // 更新最近联系人数据
-                [self updateRecents:msg];
-                // 刷新列表, 拉到最低
-                [self insertData:msg scrollToEnd:YES animated:YES];
-    
-            } else {
-                NSLog(@"ChatViewController::sendVoice( 发送语音消息 : %@, 失败 )", msg.voiceMsg.filePath);
-            }
+    // TODO:发送语音
+    if (filePath) {
+        LSLCLiveChatMsgItemObject *msg = nil;
+        msg = [self.liveChatManager sendVoice:self.womanId voicePath:filePath fileType:@"mp3" timeLength:time];
+        if (msg != nil) {
+            NSLog(@"QNChatViewController::sendVoice( 发送语音消息 : %@, msgId : %ld )", msg.voiceMsg.filePath, (long)msg.msgId);
+
+            // 更新最近联系人数据
+            [self updateRecents:msg];
+            // 刷新列表, 拉到最低
+            [self insertData:msg scrollToEnd:YES animated:YES];
+
+        } else {
+            NSLog(@"QNChatViewController::sendVoice( 发送语音消息 : %@, 失败 )", msg.voiceMsg.filePath);
         }
+    }
 }
 
 - (void)sendSmallEmotion:(NSString *)emotionId {
     [[LiveModule module].analyticsManager reportActionEvent:SendLivechatSticker eventCategory:EventCategoryLiveChat];
     // TODO:发送小高级表情
-        LSLCLiveChatMsgItemObject *msg = [self.liveChatManager sendMagicIcon:self.womanId iconId:emotionId];
-        self.msgItem = msg;
-        if (msg != nil) {
-            NSLog(@"ChatViewController::sendEmotion( 发送小高级表情消息 emotionId : %@ )", msg.magicIconMsg.magicIconId);
-    
-            // 更新最近联系人数据
-            [self updateRecents:msg];
-    
-        } else {
-            NSLog(@"ChatViewController::sendEmotion( 发送小高级表情消息 : %@, 失败 )", msg.magicIconMsg.magicIconId);
-        }
-        [self insertData:msg scrollToEnd:YES animated:YES];
+    LSLCLiveChatMsgItemObject *msg = [self.liveChatManager sendMagicIcon:self.womanId iconId:emotionId];
+    self.msgItem = msg;
+    if (msg != nil) {
+        NSLog(@"QNChatViewController::sendEmotion( 发送小高级表情消息 emotionId : %@ )", msg.magicIconMsg.magicIconId);
+
+        // 更新最近联系人数据
+        [self updateRecents:msg];
+
+    } else {
+        NSLog(@"QNChatViewController::sendEmotion( 发送小高级表情消息 : %@, 失败 )", msg.magicIconMsg.magicIconId);
+    }
+    [self insertData:msg scrollToEnd:YES animated:YES];
 }
 
 #pragma mark - 播放语音
 - (void)palyVoice:(NSInteger)row {
-        // 语音在播放中，点击其他语音
-        if (self.audioPlayer.isPlaying && row != self.voicePlayRow) {
-            QNMessage *item = [self.msgArray objectAtIndex:self.voicePlayRow];
-            if (item.sender == MessageSenderSelf) {
-                QNChatVoiceSelfTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.voicePlayRow inSection:0]];
-                [cell setPalyButtonImage:NO];
-                item.liveChatMsgItemObject.voiceMsg.isPalying = NO;
-            } else {
-                QNChatVoiceTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.voicePlayRow inSection:0]];
-                [cell setPalyButtonImage:NO];
-                item.liveChatMsgItemObject.voiceMsg.isPalying = NO;
-            }
-        }
-    
-        self.voicePlayRow = row;
-        QNMessage *item = [self.msgArray objectAtIndex:row];
-        //将语音标记为已读
-        QNChatVoiceTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
-    
-        if (item.liveChatMsgItemObject.voiceMsg.filePath.length > 0) {
-            [self stopVoice:row];
-            [cell setPalyButtonImage:YES];
-            if (item.sender != MessageSenderSelf) {
-                cell.redView.hidden = YES;
-                NSString *voiceID = [NSString stringWithFormat:@"%@_%@", item.liveChatMsgItemObject.voiceMsg.voiceId, item.liveChatMsgItemObject.fromId];
-                [self.voiceManager saveVoiceReadMessage:voiceID];
-                item.liveChatMsgItemObject.voiceMsg.isRead = YES;
-            }
-            item.liveChatMsgItemObject.voiceMsg.isPalying = YES;
-            [self.audioPlayer playSongWithUrl:item.liveChatMsgItemObject.voiceMsg.filePath];
-        } else {
+    // 语音在播放中，点击其他语音
+    if (self.audioPlayer.isPlaying && row != self.voicePlayRow) {
+        QNMessage *item = [self.msgArray objectAtIndex:self.voicePlayRow];
+        if (item.sender == MessageSenderSelf) {
+            QNChatVoiceSelfTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.voicePlayRow inSection:0]];
             [cell setPalyButtonImage:NO];
-            [self.liveChatManager getVoice:self.womanId msgId:(int)item.msgId];
+            item.liveChatMsgItemObject.voiceMsg.isPalying = NO;
+        } else {
+            QNChatVoiceTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.voicePlayRow inSection:0]];
+            [cell setPalyButtonImage:NO];
+            item.liveChatMsgItemObject.voiceMsg.isPalying = NO;
         }
+    }
+
+    self.voicePlayRow = row;
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    //将语音标记为已读
+    QNChatVoiceTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
+
+    if (item.liveChatMsgItemObject.voiceMsg.filePath.length > 0) {
+        [self stopVoice:row];
+        [cell setPalyButtonImage:YES];
+        if (item.sender != MessageSenderSelf) {
+            cell.redView.hidden = YES;
+            NSString *voiceID = [NSString stringWithFormat:@"%@_%@", item.liveChatMsgItemObject.voiceMsg.voiceId, item.liveChatMsgItemObject.fromId];
+            [self.voiceManager saveVoiceReadMessage:voiceID];
+            item.liveChatMsgItemObject.voiceMsg.isRead = YES;
+        }
+        item.liveChatMsgItemObject.voiceMsg.isPalying = YES;
+        [self.audioPlayer playSongWithUrl:item.liveChatMsgItemObject.voiceMsg.filePath];
+    } else {
+        [cell setPalyButtonImage:NO];
+        [self.liveChatManager getVoice:self.womanId msgId:(int)item.msgId];
+    }
 }
 
 //停止播放语音
@@ -997,15 +1449,15 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 }
 
 - (void)chatAudioPlayerFailPlay {
-        if (self.msgArray.count > 0) {
-            QNMessage *item = [self.msgArray objectAtIndex:self.voicePlayRow];
-            item.liveChatMsgItemObject.voiceMsg.isPalying = NO;
-            [self.liveChatManager getVoice:self.womanId msgId:(int)item.msgId];
-            NSString *voiceID = [NSString stringWithFormat:@"%@_%@", item.liveChatMsgItemObject.voiceMsg.voiceId, item.liveChatMsgItemObject.fromId];
-            [self.voiceManager removeVoiceReadMessage:voiceID];
-    
-            [self chatAudioPlayerDidFinishPlay];
-        }
+    if (self.msgArray.count > 0) {
+        QNMessage *item = [self.msgArray objectAtIndex:self.voicePlayRow];
+        item.liveChatMsgItemObject.voiceMsg.isPalying = NO;
+        [self.liveChatManager getVoice:self.womanId msgId:(int)item.msgId];
+        NSString *voiceID = [NSString stringWithFormat:@"%@_%@", item.liveChatMsgItemObject.voiceMsg.voiceId, item.liveChatMsgItemObject.fromId];
+        [self.voiceManager removeVoiceReadMessage:voiceID];
+
+        [self chatAudioPlayerDidFinishPlay];
+    }
 }
 
 #pragma mark - 录音按钮点击事件
@@ -1015,11 +1467,10 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     [self chatAudioPlayerDidFinishPlay];
     if (![QNChatVoiceView canRecord]) {
         NSString *messageTips = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[LiveBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_Voice_Allow", nil)];
-        [[[UIAlertView alloc] initWithTitle:nil
-                                    message:messageTips
-                                   delegate:nil
-                          cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                          otherButtonTitles:nil] show];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:messageTips preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:cancelAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
         return;
     } else {
         if ([[NSUserDefaults standardUserDefaults] objectForKey:@"DidAudioPermissions"]) {
@@ -1035,9 +1486,12 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
             } else {
                 // 必须开聊才能发送语音
                 NSString *inChatTips = NSLocalizedStringFromSelf(@"Tips_InChat_Voice");
-                UIAlertView *chatAlertView = [[UIAlertView alloc] initWithTitle:nil message:inChatTips delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
-                chatAlertView.tag = AlertTypeInChatAllow;
-                [chatAlertView show];
+                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:inChatTips preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self clickAlertViewButton:AlertTypeInChatAllow];
+                }];
+                [alertVC addAction:okAC];
+                [self presentViewController:alertVC animated:YES completion:nil];
             }
         }
     }
@@ -1071,21 +1525,21 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
 #pragma mark - 消息管理逻辑
 - (void)reloadData:(BOOL)isReloadView scrollToEnd:(BOOL)scrollToEnd animated:(BOOL)animated {
-        // TODO:刷新消息列表
-        NSMutableArray *dataArray = [NSMutableArray array];
-        NSArray *array = [self.liveChatManager getMsgsWithUser:self.womanId];
-        for (LSLCLiveChatMsgItemObject *msg in array) {
-            QNMessage *item = [self reloadMessageFromLiveChatMsgItemObject:msg];
-            [dataArray addObject:item];
+    // TODO:刷新消息列表
+    NSMutableArray *dataArray = [NSMutableArray array];
+    NSArray *array = [self.liveChatManager getMsgsWithUser:self.womanId];
+    for (LSLCLiveChatMsgItemObject *msg in array) {
+        QNMessage *item = [self reloadMessageFromLiveChatMsgItemObject:msg];
+        [dataArray addObject:item];
+    }
+    if (isReloadView) {
+        self.msgArray = dataArray;
+        [self.tableView reloadData];
+
+        if (scrollToEnd) {
+            [self scrollToEnd:animated];
         }
-        if (isReloadView) {
-            self.msgArray = dataArray;
-            [self.tableView reloadData];
-    
-            if (scrollToEnd) {
-                [self scrollToEnd:animated];
-            }
-        }
+    }
 }
 
 - (void)insertData:(LSLCLiveChatMsgItemObject *)object scrollToEnd:(BOOL)scrollToEnd animated:(BOOL)animated {
@@ -1141,196 +1595,274 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 - (QNMessage *)reloadMessageFromLiveChatMsgItemObject:(LSLCLiveChatMsgItemObject *)msg {
     // TODO:生成消息数据
     QNMessage *item = [[QNMessage alloc] init];
-        item.liveChatMsgItemObject = msg;
-        item.msgId = msg.msgId;
-        if (msg.msgType == MT_Custom) {
-            // 自定义消息
-            QNMessage *custom = [self.msgCustomDict valueForKey:[NSString stringWithFormat:@"%ld", (long)msg.msgId]];
-            if (custom != nil) {
-                item = [custom copy];
-            }
-        } else {
-            // 其他
-    
-            // 方向
-            switch (msg.sendType) {
-                case SendType_Send: {
-                    // 发出去的消息
-                    item.sender = MessageSenderSelf;
-                } break;
-                case SendType_Recv: {
-                    // 接收到的消息
-                    item.sender = MessageSenderLady;
-                } break;
-                case SendType_System: {
-                    // 系统消息
-                } break;
-                default:
-                    break;
-            }
-    
-            // 类型
-            switch (msg.msgType) {
-                case MT_Text: {
-                    // 文本
-                    item.type = MessageTypeText;
-                    item.text = [LSStringEncoder htmlEntityDecode:msg.textMsg.displayMsg];
-                    item.attText = [self parseMessageTextEmotion:item.text font:[UIFont systemFontOfSize:TextMessageFontSize]];
-                } break;
-                case MT_System: {
-                    item.type = MessageTypeSystemTips;
-    
-                    switch (msg.systemMsg.codeType) {
-                        case MESSAGE: {
-                            // 普通系统消息
-                            item.text = msg.systemMsg.message;
-                        } break;
-                        case TRY_CHAT_END: {
-                            // 试聊结束消息
-                            item.text = msg.systemMsg.message;
-                            item.text = NSLocalizedStringFromSelf(@"Tips_Your_Free_Chat_Is_Ended");
-                        } break;
-                        case NOT_SUPPORT_TEXT: {
-                            // 不支持文本消息
-                            item.text = msg.systemMsg.message;
-                            item.text = NSLocalizedStringFromSelf(@"Tips_Text_Not_Support");
-                        } break;
-                        case NOT_SUPPORT_EMOTION: {
-                            // 试聊券系统消息
-                            item.text = msg.systemMsg.message;
-                            item.text = NSLocalizedStringFromSelf(@"Tips_Emotion_Not_Support");
-                        } break;
-                        case NOT_SUPPORT_VOICE: {
-                            // 不支持语音消息
-                            item.text = msg.systemMsg.message;
-                            item.text = NSLocalizedStringFromSelf(@"Tips_Voice_Not_Support");
-                        } break;
-                        case NOT_SUPPORT_PHOTO: {
-                            // 不支持私密照消息
-                            item.text = msg.systemMsg.message;
-                            item.text = NSLocalizedStringFromSelf(@"Tips_Photo_Not_Support");
-                        } break;
-                        case NOT_SUPPORT_MAGICICON: {
-                            // 不支持小高表消息
-                            item.text = msg.systemMsg.message;
-                            item.text = NSLocalizedStringFromSelf(@"Tips_MagicIcon_Not_Support");
-                        } break;
-                        default:
-                            break;
-                    }
-    
-                    item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
-                } break;
-                case MT_Warning: {
-                    item.type = MessageTypeWarningTips;
-                    switch (msg.warningMsg.codeType) {
-                        case WARNING_NOMONEY: {
-                            item.text = msg.warningMsg.message;
-                            NSString *tips = [NSString stringWithFormat:@"%@ Please ", NSLocalizedStringFromSelf(@"Warning_Error_Tips_No_Money")];
-                            NSString *linkMessage = NSLocalizedStringFromSelf(@"Tips_Add_Credit");
-                            item.attText = [self parseNoMomenyWarningMessage:tips linkMessage:linkMessage font:[UIFont systemFontOfSize:WarningMessageFontSize] color:MessageGrayColor];
-                        } break;
-                        default: {
-                            item.text = msg.warningMsg.message;
-                            item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
-                        } break;
-                    }
-                } break;
-                case MT_Photo: {
-                    item.type = MessageTypePhoto;
-                    item.secretPhotoImage = [UIImage imageNamed:@"LS_Chat_SecretPlaceholder"];
-                } break;
-                //语音类型
-                case MT_Voice: {
-                    item.type = MessageTypeVoice;
-    
-                    //如果本地没有语音文件就自动下载
-                    if (item.liveChatMsgItemObject.voiceMsg.filePath.length == 0) {
-                        [self.liveChatManager getVoice:self.womanId msgId:(int)item.msgId];
-                    }
-                    switch (item.sender) {
-                        case MessageSenderLady: {
-                            NSString *voiceID = [NSString stringWithFormat:@"%@_%@", item.liveChatMsgItemObject.voiceMsg.voiceId, item.liveChatMsgItemObject.fromId];
-                            //标记是否已读
-                            item.liveChatMsgItemObject.voiceMsg.isRead = [self.voiceManager voiceMessageIsRead:voiceID];
-                        } break;
-                        default:
-                            break;
-                    }
-                } break;
-                case MT_Emotion: {
-                    item.type = MessageTypeLargeEmotion;
-                    switch (item.sender) {
-                        case MessageSenderLady:
-                        case MessageSenderSelf: {
-                            NSString *emotionId = msg.emotionMsg.emotionId;
-    
-                            // 设置缩略图
-                            if (msg.emotionMsg.imagePath.length > 0) {
-                                NSString *imagePath = msg.emotionMsg.imagePath;
-                                item.emotionDefault = [self getEmotionImageFromCache:emotionId imagePath:imagePath];
-                            } else {
-                                [self.liveChatManager getEmotionImage:msg.emotionMsg.emotionId];
-                            }
-    
-                            // 设置动画图片
-                            if (msg.emotionMsg.playBigImages.count > 0) {
-                                item.emotionAnimationArray = [self getEmotionImageArrayFromCache:emotionId imagePathArray:msg.emotionMsg.playBigImages];
-                            } else {
-                                [self.liveChatManager getEmotionPlayImage:emotionId];
-                            }
-    
-                        } break;
-    
-                        default:
-                            break;
-                    }
-                } break;
-                case MT_MagicIcon: {
-                    item.type = MessageTypeSmallEmotion;
-                    switch (item.sender) {
-                        case MessageSenderLady:
-                        case MessageSenderSelf: {
-                            NSString *emotionId = msg.magicIconMsg.magicIconId;
-                            // 设置缩略图
-                            if (msg.magicIconMsg.thumbPath.length > 0) {
-                                NSString *imagePath = msg.magicIconMsg.thumbPath;
-                                item.emotionDefault = [self getSmallThumbEmotionImageFromCache:emotionId imagePath:imagePath];
-                            } else {
-                                if (emotionId.length > 0) {
-                                    [self.liveChatManager getMagicIconThumbImage:emotionId];
-                                }
-                            }
-    
-                        } break;
-    
-                        default:
-                            break;
-                    }
-                } break;
-                default:
-                    break;
-            }
-    
-            // 状态
-            switch (msg.statusType) {
-                case StatusType_Processing: {
-                    // 处理中
-                    item.status = MessageStatusProcessing;
-                } break;
-                case StatusType_Fail: {
-                    // 失败
-                    item.status = MessageStatusFail;
-                } break;
-                case StatusType_Finish: {
-                    // 完成
-                    item.status = MessageStatusFinish;
-                } break;
-    
-                default:
-                    break;
-            }
+    item.liveChatMsgItemObject = msg;
+    item.msgId = msg.msgId;
+    if (msg.msgType == MT_Custom) {
+        // 自定义消息
+        QNMessage *custom = [self.msgCustomDict valueForKey:[NSString stringWithFormat:@"%ld", (long)msg.msgId]];
+        if (custom != nil) {
+            item = [custom copy];
+            
+            item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
+            CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
+            item.cellH = viewSize.height;
         }
+    } else {
+        // 其他
+
+        // 方向
+        switch (msg.sendType) {
+            case SendType_Send: {
+                // 发出去的消息
+                item.sender = MessageSenderSelf;
+            } break;
+            case SendType_Recv: {
+                // 接收到的消息
+                item.sender = MessageSenderLady;
+            } break;
+            case SendType_System: {
+                // 系统消息
+            } break;
+            default:
+                break;
+        }
+
+        // 类型
+        switch (msg.msgType) {
+            case MT_Text: {
+                // 文本
+                item.type = MessageTypeText;
+                item.text = [LSStringEncoder htmlEntityDecode:msg.textMsg.displayMsg];
+                item.attText = [self parseMessageTextEmotion:item.text font:[UIFont systemFontOfSize:TextMessageFontSize]];
+                // 文本
+                if (item.sender == MessageSenderLady) {
+                    // 对方
+                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatTextLadyTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
+                    item.cellH = viewSize.height;
+                } else {
+                    // 自己
+                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatTextSelfTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
+                    item.cellH = viewSize.height;
+                }
+            } break;
+            case MT_System: {
+                item.type = MessageTypeSystemTips;
+                switch (msg.systemMsg.codeType) {
+                    case MESSAGE: {
+                        // 普通系统消息
+                        item.text = msg.systemMsg.message;
+                    } break;
+                    case TRY_CHAT_END: {
+                        // 试聊结束消息
+                        item.text = msg.systemMsg.message;
+                        item.text = NSLocalizedStringFromSelf(@"Tips_Your_Free_Chat_Is_Ended");
+                    } break;
+                    case NOT_SUPPORT_TEXT: {
+                        // 不支持文本消息
+                        item.text = msg.systemMsg.message;
+                        item.text = NSLocalizedStringFromSelf(@"Tips_Text_Not_Support");
+                    } break;
+                    case NOT_SUPPORT_EMOTION: {
+                        // 试聊券系统消息
+                        item.text = msg.systemMsg.message;
+                        item.text = NSLocalizedStringFromSelf(@"Tips_Emotion_Not_Support");
+                    } break;
+                    case NOT_SUPPORT_VOICE: {
+                        // 不支持语音消息
+                        item.text = msg.systemMsg.message;
+                        item.text = NSLocalizedStringFromSelf(@"Tips_Voice_Not_Support");
+                    } break;
+                    case NOT_SUPPORT_PHOTO: {
+                        // 不支持私密照消息
+                        item.text = msg.systemMsg.message;
+                        item.text = NSLocalizedStringFromSelf(@"Tips_Photo_Not_Support");
+                    } break;
+                    case NOT_SUPPORT_MAGICICON: {
+                        // 不支持小高表消息
+                        item.text = msg.systemMsg.message;
+                        item.text = NSLocalizedStringFromSelf(@"Tips_MagicIcon_Not_Support");
+                    } break;
+                    default:
+                        break;
+                }
+
+                item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
+                CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
+                item.cellH = viewSize.height;
+
+            } break;
+            case MT_Warning: {
+                item.type = MessageTypeWarningTips;
+                switch (msg.warningMsg.codeType) {
+                    case WARNING_NOMONEY: {
+                        item.text = msg.warningMsg.message;
+                        NSString *tips = [NSString stringWithFormat:@"%@ Please ", NSLocalizedStringFromSelf(@"Warning_Error_Tips_No_Money")];
+                        NSString *linkMessage = NSLocalizedStringFromSelf(@"Tips_Add_Credit");
+                        item.attText = [self parseNoMomenyWarningMessage:tips linkMessage:linkMessage font:[UIFont systemFontOfSize:WarningMessageFontSize] color:MessageGrayColor];
+                    } break;
+                    default: {
+                        item.text = msg.warningMsg.message;
+                        item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
+                    } break;
+                }
+                CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
+                item.cellH = viewSize.height;
+            } break;
+            case MT_Photo: {
+                item.type = MessageTypePhoto;
+                //是否横图
+                BOOL isCross = NO;
+                //已购买
+                if (item.liveChatMsgItemObject.secretPhoto.isGetCharge) {
+                    // 必须先重文件读取完整data, 如果用imageWithContentsOfFile读取会被修改的文件会crash
+                    NSString *path = @"";
+                    if (item.sender == MessageSenderSelf) {
+                        path = item.liveChatMsgItemObject.secretPhoto.srcFilePath;
+                    } else {
+                        path = item.liveChatMsgItemObject.secretPhoto.showSrcFilePath;
+                    }
+                    NSData *data = [NSData dataWithContentsOfFile:path];
+                    UIImage *secretPhotoImage = [UIImage imageWithData:data];
+                    if (secretPhotoImage == nil) {
+                        // 获取清晰图
+                        [self.liveChatManager getPhoto:item.liveChatMsgItemObject.fromId photoId:item.liveChatMsgItemObject.secretPhoto.photoId sizeType:GPT_LARGE sendType:item.liveChatMsgItemObject.sendType];
+                    } else {
+                        //判断图片是否横图
+                        if (secretPhotoImage.size.height < secretPhotoImage.size.width) {
+                            isCross = YES;
+                        }
+                    }
+                } else {
+                    NSString *path = item.liveChatMsgItemObject.secretPhoto.showFuzzyFilePath;
+                    NSData *data = [NSData dataWithContentsOfFile:path];
+                    UIImage *secretPhotoImage = [UIImage imageWithData:data];
+                    if (secretPhotoImage == nil) {
+                        //獲取模糊圖
+                        [self.liveChatManager getPhoto:item.liveChatMsgItemObject.fromId photoId:item.liveChatMsgItemObject.secretPhoto.photoId sizeType:GPT_LARGE sendType:item.liveChatMsgItemObject.sendType];
+                    }
+                }
+                if (item.sender == MessageSenderSelf) {
+                    item.cellH = [QNChatPhotoSelfTableViewCell cellHeight:isCross];
+                } else {
+                    item.cellH = [QNChatPhotoLadyTableViewCell cellHeight:isCross];
+                }
+            } break;
+            //语音类型
+            case MT_Voice: {
+                item.type = MessageTypeVoice;
+                //语音
+                CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatVoiceTableViewCell cellHeight]);
+                item.cellH = viewSize.height;
+                //如果本地没有语音文件就自动下载
+                if (item.liveChatMsgItemObject.voiceMsg.filePath.length == 0) {
+                    [self.liveChatManager getVoice:self.womanId msgId:(int)item.msgId];
+                }
+                switch (item.sender) {
+                    case MessageSenderLady: {
+                        NSString *voiceID = [NSString stringWithFormat:@"%@_%@", item.liveChatMsgItemObject.voiceMsg.voiceId, item.liveChatMsgItemObject.fromId];
+                        //标记是否已读
+                        item.liveChatMsgItemObject.voiceMsg.isRead = [self.voiceManager voiceMessageIsRead:voiceID];
+                    } break;
+                    default:
+                        break;
+                }
+            } break;
+            case MT_Emotion: {
+                item.type = MessageTypeLargeEmotion;
+                CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatLargeEmotionLadyTableViewCell cellHeight]);
+                item.cellH = viewSize.height;
+                switch (item.sender) {
+                    case MessageSenderLady:
+                    case MessageSenderSelf: {
+                        NSString *emotionId = msg.emotionMsg.emotionId;
+
+                        // 设置缩略图
+                        if (msg.emotionMsg.imagePath.length > 0) {
+                            NSString *imagePath = msg.emotionMsg.imagePath;
+                            item.emotionDefault = [self getEmotionImageFromCache:emotionId imagePath:imagePath];
+                        } else {
+                            [self.liveChatManager getEmotionImage:msg.emotionMsg.emotionId];
+                        }
+
+                        // 设置动画图片
+                        if (msg.emotionMsg.playBigImages.count > 0) {
+                            item.emotionAnimationArray = [self getEmotionImageArrayFromCache:emotionId imagePathArray:msg.emotionMsg.playBigImages];
+                        } else {
+                            [self.liveChatManager getEmotionPlayImage:emotionId];
+                        }
+
+                    } break;
+
+                    default:
+                        break;
+                }
+            } break;
+            case MT_MagicIcon: {
+                item.type = MessageTypeSmallEmotion;
+                CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSmallEmotionLadyTableViewCell cellHeight]);
+                item.cellH = viewSize.height;
+                switch (item.sender) {
+                    case MessageSenderLady:
+                    case MessageSenderSelf: {
+                        NSString *emotionId = msg.magicIconMsg.magicIconId;
+                        // 设置缩略图
+                        if (msg.magicIconMsg.thumbPath.length > 0) {
+                            NSString *imagePath = msg.magicIconMsg.thumbPath;
+                            item.emotionDefault = [self getSmallThumbEmotionImageFromCache:emotionId imagePath:imagePath];
+                        } else {
+                            if (emotionId.length > 0) {
+                                [self.liveChatManager getMagicIconThumbImage:emotionId];
+                            }
+                        }
+
+                    } break;
+
+                    default:
+                        break;
+                }
+            } break;
+            case MT_Video: {
+                item.type = MessageTypeVideo;
+                //是否横图
+                BOOL isCross = NO;
+                // 必须先重文件读取完整data, 如果用imageWithContentsOfFile读取会被修改的文件会crash
+                NSData *data = [NSData dataWithContentsOfFile:item.liveChatMsgItemObject.videoMsg.bigPhotoFilePath];
+                UIImage *secretPhotoImage = [UIImage imageWithData:data];
+                if (secretPhotoImage == nil) {
+                    // 获取清晰图
+                    [self.liveChatManager getVideoPhoto:item.liveChatMsgItemObject.fromId videoId:item.liveChatMsgItemObject.videoMsg.videoId inviteId:item.liveChatMsgItemObject.inviteId];
+                } else {
+                    //判断图片是否横图
+                    if (secretPhotoImage.size.height < secretPhotoImage.size.width) {
+                        isCross = YES;
+                    }
+                }
+                item.cellH = [LSChatVideoLadyTableViewCell cellHeight:isCross];
+
+            } break;
+            default:
+                break;
+        }
+
+        // 状态
+        switch (msg.statusType) {
+            case StatusType_Processing: {
+                // 处理中
+                item.status = MessageStatusProcessing;
+            } break;
+            case StatusType_Fail: {
+                // 失败
+                item.status = MessageStatusFail;
+            } break;
+            case StatusType_Finish: {
+                // 完成
+                item.status = MessageStatusFinish;
+            } break;
+
+            default:
+                break;
+        }
+    }
 
     return item;
 }
@@ -1339,8 +1871,8 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     // TODO:滚动到列表底部
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         NSInteger count = [self.tableView numberOfRowsInSection:0];
-        if( count > 0 ) {
-            NSIndexPath* indexPath = [NSIndexPath indexPathForRow:count - 1 inSection:0];
+        if (count > 0) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:count - 1 inSection:0];
             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:animated];
         }
     });
@@ -1352,14 +1884,14 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
     msg.msgType = MT_Custom;
     msg.createTime = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970];
 
-        // 无用代码
-        msg.customMsg = [[LSLCLiveChatCustomItemObject alloc] init];
+    // 无用代码
+    msg.customMsg = [[LSLCLiveChatCustomItemObject alloc] init];
 
     // 记录自定义消息
     QNMessage *custom = [[QNMessage alloc] init];
 
-        NSInteger msgId = [self.liveChatManager insertHistoryMessage:self.womanId msg:msg];
-        custom.msgId = msgId;
+    NSInteger msgId = [self.liveChatManager insertHistoryMessage:self.womanId msg:msg];
+    custom.msgId = msgId;
 
     [self.msgCustomDict setValue:custom forKey:[NSString stringWithFormat:@"%ld", (long)msgId]];
 
@@ -1368,21 +1900,21 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
 - (void)insertWaringMessage {
     // TODO:插入非法警告消息
-        LSLCLiveChatMsgItemObject *msg = [[LSLCLiveChatMsgItemObject alloc] init];
-        msg.msgType = MT_Warning;
-        msg.createTime = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970];
-        msg.warningMsg = [[LSLCLiveChatWarningItemObject alloc] init];
-        msg.warningMsg.message = NSLocalizedStringFromSelf(@"Send_Error_Tips_Illegal");
-        [self.liveChatManager insertHistoryMessage:self.womanId msg:msg];
-        [self insertData:msg scrollToEnd:YES animated:YES];
+    LSLCLiveChatMsgItemObject *msg = [[LSLCLiveChatMsgItemObject alloc] init];
+    msg.msgType = MT_Warning;
+    msg.createTime = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970];
+    msg.warningMsg = [[LSLCLiveChatWarningItemObject alloc] init];
+    msg.warningMsg.message = NSLocalizedStringFromSelf(@"Send_Error_Tips_Illegal");
+    [self.liveChatManager insertHistoryMessage:self.womanId msg:msg];
+    [self insertData:msg scrollToEnd:YES animated:YES];
 }
 
 - (void)clearCustomMessage {
     // TODO:清空自定义消息
-        for (NSString *key in self.msgCustomDict) {
-            QNMessage *msg = [self.msgCustomDict valueForKey:key];
-            [self.liveChatManager removeHistoryMessage:self.womanId msgId:msg.msgId];
-        }
+    for (NSString *key in self.msgCustomDict) {
+        QNMessage *msg = [self.msgCustomDict valueForKey:key];
+        [self.liveChatManager removeHistoryMessage:self.womanId msgId:msg.msgId];
+    }
 }
 
 - (void)outCreditEvent:(NSInteger)index {
@@ -1398,9 +1930,10 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
         [alertVc addAction:ok];
         [self presentViewController:alertVc animated:NO completion:nil];
     } else {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        alertView.tag = index;
-        [alertView show];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:okAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
     }
 }
 
@@ -1422,28 +1955,35 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
                 if (user && user.statusType == USTATUS_ONLINE) {
                     // 弹出重试
                     NSString *tips = NSLocalizedStringFromSelf(@"Send_Error_Tips_Retry");
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"Close", nil) otherButtonTitles:NSLocalizedString(@"Retry", nil), nil];
-
-                    alertView.tag = index;
-                    [alertView show];
-
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleCancel handler:nil];
+                    UIAlertAction *retryAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [self clickAlertViewButton:index];
+                    }];
+                    [alertVC addAction:closeAC];
+                    [alertVC addAction:retryAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 } else {
                     // 弹出不在线
                     NSString *tips = NSLocalizedStringFromSelf(@"Send_Error_Tips_Offline");
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                    alertView.tag = index;
-                    [alertView show];
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil];
+                    [alertVC addAction:closeAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 }
 
             } break;
             default: {
                 // 其他未处理错误
                 NSString *tips = NSLocalizedStringFromSelf(@"Send_Error_Tips_Other");
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"Close", nil) otherButtonTitles:NSLocalizedString(@"Retry", nil), nil];
-
-                alertView.tag = index;
-                [alertView show];
-
+                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleCancel handler:nil];
+                UIAlertAction *retryAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self clickAlertViewButton:index];
+                }];
+                [alertVC addAction:closeAC];
+                [alertVC addAction:retryAC];
+                [self presentViewController:alertVC animated:YES completion:nil];
             } break;
         }
     }
@@ -1468,14 +2008,18 @@ ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCel
 
     QNChatEmotion *emotion = nil;
     UIImage *image = nil;
+
+    NSString *imageItemName = nil;
     NSString *imageFileName = nil;
     NSString *imageName = nil;
 
     for (NSDictionary *dict in emotionFileArray) {
-        imageFileName = [dict objectForKey:@"name"];
+        imageItemName = [dict objectForKey:@"name"];
+        imageFileName = [NSString stringWithFormat:@"LS_img%@", imageItemName];
+
         image = [UIImage imageNamed:imageFileName];
         if (image != nil) {
-            imageName = [self parseEmotionTextByImageName:imageFileName];
+            imageName = [NSString stringWithFormat:@"[img:%@]", imageItemName];
             emotion = [[QNChatEmotion alloc] initWithTextImage:imageName image:image];
 
             [emotionDict setObject:emotion forKey:imageName];
@@ -1700,6 +2244,9 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
  *  @return 普通富文本消息
  */
 - (NSAttributedString *)parseMessage:(NSString *)text font:(UIFont *)font color:(UIColor *)textColor {
+    if (text == nil) {
+        return [[NSMutableAttributedString alloc] initWithString:@""];
+    }
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     [attributeString addAttributes:@{
         NSFontAttributeName : font,
@@ -1718,6 +2265,9 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
  *  @return 没钱富文本警告消息
  */
 - (NSAttributedString *)parseNoMomenyWarningMessage:(NSString *)text linkMessage:(NSString *)linkMessage font:(UIFont *)font color:(UIColor *)textColor {
+    if (text == nil) {
+        return [[NSMutableAttributedString alloc] initWithString:@""];
+    }
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     [attributeString addAttributes:@{
         NSFontAttributeName : font,
@@ -1762,100 +2312,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     }
     // 数据填充
     QNMessage *item = [self.msgArray objectAtIndex:indexPath.row];
-    switch (item.type) {
-        case MessageTypeSystemTips: {
-            // 系统消息
-            CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
-            height = viewSize.height;
-        } break;
-        case MessageTypeWarningTips: {
-            // 警告消息
-            // 系统消息
-            CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
-            height = viewSize.height;
-        } break;
-        case MessageTypeText: {
-            // 文本
-            switch (item.sender) {
-                case MessageSenderLady: {
-                    // 对方
-                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatTextLadyTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
-                    height = viewSize.height;
-                } break;
-                case MessageSenderSelf: {
-                    // 自己
-                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatTextSelfTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
-                    height = viewSize.height;
-                } break;
-                default: {
-                } break;
-            }
-        } break;
-        case MessageTypePhoto: {
-            // 图片
-            switch (item.sender) {
-                case MessageSenderLady: {
-                    // 对方
-                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatPhotoLadyTableViewCell cellHeight]);
-                    height = viewSize.height;
-                } break;
-                case MessageSenderSelf: {
-                    // 自己
-                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatPhotoSelfTableViewCell cellHeight]);
-                    height = viewSize.height;
-                } break;
-                default: {
-                } break;
-            }
-        } break;
-        case MessageTypeVoice: {
-            //语音
-            CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatVoiceTableViewCell cellHeight]);
-            height = viewSize.height;
-        } break;
-        case MessageTypeCoupon: {
-            // 试聊券
-            CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatCouponTableViewCell cellHeight]);
-            height = viewSize.height;
-        } break;
-        case MessageTypeLargeEmotion: {
-            //  高级表情
-            switch (item.sender) {
-                case MessageSenderLady: {
-                    // 对方
-                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatLargeEmotionLadyTableViewCell cellHeight]);
-                    height = viewSize.height;
-                } break;
-                case MessageSenderSelf: {
-                    // 自己
-                    CGSize viewsize = CGSizeMake(self.tableView.frame.size.width, [QNChatLargeEmotionSelfTableViewCell cellHeight]);
-                    return viewsize.height;
-                } break;
-                default:
-                    break;
-            }
-        } break;
-        case MessageTypeSmallEmotion: {
-            //  小高级表情
-            switch (item.sender) {
-                case MessageSenderLady: {
-                    // 对方
-                    CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSmallEmotionLadyTableViewCell cellHeight]);
-                    height = viewSize.height;
-                } break;
-                case MessageSenderSelf: {
-                    // 自己
-                    CGSize viewsize = CGSizeMake(self.tableView.frame.size.width, [QNChatSmallEmotionSelfTableViewCell cellHeight]);
-                    return viewsize.height;
-                } break;
-                default:
-                    break;
-            }
-        } break;
-        default: {
-        } break;
-    }
-    return height;
+    return item.cellH;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -2001,6 +2458,142 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
                     break;
             }
         } break;
+        case MessageTypePhoto: {
+            // 图片
+            switch (item.sender) {
+                case MessageSenderLady: {
+                    // 接收到的消息
+                    QNChatPhotoLadyTableViewCell *cell = [QNChatPhotoLadyTableViewCell getUITableViewCell:tableView];
+                    result = cell;
+                    result.tag = indexPath.row;
+                    cell.delegate = self;
+                    //用于刷新图片
+                    cell.detailLabel.text = [NSString stringWithFormat:@"\"%@\"", item.liveChatMsgItemObject.secretPhoto.photoDesc, nil];
+                    //已购买
+                    if (item.liveChatMsgItemObject.secretPhoto.isGetCharge) {
+                        // 必须先重文件读取完整data, 如果用imageWithContentsOfFile读取会被修改的文件会crash
+                        NSData *data = [NSData dataWithContentsOfFile:item.liveChatMsgItemObject.secretPhoto.showSrcFilePath];
+                        UIImage *secretPhotoImage = [UIImage imageWithData:data];
+                        
+                        if (secretPhotoImage == nil) {
+                            // 获取本地模糊图
+                            NSData *data = [NSData dataWithContentsOfFile:item.liveChatMsgItemObject.secretPhoto.showFuzzyFilePath];
+                            UIImage *secretPhotoImage = [UIImage imageWithData:data];
+                            cell.secretPhoto.image = secretPhotoImage;
+                            cell.loadingPhoto.hidden = NO;
+                        } else {
+                            cell.loadingPhoto.hidden = YES;
+                            cell.privateLock.hidden = YES;
+                            cell.privateUnlock.hidden = YES;
+                            cell.secretPhoto.image = secretPhotoImage;
+                        }
+                    } else //未购买
+                    {
+                        
+                        // 获取本地模糊图
+                        NSData *data = [NSData dataWithContentsOfFile:item.liveChatMsgItemObject.secretPhoto.showFuzzyFilePath];
+                        UIImage *secretPhotoImage = [UIImage imageWithData:data];
+                        if (secretPhotoImage == nil) {
+                            cell.loadingPhoto.hidden = NO;
+                        } else {
+                            cell.loadingPhoto.hidden = YES;
+                            cell.privateLock.hidden = NO;
+                            cell.privateUnlock.hidden = NO;
+                            cell.secretPhoto.image = secretPhotoImage;
+                        }
+                    }
+                    
+                    if (item.liveChatMsgItemObject.procResult.errType != LSLIVECHAT_LCC_ERR_SUCCESS && cell.secretPhoto.image == nil) {
+                        cell.loadingPhoto.hidden = YES;
+                        cell.privateLock.hidden = YES;
+                        cell.privateUnlock.hidden = YES;
+                        cell.loadPhotoFailIcon.hidden = NO;
+                    }
+
+                    //处理图片显示的大小
+                    if (cell.secretPhoto.image) {
+                        if (cell.secretPhoto.image.size.height == cell.secretPhoto.image.size.width) {
+                            cell.imageW.constant = halfHight;
+                            cell.imageH.constant = halfHight;
+                        } else if (cell.secretPhoto.image.size.height > cell.secretPhoto.image.size.width) {
+                            cell.imageW.constant = halfWidth;
+                            cell.imageH.constant = halfHight;
+                        } else {
+                            cell.imageW.constant = halfHight;
+                            cell.imageH.constant = halfWidth;
+                        }
+                        [cell layoutIfNeeded];
+                    }
+                } break;
+                case MessageSenderSelf: {
+                    //发出的私密照
+                    QNChatPhotoSelfTableViewCell *cell = [QNChatPhotoSelfTableViewCell getUITableViewCell:tableView];
+                    result = cell;
+                    result.tag = indexPath.row;
+                    cell.delegate = self;
+
+                    if (item.liveChatMsgItemObject.secretPhoto.srcFilePath.length > 0) {
+                        cell.secretPhoto.image = nil;
+                        cell.secretPhoto.image = [UIImage imageWithData:[NSData dataWithContentsOfFile:item.liveChatMsgItemObject.secretPhoto.srcFilePath]];
+                    } else if (item.liveChatMsgItemObject.secretPhoto.showSrcFilePath.length > 0) {
+                        cell.secretPhoto.image = nil;
+                        cell.secretPhoto.image = [UIImage imageWithData:[NSData dataWithContentsOfFile:item.liveChatMsgItemObject.secretPhoto.showSrcFilePath]];
+                    } else {
+                        item.status = MessageStatusProcessing;
+                    }
+                    //处理图片显示的大小
+                    if (cell.secretPhoto.image != nil) {
+                        if (cell.secretPhoto.image) {
+                            if (cell.secretPhoto.image.size.height == cell.secretPhoto.image.size.width) {
+                                cell.imageW.constant = halfHight;
+                                cell.imageH.constant = halfHight;
+                            } else if (cell.secretPhoto.image.size.height > cell.secretPhoto.image.size.width) {
+                                cell.imageW.constant = halfWidth;
+                                cell.imageH.constant = halfHight;
+                            } else {
+                                cell.imageW.constant = halfHight;
+                                cell.imageH.constant = halfWidth;
+                            }
+                            [cell layoutIfNeeded];
+                        }
+                        [cell layoutIfNeeded];
+                    } else {
+                        item.status = MessageStatusProcessing;
+                    }
+                    
+                    cell.loadPhotoFailIcon.hidden = YES;
+
+                    //获取图片发送的状态,显示图片以及加载状态
+                    switch (item.status) {
+                        case MessageStatusProcessing: {
+                            // 发送中
+                            [cell.loadingActivity startAnimating];
+                            cell.loadingActivity.hidden = NO;
+                            cell.retryBtn.hidden = YES;
+                        } break;
+                        case MessageStatusFinish: {
+                            // 发送成功
+                            [cell.loadingActivity stopAnimating];
+                            cell.retryBtn.hidden = YES;
+                        } break;
+                        case MessageStatusFail: {
+                            // 发送失败
+                            [cell.loadingActivity stopAnimating];
+                            cell.retryBtn.hidden = NO;
+                            cell.delegate = self;
+                        } break;
+                        default: {
+                            // 未知
+                            [cell.loadingActivity stopAnimating];
+                            cell.retryBtn.hidden = YES;
+                        } break;
+                    }
+                } break;
+
+                default:
+                    break;
+            }
+        } break;
         case MessageTypeCoupon: {
             // 试聊券
             QNChatCouponTableViewCell *cell = [QNChatCouponTableViewCell getUITableViewCell:tableView];
@@ -2047,7 +2640,66 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
                 default:
                     break;
             }
-        }
+        } break;
+        case MessageTypeVideo: {
+            // 视频
+            LSChatVideoLadyTableViewCell *cell = [LSChatVideoLadyTableViewCell getUITableViewCell:tableView];
+            result = cell;
+            result.tag = indexPath.row;
+            cell.delegate = self;
+            if (item.liveChatMsgItemObject.videoMsg.videoDesc.length > 0) {
+                //描述
+                cell.detailLabel.text = [NSString stringWithFormat:@"\"%@\"", item.liveChatMsgItemObject.videoMsg.videoDesc, nil];
+            }
+            // 必须先重文件读取完整data, 如果用imageWithContentsOfFile读取会被修改的文件会crash
+            NSData *data = [NSData dataWithContentsOfFile:item.liveChatMsgItemObject.videoMsg.bigPhotoFilePath];
+            UIImage *secretPhotoImage = [UIImage imageWithData:data];
+            if (secretPhotoImage == nil) {
+                cell.loadingPhoto.hidden = NO;
+                cell.playIcon.hidden = YES;
+                cell.lockIcon.hidden = YES;
+                cell.alphaView.hidden = YES;
+            } else {
+                cell.loadingPhoto.hidden = YES;
+                cell.lockIcon.hidden = NO;
+                cell.secretPhoto.image = secretPhotoImage;
+                //已购买
+                if (item.liveChatMsgItemObject.videoMsg.charge) {
+                    cell.lockIcon.hidden = YES;
+                    cell.lockPhoto.hidden = YES;
+                    cell.playIcon.hidden = NO;
+                    cell.alphaView.hidden = YES;
+                } else {
+                    cell.lockIcon.hidden = NO;
+                    cell.lockPhoto.hidden = NO;
+                    cell.playIcon.hidden = YES;
+                    cell.alphaView.hidden = NO;
+                }
+            }
+            if (item.liveChatMsgItemObject.procResult.errType != LSLIVECHAT_LCC_ERR_SUCCESS && cell.secretPhoto.image == nil) {
+                cell.loadingPhoto.hidden = YES;
+                cell.playIcon.hidden = YES;
+                cell.lockIcon.hidden = YES;
+                cell.lockPhoto.hidden = YES;
+                cell.loadFailIcon.hidden = NO;
+                cell.alphaView.hidden = YES;
+            }
+
+            //处理图片显示的大小
+            if (cell.secretPhoto.image) {
+                if (cell.secretPhoto.image.size.height == cell.secretPhoto.image.size.width) {
+                    cell.imageW.constant = halfHight;
+                    cell.imageH.constant = halfHight;
+                } else if (cell.secretPhoto.image.size.height > cell.secretPhoto.image.size.width) {
+                    cell.imageW.constant = halfWidth;
+                    cell.imageH.constant = halfHight;
+                } else {
+                    cell.imageW.constant = halfHight;
+                    cell.imageH.constant = halfWidth;
+                }
+                [cell layoutIfNeeded];
+            }
+        } break;
         default: {
         } break;
     }
@@ -2128,7 +2780,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         // 弹出键盘
         // 增加加速度
 
-        if (self.emotionBtn.selected == YES) {
+        if (self.emotionBtn.selected == YES || self.photoBtn.selected == YES) {
             self.inputMessageViewBottom.constant = -height + h;
         } else {
             self.inputMessageViewBottom.constant = -height;
@@ -2139,7 +2791,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         // 收起键盘
 
         self.inputMessageViewBottom.constant = h;
-        //self.photoView.hidden = YES;
+        self.photoView.hidden = YES;
         self.chatEmotionKeyboardView.hidden = YES;
     }
 
@@ -2176,6 +2828,8 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     if (self.emotionBtn.selected == NO) {
         // 没有选择表情
         [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
+    } else if (self.photoBtn.selected == NO) {
+        [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
     }
 }
 
@@ -2199,11 +2853,12 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    [self hideButtonBar];
     // 增加手势
     [self addSingleTap];
     // 切换所有按钮到系统键盘状态
     self.emotionBtn.selected = NO;
-     
+    self.photoBtn.selected = NO;
     return YES;
 }
 
@@ -2247,13 +2902,13 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         if (msg != nil) {
             if ([msg.toId isEqualToString:self.womanId]) {
                 if (msg.statusType == StatusType_Finish) {
-                    NSLog(@"ChatViewController::onSendTextMsg( 发送文本消息回调, 发送成功 : %@, toId : %@ )", msg.textMsg.displayMsg, msg.toId);
-                    
+                    NSLog(@"QNChatViewController::onSendTextMsg( 发送文本消息回调, 发送成功 : %@, toId : %@ )", msg.textMsg.displayMsg, msg.toId);
+
                     if (msg.textMsg.illegal) {
                         [self performSelector:@selector(insertWaringMessage) withObject:self afterDelay:1];
                     }
                 } else {
-                    NSLog(@"ChatViewController::onSendTextMsg( 发送文本消息回调, 发送失败 : %@, toId : %@, errMsg : %@ )", msg.textMsg.displayMsg, msg.toId, errMsg);
+                    NSLog(@"QNChatViewController::onSendTextMsg( 发送文本消息回调, 发送失败 : %@, toId : %@, errMsg : %@ )", msg.textMsg.displayMsg, msg.toId, errMsg);
                 }
                 [self updataMessageData:msg scrollToEnd:NO animated:NO];
             }
@@ -2266,7 +2921,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         for (LSLCLiveChatMsgItemObject *msg in msgs) {
             // 当前聊天女士才显示
             if ([msg.toId isEqualToString:self.womanId]) {
-                NSLog(@"ChatViewController::onSendTextMsgsFail( 发送消息失败回调（多条）: %@ )", msg);
+                NSLog(@"QNChatViewController::onSendTextMsgsFail( 发送消息失败回调（多条）: %@ )", msg);
 
                 [self updataMessageData:msg scrollToEnd:NO animated:NO];
             }
@@ -2278,7 +2933,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([msg.fromId isEqualToString:self.womanId]) {
-            NSLog(@"ChatViewController::onRecvTextMsg( 接收文本消息回调 fromId : %@, message : %@ )", msg.fromId, msg.textMsg.displayMsg);
+            NSLog(@"QNChatViewController::onRecvTextMsg( 接收文本消息回调 fromId : %@, message : %@ )", msg.fromId, msg.textMsg.displayMsg);
             [[QNContactManager manager] updateReadMsg:self.womanId];
             [self insertData:msg scrollToEnd:YES animated:YES];
         }
@@ -2289,7 +2944,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([msg.fromId isEqualToString:self.womanId]) {
-            NSLog(@"ChatViewController::onRecvSystemMsg( 接收系统消息回调 fromId : %@, message : %@ )", msg.fromId, msg.systemMsg.message);
+            NSLog(@"QNChatViewController::onRecvSystemMsg( 接收系统消息回调 fromId : %@, message : %@ )", msg.fromId, msg.systemMsg.message);
             [self insertData:msg scrollToEnd:YES animated:YES];
         }
     });
@@ -2299,7 +2954,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([msg.fromId isEqualToString:self.womanId]) {
-            NSLog(@"ChatViewController::onRecvWarningMsg( 接收警告消息 fromId : %@, message : %@ )", msg.fromId, msg.warningMsg.message);
+            NSLog(@"QNChatViewController::onRecvWarningMsg( 接收警告消息 fromId : %@, message : %@ )", msg.fromId, msg.warningMsg.message);
             [self insertData:msg scrollToEnd:YES animated:YES];
         }
     });
@@ -2309,7 +2964,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([userId isEqualToString:self.womanId]) {
-            NSLog(@"ChatViewController::onRecvEditMsg( 对方编辑消息回调 )");
+            NSLog(@"QNChatViewController::onRecvEditMsg( 对方编辑消息回调 )");
             [self reloadData:YES scrollToEnd:YES animated:YES];
         }
     });
@@ -2319,7 +2974,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([userId isEqualToString:self.womanId]) {
-            NSLog(@"ChatViewController::onGetHistoryMessage( 获取单个用户历史聊天记录 )");
+            NSLog(@"QNChatViewController::onGetHistoryMessage( 获取单个用户历史聊天记录 )");
             [self reloadData:YES scrollToEnd:YES animated:YES];
         }
     });
@@ -2330,7 +2985,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         for (NSString *userId in userIds) {
             // 当前聊天女士才显示
             if ([userId isEqualToString:self.womanId]) {
-                NSLog(@"ChatViewController::onGetHistoryMessage( 获取多个用户历史聊天记录 )");
+                NSLog(@"QNChatViewController::onGetHistoryMessage( 获取多个用户历史聊天记录 )");
                 [self reloadData:YES scrollToEnd:YES animated:YES];
                 break;
             }
@@ -2344,7 +2999,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
             // 当前聊天女士才显示
             if ([userId isEqualToString:self.womanId]) {
                 if (status == CouponStatus_Yes) {
-                    NSLog(@"ChatViewController::onCheckTryTicket( 检测是否可使用试聊券回调, 可用 userId : %@ )", userId);
+                    NSLog(@"QNChatViewController::onCheckTryTicket( 检测是否可使用试聊券回调, 可用 userId : %@ )", userId);
                     // 插入试聊券消息
                     QNMessage *custom = [self insertCustomMessage];
                     custom.type = MessageTypeCoupon;
@@ -2356,7 +3011,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
                     custom.attText = [self parseMessage:custom.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
 
                 } else {
-                    NSLog(@"ChatViewController::onCheckTryTicket( 检测是否可使用试聊券回调, 不可用 userId : %@ )", userId);
+                    NSLog(@"QNChatViewController::onCheckTryTicket( 检测是否可使用试聊券回调, 不可用 userId : %@ )", userId);
 
                     // 插入资费提示
                     QNMessage *custom = [self insertCustomMessage];
@@ -2375,27 +3030,119 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([user.userId isEqualToString:self.womanId]) {
-            NSLog(@"ChatViewController::onRecvTryTalkEnd( 结束试聊回调 userId : %@ )", user.userId);
+            NSLog(@"QNChatViewController::onRecvTryTalkEnd( 结束试聊回调 userId : %@ )", user.userId);
         }
     });
 }
 
+#pragma mark - 私密照回调
+- (void)onGetPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg msgList:(NSArray<LSLCLiveChatMsgItemObject *> *_Nonnull)msgList sizeType:(GETPHOTO_PHOTOSIZE_TYPE)sizeType {
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        for (LSLCLiveChatMsgItemObject *msgItem in msgList) {
+            if ([msgItem.fromId isEqualToString:self.womanId]) {
+                NSLog(@"QNChatViewController::onGetPhoto( 获取女士私密照回调 : %ld, fromId : %@, photoId : %@, showSrcFilePath : %@)", (long)msgItem.msgId, msgItem.fromId, msgItem.secretPhoto.photoId, msgItem.secretPhoto.showSrcFilePath);
+                [self reloadData:YES scrollToEnd:NO animated:NO];
+                break;
+            } else if ([msgItem.toId isEqualToString:self.womanId]) {
+                NSLog(@"QNChatViewController::onGetPhoto( 获取男士私密照回调 : %ld, toId : %@, photoId : %@, showSrcFilePath : %@)", (long)msgItem.msgId, msgItem.toId, msgItem.secretPhoto.photoId,msgItem.secretPhoto.showSrcFilePath);
+                [self reloadData:YES scrollToEnd:NO animated:NO];
+                break;
+            }
+        }
+    });
+}
+
+- (void)onPhotoFee:(bool)success errNo:(NSString *)errNo errMsg:(NSString *)errMsg msgItem:(LSLCLiveChatMsgItemObject *)msgItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([msgItem.fromId isEqualToString:self.womanId]) {
+            NSLog(@"QNChatViewController::onPhotoFee( 付费女士私密照回调 : %ld, fromId : %@, photoId : %@ srcFilePath : %@)", (long)msgItem.msgId, msgItem.fromId, msgItem.secretPhoto.photoId,msgItem.secretPhoto.srcFilePath);
+
+            if (success) {
+                [self reloadData:YES scrollToEnd:NO animated:NO];
+            }
+        }
+    });
+}
+
+- (void)onRecvPhoto:(LSLCLiveChatMsgItemObject *)msgItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([msgItem.fromId isEqualToString:self.womanId]) {
+            NSLog(@"QNChatViewController::onRecvPhoto( 收到私密照回调 : %ld, fromId : %@, photoId : %@ )", (long)msgItem.msgId, msgItem.fromId, msgItem.secretPhoto.photoId);
+            [[QNContactManager manager] updateReadMsg:self.womanId];
+            [self insertData:msgItem scrollToEnd:YES animated:YES];
+        }
+    });
+}
+
+- (void)onSendPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *)errNo errMsg:(NSString *)errMsg msgItem:(LSLCLiveChatMsgItemObject *)msgItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (msgItem != nil) {
+            if ([msgItem.toId isEqualToString:self.womanId]) {
+                if (msgItem.statusType == StatusType_Finish) {
+                    NSLog(@"QNChatViewController::onSendPhoto( 发送私密照消息回调, 发送成功 : %ld, toId : %@, photoId : %@ )", (long)msgItem.msgId, msgItem.toId, msgItem.secretPhoto.photoId);
+
+                } else {
+                    NSLog(@"QNChatViewController::onSendPhoto( 发送私密照消息回调, 发送失败 : %ld, toId : %@, errMsg : %@ )", (long)msgItem.msgId, msgItem.toId, errMsg);
+                }
+                [self updataMessageData:msgItem scrollToEnd:YES animated:YES];
+            }
+        }
+    });
+}
+
+#pragma mark - 私密照中操作或回调
+- (void)ChatPhotoLadyTableViewCellDidLookPhoto:(QNChatPhotoLadyTableViewCell *)cell {
+    NSInteger index = cell.tag;
+    QNMessage *msg = [self.msgArray objectAtIndex:index];
+    LSChatAccessoryListViewController *vc = [[LSChatAccessoryListViewController alloc] initWithNibName:nil bundle:nil];
+    vc.items = [self getChatFileListArray];
+    vc.row = [[self getChatFileListArray] indexOfObject:msg];
+    LSNavigationController * nav = [[LSNavigationController alloc]initWithRootViewController:vc];
+    [self presentViewController:nav animated:NO completion:nil];
+}
+
+- (void)ChatPhotoSelfTableViewCellDidLookPhoto:(QNChatPhotoSelfTableViewCell *)cell {
+    NSInteger index = cell.tag;
+    QNMessage *msg = [self.msgArray objectAtIndex:index];
+    LSChatAccessoryListViewController *vc = [[LSChatAccessoryListViewController alloc] initWithNibName:nil bundle:nil];
+    vc.items = [self getChatFileListArray];
+    vc.row = [[self getChatFileListArray] indexOfObject:msg];
+    LSNavigationController * nav = [[LSNavigationController alloc]initWithRootViewController:vc];
+    [self presentViewController:nav animated:NO completion:nil];
+}
+
+- (void)ChatPhotoSelfTableViewCellDidClickRetryBtn:(QNChatPhotoSelfTableViewCell *)cell {
+    NSIndexPath *path = [self.tableView indexPathForCell:cell];
+    [self handleErrorMsg:path.row];
+}
+
+- (NSArray *)getChatFileListArray {
+
+    NSMutableArray *array = [NSMutableArray array];
+    for (QNMessage *msg in self.msgArray) {
+        if (msg.type == MessageTypePhoto || msg.type == MessageTypeVideo) {
+            [array addObject:msg];
+        }
+    }
+    return array;
+}
 #pragma mark - 小高表消息回调
 - (void)onGetMagicIconConfig:(bool)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg magicIconConItem:(LSLCLiveChatMagicIconConfigItemObject *_Nonnull)config {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"ChatViewController::onGetMagicIconConfig( 获取小高级表情消息回调 maxupdatetime : %ld, path : %@ )", (long)config.maxupdatetime, config.path);
+        NSLog(@"QNChatViewController::onGetMagicIconConfig( 获取小高级表情消息回调 maxupdatetime : %ld, path : %@ )", (long)config.maxupdatetime, config.path);
     });
 }
 
 - (void)onGetMagicIconSrcImage:(bool)success magicIconItem:(LSLCLiveChatMagicIconItemObject *_Nonnull)item {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"ChatViewController::onGetMagicIconSrcImage( 获取小高级表情清晰图消息回调 magicIconId : %@, sourcePath : %@ )", item.magicIconId, item.sourcePath);
+        NSLog(@"QNChatViewController::onGetMagicIconSrcImage( 获取小高级表情清晰图消息回调 magicIconId : %@, sourcePath : %@ )", item.magicIconId, item.sourcePath);
     });
 }
 
 - (void)onGetMagicIconThumbImage:(bool)success magicIconItem:(LSLCLiveChatMagicIconItemObject *_Nonnull)item {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"ChatViewController::onGetMagicIconThumbImage( 获取小高级表情缩略图消息回调 magicIconId : %@, thumbPath : %@ )", item.magicIconId, item.thumbPath);
+        NSLog(@"QNChatViewController::onGetMagicIconThumbImage( 获取小高级表情缩略图消息回调 magicIconId : %@, thumbPath : %@ )", item.magicIconId, item.thumbPath);
         // 获取缩略图
         QNChatSmallGradeEmotion *emotion = [self getSmallThumbEmotionFromCache:item.magicIconId];
         emotion.liveChatMagicIconItemObject = item;
@@ -2407,16 +3154,16 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 
 - (void)onSendMagicIcon:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errMsg msgItem:(LSLCLiveChatMsgItemObject *_Nullable)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"ChatViewController::onSendMagicIcon( 发送小高级表情消息回调 fromId : %@, emotionId : %@ )", msgItem.fromId, msgItem.emotionMsg.emotionId);
+        NSLog(@"QNChatViewController::onSendMagicIcon( 发送小高级表情消息回调 fromId : %@, emotionId : %@ )", msgItem.fromId, msgItem.emotionMsg.emotionId);
         if ([msgItem.toId isEqualToString:self.womanId]) {
             [self updataMessageData:msgItem scrollToEnd:NO animated:NO];
         }
     });
 }
 
-- (void)onRecvMagicIcon:(LSLCLiveChatMsgItemObject*  _Nonnull)msgItem {
+- (void)onRecvMagicIcon:(LSLCLiveChatMsgItemObject *_Nonnull)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"ChatViewController::onRecvMagicIcon( 接收小高级表情消息回调 fromId : %@, emotionId : %@ )", msgItem.fromId, msgItem.emotionMsg.emotionId);
+        NSLog(@"QNChatViewController::onRecvMagicIcon( 接收小高级表情消息回调 fromId : %@, emotionId : %@ )", msgItem.fromId, msgItem.emotionMsg.emotionId);
         if ([msgItem.fromId isEqualToString:self.womanId]) {
             [[QNContactManager manager] updateReadMsg:self.womanId];
             [self insertData:msgItem scrollToEnd:YES animated:YES];
@@ -2425,20 +3172,19 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 }
 
 #pragma mark - 语音消息回调
-- (void)onGetVoice:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString*)errNo errMsg:(NSString*)errMsg msgItem:(LSLCLiveChatMsgItemObject*)msgItem {
+- (void)onGetVoice:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *)errNo errMsg:(NSString *)errMsg msgItem:(LSLCLiveChatMsgItemObject *)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"ChatViewController::onGetVoice( 获取语音消息回调回调 errType:%d, voicePath: %@)",errType,msgItem.voiceMsg.filePath);
+        NSLog(@"QNChatViewController::onGetVoice( 获取语音消息回调回调 errType:%d, voicePath: %@)", errType, msgItem.voiceMsg.filePath);
         if ([self.womanId isEqualToString:msgItem.fromId] && errType == LSLIVECHAT_LCC_ERR_SUCCESS) {
             [self updataMessageData:msgItem scrollToEnd:NO animated:NO];
         }
     });
 }
 
-- (void)onRecvVoice:(LSLCLiveChatMsgItemObject*)msgItem
-{
+- (void)onRecvVoice:(LSLCLiveChatMsgItemObject *)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.womanId isEqualToString:msgItem.fromId]) {
-            NSLog(@"ChatViewController::onRecvVoice( 接收到语音消息 , voiceId : %@, voicePath: %@)",msgItem.voiceMsg.voiceId,msgItem.voiceMsg.filePath);
+            NSLog(@"QNChatViewController::onRecvVoice( 接收到语音消息 , voiceId : %@, voicePath: %@)", msgItem.voiceMsg.voiceId, msgItem.voiceMsg.filePath);
             [[QNContactManager manager] updateReadMsg:self.womanId];
             [self insertData:msgItem scrollToEnd:YES animated:YES];
             [self.liveChatManager getVoice:self.womanId msgId:(int)msgItem.msgId];
@@ -2446,15 +3192,14 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
-- (void)onSendVoice:(LSLIVECHAT_LCC_ERR_TYPE) errType errNo:(NSString*) errNo errMsg:(NSString*) errMsg msgItem:(LSLCLiveChatMsgItemObject*) msgItem
-{
+- (void)onSendVoice:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *)errNo errMsg:(NSString *)errMsg msgItem:(LSLCLiveChatMsgItemObject *)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
 
-        if( msgItem != nil ) {
+        if (msgItem != nil) {
             if( msgItem.statusType == StatusType_Finish ) {
-                NSLog(@"ChatViewController::onSendVoice( 发送语音消息回调, 发送成功 : %@, toId : %@ )", msgItem.voiceMsg.filePath, msgItem.toId);
+                NSLog(@"QNChatViewController::onSendVoice( 发送语音消息回调, 发送成功 : %@, toId : %@ )", msgItem.voiceMsg.filePath, msgItem.toId);
             } else {
-                NSLog(@"ChatViewController::onSendVoice( 发送语音消息回调, 发送失败 : %@, toId : %@, errMsg : %@ )", msgItem.voiceMsg.filePath, msgItem.toId, errMsg);
+                NSLog(@"QNChatViewController::onSendVoice( 发送语音消息回调, 发送失败 : %@, toId : %@, errMsg : %@ )", msgItem.voiceMsg.filePath, msgItem.toId, errMsg);
             }
             [self updataMessageData:msgItem scrollToEnd:NO animated:NO];
         }
@@ -2470,27 +3215,20 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 //        }
 
         if (self.isEndChat) {
-
             if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
                  [self.liveChatManager endTalk:self.womanId];
                  [[QNContactManager manager]removeChatLastMsg:self.womanId];
             }
             [self.navigationController popViewControllerAnimated:YES];
-        }
-        else
-        {
+        } else {
             if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
                 [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"InChat_Tip")];
-
-            }else
-            {
+            } else {
                 if ([self.liveChatManager isInManInviteCanCancel:self.womanId]) {
                     [self.liveChatManager endTalk:self.womanId];
                     [[QNContactManager manager]removeChatLastMsg:self.womanId];
                     [self.navigationController popViewControllerAnimated:YES];
-                }
-                else
-                {
+                } else {
                     [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"on2min")];
                 }
             }
@@ -2498,5 +3236,72 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     }
 }
 
+#pragma mark - 视频逻辑
+- (void)onRecvVideo:(LSLCLiveChatMsgItemObject *)msgItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.womanId isEqualToString:msgItem.fromId]) {
+            NSLog(@"QNChatViewController::onRecvVideo( 接收到视频消息 , videoId : %@, videoUrl: %@)",msgItem.videoMsg.videoId,msgItem.videoMsg.videoUrl);
+            [[QNContactManager manager] updateReadMsg:self.womanId];
+            [self insertData:msgItem scrollToEnd:YES animated:YES];
+            [self.liveChatManager getVideoPhoto:self.womanId videoId:msgItem.videoMsg.videoId inviteId:msgItem.inviteId];
+        }
+    });
+}
 
+- (void)onGetVideoPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *)errNo errMsg:(NSString *)errMsg userId:(NSString *)userId inviteId:(NSString *)inviteId videoId:(NSString *)videoId videoType:(VIDEO_PHOTO_TYPE)videoType videoPath:(NSString *)videoPath msgList:(NSArray<LSLCLiveChatMsgItemObject *> *)msgList {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.womanId isEqualToString:userId]) {
+            for (LSLCLiveChatMsgItemObject *msgItem in msgList) {
+                if ([msgItem.fromId isEqualToString:self.womanId]) {
+                    NSLog(@"QNChatViewController::onGetVideoPhoto( 获取视频封面回调 %@, videoId : %@, videoPhotoPath: %@)",(errType==LSLIVECHAT_LCC_ERR_SUCCESS)?@"success":@"fail",videoId,videoPath);
+                    [self reloadData:YES scrollToEnd:NO animated:NO];
+                    break;
+                }
+            }
+        }
+    });
+}
+
+- (void)onGetVideo:(LSLIVECHAT_LCC_ERR_TYPE)errType userId:(NSString *)userId videoId:(NSString *)videoId inviteId:(NSString *)inviteId videoPath:(NSString *)videoPath msgList:(NSArray<LSLCLiveChatMsgItemObject *> *)msgList {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.womanId isEqualToString:userId]) {
+            if (errType == LSLIVECHAT_LCC_ERR_SUCCESS) {
+                for (LSLCLiveChatMsgItemObject *msgItem in msgList) {
+                    if ([msgItem.fromId isEqualToString:self.womanId]) {
+                        NSLog(@"QNChatViewController::onGetVideo( 获取视频文件回调 success=YES, videoId : %@, videoPath: %@)",videoId,videoPath);
+                        [self reloadData:YES scrollToEnd:NO animated:NO];
+                        break;
+                    }
+                }
+            }
+            else {
+                NSLog(@"QNChatViewController::onGetVideo( 获取视频文件回调 success=NO, videoId : %@, videoPath: %@)",videoId,videoPath);
+            }
+        }
+    });
+}
+
+- (void)onVideoFee:(bool)success errNo:(NSString *)errNo errMsg:(NSString *)errMsg msgItem:(LSLCLiveChatMsgItemObject *)msgItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.womanId isEqualToString:msgItem.fromId]) {
+            if (msgItem.videoMsg.charge) {
+                NSLog(@"QNChatViewController::onVideoFee （购买视频 成功 videoId : %@, videoCharge: %@)",msgItem.videoMsg.videoId,BOOL2SUCCESS(msgItem.videoMsg.charge));
+            }
+            else {
+                NSLog(@"QNChatViewController::onVideoFee （购买视频 失败 videoId : %@, videoCharge: %@)",msgItem.videoMsg.videoId,BOOL2SUCCESS(msgItem.videoMsg.charge));
+            }
+            [self reloadData:YES scrollToEnd:NO animated:NO];
+        }
+    });
+}
+
+- (void)ChatVideoLadyTableViewCellDid:(LSChatVideoLadyTableViewCell *)cell {
+    NSInteger index = cell.tag;
+    QNMessage *msg = [self.msgArray objectAtIndex:index];
+    LSChatAccessoryListViewController * vc = [[LSChatAccessoryListViewController alloc] initWithNibName:nil bundle:nil];
+    vc.items = [self getChatFileListArray];
+    vc.row = [[self getChatFileListArray] indexOfObject:msg];
+    LSNavigationController * nav = [[LSNavigationController alloc]initWithRootViewController:vc];
+    [self presentViewController:nav animated:NO completion:nil];
+}
 @end

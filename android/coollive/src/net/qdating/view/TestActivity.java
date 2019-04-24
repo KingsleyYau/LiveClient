@@ -41,9 +41,9 @@ public class TestActivity extends Activity {
 //		surfaceViewPublish.setKeepScreenOn(true);
 
 		// 播放相关
-		player = new LSPlayer();
-		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
-		player.playUrl(String.format("%s", url), "", playH264File, "");
+//		player = new LSPlayer();
+//		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
+//		player.playUrl(String.format("%s", url), "", playH264File, "");
 		
 		// 推送相关
 		final int rotation = getWindowManager().getDefaultDisplay()

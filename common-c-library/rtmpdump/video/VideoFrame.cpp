@@ -26,7 +26,7 @@ VideoFrame::VideoFrame() {
 
 VideoFrame::~VideoFrame() {
     if( mpAVFrame ) {
-        av_free(mpAVFrame);
+    	av_frame_free(&mpAVFrame);
         mpAVFrame = NULL;
     }
 }

@@ -10,15 +10,14 @@
 #define HttpGetPushConfigTask_H_
 
 #include "HttpRequestTask.h"
-#include "HttpLoginProtocol.h"
-#include "HttpRequestEnum.h"
+#include "item/HttpAppPushConfigItem.h"
 
 class HttpGetPushConfigTask;
 
 class IRequestGetPushConfigCallback {
 public:
 	virtual ~IRequestGetPushConfigCallback(){};
-	virtual void OnGetPushConfig(HttpGetPushConfigTask* task, bool success, int errnum, const string& errmsg, bool isPriMsgAppPush, bool isMailAppPush) = 0;
+	virtual void OnGetPushConfig(HttpGetPushConfigTask* task, bool success, int errnum, const string& errmsg, const HttpAppPushConfigItem& appPushItem) = 0;
 };
       
 class HttpGetPushConfigTask : public HttpRequestTask {

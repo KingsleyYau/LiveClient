@@ -51,7 +51,6 @@
 #import "InterimShowViewController.h"
 #import "HangOutPreViewController.h"
 #import "IntentionletterListViewController.h"
-#import "CorrespondencePageViewController.h"
 
 #import "ShowTipView.h"
 #import "StartHangOutTipView.h"
@@ -76,16 +75,16 @@
 #import "LSMainNotificationManager.h"
 #import "MainNotificaitonView.h"
 #import "HangoutDialogViewController.h"
+#import "LSSayHiListViewController.h"
 
+#import "QNRiskControlManager.h"
 #define MainPageOverView 3
 
 typedef enum AlertType {
     AlertTypeUpdate = 9001,
 } AlertType;
 
-
-@interface LSMainViewController () <LiveUrlHandlerDelegate, LiveUrlHandlerParseDelegate, LoginManagerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, LSFollowingViewControllerDelegate, LSPZPagingScrollViewDelegate, StartHangOutTipViewDelegate, LiveHeaderScrollviewDelegate, LSUserUnreadCountManagerDelegate, UIGestureRecognizerDelegate, LSBackgroudReloadManagerDelegate, ShowListViewControllerDelegate, LSHomeSettingViewControllerDelegate, UIAlertViewDelegate,LiveModuleDelegate,LadyListNotificationViewDelegate,LSMainNotificationManagerDelegate>
-
+@interface LSMainViewController () <LiveUrlHandlerDelegate, LiveUrlHandlerParseDelegate, LoginManagerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, LSFollowingViewControllerDelegate, LSPZPagingScrollViewDelegate, StartHangOutTipViewDelegate, LiveHeaderScrollviewDelegate, LSUserUnreadCountManagerDelegate, UIGestureRecognizerDelegate, LSBackgroudReloadManagerDelegate, ShowListViewControllerDelegate, LSHomeSettingViewControllerDelegate, LiveModuleDelegate, LadyListNotificationViewDelegate, LSMainNotificationManagerDelegate>
 
 /**
  内容页
@@ -130,10 +129,11 @@ typedef enum AlertType {
  */
 @property (nonatomic, assign) BOOL isSwitchSite;
 
+@property (nonatomic, strong) QNLadyListNotificationView *notificationView;
 
-@property (nonatomic, strong) QNLadyListNotificationView * notificationView;
+@property (nonatomic, strong) MainNotificaitonView *mainNotificaitonView;
 
-@property (nonatomic, strong) MainNotificaitonView * mainNotificaitonView;
+@property (nonatomic, strong) NSMutableArray *notifiArray;
 
 @end
 
@@ -148,29 +148,30 @@ typedef enum AlertType {
 #pragma mark - 界面初始化
 - (void)initCustomParam {
     [super initCustomParam];
-    
+
     //self.navigationTitle = NSLocalizedStringFromSelf(@"NAVIGATION_ITEM_TITLE");
+    self.canPopWithGesture = NO;
     
     // 监听登录事件
     self.loginManager = [LSLoginManager manager];
     [self.loginManager addDelegate:self];
-    
+
     // 路径跳转
     self.handler = [LiveUrlHandler shareInstance];
     self.handler.delegate = self;
     self.handler.parseDelegate = self;
-    
+
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
-    
+
     self.unreadManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadManager addDelegate:self];
-    
+
     [LSBackgroudReloadManager manager].delegate = self;
-    
+
     [LiveModule module].noticeDelegate = self;
-    
+
     [LSMainNotificationManager manager].delegate = self;
     // 第一次登录
     self.isFirstLogin = YES;
@@ -181,66 +182,116 @@ typedef enum AlertType {
 - (void)dealloc {
     // 去掉登录事件
     [self.loginManager removeDelegate:self];
-    
+
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
-    
+
     [self.unreadManager removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+
     self.curIndex = 0;
-    
+
     // 主播Hot列表
     LSHotViewController *vcHot = [[LSHotViewController alloc] initWithNibName:nil bundle:nil];
     [self addChildViewController:vcHot];
-    
+
     // 主播Follow列表
     LSFollowingViewController *vcFollow = [[LSFollowingViewController alloc] initWithNibName:nil bundle:nil];
     vcFollow.followVCDelegate = self;
     [self addChildViewController:vcFollow];
-    
+
     ShowListViewController *vcShowList = [[ShowListViewController alloc] initWithNibName:nil bundle:nil];
     vcShowList.showDelegate = self;
     [self addChildViewController:vcShowList];
-    
-    if ([LSLoginManager manager].loginItem.isHangoutRisk) {
+
+    if (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
         self.viewControllers = [NSArray arrayWithObjects:vcHot, vcFollow, vcShowList, nil];
-    }else {
-        
+    } else {
+
         //多人互动列表
-        LSHangoutListViewController * hangoutVC = [[LSHangoutListViewController alloc]initWithNibName:nil bundle:nil];
+        LSHangoutListViewController *hangoutVC = [[LSHangoutListViewController alloc] initWithNibName:nil bundle:nil];
         [self addChildViewController:hangoutVC];
-        
+
         self.viewControllers = [NSArray arrayWithObjects:vcHot, hangoutVC, vcFollow, vcShowList, nil];
     }
 
     self.pagingScrollView.pagingViewDelegate = self;
-    
+    self.pagingScrollView.delaysContentTouches = NO;
+
     self.hangoutTipView = [[StartHangOutTipView alloc] init];
     self.hangoutTipView.hidden = YES;
     self.hangoutTipView.delegate = self;
     [self.navigationController.view addSubview:self.hangoutTipView];
-    
+
     self.coverView = [[UIView alloc] init];
     self.coverView.backgroundColor = Color(0, 0, 0, 0.5);
     self.coverView.hidden = YES;
     [self.navigationController.view addSubview:self.coverView];
-    
+
     [self addSwipeGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     // 头部颜色
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self removeSettingView];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    if (!self.viewDidAppearEver) {
+        // 选中默认页, 第一次进入
+
+        if ([LiveModule module].isUpdate) {
+            // 存在可以升级的版本
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Update_Title", nil) message:[LiveModule module].updateDesc preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Not_Now", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            UIAlertAction *updateAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Update", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LiveModule module].updateStoreURL]];
+            }];
+            [alertVC addAction:cancelAC];
+            [alertVC addAction:updateAC];
+            [self presentViewController:alertVC animated:YES completion:nil];
+        }
+    }
+
+    [super viewDidAppear:animated];
+
+    [self.view addGestureRecognizer:self.swipe];
+
+    // 登录成功后判断是否有内部链接未打开，有则跳转
+    [[LiveUrlHandler shareInstance] openURL];
+
+    [self.pagingScrollView layoutIfNeeded];
+    [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:NO];
+
+    // 判断登录状态显示loading
+    [self showLoadingForStatus];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
+- (void)setupNavigationBar {
+    [super setupNavigationBar];
+    self.navigationItem.leftBarButtonItem = [UIBarButtonItem itemWithTarget:self action:@selector(backAction:) image:[UIImage imageNamed:@"Home_Me_Btn"]];
+    self.liveHeaderScrollview = [[LiveHeaderScrollview alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 45, 44)];
+    self.liveHeaderScrollview.delegate = self;
+    self.liveHeaderScrollview.dataSource = [NSArray arrayWithArray:[self setUpDataSource]];
+    self.navigationItem.titleView = self.liveHeaderScrollview;
 }
 
 - (void)addSwipeGesture {
@@ -260,7 +311,7 @@ typedef enum AlertType {
 }
 
 - (void)handleSwipeFrom:(UISwipeGestureRecognizer *)sender {
-    
+
     if (self.curIndex == 0 && sender.direction == UISwipeGestureRecognizerDirectionRight) {
         [self addSettingView];
     }
@@ -297,6 +348,7 @@ typedef enum AlertType {
 - (void)lsHomeSettingViewControllerDidRemoveVC:(LSHomeSettingViewController *)homeSettingVC {
     [homeSettingVC.view removeFromSuperview];
     [homeSettingVC removeFromParentViewController];
+    [self.navigationController setNeedsStatusBarAppearanceUpdate];
     [self reportDidShowPage:self.curIndex];
     LSHotViewController *hotVC = (LSHotViewController *)self.viewControllers.firstObject;
     [hotVC setCanDidpush:YES];
@@ -305,37 +357,6 @@ typedef enum AlertType {
 - (void)removeSettingView {
     [self.settingVC removeHomeSettingVC];
     [self.settingVC viewWillDisappear:NO];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    if (!self.viewDidAppearEver) {
-        // 选中默认页, 第一次进入
-        
-        if ([LiveModule module].isUpdate) {
-            // 存在可以升级的版本
-            UIAlertView *updateAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Update_Title", nil) message:[LiveModule module].updateDesc delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Not_Now", nil), NSLocalizedString(@"Update", nil), nil];
-            updateAlertView.tag = AlertTypeUpdate;
-            [updateAlertView show];
-        }
-    }
-    
-    [super viewDidAppear:animated];
-    
-    [self.view addGestureRecognizer:self.swipe];
-    
-    // 禁止主界面右滑
-    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    }
-    
-    // 登录成功后判断是否有内部链接未打开，有则跳转
-    [[LiveUrlHandler shareInstance] openURL];
-    
-    [self.pagingScrollView layoutIfNeeded];
-    [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:NO];
-    
-    // 判断登录状态显示loading
-    [self showLoadingForStatus];
 }
 
 - (void)showLoadingForStatus {
@@ -348,7 +369,7 @@ typedef enum AlertType {
             self.coverView.hidden = NO;
             [self showLoading];
         } break;
-            
+
         default: {
             // 如果第一次登录 刷新列表数据
             if (self.isFirstLogin) {
@@ -376,9 +397,9 @@ typedef enum AlertType {
 
 - (void)willMoveToParentViewController:(nullable UIViewController *)parent {
     [super willMoveToParentViewController:parent];
-    
+
     NSLog(@"LSMainViewController::willMoveToParentViewController( parent : %@ )", parent);
-    
+
     if (!parent) {
         // 停止互斥服务
         [[LiveMutexService service] closeService];
@@ -397,38 +418,12 @@ typedef enum AlertType {
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self removeSettingView];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    // 恢复右滑手势
-    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    }
-}
-
-- (void)setupNavigationBar {
-    [super setupNavigationBar];
-    
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem itemWithTarget:self action:@selector(backAction:) image:[UIImage imageNamed:@"Home_Me_Btn"]];
-    
-    self.liveHeaderScrollview = [[LiveHeaderScrollview alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 45, 44)];
-    self.liveHeaderScrollview.delegate = self;
-    self.liveHeaderScrollview.dataSource = [NSArray arrayWithArray:[self setUpDataSource]];
-    self.navigationItem.titleView = self.liveHeaderScrollview;
-    
-}
-
 - (NSArray *)setUpDataSource {
-    NSArray * title = [NSArray array];
-    if ([LSLoginManager manager].loginItem.isHangoutRisk) {
-        title = @[@"DISCOVER",@"FOLLOW", @"CALENDAR"];
-    }
-    else {
-        title = @[@"DISCOVER",@"HANG-OUT", @"FOLLOW", @"CALENDAR"];
+    NSArray *title = [NSArray array];
+    if (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
+        title = @[ @"DISCOVER", @"FOLLOW", @"CALENDAR" ];
+    } else {
+        title = @[ @"DISCOVER", @"HANG-OUT", @"FOLLOW", @"CALENDAR" ];
     }
     return title;
 }
@@ -473,16 +468,16 @@ typedef enum AlertType {
 }
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
-    
+
     UIViewController *vc = [self.viewControllers objectAtIndex:index];
     CGFloat pageViewHeight = pageView.self.frame.size.height;
-    
+
     if (vc.view != nil) {
         [vc.view removeFromSuperview];
     }
-    
+
     [pageView removeAllSubviews];
-    
+
     [vc.view setFrame:CGRectMake(0, 0, pageView.self.frame.size.width, pageViewHeight)];
     [pageView addSubview:vc.view];
 }
@@ -491,7 +486,7 @@ typedef enum AlertType {
     self.curIndex = index;
     [self reportDidShowPage:index];
     [self.liveHeaderScrollview scrollCollectionItemToDesWithDesIndex:self.curIndex];
-    
+
     if (self.curIndex == 0) {
         LSHotViewController *hotVC = (LSHotViewController *)self.viewControllers[self.curIndex];
         [hotVC reloadUnreadNum];
@@ -507,7 +502,7 @@ typedef enum AlertType {
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
             [self.unreadManager getTotalUnreadNum:^(BOOL success, TotalUnreadNumObject *unreadModel){
             }];
-            
+
             if (self.viewControllers.count && self.isFirstLogin) {
                 [self reloadVCData:NO];
                 self.isFirstLogin = NO;
@@ -520,7 +515,7 @@ typedef enum AlertType {
                 sessionErrorMsg = errmsg;
             }
             [manager logout:LogoutTypeKick msg:sessionErrorMsg];
-            NSLog(@"LSMainViewController sessionErrorMsg: %@  errmsg:%@",sessionErrorMsg,errmsg);
+            NSLog(@"LSMainViewController sessionErrorMsg: %@  errmsg:%@", sessionErrorMsg, errmsg);
         }
     });
 }
@@ -535,9 +530,9 @@ typedef enum AlertType {
         if (type == LogoutTypeKick) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
             [alertView show];
-            NSLog(@"LSMainViewController onLogout: %d  errmsg:%@",type,msg);
+            NSLog(@"LSMainViewController onLogout: %d  errmsg:%@", type, msg);
         }
-        
+
     });
 }
 
@@ -567,7 +562,6 @@ typedef enum AlertType {
     }
 }
 
-
 - (void)removeHangoutTip:(id)sender {
     self.closeHangoutTipBtn.hidden = YES;
     self.hangoutTipView.hidden = YES;
@@ -577,7 +571,7 @@ typedef enum AlertType {
 - (void)requestHangout:(StartHangOutTipView *)view {
     self.closeHangoutTipBtn.hidden = YES;
     self.hangoutTipView.hidden = YES;
-    
+
     HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
@@ -599,19 +593,14 @@ typedef enum AlertType {
 - (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList {
     IMOngoingShowItemObject *item = [ongoingShowList firstObject];
     NSLog(@"LSMainViewController 第一次IM登录接收节目开播通知类型:%d 消息内容:%@", item.type, item.msg);
-    
+
     [self onRecvProgramPlayNotice:item.showInfo type:item.type msg:item.msg];
 }
-
-- (void)moduleOnNotification:(LiveModule *)module {
-    [module pushInviteNotice];
-}
-
 
 #pragma mark - 链接打开内部模块处理
 - (void)handlerUpdateUrl:(LiveUrlHandler *)handler {
     NSLog(@"LSMainViewController::handlerUpdateUrl( [URL更新], self : %p, viewDidAppearEver : %@ )", self, BOOL2YES(self.viewDidAppearEver));
-    
+
     // TODO:如果界面已经展现, 收到URL打开模块通知, 直接处理
     if (self.viewDidAppearEver) {
         [self.settingVC removeHomeSettingVC];
@@ -627,25 +616,41 @@ typedef enum AlertType {
             index = 0;
         } break;
         case LiveUrlMainListUrlTypeHangout: {
-            index = 1;
+            // 如果没有多人互动的权限则跳转到首页
+            if (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
+                index = 0;
+            } else {
+                index = 1;
+            }
+
         } break;
         case LiveUrlMainListUrlTypeFollow: {
-            index = 2;
+            if (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
+                index = 1;
+            } else {
+                index = 2;
+            }
+
         } break;
         case LiveUrlMainListUrlTypeCalendar: {
-            index = 3;
+            if (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
+                index = 2;
+            } else {
+                index = 3;
+            }
+
         } break;
         default:
             break;
     }
-    
+
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 主页], type : %d, index : %d )", type, index);
-    
+
     [self.navigationController popToViewController:self animated:NO];
     [self reportScreenForce];
-    
+
     self.curIndex = index;
-    
+
     // 界面显示再切换标题页
     if (self.viewDidAppearEver) {
         [self.pagingScrollView layoutIfNeeded];
@@ -656,27 +661,27 @@ typedef enum AlertType {
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openAnchorDetail:(NSString *)anchorId {
     // TODO:收到通知进入主播资料页
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 主播资料页], anchorId : %@ )", anchorId);
-    
+
     AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     vc.anchorId = anchorId;
     vc.enterRoom = 1;
-    
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openPublicLive:(NSString *)roomId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType {
     // TODO:点击立即免费公开
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 进入公开直播间], roomId : %@, anchorId : %@, roomType : %u )", roomId, anchorId, roomType);
-    
+
     [[LiveModule module].analyticsManager reportActionEvent:EnterPublicBroadcast eventCategory:EventCategoryenterBroadcast];
-    
+
     PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.roomId = roomId;
     liveRoom.userId = anchorId;
     liveRoom.roomType = roomType;
     vc.liveRoom = liveRoom;
-    
+
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
 
@@ -690,21 +695,21 @@ typedef enum AlertType {
     liveRoom.userId = anchorId;
     liveRoom.roomType = roomType;
     vc.liveRoom = liveRoom;
-    
+
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openShow:(NSString *)showId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType {
     // TODO:进入节目过渡页
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 进入节目], roomId : %@, anchorId : %@, roomType : %u )", showId, anchorId, roomType);
-    
+
     InterimShowViewController *vc = [[InterimShowViewController alloc] initWithNibName:nil bundle:nil];
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.showId = showId;
     liveRoom.userId = anchorId;
     liveRoom.roomType = roomType;
     vc.liveRoom = liveRoom;
-    
+
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
 
@@ -718,21 +723,21 @@ typedef enum AlertType {
     liveRoom.userName = anchorName;
     vc.inviteId = inviteId;
     vc.liveRoom = liveRoom;
-    
+
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openHangout:(NSString *)roomId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName hangoutAnchorId:(NSString *)hangoutAnchorId hangoutAnchorName:(NSString *)hangoutAnchorName {
     // TODO:收到通知进入多人互动直播间
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 进入多人互动直播间], roomId : %@, anchorId : %@, anchorName : %@, hangoutAnchorId : %@, hangoutAnchorName : %@ )", roomId, anchorId, anchorName, hangoutAnchorId, hangoutAnchorName);
-    
+
     HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
     vc.roomId = roomId;
     vc.inviteAnchorId = anchorId;
     vc.inviteAnchorName = anchorName;
     vc.hangoutAnchorId = hangoutAnchorId;
     vc.hangoutAnchorName = hangoutAnchorName;
-    
+
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
 
@@ -740,12 +745,12 @@ typedef enum AlertType {
     // TODO:收到通知进入新建预约页
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 新建预约页], anchorId : %@, anchorName : %@ )", anchorId, anchorName);
     [self reportScreenForce];
-    
+
     BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
     vc.userId = anchorId;
     vc.userName = anchorName;
-    
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBookingList:(LiveUrlBookingListType)bookListType {
@@ -767,15 +772,15 @@ typedef enum AlertType {
         default:
             break;
     }
-    
+
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 预约列表页], bookType : %d, index : %d )", bookListType, index);
     [[LiveGobalManager manager] popToRootVC];
     [self reportScreenForce];
-    
+
     LSMyReservationsViewController *vc = [[LSMyReservationsViewController alloc] initWithNibName:nil bundle:nil];
     vc.curIndex = index;
-    
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBackpackList:(LiveUrlBackpackListType)backpackType {
@@ -797,22 +802,22 @@ typedef enum AlertType {
         default:
             break;
     }
-    
+
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 背包列表页], backpackType : %d, index : %d )", backpackType, index);
     [[LiveGobalManager manager] popToRootVC];
     [self reportScreenForce];
-    
+
     MyBackpackViewController *vc = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
     vc.curIndex = index;
-    
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandlerOpenAddCredit:(LiveUrlHandler *)handler {
     NSLog(@"LSMainViewController::liveUrlHandlerOpenMyLevel( [URL跳转, 买点] )");
     // TODO:收到通知进入买点
     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandlerOpenMyLevel:(LiveUrlHandler *)handler {
@@ -820,9 +825,9 @@ typedef enum AlertType {
     NSLog(@"LSMainViewController::liveUrlHandlerOpenMyLevel( [URL跳转, 我的等级] )");
     [[LiveGobalManager manager] popToRootVC];
     [self reportScreenForce];
-    
+
     MeLevelViewController *vc = [[MeLevelViewController alloc] initWithNibName:nil bundle:nil];
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandlerOpenChatList:(LiveUrlHandler *)handler {
@@ -830,16 +835,16 @@ typedef enum AlertType {
     NSLog(@"LSMainViewController::liveUrlHandlerOpenChatList( [URL跳转, 聊天列表] )");
     [[LiveGobalManager manager] popToRootVC];
     [self reportScreenForce];
-    
+
     LSMessageViewController *vc = [[LSMessageViewController alloc] initWithNibName:nil bundle:nil];
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openChatWithAnchor:(NSString *)anchorId anchorName:(NSString *)anchorName {
     // TODO:进入私信界面
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 聊天界面] )");
     LSChatViewController *vc = [LSChatViewController initChatVCWithAnchorId:anchorId];
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandlerOpenGreetMailList:(LiveUrlHandler *)handler {
@@ -847,8 +852,8 @@ typedef enum AlertType {
     NSLog(@"LSMainViewController::liveUrlHandlerOpenGreetMailList( [URL跳转, 意向信列表] )");
     [[LiveGobalManager manager] popToRootVC];
     LSGreetingsViewController *vc = [[LSGreetingsViewController alloc] initWithNibName:nil bundle:nil];
-    
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandlerOpenMailList:(LiveUrlHandler *)handler {
@@ -856,21 +861,21 @@ typedef enum AlertType {
     NSLog(@"LSMainViewController::liveUrlHandlerOpenMailList( [URL跳转, 信件列表] )");
     [[LiveGobalManager manager] popToRootVC];
     LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
-    
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenYesNoDialogTitle:(NSString *)title msg:(NSString *)msg yesTitle:(NSString *)yesTitle noTitle:(NSString *)noTitle yesUrl:(NSString *)yesUrl {
     // TODO:弹出对话框
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 弹出对话框] )");
-    
+
     UIAlertController *yesNoAlertView = [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleAlert];
     // 如果没有No的标题则不显示
     if (noTitle.length > 0) {
         UIAlertAction *noAction = [UIAlertAction actionWithTitle:noTitle
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action){
-                                                             
+
                                                          }];
         [yesNoAlertView addAction:noAction];
     }
@@ -886,56 +891,79 @@ typedef enum AlertType {
                                                                   // 通过WebView打开的Http链接
                                                                   LiveWebViewController *vc = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
                                                                   vc.url = yesUrl;
-                                                                  [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+                                                                  [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
                                                               }
                                                           }
                                                       }];
     [yesNoAlertView addAction:yesAction];
-    
+
     [self presentViewController:yesNoAlertView animated:NO completion:nil];
 }
 
-
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenLiveChatLady:(NSString *)anchorId anchorName:(NSString *)anchorName {
+    // TODO::进入聊天界面
     QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
     vc.womanId = anchorId;
     vc.firstName = anchorName;
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
-    
+    [[LiveGobalManager manager] pushAndPopVCWithNVCFromVC:self toVC:vc];
 }
 
-
 - (void)liveUrlHandlerOpenLiveChatList:(LiveUrlHandler *)handler {
-    [[LiveGobalManager manager] popToRootVC];
-    QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:self]) {
+        [[LiveGobalManager manager] popToRootVC];
+        QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
+        [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
+    }
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenSendMail:(NSString *)anchorId anchorName:(NSString *)anchorName {
     LSSendMailViewController *vc = [[LSSendMailViewController alloc] initWithNibName:nil bundle:nil];
     vc.anchorId = anchorId;
     vc.anchorName = anchorName;
-    [[LiveGobalManager manager] pushVCWithCurrentNVCFromVC:self toVC:vc];
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenHangoutRoom:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    
+
     HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
     vc.inviteAnchorId = anchorId;
     vc.inviteAnchorName = anchorName;
-    
+
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenHangoutDialog:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    
-    HangoutDialogViewController *vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
+    HangoutDialogViewController *vc = [[LiveGobalManager manager] addDialogVc];
     vc.anchorId = anchorId;
     vc.anchorName = anchorName;
-    UIViewController *topVc = [LiveModule module].moduleVC.navigationController;
-    [topVc addChildViewController:vc];
-    [topVc.view addSubview:vc.view];
     [vc showhangoutView];
+}
+
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openSayHiType:(LiveUrlSayHiListType)type {
+    int index = 0;
+    switch (type) {
+        case LiveUrlSayHiListTypeAll: {
+            index = 0;
+        } break;
+        case LiveUrlSayHiListTypeResponse: {
+            index = 1;
+        } break;
+        default:
+            break;
+    }
+    [[LiveGobalManager manager] popToRootVC];
+    LSSayHiListViewController *vc = [[LSSayHiListViewController alloc] initWithNibName:nil bundle:nil];
+    vc.curIndex = index;
+    [[LiveGobalManager manager] pushWithNVCFromVC:self toVC:vc];
+}
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenSayHiDetail:(NSString *)sayhiId {
+    
+}
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didSendSayhi:(NSString *)anchorId anchorName:(NSString *)anchorName {
+    
 }
 
 #pragma mark - 后台刷新
@@ -944,35 +972,26 @@ typedef enum AlertType {
     [self reloadVCData:NO];
 }
 
-#pragma mark - alertView回调
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == AlertTypeUpdate) {
-        if (alertView.cancelButtonIndex != buttonIndex) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LiveModule module].updateStoreURL]];
-        }
-    }
-}
-
 #pragma mark - 本地推送逻辑
 
 - (void)LadyListNotificationViewDidToChat:(LSLCLiveChatUserItemObject *)item {
     if (item.chatType == LC_CHATTYPE_INVITE) {
         [[LiveModule module].analyticsManager reportActionEvent:ClickLiveChatInvitation eventCategory:EventCategoryLiveChat];
-    }else if (item.chatType == LC_CHATTYPE_IN_CHAT_USE_TRY_TICKET || LC_CHATTYPE_IN_CHAT_CHARGE) {
+    } else if (item.chatType == LC_CHATTYPE_IN_CHAT_USE_TRY_TICKET || LC_CHATTYPE_IN_CHAT_CHARGE) {
         [[LiveModule module].analyticsManager reportActionEvent:ClickLiveChatMessage eventCategory:EventCategoryLiveChat];
     }
-    NSLog(@"点击浮窗进入聊天室 UserID:%@",item.userName);
-    QNChatViewController * vc = [[QNChatViewController alloc]initWithNibName:nil bundle:nil];
+    NSLog(@"点击浮窗进入聊天室 UserID:%@", item.userName);
+    QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
     vc.womanId = item.userId;
     vc.photoURL = item.imageUrl;
     vc.firstName = item.userName;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)mainNotificationManagerShowNotificaitonView {
-    
+- (void)mainNotificationManagerShowNotificaitonView:(LSMainNotificaitonModel *)model {
+
     if (!self.mainNotificaitonView) {
-        self.mainNotificaitonView = [[MainNotificaitonView alloc]initWithFrame:CGRectMake(-screenSize.width, self.view.frame.size.height - 88, screenSize.width, 78)];
+        self.mainNotificaitonView = [[MainNotificaitonView alloc] initWithFrame:CGRectMake(-screenSize.width, self.view.frame.size.height - 95, screenSize.width, 90)];
         [self.view addSubview:self.mainNotificaitonView];
         
         [UIView animateWithDuration:0.3 animations:^{
@@ -980,13 +999,19 @@ typedef enum AlertType {
             rect.origin.x = 0;
             self.mainNotificaitonView.frame = rect;
         }];
+        
+        [self.notifiArray removeAllObjects];
+        self.notifiArray = [NSMutableArray array];
     }
-
+    [self.notifiArray insertObject:model atIndex:0];
+    self.mainNotificaitonView.items = self.notifiArray;
     [self.mainNotificaitonView reloadData];
 }
 
-- (void)mainNotificationManagerHideNotificaitonView {
+- (void)mainNotificationManagerHideNotificaitonView:(LSMainNotificaitonModel *)model {
     
+    [self.notifiArray removeObject:model];
+    self.mainNotificaitonView.items = self.notifiArray;
     [self.mainNotificaitonView deleteCollectionViewRow];
 }
 
@@ -1000,6 +1025,10 @@ typedef enum AlertType {
         [self.mainNotificaitonView removeFromSuperview];
         self.mainNotificaitonView = nil;
     }];
+}
+
+- (void)mainNotificationManagerRemoveselectedItem {
+    [self.mainNotificaitonView reloadData];
 }
 
 @end

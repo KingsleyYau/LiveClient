@@ -15,9 +15,15 @@
 
 "SEND_GIFT_ERROR" = "Failed to send \"%@\". No broadcasters in this Hang-out.";
 
+"SEND_GIFT_NO_SELECT" = "Failed to send \"%@\". Please chose at least one broadcaster.";
+
 "SEND_GIFT_ANCHOR_LEAVE" = "Failed to send “%@”.%@ has left the Hang-out.";
 
 "SENDGIFT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"SEND_INVITE_NO_CREDIT" = "You have insufficient credits to send the invitation.";
+
+"OPEN_DOOR_NO_CREDIT" = "You have insufficient credits to open door.";
 
 "ROOM_IS_FULL" = "Your broadcast room is full. Pleaes try again later.";
 
@@ -37,6 +43,14 @@
 
 "NO_CREIDT_ANCHOR_LEFT" = "%@'s line has been held. Add credits to bring her back to line now!";
 
-"CONNECT_SEVER_FAIL" = "Trouble connecting to the server,please try again later.";
+"CONNECT_SEVER_FAIL" = "Trouble connecting to the server.Please try again later.";
 
 "HANGOUT_IS_ENDED" = "Hang-out has ended.";
+
+"HANGOUT_NO_CREDITS" = "You have insufficient credits. Please add more credits and try again.";
+
+"LEAVE_ROOM_TIP" = "Are you sure to leave the current broadcast room?";
+
+
+
+

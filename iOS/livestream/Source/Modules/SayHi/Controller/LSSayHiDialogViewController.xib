@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSSayHiDialogViewController">
+            <connections>
+                <outlet property="dialogView" destination="1Yg-qd-5Er" id="o4E-0x-opT"/>
+                <outlet property="errorLabel" destination="hFq-ab-ti0" id="iUN-x5-9y7"/>
+                <outlet property="pushButton" destination="vgx-1y-3CF" id="SqT-qG-72A"/>
+                <outlet property="tiltleLabel" destination="JKg-FF-BBR" id="rDI-Lh-BfR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rXU-rL-kP7" userLabel="Back Ground Close Button">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                    <state key="normal">
+                        <color key="titleShadowColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="0.40148758559999997" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="closeAction:" destination="-1" eventType="touchUpInside" id="t6j-IS-AWH"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Yg-qd-5Er">
+                    <rect key="frame" x="20" y="292" width="374" height="152.33333333333337"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pjL-qz-3ay" userLabel="Close Button">
+                            <rect key="frame" x="339" y="0.0" width="35" height="35"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="35" id="7Rc-Jg-jtd"/>
+                                <constraint firstAttribute="width" secondItem="pjL-qz-3ay" secondAttribute="height" multiplier="1:1" id="B6s-XB-MDb"/>
+                            </constraints>
+                            <state key="normal" image="Live_Public_Vip_Close_Btn"/>
+                            <connections>
+                                <action selector="closeAction:" destination="-1" eventType="touchUpInside" id="bZx-x3-R5B"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Can not send Say Hi to {%@}" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JKg-FF-BBR">
+                            <rect key="frame" x="20" y="30" width="284" height="19.333333333333329"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFq-ab-ti0">
+                            <rect key="frame" x="20" y="69.333333333333314" width="334" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vgx-1y-3CF">
+                            <rect key="frame" x="20" y="88.333333333333314" width="125" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <state key="normal" title="View this Say Hi &gt;&gt;"/>
+                            <connections>
+                                <action selector="pushAction:" destination="-1" eventType="touchUpInside" id="R0t-P2-tnk"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="pjL-qz-3ay" firstAttribute="top" secondItem="1Yg-qd-5Er" secondAttribute="top" id="7rj-sP-mnv"/>
+                        <constraint firstItem="JKg-FF-BBR" firstAttribute="top" secondItem="1Yg-qd-5Er" secondAttribute="top" constant="30" id="KEM-Bb-CRc"/>
+                        <constraint firstAttribute="trailing" secondItem="pjL-qz-3ay" secondAttribute="trailing" id="Kbw-Oz-Ptd"/>
+                        <constraint firstAttribute="trailing" secondItem="hFq-ab-ti0" secondAttribute="trailing" constant="20" id="MKw-Lm-XTy"/>
+                        <constraint firstItem="vgx-1y-3CF" firstAttribute="top" secondItem="hFq-ab-ti0" secondAttribute="bottom" constant="2" id="SJa-fl-ddl"/>
+                        <constraint firstItem="vgx-1y-3CF" firstAttribute="leading" secondItem="hFq-ab-ti0" secondAttribute="leading" id="SNw-Cv-H9X"/>
+                        <constraint firstItem="hFq-ab-ti0" firstAttribute="top" secondItem="JKg-FF-BBR" secondAttribute="bottom" constant="20" id="UqC-jw-gfy"/>
+                        <constraint firstItem="JKg-FF-BBR" firstAttribute="leading" secondItem="1Yg-qd-5Er" secondAttribute="leading" constant="20" id="YBk-Ba-YUt"/>
+                        <constraint firstAttribute="bottom" secondItem="vgx-1y-3CF" secondAttribute="bottom" constant="35" id="eV4-4n-Igk"/>
+                        <constraint firstItem="pjL-qz-3ay" firstAttribute="leading" secondItem="JKg-FF-BBR" secondAttribute="trailing" constant="35" id="nJS-Up-aQa"/>
+                        <constraint firstItem="hFq-ab-ti0" firstAttribute="leading" secondItem="JKg-FF-BBR" secondAttribute="leading" id="zjE-w2-ImL"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="1Yg-qd-5Er" secondAttribute="trailing" constant="20" id="0WY-3W-laR"/>
+                <constraint firstItem="1Yg-qd-5Er" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="15G-3A-hwm"/>
+                <constraint firstItem="rXU-rL-kP7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="FIj-Dh-CXO"/>
+                <constraint firstItem="1Yg-qd-5Er" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Nbn-5l-34I"/>
+                <constraint firstItem="rXU-rL-kP7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Uer-No-sLC"/>
+                <constraint firstAttribute="bottom" secondItem="rXU-rL-kP7" secondAttribute="bottom" id="VMh-8A-xOO"/>
+                <constraint firstItem="1Yg-qd-5Er" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="Wgy-YH-8NJ"/>
+                <constraint firstAttribute="trailing" secondItem="rXU-rL-kP7" secondAttribute="trailing" id="xoW-S2-Dic"/>
+            </constraints>
+            <point key="canvasLocation" x="37.681159420289859" y="41.576086956521742"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Public_Vip_Close_Btn" width="12" height="12"/>
+    </resources>
+</document>

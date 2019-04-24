@@ -35,12 +35,16 @@ typedef enum {
 
 @implementation LSPushNoticeViewController
 
+- (void)initCustomParam {
+    [super initCustomParam];
+    self.navigationItem.title = NSLocalizedString(@"Push Notifications", nil);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.openSettingBtn.layer.cornerRadius = 22;
     self.openSettingBtn.layer.masksToBounds = YES;
-    self.title = @"Push Notifications";
     self.sessionManager = [LSSessionRequestManager manager];
 }
 
@@ -203,10 +207,10 @@ typedef enum {
 
 - (BOOL)getPushConfig {
     LSGetPushConfigRequest *request = [[LSGetPushConfigRequest alloc] init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, BOOL isPriMsgAppPush, BOOL isMailAppPush) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSAppPushConfigItemObject *item) {
         if (success) {
-            self.isPriMsgAppPush = isPriMsgAppPush;
-            self.isMailAppPush = isMailAppPush;
+            self.isPriMsgAppPush = item.isPriMsgAppPush;
+            self.isMailAppPush = item.isMailAppPush;
             [self reloadData:YES];
         }else {
             [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];

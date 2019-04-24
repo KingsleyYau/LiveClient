@@ -14,7 +14,7 @@
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveFinshViewController.h"
 #import "ShowLiveViewController.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LiveModule.h"
 #import "BookPrivateBroadcastViewController.h"
 #import "LSShowListWithAnchorIdRequest.h"
@@ -65,6 +65,9 @@ typedef enum ShowButtonType {
 #pragma mark - 余额及返点信息管理器
 @property (nonatomic, strong) LiveRoomCreditRebateManager *creditRebateManager;
 
+// 个人信息管理器
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
+
 @property (nonatomic) BOOL isAddCredit;
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
@@ -106,8 +109,8 @@ typedef enum ShowButtonType {
     [self.imManager.client removeDelegate:self];
     
     // 注销前后台切换通知
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
@@ -121,6 +124,11 @@ typedef enum ShowButtonType {
     
     NSLog(@"InterimShowViewController::initCustomParam()");
     
+    // 隐藏导航栏
+    self.isShowNavBar = NO;
+    // 禁止导航栏后退手势
+    self.canPopWithGesture = NO;
+    
     // 初始化管理器
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
@@ -128,6 +136,8 @@ typedef enum ShowButtonType {
     
     // 初始化后台管理器
     [[LiveGobalManager manager] addDelegate:self];
+    
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
     
     self.sessionManager = [LSSessionRequestManager manager];
     
@@ -138,8 +148,8 @@ typedef enum ShowButtonType {
     
     // 注册前后台切换通知
     _isBackground = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     // 初始化计时器
     self.enterRoomTimer = [[LSTimer alloc] init];
@@ -181,9 +191,6 @@ typedef enum ShowButtonType {
     
     self.tipsLabel.text = @"";
     
-    // 禁止导航栏后退手势
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    
     self.headImage.layer.cornerRadius = self.headImage.frame.size.height/2;
     self.headImage.layer.masksToBounds = YES;
     
@@ -202,12 +209,6 @@ typedef enum ShowButtonType {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // 隐藏导航栏
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-    
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -241,9 +242,6 @@ typedef enum ShowButtonType {
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    // 停止计时
-    [self stopAllTimer];
-    
     // 设置允许显示立即邀请
     [[LiveGobalManager manager] setCanShowInvite:YES];
     
@@ -270,21 +268,20 @@ typedef enum ShowButtonType {
     
     // 刷新女士头像
     if ( self.liveRoom.photoUrl.length > 0 ) {
-        [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         }];
     } else {
         // 请求并缓存主播信息
         if (self.liveRoom.userId.length > 0) {
-            WeakObject(self, weakSelf);
-            [[LSUserInfoManager manager] getUserInfo:self.liveRoom.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            [self.roomUserInfoManager getUserInfo:self.liveRoom.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 刷新女士头像
-                    weakSelf.liveRoom.photoUrl = item.photoUrl;
-                    [weakSelf.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+                    self.liveRoom.photoUrl = item.photoUrl;
+                    [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
                     }];
                     // 刷新女士名字
-                    weakSelf.liveRoom.userName = item.nickName;
-                    weakSelf.nameLabel.text = item.nickName;
+                    self.liveRoom.userName = item.nickName;
+                    self.nameLabel.text = item.nickName;
                 });
             }];
         }
@@ -509,7 +506,7 @@ typedef enum ShowButtonType {
                 item.userId = roomItem.userId;
                 item.nickName = roomItem.nickName;
                 item.photoUrl = roomItem.photoUrl;
-                [[LSUserInfoManager manager] setLiverInfoDic:item];
+                [self.roomUserInfoManager setLiverInfoDic:item];
                 
                 // 进入成功不能显示退出按钮
                 self.closeBtn.hidden = YES;
@@ -610,6 +607,7 @@ typedef enum ShowButtonType {
         ShowLiveViewController *vc = [[ShowLiveViewController alloc] initWithNibName:nil bundle:nil];
         vc.liveRoom = self.liveRoom;
         self.vc = vc;
+        [self.navigationController popToRootViewControllerAnimated:NO];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

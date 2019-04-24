@@ -69,6 +69,7 @@
         self.shareLink = [coder decodeObjectForKey:@"shareLink"];
         self.liveShowType = [coder decodeIntForKey:@"liveShowType"];
         self.isHasTalent = [coder decodeBoolForKey:@"isHasTalent"];
+        self.isHangoutPriv = [coder decodeBoolForKey:@"isHangoutPriv"];
     }
     return self;
 }
@@ -101,6 +102,7 @@
     [coder encodeObject:self.shareLink forKey:@"shareLink"];
     [coder encodeInt:self.liveShowType forKey:@"liveShowType"];
     [coder encodeBool:self.isHasTalent forKey:@"isHasTalent"];
+    [coder encodeBool:self.isHangoutPriv forKey:@"isHangoutPriv"];
 }
 
 

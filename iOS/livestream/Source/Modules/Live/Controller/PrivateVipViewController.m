@@ -16,6 +16,7 @@
 #import "LSAddCreditsViewController.h"
 #import "HangoutDialogViewController.h"
 #import "LSAnchorCardViewController.h"
+#import "LiveGobalManager.h"
 
 @interface PrivateVipViewController () <PrivateViewControllerDelegate, TalentOnDemandVCDelegate, StartHangOutTipViewDelegate,HangoutDialogViewControllerDelegate>
 @property (strong) PrivateViewController *vc;
@@ -41,6 +42,11 @@
     [super initCustomParam];
     
     NSLog(@"PrivateVipViewController::initCustomParam( self : %p )", self);
+    
+    // 隐藏导航栏
+    self.isShowNavBar = NO;
+    // 禁止导航栏后退手势
+    self.canPopWithGesture = NO;
     
     self.firstManager = [RoomTypeIsFirstManager manager];
     
@@ -230,13 +236,11 @@
 
 
 - (void)showHangoutTipView {
-    HangoutDialogViewController *vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
+    HangoutDialogViewController *vc = [[LiveGobalManager manager] addDialogVc];
     vc.anchorId = self.liveRoom.userId;
     vc.anchorName = self.liveRoom.userName;
     vc.useUrlHandler = NO;
     vc.dialogDelegate = self;
-    [self addChildViewController:vc];
-    [self.view addSubview:vc.view];
     [vc showhangoutView];
 }
 

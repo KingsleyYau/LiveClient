@@ -10,11 +10,15 @@
 
 #import "LSLCLiveChatMsgItemObject.h"
 //#import "MonthlyFeeTipItemObject.h"
+#import "LSLiveChatRequestManager.h"
 
 @interface QNMessage : NSObject
 
 #pragma mark - 原始数据
-@property (nonatomic, strong) LSLCLiveChatMsgItemObject* liveChatMsgItemObject;
+@property (nonatomic, strong) LSLCLiveChatMsgItemObject *liveChatMsgItemObject;
+// 已观看视频列表数据
+@property (nonatomic, strong) LSLCRecentVideoItemObject *recentVideoItemObject;
+
 ///** 月费数据 */
 //@property (nonatomic,strong) MonthlyFeeTipItemObject *monthLyFeeTipItemObject;
 
@@ -35,6 +39,8 @@
  */
 @property (strong) NSArray<UIImage *> *emotionAnimationArray;
 
+@property (nonatomic, assign) CGFloat cellH;
+
 typedef enum {
     MessageSenderUnknow = 0,
     MessageSenderLady,
@@ -52,6 +58,7 @@ typedef enum {
     MessageTypeLargeEmotion,
     MessageTypeSmallEmotion,
     MessageTypeCoupon,
+    MessageTypeVideo,
 } Type;
 @property (nonatomic, assign) Type type;
 

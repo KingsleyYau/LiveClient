@@ -13,6 +13,7 @@
     if (self = [super init]) {
         self.isPriMsgAppPush = NO;
         self.isMailAppPush = NO;
+        self.isSayHiAppPush = NO;
     }
     
     return self;
@@ -25,7 +26,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager setPushConfig:self.isPriMsgAppPush isMailAppPush:self.isMailAppPush finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg)  {
+        NSInteger request = [self.manager setPushConfig:self.isPriMsgAppPush isMailAppPush:self.isMailAppPush isSayHiAppPush:self.isSayHiAppPush finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg)  {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理

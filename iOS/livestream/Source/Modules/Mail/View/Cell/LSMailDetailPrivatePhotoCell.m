@@ -21,29 +21,6 @@
 
 @implementation LSMailDetailPrivatePhotoCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if( self ) {
-        // Initialization code
-        NSBundle *bundle = [LiveBundle mainBundle];
-        NSArray *nib = [bundle loadNibNamedWithFamily:@"LSMailDetailPrivatePhotoCell" owner:nil options:nil];
-        self = [nib objectAtIndex:0];
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        self.imageItems = [[NSMutableArray alloc] init];
-        
-        self.collectionView.showsVerticalScrollIndicator = NO;
-        self.collectionView.showsHorizontalScrollIndicator = NO;
-        self.collectionView.scrollEnabled = NO;
-        self.collectionView.delegate = self;
-        self.collectionView.dataSource = self;
-        
-        UINib *cellNib = [UINib nibWithNibName:@"LSPrivatePhotoCollectionViewCell" bundle:[LiveBundle mainBundle]];
-        [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:[LSPrivatePhotoCollectionViewCell cellIdentifier]];
-    }
-    return self;
-}
-
 + (id)getUITableViewCell:(UITableView *)tableView {
     LSMailDetailPrivatePhotoCell *cell = (LSMailDetailPrivatePhotoCell *)[tableView dequeueReusableCellWithIdentifier:[LSMailDetailPrivatePhotoCell cellIdentifier]];
     
@@ -52,6 +29,16 @@
         NSArray *nib = [bundle loadNibNamedWithFamily:[LSMailDetailPrivatePhotoCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.imageItems = [[NSMutableArray alloc] init];
+        
+        cell.collectionView.showsVerticalScrollIndicator = NO;
+        cell.collectionView.showsHorizontalScrollIndicator = NO;
+        cell.collectionView.scrollEnabled = NO;
+        cell.collectionView.delegate = cell;
+        cell.collectionView.dataSource = cell;
+        
+        UINib *cellNib = [UINib nibWithNibName:@"LSPrivatePhotoCollectionViewCell" bundle:[LiveBundle mainBundle]];
+        [cell.collectionView registerNib:cellNib forCellWithReuseIdentifier:[LSPrivatePhotoCollectionViewCell cellIdentifier]];
     }
     return cell;
 }

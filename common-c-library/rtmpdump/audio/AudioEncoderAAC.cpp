@@ -292,32 +292,8 @@ void AudioEncoderAAC::Stop() {
         // 停止编码线程
         mEncodeAudioThread.Stop();
 
-        AudioFrame* frame = NULL;
-        // 释放未编码Buffer
-        mEncodeBufferList.lock();
-        while( !mEncodeBufferList.empty() ) {
-            frame = (AudioFrame* )mEncodeBufferList.front();
-            mEncodeBufferList.pop_front();
-            if( frame != NULL ) {
-            	delete frame;
-            } else {
-                break;
-            }
-        }
-        mEncodeBufferList.unlock();
-
-        // 释放空闲Buffer
-        mFreeBufferList.lock();
-        while( !mFreeBufferList.empty() ) {
-            frame = (AudioFrame* )mFreeBufferList.front();
-            mFreeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mFreeBufferList.unlock();
+        // 清空队列
+        ClearAudioFrame();
     }
     mRuningMutex.unlock();
 
@@ -558,6 +534,47 @@ void AudioEncoderAAC::ReleaseAudioFrame(AudioFrame* audioFrame) {
     mFreeBufferList.unlock();
 }
 
+void AudioEncoderAAC::ClearAudioFrame() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "AudioEncoderAAC::ClearAudioFrame( "
+                 "this : %p, "
+                 "mEncodeBufferList.size() : %d, "
+                 "mFreeBufferList.size() : %d "
+                 ")",
+                 this,
+				 mEncodeBufferList.size(),
+				 mFreeBufferList.size()
+                 );
+
+    AudioFrame* frame = NULL;
+    // 释放未编码Buffer
+    mEncodeBufferList.lock();
+    while( !mEncodeBufferList.empty() ) {
+        frame = (AudioFrame* )mEncodeBufferList.front();
+        mEncodeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mEncodeBufferList.unlock();
+
+    // 释放空闲Buffer
+    mFreeBufferList.lock();
+    while( !mFreeBufferList.empty() ) {
+        frame = (AudioFrame* )mFreeBufferList.front();
+        mFreeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mFreeBufferList.unlock();
+}
+
 void AudioEncoderAAC::EncodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
@@ -578,6 +595,16 @@ void AudioEncoderAAC::EncodeAudioHandle() {
 
         mEncodeBufferList.lock();
         if( !mEncodeBufferList.empty() ) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_STAT,
+                         "AudioEncoderAAC::EncodeAudioHandle( "
+                         "this : %p, "
+                         "mEncodeBufferList.size() : %d "
+                         ")",
+                         this,
+						 mEncodeBufferList.size()
+                         );
+
             srcFrame = (AudioFrame* )mEncodeBufferList.front();
             mEncodeBufferList.pop_front();
         }

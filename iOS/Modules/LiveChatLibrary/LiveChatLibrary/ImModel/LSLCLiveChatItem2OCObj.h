@@ -17,6 +17,7 @@
 #import "LSLCLiveChatMagicIconItemObject.h"
 #import "LSLCLiveChatMagicIconConfigItemObject.h"
 #import "LSLCLiveChatMsgVoiceItem.h"
+#import "LSLCLiveChatMsgVideoItem.h"
 @interface LSLCLiveChatItem2OCObj : NSObject
 
 #pragma mark - 公共处理
@@ -169,4 +170,14 @@
  * @return 语音消息object
  */
 + (LSLCLiveChatMsgVoiceItem* _Nullable)getLiveChatVoiceItemObject:(const LSLCVoiceItem*_Nullable)voiceItem;
+
+/**
+ * 获取视频消息object
+ *
+ * @param videoItem 视频item
+ *
+ * @return 视频消息object
+ */
++ (LSLCLiveChatMsgVideoItem* _Nullable)getLiveChatVideoItemObject:(const lcmm::LSLCVideoItem*_Nullable)videoItem;
+
 @end

@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *changeSiteBtn;
 @property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *settingBtnY;
 @property (weak, nonatomic) id<LSHomeSettingHaedViewDelegate> delegate;
 
 - (void)updateUserInfo;

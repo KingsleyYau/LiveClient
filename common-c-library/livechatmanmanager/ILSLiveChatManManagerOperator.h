@@ -51,6 +51,8 @@ public:
     virtual void SetUserOnlineStatusWithLccErrType(LSLCUserItem* userItem, LSLIVECHAT_LCC_ERR_TYPE errType) = 0;
     // 自动过滤器回调自动邀请消息到livechatmanmanager
     virtual void OnAutoInviteFilterCallback(LSLCAutoInviteItem* autoInviteItem, const string& message) = 0;
+    // 发送私密照的上传私密照成功回调
+    virtual void OnUploadPhoto(LSLCMessageItem* photoItem) = 0;
     
     // 插入定时任务
     virtual void InsertRequestTask(ILSLiveChatManManagerTaskCallback* callback, TaskParam param, long long delayTime = -1) = 0;

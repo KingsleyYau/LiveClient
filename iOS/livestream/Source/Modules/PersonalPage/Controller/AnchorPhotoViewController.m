@@ -16,6 +16,11 @@
 @end
 
 @implementation AnchorPhotoViewController
+- (void)initCustomParam {
+    [super initCustomParam];
+    
+    self.isShowNavBar = NO;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,14 +34,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.navigationBar.hidden = YES;
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    
     [self.pagingScrollView displayPagingViewAtIndex:self.photoIndex animated:YES];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -114,7 +118,7 @@
         
         // 加载图片
         __weak typeof(self) weakSelf = self;
-        [imageViewLoader sdWebImageLoadView:photoView options:0 imageUrl:url placeholderImage:nil finishHandler:^(UIImage *image) {
+        [imageViewLoader loadImageWithImageView:photoView options:0 imageUrl:url placeholderImage:nil finishHandler:^(UIImage *image) {
             [weakSelf hideAndResetLoading];
         }];
         
@@ -146,7 +150,6 @@
 
 - (void)photoViewDidSingleTap:(LSPZPhotoView *)photoView {
     [self dismissViewControllerAnimated:NO completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
 - (void)photoViewDidDoubleTap:(LSPZPhotoView *)photoView {
@@ -182,7 +185,6 @@
 
 - (void)lockPhotoViewDidClick:(UITapGestureRecognizer *)gesture {
     [self dismissViewControllerAnimated:NO completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
 

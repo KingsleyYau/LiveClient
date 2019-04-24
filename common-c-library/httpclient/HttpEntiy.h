@@ -42,7 +42,14 @@ public:
 	void AddFile(string key, string fileName, string mimeType = "image/jpeg");
 
 	void Reset();
+    
+    /**
+     获取请求参数(调试输出)
 
+     @return 参数文本输出
+     */
+    string GetContentDesc();
+    
 private:
 	HttpMap mHeaderMap;
 	HttpMap mContentMap;

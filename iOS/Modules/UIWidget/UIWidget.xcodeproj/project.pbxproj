@@ -14,6 +14,7 @@
 		254D0DF41EF27DBD00DDBC0B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DF31EF27DBD00DDBC0B /* MobileCoreServices.framework */; };
 		254D0DFC1EF2837900DDBC0B /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DFB1EF2837900DDBC0B /* WebP.framework */; };
 		25E8873D1F582EE2006E4639 /* LSUITapImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8873C1F582EE2006E4639 /* LSUITapImageView.m */; };
+		3E9F690A2227B23B00C69F0F /* TopLeftLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9F69092227B23B00C69F0F /* TopLeftLabel.m */; };
 		3EA003542094706E00278891 /* TXScrollLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EA003512094706E00278891 /* TXScrollLabelView.m */; };
 		3EA003552094706E00278891 /* UIView+TXFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EA003532094706E00278891 /* UIView+TXFrame.m */; };
 		3EEAFAAD20AAFEBD00DEA419 /* LSYYCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EEAFA8720AAFEBD00DEA419 /* LSYYCache.m */; };
@@ -33,7 +34,6 @@
 		3EEAFABC20AAFEBD00DEA419 /* LSYYImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EEAFAA720AAFEBD00DEA419 /* LSYYImageCache.m */; };
 		3EEAFABD20AAFEBD00DEA419 /* LSYYWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EEAFAAA20AAFEBD00DEA419 /* LSYYWebImageManager.m */; };
 		3EEAFABE20AAFEBD00DEA419 /* LSYYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EEAFAAC20AAFEBD00DEA419 /* LSYYWebImageOperation.m */; };
-		500689871D3CF97A00CF5D10 /* LSUIImageViewFill.m in Sources */ = {isa = PBXBuildFile; fileRef = 500689861D3CF97A00CF5D10 /* LSUIImageViewFill.m */; };
 		504B17B8201ABBD4007D5B8B /* LSUITabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */; };
 		50511F461F9450D0009E4C88 /* LSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F451F9450D0009E4C88 /* LSColor.m */; };
 		50511F521F945A9C009E4C88 /* NSBundle+DeviceFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F4F1F945A9C009E4C88 /* NSBundle+DeviceFamily.m */; };
@@ -100,6 +100,8 @@
 		25E8873B1F582EE2006E4639 /* LSUITapImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUITapImageView.h; sourceTree = "<group>"; };
 		25E8873C1F582EE2006E4639 /* LSUITapImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUITapImageView.m; sourceTree = "<group>"; };
 		3E15EB4E20ABC6D200395074 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		3E9F69082227B23B00C69F0F /* TopLeftLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TopLeftLabel.h; sourceTree = "<group>"; };
+		3E9F69092227B23B00C69F0F /* TopLeftLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TopLeftLabel.m; sourceTree = "<group>"; };
 		3EA003502094706E00278891 /* TXScrollLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXScrollLabelView.h; sourceTree = "<group>"; };
 		3EA003512094706E00278891 /* TXScrollLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXScrollLabelView.m; sourceTree = "<group>"; };
 		3EA003522094706E00278891 /* UIView+TXFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TXFrame.h"; sourceTree = "<group>"; };
@@ -139,8 +141,6 @@
 		3EEAFAAA20AAFEBD00DEA419 /* LSYYWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSYYWebImageManager.m; sourceTree = "<group>"; };
 		3EEAFAAB20AAFEBD00DEA419 /* LSYYWebImageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSYYWebImageOperation.h; sourceTree = "<group>"; };
 		3EEAFAAC20AAFEBD00DEA419 /* LSYYWebImageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSYYWebImageOperation.m; sourceTree = "<group>"; };
-		500689851D3CF97A00CF5D10 /* LSUIImageViewFill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUIImageViewFill.h; sourceTree = "<group>"; };
-		500689861D3CF97A00CF5D10 /* LSUIImageViewFill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUIImageViewFill.m; sourceTree = "<group>"; };
 		504B17B6201ABBD4007D5B8B /* LSUITabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUITabBarItem.h; sourceTree = "<group>"; };
 		504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSUITabBarItem.m; sourceTree = "<group>"; };
 		50511F441F9450D0009E4C88 /* LSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSColor.h; sourceTree = "<group>"; };
@@ -247,6 +247,15 @@
 				254D0DFB1EF2837900DDBC0B /* WebP.framework */,
 			);
 			path = Extern;
+			sourceTree = "<group>";
+		};
+		3E9F69072227B21D00C69F0F /* TopLeftLabel */ = {
+			isa = PBXGroup;
+			children = (
+				3E9F69082227B23B00C69F0F /* TopLeftLabel.h */,
+				3E9F69092227B23B00C69F0F /* TopLeftLabel.m */,
+			);
+			path = TopLeftLabel;
 			sourceTree = "<group>";
 		};
 		3EA0034F2094706E00278891 /* TXScrollLabelView */ = {
@@ -410,8 +419,6 @@
 				50A98C4E1F9488D700043448 /* UIImage+ImageEffects.m */,
 				50A98C4A1F9485B000043448 /* LSUIImageFactory.h */,
 				50A98C4B1F9485B000043448 /* LSUIImageFactory.m */,
-				500689851D3CF97A00CF5D10 /* LSUIImageViewFill.h */,
-				500689861D3CF97A00CF5D10 /* LSUIImageViewFill.m */,
 				50F1253F1D1BE4FA00435C12 /* LSUIImageViewTopFit.h */,
 				50F125401D1BE4FA00435C12 /* LSUIImageViewTopFit.m */,
 				25E8873B1F582EE2006E4639 /* LSUITapImageView.h */,
@@ -490,6 +497,7 @@
 		CAF537C9171FDB70005DCB49 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				3E9F69072227B21D00C69F0F /* TopLeftLabel */,
 				57A265E620F738C1000DB5EC /* UIButtonItem */,
 				3EEAFA8420AAFEBD00DEA419 /* LSYYWebImage */,
 				3EA0034F2094706E00278891 /* TXScrollLabelView */,
@@ -651,6 +659,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = CA799B52171F98700043B352;
@@ -698,7 +707,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				500689871D3CF97A00CF5D10 /* LSUIImageViewFill.m in Sources */,
 				577FD97B20FDBECA00961C6A /* UINavigationController+SXFixSpace.m in Sources */,
 				50A98C4C1F9485B000043448 /* LSUIImageFactory.m in Sources */,
 				3EEAFAB520AAFEBD00DEA419 /* UIImage+LSYYWebImage.m in Sources */,
@@ -737,6 +745,7 @@
 				50511F461F9450D0009E4C88 /* LSColor.m in Sources */,
 				5240E5EB215E0F6C00B43159 /* LSLinkTextView.m in Sources */,
 				5063A3EA1ECE91D000361942 /* LSUITextFieldAlign.m in Sources */,
+				3E9F690A2227B23B00C69F0F /* TopLeftLabel.m in Sources */,
 				3EEAFABB20AAFEBD00DEA419 /* LSYYSpriteSheetImage.m in Sources */,
 				CAF5383F171FDB71005DCB49 /* LSViewController.m in Sources */,
 				3EEAFABD20AAFEBD00DEA419 /* LSYYWebImageManager.m in Sources */,

@@ -17,7 +17,6 @@
 
 @interface UIScrollView (PullRefresh)
 
-- (void)setHeaderContent:(CGFloat)headerViewHeight;
 - (void)initPullRefresh:(id<UIScrollViewRefreshDelegate>)delegate pullDown:(BOOL)pullDown pullUp:(BOOL)pullUp;
 - (void)unInitPullRefresh;
 

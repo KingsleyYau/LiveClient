@@ -88,6 +88,8 @@ public:
 	string 	m_showSrcFilePath;		// 用于显示的原图路径
 	string	m_thumbSrcFilePath;		// 拇指原图路径
 	bool	m_charge;				// 是否已付费
+    // http接口13.6.上传附件 成功返回的url
+    string m_loadUrl;               // 上传的url
 private:
 	ProcessStatusList	m_statusList;	// 图片处理状态列表
     

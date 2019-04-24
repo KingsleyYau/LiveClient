@@ -11,7 +11,6 @@
 #import "TalentOnDemandCell.h"
 #import "LSImManager.h"
 #import "DialogTip.h"
-#import "DialogOK.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveModule.h"
 #import "PushAnimator.h"
@@ -37,7 +36,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *talentShowBtn;
 @property (weak, nonatomic) IBOutlet UILabel *talentInfoLabel;
 
-@property (strong) DialogOK *dialogOK;
 @property (strong) DialogTip *dialogTipView;
 
 @property (nonatomic, assign) NSInteger oldRow;
@@ -65,9 +63,6 @@
 - (void)dealloc {
     NSLog(@"TalentOnDemandViewController::dealloc()");
     
-    if (self.dialogOK) {
-        [self.dialogOK removeFromSuperview];
-    }
     if (self.dialogTipView) {
         [self.dialogTipView removeFromSuperview];
     }
@@ -189,7 +184,22 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark 隐藏界面事件
+#pragma mark 隐藏/显示界面事件
+/** 显示买点弹框 **/
+- (void)showAddCreditsView:(NSString *)tip {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tip preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *canaelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *addAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"ADD_CREDITS", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
+        if ([self.delegate respondsToSelector:@selector(pushToRechargeCredit)]) {
+            [self.delegate pushToRechargeCredit];
+        }
+    }];
+    [alertVC addAction:canaelAC];
+    [alertVC addAction:addAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
 - (void)closeBtnDid {
     if ([self.delegate respondsToSelector:@selector(talentOnDemandVCCancelButtonDid)]) {
         [self.delegate talentOnDemandVCCancelButtonDid];
@@ -197,9 +207,10 @@
 }
 
 - (IBAction)detailTap:(UITapGestureRecognizer *)sender {
-    
-    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:NSLocalizedStringFromSelf(@"Note") message:NSLocalizedStringFromSelf(@"Talent_Detail_Msg") delegate:nil cancelButtonTitle:NSLocalizedString(@"Close", nil) otherButtonTitles:nil, nil];
-    [alertView show];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromSelf(@"Note") message:NSLocalizedStringFromSelf(@"Talent_Detail_Msg") preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *canaelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleCancel handler:nil];
+    [alertVC addAction:canaelAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 #pragma mark 重新请求按钮事件
@@ -287,23 +298,7 @@
 - (void)sendTalentShowRequest:(GetTalentItemObject *)item {
     
     if (self.creditRebateManager.mCredit < item.credit) {
-        
-        if (self.dialogOK) {
-            [self.dialogOK removeFromSuperview];
-            self.dialogOK = nil;
-        }
-        WeakObject(self, weakSelf);
-        self.dialogOK = [DialogOK dialog];
-        self.dialogOK.tipsLabel.text = NSLocalizedStringFromSelf(@"TALENT_ERR_ADD_CREDIT");
-        [self.dialogOK showDialog:self.liveRoom.superView
-                      actionBlock:^{
-                          NSLog(@"跳转到充值界面");
-                          [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                          if ([weakSelf.delegate respondsToSelector:@selector(pushToRechargeCredit)]) {
-                              [weakSelf.delegate pushToRechargeCredit];
-                          }
-                      }];
-        
+        [self showAddCreditsView:NSLocalizedStringFromSelf(@"TALENT_ERR_ADD_CREDIT")];
     } else {
         
         BOOL bFlag = [self.iMManager sendTalent:self.roomId talentId:item.talentId];
@@ -321,42 +316,27 @@
 
 #pragma mark 才艺点播回调
 - (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg talentInviteId:(NSString *)talentInviteId talentId:(NSString * _Nonnull)talentId {
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"TalentOnDemandViewController::onSendTalent( [发送直播间才艺点播邀请, %@], errType : %d, errmsg : %@ talentInviteId:%@ talentId:%@)", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, talentInviteId, talentId);
         if (err != LCC_ERR_SUCCESS) {
             //信用点不足
             if (err == LCC_ERR_NO_CREDIT) {
-                if (weakSelf.dialogOK) {
-                    [weakSelf.dialogOK removeFromSuperview];
-                }
-                
-                weakSelf.dialogOK = [DialogOK dialog];
-                weakSelf.dialogOK.tipsLabel.text = NSLocalizedStringFromSelf(@"TALENT_ERR_ADD_CREDIT");
-                [weakSelf.dialogOK showDialog:weakSelf.liveRoom.superView
-                              actionBlock:^{
-                                  NSLog(@"跳转到充值界面");
-                                  [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                  if ([weakSelf.delegate respondsToSelector:@selector(pushToRechargeCredit)]) {
-                                      [weakSelf.delegate pushToRechargeCredit];
-                                  }
-                              }];
-            }
-            else  {
-                [weakSelf showDialog:errMsg];
+                [self showAddCreditsView:NSLocalizedStringFromSelf(@"TALENT_ERR_ADD_CREDIT")];
+            } else  {
+                [self showDialog:errMsg];
             }
             
         } else {
             
-            weakSelf.talentInviteId = talentInviteId;
-            for (GetTalentItemObject *item in weakSelf.data) {
+            self.talentInviteId = talentInviteId;
+            for (GetTalentItemObject *item in self.data) {
                 if ([item.talentId isEqualToString:talentId]) {
-                    weakSelf.checkedTalentName = item.name;
-                    weakSelf.checkedTalentId = item.talentId;
+                    self.checkedTalentName = item.name;
+                    self.checkedTalentId = item.talentId;
                     
                     //发送成功
-                    NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_TALENT_SUCCESS"), weakSelf.checkedTalentName];
-                    [weakSelf sendTalentMessage:message];
+                    NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_TALENT_SUCCESS"), self.checkedTalentName];
+                    [self sendTalentMessage:message];
                     break;
                 }
             }
@@ -366,18 +346,17 @@
 
 - (void)onRecvSendTalentNotice:(ImTalentReplyObject *)item {
     NSLog(@"TalentOnDemandViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *message = @"";
         //接受
         if (item.status == TALENTSTATUS_AGREE) {
-            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), weakSelf.liveRoom.userName, item.name];
-            [weakSelf sendTalentMessage:message];
+            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), self.liveRoom.userName, item.name];
+            [self sendTalentMessage:message];
         }
         //拒绝
         else if (item.status == TALENTSTATUS_REJECT) {
-            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), weakSelf.liveRoom.userName, item.name];
-            [weakSelf sendTalentMessage:message];
+            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), self.liveRoom.userName, item.name];
+            [self sendTalentMessage:message];
         } else //其他
         {
             
@@ -407,12 +386,11 @@
 
 #pragma mark 直播重连回调
 - (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ImLoginReturnObject *)item {
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (errType == LCC_ERR_SUCCESS) {
-            if (weakSelf.talentInviteId.length > 0) {
+            if (self.talentInviteId.length > 0) {
                 //获取才艺点播状态
-                [weakSelf.talentOnDemandManager getTalentStatusRoomId:weakSelf.roomId talentId:weakSelf.talentInviteId];
+                [self.talentOnDemandManager getTalentStatusRoomId:self.roomId talentId:self.talentInviteId];
             }
         }
     });
@@ -420,23 +398,22 @@
 
 #pragma mark 获取才艺点播状态
 - (void)onGetTalentStatus:(GetTalentStatusItemObject *)statusItemObject {
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (weakSelf.talentInviteId.length > 0) {
+        if (self.talentInviteId.length > 0) {
             if (statusItemObject.status == HTTPTALENTSTATUS_ACCEPT) {
                 //同意
-                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), weakSelf.liveRoom.userName,statusItemObject.name];
-                [weakSelf sendTalentMessage:message];
+                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), self.liveRoom.userName,statusItemObject.name];
+                [self sendTalentMessage:message];
             }
             else if (statusItemObject.status == HTTPTALENTSTATUS_REJECT)
             {
                 //拒绝
-                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), weakSelf.liveRoom.userName, statusItemObject.name];
-                [weakSelf sendTalentMessage:message];
+                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), self.liveRoom.userName, statusItemObject.name];
+                [self sendTalentMessage:message];
             }
             else
             {
-                weakSelf.talentInviteId = nil;
+                self.talentInviteId = nil;
             }
         }
     });

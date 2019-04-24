@@ -13,5 +13,9 @@
  * anchorId                         主播ID
  */
 @property (nonatomic, copy) NSString* _Nullable anchorId;
+/**
+ * isAuto 是否自动（1：自动  0：手动）
+ */
+@property (nonatomic, assign) BOOL isAuto;
 @property (nonatomic, strong) AutoInvitationHangoutLiveDisplayFinishHandler _Nullable finishHandler;
 @end

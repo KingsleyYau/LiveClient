@@ -16,6 +16,8 @@
 #include <common/KLog.h>
 
 #include <stdint.h>
+// read,close 用到<unistd.h>， 旧的<fcntl.h>包含了unistd.h，r16b以后fcntl.h就没有包含了unistd.h
+#include <unistd.h>
 
 // 设备信息文件
 #define DISKSTATS		"/proc/diskstats" 		// 闪存分区信息

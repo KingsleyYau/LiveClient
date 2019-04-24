@@ -30,18 +30,18 @@ CTaskManager::CTaskManager(void)
 
 CTaskManager::~CTaskManager(void)
 {
-	FileLog("ImClient", "CTaskManager::~CTaskManager() begin");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::~CTaskManager() begin");
 	Stop();
-	FileLog("ImClient", "CTaskManager::~CTaskManager() stop ok");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::~CTaskManager() stop ok");
 	ITransportDataHandler::Release(m_dataHandler);
 	m_dataHandler = NULL;
-	FileLog("ImClient", "CTaskManager::~CTaskManager() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::~CTaskManager() end");
 }
 
 // 初始化接口
 bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListener, ITaskManagerListener* mgrListener)
 {
-	FileLog("ImClient", "CTaskManager::Init() urls.size:%d, clientListener:%p, mgrListener:%p"
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Init() urls.size:%d, clientListener:%p, mgrListener:%p"
             , urls.size(), clientListener, mgrListener);
 
 	if (!m_bInit) {
@@ -50,13 +50,13 @@ bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListe
 			m_dataHandler = ITransportDataHandler::Create();
 			m_bInit = m_dataHandler->Init(this);
 		}
-		FileLog("ImClient", "CTaskManager::Init() create m_dataHandler:%p, m_bInit:%d", m_dataHandler, m_bInit);
+		FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Init() create m_dataHandler:%p, m_bInit:%d", m_dataHandler, m_bInit);
 
 		// 初始化 task map
 		if (m_bInit) {
 			m_bInit = m_requestTaskMap.Init();
 		}
-		FileLog("ImClient", "CTaskManager::Init() m_requestTaskMap.Init() m_bInit:%d", m_bInit);
+		FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Init() m_requestTaskMap.Init() m_bInit:%d", m_bInit);
 
 		// 赋值
 		if (m_bInit) {
@@ -66,7 +66,7 @@ bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListe
 		}
 	}
 
-	FileLog("ImClient", "CTaskManager::Init() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Init() end");
 
 	return m_bInit;
 }
@@ -74,37 +74,37 @@ bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListe
 // 开始
 bool CTaskManager::Start()
 {
-	FileLog("ImClient", "CTaskManager::Start()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Start()");
 	if (m_bInit && !m_bStart) {
 		m_bStart = m_dataHandler->Start(m_urls);
 	}
-	FileLog("ImClient", "CTaskManager::Start() m_bStart:%d", m_bStart);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Start() m_bStart:%d", m_bStart);
 	return m_bStart;
 }
 	
 // 停止（不等待）
 bool CTaskManager::Stop()
 {
-	FileLog("ImClient", "CTaskManager::Stop()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Stop()");
 	bool result = false;
 	if (NULL != m_dataHandler) {
 		result = m_dataHandler->Stop();
 		m_bStart = !result;
 	}
-	FileLog("ImClient", "CTaskManager::Stop() result:%d", result);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::Stop() result:%d", result);
 	return result;
 }
 
 // 停止（等待）
 bool CTaskManager::StopAndWait()
 {
-	FileLog("ImClient", "CTaskManager::StopAndWait()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::StopAndWait()");
 	bool result = false;
 	if (NULL != m_dataHandler) {
 		result = m_dataHandler->StopAndWait();
 		m_bStart = !result;
 	}
-	FileLog("ImClient", "CTaskManager::StopAndWait() result:%d", result);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::StopAndWait() result:%d", result);
 
 	return result;	
 }
@@ -132,17 +132,17 @@ bool CTaskManager::HandleRequestTask(ITask* task)
 }
 
 // ------------- ILiveChatClientListener接口函数 -------------
-// 连接callback
+// 连接callback（告诉监听对象成功开心跳包，失败告诉登陆失败）
 void CTaskManager::OnConnect(bool success)
 {
-	FileLog("ImClient", "CTaskManager::OnConnect() success:%d", success);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::OnConnect() success:%d", success);
 	if (NULL != m_mgrListener) {
 		m_mgrListener->OnConnect(success);
 	}
-	FileLog("ImClient", "CTaskManager::OnConnect() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::OnConnect() end");
 }
 
-// 断开连接callback（先回调OnDisconnect()再回调OnDisconnect(const TaskList& list)）
+// 断开连接callback（和下面的OnDisconnect(const TaskList& list)一起用的，只是OnDisconnect（）先调用为了监听对象停心跳包，OnDisconnect(const TaskList& list)为了logout）
 void CTaskManager::OnDisconnect()
 {
 	m_mgrListener->OnDisconnect();
@@ -151,7 +151,7 @@ void CTaskManager::OnDisconnect()
 // 断开连接callback（连接不成功不会调用，断开后需要手动调用ITransportDataHandler::Stop才能停止）
 void CTaskManager::OnDisconnect(const TaskList& listUnsentTask)
 {
-	FileLog("ImClient", "CTaskManager::OnDisconnect() listUnsentTask.size:%d", listUnsentTask.size());
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::OnDisconnect() listUnsentTask.size:%d", listUnsentTask.size());
 	if (NULL != m_mgrListener) {
 		// 回调 发送不成功 或 发送成功但没有回应 的task
 		m_requestTaskMap.InsertTaskList(listUnsentTask);
@@ -170,7 +170,7 @@ void CTaskManager::OnDisconnect(const TaskList& listUnsentTask)
 			delete task;
 		}
 	}
-	FileLog("ImClient", "CTaskManager::OnDisconnect() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::OnDisconnect() end");
 }
 	
 // 发送callback
@@ -204,7 +204,7 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
 {
 	FileLevelLog(
                  "ImClient",
-                 KLog::LOG_MSG,
+                 KLog::LOG_WARNING,
                  "CTaskManager::OnRecv() cmd:%s, seq:%d, data.empty:%d",
                  tp.m_cmd.c_str(),
                  tp.m_reqId,
@@ -267,6 +267,6 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
     
 
 
-	FileLog("ImClient", "CTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
 		, tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str());
 }

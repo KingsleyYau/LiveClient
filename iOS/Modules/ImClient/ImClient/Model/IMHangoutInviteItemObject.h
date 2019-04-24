@@ -11,7 +11,7 @@
 /**
  * 多人邀请信息
  * logId            记录ID
- * isAnto           是否自动邀请
+ * isAuto           是否自动邀请
  * anchorId         主播ID
  * nickName         主播昵称
  * cover            封面图URL
@@ -20,7 +20,7 @@
  * avatarImg        主播头像
  */
 @property (nonatomic, assign) int logId;
-@property (nonatomic, assign) BOOL isAnto;
+@property (nonatomic, assign) BOOL isAuto;
 @property (nonatomic, copy) NSString* _Nonnull anchorId;
 @property (nonatomic, copy) NSString* _Nonnull anchorNickName;
 @property (nonatomic, copy) NSString* _Nonnull anchorCover;

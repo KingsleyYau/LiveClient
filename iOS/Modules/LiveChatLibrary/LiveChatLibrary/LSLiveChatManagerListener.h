@@ -278,6 +278,30 @@
  */
 - (void)onSendPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg msgItem:(LSLCLiveChatMsgItemObject *_Nonnull)msgItem;
 
+#pragma mark - 视频回调
+
+- (void)onGetVideo:(LSLIVECHAT_LCC_ERR_TYPE)errType userId:(NSString *_Nonnull)userId videoId:(NSString *_Nonnull)videoId inviteId:(NSString *_Nonnull)inviteId videoPath:(NSString *_Nonnull)videoPath msgList:(NSArray<LSLCLiveChatMsgItemObject *> *_Nonnull)msgList;
+
+- (void)onGetVideoPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg userId:(NSString *_Nonnull)userId inviteId:(NSString *_Nonnull)inviteId videoId:(NSString *_Nonnull)videoId videoType:(VIDEO_PHOTO_TYPE)videoType videoPath:(NSString *_Nonnull)videoPath msgList:(NSArray<LSLCLiveChatMsgItemObject *> *_Nonnull)msgList;
+
+/**
+ *  接收视频消息
+ *
+ *  @param msgItem 消息Object
+ *
+ */
+- (void)onRecvVideo:(LSLCLiveChatMsgItemObject *_Nonnull)msgItem;
+
+/**
+ *  购买视频信息回调
+ *
+ *  @param success 操作是否成功
+ *  @param errNo   结果编码
+ *  @param errMsg  结果描述
+ *  @param msgItem 消息
+ */
+- (void)onVideoFee:(bool)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg msgItem:(LSLCLiveChatMsgItemObject *_Nonnull)msgItem;
+
 #pragma mark - 高级表情回调
 /**
  *  获取高级表情设置item

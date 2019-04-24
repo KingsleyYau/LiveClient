@@ -48,9 +48,10 @@ private:
     bool m_isInitMgr;           // 是否已初始化mgr
     
     IAutoLock*      m_connStateLock;    // 连接状态锁
-    ConnectState    m_connState;        // 连接状态（还控制了线程的标志位）
-    bool            m_isShutdownConnecting;    // 判断是否在conncet时Shutdown
+    ConnectState    m_connState;        // 连接状态（还控制了线程的标志位） 
     bool            m_isWebConnected;   // 判断是否websockt连接成功没有；
+    
+    
     
     
     string  m_url;  // 连接url

@@ -8,14 +8,16 @@
 
 APP_PLATFORM := android-16
 APP_STL := stlport_static #使用STLport作为静态库
+#APP_STL := c++_static
+#APP_STL := c++_shared
 
 #APP_OPTIM := debug # gdbserver调试模式
 
-#APP_ABI := all #[armeabi-v7a] [arm64-v8a] [x86], NDK-r7之后可以使用这样方式编译支持多种芯片, NDK-r10e之后[armeabi]和[mips]被废弃
-#APP_ABI	:= armeabi armeabi-v7a arm64-v8a x86
+#APP_ABI := all #[armeabi-v7a] [arm64-v8a] [x86], NDK-r7开始可以使用这样方式编译支持多种芯片, NDK-r16开始[armeabi]和[mips]被废弃
+#APP_ABI	:= armeabi-v7a arm64-v8a x86 x86_64
 APP_ABI	:= armeabi armeabi-v7a arm64-v8a x86
 
-#NDK_TOOLCHAIN_VERSION = 4.9
+APP_CFLAGS += -O2 -D_ANDROID -DPRINT_JNI_LOG -DFILE_JNI_LOG #-g
+#APP_CFLAGS += -D_ANDROID_NDK_VERSION=16
 
-#STLPORT_FORCE_REBUILD := true 可以强制重新编译STLPort源码
-APP_CFLAGS += -O2 -D_ANDROID -DPRINT_JNI_LOG -DFILE_JNI_LOG #-D_CHECK_MEMORY_LEAK#-O2 #-g
+NDK_TOOLCHAIN_VERSION = 4.9

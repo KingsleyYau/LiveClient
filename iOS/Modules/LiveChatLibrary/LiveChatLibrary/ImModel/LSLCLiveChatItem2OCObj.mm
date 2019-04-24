@@ -17,6 +17,7 @@
 + (LSLCLiveChatCustomItemObject* _Nullable)getLiveChatCustomItemObject:(const LSLCCustomItem*)customItem;
 + (LSLCLiveChatMsgPhotoItem* _Nullable)getLiveChatPhotoItemObject:(const LSLCPhotoItem*)photoItem;
 + (LSLCLiveChatMsgVoiceItem* _Nullable)getLiveChatVoiceItemObject:(const LSLCVoiceItem*)voiceItem;
++ (LSLCLiveChatMsgVideoItem* _Nullable)getLiveChatVideoItemObject:(const lcmm::LSLCVideoItem*_Nullable)videoItem;
 
 + (NSArray<LSLCEmotionTypeItemObject*>* _Nullable)getEmotionTypeItemObject:(const LSLCOtherEmotionConfigItem::TypeList&)typeList;
 + (NSArray<LSLCEmotionTagItemObject*>* _Nullable)getEmotionTagItemObject:(const LSLCOtherEmotionConfigItem::TagList&)tagList;
@@ -33,6 +34,7 @@
 + (LSLCEmotionItem* _Nullable)getLiveChatEmotionItem:(LSLCLiveChatEmotionItemObject* _Nonnull)emotion;
 + (LSLCMagicIconItem* _Nullable)getLiveChatMagicIconItem:(LSLCLiveChatMagicIconItemObject* _Nonnull)magicIcon;
 + (LSLCVoiceItem* _Nullable)getLiveChatVoiceItem:(LSLCLiveChatMsgVoiceItem*_Nonnull)voiceItem;
++ (lcmm::LSLCVideoItem* _Nullable)getLiveChatVideoItem:(LSLCLiveChatMsgVideoItem*_Nonnull)videoItem;
 @end
 
 @implementation LSLCLiveChatItem2OCObj
@@ -201,8 +203,11 @@
                 delete newMagicIconItem;
             }
         }
-        else if (MT_Voice == msgItem->m_msgType){
+        else if (MT_Voice == msgItem->m_msgType) {
             obj.voiceMsg = [self getLiveChatVoiceItemObject:msgItem->GetVoiceItem()];
+        }
+        else if (MT_Video == msgItem->m_msgType) {
+            obj.videoMsg = [self getLiveChatVideoItemObject:msgItem->GetVideoItem()];
         }
     }
     return obj;
@@ -257,8 +262,11 @@
             delete newMagicIconItem;
         }
     }
-    else if (MT_Voice == msgItem.m_msgType){
+    else if (MT_Voice == msgItem.m_msgType) {
         obj.voiceMsg = [self getLiveChatVoiceItemObject:msgItem.GetVoiceItem()];
+    }
+    else if (MT_Video == msgItem.m_msgType) {
+        obj.videoMsg = [self getLiveChatVideoItemObject:msgItem.GetVideoItem()];
     }
     return obj;
 }
@@ -566,6 +574,10 @@
             LSLCVoiceItem* voiceItem = [LSLCLiveChatItem2OCObj getLiveChatVoiceItem:msg.voiceMsg];
             msgItem->SetVoiceItem(voiceItem);
         }
+        else if (MT_Video == msgItem->m_msgType) {
+            lcmm::LSLCVideoItem* videoItem = [LSLCLiveChatItem2OCObj getLiveChatVideoItem:msg.videoMsg];
+            msgItem->SetVideoItem(videoItem);
+        }
         else
         {
             delete msgItem;
@@ -736,6 +748,22 @@
         
     }
     return lcVoiceItem;
+}
+
++ (lcmm::LSLCVideoItem* _Nullable)getLiveChatVideoItem:(LSLCLiveChatMsgVideoItem*_Nonnull)videoItem
+{
+    lcmm::LSLCVideoItem* lcVideoItem = new lcmm::LSLCVideoItem;
+    if(NULL != lcVideoItem && videoItem != nil){
+        lcVideoItem->m_videoId = videoItem.videoId != nil ? [videoItem.videoId UTF8String] : "";
+        lcVideoItem->m_sendId  = videoItem.sendId != nil ? [videoItem.sendId UTF8String] : "";
+        lcVideoItem->m_videoDesc   = videoItem.videoDesc != nil ? [videoItem.videoDesc UTF8String] : "";
+        lcVideoItem->m_videoUrl = videoItem.videoUrl != nil ? [videoItem.videoUrl UTF8String] : "";
+        lcVideoItem->m_bigPhotoFilePath   = videoItem.bigPhotoFilePath != nil ? [videoItem.bigPhotoFilePath UTF8String] : "";
+        lcVideoItem->m_videoFilePath = videoItem.videoFilePath != nil ? [videoItem.videoFilePath UTF8String] : "";
+        lcVideoItem->m_charge = videoItem.charge;
+        
+    }
+    return lcVideoItem;
 }
 
 
@@ -922,6 +950,24 @@
         obj.timeLength = voiceItem->m_timeLength;
         obj.charge = voiceItem->m_charge;
         obj.processing = voiceItem->m_processing;
+    }
+    return obj;
+}
+
++ (LSLCLiveChatMsgVideoItem* _Nullable)getLiveChatVideoItemObject:(const lcmm::LSLCVideoItem*_Nullable)videoItem
+{
+    LSLCLiveChatMsgVideoItem* obj = nil;
+    if (NULL != videoItem)
+    {
+        obj = [[LSLCLiveChatMsgVideoItem alloc] init];
+        obj.videoId = [NSString stringWithUTF8String:videoItem->m_videoId.c_str()];
+        obj.sendId = [NSString stringWithUTF8String:videoItem->m_sendId.c_str()];
+        obj.videoDesc = [NSString stringWithUTF8String:videoItem->m_videoDesc.c_str()];
+        obj.videoUrl = [NSString stringWithUTF8String:videoItem->m_videoUrl.c_str()];
+        obj.charge = videoItem->m_charge;
+        //        obj.thumbPhotoFilePath = [NSString stringWithUTF8String:videoItem->m_thumbPhotoFilePath.c_str()];
+        obj.bigPhotoFilePath = [NSString stringWithUTF8String:videoItem->m_bigPhotoFilePath.c_str()];
+        obj.videoFilePath = [NSString stringWithUTF8String:videoItem->m_videoFilePath.c_str()];
     }
     return obj;
 }

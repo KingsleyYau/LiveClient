@@ -31,7 +31,7 @@
 #import "LSGiftManager.h"
 #import "LSChatEmotionManager.h"
 #import "LiveStreamSession.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 
 #import "AudienceModel.h"
@@ -39,7 +39,6 @@
 #import "LSSendinvitationHangoutRequest.h"
 #import "LSGetHangoutInvitStatusRequest.h"
 
-#import "DialogOK.h"
 #import "DialogChoose.h"
 #import "DialogTip.h"
 #import "DialogWarning.h"
@@ -83,7 +82,7 @@
 #define STREAM_PLAYER_RECONNECT_MAX_TIMES 5
 #define STREAM_PUBLISH_RECONNECT_MAX_TIMES STREAM_PLAYER_RECONNECT_MAX_TIMES
 
-@interface LiveViewController () <UITextFieldDelegate, LSCheckButtonDelegate, BarrageViewDataSouce, BarrageViewDelegate, GiftComboViewDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate, DriveViewDelegate, MsgTableViewCellDelegate, LiveStreamPlayerDelegate, LiveStreamPublisherDelegate, LiveGobalManagerDelegate, TalentMsgCellDelegate, HangOutOpenDoorCellDelegate, UIAlertViewDelegate>
+@interface LiveViewController () <UITextFieldDelegate, LSCheckButtonDelegate, BarrageViewDataSouce, BarrageViewDelegate, GiftComboViewDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate, DriveViewDelegate, MsgTableViewCellDelegate, LiveStreamPlayerDelegate, LiveStreamPublisherDelegate, LiveGobalManagerDelegate, TalentMsgCellDelegate, HangOutOpenDoorCellDelegate>
 
 #pragma mark - 流[播放/推送]管理
 // 流播放地址
@@ -127,7 +126,7 @@
 @property (nonatomic, strong) GiftComboManager *giftComboManager;
 
 #pragma mark - 用户信息管理器
-@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
 
 #pragma mark - 礼物连击界面
 @property (nonatomic, strong) NSMutableArray<GiftComboView *> *giftComboViews;
@@ -165,9 +164,6 @@
 @property (nonatomic, assign) int showToastNum;
 
 #pragma mark - 对话框
-@property (strong) DialogOK *dialogToastAddCredit;
-@property (strong) DialogOK *dialogWatchAddCredit;
-@property (strong) DialogOK *dialogGiftAddCredit;
 @property (strong) DialogTip *dialogProbationTip;
 @property (strong) DialogWarning *dialogView;
 
@@ -184,6 +180,8 @@
 @property (nonatomic, assign) BOOL isRecommend;
 // 是否邀请Hangout成功
 @property (nonatomic, assign) BOOL isInviteHangout;
+// 是否正在Hangout邀请
+@property (nonatomic, assign) BOOL isInvitingHangout;
 // HangOut邀请ID
 @property (nonatomic, copy) NSString *hangoutInviteId;
 // Hangout邀请主播名称 ID
@@ -191,8 +189,6 @@
 @property (nonatomic, copy) NSString *hangoutAnchorId;
 // push跳转Url
 @property (nonatomic, strong) NSURL *pushUrl;
-// 信用点不足提示
-@property (nonatomic, strong) UIAlertView *alertView;
 
 #pragma mark - 测试
 @property (nonatomic, weak) NSTimer *testTimer;
@@ -211,6 +207,8 @@
     [super initCustomParam];
 
     NSLog(@"LiveViewController::initCustomParam()");
+
+    self.isShowNavBar = NO;
 
     // 初始化流组件
     self.playUrl = @"rtmp://172.25.32.133:7474/test_flash/max_mv";
@@ -244,7 +242,7 @@
     self.giftComboManager = [[GiftComboManager alloc] init];
 
     // 初始化用户信息管理器
-    self.userInfoManager = [LSUserInfoManager manager];
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
 
     // 初始化礼物管理器
     self.giftDownloadManager = [LSGiftManager manager];
@@ -278,8 +276,8 @@
     // 注册前后台切换通知
     _isBackground = NO;
     self.isTimeOut = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 
     // 注册大礼物结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animationWhatIs:) name:@"GiftAnimationIsOver" object:nil];
@@ -295,18 +293,14 @@
 
     // 初始化是否推荐邀请hangout
     self.isRecommend = NO;
-    // 初始化是否正在邀请多人互动
+    // 初始化是否邀请多人互动成功
     self.isInviteHangout = NO;
-    
-    // 初始化充点提示控件
-    self.alertView = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"INVITE_HANGOUT_ADDCREDIT", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ADD_CREDITS", nil), nil];
+    // 初始化是否正在多人互动邀请
+    self.isInvitingHangout = NO;
 }
 
 - (void)dealloc {
     NSLog(@"LiveViewController::dealloc()");
-
-    // 移除直播间用户信息
-    [[LSUserInfoManager manager] removeAllInfo];
 
     // 去除大礼物结束通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GiftAnimationIsOver" object:nil];
@@ -321,6 +315,7 @@
 
     // 移除直播间后台代理监听
     [[LiveGobalManager manager] removeDelegate:self];
+    [[LiveGobalManager manager] setupLiveVC:nil orHangOutVC:nil];
 
     // 移除直播间IM代理监听
     [self.imManager removeDelegate:self];
@@ -338,13 +333,6 @@
         NSLog(@"LiveViewController::dealloc( [发送退出直播间], roomId : %@ )", self.liveRoom.roomId);
         [self.imManager leaveRoom:self.liveRoom];
     }
-
-    if (self.dialogWatchAddCredit) {
-        [self.dialogWatchAddCredit removeFromSuperview];
-    }
-    if (self.dialogToastAddCredit) {
-        [self.dialogToastAddCredit removeFromSuperview];
-    }
 }
 
 - (void)viewDidLoad {
@@ -352,6 +340,8 @@
 
     // 赋值到全局变量, 用于后台计时操作
     [LiveGobalManager manager].liveRoom = self.liveRoom;
+    // 赋值到全局变量 用于观看信件或chat视频关闭直播声音
+    [[LiveGobalManager manager] setupLiveVC:self orHangOutVC:nil];
 
     // 禁止锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
@@ -396,9 +386,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // 隐藏导航栏
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
+    [self hideNavigationBar];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -485,18 +473,18 @@
     // 默认隐藏邀请私密控件
     self.startOneViewHeigh.constant = 0;
 
-    self.startOneBtn.layer.cornerRadius = self.startOneBtn.tx_height/2;
+    self.startOneBtn.layer.cornerRadius = self.startOneBtn.tx_height / 2;
     self.startOneBtn.layer.masksToBounds = YES;
-    
-    self.startHangoutBtn.layer.cornerRadius = self.startHangoutBtn.tx_height/2;
+
+    self.startHangoutBtn.layer.cornerRadius = self.startHangoutBtn.tx_height / 2;
     self.startHangoutBtn.layer.masksToBounds = YES;
-    
-    LSShadowView * shadowView = [[LSShadowView alloc]init];
+
+    LSShadowView *shadowView = [[LSShadowView alloc] init];
     [shadowView showShadowAddView:self.startOneBtn];
-    
-    LSShadowView * shadowView1 = [[LSShadowView alloc]init];
+
+    LSShadowView *shadowView1 = [[LSShadowView alloc] init];
     [shadowView1 showShadowAddView:self.startHangoutBtn];
-    
+
     self.startOneBtn.hidden = YES;
     self.startHangoutBtn.hidden = YES;
 }
@@ -514,6 +502,22 @@
                        [timer stopTimer];
                    }];
     }
+}
+
+/** 显示买点弹框 **/
+- (void)showAddCreditsView:(NSString *)tip {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tip preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *canaelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *addAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"ADD_CREDITS", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if ([self.liveDelegate respondsToSelector:@selector(noCreditPushTo:)]) {
+            [self.liveDelegate noCreditPushTo:self];
+        }
+    }];
+    [alertVC addAction:canaelAC];
+    [alertVC addAction:addAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 #pragma mark - 界面事件
@@ -574,19 +578,18 @@
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
 
     // 开始转菊花
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL bFlag = [weakSelf.player playUrl:weakSelf.playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+        BOOL bFlag = [self.player playUrl:self.playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
         dispatch_async(dispatch_get_main_queue(), ^{
             // 停止菊花
             if (bFlag) {
                 // 播放成功
-                if ([weakSelf.liveDelegate respondsToSelector:@selector(liveViewIsPlay:)]) {
-                    [weakSelf.liveDelegate liveViewIsPlay:weakSelf];
+                if ([self.liveDelegate respondsToSelector:@selector(liveViewIsPlay:)]) {
+                    [self.liveDelegate liveViewIsPlay:self];
                 }
-                if (weakSelf.liveRoom.roomType != LiveRoomType_Public) {
-                    weakSelf.rewardedBgView.hidden = YES;
-                    weakSelf.rewardedBtn.hidden = YES;
+                if (self.liveRoom.roomType != LiveRoomType_Public) {
+                    self.rewardedBgView.hidden = YES;
+                    self.rewardedBtn.hidden = YES;
                 }
             } else {
                 // 播放失败
@@ -603,7 +606,6 @@
 
 - (void)initPublish {
     NSLog(@"LiveViewController::initPublish( [初始化推送流] )");
-    WeakObject(self, weakSelf);
     // 初始化采集
     [[LiveStreamSession session] checkAudio:^(BOOL granted) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -615,7 +617,7 @@
 
                                                                  }];
                 [alertVC addAction:actionOK];
-                [weakSelf presentViewController:alertVC animated:NO completion:nil];
+                [self presentViewController:alertVC animated:NO completion:nil];
             }
         });
     }];
@@ -630,7 +632,7 @@
 
                                                                  }];
                 [alertVC addAction:actionOK];
-                [weakSelf presentViewController:alertVC animated:NO completion:nil];
+                [self presentViewController:alertVC animated:NO completion:nil];
             }
         });
     }];
@@ -685,6 +687,12 @@
     return url;
 }
 
+#pragma mark - 关闭/开启直播间声音(LiveChat使用)
+- (void)openOrCloseSuond:(BOOL)isClose {
+    self.publisher.mute = isClose;
+    self.player.mute = isClose;
+}
+
 #pragma mark - 初始化座驾控件
 - (void)setupDriveView {
 
@@ -701,7 +709,6 @@
 
 #pragma mark - 座驾（入场信息）
 - (void)canPlayDirve:(DriveView *)driveView audienceModel:(AudienceModel *)model offset:(int)offset ifError:(NSError *)error {
-
     if (error) {
         // 移除错误下载
         [self drivePlayCallback];
@@ -717,37 +724,37 @@
 }
 
 - (void)getDriveInfo:(NSString *)userId {
-    WeakObject(self, weakSelf);
+
     NSLog(@"LiveViewController::getDriveInfo( [获取座驾], userId : %@ )", userId);
-    [[LSUserInfoManager manager] getFansBaseInfo:userId
-                                   finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           @synchronized(self) {
-                                               if (item.riderId.length > 0) {
-                                                   AudienceModel *model = [[AudienceModel alloc] init];
-                                                   model.userid = userId;
-                                                   model.nickname = item.nickName;
-                                                   model.photourl = item.photoUrl;
-                                                   model.riderid = item.riderId;
-                                                   model.riderurl = item.riderUrl;
-                                                   model.ridername = item.riderName;
-                                                   [weakSelf.audienArray addObject:model];
-                                                   if (!weakSelf.isDriveShow) {
-                                                       weakSelf.isDriveShow = YES;
-                                                       [weakSelf.driveView audienceComeInLiveRoom:weakSelf.audienArray[0]];
-                                                   }
+    [self.roomUserInfoManager getFansBaseInfo:userId
+                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        @synchronized(self) {
+                                            if (item.riderId.length > 0) {
+                                                AudienceModel *model = [[AudienceModel alloc] init];
+                                                model.userid = userId;
+                                                model.nickname = item.nickName;
+                                                model.photourl = item.photoUrl;
+                                                model.riderid = item.riderId;
+                                                model.riderurl = item.riderUrl;
+                                                model.ridername = item.riderName;
+                                                [self.audienArray addObject:model];
+                                                if (!self.isDriveShow) {
+                                                    self.isDriveShow = YES;
+                                                    [self.driveView audienceComeInLiveRoom:self.audienArray[0]];
+                                                }
 
-                                                   // 插入自己座驾入场消息
-                                                   [weakSelf addRiderJoinMessageNickName:item.nickName riderName:item.riderName honorUrl:weakSelf.liveRoom.imLiveRoom.honorImg fromId:weakSelf.loginManager.loginItem.userId isHasTicket:weakSelf.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
+                                                // 插入自己座驾入场消息
+                                                [self addRiderJoinMessageNickName:item.nickName riderName:item.riderName honorUrl:self.liveRoom.imLiveRoom.honorImg fromId:self.loginManager.loginItem.userId isHasTicket:self.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
 
-                                               } else {
-                                                   // 插入自己入场消息
-                                                   MsgItem *msgItem = [weakSelf addJoinMessageNickName:item.nickName honorUrl:weakSelf.liveRoom.imLiveRoom.honorImg fromId:weakSelf.loginManager.loginItem.userId isHasTicket:weakSelf.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
-                                                   [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
-                                               }
-                                           }
-                                       });
-                                   }];
+                                            } else {
+                                                // 插入自己入场消息
+                                                MsgItem *msgItem = [self addJoinMessageNickName:item.nickName honorUrl:self.liveRoom.imLiveRoom.honorImg fromId:self.loginManager.loginItem.userId isHasTicket:self.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
+                                                [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+                                            }
+                                        }
+                                    });
+                                }];
 }
 
 #pragma mark - 座驾入场动画
@@ -759,34 +766,26 @@
         make.right.equalTo(self.view.mas_right).offset(-13);
     }];
 
-    WeakObject(self, weakSelf);
     [UIView animateWithDuration:2
         animations:^{
-            weakSelf.driveView.alpha = 1;
-            [weakSelf.view layoutIfNeeded];
+            self.driveView.alpha = 1;
+            [self.view layoutIfNeeded];
 
         }
         completion:^(BOOL finished) {
-
             [UIView animateWithDuration:0.5
                 delay:1
                 options:0
                 animations:^{
-
-                    weakSelf.driveView.alpha = 0;
+                    self.driveView.alpha = 0;
                 }
                 completion:^(BOOL finished) {
-
                     //                    [weakSelf.driveView mas_updateConstraints:^(MASConstraintMaker *make) {
                     //                        make.right.equalTo(self.view.mas_right).offset(offset);
                     //                    }];
-                    weakSelf.driveView.hidden = YES;
+                    self.driveView.hidden = YES;
                     // 播放完回调
-                    [weakSelf drivePlayCallback];
-
-                    // 测试
-                    // weakSelf.isDriveShow = NO;
-
+                    [self drivePlayCallback];
                 }];
         }];
 }
@@ -874,20 +873,24 @@
                                          options:0
                                         imageUrl:imgUrl
                                 placeholderImage:
-                                    [UIImage imageNamed:@"Live_Gift_Nomal"]];
+                                    [UIImage imageNamed:@"Live_Gift_Nomal"]
+                                   finishHandler:nil];
 
     giftComboView.item = giftItem;
 
-    WeakObject(self, weakSelf);
     // 获取用户头像
-    [self.userInfoManager getUserInfo:userId
-                        finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                // 当前用户
-                                [weakSelf.headImageLoader refreshCachedImage:giftComboView.iconImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
-                                }];
-                            });
-                        }];
+    [self.roomUserInfoManager getUserInfo:userId
+                            finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    // 当前用户
+                                    [self.headImageLoader loadImageFromCache:giftComboView.iconImageView
+                                                                         options:SDWebImageRefreshCached
+                                                                        imageUrl:item.photoUrl
+                                                                placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]
+                                                                   finishHandler:^(UIImage *image){
+                                                                   }];
+                                });
+                            }];
 
     // 从左到右
     NSInteger index = giftComboView.tag;
@@ -1042,15 +1045,18 @@
     BarrageModel *bgItem = (BarrageModel *)model;
     cell.model = bgItem;
     NSLog(@"LiveViewController:: barrageView message:%@", bgItem.message);
-    WeakObject(self, weakSelf);
     // 获取用户头像
-    [self.userInfoManager getUserInfo:bgItem.userId
-                        finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [weakSelf.headImageLoader refreshCachedImage:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
-                                }];
-                            });
-                        }];
+    [self.roomUserInfoManager getUserInfo:bgItem.userId
+                            finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [self.headImageLoader loadImageFromCache:cell.imageViewHeader
+                                                                         options:SDWebImageRefreshCached
+                                                                        imageUrl:item.photoUrl
+                                                                placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]
+                                                                   finishHandler:^(UIImage *image){
+                                                                   }];
+                                });
+                            }];
 
     cell.labelName.text = bgItem.name;
     cell.labelMessage.attributedText = [self.emotionManager parseMessageTextEmotion:bgItem.message font:[UIFont boldSystemFontOfSize:15]];
@@ -1264,7 +1270,7 @@
                 deleteOldMsg = YES;
                 // 删除一条最新消息
                 [self.msgArray removeObjectAtIndex:self.msgArray.count - 1];
-                
+
             } else {
                 deleteOldMsg = (self.msgArray.count >= MessageCount);
                 if (deleteOldMsg) {
@@ -1276,7 +1282,7 @@
         // 增加新消息
         [self.msgArray addObject:item];
     }
-    
+
     if (lastVisibleRow >= lastRow) {
         // 如果消息列表当前能显示最新的消息
 
@@ -1521,56 +1527,54 @@
 - (void)agreeAnchorKnock:(MsgItem *)item {
 }
 
-#pragma mark - UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != alertView.cancelButtonIndex) {
-        LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:vc animated:NO];
-    }
-}
-
 #pragma mark - HTTP请求
 // TODO:直播间发送Hangout邀请
 - (void)inviteAnchorWithHangout:(NSString *)recommendId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    // 显示提示控件
-    [self showRoomTipView:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITING_HANG_OUT"), self.liveRoom.userName] isReject:NO];
-    WeakObject(self, weakSelf);
-    LSSendinvitationHangoutRequest *request = [[LSSendinvitationHangoutRequest alloc] init];
-    request.roomId = self.liveRoom.roomId;
-    request.anchorId = self.liveRoom.userId;
-    request.recommendId = recommendId;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSString *_Nonnull roomId, NSString *_Nonnull inviteId, int expire) {
-        NSLog(@"LiveViewController::sendHangoutInvite( [发起多人互动邀请], success : %@, errnum : %d, errmsg : %@, roomId : %@, inviteId : %@, expire : %d )",
-              BOOL2SUCCESS(success), errnum, errmsg, roomId, inviteId, expire);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (errnum == HTTP_LCC_ERR_SUCCESS) {
-                if (recommendId.length > 0) {
-                    weakSelf.isRecommend = YES;
+    if (!self.isInvitingHangout) {
+        self.isInvitingHangout = YES;
+        // 显示提示控件
+        [self showRoomTipView:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITING_HANG_OUT"), self.liveRoom.userName] isReject:NO];
+        
+        LSSendinvitationHangoutRequest *request = [[LSSendinvitationHangoutRequest alloc] init];
+        request.roomId = self.liveRoom.roomId;
+        request.anchorId = self.liveRoom.userId;
+        request.recommendId = recommendId;
+        request.isCreateOnly = YES;
+        request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSString *_Nonnull roomId, NSString *_Nonnull inviteId, int expire) {
+            NSLog(@"LiveViewController::sendHangoutInvite( [发起多人互动邀请], success : %@, errnum : %d, errmsg : %@, roomId : %@, inviteId : %@, expire : %d )",
+                  BOOL2SUCCESS(success), errnum, errmsg, roomId, inviteId, expire);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (errnum == HTTP_LCC_ERR_SUCCESS) {
+                    if (recommendId.length > 0) {
+                        self.isRecommend = YES;
+                    }
+                    self.hangoutInviteId = inviteId;
+                    self.hangoutAnchorName = anchorName;
+                    self.hangoutAnchorId = anchorId;
+                } else {
+                    self.isInvitingHangout = NO;
+                    
+                    self.isRecommend = NO;
+                    self.isInviteHangout = NO;
+                    self.hangoutInviteId = nil;
+                    // 发送邀请失败提示
+                    [self.dialogProbationTip showDialogTip:self.liveRoom.superView tipText:errmsg];
+                    self.roomTipView.hidden = YES;
+                    
+                    // 如果没钱
+                    if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
+                        [self showAddCreditsView:NSLocalizedStringFromSelf(@"SEND_INVITE_NO_CREDIT")];
+                    }
                 }
-                weakSelf.hangoutInviteId = inviteId;
-                weakSelf.hangoutAnchorName = anchorName;
-                weakSelf.hangoutAnchorId = anchorId;
-            } else {
-                weakSelf.isRecommend = NO;
-                weakSelf.isInviteHangout = NO;
-                weakSelf.hangoutInviteId = nil;
-                // 发送邀请失败提示
-                [weakSelf.dialogProbationTip showDialogTip:weakSelf.liveRoom.superView tipText:errmsg];
-                weakSelf.roomTipView.hidden = YES;
-
-                // 如果没钱
-                if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
-                    [weakSelf.alertView show];
-                }
-            }
-        });
-    };
-    [self.sessionManager sendRequest:request];
+            });
+        };
+        [self.sessionManager sendRequest:request];
+    }
 }
 
 // TODO:查询Hangout邀请状态
 - (void)getHangoutInviteStatu {
-    WeakObject(self, weakSelf);
+
     if (self.hangoutInviteId.length > 0) {
         LSGetHangoutInvitStatusRequest *request = [[LSGetHangoutInvitStatusRequest alloc] init];
         request.inviteId = self.hangoutInviteId;
@@ -1582,28 +1586,31 @@
                 if (success) {
                     switch (status) {
                         case IMREPLYINVITETYPE_AGREE: {
-                            weakSelf.isInviteHangout = YES;
-                            [weakSelf showRoomTipView:NSLocalizedStringFromSelf(@"INVITE_SUCCESS_HANGOUT") isReject:NO];
+                            self.isInvitingHangout = YES;
+                            self.isInviteHangout = YES;
+                            [self showRoomTipView:NSLocalizedStringFromSelf(@"INVITE_SUCCESS_HANGOUT") isReject:NO];
                             if (roomId.length > 0) {
                                 // 拼接push跳转多人互动url
-                                if (weakSelf.isRecommend) {
-                                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:weakSelf.liveRoom.userId hangoutAnchorName:weakSelf.liveRoom.userName];
+                                if (self.isRecommend) {
+                                    self.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:self.hangoutAnchorId anchorName:self.hangoutAnchorName hangoutAnchorId:self.liveRoom.userId hangoutAnchorName:self.liveRoom.userName];
                                 } else {
-                                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:@"" hangoutAnchorName:@""];
+                                    self.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:roomId anchorId:self.hangoutAnchorId anchorName:self.hangoutAnchorName hangoutAnchorId:@"" hangoutAnchorName:@""];
                                 }
                             }
                         } break;
 
                         case IMREPLYINVITETYPE_NOCREDIT: {
-                            [weakSelf.alertView show];
+                            self.isInvitingHangout = NO;
+                            [self showAddCreditsView:NSLocalizedString(@"INVITE_HANGOUT_ADDCREDIT", nil)];
                         } break;
 
                         default: {
-                            weakSelf.isRecommend = NO;
-                            weakSelf.isInviteHangout = NO;
-                            weakSelf.hangoutInviteId = nil;
-                            NSString *tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITE_REJECT_HANGOUT"), weakSelf.liveRoom.userName];
-                            [weakSelf showRoomTipView:tip isReject:YES];
+                            self.isInvitingHangout = NO;
+                            self.isRecommend = NO;
+                            self.isInviteHangout = NO;
+                            self.hangoutInviteId = nil;
+                            NSString *tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITE_REJECT_HANGOUT"), self.liveRoom.userName];
+                            [self showRoomTipView:tip isReject:YES];
                         } break;
                     }
                 }
@@ -1627,31 +1634,30 @@
 #pragma mark - IM通知
 - (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg item:(ImLoginReturnObject *_Nonnull)item {
     NSLog(@"LiveViewController::onLogin( [IM登陆, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
-    WeakObject(self, weakSelf);
+
     if (errType == LCC_ERR_SUCCESS) {
         // 重新进入直播间
         dispatch_async(dispatch_get_main_queue(), ^{
-
-            if (weakSelf.liveRoom.roomId.length) {
+            if (self.liveRoom.roomId.length) {
                 // 获取Hangout邀请回复状态
-                [weakSelf getHangoutInviteStatu];
+                [self getHangoutInviteStatu];
 
-                [weakSelf.imManager enterRoom:weakSelf.liveRoom.roomId
+                [self.imManager enterRoom:self.liveRoom.roomId
                             finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem, ImAuthorityItemObject *_Nonnull priv) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    weakSelf.liveRoom.priv = priv;
+                                    self.liveRoom.priv = priv;
                                     if (success) {
-                                        NSLog(@"LiveViewController::onLogin( [IM登陆, 成功, 重新进入直播间], roomId : %@ isHasOneOnOneAuth :%d, isHasBookingAuth : %d)", weakSelf.liveRoom.roomId,priv.isHasOneOnOneAuth,priv.isHasBookingAuth);
+                                        NSLog(@"LiveViewController::onLogin( [IM登陆, 成功, 重新进入直播间], roomId : %@ isHasOneOnOneAuth :%d, isHasBookingAuth : %d)", self.liveRoom.roomId, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
                                         // 更新直播间信息
-                                        [weakSelf.liveRoom reset];
-                                        weakSelf.liveRoom.imLiveRoom = roomItem;
-                                        
-                                        // 重新推流
-                                        [weakSelf stopPlay];
-                                        [weakSelf play];
+                                        [self.liveRoom reset];
+                                        self.liveRoom.imLiveRoom = roomItem;
 
-                                        if ([weakSelf.liveDelegate respondsToSelector:@selector(onReEnterRoom:)]) {
-                                            [weakSelf.liveDelegate onReEnterRoom:weakSelf];
+                                        // 重新推流
+                                        [self stopPlay];
+                                        [self play];
+
+                                        if ([self.liveDelegate respondsToSelector:@selector(onReEnterRoom:)]) {
+                                            [self.liveDelegate onReEnterRoom:self];
                                         }
 
                                         // 设置余额及返点信息管理器
@@ -1660,26 +1666,26 @@
                                         imRebateItem.curTime = roomItem.rebateInfo.curTime;
                                         imRebateItem.preCredit = roomItem.rebateInfo.preCredit;
                                         imRebateItem.preTime = roomItem.rebateInfo.preTime;
-                                        [weakSelf.creditRebateManager setReBateItem:imRebateItem];
-                                        [weakSelf.creditRebateManager setCredit:roomItem.credit];
+                                        [self.creditRebateManager setReBateItem:imRebateItem];
+                                        [self.creditRebateManager setCredit:roomItem.credit];
 
                                     } else {
-                                        NSLog(@"LiveViewController::onLogin( [IM登陆, 成功, 但直播间已经关闭], roomId : %@ )", weakSelf.liveRoom.roomId);
+                                        NSLog(@"LiveViewController::onLogin( [IM登陆, 成功, 但直播间已经关闭], roomId : %@ )", self.liveRoom.roomId);
 
                                         // 如果是正在邀请Hangout状态 跳转Hangout直播间
-                                        if (weakSelf.isInviteHangout) {
-                                            [weakSelf stopPlay];
-                                            [weakSelf stopPublish];
+                                        if (self.isInviteHangout) {
+                                            [self stopPlay];
+                                            [self stopPublish];
 
-                                            LSNavigationController *nvc = (LSNavigationController *)weakSelf.navigationController;
+                                            LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
                                             [nvc forceToDismissAnimated:NO completion:nil];
                                             [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
 
-                                            [[LiveUrlHandler shareInstance] handleOpenURL:weakSelf.pushUrl];
+                                            [[LiveUrlHandler shareInstance] handleOpenURL:self.pushUrl];
                                         } else {
                                             if (errType != LCC_ERR_CONNECTFAIL) {
                                                 // 停止推拉流、结束直播
-                                                [weakSelf stopLiveWithErrtype:LCC_ERR_NOT_FOUND_ROOM errMsg:NSLocalizedStringFromSelf(@"LIVE_NOT_ROOM")];
+                                                [self stopLiveWithErrtype:LCC_ERR_NOT_FOUND_ROOM errMsg:NSLocalizedStringFromSelf(@"LIVE_NOT_ROOM")];
                                             }
                                         }
                                     }
@@ -1687,7 +1693,7 @@
                             }];
             } else {
                 // 停止推拉流、结束直播
-                [weakSelf stopLiveWithErrtype:LCC_ERR_NOT_FOUND_ROOM errMsg:NSLocalizedStringFromSelf(@"LIVE_NOT_ROOM")];
+                [self stopLiveWithErrtype:LCC_ERR_NOT_FOUND_ROOM errMsg:NSLocalizedStringFromSelf(@"LIVE_NOT_ROOM")];
             }
         });
     }
@@ -1705,42 +1711,29 @@
 
 - (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"LiveViewController::onSendGift( [发送直播间礼物消息], errmsg : %@, credit : %f, rebateCredit : %f )", errmsg, credit, rebateCredit);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-
         if (success) {
-
             if (credit >= 0) {
-                [weakSelf setUpRewardedCredit:rebateCredit];
+                [self setUpRewardedCredit:rebateCredit];
                 // 设置余额及返点信息管理器
-                [weakSelf.creditRebateManager setCredit:credit];
+                [self.creditRebateManager setCredit:credit];
             }
-            [weakSelf.creditRebateManager updateRebateCredit:rebateCredit];
+            [self.creditRebateManager updateRebateCredit:rebateCredit];
 
         } else if (errType == LCC_ERR_NO_CREDIT) {
-            if (weakSelf.dialogGiftAddCredit) {
-                [weakSelf.dialogGiftAddCredit removeFromSuperview];
-            }
-            weakSelf.dialogGiftAddCredit = [DialogOK dialog];
-            weakSelf.dialogGiftAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"SENDTOSAT_ERR_ADD_CREDIT");
-            [weakSelf.dialogGiftAddCredit showDialog:weakSelf.liveRoom.superView
-                                     actionBlock:^{
-                                         NSLog(@"没钱了。。");
-                                         if ([weakSelf.liveDelegate respondsToSelector:@selector(noCreditPushTo:)]) {
-                                             [weakSelf.liveDelegate noCreditPushTo:weakSelf];
-                                         }
-                                     }];
+            [self showAddCreditsView:NSLocalizedStringFromSelf(@"SENDTOSAT_ERR_ADD_CREDIT")];
         }
     });
 }
 
 - (void)onRecvSendGiftNotice:(NSString *_Nonnull)roomId fromId:(NSString *_Nonnull)fromId nickName:(NSString *_Nonnull)nickName giftId:(NSString *_Nonnull)giftId giftName:(NSString *_Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(NSString *_Nonnull)honorUrl {
     NSLog(@"LiveViewController::onRecvRoomGiftNotice( [接收礼物], roomId : %@, fromId : %@, nickName : %@, giftId : %@, giftName : %@, giftNum : %d, honorUrl : %@ )", roomId, fromId, nickName, giftId, giftName, giftNum, honorUrl);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
             // 判断本地是否有该礼物
-            BOOL bHave = ([weakSelf.giftDownloadManager getGiftItemWithId:giftId] != nil);
+            BOOL bHave = ([self.giftDownloadManager getGiftItemWithId:giftId] != nil);
             if (bHave) {
                 // 连击起始数
                 int starNum = multi_click_start - 1;
@@ -1759,42 +1752,42 @@
 
                 if (item.giftItem.infoItem.type == GIFTTYPE_COMMON) {
                     // 连击礼物
-                    [weakSelf addCombo:item];
+                    [self addCombo:item];
 
                 } else {
                     // 礼物添加到队列
-                    if (!weakSelf.bigGiftArray && weakSelf.viewIsAppear) {
-                        weakSelf.bigGiftArray = [NSMutableArray array];
+                    if (!self.bigGiftArray && self.viewIsAppear) {
+                        self.bigGiftArray = [NSMutableArray array];
                     }
                     for (int i = 0; i < giftNum; i++) {
-                        [weakSelf.bigGiftArray addObject:item.giftid];
+                        [self.bigGiftArray addObject:item.giftid];
                     }
 
                     // 防止动画播完view没移除
-                    if (!weakSelf.giftAnimationView.isAnimating) {
-                        [weakSelf.giftAnimationView removeFromSuperview];
-                        weakSelf.giftAnimationView = nil;
+                    if (!self.giftAnimationView.isAnimating) {
+                        [self.giftAnimationView removeFromSuperview];
+                        self.giftAnimationView = nil;
                     }
 
-                    if (!weakSelf.giftAnimationView) {
+                    if (!self.giftAnimationView) {
                         // 显示大礼物动画
-                        if (weakSelf.bigGiftArray.count) {
-                            [weakSelf starBigAnimationWithGiftID:weakSelf.bigGiftArray[0]];
+                        if (self.bigGiftArray.count) {
+                            [self starBigAnimationWithGiftID:self.bigGiftArray[0]];
                         }
                     }
                 }
 
                 if ([fromId isEqualToString:[LSLoginManager manager].loginItem.userId]) {
                     // 插入送礼文本消息
-                    [weakSelf addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum honorUrl:honorUrl fromId:fromId isHasTicket:weakSelf.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
+                    [self addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum honorUrl:honorUrl fromId:fromId isHasTicket:self.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
                 } else {
-                    [self.userInfoManager getUserInfo:fromId
-                                        finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                // 插入送礼文本消息
-                                                [weakSelf addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
-                                            });
-                                        }];
+                    [self.roomUserInfoManager getUserInfo:fromId
+                                            finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    // 插入送礼文本消息
+                                                    [self addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
+                                                });
+                                            }];
                 }
             } else {
                 // 获取礼物详情
@@ -1806,79 +1799,67 @@
 
 - (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"LiveViewController::onSendToast( [发送直播间弹幕消息, %@], errmsg : %@, credit : %f, rebateCredit : %f )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errmsg, credit, rebateCredit);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             if (credit >= 0) {
-                [weakSelf setUpRewardedCredit:rebateCredit];
+                [self setUpRewardedCredit:rebateCredit];
 
                 // 设置余额及返点信息管理器
-                [weakSelf.creditRebateManager setCredit:credit];
+                [self.creditRebateManager setCredit:credit];
             }
-            [weakSelf.creditRebateManager updateRebateCredit:rebateCredit];
+            [self.creditRebateManager updateRebateCredit:rebateCredit];
 
         } else if (errType == LCC_ERR_NO_CREDIT) {
-            if (weakSelf.dialogToastAddCredit) {
-                [weakSelf.dialogToastAddCredit removeFromSuperview];
-            }
-            weakSelf.dialogToastAddCredit = [DialogOK dialog];
-            weakSelf.dialogToastAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"SENDTOSAT_ERR_ADD_CREDIT");
-            [weakSelf.dialogToastAddCredit showDialog:weakSelf.liveRoom.superView
-                                      actionBlock:^{
-                                          NSLog(@"没钱了。。");
-                                          [[LiveModule module].analyticsManager reportActionEvent:@"add_Credit" eventCategory:@"Gobal"];
-                                          if ([weakSelf.liveDelegate respondsToSelector:@selector(noCreditPushTo:)]) {
-                                              [weakSelf.liveDelegate noCreditPushTo:weakSelf];
-                                          }
-                                      }];
+            [self showAddCreditsView:NSLocalizedStringFromSelf(@"SENDTOSAT_ERR_ADD_CREDIT")];
         }
     });
 }
 
 - (void)onRecvSendToastNotice:(NSString *_Nonnull)roomId fromId:(NSString *_Nonnull)fromId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg honorUrl:(NSString *_Nonnull)honorUrl {
     NSLog(@"LiveViewController::onRecvSendToastNotice( [接收直播间弹幕通知], roomId : %@, fromId : %@, nickName : %@, msg : %@ honorUrl:%@)", roomId, fromId, nickName, msg, honorUrl);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
-            weakSelf.barrageView.hidden = NO;
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            self.barrageView.hidden = NO;
 
             if ([fromId isEqualToString:[LSLoginManager manager].loginItem.userId]) {
                 // 插入普通文本消息
-                [weakSelf addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:weakSelf.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
+                [self addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:self.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
             } else {
-                [weakSelf.userInfoManager getUserInfo:fromId
-                                    finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            // 插入普通文本消息
-                                            [weakSelf addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
-                                        });
-                                    }];
+                [self.roomUserInfoManager getUserInfo:fromId
+                                        finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                // 插入普通文本消息
+                                                [self addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
+                                            });
+                                        }];
             }
             // 插入到弹幕
             BarrageModel *bgItem = [BarrageModel barrageModelForName:nickName message:msg urlWihtUserID:fromId];
             NSArray *items = [NSArray arrayWithObjects:bgItem, nil];
-            [weakSelf.barrageView insertBarrages:items immediatelyShow:YES];
+            [self.barrageView insertBarrages:items immediatelyShow:YES];
         }
     });
 }
 
 - (void)onRecvSendChatNotice:(NSString *_Nonnull)roomId level:(int)level fromId:(NSString *_Nonnull)fromId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg honorUrl:(NSString *_Nonnull)honorUrl {
     NSLog(@"LiveViewController::onRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@ )", roomId, nickName, msg);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([roomId isEqualToString:weakSelf.liveRoom.imLiveRoom.roomId]) {
+        if ([roomId isEqualToString:self.liveRoom.imLiveRoom.roomId]) {
 
             if ([fromId isEqualToString:[LSLoginManager manager].loginItem.userId]) {
                 // 插入聊天消息到列表
-                [weakSelf addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:weakSelf.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
+                [self addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:self.liveRoom.httpLiveRoom.showInfo.ticketStatus == PROGRAMTICKETSTATUS_BUYED ? YES : NO];
             } else {
-                [weakSelf.userInfoManager getUserInfo:fromId
-                                    finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            // 插入聊天消息到列表
-                                            [weakSelf addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
-                                        });
-                                    }];
+                [self.roomUserInfoManager getUserInfo:fromId
+                                        finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                // 插入聊天消息到列表
+                                                [self addChatMessageNickName:nickName text:msg honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
+                                            });
+                                        }];
             }
         }
     });
@@ -1887,11 +1868,11 @@
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket {
 
     NSLog(@"LiveViewController::onRecvFansRoomIn( [接收观众进入直播间], roomId : %@, userId : %@, nickName : %@, photoUrl : %@ )", roomId, userId, nickName, photoUrl);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
 
-        if ([roomId isEqualToString:weakSelf.liveRoom.imLiveRoom.roomId]) {
-            if (![userId isEqualToString:weakSelf.loginManager.loginItem.userId]) {
+        if ([roomId isEqualToString:self.liveRoom.imLiveRoom.roomId]) {
+            if (![userId isEqualToString:self.loginManager.loginItem.userId]) {
                 // 如果有座驾
                 if (riderId.length) {
                     // 坐骑队列
@@ -1902,29 +1883,29 @@
                     model.riderid = riderId;
                     model.ridername = riderName;
                     model.riderurl = riderUrl;
-                    [weakSelf.audienArray addObject:model];
-                    if (!weakSelf.isDriveShow) {
-                        weakSelf.isDriveShow = YES;
-                        [weakSelf.driveView audienceComeInLiveRoom:weakSelf.audienArray[0]];
+                    [self.audienArray addObject:model];
+                    if (!self.isDriveShow) {
+                        self.isDriveShow = YES;
+                        [self.driveView audienceComeInLiveRoom:self.audienArray[0]];
                     }
 
                     // 用户座驾入场信息
-                    [weakSelf addRiderJoinMessageNickName:nickName riderName:riderName honorUrl:honorImg fromId:userId isHasTicket:isHasTicket];
+                    [self addRiderJoinMessageNickName:nickName riderName:riderName honorUrl:honorImg fromId:userId isHasTicket:isHasTicket];
 
                 } else { // 如果没座驾
                     // 插入入场消息到列表
-                    MsgItem *msgItem = [weakSelf addJoinMessageNickName:nickName honorUrl:honorImg fromId:userId isHasTicket:isHasTicket];
+                    MsgItem *msgItem = [self addJoinMessageNickName:nickName honorUrl:honorImg fromId:userId isHasTicket:isHasTicket];
 
                     // (插入/替换)到到消息列表
                     BOOL replace = NO;
-                    if (weakSelf.msgArray.count > 0) {
-                        MsgItem *lastItem = [weakSelf.msgArray lastObject];
+                    if (self.msgArray.count > 0) {
+                        MsgItem *lastItem = [self.msgArray lastObject];
                         if (lastItem.msgType == msgItem.msgType) {
                             // 同样是入场消息, 替换最后一条
                             replace = NO;
                         }
                     }
-                    [weakSelf addMsg:msgItem replace:replace scrollToEnd:YES animated:YES];
+                    [self addMsg:msgItem replace:replace scrollToEnd:YES animated:YES];
                 }
             }
         }
@@ -1933,81 +1914,69 @@
 
 - (void)onRecvRebateInfoNotice:(NSString *_Nonnull)roomId rebateInfo:(RebateInfoObject *_Nonnull)rebateInfo {
     NSLog(@"LiveViewController::onRecvRebateInfoNotice( [接收返点通知], roomId : %@ )", roomId);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
             // 设置余额及返点信息管理器
             IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
             imRebateItem.curCredit = rebateInfo.curCredit;
             imRebateItem.curTime = rebateInfo.curTime;
             imRebateItem.preCredit = rebateInfo.preCredit;
             imRebateItem.preTime = rebateInfo.preTime;
-            [weakSelf.creditRebateManager setReBateItem:imRebateItem];
+            [self.creditRebateManager setReBateItem:imRebateItem];
 
             // 更新本地返点信息
-            weakSelf.liveRoom.imLiveRoom.rebateInfo = rebateInfo;
+            self.liveRoom.imLiveRoom.rebateInfo = rebateInfo;
             // 更新返点控件
-            [weakSelf setUpRewardedCredit:rebateInfo.curCredit];
+            [self setUpRewardedCredit:rebateInfo.curCredit];
 
             // 插入返点更新文本
             NSString *msg = [NSString stringWithFormat:@"%@ %.2f credits", NSLocalizedStringFromSelf(@"Recv_Rebate"), rebateInfo.preCredit];
-            MsgItem *msgItem = [[MsgItem alloc] init];
-            msgItem.text = msg;
-            msgItem.msgType = MsgType_Announce;
-            NSMutableAttributedString *attributeString = [weakSelf.msgManager presentTheRoomStyleItem:weakSelf.roomStyleItem msgItem:msgItem];
-            msgItem.attText = attributeString;
-            [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+            NSAttributedString *atrStr = [[NSAttributedString alloc] initWithString:msg];
+            [self addTips:atrStr];
         }
     });
 }
 
 - (void)onRecvLevelUpNotice:(int)level {
     NSLog(@"LiveViewController::onRecvLevelUpNotice( [接收观众等级升级通知], level : %d )", level);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         // 插入观众等级升级文本
         NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"Recv_Level_Up", @"Recv_Level_Up"), level];
-        MsgItem *msgItem = [[MsgItem alloc] init];
-        msgItem.text = msg;
-        msgItem.msgType = MsgType_Announce;
-        NSMutableAttributedString *attributeString = [weakSelf.msgManager presentTheRoomStyleItem:weakSelf.roomStyleItem msgItem:msgItem];
-        msgItem.attText = attributeString;
-        [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+        NSAttributedString *atrStr = [[NSAttributedString alloc] initWithString:msg];
+        [self addTips:atrStr];
 
-        weakSelf.liveRoom.imLiveRoom.manLevel = level;
+        self.liveRoom.imLiveRoom.manLevel = level;
     });
 }
 
 - (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *_Nonnull)loveLevelItem {
     NSLog(@"LiveViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d, anchorId: %@, anchorName: %@  )", loveLevelItem.loveLevel, loveLevelItem.anchorId, loveLevelItem.anchorName);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         // 插入观众等级升级文本
-        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"Recv_Love_Up", @"Recv_Love_Up"), weakSelf.liveRoom.userName, loveLevelItem.loveLevel];
-        MsgItem *msgItem = [[MsgItem alloc] init];
-        msgItem.text = msg;
-        msgItem.msgType = MsgType_Announce;
-        NSMutableAttributedString *attributeString = [weakSelf.msgManager presentTheRoomStyleItem:weakSelf.roomStyleItem msgItem:msgItem];
-        msgItem.attText = attributeString;
-        [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"Recv_Love_Up", @"Recv_Love_Up"), self.liveRoom.userName, loveLevelItem.loveLevel];
+        NSAttributedString *atrStr = [[NSAttributedString alloc] initWithString:msg];
+        [self addTips:atrStr];
 
-        weakSelf.liveRoom.imLiveRoom.loveLevel = loveLevelItem.loveLevel;
+        self.liveRoom.imLiveRoom.loveLevel = loveLevelItem.loveLevel;
     });
 }
 
-- (void)onRecvRoomKickoffNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString *_Nonnull)errmsg credit:(double)credit priv:(ImAuthorityItemObject * _Nonnull)priv {
-    NSLog(@"LiveViewController::onRecvRoomKickoffNotice( [接收踢出直播间通知], roomId : %@ credit:%f, isHasOneOnOneAuth :%d, isHasBookingAuth : %d", roomId, credit, priv.isHasOneOnOneAuth,priv.isHasBookingAuth);
-    WeakObject(self, weakSelf);
+- (void)onRecvRoomKickoffNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString *_Nonnull)errmsg credit:(double)credit priv:(ImAuthorityItemObject *_Nonnull)priv {
+    NSLog(@"LiveViewController::onRecvRoomKickoffNotice( [接收踢出直播间通知], roomId : %@ credit:%f, isHasOneOnOneAuth :%d, isHasBookingAuth : %d", roomId, credit, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
+
     dispatch_async(dispatch_get_main_queue(), ^{
 
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
-            weakSelf.liveRoom.priv = priv;
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            self.liveRoom.priv = priv;
             // 发送退出直播间
-            [weakSelf.imManager leaveRoom:weakSelf.liveRoom];
-            
+            [self.imManager leaveRoom:self.liveRoom];
+
             // 设置余额及返点信息管理器
             if (credit >= 0) {
-                [weakSelf.creditRebateManager setCredit:credit];
+                [self.creditRebateManager setCredit:credit];
             }
 
             LCC_ERR_TYPE type;
@@ -2017,80 +1986,68 @@
                 type = LCC_ERR_ROOM_LIVEKICKOFF;
             }
             // 停止推拉流、显示结束直播间界面
-            [weakSelf stopLiveWithErrtype:type errMsg:errmsg];
+            [self stopLiveWithErrtype:type errMsg:errmsg];
         }
     });
 }
 
 - (void)onRecvLackOfCreditNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg credit:(double)credit {
     NSLog(@"LiveViewController::onRecvLackOfCreditNotice( [接收充值通知], roomId : %@ credit:%f", roomId, credit);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         // 设置余额及返点信息管理器
         if (credit >= 0) {
-            [weakSelf.creditRebateManager setCredit:credit];
+            [self.creditRebateManager setCredit:credit];
         }
 
-        if (weakSelf.dialogWatchAddCredit) {
-            [weakSelf.dialogWatchAddCredit removeFromSuperview];
-        }
-        weakSelf.dialogWatchAddCredit = [DialogOK dialog];
-        weakSelf.dialogWatchAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"WATCHING_WILL_NO_MONEY");
-        [weakSelf.dialogWatchAddCredit showDialog:weakSelf.liveRoom.superView
-                                  actionBlock:^{
-                                      NSLog(@"没钱了。。");
-                                      if ([weakSelf.liveDelegate respondsToSelector:@selector(noCreditPushTo:)]) {
-                                          [weakSelf.liveDelegate noCreditPushTo:weakSelf];
-                                      }
-                                  }];
+        [self showAddCreditsView:NSLocalizedStringFromSelf(@"WATCHING_WILL_NO_MONEY")];
     });
 }
 
 - (void)onRecvCreditNotice:(NSString *_Nonnull)roomId credit:(double)credit {
     NSLog(@"LiveViewController::onRecvCreditNotice( [接收定时扣费通知], roomId : %@, credit : %f ）", roomId, credit);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         // 设置余额及返点信息管理器
         if (credit >= 0) {
-            [weakSelf.creditRebateManager setCredit:credit];
+            [self.creditRebateManager setCredit:credit];
         }
     });
 }
 
 - (void)onRecvSendTalentNotice:(ImTalentReplyObject *)item {
     NSLog(@"LiveViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         if (item.status == TALENTSTATUS_AGREE && item.credit >= 0) {
             // 更新返点控件
-            [weakSelf setUpRewardedCredit:item.rebateCredit];
+            [self setUpRewardedCredit:item.rebateCredit];
 
-            [weakSelf starBigAnimationWithGiftID:item.giftId];
+            [self starBigAnimationWithGiftID:item.giftId];
         }
     });
 }
 
 - (void)onRecvTalentPromptNotice:(NSString *)roomId introduction:(NSString *)introduction {
     NSLog(@"LiveViewController::onRecvTalentPromptNotice( [接收直播间才艺点播提示公告通知] :%@)", introduction);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([weakSelf.liveRoom.roomId isEqualToString:roomId]) {
+        if ([self.liveRoom.roomId isEqualToString:roomId]) {
             MsgItem *msgItem = [[MsgItem alloc] init];
             msgItem.msgType = MsgType_Talent;
-            msgItem.honorUrl = weakSelf.liveRoom.photoUrl;
-            msgItem.toName = weakSelf.liveRoom.userName;
+            msgItem.honorUrl = self.liveRoom.photoUrl;
+            msgItem.toName = self.liveRoom.userName;
             msgItem.text = introduction;
-            [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
         }
     });
 }
 
 - (void)onRecvSendSystemNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg link:(NSString *_Nonnull)link type:(IMSystemType)type {
     NSLog(@"LiveViewController::onRecvSendSystemNotice( [接收直播间公告消息], roomId : %@, msg : %@, link: %@ type:%d)", roomId, msg, link, type);
-    WeakObject(self, weakSelf);
-    dispatch_async(dispatch_get_main_queue(), ^{
 
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
             MsgItem *msgItem = [[MsgItem alloc] init];
             if (type == IMSYSTEMTYPE_COMMON) {
                 msgItem.text = msg;
@@ -2102,68 +2059,68 @@
                 }
 
             } else {
-                if (weakSelf.dialogView) {
-                    [weakSelf.dialogView removeFromSuperview];
+                if (self.dialogView) {
+                    [self.dialogView removeFromSuperview];
                 }
-                weakSelf.dialogView = [DialogWarning dialogWarning];
-                weakSelf.dialogView.tipsLabel.text = msg;
-                [weakSelf.dialogView showDialogWarning:weakSelf.view actionBlock:nil];
+                self.dialogView = [DialogWarning dialogWarning];
+                self.dialogView.tipsLabel.text = msg;
+                [self.dialogView showDialogWarning:self.view actionBlock:nil];
 
                 msgItem.text = msg;
                 msgItem.msgType = MsgType_Warning;
             }
-            NSMutableAttributedString *attributeString = [weakSelf.msgManager presentTheRoomStyleItem:weakSelf.roomStyleItem msgItem:msgItem];
+            NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:msgItem];
             msgItem.attText = attributeString;
-            [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
         }
     });
 }
 
-- (void)onRecvLeavingPublicRoomNotice:(NSString *_Nonnull)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg priv:(ImAuthorityItemObject * _Nonnull)priv {
+- (void)onRecvLeavingPublicRoomNotice:(NSString *_Nonnull)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg priv:(ImAuthorityItemObject *_Nonnull)priv {
     NSLog(@"LiveViewController::onRecvLeavingPublicRoomNotice( [接收关闭直播间倒数通知], roomId : %@ , leftSeconds : %d ,isHasOneOnOneAuth : %d ,isHasOneOnOneAuth : %d)", roomId, leftSeconds, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
-    WeakObject(self, weakSelf);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
-            weakSelf.liveRoom.priv = priv;
-            // 开启关闭倒计时定时器
-//            [weakSelf hiddenStartOneView];
-            weakSelf.countdownView.hidden = NO;
-            [weakSelf.view bringSubviewToFront:weakSelf.countdownLabel];
 
-            weakSelf.timeCount = leftSeconds;
-            [weakSelf.timer startTimer:nil
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            self.liveRoom.priv = priv;
+            // 开启关闭倒计时定时器
+            //            [self hiddenStartOneView];
+            self.countdownView.hidden = NO;
+            [self.view bringSubviewToFront:self.countdownLabel];
+
+            self.timeCount = leftSeconds;
+            [self.timer startTimer:nil
                       timeInterval:1.0 * NSEC_PER_SEC
                            starNow:YES
                             action:^{
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    [weakSelf changeTimeLabel];
+                                    [self changeTimeLabel];
                                 });
                             }];
         }
     });
 }
 
-- (void)onRecvRoomCloseNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg priv:(ImAuthorityItemObject * _Nonnull)priv {
+- (void)onRecvRoomCloseNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg priv:(ImAuthorityItemObject *_Nonnull)priv {
     NSLog(@"LiveViewController::onRecvRoomCloseNotice( [接收关闭直播间回调], roomId : %@, errType : %d, errMsg : %@, isHasOneOnOneAuth : %d, isHasOneOnOneAuth: %d )", roomId, errType, errmsg, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
-    WeakObject(self, weakSelf);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (weakSelf.liveRoom.roomId) {
-            if ([weakSelf.liveRoom.roomId isEqualToString:roomId]) {
-                weakSelf.liveRoom.priv = priv;
-                // 是否邀请Hangout
-                if (weakSelf.isInviteHangout) {
-                    [weakSelf stopPlay];
-                    [weakSelf stopPublish];
 
-                    LSNavigationController *nvc = (LSNavigationController *)weakSelf.navigationController;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.liveRoom.roomId) {
+            if ([self.liveRoom.roomId isEqualToString:roomId]) {
+                self.liveRoom.priv = priv;
+                // 是否邀请Hangout
+                if (self.isInviteHangout) {
+                    [self stopPlay];
+                    [self stopPublish];
+
+                    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
                     [nvc forceToDismissAnimated:NO completion:nil];
                     [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
 
-                    [[LiveUrlHandler shareInstance] handleOpenURL:weakSelf.pushUrl];
+                    [[LiveUrlHandler shareInstance] handleOpenURL:self.pushUrl];
 
                 } else {
                     // 停止流、显示结束直播页
-                    [weakSelf stopLiveWithErrtype:errType errMsg:errmsg];
+                    [self stopLiveWithErrtype:errType errMsg:errmsg];
                 }
             }
         }
@@ -2172,15 +2129,15 @@
 
 - (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString *> *_Nonnull)playUrl userId:(NSString *_Nonnull)userId {
     NSLog(@"LiveViewController::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ userId : %@ )", roomId, playUrl, userId);
-    WeakObject(self, weakSelf);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
-            // 更新流地址
-            [weakSelf.liveRoom reset];
-            weakSelf.liveRoom.playUrlArray = [playUrl copy];
 
-            [weakSelf stopPlay];
-            [weakSelf play];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            // 更新流地址
+            [self.liveRoom reset];
+            self.liveRoom.playUrlArray = [playUrl copy];
+
+            [self stopPlay];
+            [self play];
         }
     });
 }
@@ -2189,14 +2146,18 @@
     NSLog(@"LiveViewController::onRecvRecommendHangoutNotice( [接收主播推荐好友通知] roomId : %@, anchorID : %@,"
            "nickName : %@, recommendId : %@, photourl : %@ )",
           item.roomId, item.anchorId, item.nickName, item.recommendId, item.photoUrl);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([item.roomId isEqualToString:weakSelf.liveRoom.roomId]) {
+        if ([item.roomId isEqualToString:self.liveRoom.roomId]) {
+
+            NSAttributedString *atrStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"WOULD_LIKE_TO_HANGOUT"), item.nickName, item.friendNickName]];
+            [self addTips:atrStr];
+
             MsgItem *msgItem = [[MsgItem alloc] init];
             msgItem.msgType = MsgType_Recommend;
             msgItem.sendName = item.nickName;
             msgItem.recommendItem = item;
-            [weakSelf addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
         }
     });
 }
@@ -2205,32 +2166,35 @@
     NSLog(@"LiveViewController::onRecvDealInviteHangoutNotice( [接收主播回复观众多人互动邀请通知] invteId : %@, roomId : %@,"
            "anchorId : %@, type : %d, anchorId : %@ )",
           item.inviteId, item.roomId, item.anchorId, item.type, item.anchorId);
-    WeakObject(self, weakSelf);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         switch (item.type) {
             case IMREPLYINVITETYPE_AGREE: {
-                weakSelf.isInviteHangout = YES;
-                [weakSelf showRoomTipView:NSLocalizedStringFromSelf(@"INVITE_SUCCESS_HANGOUT") isReject:NO];
+                self.isInvitingHangout = YES;
+                self.isInviteHangout = YES;
+                [self showRoomTipView:NSLocalizedStringFromSelf(@"INVITE_SUCCESS_HANGOUT") isReject:NO];
                 // 拼接push跳转多人互动url
                 // 是否是推荐邀请
-                if (weakSelf.isRecommend) {
-                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:weakSelf.liveRoom.userId hangoutAnchorName:weakSelf.liveRoom.userName];
+                if (self.isRecommend) {
+                    self.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:self.hangoutAnchorId anchorName:self.hangoutAnchorName hangoutAnchorId:self.liveRoom.userId hangoutAnchorName:self.liveRoom.userName];
                 } else {
-                    weakSelf.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:weakSelf.hangoutAnchorId anchorName:weakSelf.hangoutAnchorName hangoutAnchorId:@"" hangoutAnchorName:@""];
+                    self.pushUrl = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:item.roomId anchorId:self.hangoutAnchorId anchorName:self.hangoutAnchorName hangoutAnchorId:@"" hangoutAnchorName:@""];
                 }
-                
+
             } break;
 
             case IMREPLYINVITETYPE_NOCREDIT: {
-                [weakSelf.alertView show];
+                self.isInvitingHangout = NO;
+                [self showAddCreditsView:NSLocalizedString(@"INVITE_HANGOUT_ADDCREDIT", nil)];
             } break;
 
             default: {
-                weakSelf.isRecommend = NO;
-                weakSelf.isInviteHangout = NO;
-                weakSelf.hangoutInviteId = nil;
+                self.isInvitingHangout = NO;
+                self.isRecommend = NO;
+                self.isInviteHangout = NO;
+                self.hangoutInviteId = nil;
                 NSString *tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITE_REJECT_HANGOUT"), item.nickName];
-                [weakSelf showRoomTipView:tip isReject:YES];
+                [self showRoomTipView:tip isReject:YES];
             } break;
         }
     });
@@ -2259,14 +2223,13 @@
 }
 
 - (void)videoBtnCountDown {
-    WeakObject(self, weakSelf);
     @synchronized(self) {
         self.videoBtnLeftSecond--;
         if (self.videoBtnLeftSecond == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 隐藏视频静音和推送按钮
-                weakSelf.stopVideoBtn.hidden = YES;
-                weakSelf.muteBtn.hidden = YES;
+                self.stopVideoBtn.hidden = YES;
+                self.muteBtn.hidden = YES;
             });
         }
     }
@@ -2350,7 +2313,7 @@
             make.edges.equalTo(self.liveRoom.superView);
         }];
     }
-    
+
     if (self.liveRoom.roomId.length > 0) {
         // 发送退出直播间
         NSLog(@"LiveViewController::dealloc( [发送退出直播间], roomId : %@ )", self.liveRoom.roomId);
@@ -2375,7 +2338,6 @@
 
 #pragma mark - 字符串拼接
 - (void)setUpRewardedCredit:(double)rebateCredit {
-
     NSMutableAttributedString *attribuStr = [[NSMutableAttributedString alloc] init];
     [attribuStr appendAttributedString:[self parseMessage:NSLocalizedStringFromSelf(@"Rebate_Tip") font:[UIFont systemFontOfSize:10] color:[UIColor whiteColor]]];
     [attribuStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%.2f", rebateCredit] font:[UIFont systemFontOfSize:12] color:COLOR_WITH_16BAND_RGB(0xffd205)]];
@@ -2488,15 +2450,10 @@
 - (void)testMethod3 {
     NSString* msg = [NSString stringWithFormat:@"msg%ld", (long)self.msgId++];
 //    [self sendMsg:msg isLounder:NO];
-    
     [self addChatMessageNickName:@"randy" text:msg honorUrl:nil fromId:nil isHasTicket:NO];
 }
 
 - (void)testMethod4 {
-    
-    if (!self.isDriveShow) {
-        
-    }
 }
 
 @end

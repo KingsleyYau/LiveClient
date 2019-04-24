@@ -72,8 +72,8 @@ public:
 	virtual void OnQueryChatRecord(long requestId, bool success, int dbTime, const list<LSLCRecord>& recordList, const string& errnum, const string& errmsg, const string& inviteId) {};
 	virtual void OnQueryChatRecordMutiple(long requestId, bool success, int dbTime, const list<LSLCRecordMutiple>& recordMutiList, const string& errnum, const string& errmsg) {};
 	virtual void OnSendPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const LSLCLCSendPhotoItem& item) {};
-	virtual void OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg) {};
-	virtual void OnCheckPhoto(long requestId, bool success, const string& errnum, const string& errmsg) {};
+	virtual void OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId) {};
+	virtual void OnCheckPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId, bool isCharge) {};
 	virtual void OnGetPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath) {};
 	virtual void OnUploadVoice(long requestId, bool success, const string& errnum, const string& errmsg, const string& voiceId) {};
 	virtual void OnPlayVoice(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath) {};
@@ -137,8 +137,8 @@ public:
 	 */
 	long QueryChatRecordMutiple(list<string> inviteIdList);
 
-	// 发送私密照片
-	long SendPhoto(const string& targetId, const string& inviteId, const string& userId, const string& sid, SENDPHOTO_MODE_TYPE modeType, const string& photoId, const string& filePath);
+	// 12.9.发送私密照片， filePath是使用《12.16.上传LiveChat相关附件》的返回参数“url”
+	long SendPhoto(const string& targetId, const string& inviteId, const string& userId, const string& sid, const string& filePath);
 
 	// 付费获取私密照片
 	long PhotoFee(const string& targetId, const string& inviteId, const string& userId, const string& sid, const string& photoId);
@@ -283,8 +283,8 @@ private:
 
 	void HandleQueryChatVirtualGift(TiXmlDocument &doc, list<LSLCGift> &giftList, int &totalCount,
 			string &path, string &version);
-	void HandleQueryRecentVideo(TiXmlDocument &doc, list<LSLCVideoItem> &itemList);
-	void HandleGetVideo(TiXmlDocument &doc, string &url);
+	void HandleQueryRecentVideo(Json::Value root, list<LSLCVideoItem> &itemList);
+	void HandleGetVideo(Json::Value root, string &url);
 };
 
 #endif /* LSLIVECHATREQUESTLIVECHATCONTROLLER_H_ */

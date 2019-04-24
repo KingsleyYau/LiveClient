@@ -103,7 +103,8 @@
  *  @param device              设备
  *  @param livechatInvite      livechat邀请权限
  *  @param isLiveChat          livechat权限
- *
+ *  @param isSendPhotoPriv     私密照发送权限
+ *  @param isLiveChatPriv     livechat总权限
  *  @return 是否成功
  */
 - (BOOL)loginUser:(NSString *)domain
@@ -122,7 +123,10 @@
               sid:(NSString *)sid
            device:(NSString *)device
    livechatInvite:(NSInteger)livechatInvite
-       isLivechat:(BOOL)isLiveChat;
+       isLivechat:(BOOL)isLiveChat
+  isSendPhotoPriv:(BOOL)isSendPhotoPriv
+   isLiveChatPriv:(BOOL)isLiveChatPriv
+  isSendVoicePriv:(BOOL)isSendVoicePriv;
 
 /**
  *  立即重登录
@@ -166,6 +170,13 @@
  *  @return 操作是否成功
  */
 - (void)endTalkAll;
+
+/**
+ *  根据错误码判断是否时余额不足
+ *
+ *  @return 是否余额不足
+ */
+- (BOOL)isNoMoneyWithErrCode:(NSString *)errCode;
 
 #pragma mark - 获取用户信息
 /**
@@ -266,6 +277,14 @@
  */
 - (BOOL)isInManInviteCanCancel:(NSString *)womanId;
 
+/**
+ * 获取用户的私密照和视频的消息
+ *  @userId  用户ID
+ *
+ *  @return 消息列表
+ */
+- (NSArray<LSLCLiveChatMsgItemObject *> *)getPrivateAndVideoMessageList:(NSString *)userId;
+
 #pragma mark - 普通消息处理（文本/历史聊天消息等）
 /**
  *  发送文本消息
@@ -338,16 +357,17 @@
  *  购买图片
  *
  *  @param userId 用户Id
- *  @param msgId  私密照Id
+ *  @param photoId  私密照Id]
+ *  @param inviteId  消息邀请Id
  *
  *  @return 处理结果
  */
-- (BOOL)photoFee:(NSString *)userId mphotoId:(NSString *)photoId;
+- (BOOL)photoFee:(NSString *)userId mphotoId:(NSString *)photoId inviteId:(NSString *)inviteId;
 /**
  *  根据消息ID获取图片(模糊或清晰)
  *
  *  @param userId   用户Id
- *  @param msgId    私密照Id
+ *  @param photoId    私密照Id
  *  @param sizeType 私密照大小类型
  *
  *  @return 处理结果
@@ -358,7 +378,7 @@
  *  // 检查私密照片是否已付费
  *
  *  @param userId 用户Id
- *  @param msgId  私密照Id
+ *  @param mphotoId  私密照Id
  *
  *  @return 处理结果
  */
@@ -369,7 +389,7 @@
  * 发送高级表情
  *
  * @param userId   用户Id
- * @param emtionId   大高级表情Id
+ * @param emotionId   大高级表情Id
  *
  * @return 高级表情消息
  */
@@ -571,5 +591,62 @@
  * @return 操作是否成功
  */
 -(BOOL)getVoice:(NSString *)userId msgId:(int)msgId;
+
+#pragma mark - 视频消息处理
+/**
+ * 获取微视频图片
+ *
+ * @param userId       用户ID
+ * @param videoId      视频ID
+ * @param inviteId     消息邀请ID
+ * @return 操作是否成功
+ */
+-(BOOL)getVideoPhoto:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId;
+/**
+ * 购买微视频
+ *
+ * @param userId       用户ID
+ * @param videoId      视频ID
+ * @param inviteId     消息邀请ID
+ * @return 操作是否成功
+ */
+-(BOOL)videoFee:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId;
+/**
+ * 获取微视频播放文件
+ *
+ * @param userId       用户ID
+ * @param videoId      视频ID
+ * @param inviteId     消息邀请ID
+ * @param videoUrl     视频Url
+ * @param msgId        消息ID
+ * @return 操作是否成功
+ */
+-(BOOL)getVideo:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId videoUrl:(NSString* _Nonnull)videoUrl msgId:(int)msgId;
+/**
+ * 获取视频当前下载状态
+ *
+ * @param videoId      视频ID
+ * @return 操作是否成功
+ */
+-(BOOL)isGetingVideo:(NSString* _Nonnull)videoId;
+/**
+ * 获取视频图片文件路径（仅文件存在）
+ *
+ * @param userId       用户ID
+ * @param inviteId     消息邀请ID
+ * @param videoId      视频ID
+ * @param type         (VPT_DEFAULT:默认尺寸 VPT_BIG:大图)
+ * @return
+ */
+-(NSString* _Nonnull)getVideoPhotoPathWithExist:(NSString* _Nonnull)userId inviteId:(NSString* _Nonnull)inviteId videoId:(NSString* _Nonnull)videoId type:(VIDEO_PHOTO_TYPE)type;
+/**
+ * 获取视频文件路径（仅文件存在）
+ *
+ * @param userId       用户ID
+ * @param inviteId     消息邀请ID
+ * @param videoId      视频ID
+ * @return
+ */
+-(NSString* _Nonnull)getVideoPathWithExist:(NSString* _Nonnull)userId inviteId:(NSString* _Nonnull)inviteId videoId:(NSString* _Nonnull)videoId;
 
 @end

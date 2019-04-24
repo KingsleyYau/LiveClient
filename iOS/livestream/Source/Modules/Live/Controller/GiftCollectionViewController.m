@@ -38,6 +38,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
 
+    self.isShowNavBar = NO;
+    
     self.selectedIndexPath = -1;
     self.isChanceSelect = YES;
 
@@ -108,7 +110,7 @@
             // 背包礼物
             [self.giftManager getRoomBackpackGiftList:self.liveRoom.roomId
                                          finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                                             [weakSelf reloadDataWithArray:success giftList:giftList];
+                                                [weakSelf reloadDataWithArray:success giftList:giftList];
                                          }];
         } break;
         default:
@@ -138,10 +140,13 @@
 
 - (void)reloadDataWithArray:(BOOL)success giftList:(NSArray *)giftList {
     if (success) {
+        self.requestFailView.hidden = YES;
         self.giftArray = giftList;
         if( giftList.count == 0 ) {
             // 没有数据
             self.tipsLabel.hidden = NO;
+        } else {
+            self.tipsLabel.hidden = YES;
         }
         [self.collectionView reloadData];
     } else {

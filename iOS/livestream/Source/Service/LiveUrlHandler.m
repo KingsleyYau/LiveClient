@@ -170,6 +170,21 @@ static LiveUrlHandler *gInstance = nil;
                 [self.parseDelegate liveUrlHandler:self didOpenHangoutRoom:item.anchorId anchorName:item.anchorName];
             }
         }break;
+        case LiveUrlTypeSendSayHi:{
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didSendSayhi:anchorName:)]) {
+                [self.parseDelegate liveUrlHandler:self didSendSayhi:item.anchorId anchorName:item.anchorName];
+            }
+        }break;
+        case LiveUrlTypeSayHiList:{
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openSayHiType:)]) {
+                [self.parseDelegate liveUrlHandler:self openSayHiType:item.sayHiListType];
+            }
+        }break;
+        case LiveUrlTypeSayHiDetail:{
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenSayHiDetail:)]) {
+                [self.parseDelegate liveUrlHandler:self didOpenSayHiDetail:item.sayhiId];
+            }
+        }break;
         default: {
             // 进入主界面
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openMainType:)]) {

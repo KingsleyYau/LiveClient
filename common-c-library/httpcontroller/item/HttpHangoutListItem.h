@@ -41,9 +41,9 @@ public:
                 coverImg = root[LIVEROOM_GETRECENTCONTACEANCHOR_COVERIMG].asString();
             }
             
-            /* onlineStatus */
+            /* onlineStatus 注意（hangout的在线状态：1为离线 2为在线） */
             if (root[LIVEROOM_GETRECENTCONTACEANCHOR_ONLINESTATUS].isNumeric()) {
-                onlineStatus = GetIntToOnLineStatus(root[LIVEROOM_GETRECENTCONTACEANCHOR_ONLINESTATUS].asInt());
+                onlineStatus = GetIntToOnLineStatus((root[LIVEROOM_GETRECENTCONTACEANCHOR_ONLINESTATUS].asInt() - 1));
             }
             
             /* friendsNum */
@@ -92,7 +92,7 @@ public:
      * nickName         主播昵称
      * avatarImg        主播头像url
      * coverImg         直播间封面图url
-     * onlineStatus     主播在线状态（ONLINE_STATUS_OFFLINE：离线，ONLINE_STATUS_LIVE：在线）
+     * onlineStatus     主播在线状态（ONLINE_STATUS_OFFLINE：离线，ONLINE_STATUS_LIVE：在线）注意（hangout的在线状态：1为离线 2为在线）
      * friendsNum       好友数量
      * invitationMsg    邀请语
      * friendsInfoList  好友信息列表

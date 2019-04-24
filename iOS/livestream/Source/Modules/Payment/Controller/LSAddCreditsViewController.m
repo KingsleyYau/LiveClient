@@ -28,7 +28,6 @@ typedef enum AlertType {
     AlertTypeCheckOrder
 } AlertType;
 
-
 typedef enum : NSUInteger {
     CreditsViewTypeMembership,
     CreditsViewTypeBanlance,
@@ -37,74 +36,67 @@ typedef enum : NSUInteger {
     CreditsViewTypeEmptyView
 } CreditsViewType;
 
-
-@interface LSAddCreditsViewController() <LSPaymentManagerDelegate>
+@interface LSAddCreditsViewController () <LSPaymentManagerDelegate>
 
 /**
  *  数据列表
  */
-@property (nonatomic,strong) NSArray *tableViewDataArray;
+@property (nonatomic, strong) NSArray *tableViewDataArray;
 /**
  *  接口管理器
  */
-@property (nonatomic, strong) LSSessionRequestManager* sessionManager;
-@property (nonatomic, strong) LSDomainSessionRequestManager* domainSessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSDomainSessionRequestManager *domainSessionManager;
 
 /**
  *  余额
  */
-@property (nonatomic, strong) NSString* money;
+@property (nonatomic, strong) NSString *money;
 
 /**
  *  支付管理器
  */
-@property (nonatomic, strong) LSPaymentManager* paymentManager;
+@property (nonatomic, strong) LSPaymentManager *paymentManager;
 
 /**
  *  当前支付订单号
  */
-@property (nonatomic, strong) NSString* orderNo;
+@property (nonatomic, strong) NSString *orderNo;
 /**
  *  行数
  */
 @property (nonatomic, strong) NSArray *tableViewArray;
 
-@property (nonatomic, strong) LSOrderProductItemObject * membershipItem;
+@property (nonatomic, strong) LSOrderProductItemObject *membershipItem;
 
 /** 购买完成显示的 */
-@property (nonatomic, strong) UIAlertView *finishAlertView;
+@property (nonatomic, strong) UIAlertController *alertVC;
+
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
 @end
 
 @implementation LSAddCreditsViewController
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-  
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+
     self.paymentManager = [LSPaymentManager manager];
     [self.paymentManager addDelegate:self];
-    
-    
+
     [self getCount];
     [self getPremiumMembershipInfo];
-    
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -118,10 +110,9 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - 界面事件
-- (void)setupNavigationBar{
+- (void)setupNavigationBar {
     [super setupNavigationBar];
-    
-    
+
     self.title = NSLocalizedStringFromSelf(@"Credits");
 }
 
@@ -131,29 +122,28 @@ typedef enum : NSUInteger {
 
 #pragma mark 设置FooterView
 - (void)setupTableFooterView {
-    
-    UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, screenSize.width - 10, 40)];
+
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, screenSize.width - 10, 40)];
     label.numberOfLines = 0;
     label.font = [UIFont systemFontOfSize:14];
     label.textColor = Color(121, 121, 121, 1);
-    label.text = [NSString stringWithFormat:@"%@ Lean more",self.membershipItem.desc];
+    label.text = [NSString stringWithFormat:@"%@ Lean more", self.membershipItem.desc];
     [self.tableView setTableFooterView:label];
-    
+
     NSMutableAttributedString *richText = [[NSMutableAttributedString alloc] initWithString:label.text];
-    [richText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:[label.text rangeOfString:@"Lean more"]];//设置下划线
+    [richText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:[label.text rangeOfString:@"Lean more"]]; //设置下划线
     [richText addAttribute:NSForegroundColorAttributeName value:Color(0, 102, 255, 1) range:[label.text rangeOfString:@"Lean more"]];
     label.attributedText = richText;
-    
+
     label.userInteractionEnabled = YES;
-    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tableFooterViewTap)]];
+    [label addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tableFooterViewTap)]];
 }
 
 //FooterView 点击事件
-- (void)tableFooterViewTap
-{
-    LSPremiumMembershipView * view = [[LSPremiumMembershipView alloc]initWithFrame:self.view.window.bounds];
+- (void)tableFooterViewTap {
+    LSPremiumMembershipView *view = [[LSPremiumMembershipView alloc] initWithFrame:self.view.window.bounds];
     [self.view.window addSubview:view];
-    
+
     [view showMembershipView:self.membershipItem.more];
 }
 
@@ -162,15 +152,12 @@ typedef enum : NSUInteger {
     // 初始化父类参数
     [super initCustomParam];
     self.backTitle = NSLocalizedString(@"", nil);
-    
+
     self.orderNo = @"";
     self.money = @"0.0";
-    
 
     self.domainSessionManager = [LSDomainSessionRequestManager manager];
     self.sessionManager = [LSSessionRequestManager manager];
-    
-
 }
 
 - (void)dealloc {
@@ -180,13 +167,13 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - 数据逻辑
-- (void)reloadData:(BOOL)isReloadView{
+- (void)reloadData:(BOOL)isReloadView {
     NSMutableArray *array = [NSMutableArray array];
 
     // credits数据列表
 
     LSProductItemObject *item = [[LSProductItemObject alloc] init];
-    item.name =  NSLocalizedStringFromSelf(@"CREDITS_BALANCE");
+    item.name = NSLocalizedStringFromSelf(@"CREDITS_BALANCE");
     item.price = self.money;
     [array addObject:item];
 
@@ -200,27 +187,24 @@ typedef enum : NSUInteger {
         item.name = self.membershipItem.title;
         item.price = self.membershipItem.subTitle;
         [array addObject:item];
-    }else {
+    } else {
         item = [[LSProductItemObject alloc] init];
         item.name = NSLocalizedStringFromSelf(@"ADD_MORE_CREDITS");
         item.price = @"";
         [array addObject:item];
     }
-    for (int i = 0;i <self.membershipItem.list.count;i++) {
+    for (int i = 0; i < self.membershipItem.list.count; i++) {
         LSProductItemObject *item = self.membershipItem.list[i];
         [array addObject:item];
     }
-
-
 
     self.items = array;
 
     if (self.membershipItem.desc.length > 0) {
         [self setupTableFooterView];
-    }else {
+    } else {
         [self.tableView setTableFooterView:nil];
     }
-
 
     // 主tableView
     NSMutableArray *rowArray = [NSMutableArray array];
@@ -244,14 +228,13 @@ typedef enum : NSUInteger {
         [dictionary setValue:[NSNumber numberWithInteger:CreditsViewTypeEmptyView] forKey:ROW_TYPE];
         [rowArray addObject:dictionary];
 
-
         dictionary = [NSMutableDictionary dictionary];
         viewSize = CGSizeMake(self.tableView.frame.size.width, 46);
         rowSize = [NSValue valueWithCGSize:viewSize];
         [dictionary setValue:rowSize forKey:ROW_SIZE];
         [dictionary setValue:[NSNumber numberWithInteger:CreditsViewTypeMembership] forKey:ROW_TYPE];
         [rowArray addObject:dictionary];
-    }else {
+    } else {
         dictionary = [NSMutableDictionary dictionary];
         viewSize = CGSizeMake(self.tableView.frame.size.width, 46);
         rowSize = [NSValue valueWithCGSize:viewSize];
@@ -265,10 +248,9 @@ typedef enum : NSUInteger {
         [dictionary setValue:rowSize forKey:ROW_SIZE];
         [dictionary setValue:[NSNumber numberWithInteger:CreditsViewTypeTitle] forKey:ROW_TYPE];
         [rowArray addObject:dictionary];
-
     }
 
-    for (int i = 0;i <self.membershipItem.list.count;i++) {
+    for (int i = 0; i < self.membershipItem.list.count; i++) {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
         viewSize = CGSizeMake(self.tableView.frame.size.width, [LSCreditDetailTableViewCell cellHeight]);
         rowSize = [NSValue valueWithCGSize:viewSize];
@@ -277,10 +259,9 @@ typedef enum : NSUInteger {
         [rowArray addObject:dictionary];
     }
 
-
     self.tableViewArray = rowArray;
 
-    if( isReloadView ) {
+    if (isReloadView) {
         [self.tableView reloadData];
     }
 }
@@ -289,51 +270,48 @@ typedef enum : NSUInteger {
     self.orderNo = nil;
 }
 
-- (NSString* )messageTipsFromErrorCode:(NSString *)errorCode defaultCode:(NSString *)defaultCode {
+- (NSString *)messageTipsFromErrorCode:(NSString *)errorCode defaultCode:(NSString *)defaultCode {
     // 默认错误
-    NSString* messageTips = NSLocalizedStringFromSelf(defaultCode);
-    
-    if(
-       [errorCode isEqualToString:PAY_ERROR_INVALID_MONTHLY_CREDIT_40005] ||
-       [errorCode isEqualToString:PAY_ERROR_REQUEST_SAMETIME_50000]
-       ) {
+    NSString *messageTips = NSLocalizedStringFromSelf(defaultCode);
+
+    if (
+        [errorCode isEqualToString:PAY_ERROR_INVALID_MONTHLY_CREDIT_40005] ||
+        [errorCode isEqualToString:PAY_ERROR_REQUEST_SAMETIME_50000]) {
         // 具体错误
         messageTips = NSLocalizedStringFromSelf(errorCode);
-        
-    }else if (
-              [errorCode isEqualToString:PAY_ERROR_OVER_CREDIT_20038] ||
-              [errorCode isEqualToString:PAY_ERROR_CAN_NOT_ADD_CREDIT_20046] ){
+
+    } else if (
+        [errorCode isEqualToString:PAY_ERROR_OVER_CREDIT_20038] ||
+        [errorCode isEqualToString:PAY_ERROR_CAN_NOT_ADD_CREDIT_20046]) {
         // 具体错误
         messageTips = NSLocalizedStringFromSelf(PAY_ERROR_TECHNICAl);
-    }else if ([errorCode isEqualToString:PAY_ERROR_2]) {
+    } else if ([errorCode isEqualToString:PAY_ERROR_2]) {
         messageTips = NSLocalizedStringFromSelf(PAY_FAIL_OR_CANCEL);
-    }else if (
-              [errorCode isEqualToString:PAY_ERROR_NORMAL] ||
-              [errorCode isEqualToString:PAY_ERROR_10003] ||
-              [errorCode isEqualToString:PAY_ERROR_10005] ||
-              [errorCode isEqualToString:PAY_ERROR_10006] ||
-              [errorCode isEqualToString:PAY_ERROR_10007] ||
-              [errorCode isEqualToString:PAY_ERROR_20014] ||
-              [errorCode isEqualToString:PAY_ERROR_20015] ||
-              [errorCode isEqualToString:PAY_ERROR_20030] ||
-              [errorCode isEqualToString:PAY_ERROR_20031] ||
-              [errorCode isEqualToString:PAY_ERROR_20032] ||
-              [errorCode isEqualToString:PAY_ERROR_20033] ||
-              [errorCode isEqualToString:PAY_ERROR_20035] ||
-              [errorCode isEqualToString:PAY_ERROR_20037] ||
-              [errorCode isEqualToString:PAY_ERROR_20039] ||
-              [errorCode isEqualToString:PAY_ERROR_20040] ||
-              [errorCode isEqualToString:PAY_ERROR_20041] ||
-              [errorCode isEqualToString:PAY_ERROR_20042] ||
-              [errorCode isEqualToString:PAY_ERROR_20043] ||
-              [errorCode isEqualToString:PAY_ERROR_20044] ||
-              [errorCode isEqualToString:PAY_ERROR_20045]
-              ) {
+    } else if (
+        [errorCode isEqualToString:PAY_ERROR_NORMAL] ||
+        [errorCode isEqualToString:PAY_ERROR_10003] ||
+        [errorCode isEqualToString:PAY_ERROR_10005] ||
+        [errorCode isEqualToString:PAY_ERROR_10006] ||
+        [errorCode isEqualToString:PAY_ERROR_10007] ||
+        [errorCode isEqualToString:PAY_ERROR_20014] ||
+        [errorCode isEqualToString:PAY_ERROR_20015] ||
+        [errorCode isEqualToString:PAY_ERROR_20030] ||
+        [errorCode isEqualToString:PAY_ERROR_20031] ||
+        [errorCode isEqualToString:PAY_ERROR_20032] ||
+        [errorCode isEqualToString:PAY_ERROR_20033] ||
+        [errorCode isEqualToString:PAY_ERROR_20035] ||
+        [errorCode isEqualToString:PAY_ERROR_20037] ||
+        [errorCode isEqualToString:PAY_ERROR_20039] ||
+        [errorCode isEqualToString:PAY_ERROR_20040] ||
+        [errorCode isEqualToString:PAY_ERROR_20041] ||
+        [errorCode isEqualToString:PAY_ERROR_20042] ||
+        [errorCode isEqualToString:PAY_ERROR_20043] ||
+        [errorCode isEqualToString:PAY_ERROR_20044] ||
+        [errorCode isEqualToString:PAY_ERROR_20045]) {
         // 普通错误
         messageTips = NSLocalizedStringFromSelf(PAY_ERROR_NORMAL);
-        
     }
-    
+
     return messageTips;
 }
 
@@ -357,7 +335,7 @@ typedef enum : NSUInteger {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = 0;
-    if([tableView isEqual:self.tableView]) {
+    if ([tableView isEqual:self.tableView]) {
         // 主tableview
         NSDictionary *dictionarry = [self.tableViewArray objectAtIndex:indexPath.row];
         CGSize viewSize;
@@ -368,11 +346,10 @@ typedef enum : NSUInteger {
     return height;
 }
 
-
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *result = nil;
     LSProductItemObject *item = [self.items objectAtIndex:indexPath.row];
-    if([tableView isEqual:self.tableView]) {
+    if ([tableView isEqual:self.tableView]) {
         // 主tableview
         NSDictionary *dictionarry = [self.tableViewArray objectAtIndex:indexPath.row];
         // 大小
@@ -382,47 +359,44 @@ typedef enum : NSUInteger {
         // 类型
         CreditsViewType type = (CreditsViewType)[[dictionarry valueForKey:ROW_TYPE] intValue];
         switch (type) {
-            case CreditsViewTypeMembership:
-            {
+            case CreditsViewTypeMembership: {
                 LSCreditTitleTableViewCell *cell = [LSCreditTitleTableViewCell getUITableViewCell:tableView];
                 result = cell;
-                cell.titleLabel.text = [NSString stringWithFormat:@"%@ %@",item.name,item.price];
-            }
-                break;
-                // 点数
-            case CreditsViewTypeBanlance:{
+                cell.titleLabel.text = [NSString stringWithFormat:@"%@ %@", item.name, item.price];
+            } break;
+            // 点数
+            case CreditsViewTypeBanlance: {
                 LSCreditTableViewCell *cell = [LSCreditTableViewCell getUITableViewCell:tableView];
                 result = cell;
                 [cell.creditBtn setTitle:self.money forState:UIControlStateNormal];
                 [cell.creditBtn sizeToFit];
                 cell.titleLabel.text = item.name;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }break;
-                // 购买点数提示
-            case CreditsViewTypeTitle:{
+            } break;
+            // 购买点数提示
+            case CreditsViewTypeTitle: {
                 LSCreditTitleTableViewCell *cell = [LSCreditTitleTableViewCell getUITableViewCell:tableView];
                 result = cell;
                 cell.titleLabel.hidden = NO;
                 cell.titleLabel.text = item.name;
-//                cell.leftImageView.image = [UIImage imageNamed:@"AddCredits-ShopBus"];
-                
-            }break;
-            case CreditsViewTypeCreditLevel:{
+                //                cell.leftImageView.image = [UIImage imageNamed:@"AddCredits-ShopBus"];
+
+            } break;
+            case CreditsViewTypeCreditLevel: {
                 // 购买点数等级显示
-                LSCreditDetailTableViewCell  *cell = [LSCreditDetailTableViewCell getUITableViewCell:tableView];
+                LSCreditDetailTableViewCell *cell = [LSCreditDetailTableViewCell getUITableViewCell:tableView];
                 result = cell;
                 cell.accessoryLabel.text = item.price;
                 cell.detailLabel.text = item.name;
-                
-            }break;
-                
-                
+
+            } break;
+
             case CreditsViewTypeEmptyView: {
                 LSCreditTitleTableViewCell *cell = [LSCreditTitleTableViewCell getUITableViewCell:tableView];
                 result = cell;
                 cell.titleLabel.hidden = YES;
-                
-            }break;
+
+            } break;
             default:
                 break;
         }
@@ -431,62 +405,58 @@ typedef enum : NSUInteger {
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     LSProductItemObject *item = [self.items objectAtIndex:indexPath.row];
     NSDictionary *dictionarry = [self.tableViewArray objectAtIndex:indexPath.row];
     CreditsViewType type = (CreditsViewType)[[dictionarry valueForKey:ROW_TYPE] intValue];
     switch (type) {
-        case CreditsViewTypeCreditLevel:
-        {
+        case CreditsViewTypeCreditLevel: {
             [self showLoading];
             BOOL result = [self.paymentManager pay:item.productId];
             // 如果直接返回失败就不限士加载
             if (!result) {
                 [self hideLoading];
             }
-            
-        }
-            break;
+
+        } break;
         default:
             break;
     }
 }
 
-
 #pragma mark - 监听返回按钮
 //实现返回按钮的功能
-- (void)backToSettings{
+- (void)backToSettings {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - 接口回调
 - (void)getCount {
     [self showLoading];
-    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
-            if( success ) {
+            if (success) {
                 NSLog(@"LSAddCreditsViewController::LeftCredit( 获取男士余额成功 )");
                 self.money = [NSString stringWithFormat:@"%.2f", credit];
-                
-            } else{
+
+            } else {
                 NSLog(@"LSAddCreditsViewController::LeftCredit( 获取男士余额失败");
             }
         });
     }];
 }
 
-- (BOOL)getPremiumMembershipInfo
-{
-//    if (!AppShareDelegate().isNetwork) {
-//        [self showHUDIcon:@"HUD_warning" message:NSLocalizedString(@"Tip_No_NetWork", nil) isToast:YES];
-//        return NO;
-//    }
-    
+- (BOOL)getPremiumMembershipInfo {
+    //    if (!AppShareDelegate().isNetwork) {
+    //        [self showHUDIcon:@"HUD_warning" message:NSLocalizedString(@"Tip_No_NetWork", nil) isToast:YES];
+    //        return NO;
+    //    }
+
     [self showLoading];
-    LSPremiumMembershipRequest * request = [[LSPremiumMembershipRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSString * _Nonnull errnum, NSString * _Nonnull errmsg, LSOrderProductItemObject *item) {
-        
+    LSPremiumMembershipRequest *request = [[LSPremiumMembershipRequest alloc] init];
+    request.finishHandler = ^(BOOL success, NSString *_Nonnull errnum, NSString *_Nonnull errmsg, LSOrderProductItemObject *item) {
+
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 NSLog(@"LSAddCreditsViewController::getPremiumMembershipInfo(获取会员充值列表成功 )");
@@ -500,13 +470,10 @@ typedef enum : NSUInteger {
                 if (!result) {
                     [self hideLoading];
                 }
-            }
-            else
-            {
+            } else {
                 [self hideLoading];
-                NSLog(@"LSAddCreditsViewController::getPremiumMembershipInfo(获取会员充值列表失败)  errmun: %@ , errmsg: %@",errnum,errmsg);
+                NSLog(@"LSAddCreditsViewController::getPremiumMembershipInfo(获取会员充值列表失败)  errmun: %@ , errmsg: %@", errnum, errmsg);
                 [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
-                
             }
         });
     };
@@ -519,114 +486,135 @@ typedef enum : NSUInteger {
     [self hideLoading];
     if (products.count > 0) {
         for (SKProduct *product in products) {
-            NSString *productLocalePrice = [NSString stringWithFormat:@"%@ %@%@",[product.priceLocale objectForKey:NSLocaleCurrencyCode],[product.priceLocale objectForKey:NSLocaleCurrencySymbol],product.price];
+            NSString *productLocalePrice = [NSString stringWithFormat:@"%@ %@%@", [product.priceLocale objectForKey:NSLocaleCurrencyCode], [product.priceLocale objectForKey:NSLocaleCurrencySymbol], product.price];
             for (LSProductItemObject *obj in self.membershipItem.list) {
                 if ([obj.productId isEqualToString:product.productIdentifier]) {
-                      obj.price = productLocalePrice;
+                    obj.price = productLocalePrice;
                 }
             }
         }
         [self reloadData:YES];
-    }else {
+    } else {
         [[DialogTip dialogTip] showDialogTip:self.view tipText:@""];
     }
-    
 }
 
-
-- (void)onGetOrderNo:(LSPaymentManager* _Nonnull)mgr result:(BOOL)result code:(NSString* _Nonnull)code orderNo:(NSString* _Nonnull)orderNo {
+- (void)onGetOrderNo:(LSPaymentManager *_Nonnull)mgr result:(BOOL)result code:(NSString *_Nonnull)code orderNo:(NSString *_Nonnull)orderNo {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if( result ) {
+        if (result) {
             NSLog(@"LSAddCreditsViewController::onGetOrderNo( 获取订单成功, orderNo : %@ )", orderNo);
             self.orderNo = orderNo;
         } else {
             NSLog(@"LSAddCreditsViewController::onGetOrderNo( 获取订单失败, code : %@ )", code);
             // 隐藏菊花
             [self hideLoading];
-            
-            NSString* tips = [self messageTipsFromErrorCode:code defaultCode:PAY_ERROR_NORMAL];
-            tips = [NSString stringWithFormat:@"%@ (%@)",tips,code];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil, nil];
-            alertView.tag = AlertTypeDefault;
-            [alertView show];
+
+            NSString *tips = [self messageTipsFromErrorCode:code defaultCode:PAY_ERROR_NORMAL];
+            tips = [NSString stringWithFormat:@"%@ (%@)", tips, code];
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self alertView:AlertTypeDefault clickCancleOrOther:0];
+            }];
+            [alertVC addAction:cancelAC];
+            [self presentViewController:alertVC animated:YES completion:nil];
         }
     });
 }
 
-- (void)onAppStorePay:(LSPaymentManager* _Nonnull)mgr result:(BOOL)result orderNo:(NSString* _Nonnull)orderNo canRetry:(BOOL)canRetry {
+- (void)onAppStorePay:(LSPaymentManager *_Nonnull)mgr result:(BOOL)result orderNo:(NSString *_Nonnull)orderNo canRetry:(BOOL)canRetry {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if( [self.orderNo isEqualToString:orderNo] ) {
-            if( result ) {
+        if ([self.orderNo isEqualToString:orderNo]) {
+            if (result) {
                 NSLog(@"LSAddCreditsViewController::onAppStorePay( AppStore支付成功, orderNo : %@ )", orderNo);
             } else {
                 NSLog(@"LSAddCreditsViewController::onAppStorePay( AppStore支付失败, orderNo : %@, canRetry :%d )", orderNo, canRetry);
                 // 隐藏菊花
                 [self hideLoading];
-                
-                if( canRetry ) {
+
+                if (canRetry) {
                     // 弹出重试窗口
-                    NSString* tips = [self messageTipsFromErrorCode:PAY_ERROR_OTHER defaultCode:PAY_ERROR_OTHER];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Retry", nil), nil];
-                    alertView.tag = AlertTypeAppStorePay;
-                    [alertView show];
-                    
+                    NSString *tips = [self messageTipsFromErrorCode:PAY_ERROR_OTHER defaultCode:PAY_ERROR_OTHER];
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self alertView:AlertTypeAppStorePay clickCancleOrOther:0];
+                    }];
+                    UIAlertAction *otherAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [self alertView:AlertTypeAppStorePay clickCancleOrOther:1];
+                    }];
+                    [alertVC addAction:cancelAC];
+                    [alertVC addAction:otherAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 } else {
                     // 弹出提示窗口
-                    NSString* tips = [self messageTipsFromErrorCode:PAY_ERROR_NORMAL defaultCode:PAY_ERROR_NORMAL];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil, nil];
-                    alertView.tag = AlertTypeDefault;
-                    [alertView show];
+                    NSString *tips = [self messageTipsFromErrorCode:PAY_ERROR_NORMAL defaultCode:PAY_ERROR_NORMAL];
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self alertView:AlertTypeDefault clickCancleOrOther:0];
+                    }];
+                    [alertVC addAction:cancelAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 }
             }
         }
     });
 }
 
-- (void)onCheckOrder:(LSPaymentManager* _Nonnull)mgr result:(BOOL)result code:(NSString* _Nonnull)code orderNo:(NSString* _Nonnull)orderNo canRetry:(BOOL)canRetry {
+- (void)onCheckOrder:(LSPaymentManager *_Nonnull)mgr result:(BOOL)result code:(NSString *_Nonnull)code orderNo:(NSString *_Nonnull)orderNo canRetry:(BOOL)canRetry {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if( [self.orderNo isEqualToString:orderNo] ) {
-            if( result ) {
+        if ([self.orderNo isEqualToString:orderNo]) {
+            if (result) {
                 NSLog(@"LSAddCreditsViewController::onCheckOrder( 验证订单成功, orderNo : %@ )", orderNo);
             } else {
                 NSLog(@"LSAddCreditsViewController::onCheckOrder( 验证订单失败, orderNo : %@, canRetry :%d, code : %@ )", orderNo, canRetry, code);
                 // 隐藏菊花
                 [self hideLoading];
-                
-                if( canRetry ) {
+
+                if (canRetry) {
                     // 弹出重试窗口
-                    NSString* tips = [self messageTipsFromErrorCode:PAY_ERROR_OTHER defaultCode:PAY_ERROR_OTHER];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Retry", nil), nil];
-                    alertView.tag = AlertTypeCheckOrder;
-                    [alertView show];
-                    
+                    NSString *tips = [self messageTipsFromErrorCode:PAY_ERROR_OTHER defaultCode:PAY_ERROR_OTHER];
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self alertView:AlertTypeCheckOrder clickCancleOrOther:0];
+                    }];
+                    UIAlertAction *otherAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [self alertView:AlertTypeCheckOrder clickCancleOrOther:1];
+                    }];
+                    [alertVC addAction:cancelAC];
+                    [alertVC addAction:otherAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 } else {
                     // 弹出提示窗口
-                    NSString* tips = [self messageTipsFromErrorCode:code defaultCode:PAY_ERROR_NORMAL];
-                    tips = [NSString stringWithFormat:@"%@ (%@)",tips,code];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil, nil];
-                    alertView.tag = AlertTypeDefault;
-                    [alertView show];
+                    NSString *tips = [self messageTipsFromErrorCode:code defaultCode:PAY_ERROR_NORMAL];
+                    tips = [NSString stringWithFormat:@"%@ (%@)", tips, code];
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self alertView:AlertTypeDefault clickCancleOrOther:0];
+                    }];
+                    [alertVC addAction:cancelAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 }
             }
         }
     });
 }
 
-- (void)onPaymentFinish:(LSPaymentManager* _Nonnull)mgr orderNo:(NSString* _Nonnull)orderNo {
+- (void)onPaymentFinish:(LSPaymentManager *_Nonnull)mgr orderNo:(NSString *_Nonnull)orderNo {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"LSAddCreditsViewController::onPaymentFinish( 支付完成 orderNo : %@ )", orderNo);
         // 隐藏菊花
         [self hideLoading];
         // 弹出提示窗口
-        NSString* tips = NSLocalizedStringFromSelf(@"PAY_SUCCESS");
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:tips delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil, nil];
-        alertView.tag = AlertTypeDefault;
+        NSString *tips = NSLocalizedStringFromSelf(@"PAY_SUCCESS");
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self alertView:AlertTypeDefault clickCancleOrOther:0];
+        }];
+        [alertVC addAction:cancelAC];
         if (!self.isBackground) {
-            [alertView show];
-        }else {
-            self.finishAlertView = alertView;
+            [self presentViewController:alertVC animated:YES completion:nil];
+        } else {
+            self.alertVC = alertVC;
         }
-
     });
 }
 
@@ -634,24 +622,20 @@ typedef enum : NSUInteger {
 - (void)willEnterBackground:(NSNotification *)notification {
     if (_isBackground == NO) {
         _isBackground = YES;
-        
     }
 }
 
 - (void)willEnterForeground:(NSNotification *)notification {
     if (_isBackground == YES) {
         _isBackground = NO;
-        if (self.finishAlertView) {
-            [self.finishAlertView show];
+        if (self.alertVC) {
+            [self presentViewController:self.alertVC animated:YES completion:nil];
         }
     }
 }
 
-
-
 #pragma mark - 点击弹窗提示
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSInteger tag = alertView.tag;
+- (void)alertView:(NSInteger)tag clickCancleOrOther:(NSInteger)index {
     switch (tag) {
         case AlertTypeDefault: {
             // 买点成功的提示
@@ -663,27 +647,27 @@ typedef enum : NSUInteger {
             
             [self getPremiumMembershipInfo];
             
-            self.finishAlertView = nil;
-        }break;
+            self.alertVC = nil;
+        } break;
         case AlertTypeAppStorePay: {
             // Apple支付中
-            switch (buttonIndex) {
-                case 0:{
+            switch (index) {
+                case 0: {
                     // 点击取消
                     [self cancelPay];
-                }break;
-                case 1:{
+                } break;
+                case 1: {
                     // 点击重试
                     [self showLoading];
                     [self.paymentManager retry:self.orderNo];
-                }break;
+                } break;
                 default:
                     break;
             }
         }break;
         case AlertTypeCheckOrder: {
             // 账单验证中
-            switch (buttonIndex) {
+            switch (index) {
                 case 0:{
                     // 点击取消, 自动验证
                     [self.paymentManager autoRetry:self.orderNo];

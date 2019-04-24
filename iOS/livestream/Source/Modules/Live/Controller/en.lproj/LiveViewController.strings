@@ -39,4 +39,6 @@
 
 "INVITE_REJECT_HANGOUT" = "%@ is not responding. Please try again later.";
 
+"WOULD_LIKE_TO_HANGOUT" = "%@ would like to Hang-out with you and %@.";
 
+"SEND_INVITE_NO_CREDIT" = "You have insufficient credits to send the invitation.";

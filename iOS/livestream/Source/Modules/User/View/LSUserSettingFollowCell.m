@@ -80,7 +80,7 @@
         [headView addSubview:headImage];
         [headView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(headImageTap:)]];
         
-        [[LSImageViewLoader loader] refreshCachedImage:headImage options:0 imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        [[LSImageViewLoader loader] loadImageFromCache:headImage options:0 imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         }];
         
         if (item.roomType != HTTPROOMTYPE_NOLIVEROOM) {

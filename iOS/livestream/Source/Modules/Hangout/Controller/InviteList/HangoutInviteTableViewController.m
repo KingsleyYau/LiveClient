@@ -42,6 +42,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
 
+    self.isShowNavBar = NO;
+    
     self.items = [NSMutableArray array];
     self.sessionManager = [LSSessionRequestManager manager];
 }
@@ -62,22 +64,23 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    // 默认下拉刷新
     if (!self.viewDidAppearEver) {
-        // 默认下拉刷新
         [self.tableView startPullDown:YES];
     }
-
     [super viewDidAppear:animated];
 }
 
 #pragma mark - 数据逻辑
 - (void)reloadInviteList {
-    [self showMaskView:YES showNolist:YES showRetry:YES];
-    // 清空列表
-    [self.items removeAllObjects];
-    // 刷新界面
-    [self.tableView reloadData];
-    [self.tableView startPullDown:YES];
+    if (self.viewIsAppear) {
+        [self showMaskView:YES showNolist:YES showRetry:YES];
+        // 清空列表
+        [self.items removeAllObjects];
+        // 刷新界面
+        [self.tableView reloadData];
+        [self.tableView startPullDown:YES];
+    }
 }
 
 - (void)pullDownRefresh {
@@ -91,6 +94,7 @@
     LSGetHangoutFriendsRequest *request = [[LSGetHangoutFriendsRequest alloc] init];
     request.anchorId = self.anchorId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *anchorId, NSArray<LSHangoutAnchorItemObject *> *array) {
+        NSLog(@"HangoutInviteTableViewController::LSGetHangoutFriendsRequest([获取主播好友列表] %@, errnum : %d, errmsg : %@, friends : %lu)",BOOL2SUCCESS(success), errnum, errmsg, (unsigned long)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             // 停止头部
             [self.tableView finishPullDown:NO];
@@ -154,7 +158,7 @@
 
     if (indexPath.row < self.items.count) {
         LSHangoutAnchorItemObject *item = [self.items objectAtIndex:indexPath.row];
-        [cell.imageViewLoader refreshCachedImage:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        [cell.imageViewLoader loadImageFromCache:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         }];
         cell.labelName.text = item.nickName;
         cell.labelDesc.text = [NSString stringWithFormat:@"%dyrs / %@", item.age, item.country, nil];
@@ -200,7 +204,7 @@
             HangoutInviteAnchor *listItem = [[HangoutInviteAnchor alloc] init];
             listItem.anchorId = item.anchorId;
             listItem.anchorName = item.nickName;
-            listItem.photoUrl = item.photoUrl;
+            listItem.photoUrl = item.avatarImg;
             [self.inviteDelegate didHangoutInviteAnchor:listItem];
         }
     }

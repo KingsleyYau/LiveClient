@@ -43,12 +43,14 @@
 "Tips_InChat_Emotion" = "Can not send premium stickers before the conversation is started.";
 "Tips_InChat_Voice" = "Can not send voice messages before the conversation is started.";
 
-"NoNetwork" = "Trouble connecting to the server, please try again later.";
+"NoNetwork" = "Trouble connecting to the server. Please try again later.";
 
 "on2min" = "You can't cancel the invitation within 2 min.";
 
 "InChat_Tip" = "You can not cancel the invitation when you are in chat.";
 
-"EndChat" = "End Chat";
+"EndChat" = "   End Chat";
 
-"Cancel invitation" = "Cancel invitation";
+"Cancel invitation" = "   Cancel invitation";
+
+"Recent Watched" = "   Recent Watched";

@@ -18,7 +18,7 @@
 #import "MJRefresh.h"
 #import "LSAddCreditsViewController.h"
 #import "AnchorPersonalViewController.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LiveModule.h"
 #import "LSImManager.h"
 #import "LSSendMessageManager.h"
@@ -30,9 +30,9 @@
 #define ISHAVEANCHORID self.anchorId.length > 0 ? YES : NO
 #define sx_deviceVersion [[[UIDevice currentDevice] systemVersion] floatValue]
 
-@interface LSChatViewController ()<LSChatTableViewDelegate,LSChatTextViewDelegate,LSCheckButtonDelegate,LSChatEmotionKeyboardViewDelegate,
-LSLiveStandardEmotionViewDelegate,UITextViewDelegate,LMMessageManagerDelegate,IMLiveRoomManagerDelegate,IMManagerDelegate,
-LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
+@interface LSChatViewController () <LSChatTableViewDelegate, LSChatTextViewDelegate, LSCheckButtonDelegate, LSChatEmotionKeyboardViewDelegate,
+                                    LSLiveStandardEmotionViewDelegate, UITextViewDelegate, LMMessageManagerDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate,
+                                    LSChatEmotionViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet LSChatTableView *tableView;
 @property (nonatomic, strong) MJRefreshNormalHeader *refresHeader;
@@ -43,19 +43,19 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 // 表情按钮
 @property (weak, nonatomic) IBOutlet LSCheckButton *emotionBtn;
 // 输入框高度约束
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* inputMessageViewHeight;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *inputMessageViewHeight;
 // 输入框底部约束
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* inputMessageViewBottom;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *inputMessageViewBottom;
 /**
  主播ID
  */
 @property (nonatomic, copy) NSString *anchorId;
 // 文字的富文本属性
-@property (nonatomic,copy) NSAttributedString *emotionAttributedString;
+@property (nonatomic, copy) NSAttributedString *emotionAttributedString;
 // 单击收起输入控件手势
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 // 消息数组
-@property (nonatomic, strong) NSMutableArray <LSMessage *> *msgArray;
+@property (nonatomic, strong) NSMutableArray<LSMessage *> *msgArray;
 // 表情列表
 @property (nonatomic, retain) NSArray *emotionArray;
 // 表情列表(用于查找)
@@ -72,16 +72,18 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) LSSendMessageManager *sendMessageManager;
 
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
+
 @end
 
 @implementation LSChatViewController
 
 - (void)dealloc {
     NSLog(@"LSChatViewController::dealloc()");
-    
+
     [[LSImManager manager] removeDelegate:self];
     [[LSImManager manager].client removeDelegate:self];
-    
+
     [self.messageManager.client removeDelegate:self];
 }
 
@@ -93,29 +95,31 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [[LSImManager manager] addDelegate:self];
     [[LSImManager manager].client addDelegate:self];
-    
+
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
+
     self.tableView.tableViewDelegate = self;
-    
+
     self.msgArray = [NSMutableArray array];
     self.emotionArray = [NSMutableArray array];
     self.emotionDict = [NSDictionary dictionary];
-    
+
     // 初始化表情管理器
     self.emotionManager = [LSChatEmotionManager emotionManager];
-    
+
     // 消息文本管理器
     self.messageManager = [LSPrivateMessageManager manager];
     [self.messageManager.client addDelegate:self];
-    
+
     // 发送消息文本管理器
     self.sendMessageManager = [[LSSendMessageManager alloc] init];
-    
+
     [self setupInputView];
     [self setupEmotionInputView];
-    
+
     if (ISHAVEANCHORID) {
         WeakObject(self, weakSelf);
         self.isCanGetMore = [self.messageManager isHasMorePrivateMsgWithUserId:self.anchorId];
@@ -139,11 +143,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // 显示导航栏
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
-    
+
     // 添加键盘事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -151,11 +151,11 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
+
     // 移除下拉刷新控件 防止控制器未释放
     self.refresHeader = nil;
     self.tableView.mj_header = nil;
-    
+
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -163,12 +163,13 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 - (void)setupNavigationBar {
     [super setupNavigationBar];
-    
+
     if (self.anchorId.length > 0) {
-        [[LSUserInfoManager manager] getUserInfo:self.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
-            // 设置聊天标题
-            [self setupTitleButton:item.nickName];
-        }];
+        [self.roomUserInfoManager getUserInfo:self.anchorId
+                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                    // 设置聊天标题
+                                    [self setupTitleButton:item.nickName];
+                                }];
     }
 }
 
@@ -200,12 +201,12 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
     self.textView.placeholder = NSLocalizedStringFromSelf(@"Tips_Input_Message_Here");
     self.textView.chatTextViewDelegate = self;
     self.textView.delegate = self;
-    
+
     [self.emotionBtn setImage:[UIImage imageNamed:@"Chat_Emotion_Icon"] forState:UIControlStateNormal];
     [self.emotionBtn setImage:[UIImage imageNamed:@"Chat_Keyboard_Icon"] forState:UIControlStateSelected];
     self.emotionBtn.adjustsImageWhenHighlighted = NO;
     self.emotionBtn.selectedChangeDelegate = self;
-    
+
     if (IS_IPHONE_X) {
         self.inputMessageViewBottom.constant = self.inputMessageViewBottom.constant - 35;
     }
@@ -214,11 +215,11 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 - (MJRefreshNormalHeader *)refresHeader {
     // TODO:上拉刷新
     if (_refresHeader == nil) {
-        WeakObject(self,weakSelf);
+        WeakObject(self, weakSelf);
         _refresHeader = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-            
+
             [weakSelf.tableView.mj_header endRefreshing];
-            
+
             if (ISHAVEANCHORID) {
                 [weakSelf getMorePrivateMsgWithUserId:weakSelf.anchorId];
             }
@@ -232,15 +233,14 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 #pragma mark - 点击进入女士详情
 - (void)showLadyDetail {
-    
 }
 
 #pragma mark - IM消息
 - (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ImLoginReturnObject *)item {
     NSLog(@"LSChatViewController::onLogin( [IM登录], errType : %d, errmsg : %@ )", errType, errmsg);
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (errType == LCC_ERR_SUCCESS) {
-            WeakObject(self, weakSelf);
             [weakSelf refreshPrivateMsgWithUserId:self.anchorId];
         }
     });
@@ -272,34 +272,36 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
         [self.messageManager setPrivateMsgReaded:self.anchorId];
         WeakObject(self, weakSelf);
         [self.msgArray removeAllObjects];
-        [self.messageManager getLocalPrivateMsgWithUserId:self.anchorId finishHandler:^(NSArray<LMMessageItemObject *> * _Nullable list) {
-            if (list.count > 0) {
-                // 同步方法更新消息数组
-                [weakSelf forMessageItemAddMsaArray:list];
-                [weakSelf.tableView reloadData];
-                // 回调主线程刷新界面
-                [weakSelf scrollToEnd:NO];
-            }
-            finish();
-        }];
+        [self.messageManager getLocalPrivateMsgWithUserId:self.anchorId
+                                            finishHandler:^(NSArray<LMMessageItemObject *> *_Nullable list) {
+                                                if (list.count > 0) {
+                                                    // 同步方法更新消息数组
+                                                    [weakSelf forMessageItemAddMsaArray:list];
+                                                    [weakSelf.tableView reloadData];
+                                                    // 回调主线程刷新界面
+                                                    [weakSelf scrollToEnd:NO];
+                                                }
+                                                finish();
+                                            }];
     }
 }
 
 - (void)refreshPrivateMsgWithUserId:(NSString *)userId {
     // TODO:服务器获取私密消息列表
     WeakObject(self, weakSelf);
-    [self.messageManager refreshPrivateMsgWithUserId:userId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, NSArray<LMMessageItemObject *> * _Nonnull list) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (success) {
-                [weakSelf.messageManager setPrivateMsgReaded:self.anchorId];
-                if (list.count > 0) {
-                    [weakSelf forMessageItemAddMsaArray:list];
-                    [weakSelf.tableView reloadData];
-                    [weakSelf scrollToEnd:NO];
-                }
-            }
-        });
-    }];
+    [self.messageManager refreshPrivateMsgWithUserId:userId
+                                       finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSArray<LMMessageItemObject *> *_Nonnull list) {
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               if (success) {
+                                                   [weakSelf.messageManager setPrivateMsgReaded:self.anchorId];
+                                                   if (list.count > 0) {
+                                                       [weakSelf forMessageItemAddMsaArray:list];
+                                                       [weakSelf.tableView reloadData];
+                                                       [weakSelf scrollToEnd:NO];
+                                                   }
+                                               }
+                                           });
+                                       }];
 }
 
 - (void)getMorePrivateMsgWithUserId:(NSString *)userId {
@@ -309,7 +311,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 - (void)forMessageItemAddMsaArray:(NSArray<LMMessageItemObject *> *)list {
     for (LMMessageItemObject *item in list) {
-        LSMessage * message = [[LSMessage alloc]init];
+        LSMessage *message = [[LSMessage alloc] init];
         message.sendMsgId = item.sendMsgId;
         message.createTime = item.createTime;
         message.sendType = item.sendType;
@@ -321,7 +323,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
         message.systemItem = item.systemItem;
         message.warningItem = item.warningItem;
         message.timeMsgItem = item.timeMsgItem;
-        
+
         if (message.privateItem.message.length > 0) {
             message.text = message.privateItem.message;
             message.attText = [[NSAttributedString alloc] initWithString:message.privateItem.message];
@@ -338,11 +340,11 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 #pragma mark - 重新加载消息到界面
 - (void)reloadData:(BOOL)isReloadView scrollToEnd:(BOOL)scrollToEnd animated:(BOOL)animated {
     // 数据填充
-    if(isReloadView) {
-        
+    if (isReloadView) {
+
         [self.tableView reloadData];
-        
-        if( scrollToEnd ) {
+
+        if (scrollToEnd) {
             [self scrollToEnd:animated];
         }
     }
@@ -352,27 +354,42 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
     // TODO: 消息列表滚动到最底
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         NSInteger count = [self.tableView numberOfRowsInSection:0];
-        if( count > 0 ) {
-            NSIndexPath* indexPath = [NSIndexPath indexPathForRow:count - 1 inSection:0];
+        if (count > 0) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:count - 1 inSection:0];
             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:animated];
         }
     });
 }
 
 #pragma mark - LSChatTableViewDelegate
-- (void)chatTextSelfRetryMessage:(LSChatSelfMessageCell *)cell sendErr:(NSInteger)sendErr{
+- (void)chatTextSelfRetryMessage:(LSChatSelfMessageCell *)cell sendErr:(NSInteger)sendErr {
     // 点击叹号弹出提示框
     NSIndexPath *path = [self.tableView indexPathForCell:cell];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
+    NSString *message;
     if (sendErr != LCC_ERR_SUCCESS) {
         if (sendErr == LCC_ERR_CONNECTFAIL) {
-            alertView.message = NSLocalizedStringFromSelf(@"Send_Message_Trouble");
+            message = NSLocalizedStringFromSelf(@"Send_Message_Trouble");
         } else {
-            alertView.message = NSLocalizedStringFromSelf(@"Message_Not_Send");
+            message = NSLocalizedStringFromSelf(@"Message_Not_Send");
         }
     }
-    alertView.tag = path.row;
-    [alertView show];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *otherAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"Retry") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self clickButtonWithAlertVC:path.row];
+    }];
+    [alertVC addAction:cancelAC];
+    [alertVC addAction:otherAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+- (void)clickButtonWithAlertVC:(NSInteger)tag {
+    // TODO:消息重发
+    LSMessage *message = self.msgArray[tag];
+    if (ISHAVEANCHORID) {
+        // 重发消息
+        [self.messageManager repeatSendPrivateMsg:self.anchorId sendMsgId:message.sendMsgId];
+    }
 }
 
 - (void)pushToAddCreditVC {
@@ -382,27 +399,14 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    
-}
-
-#pragma mark - UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != alertView.cancelButtonIndex) {
-        // TODO:消息重发
-        LSMessage *message = self.msgArray[alertView.tag];
-        if (ISHAVEANCHORID) {
-            // 重发消息
-            [self.messageManager repeatSendPrivateMsg:self.anchorId sendMsgId:message.sendMsgId];
-        }
-    }
 }
 
 #pragma mark - LMMessageManagerDelegate
-- (void)onSendPrivateMessage:(BOOL)success errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(LMMessageItemObject* _Nonnull)item {
-    NSLog(@"LSChatViewController::([发送和重发的私信消息的成功或失败 success : %@, errType : %d, errmsg : %@ msgId : %d ])",success ? @"成功" : @"失败",errType,errmsg,item.msgId);
+- (void)onSendPrivateMessage:(BOOL)success errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg item:(LMMessageItemObject *_Nonnull)item {
+    NSLog(@"LSChatViewController::([发送和重发的私信消息的成功或失败 success : %@, errType : %d, errmsg : %@ msgId : %d ])", success ? @"成功" : @"失败", errType, errmsg, item.msgId);
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        
+
         // 循环找到对应消息队列 更新消息状态
         for (NSInteger i = weakSelf.msgArray.count - 1; i >= 0; i--) {
             LSMessage *message = weakSelf.msgArray[i];
@@ -418,7 +422,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
     });
 }
 
-- (void)onRepeatSendPrivateMsgNotice:(NSString* _Nonnull)userId msgList:(NSArray<LMMessageItemObject*>* _Nonnull)msgList {
+- (void)onRepeatSendPrivateMsgNotice:(NSString *_Nonnull)userId msgList:(NSArray<LMMessageItemObject *> *_Nonnull)msgList {
     NSLog(@"LSChatViewController::onRepeatSendPrivateMsgNotice([重发回调所有本地私信消息] msgList:%lu)", (unsigned long)[msgList count]);
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -451,12 +455,12 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
         // 获取是否可以上拉
         weakSelf.isCanGetMore = [weakSelf.messageManager isHasMorePrivateMsgWithUserId:self.anchorId];
         [weakSelf setTheTableViewMJHeadr:weakSelf.isCanGetMore];
-        
+
         if (success) {
             if (list.count > 0) {
-                for (NSInteger i = list.count - 1; i >= 0 ; i--) {
+                for (NSInteger i = list.count - 1; i >= 0; i--) {
                     LMMessageItemObject *item = list[i];
-                    LSMessage * message = [[LSMessage alloc]init];
+                    LSMessage *message = [[LSMessage alloc] init];
                     message.sendMsgId = item.sendMsgId;
                     message.createTime = item.createTime;
                     message.sendType = item.sendType;
@@ -467,7 +471,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
                     message.systemItem = item.systemItem;
                     message.warningItem = item.warningItem;
                     message.timeMsgItem = item.timeMsgItem;
-                    
+
                     if (message.privateItem.message.length > 0) {
                         message.text = message.privateItem.message;
                         message.attText = [[NSAttributedString alloc] initWithString:message.privateItem.message];
@@ -480,7 +484,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
                 }
                 weakSelf.tableView.msgArray = weakSelf.msgArray;
                 [weakSelf.tableView reloadData];
-                
+
                 if (list.count - 1 > 0) {
                     NSIndexPath *path = [NSIndexPath indexPathForRow:list.count - 1 inSection:0];
                     [weakSelf.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -492,14 +496,14 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 #pragma mark - 输入控件管理
 - (void)addSingleTap {
-    if( self.singleTap == nil ) {
+    if (self.singleTap == nil) {
         self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeAllInputView)];
         [self.tableView addGestureRecognizer:self.singleTap];
     }
 }
 
 - (void)removeSingleTap {
-    if( self.singleTap ) {
+    if (self.singleTap) {
         [self.tableView removeGestureRecognizer:self.singleTap];
         self.singleTap = nil;
     }
@@ -511,18 +515,17 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 - (void)showKeyboardView {
     // 增加手势
     [self addSingleTap];
-    
+
     self.textView.inputView = nil;
     [self.textView becomeFirstResponder];
 }
 
 #pragma mark - 表情逻辑
 
-
 - (void)selectedChanged:(id)sender {
     [self.textView endEditing:YES];
     UIButton *emotionBtn = (UIButton *)sender;
-    if( emotionBtn.selected == YES ) {
+    if (emotionBtn.selected == YES) {
         // 弹出底部emotion的键盘
         [self showEmotionView];
     } else {
@@ -532,7 +535,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 }
 
 - (void)setupEmotionInputView {
-    
+
     self.emotionVC = [[LSChatEmotionViewController alloc] initWithNibName:nil bundle:nil];
     self.emotionVC.emotionDelegate = self;
     self.emotionVC.view.hidden = YES;
@@ -549,13 +552,13 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 - (void)showEmotionView {
     // 增加手势
     [self addSingleTap];
-    
+
     // 关闭系统键盘
     [self.textView resignFirstResponder];
-    
+
     if (self.inputMessageViewBottom.constant != -self.emotionVC.view.frame.size.height) {
         self.emotionVC.view.hidden = NO;
-        
+
         if (IS_IPHONE_X) {
             CGFloat height = self.emotionVC.view.frame.size.height + 35;
             [self moveInputBarWithKeyboardHeight:height withDuration:0.25];
@@ -563,7 +566,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
             // 未显示则显示
             [self moveInputBarWithKeyboardHeight:self.emotionVC.view.frame.size.height withDuration:0.25];
         }
-        
+
         [self.emotionVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.inputMessageView.mas_bottom);
         }];
@@ -591,20 +594,19 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 - (void)closeAllInputView {
     // 降低加速度
     self.tableView.decelerationRate = UIScrollViewDecelerationRateNormal;
-    
+
     // 移除手势
     [self removeSingleTap];
-    
+
     // 关闭表情输入
-    if( self.emotionBtn.selected == YES ) {
+    if (self.emotionBtn.selected == YES) {
         self.emotionBtn.selected = NO;
         [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
     }
-    
+
     // 关闭系统键盘
     [self.textView resignFirstResponder];
 }
-
 
 #pragma mark - 消息列表文本解析
 /**
@@ -615,25 +617,25 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
  *  @param font        字体
  *  @return 没钱富文本警告消息
  */
-- (NSAttributedString* )parseNoMomenyWarningMessage:(NSString* )text linkMessage:(NSString* )linkMessage font:(UIFont* )font color:(UIColor *)textColor{
+- (NSAttributedString *)parseNoMomenyWarningMessage:(NSString *)text linkMessage:(NSString *)linkMessage font:(UIFont *)font color:(UIColor *)textColor {
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     [attributeString addAttributes:@{
-                                     NSFontAttributeName : font,
-                                     NSForegroundColorAttributeName:textColor
-                                     }
+        NSFontAttributeName : font,
+        NSForegroundColorAttributeName : textColor
+    }
                              range:NSMakeRange(0, attributeString.length)];
-    
-    
+
     LSChatTextAttachment *attachment = [[LSChatTextAttachment alloc] init];
     attachment.text = linkMessage;
     attachment.url = [NSURL URLWithString:ADD_CREDIT_URL];
     attachment.bounds = CGRectMake(0, -4, font.lineHeight, font.lineHeight);
     NSMutableAttributedString *attributeLinkString = [[NSMutableAttributedString alloc] initWithString:linkMessage];
     [attributeLinkString addAttributes:@{
-                                         NSFontAttributeName : font,
-                                         NSAttachmentAttributeName : attachment,
-                                         } range:NSMakeRange(0, attributeLinkString.length)];
-    
+        NSFontAttributeName : font,
+        NSAttachmentAttributeName : attachment,
+    }
+                                 range:NSMakeRange(0, attributeLinkString.length)];
+
     [attributeString appendAttributedString:attributeLinkString];
     return attributeString;
 }
@@ -641,17 +643,17 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
     BOOL bFlag = NO;
     //    [self.view layoutIfNeeded];
-    
-    if(height != 0) {
+
+    if (height != 0) {
         // 弹出键盘
-        
+
         // 增加加速度
         self.tableView.decelerationRate = UIScrollViewDecelerationRateFast;
-        
+
         self.inputMessageViewBottom.constant = -height;
         bFlag = YES;
         [self scrollToEnd:YES];
-        
+
     } else {
         // 收起键盘
         if (IS_IPHONE_X) {
@@ -661,7 +663,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
         }
         self.emotionVC.view.hidden = YES;
     }
-    
+
     //    [UIView animateWithDuration:duration animations:^{
     //        [self.view layoutIfNeeded];
     //    } completion:nil];
@@ -669,26 +671,25 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
-    NSValue* aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    
+
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
     // 从表情键盘切换成系统键盘,保存普通表情的富文本属性
     self.emotionAttributedString = self.textView.attributedText;
     [self moveInputBarWithKeyboardHeight:keyboardRect.size.height withDuration:animationDuration];
-    
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
-    NSDictionary* userInfo = [notification userInfo];
+    NSDictionary *userInfo = [notification userInfo];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    
+
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
-    
-    if( self.emotionBtn.selected == NO ) {
+
+    if (self.emotionBtn.selected == NO) {
         // 没有选择表情
         [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
     }
@@ -704,8 +705,8 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
         if (toBeString.length > MAXInputCount) {
             // 取出之前保存的属性
             textView.attributedText = self.emotionAttributedString;
-            
-        }else {
+
+        } else {
             // 记录当前的富文本属性
             self.emotionAttributedString = textView.attributedText;
         }
@@ -715,20 +716,20 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     // 增加手势
     [self addSingleTap];
-    
+
     // 切换所有按钮到系统键盘状态
     self.emotionBtn.selected = NO;
-    
+
     return YES;
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     BOOL result = YES;
     // 检查是否系统表情
-    if( [text containEmoji] ) {
+    if ([text containEmoji]) {
         result = NO;
     }
-    
+
     // 判断输入的字是否是回车，即按下send
     if ([text isEqualToString:@"\n"]) {
         // 触发发送
@@ -744,7 +745,6 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
                 result = NO;
             }
         }
-        
     }
     // 允许输入
     return result;
@@ -752,7 +752,7 @@ LSChatEmotionViewControllerDelegate,UIAlertViewDelegate>
 
 #pragma mark - 输入栏高度改变回调
 - (void)textViewChangeHeight:(LSChatTextView *)textView height:(CGFloat)height {
-    if( height < INPUTMESSAGEVIEW_MAX_HEIGHT ) {
+    if (height < INPUTMESSAGEVIEW_MAX_HEIGHT) {
         if (height + 10 < INPUTMESSAGEVIEW_NORMAL_HEIGHT) {
             self.inputMessageViewHeight.constant = INPUTMESSAGEVIEW_NORMAL_HEIGHT;
         } else {

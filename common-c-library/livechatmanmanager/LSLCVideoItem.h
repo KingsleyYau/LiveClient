@@ -37,7 +37,10 @@ public:
 		, const string& sendId
 		, const string& videoDesc
 		, const string& videoUrl
-		, bool charge);
+		, bool charge
+        , const string& thumbPhotoFilePath
+        , const string& bigPhotoFilePath
+        , const string& videoFilePath);
 
 	// 添加/删除视频付费状态
 	void AddProcessStatusFee();
@@ -45,7 +48,7 @@ public:
 	// 判断视频是否付费状态
 	bool IsFee();
     // 获取处理状态列表
-    ProcessStatusList GetStatusList();
+    ProcessStatusList& GetStatusList();
 
 public:
 	string	m_videoId;				// 视频ID
@@ -53,6 +56,10 @@ public:
 	string	m_videoDesc;			// 视频描述
 	string	m_videoUrl;				// 视频URL
 	bool	m_charge;				// 是否已付费
+    // 后面增加的
+    string m_thumbPhotoFilePath;    // 小图路径
+    string m_bigPhotoFilePath;      // 大图路径
+    string m_videoFilePath;            // 视频路径
 private:
 	ProcessStatusList m_statusList;	// 处理状态列表
 };

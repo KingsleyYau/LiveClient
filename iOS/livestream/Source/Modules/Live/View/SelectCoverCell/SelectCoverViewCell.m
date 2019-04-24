@@ -137,7 +137,7 @@
         }
     }
 
-    [self.loader loadImageWithImageView:self.imageView options:0 imageUrl:imageUrl placeholderImage:nil];
+    [self.loader loadImageWithImageView:self.imageView options:0 imageUrl:imageUrl placeholderImage:nil finishHandler:nil];
 }
 
 - (UIView *)snapshotView {

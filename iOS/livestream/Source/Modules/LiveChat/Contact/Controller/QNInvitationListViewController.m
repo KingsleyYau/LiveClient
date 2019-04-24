@@ -79,7 +79,7 @@
 }
 
 - (void)tableView:(QNInviteListTableView *)tableView didSelectContact:(LSLadyRecentContactObject *)item {
-    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat]) {
+    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:self]) {
         NSLog(@"QNInviteListTableView %s",__func__);
         QNChatViewController* vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
         vc.firstName = item.firstname;

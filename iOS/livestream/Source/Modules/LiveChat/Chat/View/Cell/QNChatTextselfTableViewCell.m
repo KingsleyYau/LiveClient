@@ -33,8 +33,8 @@
     if( nil == cell ) {
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[QNChatTextSelfTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
-        cell.backgroundImageView.layer.cornerRadius = cell.backgroundImageView.frame.size.height/2 - 1;
-        cell.backgroundImageView.layer.masksToBounds = YES;
+//        cell.backgroundImageView.layer.cornerRadius = cell.backgroundImageView.frame.size.height/2 - 1;
+//        cell.backgroundImageView.layer.masksToBounds = YES;
     }
     
     cell.detailLabel.text = @"";

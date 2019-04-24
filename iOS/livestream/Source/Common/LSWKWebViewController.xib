@@ -29,9 +29,9 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="asI-3c-c6Y" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="6Ws-if-fu7"/>
-                <constraint firstAttribute="trailing" secondItem="asI-3c-c6Y" secondAttribute="trailing" id="7fM-QJ-Xta"/>
+                <constraint firstItem="asI-3c-c6Y" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="7fM-QJ-Xta"/>
                 <constraint firstItem="asI-3c-c6Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TWw-JE-Tnf"/>
-                <constraint firstAttribute="bottom" secondItem="asI-3c-c6Y" secondAttribute="bottom" id="w8Z-o2-ukH"/>
+                <constraint firstItem="asI-3c-c6Y" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="w8Z-o2-ukH"/>
             </constraints>
         </view>
     </objects>

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
 #import "LSImManager.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 
 typedef enum {
     HANGOUTERROR_NORMAL,

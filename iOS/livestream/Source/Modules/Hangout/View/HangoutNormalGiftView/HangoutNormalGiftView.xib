@@ -39,6 +39,9 @@
                                 <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <state key="highlighted" title=" Tap to retry" image="Hangout_Invite_Fail"/>
+                            <connections>
+                                <action selector="retryListAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="8Jw-IS-fdh"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nD-P7-vBC" userLabel="Noyet Button">
                             <rect key="frame" x="135" y="83" width="105" height="26"/>

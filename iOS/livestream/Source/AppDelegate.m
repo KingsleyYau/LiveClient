@@ -17,10 +17,11 @@
 
 #import "LiveUrlHandler.h"
 #import "LiveModule.h"
+#import "LiveMutexService.h"
 
 #import "GCDWebDAVServer.h"
 #import "LSBackgroudReloadManager.h"
-@interface AppDelegate ()
+@interface AppDelegate () <IMutexServiceManager>
 @property (strong) GCDWebServer *httpServer;
 @end
 
@@ -44,9 +45,6 @@
 //    NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil startImmediately:YES];
     // 初始化Crash Log捕捉
 //    [CrashLogManager manager];
-    
-    // 状态栏白色
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     // 注册推送
 //    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
@@ -78,6 +76,7 @@
     // 注册推送
     [self registerRemoteNotifications:application];
 
+    [LiveModule module].serviceManager = self;
     // 延长启动画面时间
     // usleep(1000 * 1000);
     
@@ -133,15 +132,15 @@
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    return YES;
+    return [self handleOpenURL:url];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    return YES;
+    return [self handleOpenURL:url];
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
-    return YES;
+    return [self handleOpenURL:url];
 }
 
 - (void)registerRemoteNotifications:(UIApplication *)application {
@@ -196,4 +195,24 @@
     return _demo;
 }
 
+- (void)addService:(id<IMutexService>)service {
+    
+}
+- (void)removeService:(id<IMutexService>)service {
+    
+}
+- (void)startService:(id<IMutexService>)service {
+    
+}
+- (void)stopService:(id<IMutexService>)service {
+}
+- (BOOL)canOpenURL:(NSURL *)url {
+    return YES;
+}
+- (BOOL)handleOpenURL:(NSURL *)url {
+    // 处理App内部链接打开
+//    [[LiveMutexService service] stopService];
+    BOOL bFlag = [[LiveUrlHandler shareInstance] handleOpenURL:url];
+    return bFlag;
+}
 @end

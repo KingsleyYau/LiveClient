@@ -41,7 +41,7 @@ public:
     
 public:
     // 初始化参数
-    bool InitParam(const string& roomId);
+    bool InitParam(const string& roomId, bool isCreateOnly);
     
 private:
     IImClientListener*    m_listener;
@@ -49,6 +49,7 @@ private:
     SEQ_T           m_seq;        // seq
     
     string          m_roomId;      // 直播间ID（可无，无则表示新建，否则表示进入）
+    bool            m_isCreateOnly; // 是否仅创建新的Hangout直播间，若已有Hangout直播间则先关闭（0：否，1：是）
     
     
     LCC_ERR_TYPE    m_errType;    // 服务器返回的处理结果

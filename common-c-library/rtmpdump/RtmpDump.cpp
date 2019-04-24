@@ -862,7 +862,7 @@ void RtmpDump::CheckConnectRunnableHandle() {
                  this);
 
     while (mbRunning) {
-        mClientMutex.lock();
+    	mConnectedMutex.lock();
         if (mIsConnected) {
             // 已经连接上服务器, 标记退出线程
             bBreak = true;
@@ -886,7 +886,7 @@ void RtmpDump::CheckConnectRunnableHandle() {
                 bBreak = true;
             }
         }
-        mClientMutex.unlock();
+        mConnectedMutex.unlock();
 
         if (bBreak) {
             break;

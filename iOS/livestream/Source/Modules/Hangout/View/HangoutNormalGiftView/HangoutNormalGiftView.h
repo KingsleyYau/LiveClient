@@ -12,15 +12,12 @@
 @class HangoutNormalGiftView;
 @protocol HangoutNormalGiftViewDelegate <NSObject>
 - (void)hangoutNormalCollectionDidSelectItem:(LSGiftManagerItem *)item giftView:(HangoutNormalGiftView *)giftView;
+- (void)hangoutNormalGiftRetry;
 @end
 
 @interface HangoutNormalGiftView : UIView
 
 @property (nonatomic, strong) NSArray <LSGiftManagerItem *> *giftArray;
-
-@property (nonatomic, assign) BOOL isCellSelect;
-
-@property (nonatomic, strong) LSGiftManagerItem* selectCellItem;
 
 @property (nonatomic, weak) id<HangoutNormalGiftViewDelegate> delegate;
 

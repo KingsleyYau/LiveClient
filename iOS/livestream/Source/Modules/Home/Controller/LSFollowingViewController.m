@@ -34,7 +34,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *noDataTips;
 @property (weak, nonatomic) IBOutlet UIButton *viewHotBtn;
 
-
 /**
  是否加载数据
  */
@@ -49,10 +48,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     // 初始化主播列表
     [self setupTableView];
-    
+
     self.viewHotBtn.layer.cornerRadius = 18.0f;
     self.viewHotBtn.layer.masksToBounds = YES;
 }
@@ -60,7 +59,7 @@
 - (void)initCustomParam {
     [super initCustomParam];
     self.items = [NSMutableArray array];
-    
+
     // Items for tab
     LSUITabBarItem *tabBarItem = [[LSUITabBarItem alloc] init];
     self.tabBarItem = tabBarItem;
@@ -71,9 +70,9 @@
     NSDictionary *selectedColor = [NSDictionary dictionaryWithObject:Color(52, 120, 247, 1) forKey:NSForegroundColorAttributeName];
     [self.tabBarItem setTitleTextAttributes:normalColor forState:UIControlStateNormal];
     [self.tabBarItem setTitleTextAttributes:selectedColor forState:UIControlStateSelected];
-    
+
     self.sessionManager = [LSSessionRequestManager manager];
-    
+
     // 是否第一次登录
     self.isFirstLogin = NO;
     // 是否刷新数据
@@ -97,7 +96,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
     [self viewDidAppearGetList:NO];
     [self updateTableViewVouchersData];
 }
@@ -110,9 +109,8 @@
     [super viewDidDisappear:animated];
 }
 
-- (void)updateTableViewVouchersData
-{
-    [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSVoucherAvailableInfoItemObject * _Nonnull item) {
+- (void)updateTableViewVouchersData {
+    [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSVoucherAvailableInfoItemObject *_Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [HomeVouchersManager manager].item = item;
@@ -125,13 +123,11 @@
 - (void)setupTableView {
     // 初始化下拉
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
-    
+
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
-    
-    
     self.tableView.tableViewDelegate = self;
 }
 
@@ -150,7 +146,7 @@
 }
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    NSLog(@"%s",__func__);
+    NSLog(@"%s", __func__);
     [self reloadBtnClickAction:sender];
 }
 - (IBAction)viewHotlistDidClick:(id)sender {
@@ -196,7 +192,6 @@
 }
 
 - (void)reloadUnreadNum {
-    
 }
 
 #pragma mark - 上下拉
@@ -229,25 +224,25 @@
 #pragma mark 数据逻辑
 - (BOOL)getListRequest:(BOOL)loadMore {
     NSLog(@"LSFollowingViewController::getListRequest( loadMore : %@ )", BOOL2YES(loadMore));
-    
+
     BOOL bFlag = NO;
-    
+
     GetFollowListRequest *request = [[GetFollowListRequest alloc] init];
-    
+
     int start = 0;
     if (!loadMore) {
         // 刷最新
         start = 0;
-        
+
     } else {
         // 刷更多
         start = self.items ? ((int)self.items.count) : 0;
     }
-    
+
     // 每页最大纪录数
     request.start = start;
     request.step = PageSize;
-    
+
     // 隐藏没有数据内容
     [self hideNoDataTipsContent];
     // 调用接口
@@ -255,8 +250,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"LSFollowingViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
-                
-                [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSVoucherAvailableInfoItemObject * _Nonnull item) {
+
+                [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSVoucherAvailableInfoItemObject *_Nonnull item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         NSLog(@"LSFollowingViewController::getVouchersData(请求试聊券:[%@])", BOOL2SUCCESS(success));
                         self.failView.hidden = YES;
@@ -270,7 +265,7 @@
                             // 停止底部
                             [self.tableView finishPullUp:YES];
                         }
-                        
+
                         for (FollowItemObject *item in array) {
                             LiveRoomInfoItemObject *itemInfo = [[LiveRoomInfoItemObject alloc] init];
                             itemInfo.photoUrl = item.photoUrl;
@@ -289,13 +284,13 @@
                             itemInfo.chatOnlineStatus = item.chatOnlineStatus;
                             [self.items addObject:itemInfo];
                         }
-                        
+
                         if (self.items.count == 0) {
                             [self showTipsContent];
                         }
-                        
+
                         [self reloadData:YES];
-                        
+
                         if (!loadMore) {
                             if (self.items.count > 0) {
                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -303,7 +298,7 @@
                                     [self.tableView scrollsToTop];
                                 });
                             }
-                        }else {
+                        } else {
                             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                                 if (self.items.count > PageSize) {
                                     // 拉到下一页
@@ -330,20 +325,20 @@
                 }
                 [self reloadData:YES];
             }
-            
+
             self.view.userInteractionEnabled = YES;
         });
-        
+
     };
-    
+
     bFlag = [self.sessionManager sendRequest:request];
-    
+
     return bFlag;
 }
 
 - (void)addItemIfNotExist:(LiveRoomInfoItemObject *_Nonnull)itemNew {
     bool bFlag = NO;
-    
+
     for (LiveRoomInfoItemObject *item in self.items) {
         if ([item.userId isEqualToString:itemNew.userId]) {
             // 已经存在
@@ -351,7 +346,7 @@
             break;
         }
     }
-    
+
     if (!bFlag) {
         // 不存在
         [self.items addObject:itemNew];
@@ -377,14 +372,14 @@
 #pragma mark - 免费公开直播间
 /** 免费的公开直播间 */
 - (void)tableView:(HotTableView *)tableView didPublicViewFreeBroadcast:(NSInteger)index {
-    
+
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     // TODO:点击立即免费公开
     [[LiveModule module].analyticsManager reportActionEvent:EnterPublicBroadcast eventCategory:EventCategoryenterBroadcast];
     PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.roomType = LiveRoomType_Public;
-    
+
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
     // 继承导航栏控制器
@@ -441,23 +436,20 @@
     // TODO:预约的私密直播间
     [[LiveModule module].analyticsManager reportActionEvent:SendRequestBooking eventCategory:EventCategoryenterBroadcast];
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-    BookPrivateBroadcastViewController * vc = [[BookPrivateBroadcastViewController alloc]initWithNibName:nil bundle:nil];
+    BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
     vc.userId = item.userId;
     vc.userName = item.nickName;
     [self.navigationController pushViewController:vc animated:YES];
-    
 }
-
 
 /** 点击女士 */
 - (void)tableView:(HotTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
-    
+
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = item.userId;
     listViewController.enterRoom = 1;
     [self.navigationController pushViewController:listViewController animated:YES];
 }
-
 
 - (void)tableView:(HotTableView *)tableView didChatNowWithAnchor:(NSInteger)index {
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];

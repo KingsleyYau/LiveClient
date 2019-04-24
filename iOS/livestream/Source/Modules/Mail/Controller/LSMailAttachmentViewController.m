@@ -68,7 +68,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -83,7 +86,6 @@
 
 - (IBAction)closeAction:(id)sender {
     [self dismissViewControllerAnimated:NO completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [self.playManager removeNotification];
 }
 
@@ -166,7 +168,7 @@
             [freePhoto.photoView sd_cancelCurrentImageLoad];
             freePhoto.photoView.image = nil;
             [freePhoto activiViewIsShow:YES];
-            [loader sdWebImageLoadView:freePhoto.photoView options:0 imageUrl:obj.originImgUrl placeholderImage:nil finishHandler:^(UIImage *image) {
+            [loader loadImageWithImageView:freePhoto.photoView options:0 imageUrl:obj.originImgUrl placeholderImage:nil finishHandler:^(UIImage *image) {
                 if (image) {
                     [freePhoto activiViewIsShow:NO];
                 }
@@ -187,14 +189,14 @@
                 case ExpenseTypeNo:{
                     // 未付费
                     [secretPhoto onlyShowBuyView];
-                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.blurImgUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.blurImgUrl placeholderImage:nil finishHandler:nil];
                 }break;
                     
                 case ExpenseTypeYes:{
                     // 已付费
                     [secretPhoto activiViewIsShow:YES];
                     [secretPhoto onlyShowImageView];
-                    [loader sdWebImageLoadView:secretPhoto.photoImageView options:0 imageUrl:obj.originImgUrl placeholderImage:nil finishHandler:^(UIImage *image) {
+                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.originImgUrl placeholderImage:nil finishHandler:^(UIImage *image) {
                         [secretPhoto activiViewIsShow:NO];
                         if (!image) {
                             [secretPhoto onlyShowLoadFailView];
@@ -208,13 +210,13 @@
                     [secretPhoto activiViewIsShow:YES];
                     // 未付费
                     [secretPhoto onlyShowBuyView];
-                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.blurImgUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.blurImgUrl placeholderImage:nil finishHandler:nil];
                 }break;
                     
                 default:{
                     // 已过期
                     [secretPhoto onlyShowExpiredView];
-                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.blurImgUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:secretPhoto.photoImageView options:0 imageUrl:obj.blurImgUrl placeholderImage:nil finishHandler:nil];
                 }break;
             }
     
@@ -229,7 +231,7 @@
             [videoView setupDetail];
             if (obj.videoUrl.length > 0) {
                 [videoView activiViewIsShow:YES];
-                [self.playManager playLdayVideo:obj.videoUrl forView:videoView.videoPlayView playTime:obj.videoTime isShowSlider:obj.isReplied];
+                [self.playManager playLdayVideo:obj.videoUrl forView:videoView.videoPlayView playTime:obj.videoTime isShowSlider:obj.isReplied isShowPlayTime:YES];
             }
         }break;
         case AttachmentTypePrivateVideo: {
@@ -247,26 +249,26 @@
             switch (obj.expenseType) {
                 case ExpenseTypeNo:{
                     // 未付费
-                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil finishHandler:nil];
                     [videoView showBuyVideoView];
                 }break;
                     
                 case ExpenseTypeYes:{
                     // 已付费
-                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil finishHandler:nil];
                     [videoView showUnlockPlayView];
                 }break;
                     
                 case ExpenseTypePaying:{
                     [videoView activiViewIsShow:YES];
                     // 付费中
-                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil finishHandler:nil];
                     [videoView showBuyVideoView];
                 }break;
                     
                 default:{
                     // 已过期
-                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil];
+                    [loader loadImageWithImageView:videoView.videoImageView options:0 imageUrl:obj.videoCoverUrl placeholderImage:nil finishHandler:nil];
                     [videoView showExpiredView];
                 }break;
             }
@@ -313,7 +315,7 @@
     [photo onlyShowLoadingView];
     LSImageViewLoader *loader = [LSImageViewLoader loader];
     [loader stop];
-    [loader sdWebImageLoadView:photo.photoImageView options:0 imageUrl:model.originImgUrl placeholderImage:nil finishHandler:^(UIImage *image) {
+    [loader loadImageWithImageView:photo.photoImageView options:0 imageUrl:model.originImgUrl placeholderImage:nil finishHandler:^(UIImage *image) {
         [photo activiViewIsShow:NO];
         if (image) {
             [photo onlyShowImageView];
@@ -358,12 +360,15 @@
     NSString *successMsg = NSLocalizedStringFromSelf(@"Photo_Successful_Save");
     NSString *errorMsg = NSLocalizedStringFromSelf(@"Photo_Error");
     if (nil == error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:successMsg delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", nil), nil ,nil];
-        [alert show];
-        
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:successMsg preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+        [alertVC addAction:okAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:errorMsg delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", nil), nil,nil];
-        [alert show];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:errorMsg preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+        [alertVC addAction:okAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
     }
 }
 
@@ -374,7 +379,7 @@
         [view activiViewIsShow:YES];
         self.greetingVideoView = view;
         view.endView.hidden = YES;
-        [self.playManager playLdayVideo:model.videoUrl forView:view.videoPlayView playTime:model.videoTime isShowSlider:model.isReplied];
+        [self.playManager playLdayVideo:model.videoUrl forView:view.videoPlayView playTime:model.videoTime isShowSlider:model.isReplied isShowPlayTime:YES];
     }
 }
 
@@ -398,7 +403,7 @@
         [view activiViewIsShow:YES];
         self.greetingVideoView = view;
         view.endView.hidden = YES;
-        [self.playManager playLdayVideo:model.videoUrl forView:view.videoPlayView playTime:model.videoTime isShowSlider:model.isReplied];
+        [self.playManager playLdayVideo:model.videoUrl forView:view.videoPlayView playTime:model.videoTime isShowSlider:model.isReplied isShowPlayTime:YES];
     }
 }
 
@@ -423,7 +428,7 @@
         [view activiViewIsShow:YES];
         self.privateVideoView = view;
         [view hideenAllView];
-        [self.playManager playLdayVideo:model.videoUrl forView:view.videoPlayView playTime:model.videoTime isShowSlider:YES];
+        [self.playManager playLdayVideo:model.videoUrl forView:view.videoPlayView playTime:model.videoTime isShowSlider:YES isShowPlayTime:YES];
     }
 }
 
@@ -443,6 +448,8 @@
 }
 
 - (void)onRecvVideoPlayFailed {
+    [self.playManager removeNotification];
+    
     // TODO: 视频播放失败
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -468,6 +475,7 @@
 }
 
 - (void)onRecvVideoPlayDone {
+    [self.playManager removeNotification];
     // TODO: 视频播放完成
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -519,7 +527,7 @@
 - (void)getMailAttachment:(LSMailAttachmentModel *)model comsumeType:(LSLetterComsumeType)comsumeType {
     // 更新购买中状态
     [self resetExpenseType:model expenseType:ExpenseTypePaying originImg:nil videoUrl:nil];
-    
+    WeakObject(self, weakSelf);
     LSBuyPrivatePhotoVideoRequest *request = [[LSBuyPrivatePhotoVideoRequest alloc] init];
     request.emfId = model.mailId;
     if (model.attachType == AttachmentTypePrivatePhoto) {
@@ -533,7 +541,6 @@
     }
     request.comsumeType = comsumeType;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSBuyAttachItemObject *item) {
-        WeakObject(self, weakSelf);
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"LSMailAttachmentViewController::getMailAttachment(购买信件附件 success : %d, errnum : %d, errmsg : %@, originImg : %@, videoUrl : %@)",success, errnum, errmsg, item.originImg, item.videoUrl);
             // 判断当前界面数据是否是购买附件数据
@@ -559,7 +566,7 @@
                         [weakSelf.secretPhoto activiViewIsShow:YES];
                         LSImageViewLoader *loader = [LSImageViewLoader loader];
                         [loader stop];
-                        [loader sdWebImageLoadView:weakSelf.secretPhoto.photoImageView options:0 imageUrl:item.originImg placeholderImage:nil finishHandler:^(UIImage *image) {
+                        [loader loadImageWithImageView:weakSelf.secretPhoto.photoImageView options:0 imageUrl:item.originImg placeholderImage:nil finishHandler:^(UIImage *image) {
                             [weakSelf.secretPhoto activiViewIsShow:NO];
                             if (!image) {
                                 [weakSelf.secretPhoto onlyShowLoadFailView];

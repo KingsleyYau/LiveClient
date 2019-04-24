@@ -39,8 +39,6 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundClick:)];
     [self.backgroundView addGestureRecognizer:tap];
 
-
-    
     self.changeSiteBtn.layer.cornerRadius = 5;
     self.changeSiteBtn.layer.masksToBounds = YES;
     self.changeSiteBtn.adjustsImageWhenHighlighted = NO;
@@ -63,9 +61,14 @@
 }
 
 - (void)updateUserInfo {
+    
+    if (IS_IPHONE_X) {
+        self.settingBtnY.constant = 50;
+    }
+    
     self.nameLabel.text = [LSLoginManager manager].loginItem.nickName;
     
-    [[LSImageViewLoader loader] refreshCachedImage:self.headView options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+    [[LSImageViewLoader loader] loadImageFromCache:self.headView options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
     }];
     
     self.userIdLabel.text = [LSLoginManager manager].loginItem.userId;

@@ -22,9 +22,9 @@ LSLiveChatRequestLiveChatController::~LSLiveChatRequestLiveChatController() {
 
 // ----- IhttprequestManagerCallback -----
 void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, const char* buf, int size) {
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess( url : %s, buf( size : %d ), requestId:%ld)", url.c_str(), size, requestId);
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::onSuccess( url : %s, buf( size : %d ), requestId:%ld)", url.c_str(), size, requestId);
 	if ( size < MAX_LOG_BUFFER && size > 0 ) {
-		FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess(), buf: %s", buf);
+		FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::onSuccess(), buf: %s", buf);
 	}
 
 	// parse base result
@@ -168,104 +168,124 @@ void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, 
 	} 
 	else if ( url.compare(LC_SENDPHOTO_PATH) == 0 ) 
 	{
-		// 5.6.发送私密照片
+		// 12.9.发送私密照片
 		LSLCLCSendPhotoItem item;
-		TiXmlDocument doc;
-		bFlag = HandleResult(buf, size, errnum, errmsg, doc);
-		if (bFlag) {
-			TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
-			TiXmlNode *infoNode = rootNode->FirstChild(LIVECHAT_INFO);
-			bFlag = item.Parsing(infoNode);
-		}
+//        TiXmlDocument doc;
+//        bFlag = HandleResult(buf, size, errnum, errmsg, doc);
+//        if (bFlag) {
+//            TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
+//            TiXmlNode *infoNode = rootNode->FirstChild(LIVECHAT_INFO);
+//            bFlag = item.Parsing(infoNode);
+//        }
+        if (data[LIVECHAT_INFO].isObject()) {
+            item.Parsing(data[LIVECHAT_INFO]);
+        }
+        item.Parsing(data);
 		mLSLiveChatRequestLiveChatControllerCallback->OnSendPhoto(requestId, bFlag, errnum, errmsg, item);
 	} 
 	else if ( url.compare(LC_PHOTOFEE_PATH) == 0 ) 
 	{
-		// 5.7.付费获取私密照片
-		TiXmlDocument doc;
-		bFlag = HandleResult(buf, size, errnum, errmsg, doc);
-		FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() bFlag:%d", bFlag);
-		// 解析已购买
-		do {
-			if ( bFlag || doc.Error() ) {
-				break;
-			}
-
-			TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
-			if( rootNode == NULL ) {
-				break;
-			}
-
-			TiXmlNode *resultNode = rootNode->FirstChild(COMMON_RESULT);
-			if (resultNode == NULL) {
-				break;
-			}
-
-			TiXmlNode *statusNode = resultNode->FirstChild(COMMON_STATUS);
-			if (statusNode == NULL) {
-				break;
-			}
-
-			TiXmlElement* itemElement = statusNode->ToElement();
-			if (itemElement == NULL) {
-				break;
-			}
-
-			string status = itemElement->GetText();
-			if (!status.empty()) {
-				FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() status:%s", status.c_str());
-				bFlag = atoi(status.c_str()) == 2;
-			}
-
-			FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() atoi() bFlag:%d", bFlag);
-		} while (false);
-
-		mLSLiveChatRequestLiveChatControllerCallback->OnPhotoFee(requestId, bFlag, errnum, errmsg);
+		// 12.10.付费获取私密照片
+//        TiXmlDocument doc;
+//        bFlag = HandleResult(buf, size, errnum, errmsg, doc);
+        string sendId = "";
+//		FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() bFlag:%d", bFlag);
+//        // 解析已购买
+//        do {
+//            if ( bFlag || doc.Error() ) {
+//                break;
+//            }
+//
+//            TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
+//            if( rootNode == NULL ) {
+//                break;
+//            }
+//
+//            TiXmlNode *resultNode = rootNode->FirstChild(COMMON_RESULT);
+//            if (resultNode == NULL) {
+//                break;
+//            }
+//
+//            TiXmlNode *statusNode = resultNode->FirstChild(COMMON_STATUS);
+//            if (statusNode == NULL) {
+//                break;
+//            }
+//
+//            TiXmlElement* itemElement = statusNode->ToElement();
+//            if (itemElement == NULL) {
+//                break;
+//            }
+//
+//            string status = itemElement->GetText();
+//            if (!status.empty()) {
+//                FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() status:%s", status.c_str());
+//                bFlag = atoi(status.c_str()) == 2;
+//            }
+//
+//            FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() atoi() bFlag:%d", bFlag);
+//        } while (false);
+        if (data[LIVECHAT_INFO].isObject()) {
+            Json::Value info = data[LIVECHAT_INFO];
+            if (info[LIVECHAT_SENDID].isString()) {
+                sendId = info[LIVECHAT_SENDID].asString();
+            }
+        }
+		mLSLiveChatRequestLiveChatControllerCallback->OnPhotoFee(requestId, bFlag, errnum, errmsg, sendId);
 	} 
 	else if ( url.compare(LC_CHECKPHOTO_PATH) == 0 ) 
 	{
  
-		// 5.8.检查私密照片是否已付费
-		TiXmlDocument doc;
-		bFlag = HandleResult(buf, size, errnum, errmsg, doc);
-		FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() bFlag:%d", bFlag);
-		// 解析已购买
-		do {
-
-			TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
-			if( rootNode == NULL ) {
-				break;
-			}
-
-			TiXmlNode *resultNode = rootNode->FirstChild(COMMON_RESULT);
-			if (resultNode == NULL) {
-				break;
-			}
-
-			TiXmlNode *statusNode = resultNode->FirstChild(COMMON_STATUS);
-			if (statusNode == NULL) {
-				break;
-			}
-
-			TiXmlElement* itemElement = statusNode->ToElement();
-			if (itemElement == NULL) {
-				break;
-			}
-
-			string status = itemElement->GetText();
-			if (!status.empty()) {
-				FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() status:%s", status.c_str());
-				bFlag = atoi(status.c_str()) == 2;
-			}
-
-			FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() atoi() bFlag:%d", bFlag);
-		} while (false);
-
-		mLSLiveChatRequestLiveChatControllerCallback->OnCheckPhoto(requestId, bFlag, errnum, errmsg);
+		// 12.11.检查私密照片是否已付费
+        string sendId = "";
+        bool isChange = false;
+//        TiXmlDocument doc;
+//        bFlag = HandleResult(buf, size, errnum, errmsg, doc);
+//        FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() bFlag:%d", bFlag);
+//        // 解析已购买
+//        do {
+//
+//            TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
+//            if( rootNode == NULL ) {
+//                break;
+//            }
+//
+//            TiXmlNode *resultNode = rootNode->FirstChild(COMMON_RESULT);
+//            if (resultNode == NULL) {
+//                break;
+//            }
+//
+//            TiXmlNode *statusNode = resultNode->FirstChild(COMMON_STATUS);
+//            if (statusNode == NULL) {
+//                break;
+//            }
+//
+//            TiXmlElement* itemElement = statusNode->ToElement();
+//            if (itemElement == NULL) {
+//                break;
+//            }
+//
+//            string status = itemElement->GetText();
+//            if (!status.empty()) {
+//                FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() status:%s", status.c_str());
+//                bFlag = atoi(status.c_str()) == 2;
+//            }
+//
+//            FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() atoi() bFlag:%d", bFlag);
+//        } while (false);
+        if (data[LIVECHAT_STATUS].isNumeric()) {
+            isChange = (data[LIVECHAT_STATUS].asInt() == 2 ? true : false);
+        }
+        if (data[LIVECHAT_INFO].isObject()) {
+            Json::Value info = data[LIVECHAT_INFO];
+            if (info[LIVECHAT_SENDID].isString()) {
+                sendId = info[LIVECHAT_SENDID].asString();
+            }
+        }
+		mLSLiveChatRequestLiveChatControllerCallback->OnCheckPhoto(requestId, bFlag, errnum, errmsg, sendId, isChange);
 	}
 	else if ( url.compare(LC_GETPHOTO_PATH) == 0 ) 
 	{
-		// 5.9.获取对方私密照片
+		// 12.12.获取对方私密照片
 		// 找回文件路径
 		string filePath("");
 		RequestCustomParamMap::iterator iter = mCustomParamMap.find(requestId);
@@ -401,16 +421,12 @@ void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, 
 
 		mLSLiveChatRequestLiveChatControllerCallback->OnSendGift(requestId, bFlag, errnum, errmsg);
 	} else if( url.compare(LC_RECENT_VIDEO_PATH) == 0) {
-		// 6.13.获取最近已看微视频列表
+		// 12.13.获取最近已看微视频列表
 		list<LSLCVideoItem> itemList;
-		TiXmlDocument doc;
-		bFlag = HandleResult(buf, size, errnum, errmsg, doc);
-		if( bFlag ) {
-			HandleQueryRecentVideo(doc, itemList);
-		}
-
+        HandleQueryRecentVideo(data, itemList);
 		mLSLiveChatRequestLiveChatControllerCallback->OnQueryRecentVideoList(requestId, bFlag, itemList, errnum, errmsg);
 	} else if( url.compare(LC_GET_VIDEO_PHOTO_PATH) == 0 ) {
+        // 12.14.获取微视频图片
 		// 找回文件路径
 		string filePath("");
 		RequestCustomParamMap::iterator iter = mCustomParamMap.find(requestId);
@@ -471,14 +487,9 @@ void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, 
 
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetVideoPhoto(requestId, bFlag, errnum, errmsg, filePath);
 	} else if( url.compare(LC_GET_VIDEO_PATH) == 0 ) {
-		// 6.15.获取微视频文件URL
-		TiXmlDocument doc;
+		// 12.15.获取微视频文件URL
 		string url = "";
-
-		bFlag = HandleResult(buf, size, errnum, errmsg, doc);
-		if( bFlag ) {
-			HandleGetVideo(doc, url);
-		}
+        HandleGetVideo(data, url);
 
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetVideo(requestId, bFlag, errnum, errmsg, url);
 	}else if( url.compare(LC_GET_MAGICICON_CONFIG_PATH) == 0 ) {
@@ -584,7 +595,7 @@ void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, 
 	FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() url: %s, end", url.c_str());
 }
 void LSLiveChatRequestLiveChatController::onFail(long requestId, string url) {
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::onFail( url : %s ), requestId:%ld", url.c_str(), requestId);
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::onFail( url : %s ), requestId:%ld", url.c_str(), requestId);
 	// request fail, callback fail
 	if( url.compare(CHECK_COUPON_PATH) == 0 ) {
 		// 12.7.查询是否符合试聊条件
@@ -642,17 +653,17 @@ void LSLiveChatRequestLiveChatController::onFail(long requestId, string url) {
 		list<LSLCRecordMutiple> recordMutiList;
 		mLSLiveChatRequestLiveChatControllerCallback->OnQueryChatRecordMutiple(requestId, false, 0, recordMutiList, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC);
 	} else if ( url.compare(LC_SENDPHOTO_PATH) == 0 ) {
-		// 5.6.发送私密照片
+		// 12.9.发送私密照片
 		LSLCLCSendPhotoItem item;
 		mLSLiveChatRequestLiveChatControllerCallback->OnSendPhoto(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, item);
 	} else if ( url.compare(LC_PHOTOFEE_PATH) == 0 ) {
-		// 5.7.付费获取私密照片
-		mLSLiveChatRequestLiveChatControllerCallback->OnPhotoFee(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC);
+		// 12.10.付费获取私密照片
+		mLSLiveChatRequestLiveChatControllerCallback->OnPhotoFee(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, "");
 	}else if ( url.compare(LC_CHECKPHOTO_PATH) == 0 ) {
-		// 5.8.检查私密照片是否已付费
-		mLSLiveChatRequestLiveChatControllerCallback->OnCheckPhoto(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC);
+		// 12.11.检查私密照片是否已付费
+		mLSLiveChatRequestLiveChatControllerCallback->OnCheckPhoto(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, "", false);
 	}  else if ( url.compare(LC_GETPHOTO_PATH) == 0 ) {
-		// 5.9.获取对方私密照片
+		// 12.12.获取对方私密照片
 		// 找回文件路径
 		string filePath("");
 		RequestCustomParamMap::iterator iter = mCustomParamMap.find(requestId);
@@ -679,11 +690,11 @@ void LSLiveChatRequestLiveChatController::onFail(long requestId, string url) {
 		// 6.12.发送虚拟礼物
 		mLSLiveChatRequestLiveChatControllerCallback->OnSendGift(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC);
 	} else if( url.compare(LC_RECENT_VIDEO_PATH) == 0) {
-		// 6.13.获取最近已看微视频列表
+		// 12.13.获取最近已看微视频列表
 		list<LSLCVideoItem> itemList;
 		mLSLiveChatRequestLiveChatControllerCallback->OnQueryRecentVideoList(requestId, false, itemList, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC);
 	} else if( url.compare(LC_GET_VIDEO_PHOTO_PATH) == 0 ) {
-		// 6.14.获取微视频图片
+		// 12.14.获取微视频图片
 		// 找回文件路径
 		string filePath("");
 		RequestCustomParamMap::iterator iter = mCustomParamMap.find(requestId);
@@ -701,7 +712,7 @@ void LSLiveChatRequestLiveChatController::onFail(long requestId, string url) {
 
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetVideoPhoto(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, filePath);
 	} else if( url.compare(LC_GET_VIDEO_PATH) == 0 ) {
-		// 6.15.获取微视频文件URL
+		// 12.15.获取微视频文件URL
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetVideo(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, "");
 	}else if( url.compare(LC_GET_MAGICICON_CONFIG_PATH) == 0 ) {
 		// 12.5.查询小高级表情配置
@@ -1096,8 +1107,6 @@ long LSLiveChatRequestLiveChatController::SendPhoto(
 		, const string& inviteId
 		, const string& userId
 		, const string& sid
-		, SENDPHOTO_MODE_TYPE modeType
-		, const string& photoId
 		, const string& filePath)
 {
 	HttpEntiy entiy;
@@ -1110,36 +1119,26 @@ long LSLiveChatRequestLiveChatController::SendPhoto(
 	entiy.AddContent(LIVECHAT_USER_ID, userId);
 	// sid
 	entiy.AddContent(LIVECHAT_SESSIONID, sid);
-	// mode
-	char temp[32] = {0};
-	snprintf(temp, sizeof(temp), "%d", modeType);
-	entiy.AddContent(LIVECHAT_SENDMODE, temp);
-	// photoId
-	entiy.AddContent(LIVECHAT_PHOTOID, photoId);
 	// file
-	entiy.AddFile(LIVECHAT_PHOTOFILE, filePath);
+	entiy.AddContent(LIVECHAT_PHOTOFILE, filePath);
 
 	string url = LC_SENDPHOTO_PATH;
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::SendPhoto( "
+    FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::SendPhoto( "
 			"url: %s, "
 			"targetId: %s, "
 			"inviteId: %s, "
-			"modeType: %d, "
-			"photoId: %s, "
 			"filePath: %s"
 			")",
 			url.c_str(),
 			targetId.c_str(),
 			inviteId.c_str(),
-			modeType,
-			photoId.c_str(),
 			filePath.c_str()
 			);
 
 	return StartRequest(url, entiy, this, WebSite);
 }
 
-// 付费获取私密照片
+// 12.10.付费获取私密照片
 long LSLiveChatRequestLiveChatController::PhotoFee(const string& targetId, const string& inviteId, const string& userId, const string& sid, const string& photoId)
 {
 	HttpEntiy entiy;
@@ -1156,7 +1155,7 @@ long LSLiveChatRequestLiveChatController::PhotoFee(const string& targetId, const
 	entiy.AddContent(LIVECHAT_PHOTOID, photoId);
 
 	string url = LC_PHOTOFEE_PATH;
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::PhotoFee( "
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::PhotoFee( "
 			"url: %s, "
 			"targetId: %s, "
 			"inviteId: %s, "
@@ -1171,7 +1170,7 @@ long LSLiveChatRequestLiveChatController::PhotoFee(const string& targetId, const
 	return StartRequest(url, entiy, this, WebSite);
 }
 
-// 检查私密照片是否已付费
+// 12.11.检查私密照片是否已付费
 long LSLiveChatRequestLiveChatController::CheckPhoto(const string& targetId
 		, const string& inviteId
 		, const string& userId
@@ -1191,7 +1190,7 @@ long LSLiveChatRequestLiveChatController::CheckPhoto(const string& targetId
 	entiy.AddContent(LIVECHAT_PHOTOID, photoId);
 
 	string url = LC_CHECKPHOTO_PATH;
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::CheckPhoto( "
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::CheckPhoto( "
 			"url: %s, "
 			"targetId: %s, "
 			"inviteId: %s, "
@@ -1247,7 +1246,7 @@ long LSLiveChatRequestLiveChatController::GetPhoto(
 	entiy.AddContent(LIVECHAT_PHOTOMODE, temp);
 
 	string url = LC_GETPHOTO_PATH;
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::GetPhoto( "
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::GetPhoto( "
 			"url: %s, "
 			"targetId: %s, "
 			"photoId: %s, "
@@ -1522,7 +1521,7 @@ long LSLiveChatRequestLiveChatController::SendGift(string womanId, string vg_id,
 }
 
 /**
- * 6.12.获取最近已看微视频列表（http post）（New）
+ * 12.13.获取最近已看微视频列表（http post）（New）
  * @param womanId		女士ID
  * @return				请求唯一Id
  */
@@ -1550,36 +1549,37 @@ long LSLiveChatRequestLiveChatController::QueryRecentVideo(
 		entiy.AddContent(LC_RECENT_VIDEO_TARGETID, womanId.c_str());
 	}
 
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::QueryRecentVideo( "
+    FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::QueryRecentVideo( "
 			"url : %s, "
-			"targetid: %s "
+            "user_sid: %s, "
+            "user_id: %s, "
+			"womanId: %s "
 			")",
 			url.c_str(),
+            user_sid.c_str(),
+            user_id.c_str(),
 			womanId.c_str()
 			);
 
 	return StartRequest(url, entiy, this, WebSite);
 }
-void LSLiveChatRequestLiveChatController::HandleQueryRecentVideo(TiXmlDocument &doc, list<LSLCVideoItem> &itemList) {
-//	const char *p = NULL;
-	TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
-	if( rootNode != NULL ) {
-		TiXmlNode *videoNode = rootNode->FirstChild(LC_RECENT_VIDEO_VIDEO);
-		if( videoNode != NULL ) {
-			TiXmlNode *listNode = videoNode->FirstChild(LC_RECENT_VIDEO_LIST);
-			while( listNode != NULL ) {
-				LSLCVideoItem item;
-				item.Parse(listNode);
-				itemList.push_back(item);
+void LSLiveChatRequestLiveChatController::HandleQueryRecentVideo(Json::Value root, list<LSLCVideoItem> &itemList) {
+    //Json::Value data;
+    if (root.isObject()) {
+        if (root[LC_RECENT_VIDEO_LIST].isArray()) {
+            for(int i = 0; i < root[LC_RECENT_VIDEO_LIST].size(); i++ ) {
+                LSLCVideoItem item;
+                item.Parse(root[LC_RECENT_VIDEO_LIST].get(i, Json::Value::null));
+                itemList.push_back(item);
+            }
 
-				listNode = listNode->NextSibling();
-			}
-		}
-	}
+        }
+    }
+    
 }
 
 /**
- * 6.13.获取微视频图片（http get）（New）
+ * 12.14.获取微视频图片（http get）（New）
  * @param womanId		女士ID
  * @param videoid		视频ID
  * @param type			图片尺寸
@@ -1626,18 +1626,22 @@ long LSLiveChatRequestLiveChatController::GetVideoPhoto(
 	snprintf(temp, sizeof(temp), "%d", type);
 	entiy.AddContent(LC_GET_VIDEO_PHOTO_SIZE, temp);
 
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::GetVideoPhoto( "
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::GetVideoPhoto( "
 			"url : %s, "
 			"targetid: %s, "
 			"videoid : %s, "
 			"type : %d, "
-			"filePath : %s "
+			"filePath : %s, "
+            "user_sid : %s, "
+            "user_id : %s "
 			")",
 			url.c_str(),
 			womanId.c_str(),
 			videoid.c_str(),
 			type,
-			filePath.c_str()
+			filePath.c_str(),
+            user_sid.c_str(),
+            user_id.c_str()
 			);
 
 	// 删除文件
@@ -1654,24 +1658,16 @@ long LSLiveChatRequestLiveChatController::GetVideoPhoto(
 	return requestId;
 }
 
-void LSLiveChatRequestLiveChatController::HandleGetVideo(TiXmlDocument &doc, string &url) {
+void LSLiveChatRequestLiveChatController::HandleGetVideo(Json::Value root, string &url) {
 //	const char *p = NULL;
-	TiXmlNode *rootNode = doc.FirstChild(COMMON_ROOT);
-	if( rootNode != NULL ) {
-		TiXmlNode *videoNode = rootNode->FirstChild(LC_GET_VIDEO_VIDEO_URL);
-		if( videoNode != NULL ) {
-			TiXmlElement* itemElement = videoNode->ToElement();
-			if ( itemElement != NULL ) {
-				const char* p = itemElement->GetText();
-				if( p != NULL ) {
-					url = p;
-				}
-			}
-		}
-	}
+        if( root.isObject() ) {
+            if (root[LC_GET_VIDEO_VIDEO_URL].isString()) {
+                url = root[LC_GET_VIDEO_VIDEO_URL].asString();
+            }
+    }
 }
 /**
- * 6.14.获取微视频文件URL（http post）（New）
+ * 12.15.获取微视频文件URL（http post）（New）
  * @param womanId		女士ID
  * @param videoid		视频ID
  * @param inviteid		邀请ID
@@ -1729,20 +1725,24 @@ long LSLiveChatRequestLiveChatController::GetVideo(
 		entiy.AddContent(LC_GET_VIDEO_SENDID, sendid.c_str());
 	}
 
-	FileLog("httprequest", "LSLiveChatRequestLiveChatController::GetVideo( "
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::GetVideo( "
 			"url : %s, "
 			"targetid : %s, "
 			"videoid : %s, "
 			"inviteid : %s, "
 			"toflag : %d, "
-			"sendid : %s "
+			"sendid : %s, "
+            "user_sid : %s, "
+            "user_id : %s "
 			")",
 			url.c_str(),
 			womanId.c_str(),
 			videoid.c_str(),
 			inviteid.c_str(),
 			toflag,
-			sendid.c_str()
+			sendid.c_str(),
+            user_sid.c_str(),
+            user_id.c_str()
 			);
 
 	return StartRequest(url, entiy, this, WebSite);

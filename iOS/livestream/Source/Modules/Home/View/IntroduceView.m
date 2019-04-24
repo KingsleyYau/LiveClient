@@ -68,7 +68,7 @@
 //    [myConfiguration.userContentController addScriptMessageHandler:self name:LIVEAPP_JS];
 //
     self = [super initWithFrame:frame configuration:myConfiguration];
-    self.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.translatesAutoresizingMaskIntoConstraints = NO;
     return self;
 }
 

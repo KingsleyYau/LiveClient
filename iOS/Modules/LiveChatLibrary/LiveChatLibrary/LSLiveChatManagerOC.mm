@@ -64,6 +64,12 @@ static LSLiveChatManagerOC *liveChatManager = nil;
 - (void)onSendPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(const string &)errNo errMsg:(const string &)errMsg msgItem:(LSLCMessageItem *)msgItem;
 - (void)onCheckPhotoFeeStatus:(bool)success errNo:(const string &)errNo errMsg:(const string &)errMsg msgItem:(LSLCMessageItem *)msgItem;
 
+#pragma mark---- 视频回调处理(OC) ----
+- (void)onGetVideo:(LSLIVECHAT_LCC_ERR_TYPE)errType userId:(const string &)userId videoId:(const string &)videoId inviteId:(const string &)inviteId videoPath:(const string &)videoPath msgList:(const LCMessageList &)msgList;
+- (void)onGetVideoPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(const string &)errNo errMsg:(const string &)errMsg userId:(const string &)userId inviteId:(const string &)inviteId videoId:(const string &)videoId videoType:(VIDEO_PHOTO_TYPE)videoType videoPath:(const string &)videoPath msgList:(const LCMessageList &)msgList;
+- (void)onRecvVideo:(LSLCMessageItem *)msgItem;
+- (void)onVideoFee:(bool)success errNo:(const string &)errNo errMsg:(const string &)errMsg msgItem:(LSLCMessageItem *)msgItem;
+
 #pragma mark---- 高级表情回调处理(OC) ----
 - (void)onGetEmotionConfig:(bool)success errNo:(const string &)errNo errMsg:(const string &)errMsg otherEmtConItem:(const LSLCOtherEmotionConfigItem &)config;
 - (void)onGetEmotionImage:(bool)success emtItem:(const LSLCEmotionItem *)item;
@@ -327,7 +333,11 @@ class LiveChatManManagerListener : public ILSLiveChatManManagerListener {
                     const string &videoId,
                     const string &inviteId,
                     const string &videoPath,
-                    const LCMessageList &msgList){};
+                    const LCMessageList &msgList){
+        if (nil != liveChatManager) {
+            [liveChatManager onGetVideo:errType userId:userId videoId:videoId inviteId:inviteId videoPath:videoPath msgList:msgList];
+        }
+    };
 
     void OnGetVideoPhoto(LSLIVECHAT_LCC_ERR_TYPE errType,
                          const string &errNo,
@@ -335,11 +345,23 @@ class LiveChatManManagerListener : public ILSLiveChatManManagerListener {
                          const string &userId,
                          const string &inviteId,
                          const string &videoId,
-                         VIDEO_PHOTO_TYPE,
+                         VIDEO_PHOTO_TYPE videoType,
                          const string &filePath,
-                         const LCMessageList &msgList){};
-    void OnRecvVideo(LSLCMessageItem *msgItem){};
-    void OnVideoFee(bool success, const string &errNo, const string &errMsg, LSLCMessageItem *msgItem){};
+                         const LCMessageList &msgList){
+        if (nil != liveChatManager) {
+            [liveChatManager onGetVideoPhoto:errType errNo:errNo errMsg:errMsg userId:userId inviteId:inviteId videoId:videoId videoType:videoType videoPath:filePath msgList:msgList];
+        }
+    };
+    void OnRecvVideo(LSLCMessageItem *msgItem){
+        if (nil != liveChatManager) {
+            [liveChatManager onRecvVideo:msgItem];
+        }
+    };
+    void OnVideoFee(bool success, const string &errNo, const string &errMsg, LSLCMessageItem *msgItem){
+        if (nil != liveChatManager) {
+            [liveChatManager onVideoFee:success errNo:errNo errMsg:errMsg msgItem:msgItem];
+        }
+    };
 
 #pragma mark---- 小高级表情回调(C++) ----
     //获取小高级表情配置item（登录成功后manmanager调用，后回调的）
@@ -603,7 +625,10 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
               sid:(NSString *)sid
            device:(NSString *)device
    livechatInvite:(NSInteger)livechatInvite
-       isLivechat:(BOOL)isLiveChat {
+       isLivechat:(BOOL)isLiveChat
+  isSendPhotoPriv:(BOOL)isSendPhotoPriv
+   isLiveChatPriv:(BOOL)isLiveChatPriv
+  isSendVoicePriv:(BOOL)isSendVoicePriv{
     BOOL result = NO;
     if (NULL == mILSLiveChatManManager) {
          mILSLiveChatManManager = ILSLiveChatManManager::Create();
@@ -638,7 +663,7 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
         }
         
 
-    result = result &&mILSLiveChatManManager->Login(strUser, strUserName, strSid, CLIENT_IPHONE, HttpClient::GetCookiesInfo(), strDevice, NO, GetliveChatInviteRiskType((int)livechatInvite), isLiveChat, YES);
+    result = result &&mILSLiveChatManManager->Login(strUser, strUserName, strSid, CLIENT_IPHONE, HttpClient::GetCookiesInfo(), strDevice, GetliveChatInviteRiskType((int)livechatInvite), isLiveChat, YES, isSendPhotoPriv, isLiveChatPriv, isSendVoicePriv);
     NSLog(@"LSLiveChatRequestManager::loginUser( user : %@,  sid: %@)", user, sid);
     return result;
 }
@@ -736,6 +761,18 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
             }
         }
     }
+}
+
+- (BOOL)isNoMoneyWithErrCode:(NSString *)errCode {
+    BOOL result = NO;
+    if (NULL != mILSLiveChatManManager) {
+        string strErrCode = "";
+        if (errCode != nil) {
+            strErrCode = [errCode UTF8String];
+        }
+        result = mILSLiveChatManManager->IsNoMoneyWithErrCode(strErrCode);
+    }
+    return result;
 }
 
 //判断是否有风控
@@ -1086,6 +1123,19 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
     return result;
 }
 
+- (NSArray<LSLCLiveChatMsgItemObject *> *)getPrivateAndVideoMessageList:(NSString *)userId {
+    NSArray<LSLCLiveChatMsgItemObject *> *msgList = [NSArray array];
+    if (NULL != mILSLiveChatManManager) {
+        string strWomanId = "";
+        if (userId != nil) {
+            strWomanId = [userId UTF8String];
+        }
+        LCMessageList list = mILSLiveChatManManager->GetPrivateAndVideoMessageList(strWomanId);
+        msgList = [LSLCLiveChatItem2OCObj getLiveChatMsgArray:list];
+    }
+    return msgList;
+}
+
 #pragma mark - 普通消息处理（文本/历史聊天消息等）
 - (LSLCLiveChatMsgItemObject *)sendTextMsg:(NSString *)userId text:(NSString *)text {
     LSLCLiveChatMsgItemObject *msgObj = nil;
@@ -1323,7 +1373,7 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
     return msgObj;
 }
 
-- (BOOL)photoFee:(NSString *)userId mphotoId:(NSString *)photoId {
+- (BOOL)photoFee:(NSString *)userId mphotoId:(NSString *)photoId inviteId:(NSString *)inviteId {
 
     BOOL result = NO;
     if (NULL != mILSLiveChatManManager) {
@@ -1335,7 +1385,11 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
         if (photoId != nil) {
             strPhotoId = [photoId UTF8String];
         }
-        result = mILSLiveChatManManager->PhotoFee(strUserId, strPhotoId);
+        string strInviteId = "";
+        if (inviteId != nil) {
+            strInviteId = [inviteId UTF8String];
+        }
+        result = mILSLiveChatManManager->PhotoFee(strUserId, strPhotoId, strInviteId);
         //result = mILSLiveChatManManager->CheckPhoto(pUserId, pPhotoId);
     }
 
@@ -1438,6 +1492,191 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
             id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
             if ([delegate respondsToSelector:@selector(onCheckPhotoFeeStatus:errNo:errMsg:msgItem:)]) {
                 [delegate onCheckPhotoFeeStatus:success errNo:nsErrNo errMsg:nsErrMsg msgItem:msgObj];
+            }
+        }
+    }
+}
+
+#pragma mark - 视频消息处理
+-(BOOL)getVideoPhoto:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId {
+    BOOL result = NO;
+    if (NULL != mILSLiveChatManManager) {
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        string strVideoId = "";
+        if (videoId != nil) {
+            strVideoId = [videoId UTF8String];
+        }
+        string strInviteId = "";
+        if (inviteId != nil) {
+            strInviteId = [inviteId UTF8String];
+        }
+        result = mILSLiveChatManManager->GetVideoPhoto(strUserId, strVideoId, strInviteId);
+    }
+    return result;
+}
+
+-(BOOL)videoFee:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString * _Nonnull)inviteId {
+    BOOL result = NO;
+    if (NULL != mILSLiveChatManManager) {
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        string strVideoId = "";
+        if (videoId != nil) {
+            strVideoId = [videoId UTF8String];
+        }
+        
+        string strInviteId = "";
+        if (inviteId != nil) {
+            strInviteId = [inviteId UTF8String];
+        }
+        
+        result = mILSLiveChatManManager->VideoFee(strUserId, strVideoId, strInviteId);
+    }
+    return result;
+}
+
+-(BOOL)getVideo:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId videoUrl:(NSString* _Nonnull)videoUrl msgId:(int)msgId {
+    BOOL result = NO;
+    if (NULL != mILSLiveChatManManager) {
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        string strVideoId = "";
+        if (videoId != nil) {
+            strVideoId = [videoId UTF8String];
+        }
+        string strInviteId = "";
+        if (inviteId != nil) {
+            strInviteId = [inviteId UTF8String];
+        }
+        string strVideoUrl = "";
+        if (videoUrl != nil) {
+            strVideoUrl = [videoUrl UTF8String];
+        }
+        result = mILSLiveChatManManager->GetVideo(strUserId, strVideoId, strInviteId, strVideoUrl, msgId);
+    }
+    return result;
+}
+
+-(BOOL)isGetingVideo:(NSString* _Nonnull)videoId {
+    BOOL result = NO;
+    if (NULL != mILSLiveChatManManager) {
+        string strVideoId = "";
+        if (videoId != nil) {
+            strVideoId = [videoId UTF8String];
+        }
+        result = mILSLiveChatManManager->IsGetingVideo(strVideoId);
+    }
+    return result;
+}
+
+-(NSString* _Nonnull)getVideoPhotoPathWithExist:(NSString* _Nonnull)userId inviteId:(NSString* _Nonnull)inviteId videoId:(NSString* _Nonnull)videoId type:(VIDEO_PHOTO_TYPE)type {
+    NSString* path = @"";
+    if (NULL != mILSLiveChatManManager) {
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        string strInviteId = "";
+        if (inviteId != nil) {
+            strInviteId = [inviteId UTF8String];
+        }
+        string strVideoId = "";
+        if (videoId != nil) {
+            strVideoId = [videoId UTF8String];
+        }
+        path = [NSString stringWithUTF8String:(mILSLiveChatManManager->GetVideoPhotoPathWithExist(strUserId, strInviteId, strVideoId, type)).c_str()];
+    }
+    return path;
+}
+
+-(NSString* _Nonnull)getVideoPathWithExist:(NSString* _Nonnull)userId inviteId:(NSString* _Nonnull)inviteId videoId:(NSString* _Nonnull)videoId {
+    NSString* path = @"";
+    if (NULL != mILSLiveChatManManager) {
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        string strInviteId = "";
+        if (inviteId != nil) {
+            strInviteId = [inviteId UTF8String];
+        }
+        string strVideoId = "";
+        if (videoId != nil) {
+            strVideoId = [videoId UTF8String];
+        }
+        mILSLiveChatManManager->GetVideoPathWithExist(strUserId, strInviteId, strVideoId);
+    }
+    return path;
+}
+
+
+#pragma mark - 视频消息处理回调
+- (void)onGetVideo:(LSLIVECHAT_LCC_ERR_TYPE)errType userId:(const string &)userId videoId:(const string &)videoId inviteId:(const string &)inviteId videoPath:(const string &)videoPath msgList:(const LCMessageList &)msgList {
+    NSString *nsUserId = [NSString stringWithUTF8String:userId.c_str()];
+    NSString *nsVideoId = [NSString stringWithUTF8String:videoId.c_str()];
+    NSString *nsInviteId = [NSString stringWithUTF8String:inviteId.c_str()];
+    NSString *nsVideoPath = [NSString stringWithUTF8String:videoPath.c_str()];
+    NSArray<LSLCLiveChatMsgItemObject *> *msgListObj = [LSLCLiveChatItem2OCObj getLiveChatMsgArray:msgList];
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onGetVideo:userId:videoId:inviteId:videoPath:msgList:)]) {
+                [delegate onGetVideo:errType userId:nsUserId videoId:nsVideoId inviteId:nsInviteId videoPath:nsVideoPath msgList:msgListObj];
+            }
+        }
+    }
+}
+- (void)onGetVideoPhoto:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(const string &)errNo errMsg:(const string &)errMsg userId:(const string &)userId inviteId:(const string &)inviteId videoId:(const string &)videoId videoType:(VIDEO_PHOTO_TYPE)videoType videoPath:(const string &)videoPath msgList:(const LCMessageList &)msgList {
+    NSString *nsErrNo = [NSString stringWithUTF8String:errNo.c_str()];
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    NSString *nsUserId = [NSString stringWithUTF8String:userId.c_str()];
+    NSString *nsInviteId = [NSString stringWithUTF8String:inviteId.c_str()];
+    NSString *nsVideoId = [NSString stringWithUTF8String:videoId.c_str()];
+    NSString *nsVideoPath = [NSString stringWithUTF8String:videoPath.c_str()];
+    NSArray<LSLCLiveChatMsgItemObject *> *msgListObj = [LSLCLiveChatItem2OCObj getLiveChatMsgArray:msgList];
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onGetVideoPhoto:errNo:errMsg:userId:inviteId:videoId:videoType:videoPath:msgList:)]) {
+                [delegate onGetVideoPhoto:errType errNo:nsErrNo errMsg:nsErrMsg userId:nsUserId inviteId:nsInviteId videoId:nsVideoId videoType:videoType videoPath:nsVideoPath msgList:msgListObj];
+            }
+        }
+    }
+}
+
+- (void)onRecvVideo:(LSLCMessageItem *)msgItem {
+    LSLCLiveChatMsgItemObject *msgObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:msgItem];
+    
+    if ([self iniviteMsgIsRiskControl:msgObj]) {
+        return;
+    }
+    
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvVideo:)]) {
+                [delegate onRecvVideo:msgObj];
+            }
+        }
+    }
+}
+
+- (void)onVideoFee:(bool)success errNo:(const string &)errNo errMsg:(const string &)errMsg msgItem:(LSLCMessageItem *)msgItem {
+    LSLCLiveChatMsgItemObject *msgObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:msgItem];
+    NSString *nsErrNo = [NSString stringWithUTF8String:errNo.c_str()];
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onVideoFee:errNo:errMsg:msgItem:)]) {
+                [delegate onVideoFee:success errNo:nsErrNo errMsg:nsErrMsg msgItem:msgObj];
             }
         }
     }

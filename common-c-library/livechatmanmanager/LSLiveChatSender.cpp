@@ -7,6 +7,7 @@
 //
 
 #include "LSLiveChatSender.h"
+#include "LSLiveChatEnumDefine.h"
 
 LSLiveChatSender::LSLiveChatSender(
                                      ILSLiveChatManManagerOperator* pOperator,
@@ -221,10 +222,27 @@ void LSLiveChatSender::SendPhotoProc(LSLCMessageItem* item)
     LSLCUserItem* userItem = item->GetUserItem();
     LSLCPhotoItem* photoItem = item->GetPhotoItem();
 
-	
-	if (photoItem->m_photoId.empty() || photoItem->m_sendId.empty()) {
+    if (photoItem->m_loadUrl.empty()) {
+        // 没上传文件成功，请求上传文件
+        long requestId = m_requestOtherController->UploadManPhoto(photoItem->m_srcFilePath);
+        if (HTTPREQUEST_INVALIDREQUESTID != requestId) {
+            // 请求成功
+            item->m_statusType = StatusType_Processing;
+            
+            // 添加到请求表
+            if (!m_photoMgr->AddRequestItem(requestId, item)) {
+                FileLog("LSLiveChatSender", "SendPhotoProc() add request item fail, requestId:%d", requestId);
+            }
+        }
+        else {
+            item->m_statusType = StatusType_Fail;
+            item->m_procResult.SetResult(LSLIVECHAT_LCC_ERR_FAIL, "", "");
+            m_listener->OnSendPhoto(item->m_procResult.m_errType, item->m_procResult.m_errNum, item->m_procResult.m_errMsg, item);
+        }
+    }
+	else if (photoItem->m_photoId.empty() || photoItem->m_sendId.empty()) {
 		// 没上传文件成功，请求上传文件
-		long requestId = m_requestController->SendPhoto(userItem->m_userId, userItem->m_inviteId, m_operator->GetUserId(), m_operator->GetSid(), SMT_FROMPHOTOFILE, "", photoItem->m_srcFilePath);
+		long requestId = m_requestController->SendPhoto(userItem->m_userId, userItem->m_inviteId, m_operator->GetUserId(), m_operator->GetSid(), photoItem->m_loadUrl);
 		if (HTTPREQUEST_INVALIDREQUESTID != requestId) {
 			// 请求成功
 			item->m_statusType = StatusType_Processing;
@@ -244,6 +262,38 @@ void LSLiveChatSender::SendPhotoProc(LSLCMessageItem* item)
 		// 上传文件成功，仅发送LiveChat消息
 		SendPhotoLiveChatMsgProc(item);
 	}
+}
+
+void LSLiveChatSender::OnUploadManPhoto(long requestId, bool success, int errnum, const string& errmsg, const string& url, const string& md5)
+{
+    LSLCMessageItem* msgItem = m_photoMgr->GetAndRemoveRequestItem(requestId);
+    if (NULL == msgItem) {
+        FileLog("LSLiveChatSender", "OnUploadManPhoto() get request item fail, requestId:%d", requestId);
+        return;
+    }
+    
+    if (success) {
+        // 发送请求成功
+        LSLCPhotoItem* photoItem = msgItem->GetPhotoItem();
+        photoItem->m_loadUrl = url;
+//        // 更新PhotoItem
+//        photoItem = m_photoMgr->UpdatePhotoItem(photoItem, msgItem);
+//        
+//        // 把源文件copy到LiveChat目录下
+//        m_photoMgr->CopyPhotoFileToDir(photoItem, photoItem->m_srcFilePath);
+        
+        // 发送图片HTTP消息
+        m_operator->OnUploadPhoto(msgItem);
+    }
+    else {
+        // 上传文件不成功
+        msgItem->m_statusType = StatusType_Fail;
+        msgItem->m_procResult.SetResult(LSLIVECHAT_LCC_ERR_FAIL, "", errmsg);
+        // 判断是否时token过期
+        HandleTokenOverWithErrCode(errnum, "", errmsg);
+
+        m_listener->OnSendPhoto(msgItem->m_procResult.m_errType, msgItem->m_procResult.m_errNum, msgItem->m_procResult.m_errMsg, msgItem);
+    }
 }
 
 void LSLiveChatSender::OnSendPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const LSLCLCSendPhotoItem& item)
@@ -272,12 +322,10 @@ void LSLiveChatSender::OnSendPhoto(long requestId, bool success, const string& e
         // 上传文件不成功
         msgItem->m_statusType = StatusType_Fail;
         msgItem->m_procResult.SetResult(LSLIVECHAT_LCC_ERR_FAIL, errnum, errmsg);
-        if(errnum == "ERROR00003"){
-            m_operator->BuildAndInsertWarningWithErrType(msgItem->m_toId, LSLIVECHAT_LCC_ERR_NOMONEY);
-        }
-        if (errnum == "ERROR900010") {
-            m_listener->OnTokenOverTimeHandler(errnum, errmsg);
-        }
+        // 判断是否时余额不足
+        HandleNotSufficientFunds(errnum, msgItem->m_toId);
+        // 判断是否时token过期
+        HandleTokenOverWithErrCode(0, errnum, errmsg);
         m_listener->OnSendPhoto(msgItem->m_procResult.m_errType, msgItem->m_procResult.m_errNum, msgItem->m_procResult.m_errMsg, msgItem);
     }
 }
@@ -314,6 +362,18 @@ void LSLiveChatSender::OnSendMessageSessionProcess(LSLCMessageItem* item) {
                 userItem->m_chatType = LC_CHATTYPE_MANINVITE;
             }
         }
+    }
+}
+
+void LSLiveChatSender::HandleTokenOverWithErrCode(int errNum, const string& errNo, const string& errmsg) {
+    if (IsTokenOverWithString(errNo) || IsTokenOverWithInt(errNum)) {
+        m_listener->OnTokenOverTimeHandler(LIVECHATERRCODE_TOKEN_OVER, errmsg);
+    }
+}
+
+void LSLiveChatSender::HandleNotSufficientFunds(const string& errNo, const string& userId) {
+    if (IsNotSufficientFundsWithErrCode(errNo)) {
+        m_operator->BuildAndInsertWarningWithErrType(userId, LSLIVECHAT_LCC_ERR_NOMONEY);
     }
 }
 
@@ -469,9 +529,8 @@ void LSLiveChatSender::OnUploadVoice(long requestId, bool success, const string&
         item->m_procResult.SetResult(LSLIVECHAT_LCC_ERR_FAIL, errnum, errmsg);
         m_listener->OnSendVoice(item->m_procResult.m_errType, item->m_procResult.m_errNum, item->m_procResult.m_errMsg, item);
         
-        if (errnum == "ERROR900010") {
-            m_listener->OnTokenOverTimeHandler(errnum, errmsg);
-        }
+        // 判断是否时token过期
+        HandleTokenOverWithErrCode(0, errnum, errmsg);
     }
 }
 

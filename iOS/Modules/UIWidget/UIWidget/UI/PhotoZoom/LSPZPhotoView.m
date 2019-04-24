@@ -74,17 +74,17 @@
 
     self.imageView.frame = frameToCenter;
 
-    CGPoint contentOffset = self.contentOffset;
+//    CGPoint contentOffset = self.contentOffset;
+//
+//    // ensure horizontal offset is reasonable
+//    if (frameToCenter.origin.x != 0.0)
+//        contentOffset.x = 0.0;
+//
+//    // ensure vertical offset is reasonable
+//    if (frameToCenter.origin.y != 0.0)
+//        contentOffset.y = 0.0;
 
-    // ensure horizontal offset is reasonable
-    if (frameToCenter.origin.x != 0.0)
-        contentOffset.x = 0.0;
-
-    // ensure vertical offset is reasonable
-    if (frameToCenter.origin.y != 0.0)
-        contentOffset.y = 0.0;
-
-    self.contentOffset = contentOffset;
+    self.contentOffset = CGPointMake(0, 0);
 
     // ensure content insert is zeroed out using translucent navigation bars
     self.contentInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);

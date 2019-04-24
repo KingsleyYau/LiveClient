@@ -13,15 +13,12 @@
 @protocol CeleBrationGiftViewDelegate <NSObject>
 
 - (void)celeBrationCollectionDidSelectItem:(LSGiftManagerItem *)item giftView:(CeleBrationGiftView *)giftView;
+- (void)celeBrationGiftRetry;
 @end
 
 @interface CeleBrationGiftView : UIView
 
 @property (nonatomic, strong) NSArray <LSGiftManagerItem *> *giftArray;
-
-@property (nonatomic, assign) BOOL isCellSelect;
-
-@property (nonatomic, strong) LSGiftManagerItem* selectCellItem;
 
 @property (nonatomic, weak) id<CeleBrationGiftViewDelegate> delegate;
 

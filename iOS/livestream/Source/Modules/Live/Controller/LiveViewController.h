@@ -205,4 +205,8 @@
  */
 - (void)inviteAnchorWithHangout:(NSString *)recommendId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName;
 
+// 关闭/开启直播间声音(LiveChat使用)
+- (void)openOrCloseSuond:(BOOL)isClose;
+
+
 @end

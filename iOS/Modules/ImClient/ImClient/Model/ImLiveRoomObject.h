@@ -45,6 +45,7 @@
  * useCoupon                试聊卷分钟数
  * shareLink                默认分享链接
  * isHasTalent              是否有才艺（NO：否，YES：是）
+ * isHangoutPriv            多人互动开播权限（NO：没有权限，YES：有权限）
  */
 @property (nonatomic, copy) NSString *_Nonnull userId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
@@ -73,6 +74,7 @@
 @property (nonatomic, assign) int useCoupon;
 @property (nonatomic, copy) NSString *_Nonnull shareLink;
 @property (nonatomic, assign) BOOL isHasTalent;
+@property (nonatomic, assign) BOOL isHangoutPriv;
 
 
 @end

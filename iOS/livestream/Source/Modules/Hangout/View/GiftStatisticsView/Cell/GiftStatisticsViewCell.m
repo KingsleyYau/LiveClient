@@ -9,7 +9,7 @@
 #import "GiftStatisticsViewCell.h"
 #import "LSImageViewLoader.h"
 
-@interface GiftStatisticsViewCell()
+@interface GiftStatisticsViewCell ()
 @property (nonatomic, strong) LSImageViewLoader *imageLoader;
 @end
 
@@ -20,7 +20,7 @@
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    
+
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.imageLoader = [LSImageViewLoader loader];
@@ -30,17 +30,20 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
+
     self.backGroundView.layer.cornerRadius = self.backGroundView.frame.size.height * 0.5;
     self.backGroundView.layer.masksToBounds = YES;
-    
+
     self.giftNumView.layer.cornerRadius = self.giftNumView.frame.size.height * 0.5;
     self.giftNumView.layer.masksToBounds = YES;
 }
 
 - (void)updataCellViewItem:(LSGiftManagerItem *)item num:(int)num {
-    [self.imageLoader loadImageWithImageView:self.giftImageView options:0 imageUrl:item.infoItem.smallImgUrl
-                                      placeholderImage:[UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
+    [self.imageLoader loadImageWithImageView:self.giftImageView
+                                     options:0
+                                    imageUrl:item.infoItem.smallImgUrl
+                            placeholderImage:[UIImage imageNamed:@"Live_Publish_Btn_Gift"]
+                               finishHandler:nil];
     if (num < 2) {
         self.giftNumView.hidden = YES;
     } else {
@@ -49,7 +52,7 @@
     if (num > 99) {
         self.giftNumLabel.text = [NSString stringWithFormat:@"..."];
     } else {
-        self.giftNumLabel.text = [NSString stringWithFormat:@"%d",num];
+        self.giftNumLabel.text = [NSString stringWithFormat:@"%d", num];
     }
 }
 

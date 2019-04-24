@@ -20,7 +20,7 @@
     if (isShow) {
         UIImageView *imageView = [[UIImageView alloc] init];
         [[LSImageViewLoader loader] loadImageWithImageView:imageView options:0 imageUrl:url placeholderImage:
-         [UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
+         [UIImage imageNamed:@"Live_Publish_Btn_Gift"] finishHandler:nil];
         
         NSTextAttachment *attch = [[NSTextAttachment alloc] init];
         attch.image = imageView.image;
@@ -48,7 +48,7 @@
     }
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
     [attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
-                     range:[str rangeOfString:@"Detials"]];
+                     range:[str rangeOfString:@"Details"]];
     return attrStr;
 }
 
@@ -77,7 +77,7 @@
     NSString * newName = name;
     for (int i = 1; i < name.length; i++) {
         newName = [newName substringToIndex:name.length- i];
-        str = [NSString stringWithFormat:@"You will use 0.3 credits to buy \"%@\". Detials",newName];
+        str = [NSString stringWithFormat:@"You will use 0.3 credits to buy \"%@\". Details",newName];
         if ([TalentMsgInfoManager isOverTheScreen:str titleFont:font inMaxWidth:width]) {
             continue;
         }
@@ -85,7 +85,7 @@
         {
             NSMutableString * num = [[NSMutableString alloc]initWithString:newName];
             [num replaceCharactersInRange:NSMakeRange(newName.length-3, 3)  withString:@"..."];
-            str = [NSString stringWithFormat:@"You will use 0.3 credits to buy \"%@\". Detials",num];
+            str = [NSString stringWithFormat:@"You will use 0.3 credits to buy \"%@\". Details",num];
             break;
         }
     }

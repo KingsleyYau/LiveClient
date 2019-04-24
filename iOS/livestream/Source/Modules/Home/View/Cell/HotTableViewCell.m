@@ -44,6 +44,9 @@
         cell.viewPublicFreeBtn.layer.cornerRadius = cell.viewPublicFreeBtn.frame.size.height * 0.5f;
         cell.viewPublicFreeBtn.layer.masksToBounds = YES;
         
+        CGFloat shadowHeight = screenSize.width / 2.5f;
+        cell.shadowHeight.constant = shadowHeight;
+        
         LSShadowView *shadow = [[LSShadowView alloc] init];
         [shadow showShadowAddView:cell.sendMailBtn];
         
@@ -62,12 +65,25 @@
         LSShadowView *shadow5 = [[LSShadowView alloc] init];
         [shadow5 showShadowAddView:cell.viewPublicFreeBtn];
         
+        NSString * str = @"";
+        CGSize size = cell.titleView.frame.size;
+        cell.scrollLabelView = [TXScrollLabelView scrollWithTitle:str type:TXScrollLabelViewTypeLeftRight velocity:1 options:UIViewAnimationOptionCurveEaseInOut];
+        cell.scrollLabelView.frame = CGRectMake(0, 0, size.width, size.height);
+        cell.scrollLabelView.scrollInset = UIEdgeInsetsMake(0, 10 , 0, 10);
+        cell.scrollLabelView.tx_centerX  = SCREEN_WIDTH/2 -30;
+        cell.scrollLabelView.scrollSpace = 20;
+        cell.scrollLabelView.textAlignment = NSTextAlignmentCenter;
+        cell.scrollLabelView.backgroundColor = [UIColor clearColor];
+        cell.scrollLabelView.font = [UIFont systemFontOfSize:18];
+        [cell.titleView addSubview:cell.scrollLabelView];
+        
+        
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0xD4000000).CGColor, (__bridge id)[UIColor clearColor].CGColor];
-        gradientLayer.locations = @[@0.0, @1.0];
+        gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0xD4000000).CGColor,(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0x25000000).CGColor, (__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0x00000000).CGColor];
+        gradientLayer.locations = @[@0,@0.75,@1.0];
         gradientLayer.startPoint = CGPointMake(0, 1.0);
         gradientLayer.endPoint = CGPointMake(0, 0.0);
-        gradientLayer.frame = CGRectMake(0, 0, screenSize.width, cell.bottomView.bounds.size.height);
+        gradientLayer.frame = CGRectMake(0, 0, screenSize.width, shadowHeight);
         [cell.bottomView.layer addSublayer:gradientLayer];
 
     }
@@ -102,22 +118,26 @@
 
 - (void)setScrollLabelViewText:(NSString *)text
 {
-     if (!self.scrollLabelView) {
-         CGSize size = self.titleView.frame.size;
-         NSString * str = [NSString stringWithFormat:@"\tSpecial Show: %@",text];
-         NSAttributedString * title = [self addShowIconImage:str];
-         self.scrollLabelView = [TXScrollLabelView scrollWithTitle:str type:TXScrollLabelViewTypeLeftRight velocity:1 options:UIViewAnimationOptionCurveEaseInOut];
-         self.scrollLabelView.frame = CGRectMake(0, 0, size.width, size.height);
-         self.scrollLabelView.scrollInset = UIEdgeInsetsMake(0, 10 , 0, 10);
-         self.scrollLabelView.tx_centerX  = SCREEN_WIDTH/2 -30;
-         self.scrollLabelView.scrollSpace = 20;
-         self.scrollLabelView.textAlignment = NSTextAlignmentCenter;
-         self.scrollLabelView.backgroundColor = [UIColor clearColor];
-         self.scrollLabelView.font = [UIFont systemFontOfSize:18];
-         [self.scrollLabelView setupAttributeTitle:title];
-         [self.titleView addSubview:self.scrollLabelView];
-         [self.scrollLabelView beginScrolling];
-    }
+    NSString * str = [NSString stringWithFormat:@"\tSpecial Show: %@",text];
+    NSAttributedString * title = [self addShowIconImage:str];
+    [self.scrollLabelView setupAttributeTitle:title];
+    [self.scrollLabelView beginScrolling];
+    
+    
+//     if (!self.scrollLabelView) {
+//         CGSize size = self.titleView.frame.size;
+//         self.scrollLabelView = [TXScrollLabelView scrollWithTitle:str type:TXScrollLabelViewTypeLeftRight velocity:1 options:UIViewAnimationOptionCurveEaseInOut];
+//         self.scrollLabelView.frame = CGRectMake(0, 0, size.width, size.height);
+//         self.scrollLabelView.scrollInset = UIEdgeInsetsMake(0, 10 , 0, 10);
+//         self.scrollLabelView.tx_centerX  = SCREEN_WIDTH/2 -30;
+//         self.scrollLabelView.scrollSpace = 20;
+//         self.scrollLabelView.textAlignment = NSTextAlignmentCenter;
+//         self.scrollLabelView.backgroundColor = [UIColor clearColor];
+//         self.scrollLabelView.font = [UIFont systemFontOfSize:18];
+//         [self.scrollLabelView setupAttributeTitle:title];
+//         [self.titleView addSubview:self.scrollLabelView];
+//         [self.scrollLabelView beginScrolling];
+//     }
 }
 
 - (NSAttributedString *)addShowIconImage:(NSString *)text {

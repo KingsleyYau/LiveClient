@@ -47,7 +47,7 @@
 
 - (void)updateMsg:(MsgItem *)msg {
  
-    [[LSImageViewLoader loader]refreshCachedImage:self.headView options:0 imageUrl:msg.honorUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
+    [[LSImageViewLoader loader]loadImageFromCache:self.headView options:0 imageUrl:msg.honorUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
     }];
     
     self.infoLabel.text = msg.text;

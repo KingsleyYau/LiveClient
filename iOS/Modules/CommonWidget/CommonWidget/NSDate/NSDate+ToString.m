@@ -120,7 +120,7 @@
     NSUInteger componentFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *comoponents = [[NSCalendar currentCalendar] components:componentFlags fromDate:self];
     NSInteger year = [comoponents year];
-    NSInteger month = [comoponents month] + 1;
+    NSInteger month = [comoponents month];
     NSInteger day = [comoponents day];
     NSInteger hour = [comoponents hour];
     NSInteger minute = [comoponents minute];
@@ -133,8 +133,8 @@
 {
     NSUInteger componentFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *comoponents = [[NSCalendar currentCalendar] components:componentFlags fromDate:self];
-    NSInteger year = [comoponents year] + 1900;
-    NSInteger month = [comoponents month] + 1;
+    NSInteger year = [comoponents year];
+    NSInteger month = [comoponents month];
     NSInteger day = [comoponents day] ;
     NSInteger hour = [comoponents hour];
     NSInteger minute = [comoponents minute];

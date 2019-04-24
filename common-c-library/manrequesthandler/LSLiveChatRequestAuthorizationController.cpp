@@ -36,7 +36,7 @@ LSLiveChatRequestAuthorizationController::~LSLiveChatRequestAuthorizationControl
 
 /* ILSLiveChatHttpRequestManagerCallback */
 void LSLiveChatRequestAuthorizationController::onSuccess(long requestId, string url, const char* buf, int size) {
-	FileLog("httprequest",
+	FileLevelLog("httprequest", KLog::LOG_WARNING,
 			"LSLiveChatRequestAuthorizationController::onSuccess( url : %s, content-type : %s, buf( size : %d ) )",
 			url.c_str(),
 			GetContentTypeById(requestId).c_str(),
@@ -44,7 +44,7 @@ void LSLiveChatRequestAuthorizationController::onSuccess(long requestId, string 
 			);
 
 	if (size < MAX_LOG_BUFFER) {
-		FileLog("httprequest", "LSLiveChatRequestAuthorizationController::onSuccess(), buf: %s", buf);
+		FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestAuthorizationController::onSuccess(), buf: %s", buf);
 	}
 
 	/* parse base result */
@@ -186,7 +186,7 @@ void LSLiveChatRequestAuthorizationController::onSuccess(long requestId, string 
     FileLog("httprequest", "LSLiveChatRequestAuthorizationController::onSuccess() end, url:%s", url.c_str());
 }
 void LSLiveChatRequestAuthorizationController::onFail(long requestId, string url) {
-	FileLog("httprequest", "LSLiveChatRequestAuthorizationController::onFail( url : %s )", url.c_str());
+	FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestAuthorizationController::onFail( url : %s )", url.c_str());
 	/* request fail, callback fail */
 	if( url.compare(FACEBOOK_LOGIN_PATH) == 0 ) {
 		/* 2.1.Facebook注册及登录 */

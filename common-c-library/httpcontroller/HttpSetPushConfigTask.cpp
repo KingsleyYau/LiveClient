@@ -23,7 +23,8 @@ void HttpSetPushConfigTask::SetCallback(IRequestSetPushConfigCallback* callback)
 
 void HttpSetPushConfigTask::SetParam(
                                      bool isPriMsgAppPush,
-                                     bool isMailAppPush
+                                     bool isMailAppPush,
+                                     bool isSayHiAppPush
                                       ) {
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
@@ -38,15 +39,20 @@ void HttpSetPushConfigTask::SetParam(
     snprintf(temp, sizeof(temp), "%d", isMailAppPush == true ? 1 : 0);
     mHttpEntiy.AddContent(SETPUSHCONFIG_MAIL_PUSH, temp);
     
+    snprintf(temp, sizeof(temp), "%d", isSayHiAppPush == true ? 1 : 0);
+    mHttpEntiy.AddContent(SETPUSHCONFIG_SAYHI_PUSH, temp);
+    
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpSetPushConfigTask::SetParam( "
             "task : %p, "
-            "isPriMsgAppPush : %d"
-            "isMailAppPush : %d"
+            "isPriMsgAppPush : %d, "
+            "isMailAppPush : %d, "
+            "isSayHiAppPush : %d"
             ")",
             this,
             isPriMsgAppPush,
-            isMailAppPush
+            isMailAppPush,
+            isSayHiAppPush
             );
 }
 

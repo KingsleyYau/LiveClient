@@ -13,23 +13,24 @@
     return @"QNChatPhotoLadyTableViewCell";
 }
 
-+ (NSInteger)cellHeight{
-    return 150;
++ (NSInteger)cellHeight:(BOOL)isCross{
+    return isCross?150:180;
 }
+
 + (id)getUITableViewCell:(UITableView*)tableView {
     QNChatPhotoLadyTableViewCell *cell = (QNChatPhotoLadyTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[QNChatPhotoLadyTableViewCell cellIdentifier]];
     
     if (nil == cell){
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[QNChatPhotoLadyTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
+        cell.secretPhoto.layer.cornerRadius = 4.0f;
+        cell.secretPhoto.layer.masksToBounds = YES;
+        cell.actionView.userInteractionEnabled = YES;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(secretPhotoClickAction)];
+        [cell.actionView addGestureRecognizer:tap];
+        
     }
-
-    cell.secretPhoto.layer.cornerRadius = 4.0f;
-    cell.secretPhoto.layer.masksToBounds = YES;
-    cell.secretPhoto.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(secretPhotoClickAction)];
-    [cell.secretPhoto addGestureRecognizer:tap];
-
     return cell;
 }
 

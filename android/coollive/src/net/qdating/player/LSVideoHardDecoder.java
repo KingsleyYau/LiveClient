@@ -272,7 +272,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		
 		// Maybe cause getDecodeVideoFrame exception, ignore it. 
 		// if not flush codec, it will cause crash when video size is increased
-//		videoCodec.flush();
+		videoCodec.flush();
 		
         bFlag = decodeVideoFrame(sps, 0, sps_size, 0);
         bFlag = bFlag && decodeVideoFrame(pps, 0, pps_size, 0);

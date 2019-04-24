@@ -18,7 +18,7 @@ TMP_PATH=./tmp
 mkdir -p $TMP_PATH
 
 # Create version
-VERSION=`grep "final public static String VERSION" $ECLIPSE_PROJECT_PATH/src/net/qdating/LSConfig.java | awk -F '"' '{print $2}'`
+VERSION=`grep "public final static String VERSION" $ECLIPSE_PROJECT_PATH/src/net/qdating/LSConfig.java | awk -F '"' '{print $2}'`
 echo "Version : $VERSION" >> $LOG_FILE
 
 # Compile java source
@@ -62,6 +62,7 @@ javadoc \
 -version \
 -d $VERSION/doc \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/*.java \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/player/LSPlayerRendererBinder.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/player/ILSPlayerStatusCallback.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/publisher/ILSPublisherStatusCallback.java \
 >> $LOG_FILE 2>&1

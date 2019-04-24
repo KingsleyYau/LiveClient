@@ -9,7 +9,7 @@
 #import "LSGreetingVideoPlayView.h"
 #import "LSImageViewLoader.h"
 
-@interface LSGreetingVideoPlayView()
+@interface LSGreetingVideoPlayView ()
 
 @end
 
@@ -18,7 +18,6 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        
     }
     return self;
 }
@@ -41,7 +40,7 @@
 - (void)setupDetail {
     if (self.item) {
         self.videoTimeLabel.text = [self timeFormatted:floor(self.item.videoTime)];
-        [[LSImageViewLoader loader] loadImageWithImageView:self.videoCoverImageView options:0 imageUrl:self.item.videoCoverUrl placeholderImage:nil];
+        [[LSImageViewLoader loader] loadImageWithImageView:self.videoCoverImageView options:0 imageUrl:self.item.videoCoverUrl placeholderImage:nil finishHandler:nil];
     }
 }
 
@@ -78,6 +77,5 @@
         [self.delegate greetingVideoPlayView:self isReplyReplayVideo:self.item];
     }
 }
-
 
 @end

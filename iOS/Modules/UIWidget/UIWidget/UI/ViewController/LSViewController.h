@@ -13,8 +13,32 @@
 @property (strong) UIView *loadActivityView;
 @property (strong) NSString *navigationTitle;
 
+/**
+ 界面是否第一次显示
+ */
 @property (assign, readonly) BOOL viewDidAppearEver;
+/**
+ 界面是否正在显示
+ */
 @property (assign, readonly) BOOL viewIsAppear;
+
+#pragma mark - 导航栏状态
+/**
+ 是否显示导航栏
+ */
+@property (assign) BOOL isShowNavBar;
+/**
+ 隐藏导航栏状态下，是否隐藏后退按钮
+ */
+@property (assign) BOOL isHideNavBackButton;
+/**
+ 显示导航栏状态下，是否隐藏导航栏下划线
+ */
+@property (assign) BOOL isHideNavBottomLine;
+/**
+ 是否能通过手势返回
+ */
+@property (assign) BOOL canPopWithGesture;
 
 #pragma mark - 横屏切换
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
@@ -47,8 +71,6 @@
  */
 - (void)hideLoading;
 
-- (void)hideNavgationBarBottomLine:(BOOL)isHide;
-
 /**
  *  重设和隐藏加载状态(为了防止之前的showLoading 和 hideLoading 没有一一对应，重新设置)
  */
@@ -59,6 +81,22 @@
  */
 - (void)showAndResetLoading;
 
+/**
+ <#Description#>
+
+ @param sender <#sender description#>
+ */
 - (void)backAction:(id)sender;
+
+#pragma mark - 导航栏隐藏处理
+- (void)showNavigationBar;
+- (void)hideNavigationBar;
+- (void)setNavigationBackButtonHidden:(BOOL)isHide;
+- (void)setNavgationBarBottomLineHidden:(BOOL)isHide;
+- (void)setNavigationBackgroundAlpha:(CGFloat)alpha;
+
+#pragma mark - 导航跳转处理
+- (NSString *)identification;
+- (BOOL)isSameVC:(LSViewController *)vc;
 
 @end

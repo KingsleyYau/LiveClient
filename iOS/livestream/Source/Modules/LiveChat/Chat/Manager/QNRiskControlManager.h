@@ -19,5 +19,5 @@ typedef enum {
 
 @property (nonatomic, assign) RiskType type;
 
-- (BOOL)isRiskControlType:(RiskType)type;
+- (BOOL)isRiskControlType:(RiskType)type withController:(UIViewController *_Nullable)vc;
 @end

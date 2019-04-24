@@ -12,6 +12,7 @@
 using namespace std;
 
 class LSLCVideoManager;
+class LSLCMessageItem;
 class LSLiveChatHttpRequestManager;
 class LSLiveChatRequestLiveChatController;
 class LSLCVideoPhotoDownloaderCallback;
@@ -31,7 +32,8 @@ public:
 			, const string& videoId
 			, const string& inviteId
 			, VIDEO_PHOTO_TYPE type
-			, const string& filePath);
+			, const string& filePath
+            , LSLCMessageItem* item);
 	bool Stop();
 	long GetRequestId() const;
 	
@@ -59,6 +61,7 @@ private:
 	string	m_inviteId;
 	VIDEO_PHOTO_TYPE	m_type;
 	string	m_filePath;
+    LSLCMessageItem*    m_item;
 };
 
 class LSLCVideoPhotoDownloaderCallback

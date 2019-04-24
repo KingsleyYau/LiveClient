@@ -13,5 +13,7 @@
 @property (nonatomic, assign) BOOL isPriMsgAppPush;
 // 是否接收私信推送通知
 @property (nonatomic, assign) BOOL isMailAppPush;
+// 是否接收SayHi推送通知
+@property (nonatomic, assign) BOOL isSayHiAppPush;
 @property (nonatomic, strong) SetPushConfigFinishHandler _Nullable finishHandler;
 @end

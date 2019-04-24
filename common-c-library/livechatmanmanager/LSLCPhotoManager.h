@@ -100,6 +100,8 @@ public:
     LCMessageList GetMsgListWithBindMap(const string& photoId);
     // 清除关联
     void ClearBindMap();
+    // 清除关于用户关联（用于endtalk清记录）
+    void ClearBindMapWithUserId(const string& userId);
 
 	// --------------------- sending（正在发送） --------------------------
 public:

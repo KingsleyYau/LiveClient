@@ -28,6 +28,5 @@
 
 - (void)setupIsResume:(BOOL)isResume;
 
-
 - (void)webViewLoadingFinshCallBack;
 @end

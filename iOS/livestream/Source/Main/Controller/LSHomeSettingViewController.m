@@ -26,6 +26,9 @@
 #import "LSGreetingsViewController.h"
 #import "LSMailViewController.h"
 #import "LiveUrlHandler.h"
+#import "QNRiskControlManager.h"
+#import "LSHomeSetItemObject.h"
+#import "LSSayHiListViewController.h"
 #define HeadViewH 252
 
 @interface LSHomeSettingViewController ()<UITableViewDelegate,UITableViewDataSource, LSHomeSettingHaedViewDelegate,                  LSUserUnreadCountManagerDelegate>
@@ -45,7 +48,6 @@
 @implementation LSHomeSettingViewController
 
 - (void)dealloc {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [self.unreadManager removeDelegate:self];
 }
 
@@ -68,18 +70,7 @@
     
     [self setTableHeadView];
     
-    if ([LSLoginManager manager].loginItem.isHangoutRisk) {
-        self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon"];
-        self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail"];
-    } else {
-        self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon",@"LS_Setting_HangOut_Icon"];
-        self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail",@"Hang-out"];
-    }
-//    self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon",@"Setting_Greetings_Icon"];
-//    self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail",@"Hang-out"];
-    
-    self.imageArray = @[@"Setting_Ticket_Icon",@"Setting_Bookings_Icon",@"Setting_BackPack_Icon"];
-    self.headArray = @[@"My Show Tickets",@"My Bookings",@"My Backpack"];
+    [self loadSettingData];
     
     // 背景单击收起事件
     UITapGestureRecognizer *bgClick = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSettingView)];
@@ -90,6 +81,74 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
 }
+
+
+- (void)loadSettingData {
+    NSMutableArray *sectionFirstArray = [NSMutableArray array];
+    LSHomeSetItemObject *item = [[LSHomeSetItemObject alloc] init];
+    item.iconName = @"Setting_Message_Icon";
+    item.titleName = @"Chat";
+    item.firstType = SettingFirstTypeChat;
+    [sectionFirstArray addObject:item];
+    
+    LSHomeSetItemObject *item1 = [[LSHomeSetItemObject alloc] init];
+    item1.iconName = @"Setting_Mail_Icon";
+    item1.titleName = @"Mail";
+    item1.firstType = SettingFirstTypeMail;
+    [sectionFirstArray addObject:item1];
+    
+    
+    // TODO:暂缺少sayhi图标
+    if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+        LSHomeSetItemObject *item2 = [[LSHomeSetItemObject alloc] init];
+        item2.iconName = @"Setting_Message_Icon";
+        item2.titleName = @"SayHi";
+        item2.firstType = SettingFirstTypeSayHi;
+        [sectionFirstArray addObject:item2];
+    }
+
+    
+    
+    LSHomeSetItemObject *item3 = [[LSHomeSetItemObject alloc] init];
+    item3.iconName = @"Setting_Greetings_Icon";
+    item3.titleName = @"Greeting Mail";
+    item3.firstType = SettingFirstTypeGreeting;
+    [sectionFirstArray addObject:item3];
+    
+    if ([LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
+        LSHomeSetItemObject *item4 = [[LSHomeSetItemObject alloc] init];
+        item4.iconName = @"LS_Setting_HangOut_Icon";
+        item4.titleName = @"Hang-out";
+        item4.firstType = SettingFirstTypeHangout;
+        [sectionFirstArray addObject:item4];
+    }
+    
+    self.titleArray = sectionFirstArray;
+    
+    NSMutableArray *sectionSecondArray = [NSMutableArray array];
+    LSHomeSetItemObject *sectionSecondItem = [[LSHomeSetItemObject alloc] init];
+    sectionSecondItem.iconName = @"Setting_Ticket_Icon";
+    sectionSecondItem.titleName = @"My Show Tickets";
+    sectionSecondItem.secondType = SettingSecondTypeShow;
+    [sectionSecondArray addObject:sectionSecondItem];
+    
+    LSHomeSetItemObject *sectionSecondItem1 = [[LSHomeSetItemObject alloc] init];
+    sectionSecondItem1.iconName = @"Setting_Bookings_Icon";
+    sectionSecondItem1.titleName = @"My Bookings";
+    sectionSecondItem1.secondType = SettingSecondTypeBooks;
+    [sectionSecondArray addObject:sectionSecondItem1];
+    
+    LSHomeSetItemObject *sectionSecondItem2 = [[LSHomeSetItemObject alloc] init];
+    sectionSecondItem2.iconName = @"Setting_BackPack_Icon";
+    sectionSecondItem2.titleName = @"My Backpack";
+    sectionSecondItem2.secondType = SettingSecondTypeBackpack;
+    [sectionSecondArray addObject:sectionSecondItem2];
+    
+    self.headArray = sectionSecondArray;
+    
+    
+}
+
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -120,12 +179,14 @@
     }
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 //显示侧滑栏
 - (void)showSettingView
 {
     // 在消失动画前禁止主界面的操作防止动画没结束点击了界面事件,防止导航栏错乱问题
     [LiveModule module].moduleVC.navigationController.view.userInteractionEnabled = NO;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     self.view.frame = CGRectMake(0, 0, screenSize.width, screenSize.height);
     
     self.headView.frame = CGRectMake(-screenSize.width, 0, screenSize.width - 70, HeadViewH);
@@ -157,7 +218,6 @@
 {
     // 在消失动画前禁止主界面的操作防止动画没结束点击了界面事件,防止导航栏错乱问题
     [LiveModule module].moduleVC.navigationController.view.userInteractionEnabled = NO;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [UIView animateWithDuration:0.3 animations:^{
         self.tableView.frame = CGRectMake(-screenSize.width, HeadViewH, screenSize.width - 70, screenSize.height -HeadViewH);
         self.headView.frame = CGRectMake(-screenSize.width, 0, screenSize.width - 70, HeadViewH);
@@ -177,12 +237,20 @@
 }
 
 - (void)removeHomeSettingVC {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     self.bgView.alpha = 0;
     if ([self.homeDelegate respondsToSelector:@selector(lsHomeSettingViewControllerDidRemoveVC:)]) {
         [self.homeDelegate lsHomeSettingViewControllerDidRemoveVC:self];
     }
 }
+
+#pragma mark - 数据逻辑
+- (void)reloadData:(BOOL)isReloadView {
+    // 数据填充
+    
+}
+
+
+
 
 #pragma mark - UnreadNumManagerDelegate
 - (void)reloadUnreadView:(TotalUnreadNumObject *)model {
@@ -269,24 +337,57 @@
     switch (indexPath.section) {
         case 0:{
             LSHomeSettingCell *setCell = [LSHomeSettingCell  getUITableViewCell:tableView];
-            setCell.settingIcon.image = [UIImage imageNamed:[self.iconArray objectAtIndex:indexPath.row]];
-            setCell.contentLabel.text = [self.titleArray objectAtIndex:indexPath.row];
-            NSInteger type = indexPath.row;
-            if (type == LSUnreadType_Private_Chat) {
-                [setCell showChatListUnreadNum:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
-            }else {
-                [setCell showUnreadNum:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
+            if (indexPath.row < self.titleArray.count) {
+                LSHomeSetItemObject *item = [self.titleArray objectAtIndex:indexPath.row];
+                setCell.settingIcon.image = [UIImage imageNamed:item.iconName];
+                setCell.contentLabel.text = item.titleName;
+                switch (item.firstType) {
+                    case SettingFirstTypeChat:{
+                        [setCell showChatListUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Private_Chat]];
+                    }break;
+                    case SettingFirstTypeMail:{
+                           [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_EMF]];
+                    }break;
+                    case SettingFirstTypeSayHi:{
+                           [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_SayHi]];
+                    }break;
+                    case SettingFirstTypeGreeting:{
+                           [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Loi]];
+                    }break;
+                    case SettingFirstTypeHangout:{
+                           [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Hangout]];
+                    }break;
+
+                    default:
+                        break;
+                }
             }
 
             cell = setCell;
         }break;
         case 1:{
             LSHomeSettingCell *myCell = [LSHomeSettingCell getUITableViewCell:tableView];
-            myCell.settingIcon.image = [UIImage imageNamed:[self.imageArray objectAtIndex:indexPath.row]];
-            myCell.contentLabel.text = [self.headArray objectAtIndex:indexPath.row];
-            NSInteger type = indexPath.row + self.titleArray.count;
-            [myCell showUnreadPoint:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
-            cell = myCell;
+            if (indexPath.row < self.titleArray.count) {
+                LSHomeSetItemObject *item = [self.headArray objectAtIndex:indexPath.row];
+                myCell.settingIcon.image = [UIImage imageNamed:item.iconName];
+                myCell.contentLabel.text = item.titleName;
+                switch (item.secondType) {
+                    case SettingSecondTypeShow:{
+                        [myCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Ticket]];
+                    }break;
+                    case SettingSecondTypeBooks:{
+                        [myCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Booking]];
+                    }break;
+                    case SettingSecondTypeBackpack:{
+                        [myCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Backpack]];
+                    }break;
+
+                    default:
+                        break;
+                }
+                cell = myCell;
+            }
+       
         }break;
             
         case 2:{
@@ -312,24 +413,29 @@
     [self removeHomeSettingVC];
     switch (indexPath.section) {
         case 0:{
-            switch (indexPath.row) {
-                case 0:
-                {
-                    QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
-                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+            LSHomeSetItemObject *item = [self.titleArray objectAtIndex:indexPath.row];
+            switch (item.firstType) {
+                case SettingFirstTypeChat:{
+                    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:self]) {
+                        QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
+                        [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+                    }
                 }break;
-                case 1:{
+                case SettingFirstTypeMail:{
                     LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
-                    [self.navigationController pushViewController:vc animated:YES];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
+                case SettingFirstTypeSayHi:{
+                    // TODO: sayhi界面
+                    LSSayHiListViewController *vc = [[LSSayHiListViewController alloc] initWithNibName:nil bundle:nil];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                     
-                case 2:{
+                }break;
+                case SettingFirstTypeGreeting:{
                     LSGreetingsViewController *vc = [[LSGreetingsViewController alloc] initWithNibName:nil bundle:nil];
-                    [self.navigationController pushViewController:vc animated:YES];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
-                case 3:{
+                case SettingFirstTypeHangout:{
                     [self removeHomeSettingVC];
                     NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHomePage:LiveUrlMainListUrlTypeHangout];
                     [[LiveUrlHandler shareInstance] handleOpenURL:url];
@@ -337,23 +443,25 @@
                     
                 default:
                     break;
+
             }
         }break;
         case 1:{
-            switch (indexPath.row) {
-                case 0:{
+            LSHomeSetItemObject *item = [self.headArray objectAtIndex:indexPath.row];
+            switch (item.secondType) {
+                case SettingSecondTypeShow:{
                     MyTicketPageViewController * vc = [[MyTicketPageViewController alloc] initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
-                    
-                case 1:{
+                case SettingSecondTypeBooks:{
                     LSMyReservationsViewController *vc = [[LSMyReservationsViewController alloc] initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
-                case 2:{
+                case SettingSecondTypeBackpack:{
                     MyBackpackViewController *vc = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
+                    
                 default:
                     break;
             }

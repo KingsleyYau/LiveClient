@@ -12,6 +12,7 @@
 - (instancetype)init{
     if (self = [super init]) {
         self.anchorId = @"";
+        self.isAuto = NO;
     }
     
     return self;
@@ -24,7 +25,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager autoInvitationClickLog:self.anchorId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg){
+        NSInteger request = [self.manager autoInvitationClickLog:self.anchorId isAuto:self.isAuto finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg){
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理

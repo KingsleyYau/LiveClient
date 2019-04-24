@@ -39,7 +39,7 @@
     self.headImageView.layer.masksToBounds = YES;
     
      self.imageLoader = [LSImageViewLoader loader];
-    [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
+    [self.imageLoader loadImageFromCache:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
                         placeholderImage:audienModel.image finishHandler:^(UIImage *image) {
                         }];
     

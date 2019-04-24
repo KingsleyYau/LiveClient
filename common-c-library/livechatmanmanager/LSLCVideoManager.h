@@ -113,14 +113,13 @@ public:
 public:
 	// 合并视频消息记录（把女士发出及男士已购买的视频记录合并为一条聊天记录）
 	void CombineMessageItem(LSLCUserItem* userItem);
-private:
 	// 根据videoId获取对应视频的消息列表
 	LCMessageList GetMessageItem(const string& userId, const string& videoId);
 
 	// --------------------------- 视频图片 -------------------------
 public:
 	// 开始下载视频图片
-	bool DownloadVideoPhoto(const string& userId, const string& sId, const string& womanId, const string& videoId, const string& inviteId, VIDEO_PHOTO_TYPE type);
+	bool DownloadVideoPhoto(const string& userId, const string& sId, const string& womanId, const string& videoId, const string& inviteId, VIDEO_PHOTO_TYPE type, LSLCMessageItem* item);
 	// 判断视频图片是否正在下载
 	bool IsDownloadVideoPhoto(const string& videoId);
 	// 停止下载视频图片

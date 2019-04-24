@@ -4,8 +4,6 @@ import java.io.File;
 
 import com.qpidnetwork.tool.CrashHandlerJni;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,6 +25,7 @@ import net.qdating.filter.LSImageVibrateFilter;
 import net.qdating.filter.LSImageWaterMarkFilter;
 import net.qdating.player.ILSPlayerStatusCallback;
 import net.qdating.player.LSVideoPlayer;
+import net.qdating.player.LSPlayerRendererBinder;
 import net.qdating.publisher.ILSPublisherStatusCallback;
 import net.qdating.utils.Log;
 
@@ -35,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
@@ -74,6 +74,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private GLSurfaceView[] surfaceViews = null;
 	private boolean[] surfaceViewsScale = null;
 	private LSImageFilter[] imageFilters = null;
+	private LSPlayerRendererBinder[] playerRenderderBinders = null;
 	private EditText editText = null;
 	private int playerRunningCount = 0;
 	private Object playerRunningCountLock = new Object();
@@ -81,11 +82,13 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	// 推送相关
 	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
 //	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/max";
-//	private String publishUrl = "rtmp://172.25.32.17:1937/speex/maxbb";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
 	private EditText editTextPublish = null;
-	
+
+	private GLSurfaceView newSurfaceView = null;
+	private LSPlayerRendererBinder newRenderderBinder = null;
+
 	private Handler handler = null;
 
 	private boolean supportPublish = false;
@@ -109,8 +112,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		setContentView(R.layout.activity_play);
 
 		LSConfig.DEBUG = false;
-		LSConfig.LOG_LEVEL = android.util.Log.INFO;
+		LSConfig.LOG_LEVEL = android.util.Log.WARN;
 		LSConfig.LOGDIR = LSConfig.TAG;
+		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeAuto;
 
 		File path = Environment.getExternalStorageDirectory();
 		filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR;
@@ -119,6 +123,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 		CrashHandler.newInstance(PlayActivity.this);
 		CrashHandlerJni.SetCrashLogDirectory(filePath);
+
+//		LSUtilTesterJni utilTestJni = new LSUtilTesterJni();
+//		utilTestJni.Test();
 
 		handler = new Handler();
 		
@@ -130,40 +137,62 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 		// 播放相关
 		surfaceViews = new GLSurfaceView[3];
-		imageFilters = new LSImageFilter[surfaceViews.length];;
+		imageFilters = new LSImageFilter[surfaceViews.length];
+		playerRenderderBinders = new LSPlayerRendererBinder[surfaceViews.length];
+
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
 		imageFilters[0] = new LSImageVibrateFilter();
+
 		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
-		imageFilters[1] = new LSImageMosaicFilter(0.3f);
+		imageFilters[1] = new LSImageMosaicFilter(0.2f);
+
 		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
 		imageFilters[2] = new LSImageColorFilter();
 		surfaceViewsScale = new boolean[surfaceViews.length];
 
 		players = new LSPlayer[surfaceViews.length];
-//		for(int i = 0; i < surfaceViews.length; i++) {
-		for(int i = 0; i < surfaceViews.length - 1; i++) {
+		for(int i = 0; i < surfaceViews.length; i++) {
+//		for(int i = 0; i < surfaceViews.length - 1; i++) {
 			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
 
 			players[i] = new LSPlayer();
-			players[i].init(surfaceViews[i], FillMode.FillModeAspectRatioFill, this);
-			players[i].setCustomFilter(imageFilters[i]);
+
+			playerRenderderBinders[i] = new LSPlayerRendererBinder(surfaceViews[i], FillMode.FillModeAspectRatioFill);
+			playerRenderderBinders[i].setCustomFilter(imageFilters[i]);
+			players[i].init(this);
+
+			players[i].setRendererBinder(playerRenderderBinders[i]);
 			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 		}
-//		players[0].playUrl(playerUrls[0], "", playH264File[0], playAACFile[0]);
 
-		// 人面识别测试
-		previewPlayer.init(surfaceViews[2], FillMode.FillModeAspectRatioFit);
-		previewWaterMarkFilter = new LSImageWaterMarkFilter();
-		File previewImgFile = new File("/sdcard/input/watermark2.png");
-		if(previewImgFile.exists()) {
-			Bitmap bitmap = BitmapFactory.decodeFile(previewImgFile.getAbsolutePath());
-			previewWaterMarkFilter.updateBmpFrame(bitmap);
-		}
-		previewWaterMarkFilter.setWaterMarkRect(0f, 0f, 0f, 0f);
-		previewGroupFilter.addFilter(previewWaterMarkFilter);
-		previewPlayer.setCustomFilter(previewGroupFilter);
-		faceDetector.setCallback(this);
+//		players[0].playUrl("rtmp://172.25.32.17:19351/live/max0", "", playH264File[0], playAACFile[0]);
+//		players[1].playUrl("rtmp://172.25.32.17:19351/live/max1", "", playH264File[0], playAACFile[0]);
+//		players[2].playUrl("rtmp://172.25.32.17:19351/live/max1", "", playH264File[0], playAACFile[0]);
+
+//		RelativeLayout layoutVideo1 = (RelativeLayout)this.findViewById(R.id.layoutVideo1);
+//		newSurfaceView = new GLSurfaceView(this);
+//		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(540, 540);
+//		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//		lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//		newSurfaceView.setLayoutParams(lp);
+//		newSurfaceView.setId(1);
+//		layoutVideo1.addView(newSurfaceView);
+//		layoutVideo1.setVisibility(View.VISIBLE);
+//		newRenderderBinder = new LSPlayerRendererBinder(newSurfaceView, FillMode.FillModeAspectRatioFill);
+
+//		// 人面识别测试
+//		previewPlayer.init(surfaceViews[2], FillMode.FillModeAspectRatioFit);
+//		previewWaterMarkFilter = new LSImageWaterMarkFilter();
+//		File previewImgFile = new File("/sdcard/input/watermark2.png");
+//		if(previewImgFile.exists()) {
+//			Bitmap bitmap = BitmapFactory.decodeFile(previewImgFile.getAbsolutePath());
+//			previewWaterMarkFilter.updateBmpFrame(bitmap);
+//		}
+//		previewWaterMarkFilter.setWaterMarkRect(0f, 0f, 0f, 0f);
+//		previewGroupFilter.addFilter(previewWaterMarkFilter);
+//		previewPlayer.setCustomFilter(previewGroupFilter);
+//		faceDetector.setCallback(this);
 
 		// 推送相关
 		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
@@ -206,8 +235,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			surfaceViewPublish.setVisibility(View.INVISIBLE);
 		}
 
-		// 初始化界面缩放
-		initAnimation();
 		// 初始化静音按钮
 		initItemButtons();
 		
@@ -343,11 +370,11 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if( players[0] != null ) {
-				if( players[0].getCustomFilter() == null ) {
-					players[0].setCustomFilter(imageFilters[0]);
+			if( playerRenderderBinders[0] != null ) {
+				if( playerRenderderBinders[0].getCustomFilter() == null ) {
+					playerRenderderBinders[0].setCustomFilter(imageFilters[0]);
 				} else {
-					players[0].setCustomFilter(null);
+					playerRenderderBinders[0].setCustomFilter(null);
 				}
 			}
 			}
@@ -369,11 +396,11 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if( players[1] != null ) {
-				if( players[1].getCustomFilter() == null ) {
-					players[1].setCustomFilter(imageFilters[1]);
+			if( playerRenderderBinders[1] != null ) {
+				if( playerRenderderBinders[1].getCustomFilter() == null ) {
+					playerRenderderBinders[1].setCustomFilter(imageFilters[1]);
 				} else {
-					players[1].setCustomFilter(null);
+					playerRenderderBinders[1].setCustomFilter(null);
 				}
 			}
 			}
@@ -395,10 +422,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if( players[2].getCustomFilter() == null ) {
-				players[2].setCustomFilter(imageFilters[2]);
+			if( playerRenderderBinders[2].getCustomFilter() == null ) {
+				playerRenderderBinders[2].setCustomFilter(imageFilters[2]);
 			} else {
-				players[2].setCustomFilter(null);
+				playerRenderderBinders[2].setCustomFilter(null);
 			}
 			}
 		});
@@ -439,96 +466,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		});
 	}
 
-	private void initAnimation() {
-		surfaceViews[0].setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			AnimatorSet animatorSet = new AnimatorSet();
-			ObjectAnimator transXAnimator = null;
-			ObjectAnimator transYAnimator = null;
-			ObjectAnimator scaleXAnimator = null;
-			ObjectAnimator scaleYAnimator = null;
-			if( !surfaceViewsScale[0] ) {
-				transXAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "translationX", 0f, (surfaceViews[0].getWidth()/2));
-				transYAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "translationY", 0f, surfaceViews[0].getHeight()/2);
-				scaleXAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "scaleX", 1f, 2f);
-				scaleYAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "scaleY", 1f, 2f);
-			} else {
-				transXAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "translationX", (surfaceViews[0].getWidth()/2), 0);
-				transYAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "translationY", surfaceViews[0].getHeight()/2, 0);
-				scaleXAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "scaleX", 2f, 1f);
-				scaleYAnimator = ObjectAnimator.ofFloat(surfaceViews[0], "scaleY", 2f, 1f);
-			}
-
-			animatorSet.playTogether(transXAnimator, transYAnimator, scaleXAnimator, scaleYAnimator);
-			animatorSet.setDuration(500);
-			animatorSet.start();
-
-			surfaceViews[0].bringToFront();
-			surfaceViewsScale[0] = !surfaceViewsScale[0];
-			}
-		});
-//		surfaceViews[1].setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				AnimatorSet animatorSet = new AnimatorSet();
-//				ObjectAnimator transXAnimator = null;
-//				ObjectAnimator transYAnimator = null;
-//				ObjectAnimator scaleXAnimator = null;
-//				ObjectAnimator scaleYAnimator = null;
-//				if( !surfaceViewsScale[1] ) {
-//					transXAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "translationX", 0f, -(surfaceViews[1].getWidth()/2));
-//					transYAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "translationY", 0f, surfaceViews[1].getHeight()/2);
-//					scaleXAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "scaleX", 1f, 2f);
-//					scaleYAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "scaleY", 1f, 2f);
-//				} else {
-//					transXAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "translationX", -(surfaceViews[1].getWidth()/2), 0);
-//					transYAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "translationY", surfaceViews[1].getHeight()/2, 0);
-//					scaleXAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "scaleX", 2f, 1f);
-//					scaleYAnimator = ObjectAnimator.ofFloat(surfaceViews[1], "scaleY", 2f, 1f);
-//				}
-//
-//				animatorSet.playTogether(transXAnimator, transYAnimator, scaleXAnimator, scaleYAnimator);
-//				animatorSet.setDuration(500);
-//				animatorSet.start();
-//				
-//				surfaceViews[1].bringToFront();
-//				surfaceViewsScale[1] = !surfaceViewsScale[1];
-//			}
-//		});
-//		surfaceViews[2].setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				AnimatorSet animatorSet = new AnimatorSet();
-//				ObjectAnimator transXAnimator = null;
-//				ObjectAnimator transYAnimator = null;
-//				ObjectAnimator scaleXAnimator = null;
-//				ObjectAnimator scaleYAnimator = null;
-//				if( !surfaceViewsScale[2] ) {
-//					transXAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "translationX", 0f, (surfaceViews[2].getWidth()/2));
-//					transYAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "translationY", 0f, -surfaceViews[2].getHeight()/2);
-//					scaleXAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "scaleX", 1f, 2f);
-//					scaleYAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "scaleY", 1f, 2f);
-//				} else {
-//					transXAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "translationX", (surfaceViews[2].getWidth()/2), 0);
-//					transYAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "translationY", -surfaceViews[2].getHeight()/2, 0);
-//					scaleXAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "scaleX", 2f, 1f);
-//					scaleYAnimator = ObjectAnimator.ofFloat(surfaceViews[2], "scaleY", 2f, 1f);
-//				}
-//
-//				animatorSet.playTogether(transXAnimator, transYAnimator, scaleXAnimator, scaleYAnimator);
-//				animatorSet.setDuration(500);
-//				animatorSet.start();
-//				
-//				surfaceViews[2].bringToFront();
-//				surfaceViewsScale[2] = !surfaceViewsScale[2];
-//			}
-//		});
-	}
-	
 	private void deleteAllFiles(File root) {  
         File files[] = root.listFiles();  
         if (files != null) {

@@ -67,6 +67,24 @@
 #define LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_COINMSG          "reply_coinMsg"
 #define LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG     "quickreply_postStampMsg"
 #define LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_COINMSG          "quickreply_coinMsg"
+#define LOGIN_USER_PRIV         "user_priv"
+#define LOGIN_USER_PRIV_LIVECHAT        "livechat"
+#define LOGIN_USER_PRIV_LIVECHAT_LIVECHAT_PRIV              "livechat_priv"
+#define LOGIN_USER_PRIV_LIVECHAT_LIVECHAT_INVITE            "livechat_invite"
+#define LOGIN_USER_PRIV_LIVECHAT_PRIVMBPPSENDVIALIVECHAT    "priv_mb_pp_send_via_livechat"
+#define LOGIN_USER_PRIV_LIVECHAT_PRIVMBLIVECHATINVITATIONVOICE    "priv_mb_livechat_invitation_voice"
+#define LOGIN_USER_PRIV_MAILPRIV        "mailPriv"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILPRIV           "userSendMailPriv"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV        "userSendMailImgPriv"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_ISPRIV                 "isPriv"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_MAXIMG                 "max_img"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_REPLYPOSTSTAMPMSG      "reply_postStampMsg"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_REPLYCOINMSG           "reply_coinMsg"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_QUICKREPLYPOSTSTAMPMSG "quickreply_postStampMsg"
+#define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_QUICKREPLYCOINMSG      "quickreply_coinMsg"
+#define LOGIN_USER_PRIV_HANGOUT         "hangout"
+#define LOGIN_USER_PRIV_HANGOUT_HANGOUTPRIV         "hangoutPriv"
+#define LOGIN_USER_PRIV_SAYHI           "say_hi"
 
 
 /* 2.2.注销 */
@@ -1092,7 +1110,7 @@
 #define LIVEROOM_GETTOTALNOREADNUM_PRIVATEMESSAGEUNREADNUM        "private_message_unread_num"
 #define LIVEROOM_GETTOTALNOREADNUM_BOOKINGUNREADNUM               "booking_unread_num"
 #define LIVEROOM_GETTOTALNOREADNUM_BACKPACKUNREADNUM              "backpack_unread_num"
-
+#define LIVEROOM_GETTOTALNOREADNUM_SAYHIRESPONSEUNREADNUM         "say_hi_response_unread_num"
 
 /* 6.18.查询个人信息 */
 /* 接口路径 */
@@ -1374,6 +1392,7 @@
 #define LIVEROOM_SENDINVITATIONHANGOUT_ROOMID                         "room_id"
 #define LIVEROOM_SENDINVITATIONHANGOUT_ANCHORID                       "anchor_id"
 #define LIVEROOM_SENDINVITATIONHANGOUT_RECOMMENDID                    "recommend_id"
+#define LIVEROOM_SENDINVITATIONHANGOUT_CREATEONLY                     "create_only"
 
 /**
  *  返回
@@ -1471,6 +1490,7 @@
  *  请求
  */
 #define LIVEROOM_AUTOINVITATIONHANGOUTLIVEDISPLAY_ANCHORID               "anchorid"
+#define LIVEROOM_AUTOINVITATIONHANGOUTLIVEDISPLAY_IS_AUTO                "is_auto"
 
 /* 8.10.自动邀请hangout点击记录*/
 /* 接口路径 */
@@ -1480,6 +1500,7 @@
  *  请求
  */
 #define LIVEROOM_AUTOINVITATIONCLICKLOG_ANCHORID                          "anchorid"
+#define LIVEROOM_AUTOINVITATIONCLICKLOG_IS_AUTO                            "is_auto"
 
 /* 8.11.获取当前会员Hangout直播状态*/
 /* 接口路径 */
@@ -1655,6 +1676,7 @@
  */
 #define GETPUSHCONFIG_PRIVMSG_PUSH                                            "priv_mb_privmsg_app_push"
 #define GETPUSHCONFIG_MAIL_PUSH                                               "priv_mb_mail_app_push"
+#define GETPUSHCONFIG_SAYHI_PUSH                                              "priv_mb_say_hi_app_push"
 
 
 /* 11.2.修改推送设置 */
@@ -1666,6 +1688,8 @@
  */
 #define SETPUSHCONFIG_PRIVMSG_PUSH                                                "priv_mb_privmsg_app_push"
 #define SETPUSHCONFIG_MAIL_PUSH                                                   "priv_mb_mail_app_push"
+#define SETPUSHCONFIG_SAYHI_PUSH                                                  "priv_mb_say_hi_app_push"
+
 
 /**************************** 意向信及信件 *****************************/
 /* 信件公共部分 */
@@ -1780,5 +1804,168 @@
  */
 #define LIVEROOM_CANSENDEMF_USER_CAN_SEND                 "user_can_send"
 #define LIVEROOM_CANSENDEMF_ANCHOR_CAN_SEND               "anchor_can_send"
+
+/**************************** SayHi *****************************/
+/* 14.1.获取主题、文本配置信息 */
+/* 接口路径 */
+#define LIVEROOM_RESOURCECONFIG                       "/pman/sayHi/api/resourceConfig"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_RESOURCECONFIG_THEMELIST             "theme_list"
+#define LIVEROOM_RESOURCECONFIG_THEMELIST_ID                    "id"
+#define LIVEROOM_RESOURCECONFIG_THEMELIST_NAME                  "name"
+#define LIVEROOM_RESOURCECONFIG_THEMELIST_SMALLIMG              "small_img"
+#define LIVEROOM_RESOURCECONFIG_THEMELIST_BIGIMG                "big_img"
+#define LIVEROOM_RESOURCECONFIG_TESTLIST              "text_list"
+#define LIVEROOM_RESOURCECONFIG_TESTLIST_ID                    "id"
+#define LIVEROOM_RESOURCECONFIG_TESTLIST_TEXT                  "text"
+
+/* 14.2.符合发送Say Hi的主播列表 */
+/* 接口路径 */
+#define LIVEROOM_GETSAYHIANCHORLIST                    "/pman/sayHi/api/getSayHiAnchorList"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETSAYHIANCHORLIST_LIST                "list"
+#define LIVEROOM_GETSAYHIANCHORLIST_LIST_ANCHORID           "anchor_id"
+#define LIVEROOM_GETSAYHIANCHORLIST_LIST_ANCHORNICKNAME     "anchor_nickname"
+#define LIVEROOM_GETSAYHIANCHORLIST_LIST_ANCHORCOVER        "anchor_cover"
+#define LIVEROOM_GETSAYHIANCHORLIST_LIST_ONLINESTATUS       "online_status"
+
+/* 14.3.检测对某主播是否能发送sayHi */
+/* 接口路径 */
+#define LIVEROOM_ISCANSENDSAYHI                    "/pman/sayHi/api/isCanSendSayHi"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_ISCANSENDSAYHI_ANCHORID            "anchor_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_ISCANSENDSAYHI_RESULT              "result"
+
+/* 14.4.发送sayHi */
+/* 接口路径 */
+#define LIVEROOM_SENDSAYHI                    "/pman/sayHi/api/sendSayHi"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_SENDSAYHI_ANCHORID             "anchor_id"
+#define LIVEROOM_SENDSAYHI_THEMEID              "theme_id"
+#define LIVEROOM_SENDSAYHI_TEXTID               "text_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_SENDSAYHI_SAYHIID              "say_hi_id"
+#define LIVEROOM_SENDSAYHI_ID                   "id"
+
+/* 14.5.All ‘Say Hi’列表 */
+/* 接口路径 */
+#define LIVEROOM_ALLSAYHILIST                    "/pman/sayHi/api/allSayHiList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_ALLSAYHILIST_START             "start"
+#define LIVEROOM_ALLSAYHILIST_STEP              "step"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_ALLSAYHILIST_TOTALCOUNT        "total_count"
+#define LIVEROOM_ALLSAYHILIST_LIST              "list"
+#define LIVEROOM_ALLSAYHILIST_LIST_SAYHIID              "say_hi_id"
+#define LIVEROOM_ALLSAYHILIST_LIST_ANCHORID             "anchor_id"
+#define LIVEROOM_ALLSAYHILIST_LIST_ANCHORNICKNAME       "anchor_nickname"
+#define LIVEROOM_ALLSAYHILIST_LIST_ANCHORCOVER          "anchor_cover"
+#define LIVEROOM_ALLSAYHILIST_LIST_ANCHORAVATAR         "anchor_avatar"
+#define LIVEROOM_ALLSAYHILIST_LIST_ANCHORAGE            "anchor_age"
+#define LIVEROOM_ALLSAYHILIST_LIST_RESPONSENUM          "response_num"
+#define LIVEROOM_ALLSAYHILIST_LIST_UNREADNUM            "unread_num"
+
+/* 14.6.Waiting for your reply列表 */
+/* 接口路径 */
+#define LIVEROOM_WAITINGREPLYSAYHILIST              "/sayHi/api/waitingReplySayHiList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_WAITINGREPLYSAYHILIST_START            "start"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_STEP             "step"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_SORT             "sort"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_WAITINGREPLYSAYHILIST_TOTALCOUNT        "total_count"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST              "list"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_SAYHIID             "say_hi_id"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_RESPONSEID          "response_id"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ANCHORID            "anchor_id"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ANCHORNICKNAME      "anchor_nickname"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ANCHORCOVER         "anchor_cover"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ANCHORAVATAR        "anchor_avatar"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ANCHORAGE           "anchor_age"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_RESPONSETIME        "response_time"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_CONTENT             "content"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_HASIMG              "has_img"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_HASREAD             "has_read"
+#define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ISFREE              "is_free"
+
+/* 14.7.SayHi详情 */
+/* 接口路径 */
+#define LIVEROOM_SAYHIDETAIL                "/pman/sayHi/api/sayHiDetail"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_SAYHIDETAIL_SAYHIID            "say_hi_id"
+#define LIVEROOM_SAYHIDETAIL_SORT               "sort"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_SAYHIDETAIL_DETAIL             "detail"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_SAYHIID             "say_hi_id"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_ANCHORID            "anchor_id"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_ANCHORNICKNAME      "anchor_nickname"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_ANCHORCOVER         "anchor_cover"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_ANCHORAVATAR        "anchor_avatar"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_ANCHORAGE           "anchor_age"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_SENDTIME            "send_time"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_TEXT                "text"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_IMG                 "img"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_RESPONSENUM         "response_num"
+#define LIVEROOM_SAYHIDETAIL_DETAIL_UNREADNUM           "unread_num"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST       "response_list"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSEID    "response_id"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME  "response_time"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_CONTENT       "content"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_ISFREE        "is_free"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_HASREAD       "has_read"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_HASIMG        "has_img"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_IMG           "img"
+
+/* 14.8.查看主播回复(扣费) */
+/* 接口路径 */
+#define LIVEROOM_READRESPONSE                "/pman/sayHi/api/readResponse"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_READRESPONSE_SAYHIID        "say_hi_id"
+#define LIVEROOM_READRESPONSE_RESPONSEID     "response_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_READRESPONSE_RESULT        "result"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

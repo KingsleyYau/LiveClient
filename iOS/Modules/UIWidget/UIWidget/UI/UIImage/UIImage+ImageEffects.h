@@ -185,4 +185,6 @@
 - (UIImage *)scaleImageWithSize:(CGSize)size;
 // 调整镜头方向
 - (UIImage *)fixOrientation ;
+
+- (UIImage *)imageCompressForSize:(NSInteger)tagetSize;
 @end

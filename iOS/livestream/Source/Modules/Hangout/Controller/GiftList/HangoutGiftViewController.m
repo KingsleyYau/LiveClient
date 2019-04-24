@@ -73,6 +73,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
     
+    self.isShowNavBar = NO;
+    
     // 初始化分类ID
     self.curIndex = 0;
     
@@ -457,6 +459,10 @@
     self.clickId = totalMilliseconds % 10000;
 }
 
+- (void)hangoutNormalGiftRetry {
+    [self requrstHangoutGiftList];
+}
+
 #pragma mark - CeleBrationGiftViewDelegate
 - (void)celeBrationCollectionDidSelectItem:(LSGiftManagerItem *)item giftView:(CeleBrationGiftView *)giftView {
     // 重置连击id
@@ -468,6 +474,9 @@
     }
 }
 
+- (void)celeBrationGiftRetry {
+    [self requrstHangoutGiftList];
+}
 
 #pragma mark - HTTP请求
 - (void)requrstHangoutGiftList {

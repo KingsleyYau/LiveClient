@@ -35,6 +35,13 @@
 - (NSString *)tmpPath;
 
 /**
+ 缓存目录(可以被清空)
+ 
+ @return 绝对路径
+ */
+- (NSString *)cacheDirectory;
+
+/**
  *  手机信息收集
  *
  *  @param fileName 文件名称
@@ -69,6 +76,15 @@
  *  @return 图片缓存路径
  */
 - (NSString *)imageUploadCachePath:(UIImage *)image fileName:(NSString *)fileName;
+/*
+ *  图片上传目录
+ *
+ *  @param image 图片
+ *  @param fileName 图片文件保存文字
+ *
+ *  @return 图片缓存路径
+ */
+- (NSString *)imageUploadSCompressSizeCachePath:(UIImage *)image fileName:(NSString *)fileName;
 
 /**
  *  大礼物文件缓存目录
@@ -135,5 +151,7 @@
  *  @return 成功/失败
  */
 - (BOOL)removeDirectory:(NSString*)path;
+
+
 
 @end

@@ -271,7 +271,8 @@ public:
                 server = (struct sockaddr*)&iddr;
             }
 
-			result =  SOCKET_ERROR != bind(m_socket, server, sizeof(*server));
+            // bind和我调用的是socket.h中的bind.   而不是 在C++11中增加的std::bind(_Fp &&__f, _BoundArgs &&__bound_args...) 函数
+            result =  SOCKET_ERROR != ::bind(m_socket, server, sizeof(*server));
 		}
 		return result;
 	}

@@ -177,7 +177,7 @@
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
         
-        [cell.imageViewLoader loadImageWithImageView:cell.minImage options:0 imageUrl:obj.photoUrlMobile placeholderImage:nil];
+        [cell.imageViewLoader loadImageWithImageView:cell.minImage options:0 imageUrl:obj.photoUrlMobile placeholderImage:nil finishHandler:nil];
         
         cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@ - %@",NSLocalizedString(@"Vaild_Time", @"Vaild_Time"),[cell getTime:obj.startValidDate],[cell getTime:obj.expDate]];
         
@@ -193,7 +193,7 @@
             
             cell.nameLabel.text = obj.anchorNcikName;
             
-            [[LSImageViewLoader loader] refreshCachedImage:cell.ladyHeadView options:SDWebImageRefreshCached imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+            [[LSImageViewLoader loader] loadImageFromCache:cell.ladyHeadView options:SDWebImageRefreshCached imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
             }];
             
             cell.ladyLabel.text = NSLocalizedStringFromSelf(@"Only_broadcaster");

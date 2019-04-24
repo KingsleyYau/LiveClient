@@ -32,17 +32,17 @@ CTransportDataHandler::CTransportDataHandler(void)
 
 CTransportDataHandler::~CTransportDataHandler(void)
 {
-	FileLog("ImClient", "CTransportDataHandler::~CTransportDataHandler() begin, this:%p", this);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::~CTransportDataHandler() begin, this:%p", this);
 	StopAndWait();
-	FileLog("ImClient", "CTransportDataHandler::~CTransportDataHandler() StopAndWait() ok, this:%p", this);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::~CTransportDataHandler() StopAndWait() ok, this:%p", this);
 	Uninit();
-	FileLog("ImClient", "CTransportDataHandler::~CTransportDataHandler() end, this:%p", this);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::~CTransportDataHandler() end, this:%p", this);
 }
 
 // 初始化
 bool CTransportDataHandler::Init(ITransportDataHandlerListener* listener)
 {
-	FileLog("ImClient", "CTransportDataHandler::Init() listener:%p", listener);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() listener:%p", listener);
 
 	bool result = false;
 	m_listener = listener;
@@ -54,22 +54,22 @@ bool CTransportDataHandler::Init(ITransportDataHandlerListener* listener)
 			m_sendTaskListLock->Init();
 		}
 	}
-	FileLog("ImClient", "CTransportDataHandler::Init() create m_sendTaskListLock:%p", m_sendTaskListLock);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() create m_sendTaskListLock:%p", m_sendTaskListLock);
 
 	if (NULL == m_packetHandler) {
 		m_packetHandler = ITransportPacketHandler::Create();
 	}
-	FileLog("ImClient", "CTransportDataHandler::Init() create m_packetHandler:%p", m_packetHandler);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() create m_packetHandler:%p", m_packetHandler);
 
 	if (NULL == m_sendThread) {
 		m_sendThread = IThreadHandler::CreateThreadHandler();
 	}
-	FileLog("ImClient", "CTransportDataHandler::Init() create m_sendThread:%p", m_sendThread);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() create m_sendThread:%p", m_sendThread);
 
 	if (NULL == m_loopThread) {
 		m_loopThread = IThreadHandler::CreateThreadHandler();
 	}
-	FileLog("ImClient", "CTransportDataHandler::Init() create m_loopThread:%p", m_loopThread);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() create m_loopThread:%p", m_loopThread);
 
 	if (NULL == m_startLock) {
 		m_startLock = IAutoLock::CreateAutoLock();
@@ -77,13 +77,13 @@ bool CTransportDataHandler::Init(ITransportDataHandlerListener* listener)
 			m_startLock->Init();
 		}
 	}
-	FileLog("ImClient", "CTransportDataHandler::Init() create m_startLock:%p", m_startLock);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() create m_startLock:%p", m_startLock);
 
     m_client = ITransportClient::Create();
     if (NULL != m_client) {
         m_client->Init(this);
     }
-	FileLog("ImClient", "CTransportDataHandler::Init() create m_client:%p", m_client);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() create m_client:%p", m_client);
 
 	result = (NULL != m_sendTaskListLock
 				&& NULL != m_packetHandler
@@ -92,7 +92,7 @@ bool CTransportDataHandler::Init(ITransportDataHandlerListener* listener)
 				&& NULL != m_startLock
 				&& NULL != m_client);
 
-	FileLog("ImClient", "CTransportDataHandler::Init() result:%d", result);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Init() result:%d", result);
 
 	if (!result) {
 		Uninit();
@@ -104,7 +104,7 @@ bool CTransportDataHandler::Init(ITransportDataHandlerListener* listener)
 // 反初始化
 void CTransportDataHandler::Uninit()
 {
-	FileLog("ImClient", "CTransportDataHandler::Uninit()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Uninit()");
 
 	delete m_sendTaskListLock;
 	m_sendTaskListLock = NULL;
@@ -130,7 +130,7 @@ void CTransportDataHandler::Uninit()
 // 开始连接
 bool CTransportDataHandler::Start(const list<string>& urls)
 {
-	FileLog("ImClient", "CTransportDataHandler::Start() urls.size:%d, this:%p", urls.size(), this);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Start() urls.size:%d, this:%p", urls.size(), this);
 
 	m_startLock->Lock();
 
@@ -148,7 +148,7 @@ bool CTransportDataHandler::Start(const list<string>& urls)
         
         // 启动线程
 		m_bStart = m_loopThread->Start(LoopThread, this);
-        FileLog("ImClient", "CTransportDataHandler::Start() m_bStart:%d, m_loopThread:%p, this:%p", m_bStart, m_loopThread, this);
+        FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Start() m_bStart:%d, m_loopThread:%p, this:%p", m_bStart, m_loopThread, this);
 	}
 
 	// 启动失败
@@ -158,7 +158,7 @@ bool CTransportDataHandler::Start(const list<string>& urls)
 
 	m_startLock->Unlock();
 
-	FileLog("ImClient", "CTransportDataHandler::Start() m_bStart:%d", m_bStart);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Start() m_bStart:%d", m_bStart);
 
 	return m_bStart;
 }
@@ -168,12 +168,12 @@ bool CTransportDataHandler::Stop()
 {
 	bool result = false;
 
-	FileLog("ImClient", "CTransportDataHandler::Stop() begin");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Stop() begin");
 //    m_startLock->Lock();
 	DisconnectProc();
 	result = true;
 //    m_startLock->Unlock();
-	FileLog("ImClient", "CTransportDataHandler::Stop() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::Stop() end");
 
 	return result;
 }
@@ -183,11 +183,11 @@ bool CTransportDataHandler::StopAndWait()
 {
 	bool result = false;
 
-	FileLog("ImClient", "CTransportDataHandler::StopAndWait() begin");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopAndWait() begin");
 	m_startLock->Lock();
 	result = StopProc();
 	m_startLock->Unlock();
-	FileLog("ImClient", "CTransportDataHandler::StopAndWait() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopAndWait() end");
 
 	return result;	
 }
@@ -195,29 +195,29 @@ bool CTransportDataHandler::StopAndWait()
 // 停止连接处理函数
 bool CTransportDataHandler::StopProc()
 {
-	FileLog("ImClient", "CTransportDataHandler::StopProc() begin");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopProc() begin");
 	long long startTime = getCurrentTime();
 
 	// 断开连接
 	DisconnectProc();
 
-	FileLog("ImClient", "CTransportDataHandler::StopProc() m_loopThread->WaitAndStop() begin");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopProc() m_loopThread->WaitAndStop() begin");
 	// 停接收线程
 	if (NULL != m_loopThread) {
 		m_loopThread->WaitAndStop();
 	}
     
-    FileLog("ImClient", "CTransportDataHandler::StopProc() m_client->Disconnect() begin");
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopProc() m_client->Disconnect() begin");
 
 	m_urls.clear();
 
     m_client->Disconnect();
-	FileLog("ImClient", "CTransportDataHandler::StopProc() m_client->Disconnect() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopProc() m_client->Disconnect() end");
 	
 	long long endTime = getCurrentTime();
 	long long diffTime = DiffTime(startTime, endTime);
 
-	FileLog("ImClient", "CTransportDataHandler::StopProc() end, m_bStart:%d, diffTime:%ld", m_bStart, diffTime);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::StopProc() end, m_bStart:%d, diffTime:%ld", m_bStart, diffTime);
 
 	return true;
 }
@@ -232,7 +232,7 @@ bool CTransportDataHandler::IsStart()
 // 发送task数据（把task放到发送列队）
 bool CTransportDataHandler::SendTaskData(ITask* task)
 {
-	FileLog("ImClient", "CTransportDataHandler::SendTaskData() task:%p", task);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendTaskData() task:%p", task);
 	bool result = false;
 	if (m_bStart) {
 		m_sendTaskListLock->Lock();
@@ -240,46 +240,46 @@ bool CTransportDataHandler::SendTaskData(ITask* task)
 		m_sendTaskListLock->Unlock();
 		result = true;
 	}
-	FileLog("ImClient", "CTransportDataHandler::SendTaskData() end, task:%p", task);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendTaskData() end, task:%p", task);
 	return result;
 }
 
 // 发送线程
 TH_RETURN_PARAM CTransportDataHandler::SendThread(void* arg)
 {
-	FileLog("ImClient", "CTransportDataHandler::SendThread() arg:%p", arg);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendThread() arg:%p", arg);
 	CTransportDataHandler* pThis = (CTransportDataHandler*) arg;
 	pThis->SendThreadProc();
-	FileLog("ImClient", "CTransportDataHandler::SendThread() end, arg:%p", arg);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendThread() end, arg:%p", arg);
 	return NULL;
 }
 
 void CTransportDataHandler::SendThreadProc(void)
 {
-	FileLog("ImClient", "CTransportDataHandler::SendThreadProc() begin, m_bStart:%d", m_bStart);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendThreadProc() begin, m_bStart:%d", m_bStart);
 	// 连接
 	if (m_bStart) {
-		FileLog("ImClient", "CTransportDataHandler::SendThreadProc() SendProc()");
+		FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendThreadProc() SendProc()");
 		// 处理task发送队列
 		SendProc();
 	}
-	FileLog("ImClient", "CTransportDataHandler::SendThreadProc() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendThreadProc() end");
 }
 
 // 接收线程
 TH_RETURN_PARAM CTransportDataHandler::LoopThread(void* arg)
 {
-	FileLog("ImClient", "CTransportDataHandler::LoopThread() arg:%p", arg);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThread() arg:%p", arg);
 	CTransportDataHandler* pThis = (CTransportDataHandler*) arg;
 	pThis->LoopThreadProc();
     
-	FileLog("ImClient", "CTransportDataHandler::LoopThread() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThread() end");
 	return NULL;
 }
 
 void CTransportDataHandler::LoopThreadProc(void)
 {
-	FileLog("ImClient", "CTransportDataHandler::LoopThreadProc() start");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThreadProc() start");
     if (ConnectProc()) {
         // 启动发送线程
         if (NULL != m_sendThread) {
@@ -288,26 +288,32 @@ void CTransportDataHandler::LoopThreadProc(void)
         
         m_client->Loop();
         
-        FileLog("ImClient", "CTransportDataHandler::LoopThreadProc() loop");
+        FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThreadProc() loop");
         
         // 停止发送线程
         if (NULL != m_sendThread) {
             m_sendThread->WaitAndStop();
         }
         
-        FileLog("ImClient", "CTransportDataHandler::LoopThreadProc() m_sendThread->WaitAndStop()");
+        FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThreadProc() m_sendThread->WaitAndStop()");
         
         // 设置接收线程的标志位为false
         m_loopThread->SetStartSign();
+    } else {
+        FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThreadProc() ConnectProc err");
+        // 连接失败处理,返回
+        if (NULL != m_listener) {
+            m_listener->OnConnect(false);
+        }
     }
-	FileLog("ImClient", "CTransportDataHandler::LoopThreadProc() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::LoopThreadProc() end");
 }
 
 
 bool CTransportDataHandler::ConnectProc()
 {
 	bool result = false;
-	FileLog("ImClient", "CTransportDataHandler::ConnectProc() start, this:%p", this);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::ConnectProc() start, this:%p", this);
 	FileLog("ImClient", "CTransportDataHandler::ConnectProc() m_urls:%d", m_urls.size());
 	FileLog("ImClient", "CTransportDataHandler::ConnectProc() m_bStart:%d", m_bStart);
 
@@ -323,13 +329,13 @@ bool CTransportDataHandler::ConnectProc()
         }
 	}
 
-	FileLog("ImClient", "CTransportDataHandler::ConnectProc() end, result:%d", result);
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::ConnectProc() end, result:%d", result);
 	return result;
 }
 
 void CTransportDataHandler::SendProc()
 {
-	FileLog("ImClient", "CTransportDataHandler::SendProc()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendProc()");
 
     // 新建发送buffer
 	size_t bufferSize = 1024 * 100;
@@ -378,25 +384,27 @@ void CTransportDataHandler::SendProc()
     // 释放发送buffer
 	delete []buffer;
     
-    FileLog("ImClient", "CTransportDataHandler::SendProc() end");
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::SendProc() end");
 }
 
 void CTransportDataHandler::DisconnectProc()
 {
-	FileLog("ImClient", "CTransportDataHandler::DisconnectProc()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::DisconnectProc()");
 
     m_bStart = false;
     if (NULL != m_client) {
         m_client->Disconnect();
     }
 
-	FileLog("ImClient", "CTransportDataHandler::DisconnectProc() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::DisconnectProc() end");
 }
 
 void CTransportDataHandler::DisconnectCallback()
 {
-	FileLog("ImClient", "CTransportDataHandler::DisconnectCallback()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::DisconnectCallback()");
 	m_listener->OnDisconnect();
+    // 当连接中，需要断网（wensoeckt连接超时，或手动logout），停止发送线程标志
+    m_bStart = false;
 	
 	m_sendTaskListLock->Lock();
 	if (NULL != m_listener) {
@@ -404,15 +412,17 @@ void CTransportDataHandler::DisconnectCallback()
 	}
 	m_sendTaskList.clear();
 	m_sendTaskListLock->Unlock();
-	FileLog("ImClient", "CTransportDataHandler::DisconnectCallback() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::DisconnectCallback() end");
 }
 
 // ------ ITransportClientCallback
 void CTransportDataHandler::OnConnect(bool success)
 {
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::OnConnect(success:%d)", success);
     if (NULL != m_listener) {
         m_listener->OnConnect(success);
     }
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::OnConnect(success:%d) end", success);
 }
 
 void CTransportDataHandler::OnRecvData(const unsigned char* data, size_t dataLen)
@@ -447,6 +457,8 @@ void CTransportDataHandler::OnRecvData(const unsigned char* data, size_t dataLen
 
 void CTransportDataHandler::OnDisconnect()
 {
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::OnDisconnect()");
     DisconnectCallback();
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "CTransportDataHandler::OnDisconnect() end");
 }
 

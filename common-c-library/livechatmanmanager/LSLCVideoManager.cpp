@@ -171,6 +171,7 @@ string LSLCVideoManager::GetVideoPath(const string& userId, const string& videoI
 
 		// 生成文件全路径
 		path = m_dirPath + cFileName;
+        path += ".mp4";
 	}
 	return path;
 }
@@ -315,19 +316,19 @@ void LSLCVideoManager::CombineMessageItem(LSLCUserItem* userItem)
 
 // --------------------------- 视频图片 -------------------------
 // 开始下载视频图片
-bool LSLCVideoManager::DownloadVideoPhoto(const string& userId, const string& sId, const string& womanId, const string& videoId, const string& inviteId, VIDEO_PHOTO_TYPE type)
+bool LSLCVideoManager::DownloadVideoPhoto(const string& userId, const string& sId, const string& womanId, const string& videoId, const string& inviteId, VIDEO_PHOTO_TYPE type, LSLCMessageItem* item)
 {
 	bool result = false;
 
 	result = IsDownloadVideoPhoto(videoId);
-	if (!result) 
+	if (!result && NULL != item)
 	{
 		LSLCVideoPhotoDownloader* downloader = new LSLCVideoPhotoDownloader;
 		if (NULL != downloader)
 		{
 			string filePath = GetVideoPhotoPath(womanId, videoId, inviteId, type);
 			result = downloader->Init(m_requestMgr, m_requestController, this);
-			result = result && downloader->StartDownload(this, userId, sId, womanId, videoId, inviteId, type, filePath);
+			result = result && downloader->StartDownload(this, userId, sId, womanId, videoId, inviteId, type, filePath, item);
 			if (result)
 			{
 				m_downloadVideoPhotoMap.lock();
@@ -448,6 +449,8 @@ void LSLCVideoManager::OnGetVideoPhoto(long requestId, bool success, const strin
 		if ((*iter)->GetRequestId() == requestId)
 		{
 			downloader = (*iter);
+            // 将正在下载列表的下载器移除
+            m_downloadVideoPhotoMap.eraseWithValue(downloader);
 			break;
 		}
 	}
@@ -466,6 +469,23 @@ void LSLCVideoManager::onFinish(LSLCVideoPhotoDownloader* downloader, bool succe
 	// 获取该视频对应的消息列表
 	LCMessageList msgList = GetMessageItem(downloader->GetWomanId(), downloader->GetVideoId());
 
+    if (success) {
+        for (LCMessageList::const_iterator iter = msgList.begin(); iter != msgList.end(); iter++) {
+            LSLCMessageItem* item = (*iter);
+            if (item->m_msgType == MT_Video
+                && NULL != item->GetVideoItem() )
+            {
+                if (downloader->GetVideoPhotoType() == VPT_DEFAULT) {
+                    item->GetVideoItem()->m_thumbPhotoFilePath = downloader->GetFilePath();
+                }
+                else if (downloader->GetVideoPhotoType() == VPT_BIG) {
+                    item->GetVideoItem()->m_bigPhotoFilePath = downloader->GetFilePath();
+                }
+            }
+        }
+    }
+    
+    
 	// callback
 	if (NULL != m_callback)
 	{
@@ -616,6 +636,17 @@ void LSLCVideoManager::onFinish(LSLCVideoDownloader* downloader, bool success)
 	// 获取该视频对应的消息列表
 	LCMessageList msgList = GetMessageItem(downloader->GetWomanId(), downloader->GetVideoId());
 
+    if (success) {
+        for (LCMessageList::const_iterator iter = msgList.begin(); iter != msgList.end(); iter++) {
+            LSLCMessageItem* item = (*iter);
+            if (item->m_msgType == MT_Video
+                && NULL != item->GetVideoItem() )
+            {
+                item->GetVideoItem()->m_videoFilePath = downloader->GetFilePath();
+            }
+        }
+    }
+    
 	// callback
 	if (NULL != m_callback)
 	{
@@ -670,6 +701,9 @@ LSLCMessageItem* LSLCVideoManager::RemovePhotoFee(long requestId)
 
 	m_videoFeeMap.lock();
 	m_videoFeeMap.findWithValue(requestId, item);
+    if (item != NULL) {
+        m_videoFeeMap.eraseWithKey(item);
+    }
 	m_videoFeeMap.unlock();
 
 	return item;

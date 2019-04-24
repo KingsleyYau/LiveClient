@@ -66,6 +66,8 @@
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="beginTimeLabelWidth" destination="yJ3-n1-Plv" id="jUs-54-6yH"/>
+                <outlet property="endTimeLabelWidth" destination="jgV-kA-jTa" id="oK2-S1-4rP"/>
                 <outlet property="ladyBeginLabel" destination="heg-pI-HNX" id="PeE-Gt-TQ9"/>
                 <outlet property="ladyEndLabel" destination="vfE-ul-o7t" id="uTb-Vd-R3p"/>
                 <outlet property="playButton" destination="Z1X-KM-RK9" id="mKO-z4-gZe"/>

@@ -21,13 +21,13 @@ public:
 	virtual ~ITaskManagerListener() {}
 
 public:
-	// 连接成功回调
+	// 连接成功回调（告诉监听对象成功开心跳包，失败告诉登陆失败）
 	virtual void OnConnect(bool success) = 0;
-	// 连接失败回调
+	// 连接失败回调(和下面的OnDisconnect(const TaskList& list)一起用的，只是OnDisconnect（）先调用为了监听对象停心跳包，OnDisconnect(const TaskList& list)为了logout)
 	virtual void OnDisconnect() = 0;
 	// 连接失败回调(listUnsentTask：未发送/未回复的task列表)
 	virtual void OnDisconnect(const TaskList& list) = 0;
-	// 已完成交互的task
+	// 已完成交互的task（这里监听对象只处理心跳）
 	virtual void OnTaskDone(ITask* task) = 0;
 };
 

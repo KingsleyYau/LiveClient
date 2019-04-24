@@ -9,7 +9,7 @@
 #import "LSMailPrivateVideoCell.h"
 #import "LSImageViewLoader.h"
 
-@interface LSMailPrivateVideoCell()
+@interface LSMailPrivateVideoCell ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *coverImageView;
 
@@ -28,35 +28,27 @@
 @property (weak, nonatomic) IBOutlet UILabel *descLabel;
 
 @property (strong, nonatomic) LSMailAttachmentModel *model;
+@property (strong, nonatomic) LSImageViewLoader *loader;
 
 @end
 
 @implementation LSMailPrivateVideoCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if( self ) {
-        // Initialization code
-        NSBundle *bundle = [LiveBundle mainBundle];
-        NSArray *nib = [bundle loadNibNamedWithFamily:@"LSMailPrivateVideoCell" owner:nil options:nil];
-        self = [nib objectAtIndex:0];
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.buyPlayBtn.layer.cornerRadius = self.buyPlayBtn.frame.size.height / 2;
-        self.buyPlayBtn.layer.masksToBounds = YES;
-        
-        self.model = [[LSMailAttachmentModel alloc] init];
-    }
-    return self;
-}
-
 + (id)getUITableViewCell:(UITableView *)tableView {
     LSMailPrivateVideoCell *cell = (LSMailPrivateVideoCell *)[tableView dequeueReusableCellWithIdentifier:[LSMailPrivateVideoCell cellIdentifier]];
-    
+
     if (nil == cell) {
         NSBundle *bundle = [LiveBundle mainBundle];
         NSArray *nib = [bundle loadNibNamedWithFamily:[LSMailPrivateVideoCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.buyPlayBtn.layer.cornerRadius = cell.buyPlayBtn.frame.size.height / 2;
+        cell.buyPlayBtn.layer.masksToBounds = YES;
+
+        cell.model = [[LSMailAttachmentModel alloc] init];
+        if (!cell.loader) {
+            cell.loader = [LSImageViewLoader loader];
+        }
     }
     return cell;
 }
@@ -64,40 +56,41 @@
 - (void)setupVideoDetail:(LSMailAttachmentModel *)model {
     self.model = model;
     switch (model.expenseType) {
-        case ExpenseTypeNo:{
+        case ExpenseTypeNo: {
             self.lockImageView.hidden = NO;
             self.lockImageView.image = [UIImage imageNamed:@"EMF_Private_Lock"];
             self.buyPlayBtn.hidden = NO;
             self.tipLabel.hidden = YES;
             self.playImageView.hidden = YES;
             self.unlockImageView.hidden = YES;
-        }break;
-        
-        case ExpenseTypeYes:{
+        } break;
+
+        case ExpenseTypeYes: {
             self.lockImageView.hidden = YES;
             self.buyPlayBtn.hidden = YES;
             self.tipLabel.hidden = YES;
             self.playImageView.hidden = NO;
             self.unlockImageView.hidden = NO;
-        }break;
-            
-        default:{
+        } break;
+
+        default: {
             self.lockImageView.hidden = NO;
             self.lockImageView.image = [UIImage imageNamed:@"Mail_Private_Photo_Expired"];
             self.buyPlayBtn.hidden = YES;
             self.tipLabel.hidden = NO;
             self.playImageView.hidden = YES;
             self.unlockImageView.hidden = YES;
-        }break;
+        } break;
     }
-    
+
     UIImage *placeholderImage = [self createImageWithColor:COLOR_WITH_16BAND_RGB(0xd8d8d8)];
-    [[LSImageViewLoader loader] loadImageWithImageView:self.coverImageView options:0 imageUrl:model.videoCoverUrl placeholderImage:placeholderImage];
-    
+    [self.loader stop];
+    [self.loader loadImageWithImageView:self.coverImageView options:0 imageUrl:model.videoCoverUrl placeholderImage:placeholderImage finishHandler:nil];
+
     self.descLabel.text = model.videoDesc;
 }
 
-- (UIImage*)createImageWithColor:(UIColor*)color {
+- (UIImage *)createImageWithColor:(UIColor *)color {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();

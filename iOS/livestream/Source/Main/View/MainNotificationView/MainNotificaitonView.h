@@ -12,6 +12,7 @@
 
 @interface MainNotificaitonView : UIView
 
+@property (nonatomic, strong) NSArray * items;
 - (void)reloadData;
 
 - (void)deleteCollectionViewRow;

@@ -44,6 +44,7 @@
 @property (strong) NSString *photoURL;
 
 @property (weak) IBOutlet LSCheckButton *emotionBtn;
+@property (weak) IBOutlet LSCheckButton *photoBtn;
 @property (weak) IBOutlet UIButton *voiceButton;
 @property (weak) IBOutlet UIImageView *voiceImageView;
 

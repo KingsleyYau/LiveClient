@@ -11,7 +11,7 @@
 #import "QNInvitationListViewController.h"
 #import "QNContactManager.h"
 #import "QNSementView.h"
-
+#import "QNRiskControlManager.h"
 typedef enum : NSUInteger {
     ChatListTypeChat = 0,
     ChatListTypeInvitation
@@ -27,6 +27,10 @@ typedef enum : NSUInteger {
 @end
 
 @implementation QNChatAndInvitationViewController
+- (void)initCustomParam {
+    [super initCustomParam];
+    self.isHideNavBottomLine = YES;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,10 +42,12 @@ typedef enum : NSUInteger {
     self.title = @"Chat";
     
     QNChatListViewController * vc1 = [[QNChatListViewController alloc] initWithNibName:nil bundle:nil];
+    vc1.isHideNavBottomLine = self.isHideNavBottomLine;
     vc1.view.frame = self.view.frame;
     [self addChildViewController:vc1];
     
     QNInvitationListViewController *vc2 = [[QNInvitationListViewController alloc] initWithNibName:nil bundle:nil];
+    vc2.isHideNavBottomLine = self.isHideNavBottomLine;
     vc2.view.frame = self.view.frame;
     [self addChildViewController:vc2];
     
@@ -66,15 +72,12 @@ typedef enum : NSUInteger {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self hideNavgationBarBottomLine:YES];
     [self reloadUnreadNum];
-    
+    [self setNavgationBarBottomLineHidden:YES];
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self hideNavgationBarBottomLine:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

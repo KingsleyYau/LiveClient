@@ -65,6 +65,7 @@ public:
         age = 0;
         country = "";
         onlineStatus = ONLINE_STATUS_UNKNOWN;
+        avatarImg = "";
     }
     
     virtual ~HttpHangoutAnchorItem() {

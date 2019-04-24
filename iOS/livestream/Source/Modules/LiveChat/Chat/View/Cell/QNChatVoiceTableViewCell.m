@@ -37,8 +37,6 @@
         cell = [nib objectAtIndex:0];
         cell.redView.layer.cornerRadius = cell.redView.frame.size.width/2;
         cell.redView.layer.masksToBounds = YES;
-        cell.palyButton.layer.cornerRadius = cell.palyButton.frame.size.height/2;
-        cell.palyButton.layer.masksToBounds = YES;
     }
     
     return cell;
@@ -48,14 +46,14 @@
     
     sender.selected = !sender.selected;
     if (sender.selected) {
-        [sender setImage:[UIImage imageNamed:@"ChatVoiceSelf_pauseIcon"] forState:UIControlStateNormal];
+        [sender setImage:[UIImage imageNamed:@"LS_ChatVoiceLady_pauseIcon"] forState:UIControlStateNormal];
         if ([self.delegate respondsToSelector:@selector(palyVoice:)]) {
             [self.delegate palyVoice:self.tag];
         }
     }
     else
     {
-        [sender setImage:[UIImage imageNamed:@"LS_ChatVoiceSelf_PlayIcon"] forState:UIControlStateNormal];
+        [sender setImage:[UIImage imageNamed:@"LS_ChatVoiceLady_PlayIcon"] forState:UIControlStateNormal];
         if ([self.delegate respondsToSelector:@selector(stopVoice:)]) {
             [self.delegate stopVoice:self.tag];
         }
@@ -66,11 +64,11 @@
 {
     self.palyButton.selected = isPaly;
     if (isPaly) {
-        [self.palyButton setImage:[UIImage imageNamed:@"LS_ChatVoiceSelf_ pauseIcon"] forState:UIControlStateNormal];
+        [self.palyButton setImage:[UIImage imageNamed:@"LS_ChatVoiceLady_ pauseIcon"] forState:UIControlStateNormal];
     }
     else
     {
-        [self.palyButton setImage:[UIImage imageNamed:@"LS_ChatVoiceSelf_PlayIcon"] forState:UIControlStateNormal];
+        [self.palyButton setImage:[UIImage imageNamed:@"LS_ChatVoiceLady_PlayIcon"] forState:UIControlStateNormal];
     }
 }
 

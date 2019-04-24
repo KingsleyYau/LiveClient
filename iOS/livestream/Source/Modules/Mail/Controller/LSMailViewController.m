@@ -63,6 +63,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     self.navigationItem.title = NSLocalizedString(@"Mail", nil);
     
     self.items = [NSMutableArray array];
@@ -75,11 +76,8 @@
     [shadowView showShadowAddView:self.noDataSearchBtn];
     
     [self hideNoMailTips];
-    
     [self setupSelectBoxView];
-    
     [self setupTableView];
-    
     [self addSingleTap];
 }
 
@@ -99,7 +97,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
     if (@available(iOS 11, *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     } else {

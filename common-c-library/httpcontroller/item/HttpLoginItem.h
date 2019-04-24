@@ -118,12 +118,12 @@ public:
         bool Parse(const Json::Value& root) {
             bool result = false;
             /* userSendMailPriv */
-            if (root[LOGIN_MAILPRIV_USERSENDMAILPRIV].isNumeric()) {
-                userSendMailPriv = root[LOGIN_MAILPRIV_USERSENDMAILPRIV].asInt();
+            if (root[LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILPRIV].isNumeric()) {
+                userSendMailPriv = root[LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILPRIV].asInt() == 1 ? true : false;
             }
             /* userSendMailImgPriv */
-            if (root[LOGIN_MAILPRIV_USERSENDMAILIMGPRIV].isObject()) {
-                userSendMailImgPriv.Parse(root[LOGIN_MAILPRIV_USERSENDMAILIMGPRIV]);
+            if (root[LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV].isObject()) {
+                userSendMailImgPriv.Parse(root[LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV]);
             }
             result = true;
             return result;
@@ -143,6 +143,129 @@ public:
          */
         bool                         userSendMailPriv;
         HttpUserSendMailPrivItem      userSendMailImgPriv;
+    };
+    
+    class HttpLiveChatPrivItem {
+    public:
+        bool Parse(const Json::Value& root) {
+            bool result = false;
+            /* isLiveChatPriv */
+            if(root[LOGIN_USER_PRIV_LIVECHAT_LIVECHAT_PRIV].isNumeric()) {
+                isLiveChatPriv = root[LOGIN_USER_PRIV_LIVECHAT_LIVECHAT_PRIV].asInt() == 1 ? true : false;
+            }
+            
+            /* liveChatInviteRiskType */
+            if(root[LOGIN_USER_PRIV_LIVECHAT_LIVECHAT_INVITE].isNumeric()) {
+                liveChatInviteRiskType = GetLSHttpliveChatInviteRiskType(root[LOGIN_USER_PRIV_LIVECHAT_LIVECHAT_INVITE].asInt());
+            }
+            
+            /* isSendLiveChatPhotoPriv */
+            if(root[LOGIN_USER_PRIV_LIVECHAT_PRIVMBPPSENDVIALIVECHAT].isNumeric()) {
+                isSendLiveChatPhotoPriv = root[LOGIN_USER_PRIV_LIVECHAT_PRIVMBPPSENDVIALIVECHAT].asInt() == 1 ? true : false;
+            }
+            /* isSendLiveChatVoicePriv */
+            if(root[LOGIN_USER_PRIV_LIVECHAT_PRIVMBLIVECHATINVITATIONVOICE].isNumeric()) {
+                isSendLiveChatVoicePriv = root[LOGIN_USER_PRIV_LIVECHAT_PRIVMBLIVECHATINVITATIONVOICE].asInt() == 1 ? true : false;
+            }
+            result = true;
+            return result;
+        }
+        
+        HttpLiveChatPrivItem() {
+            isLiveChatPriv = true;
+            liveChatInviteRiskType = LSHTTP_LIVECHATINVITE_RISK_NOLIMIT;
+            isSendLiveChatPhotoPriv = true;
+            isSendLiveChatVoicePriv = true;
+        }
+        
+        virtual ~HttpLiveChatPrivItem() {
+            
+        }
+        /**
+         *  LiveChat权限相关
+         *  isLiveChatPriv              LiveChat聊天总权限（0：禁止，1：正常，默认：1）
+         *  liveChatInviteRiskType      聊天邀请（LSHTTP_LIVECHATINVITE_RISK_NOLIMIT：不作任何限制 ，
+                                                 LSHTTP_LIVECHATINVITE_RISK_LIMITSEND：限制发送信息，
+                                                 LSHTTP_LIVECHATINVITE_RISK_LIMITREV：限制接受邀请，
+                                                 LSHTTP_LIVECHATINVITE_RISK_LIMITALL：收发全部限制）
+         *  isSendLiveChatPhotoPriv     观众发送私密照权限（0：禁止，1：正常，默认：1）
+         *  isSendLiveChatVoicePriv     观众发送语音权限（0：禁止，1：正常，默认：1）
+         */
+        bool                         isLiveChatPriv;
+        LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
+        bool                         isSendLiveChatPhotoPriv;
+        bool                         isSendLiveChatVoicePriv;
+    };
+    
+    class HttpHangoutPrivItem {
+    public:
+        bool Parse(const Json::Value& root) {
+            bool result = false;
+            /* isHangoutPriv */
+            if(root[LOGIN_USER_PRIV_HANGOUT_HANGOUTPRIV].isNumeric()) {
+                isHangoutPriv = root[LOGIN_USER_PRIV_HANGOUT_HANGOUTPRIV].asInt() == 1 ? true : false;
+            }
+            
+            result = true;
+            return result;
+        }
+        
+        HttpHangoutPrivItem() {
+            isHangoutPriv = true;
+        }
+        
+        virtual ~HttpHangoutPrivItem() {
+            
+        }
+        /**
+         *  Hangout权限相关
+         *  isHangoutPriv            Hangout总权限（0：禁止，1：正常，默认：0）
+         */
+        bool                         isHangoutPriv;
+    };
+    
+    class HttpUserPrivItem {
+    public:
+        bool Parse(const Json::Value& root) {
+            bool result = false;
+            /* liveChatPriv */
+            if(root[LOGIN_USER_PRIV_LIVECHAT].isObject()) {
+                liveChatPriv.Parse(root[LOGIN_USER_PRIV_LIVECHAT]);
+            }
+            /* mailPriv */
+            if(root[LOGIN_USER_PRIV_MAILPRIV].isObject()) {
+                mailPriv.Parse(root[LOGIN_USER_PRIV_MAILPRIV]);
+            }
+            /* hangoutPriv */
+            if(root[LOGIN_USER_PRIV_HANGOUT].isObject()) {
+                hangoutPriv.Parse(root[LOGIN_USER_PRIV_HANGOUT]);
+            }
+            /* isSayHiPriv */
+            if(root[LOGIN_USER_PRIV_SAYHI].isNumeric()) {
+                isSayHiPriv = root[LOGIN_USER_PRIV_SAYHI].asInt() == 0 ? false : true;
+            }
+            result = true;
+            return result;
+        }
+        
+        HttpUserPrivItem() {
+            isSayHiPriv = true;
+        }
+        
+        virtual ~HttpUserPrivItem() {
+            
+        }
+        /**
+         *  信件及意向信权限相关
+         *  liveChatPriv        LiveChat权限相关
+         *  mailPriv            信件及意向信权限相关
+         *  hangoutPriv         Hangout权限相关
+         *  isSayHiPriv         SayHi权限(1:有  0:无)
+         */
+        HttpLiveChatPrivItem         liveChatPriv;
+        HttpMailPrivItem             mailPriv;
+        HttpHangoutPrivItem          hangoutPriv;
+        bool                         isSayHiPriv;
     };
     
     void Parse(const Json::Value& root) {
@@ -207,12 +330,12 @@ public:
             if( root[LOGIN_QNMAINADURL].isString() ) {
                 qnMainAdUrl = root[LOGIN_QNMAINADURL].asString();
             }
-            
+
             /* qnMainAdTitle */
             if( root[LOGIN_QNMAINADTITLE].isString() ) {
                 qnMainAdTitle = root[LOGIN_QNMAINADTITLE].asString();
             }
-            
+
             /* qnMainAdId */
             if( root[LOGIN_QNMAINADID].isString() ) {
                 qnMainAdId = root[LOGIN_QNMAINADID].asString();
@@ -232,15 +355,20 @@ public:
             if(root[LOGIN_HANGOUTPRIV].isNumeric()) {
                 isHangoutRisk = root[LOGIN_HANGOUTPRIV].asInt() == 1 ? true : false;
             }
-            
+
             /* liveChatInviteRiskType */
             if(root[LOGIN_LIVECHAT_INVITE].isNumeric()) {
                 liveChatInviteRiskType = GetLSHttpliveChatInviteRiskType(root[LOGIN_LIVECHAT_INVITE].asInt());
             }
+//
+//            /* mailPriv */
+//            if(root[LOGIN_MAILPRIV].isObject()) {
+//                mailPriv.Parse(root[LOGIN_MAILPRIV]);
+//            }
             
-            /* mailPriv */
-            if(root[LOGIN_MAILPRIV].isObject()) {
-                mailPriv.Parse(root[LOGIN_MAILPRIV]);
+            /* userPriv */
+            if(root[LOGIN_USER_PRIV].isObject()) {
+                userPriv.Parse(root[LOGIN_USER_PRIV]);
             }
             
         }
@@ -293,6 +421,7 @@ public:
                                          LSHTTP_LIVECHATINVITE_RISK_LIMITALL：收发全部限制）
      *
      * mailPriv   信件及意向信权限相关
+     * userPriv   信件及意向信权限相关
      */
     string userId;
     string token;
@@ -311,7 +440,8 @@ public:
     bool isLiveChatRisk;
     bool isHangoutRisk;
     LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
-    HttpMailPrivItem mailPriv;
+//    HttpMailPrivItem mailPriv;
+    HttpUserPrivItem userPriv;
 };
 
 #endif /* LOGINITEM_H_ */

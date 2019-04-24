@@ -72,18 +72,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // 隐藏状态栏在隐藏导航栏之前,放在之后可能会导致计算位置少了状态栏的高度
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
+}
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 - (void)setupContainView {
@@ -227,8 +223,6 @@
         
         LiveWebViewController *webViewController = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
         webViewController.url = url;
-        self.navigationController.navigationBar.hidden = NO;
-        [self.navigationController setNavigationBarHidden:NO];
         [self.navigationController pushViewController:webViewController animated:YES];
         
     });

@@ -5,6 +5,7 @@ import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageInputYuvFilter;
 import net.qdating.filter.LSImageOutputFilter;
+import net.qdating.player.LSVideoHardDecoderFrame;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;

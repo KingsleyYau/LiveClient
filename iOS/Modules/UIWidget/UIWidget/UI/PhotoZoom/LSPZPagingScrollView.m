@@ -49,7 +49,7 @@
     //    self.showsVerticalScrollIndicator = NO;
     //    self.showsHorizontalScrollIndicator = NO;
     self.delegate = self;
-
+   
     //self.backgroundColor = [UIColor clearColor];
     // it is very important to auto resize
     //    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -97,9 +97,9 @@
 
     if (self.pagingViewDelegate == nil)
         return CGSizeZero;
-    
+
     NSUInteger count = 0;
-    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+    if ([self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)]) {
         count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
     }
 
@@ -118,7 +118,7 @@
 - (NSUInteger)currentPagingIndex {
     NSUInteger index = (NSUInteger)(ceil(self.contentOffset.x / self.bounds.size.width));
     NSUInteger count = 0;
-    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+    if ([self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)]) {
         count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
     }
     if (index >= count) {
@@ -149,7 +149,7 @@
     }
     //    assert(self.pagingViewDelegate != nil);
     NSUInteger count = 0;
-    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+    if ([self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)]) {
         count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
     }
     if (count == 0) {
@@ -161,7 +161,7 @@
     visibleBounds = CGRectMake(self.contentOffset.x, 0, self.bounds.size.width, 0);
     int firstNeededPageIndex = floorf(CGRectGetMinX(visibleBounds) / CGRectGetWidth(visibleBounds));
     float xIndex = CGRectGetMaxX(visibleBounds) - 1;
-    xIndex = (xIndex > 0)?xIndex:0;
+    xIndex = (xIndex > 0) ? xIndex : 0;
     int lastNeededPageIndex = floorf(xIndex / CGRectGetWidth(visibleBounds));
     firstNeededPageIndex = MAX(firstNeededPageIndex, 0);
     lastNeededPageIndex = MIN(lastNeededPageIndex, (int)count - 1);
@@ -305,7 +305,7 @@
 - (void)resetDisplay {
     [self cleanUp];
     NSUInteger count = 0;
-    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+    if ([self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)]) {
         count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
     }
     if (count > 0) {
@@ -350,4 +350,27 @@
     _currentPagingIndex = [self currentPagingIndex];
     [self.pagingViewDelegate pagingScrollView:self didShowPageViewForDisplay:_currentPagingIndex];
 }
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]) {
+         [self.panGestureRecognizer requireGestureRecognizerToFail:otherGestureRecognizer];
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    
+    UIView *view = [super hitTest:point withEvent:event];
+    if([view isKindOfClass:[UISlider class]]) {
+        //如果响应view是UISlider,则scrollview禁止滑动
+        self.scrollEnabled = NO;
+    } else {
+        //如果不是,则恢复滑动
+        self.scrollEnabled = YES;
+    }
+    return view;
+}
+
 @end

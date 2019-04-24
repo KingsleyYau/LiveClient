@@ -4,51 +4,51 @@
 <array>
 	<dict>
 		<key>name</key>
-		<string>img0</string>
+		<string>0</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img1</string>
+		<string>1</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img2</string>
+		<string>2</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img3</string>
+		<string>3</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img4</string>
+		<string>4</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img5</string>
+		<string>5</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img6</string>
+		<string>6</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img10</string>
+		<string>10</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img13</string>
+		<string>13</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img14</string>
+		<string>14</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img15</string>
+		<string>15</string>
 	</dict>
 	<dict>
 		<key>name</key>
-		<string>img16</string>
+		<string>16</string>
 	</dict>
 </array>
 </plist>

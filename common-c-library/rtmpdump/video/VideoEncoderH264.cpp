@@ -210,6 +210,8 @@ void VideoEncoderH264::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoEncoderH264::Pause( this : %p )", this);
     
     Stop();
+
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoEncoderH264::Pause( this : %p, [Success] )", this);
 }
     
 void VideoEncoderH264::EncodeVideoFrame(void* data, int size, void* frame) {
@@ -319,45 +321,8 @@ void VideoEncoderH264::Stop() {
         // 停止编码线程
         mEncodeVideoThread.Stop();
         
-        VideoFrame* frame = NULL;
-        // 释放未重采样的视频帧
-        mConvertBufferList.lock();
-        while( !mConvertBufferList.empty() ) {
-            frame = (VideoFrame* )mConvertBufferList.front();
-            mConvertBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mConvertBufferList.unlock();
-        
-        // 释放未编码Buffer
-        mEncodeBufferList.lock();
-        while( !mEncodeBufferList.empty() ) {
-            frame = (VideoFrame* )mEncodeBufferList.front();
-            mEncodeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mEncodeBufferList.unlock();
-        
-        // 释放空闲Buffer
-        mFreeBufferList.lock();
-        while( !mFreeBufferList.empty() ) {
-            frame = (VideoFrame* )mFreeBufferList.front();
-            mFreeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mFreeBufferList.unlock();
+        // 清空队列
+        ClearVideoFrame();
     }
     mRuningMutex.unlock();
     
@@ -613,7 +578,64 @@ void VideoEncoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
     mFreeBufferList.push_back(videoFrame);
     mFreeBufferList.unlock();
 }
+
+void VideoEncoderH264::ClearVideoFrame() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoEncoderH264::ClearVideoFrame( "
+                 "this : %p, "
+                 "mEncodeBufferList.size() : %d, "
+                 "mConvertBufferList.size() : %d, "
+                 "mFreeBufferList.size() : %d "
+                 ")",
+                 this,
+				 mEncodeBufferList.size(),
+                 mConvertBufferList.size(),
+                 mFreeBufferList.size()
+                 );
     
+    // 释放解码Buffer
+    VideoFrame* frame = NULL;
+
+    mEncodeBufferList.lock();
+    while( !mEncodeBufferList.empty() ) {
+        frame = (VideoFrame* )mEncodeBufferList.front();
+        mEncodeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mEncodeBufferList.unlock();
+
+    // 释放转换Buffer
+    mConvertBufferList.lock();
+    while( !mConvertBufferList.empty() ) {
+        frame = (VideoFrame* )mConvertBufferList.front();
+        mConvertBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mConvertBufferList.unlock();
+
+    // 释放空闲Buffer
+    mFreeBufferList.lock();
+    while( !mFreeBufferList.empty() ) {
+        frame = (VideoFrame* )mFreeBufferList.front();
+        mFreeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mFreeBufferList.unlock();
+}
+
 char* VideoEncoderH264::FindNalu(char* start, int size, int& startCodeSize) {
     static const char naluStartCode[] = {0x00, 0x00, 0x00, 0x01};
     static const char sliceStartCode[] = {0x00, 0x00, 0x01};

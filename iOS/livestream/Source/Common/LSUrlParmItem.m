@@ -119,6 +119,20 @@
             case LiveUrlTypeHangout: {
                 // TODO:多人直播间
             }break;
+            case LiveUrlTypeSendSayHi: {
+                // TODO:进入发送SayHi界面
+            }break;
+            case LiveUrlTypeSayHiList:{
+                // TODO:进入SayHi的列表
+                NSString *listTypeString = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+                if( [listTypeString intValue] >= LiveUrlSayHiListTypeAll && [listTypeString intValue] < LiveUrlSayHiListTypeUnknown ) {
+                    _sayHiListType = [listTypeString intValue];
+                }
+            }break;
+            case LiveUrlTypeSayHiDetail:{
+                // TODO:进入SayHi详情界面
+                  _sayhiId = [LSURLQueryParam urlParamForKey:@"sayhiid" url:url];
+            }break;
             default: {
             } break;
         }
@@ -133,13 +147,13 @@
         case LiveUrlMainListTypeHot:{
             index = 1;
         }break;
-        case LiveUrlMainListUrlTypeHangout: {
+        case LiveUrlMainListUrlTypeFollow:{
             index = 2;
         }break;
-        case LiveUrlMainListUrlTypeFollow:{
+        case LiveUrlMainListUrlTypeCalendar:{
             index = 3;
         }break;
-        case LiveUrlMainListUrlTypeCalendar:{
+        case LiveUrlMainListUrlTypeHangout: {
             index = 4;
         }break;
         default:
@@ -201,6 +215,12 @@
         type = LiveUrlTypeHangoutDialog;
     }else if ([moduleString isEqualToString:@"hangout"]) {
         type = LiveUrlTypeHangout;
+    }else if ([moduleString isEqualToString:@"sayhi_list"]) {
+        type = LiveUrlTypeSayHiList;
+    }else if ([moduleString isEqualToString:@"sendsayhi"]) {
+        type = LiveUrlTypeSendSayHi;
+    }else if ([moduleString isEqualToString:@"sayhi_detail"]) {
+        type = LiveUrlTypeSayHiDetail;
     }
     
     return type;

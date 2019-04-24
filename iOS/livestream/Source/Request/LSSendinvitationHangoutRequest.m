@@ -14,6 +14,7 @@
         self.roomId = @"";
         self.anchorId = @"";
         self.recommendId = @"";
+        self.isCreateOnly = NO;
     }
     
     return self;
@@ -26,7 +27,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager sendInvitationHangout:self.roomId anchorId:self.anchorId recommendId:self.recommendId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, NSString * _Nonnull inviteId, int expire) {
+        NSInteger request = [self.manager sendInvitationHangout:self.roomId anchorId:self.anchorId recommendId:self.recommendId isCreateOnly:self.isCreateOnly finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, NSString * _Nonnull inviteId, int expire) {
             BOOL bFlag = NO;
 
             // 没有处理过, 才进入LSSessionRequestManager处理

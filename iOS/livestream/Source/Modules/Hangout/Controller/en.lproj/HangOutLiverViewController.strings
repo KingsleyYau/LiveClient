@@ -6,7 +6,7 @@
 "FLY-A2-Npi.text" = "Randy";
 
 /* Class = "UILabel"; text = "Invite Randy"; ObjectID = "zBx-hC-ddw"; */
-"zBx-hC-ddw.text" = "Invite Broadcast";
+"zBx-hC-ddw.text" = "Invite Broadcaster";
 
 "INVITING_ANCHOR" = "Inviting %@";
 

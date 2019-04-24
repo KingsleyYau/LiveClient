@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSChatPhotoView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="313"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="7gr-2t-bVO">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="313"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="BAT-1V-73O">
+                        <size key="itemSize" width="138" height="138"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="46"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="iN0-l3-epB" id="ywP-2h-K5W"/>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="Whf-Bm-y9O"/>
+                    </connections>
+                </collectionView>
+                <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O1h-Sy-baF">
+                    <rect key="frame" x="16" y="16" width="40" height="40"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="POR-Re-tAh"/>
+                        <constraint firstAttribute="height" constant="40" id="qwz-eA-6F9"/>
+                    </constraints>
+                    <state key="normal" image="LSChat_PhotoCam"/>
+                    <connections>
+                        <action selector="camBtnDid:" destination="iN0-l3-epB" eventType="touchUpInside" id="wMJ-3y-UG6"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1q-fp-K0M">
+                    <rect key="frame" x="16" y="77" width="40" height="40"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="VaH-LB-zHa"/>
+                        <constraint firstAttribute="height" constant="40" id="oEH-UQ-S36"/>
+                    </constraints>
+                    <state key="normal" image="LSChat_PhotoAlbum"/>
+                    <connections>
+                        <action selector="albumBtnDid:" destination="iN0-l3-epB" eventType="touchUpInside" id="wDA-q5-YET"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.73999999999999999" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jct-hw-Q6y">
+                    <rect key="frame" x="0.0" y="283" width="375" height="30"/>
+                    <color key="backgroundColor" red="0.0039215686274509803" green="0.0039215686274509803" blue="0.0039215686274509803" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="tFc-3V-mtt"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <state key="normal" title="1.5 credits for each photo sent"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.93701923080000005" green="0.93701923080000005" blue="0.93701923080000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="7gr-2t-bVO" secondAttribute="trailing" id="6QY-nX-5Fo"/>
+                <constraint firstItem="7gr-2t-bVO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="8u9-nG-Tge"/>
+                <constraint firstItem="r1q-fp-K0M" firstAttribute="top" secondItem="O1h-Sy-baF" secondAttribute="bottom" constant="21" id="BhH-Vi-ayF"/>
+                <constraint firstAttribute="trailing" secondItem="jct-hw-Q6y" secondAttribute="trailing" id="MtC-GX-Njo"/>
+                <constraint firstItem="r1q-fp-K0M" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="WcV-JB-vxS"/>
+                <constraint firstItem="O1h-Sy-baF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="XsX-kR-qxu"/>
+                <constraint firstItem="O1h-Sy-baF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="bBO-mw-C38"/>
+                <constraint firstAttribute="bottom" secondItem="7gr-2t-bVO" secondAttribute="bottom" id="bMW-QC-dgJ"/>
+                <constraint firstItem="jct-hw-Q6y" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mE9-Ob-9TU"/>
+                <constraint firstAttribute="bottom" secondItem="jct-hw-Q6y" secondAttribute="bottom" id="pmo-kn-hiT"/>
+                <constraint firstItem="7gr-2t-bVO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="sFh-2s-6kk"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="camBtnH" destination="qwz-eA-6F9" id="aVu-35-fWF"/>
+                <outlet property="camBtnTop" destination="bBO-mw-C38" id="yPk-yx-zQp"/>
+                <outlet property="chatPhotoCollectionView" destination="7gr-2t-bVO" id="MZC-dM-QDM"/>
+                <outlet property="photoAlbumBtn" destination="r1q-fp-K0M" id="P69-hq-JaZ"/>
+                <outlet property="photoCamBtn" destination="O1h-Sy-baF" id="DAL-2J-yM5"/>
+            </connections>
+            <point key="canvasLocation" x="138.40000000000001" y="309.89505247376314"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LSChat_PhotoAlbum" width="24" height="24"/>
+        <image name="LSChat_PhotoCam" width="24" height="24"/>
+    </resources>
+</document>

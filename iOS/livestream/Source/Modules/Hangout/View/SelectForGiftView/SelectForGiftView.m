@@ -91,7 +91,7 @@
     self.allImageViewThree.hidden = YES;
     
     self.nameLabel.text = anchorName;
-    [[LSImageViewLoader loader] refreshCachedImage:self.anchorImageView options:SDWebImageRefreshCached imageUrl:url placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [[LSImageViewLoader loader] loadImageFromCache:self.anchorImageView options:SDWebImageRefreshCached imageUrl:url placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
 }
 
@@ -111,12 +111,12 @@
     self.anchorImageView.hidden = YES;
     
     self.nameLabel.text = anchorName;
-    [[LSImageViewLoader loader] refreshCachedImage:self.allImageViewTwo options:SDWebImageRefreshCached imageUrl:urls.firstObject placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [[LSImageViewLoader loader] loadImageFromCache:self.allImageViewTwo options:SDWebImageRefreshCached imageUrl:urls.firstObject placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
-    [[LSImageViewLoader loader] refreshCachedImage:self.allImageViewThree options:SDWebImageRefreshCached imageUrl:urls[1] placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [[LSImageViewLoader loader] loadImageFromCache:self.allImageViewThree options:SDWebImageRefreshCached imageUrl:urls[1] placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
     if (!isSubter) {
-        [[LSImageViewLoader loader] refreshCachedImage:self.allImageViewOne options:SDWebImageRefreshCached imageUrl:urls[2] placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        [[LSImageViewLoader loader] loadImageFromCache:self.allImageViewOne options:SDWebImageRefreshCached imageUrl:urls[2] placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         }];
     }
 }

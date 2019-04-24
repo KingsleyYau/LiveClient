@@ -17,7 +17,7 @@
 #import "LiveModule.h"
 #import "AudienModel.h"
 #import "RoomTypeIsFirstManager.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "AnchorPersonalViewController.h"
 #import "DialogTip.h"
@@ -26,7 +26,7 @@
 #import "StartHangOutTipView.h"
 #import "LiveUrlHandler.h"
 #import "HangoutDialogViewController.h"
-
+#import "LiveGobalManager.h"
 @interface PublicVipViewController () <IMManagerDelegate, IMLiveRoomManagerDelegate, PlayViewControllerDelegate, HangoutDialogViewControllerDelegate>
 
 // 观众数组
@@ -58,76 +58,79 @@
 @property (nonatomic, strong) StartHangOutTipView *hangoutTipView;
 @property (nonatomic, strong) UIButton *closeHangoutTipBtn;
 
+#pragma mark - 用户信息管理器
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
+
 @end
 
 @implementation PublicVipViewController
 - (void)initCustomParam {
     [super initCustomParam];
-    
+
     NSLog(@"PublicVipViewController::initCustomParam( self : %p )", self);
+
+    // 隐藏导航栏
+    self.isShowNavBar = NO;
+    // 禁止导航栏后退手势
+    self.canPopWithGesture = NO;
     
     self.sessionManager = [LSSessionRequestManager manager];
     self.firstManager = [RoomTypeIsFirstManager manager];
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
-    
+
     self.dialogTipView = [DialogTip dialogTip];
     self.audienceArray = [[NSMutableArray alloc] init];
-    
+
     self.ladyImageLoader = [LSImageViewLoader loader];
+
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
 }
 
 - (void)setupContainView {
     [super setupContainView];
-    
+
     // 初始化头部界面
     //    [self setupHeaderImageView];
-    
+
     // 更新头部直播间数据
     [self setupHeadViewInfo];
 }
 
 - (void)dealloc {
     NSLog(@"PublicVipViewController::dealloc( self : %p )", self);
-    
+
     if (self.closeDialogTipView) {
         [self.closeDialogTipView removeFromSuperview];
     }
-    
+
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    
+
     self.headBackgroundView.layer.cornerRadius = self.headBackgroundView.frame.size.height / 2;
     self.headBackgroundView.layer.masksToBounds = YES;
-    
+
     self.laddyHeadImageView.layer.cornerRadius = self.laddyHeadImageView.frame.size.height / 2;
     self.laddyHeadImageView.layer.masksToBounds = YES;
-    
+
     // 根据时候关注
     if (self.liveRoom.imLiveRoom.favorite) {
         self.followBtnWidth.constant = 0;
     }
-    
+
     self.liveRoom.superView = self.view;
     self.liveRoom.superController = self;
-    
+
     // 初始化播放界面
     [self setupPlayController];
-    
+
     // 请求观众席列表
     [self setupAudienView];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -148,19 +151,14 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
 }
 
 - (void)showHangoutTipView {
-    HangoutDialogViewController *vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
+    HangoutDialogViewController *vc = [[LiveGobalManager manager] addDialogVc];
     vc.anchorId = self.liveRoom.userId;
     vc.anchorName = self.liveRoom.userName;
-    vc.dialogDelegate = self;
-    [self addChildViewController:vc];
-    [self.view addSubview:vc.view];
     [vc showhangoutView];
 }
-
 
 #pragma mark - 界面风格初始化
 - (void)setupPlayController {
@@ -190,7 +188,7 @@
     self.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 135, 0, 1);
     self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
     self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(181, 181, 181, 0.49);
-    
+
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titleBackGroundView.mas_bottom);
@@ -202,41 +200,41 @@
             make.bottom.equalTo(self.view);
         }
     }];
-    
+
     [self.playVC.liveVC bringSubviewToFrontFromView:self.view];
     [self.view bringSubviewToFront:self.playVC.chooseGiftListView];
     CGRect frame = self.playVC.chooseGiftListView.frame;
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
-    
+
     //是否节目直播间
     if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
         // 隐藏立即私密邀请控件
         self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
-    }
-    else {
+    } else {
         //没有立即私密权限和多人互动权限
-        if (!self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.isHangoutRisk) {
+        if (!self.liveRoom.priv.isHasOneOnOneAuth && (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) && (!self.liveRoom.imLiveRoom.isHangoutPriv)) {
             // 隐藏立即私密邀请控件
             self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
         }
         //有立即私密权限，没有多人互动权限
-        else if (self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.isHangoutRisk) {
-            self.playVC.liveVC.startOneViewHeigh.constant = 40;
-            self.playVC.liveVC.startOneView.hidden = NO;
-            self.playVC.liveVC.startOneBtn.hidden = NO;
-            self.playVC.liveVC.startHangoutBtn.hidden = YES;
-            self.playVC.liveVC.startOneBtnX.constant = 0;
+        else if (self.liveRoom.priv.isHasOneOnOneAuth) {
+            if ((![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) && !self.liveRoom.imLiveRoom.isHangoutPriv) {
+                self.playVC.liveVC.startOneViewHeigh.constant = 40;
+                self.playVC.liveVC.startOneView.hidden = NO;
+                self.playVC.liveVC.startOneBtn.hidden = NO;
+                self.playVC.liveVC.startHangoutBtn.hidden = YES;
+                self.playVC.liveVC.startOneBtnX.constant = 0;
+            }
         }
         //没有立即私密权限，有多人互动权限
-        else if (!self.liveRoom.priv.isHasOneOnOneAuth && ![LSLoginManager manager].loginItem.isHangoutRisk) {
+        else if (!self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv && self.liveRoom.imLiveRoom.isHangoutPriv) {
             self.playVC.liveVC.startOneViewHeigh.constant = 40;
             self.playVC.liveVC.startOneView.hidden = NO;
             self.playVC.liveVC.startOneBtn.hidden = YES;
             self.playVC.liveVC.startHangoutBtn.hidden = NO;
             self.playVC.liveVC.startHangoutBtnX.constant = 0;
-        }
-        else {
+        } else {
             //有立即私密权限，有多人互动权限，默认UI
             self.playVC.liveVC.startOneViewHeigh.constant = 40;
             self.playVC.liveVC.startOneView.hidden = NO;
@@ -244,12 +242,12 @@
             self.playVC.liveVC.startHangoutBtn.hidden = NO;
         }
     }
-    
+
     // 立即私密按钮
     //    self.playVC.liveVC.cameraBtn.hidden = NO;
     //    [self.playVC.liveVC.cameraBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Invite_Btn"] forState:UIControlStateNormal];
     //    [self.playVC.liveVC.cameraBtn addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
-    
+
     // 礼物按钮
     [self.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Gift_Btn"] forState:UIControlStateNormal];
     // 输入栏目
@@ -258,7 +256,7 @@
     self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0x5D0E86);
     // 视频播放界面
     //        self.playVC.liveVC.videoBgImageView.backgroundColor = self.view.backgroundColor;
-    
+
     // 聊天输入框
     [self.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Send_Btn"] forState:UIControlStateNormal];
     self.playVC.liveSendBarView.louderBtnImage = [UIImage imageNamed:@"Live_Public_Vip_Pop_Btn"];
@@ -274,7 +272,7 @@
 - (void)setupHeaderImageView {
     self.tipView = [[ChardTipView alloc] init];
     self.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
-    
+
     [self.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
                               roomTip:NSLocalizedStringFromSelf(@"VIP_PUBLIC_TIP")
                            creditText:NSLocalizedStringFromSelf(@"CREDIT_TIP")];
@@ -285,11 +283,10 @@
         make.width.equalTo(@(self.roomTypeImageView.frame.size.width * 1.5));
         make.left.equalTo(@0);
     }];
-    
+
     // 图片点击事件
     WeakObject(self, weakSelf);
     [self.roomTypeImageView addTapBlock:^(id obj) {
-        
         if (!weakSelf.isTipShow) {
             weakSelf.hidenTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
                                                                    target:weakSelf
@@ -302,7 +299,7 @@
             weakSelf.isTipShow = YES;
         }
     }];
-    
+
     // 是否第一次进入该类型直播间 显示资费提示
     BOOL haveCome = [self.firstManager getThisTypeHaveCome:@"Public_VIP_Join"];
     if (haveCome) {
@@ -320,15 +317,19 @@
     } else {
         self.titleBgImageTop.constant = 20;
     }
-    
+
     if (self.liveRoom.userName.length > 0) {
         self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s", self.liveRoom.userName];
     } else {
         self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s", self.liveRoom.httpLiveRoom.nickName];
     }
-    [self.ladyImageLoader refreshCachedImage:self.laddyHeadImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-    }];
-    
+    [self.ladyImageLoader loadImageFromCache:self.laddyHeadImageView
+                                     options:SDWebImageRefreshCached
+                                    imageUrl:self.liveRoom.photoUrl
+                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                               finishHandler:^(UIImage *image){
+                               }];
+
     //    NSString *audienceNum = [NSString stringWithFormat:@"(%d/%d)", self.liveRoom.imLiveRoom.fansNum, self.liveRoom.imLiveRoom.maxFansiNum];
 }
 
@@ -336,20 +337,19 @@
 
 // 获取观众列表
 - (void)setupAudienView {
-    WeakObject(self, weakSelf);
     LiveFansListRequest *request = [[LiveFansListRequest alloc] init];
     request.roomId = self.liveRoom.roomId;
     request.start = 0;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg,
                               NSArray<ViewerFansItemObject *> *_Nullable array) {
-        
+
         NSLog(@"PublicViewController::LiveFansListRequest( [请求观众列表], success : %d, errnum : %ld, errmsg : %@, array : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                
-                [weakSelf.audienceArray removeAllObjects];
+
+                [self.audienceArray removeAllObjects];
                 for (ViewerFansItemObject *item in array) {
-                    
+
                     AudienModel *model = [[AudienModel alloc] init];
                     model.userId = item.userId;
                     model.nickName = item.nickName;
@@ -359,8 +359,8 @@
                     model.level = item.level;
                     model.image = [UIImage imageNamed:@"Default_Img_Man_Circyle"];
                     model.isHasTicket = item.isHasTicket;
-                    [weakSelf.audienceArray addObject:model];
-                    
+                    [self.audienceArray addObject:model];
+
                     // 更新并缓存本地观众数据
                     LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
                     infoItem.userId = item.userId;
@@ -371,19 +371,19 @@
                     infoItem.userLevel = item.level;
                     infoItem.isAnchor = 0;
                     infoItem.isHasTicket = item.isHasTicket;
-                    [[LSUserInfoManager manager] setAudienceInfoDicL:infoItem];
+                    [self.roomUserInfoManager setAudienceInfoDicL:infoItem];
                 }
-                
+
                 // 显示最大人数默认头像
-                if (weakSelf.audienceArray.count < weakSelf.liveRoom.imLiveRoom.maxFansiNum) {
-                    NSUInteger count = weakSelf.liveRoom.imLiveRoom.maxFansiNum - weakSelf.audienceArray.count;
+                if (self.audienceArray.count < self.liveRoom.imLiveRoom.maxFansiNum) {
+                    NSUInteger count = self.liveRoom.imLiveRoom.maxFansiNum - self.audienceArray.count;
                     for (NSUInteger num = 0; num < count; num++) {
                         AudienModel *model = [[AudienModel alloc] init];
                         model.image = [UIImage imageNamed:@"Default_Img_Noman_Circyle"];
-                        [weakSelf.audienceArray addObject:model];
+                        [self.audienceArray addObject:model];
                     }
                 }
-                weakSelf.audienceView.audienceArray = weakSelf.audienceArray;
+                self.audienceView.audienceArray = self.audienceArray;
             }
         });
     };
@@ -405,7 +405,6 @@
 
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket {
     NSLog(@"PublicViewController::onRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新并缓存本地观众数据
         LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
@@ -416,18 +415,17 @@
         infoItem.riderName = riderName;
         infoItem.riderUrl = riderUrl;
         infoItem.isAnchor = 0;
-        [[LSUserInfoManager manager] setAudienceInfoDicL:infoItem];
-        
+        [self.roomUserInfoManager setAudienceInfoDicL:infoItem];
+
         // 刷观众列表
-        [weakSelf setupAudienView];
+        [self setupAudienView];
     });
 }
 
 - (void)onRecvLeaveRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl fansNum:(int)fansNum {
     NSLog(@"PublicViewController::onRecvLeaveRoomNotice( [接收观众退出直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, fansNum);
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf setupAudienView];
+        [self setupAudienView];
     });
 }
 
@@ -450,7 +448,6 @@
 }
 
 - (IBAction)followLiverAction:(id)sender {
-    WeakObject(self, weakSelf);
     [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickFollow eventCategory:EventCategoryBroadcast];
     SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
     request.userId = self.liveRoom.userId;
@@ -459,10 +456,10 @@
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                weakSelf.followBtnWidth.constant = 0;
+                self.followBtnWidth.constant = 0;
                 //                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
             } else {
-                [weakSelf.dialogTipView showDialogTip:weakSelf.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
+                [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
             }
             NSLog(@"PublicViewController::followLiverAction( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
         });

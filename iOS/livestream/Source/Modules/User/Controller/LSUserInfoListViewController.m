@@ -10,7 +10,7 @@
 #import "LSLoginManager.h"
 #import "UserInfoListCell.h"
 #import "LSUserUnreadCountManager.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LSLoginManager.h"
 #import "LSMyReservationsViewController.h"
 #import "MyBackpackViewController.h"
@@ -23,7 +23,7 @@
 @property (nonatomic, assign) int myReservationsCount;
 @property (nonatomic, assign) int myBackpackCount;
 #pragma mark - 用户信息管理器
-@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
 @property (nonatomic, strong) LSLoginManager *loginManager;
 @end
 
@@ -57,7 +57,7 @@
 
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
-    self.userInfoManager = [LSUserInfoManager manager];
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
     self.loginManager = [LSLoginManager manager];
     
     self.titleArray = @[
@@ -83,10 +83,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    [self hideNavgationBarBottomLine:NO];
 }
 
 - (void)onGetResevationsUnredCount:(BookingUnreadUnhandleNumItemObject *)item {
@@ -148,7 +144,7 @@
                 cell.unread.hidden = YES;
                 cell.levelBtn.hidden = NO;
                 cell.unIcon.hidden = YES;
-                [self.userInfoManager getLiverInfo:self.loginManager.loginItem.userId
+                [self.roomUserInfoManager getLiverInfo:self.loginManager.loginItem.userId
                                      finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                          dispatch_async(dispatch_get_main_queue(), ^{
                                              [blockCell updateLevel:item.userLevel];

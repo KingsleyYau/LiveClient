@@ -192,7 +192,7 @@ void CLSLiveChatTaskManager::OnSend(bool success, ILSLiveChatTask* task)
 void CLSLiveChatTaskManager::OnRecv(const LSLiveChatTransportProtocol* tp)
 {
 	FileLog("LiveChatClient", "CLSLiveChatTaskManager::OnRecv() tp:%p", tp);
-	FileLog("LiveChatClient", "CLSLiveChatTaskManager::OnRecv() cmd:%d, seq:%d, lenght:%d, tp.dataLen:%d"
+    FileLevelLog("LiveChatClient", KLog::LOG_WARNING, "CLSLiveChatTaskManager::OnRecv() cmd:%d, seq:%d, lenght:%d, tp.dataLen:%d"
 			, tp->header.cmd, tp->header.seq, tp->header.length, tp->GetDataLength());
 
 	ILSLiveChatTask* task = NULL;

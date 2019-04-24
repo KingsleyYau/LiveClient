@@ -24,15 +24,16 @@
         self.isPushAd = [coder decodeBoolForKey:@"isPushAd"];
         self.svrList = [coder decodeObjectForKey:@"svrList"];
         self.userType = [coder decodeIntForKey:@"userType"];
-        self.qnMainAdUrl = [coder decodeObjectForKey:@"qnMainAdUrl"];
-        self.qnMainAdTitle = [coder decodeObjectForKey:@"qnMainAdTitle"];
-        self.qnMainAdId = [coder decodeObjectForKey:@"qnMainAdId"];
+//        self.qnMainAdUrl = [coder decodeObjectForKey:@"qnMainAdUrl"];
+//        self.qnMainAdTitle = [coder decodeObjectForKey:@"qnMainAdTitle"];
+//        self.qnMainAdId = [coder decodeObjectForKey:@"qnMainAdId"];
         self.gaUid = [coder decodeObjectForKey:@"gaUid"];
         self.sessionId = [coder decodeObjectForKey:@"sessionId"];
         self.isLiveChatRisk = [coder decodeBoolForKey:@"isLiveChatRisk"];
-        self.isHangoutRisk = [coder decodeBoolForKey:@"isHangoutRisk"];
-        self.liveChatInviteRiskType = [coder decodeIntForKey:@"liveChatInviteRiskType"];
-        self.mailPriv = [coder decodeObjectForKey:@"mailPriv"];
+//        self.isHangoutRisk = [coder decodeBoolForKey:@"isHangoutRisk"];
+//        self.liveChatInviteRiskType = [coder decodeIntForKey:@"liveChatInviteRiskType"];
+//        self.mailPriv = [coder decodeObjectForKey:@"mailPriv"];
+        self.userPriv = [coder decodeObjectForKey:@"userPriv"];
     }
     return self;
 }
@@ -47,16 +48,16 @@
     [coder encodeBool:self.isPushAd forKey:@"isPushAd"];
     [coder encodeObject:self.svrList forKey:@"svrList"];
     [coder encodeInt:self.userType forKey:@"userType"];
-    [coder encodeObject:self.qnMainAdUrl forKey:@"qnMainAdUrl"];
-    [coder encodeObject:self.qnMainAdTitle forKey:@"qnMainAdTitle"];
-    [coder encodeObject:self.qnMainAdId forKey:@"qnMainAdId"];
+//    [coder encodeObject:self.qnMainAdUrl forKey:@"qnMainAdUrl"];
+//    [coder encodeObject:self.qnMainAdTitle forKey:@"qnMainAdTitle"];
+//    [coder encodeObject:self.qnMainAdId forKey:@"qnMainAdId"];
     [coder encodeObject:self.gaUid forKey:@"gaUid"];
     [coder encodeObject:self.sessionId forKey:@"sessionId"];
     [coder encodeBool:self.isLiveChatRisk forKey:@"isLiveChatRisk"];
-    [coder encodeBool:self.isHangoutRisk forKey:@"isHangoutRisk"];
-    [coder encodeInt:self.liveChatInviteRiskType forKey:@"liveChatInviteRiskType"];
-    [coder encodeObject:self.mailPriv forKey:@"mailPriv"];
-
+//    [coder encodeBool:self.isHangoutRisk forKey:@"isHangoutRisk"];
+//    [coder encodeInt:self.liveChatInviteRiskType forKey:@"liveChatInviteRiskType"];
+//    [coder encodeObject:self.mailPriv forKey:@"mailPriv"];
+    [coder encodeObject:self.userPriv forKey:@"userPriv"];
 }
 
 @end

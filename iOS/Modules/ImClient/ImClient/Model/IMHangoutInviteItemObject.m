@@ -16,7 +16,7 @@
 - (id)init {
     if( self = [super init] ) {
         self.logId = 0;
-        self.isAnto = NO;
+        self.isAuto = NO;
         self.anchorId = @"";
         self.anchorNickName = @"";
         self.anchorCover = @"";
@@ -30,7 +30,7 @@
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
         self.logId = [coder decodeIntForKey:@"logId"];
-        self.isAnto = [coder decodeBoolForKey:@"isAnto"];
+        self.isAuto = [coder decodeBoolForKey:@"isAuto"];
         self.anchorId = [coder decodeObjectForKey:@"anchorId"];
         self.anchorNickName = [coder decodeObjectForKey:@"anchorNickName"];
         self.anchorCover = [coder decodeObjectForKey:@"anchorCover"];
@@ -45,7 +45,7 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
 
     [coder encodeInt:self.logId forKey:@"logId"];
-    [coder encodeBool:self.isAnto forKey:@"isAnto"];
+    [coder encodeBool:self.isAuto forKey:@"isAuto"];
     [coder encodeObject:self.anchorId forKey:@"anchorId"];
     [coder encodeObject:self.anchorNickName forKey:@"anchorNickName"];
     [coder encodeObject:self.anchorCover forKey:@"anchorCover"];

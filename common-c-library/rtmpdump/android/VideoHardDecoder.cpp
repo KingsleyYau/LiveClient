@@ -357,13 +357,13 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 			naluHeaderSize
 			);
 
-	bool bChange = false;
+	bool bChange = true;
 
-	if( mSpSize != sps_size || memcmp(mpSps, sps, sps_size) != 0 ) {
-		bChange = true;
-	} else if( mPpsSize != pps_size || memcmp(mpPps, pps, pps_size) != 0 ) {
-		bChange = true;
-	}
+//	if( mSpSize != sps_size || memcmp(mpSps, sps, sps_size) != 0 ) {
+//		bChange = true;
+//	} else if( mPpsSize != pps_size || memcmp(mpPps, pps, pps_size) != 0 ) {
+//		bChange = true;
+//	}
 
 	if( bChange ) {
 		// 重新设置解码器变量
@@ -479,7 +479,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
             FileLevelLog("rtmpdump",
                          KLog::LOG_STAT,
                          "VideoHardDecoder::DecodeVideoFrame( "
-						 "this : %p,"
+						 "this : %p, "
                          "[Got Nalu], "
                          "naluSize : %d, "
                          "naluBodySize : %d, "

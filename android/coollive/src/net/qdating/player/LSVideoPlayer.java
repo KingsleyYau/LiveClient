@@ -14,13 +14,9 @@ import net.qdating.utils.Log;
 
 public class LSVideoPlayer implements ILSVideoRendererJni {
 	/**
-	 * 预览界面
+	 * 渲染绑定器
 	 */
-	private GLSurfaceView playerSurfaceView;
-	/**
-	 * 预览渲染器
-	 */
-	private LSVideoPlayerRenderer playerRenderer = null;
+	private LSPlayerRendererBinder rendererBinder = null;
 	
 	private int pixelBufferSize = 0;
     private Bitmap bitmap = null;
@@ -34,49 +30,13 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
 	}
 	
 	/**
-	 * 绑定界面元素
-	 * @param surfaceView 界面
-	 * @param fillMode 填充模式
+	 * 设置渲染绑定器
+	 * @param rendererBinder 渲染绑定器
 	 */
-	public void init(GLSurfaceView surfaceView, FillMode fillMode) {
-		// 创建预览渲染器
-		this.playerRenderer = new LSVideoPlayerRenderer(fillMode);
-		this.playerRenderer.init();
-		
-		// 设置GL预览界面, 按照顺序调用, 否则crash
-		this.playerSurfaceView = surfaceView;
-		this.playerSurfaceView.setEGLContextClientVersion(2);
-		this.playerSurfaceView.setRenderer(playerRenderer);
-		this.playerSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-		this.playerSurfaceView.setPreserveEGLContextOnPause(true);
-	}
-	
-	/**
-	 * 反初始化
-	 */
-	public void uninit() {
-	}
-
-	/**
-	 * 设置自定义滤镜
-	 * @param customFilter 自定义滤镜
-	 */
-	public void setCustomFilter(LSImageFilter customFilter) {
-		if( playerRenderer != null ) {
-			playerRenderer.setCustomFilter(customFilter);
+	public void setRendererBinder(LSPlayerRendererBinder rendererBinder) {
+		synchronized (this) {
+			this.rendererBinder = rendererBinder;
 		}
-	}
-
-	/**
-	 * 获取自定义滤镜
-	 * @return 自定义滤镜
-	 */
-	public LSImageFilter getCustomFilter() {
-		LSImageFilter filter = null;
-		if( playerRenderer != null ) {
-			filter = playerRenderer.getCustomFilter();
-		}
-		return filter;
 	}
 
 	@Override
@@ -84,10 +44,15 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
 		// TODO Auto-generated method stub
 		// 刷新内存图像
 		drawBitmap(data, size, width, height);
-		// 更新滤镜输入
-		playerRenderer.updateBmpFrame(bitmap);
-		// 通知界面刷新
-		playerSurfaceView.requestRender();
+
+		synchronized (this) {
+			if( rendererBinder != null ) {
+				// 更新滤镜输入
+				rendererBinder.playerRenderer.updateBmpFrame(bitmap);
+				// 通知界面刷新
+				rendererBinder.playerSurfaceView.requestRender();
+			}
+		}
 	}
 	
     private void drawBitmap(byte[] data, int size, int width, int height) {
@@ -103,10 +68,16 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
     		
     		this.width = width;
     		this.height = height;
-    		playerRenderer.setOriginalSize(width, height);
+
     		bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
     	}
-    	
+
+		synchronized (this) {
+			if( rendererBinder != null ) {
+				rendererBinder.playerRenderer.setOriginalSize(width, height);
+			}
+		}
+
     	// 更新内存块大小
     	if( pixelBufferSize < size ) {
     		Log.d(LSConfig.TAG, String.format("LSVideoPlayer::drawBitmap( [Change buffer size], oldSize : %d, newSize : %d )", pixelBufferSize, size));

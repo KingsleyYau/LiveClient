@@ -28,14 +28,17 @@ typedef enum {
     LiveUrlTypeSendMail,
     LiveUrlTypeHangoutDialog,
     LiveUrlTypeHangout,
+    LiveUrlTypeSayHiList,
+    LiveUrlTypeSayHiDetail,
+    LiveUrlTypeSendSayHi,
     LiveUrlTypeUnknow,
 } LiveUrlType;
 
 typedef enum {
     LiveUrlMainListTypeHot = 1,
-    LiveUrlMainListUrlTypeHangout,
-    LiveUrlMainListUrlTypeFollow,
-    LiveUrlMainListUrlTypeCalendar,
+    LiveUrlMainListUrlTypeFollow = 2,
+    LiveUrlMainListUrlTypeCalendar = 3,
+    LiveUrlMainListUrlTypeHangout = 4,
     LiveUrlMainListTypeUnknow,
 } LiveUrlMainListType;
 
@@ -64,6 +67,11 @@ typedef enum {
     LiveUrlBackPackListTypeUnknow,
 } LiveUrlBackpackListType;
 
+typedef enum {
+    LiveUrlSayHiListTypeAll = 1,
+    LiveUrlSayHiListTypeResponse,
+    LiveUrlSayHiListTypeUnknown,
+} LiveUrlSayHiListType;
 @interface LSUrlParmItem : NSObject
 /**
  根据URL生成实例
@@ -130,12 +138,21 @@ typedef enum {
  */
 @property (assign, readonly) LiveUrlBackpackListType backpackListType;
 
+#pragma mark - 背包列表参数
+/**
+ sayhi列表类型
+ */
+@property (assign, readonly) LiveUrlBackpackListType sayHiListType;
 #pragma mark - 节目参数
 /**
  节目Id
  */
 @property (strong, readonly) NSString *liveShowId;
-
+#pragma mark - sayhi参数
+/**
+ 节目Id
+ */
+@property (strong, readonly) NSString *sayhiId;
 #pragma mark - 对话框参数
 @property (strong, readonly) NSString *title;
 @property (strong, readonly) NSString *msg;

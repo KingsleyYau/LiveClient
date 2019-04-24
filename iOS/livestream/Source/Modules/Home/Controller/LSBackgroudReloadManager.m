@@ -35,7 +35,7 @@ static LSBackgroudReloadManager* backgroudReloadManager = nil;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(willEnterForeground)
-                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
+                                                     name:UIApplicationWillEnterForegroundNotification object:nil];
     }
     return self;
 }

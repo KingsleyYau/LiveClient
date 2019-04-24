@@ -141,6 +141,22 @@
         h = ceil(textRect.size.height);
 
         h += y * 2;
+        
+        // 防止语音听写输入高度会修改导致offset改变
+        CGSize contentSize = self.contentSize;
+        UIEdgeInsets offset;
+        CGSize newSize = contentSize;
+        
+        //如果文字内容高度没有超过textView的高度
+        if(contentSize.height <= self.frame.size.height) {
+            //textView的高度减去文字高度除以2就是Y方向的偏移量，也就是textView的上内边距
+            CGFloat offsetY = (self.frame.size.height - contentSize.height) / 2;
+            offset = UIEdgeInsetsMake(offsetY, 0, 0, 0);
+            [self setContentInset:offset];
+        }
+        
+        //根据前面计算设置textView的ContentSize和Y方向偏移量
+        [self setContentSize:newSize];
     }
 
     if( self.height != h ) {

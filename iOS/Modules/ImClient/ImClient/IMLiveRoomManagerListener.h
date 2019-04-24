@@ -73,7 +73,7 @@
 - (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ImLiveRoomObject* _Nonnull)item priv:(ImAuthorityItemObject* _Nonnull)priv;
 
 /**
- *  3.14.观众开始／结束视频互动接口 回调
+ *  3.14.观众开始／结束视频互动接口 回调 （//    处理错误码为 LCC_ERR_NO_CREDIT_DOUBLE_VIDEO : 私密直播间开始双向视频时，信用点不足(用于3.14.观众开始/结束视频互动 接口)）
  *
  *  @param success          操作是否成功
  *  @param reqId            请求序列号
@@ -97,7 +97,7 @@
 
 #pragma mark - 直播间接收操作回调
 /**
- *  3.3.接收直播间关闭通知(观众)回调
+ *  3.3.接收直播间关闭通知(观众)回调 （LCC_ERR_NO_CREDIT_CLOSE_LIVE // 余额不足）
  *
  *  @param roomId      直播间ID
  *  @param priv        权限
@@ -193,7 +193,7 @@
  *  @param item  直播间开播通知结构体
  *
  */
-- (void) onRecvWaitStartOverNotice:(ImStartOverRoomObject* _Nonnull)item;
+- (void)onRecvWaitStartOverNotice:(ImStartOverRoomObject* _Nonnull)item;
 
 /**
  *  3.12.接收观众／主播切换视频流通知接口 回调
@@ -307,7 +307,7 @@
  *  @param invitationId      邀请ID
  *  @param timeOut           邀请的剩余有效时间
  *  @param roomId            直播间ID
- *  @param chatOnlineStatus  Chat在线状态（IMCHATONLINESTATUS_OFF：离线，IMCHATONLINESTATUS_ONLINE：在线）
+ *  @param inviteErr         邀请错误信息Object
  *
  */
 - (void)onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg invitationId:(NSString* _Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString* _Nonnull)roomId inviteErr:(ImInviteErrItemObject* _Nonnull)inviteErr;
@@ -473,8 +473,8 @@
  *
  *  @param success      操作是否成功
  *  @param reqId        请求序列号
- *  @param errMsg      结果描述
- *  @param item        进入多人互动直播间信息
+ *  @param errMsg       结果描述
+ *  @param item         进入多人互动直播间信息
  *
  */
 - (void)onEnterHangoutRoom:(SEQ_T)reqId succes:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg item:(IMHangoutRoomItemObject * _Nonnull)item;
@@ -484,7 +484,7 @@
  *
  *  @param success      操作是否成功
  *  @param reqId        请求序列号
- *  @param errMsg      结果描述
+ *  @param errMsg       结果描述
  *
  */
 - (void)onLeaveHangoutRoom:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg;
@@ -541,7 +541,7 @@
 - (void)onRecvLackCreditHangoutNotice:(IMLackCreditHangoutItemObject * _Nonnull)item;
 
 /**
- *  10.11.多人互动观众开始/结束视频互动接口 回调
+ *  10.11.多人互动观众开始/结束视频互动接口 回调 （处理错误码为 LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO : Hangout直播间开始双向视频时，信用点不足(用于10.11.多人互动观众开始/结束视频互动 接口)）
  *
  *  @param success          操作是否成功
  *  @param reqId            请求序列号
@@ -586,6 +586,16 @@
  *
  */
 - (void)onRecvHandoutInviteNotice:(IMHangoutInviteItemObject * _Nonnull)item;
+
+/**
+ *  10.16.接收Hangout直播间男士信用点不足两个周期通知接口 回调
+ *
+ *  @param roomId      直播间ID
+ *  @param err         错误码
+ *  @param errMsg      错误描述
+ *
+ */
+- (void)onRecvHangoutCreditRunningOutNotice:(NSString * _Nonnull)roomId err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg;
 
 // ------------- 节目 -------------
 /**

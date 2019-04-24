@@ -34,6 +34,7 @@
         self.systemMsg = nil;
         self.customMsg = nil;
         self.voiceMsg = nil;
+        self.videoMsg = nil;
         self.downloadSuccess = NO;
         self.loadingImage = NO;
         self.emotionMsg = nil;

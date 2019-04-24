@@ -15,7 +15,7 @@
 
 #import "GPUImagePicture.h"
 
-#import "ImageCVPixelBufferInput.h"
+#import "ImageCVPixelBufferOutput.h"
 
 #import "LiveStreamSession.h"
 
@@ -28,7 +28,7 @@
  */
 @property (nonatomic, strong) AVSampleBufferDisplayLayer *videoLayer;
 
-@property (nonatomic, strong) ImageCVPixelBufferInput *pixelBufferInput;
+@property (nonatomic, strong) ImageCVPixelBufferOutput *pixelBufferOutput;
 
 @property (strong) NSString *_Nonnull url;
 @property (strong) NSString *_Nonnull recordFilePath;
@@ -61,10 +61,10 @@
         self.player = [RtmpPlayerOC instance];
         self.player.delegate = self;
 
-        self.pixelBufferInput = [[ImageCVPixelBufferInput alloc] init];
+        self.pixelBufferOutput = [[ImageCVPixelBufferOutput alloc] init];
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     }
 
     return self;
@@ -73,8 +73,8 @@
 - (void)dealloc {
     NSLog(@"LiveStreamPlayer::dealloc( self : %p )", self);
 
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 
     if (_isBackground == YES) {
         _isBackground = NO;
@@ -124,8 +124,8 @@
     if (_playView != playView) {
         _playView = playView;
 
-        [self.pixelBufferInput removeAllTargets];
-        [self.pixelBufferInput addTarget:_playView];
+        [self.pixelBufferOutput removeAllTargets];
+        [self.pixelBufferOutput addTarget:_playView];
     }
 }
 
@@ -207,7 +207,7 @@
 - (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC *_Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
     if (buffer) {
         // 这里显示视频
-        [self.pixelBufferInput processCVPixelBuffer:buffer];
+        [self.pixelBufferOutput processCVPixelBuffer:buffer];
     }
 }
 

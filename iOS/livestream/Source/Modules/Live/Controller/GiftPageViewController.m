@@ -17,7 +17,6 @@
 
 #import "LiveModule.h"
 
-#import "DialogOK.h"
 #import "DialogTip.h"
 
 #import "LiveRoomCreditRebateManager.h"
@@ -57,8 +56,6 @@
 
 // 普通提示
 @property (nonatomic, strong) DialogTip *dialogTipView;
-// 买点提示
-@property (nonatomic, strong) DialogOK *dialogGiftAddCredit;
 
 // 余额及返点信息管理器
 @property (nonatomic, strong) LiveRoomCreditRebateManager *creditRebateManager;
@@ -76,6 +73,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
 
+    self.isShowNavBar = NO;
+    
     self.curIndex = 0;
     self.buttonBarHeight = 0;
 
@@ -96,11 +95,7 @@
     if (self.dialogTipView) {
         [self.dialogTipView removeFromSuperview];
     }
-
-    if (self.dialogGiftAddCredit) {
-        [self.dialogGiftAddCredit removeFromSuperview];
-    }
-
+    
     [self.sendGiftTheQueueManager unInit];
     [self.sendGiftTheQueueManager removeAllSendGift];
 
@@ -119,7 +114,6 @@
 
     // 初始化提示
     self.dialogTipView = [DialogTip dialogTip];
-    self.dialogGiftAddCredit = [DialogOK dialog];
 
     // 初始化分栏
     [self setupSegment];
@@ -343,6 +337,23 @@
     }
 }
 
+#pragma mark - 显示买点弹框
+- (void)showAddCreditsView:(NSString *)tip {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tip preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *addAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"ADD_CREDITS", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
+        if ([self.vcDelegate respondsToSelector:@selector(didCreditAction:)]) {
+            [self.vcDelegate didCreditAction:self];
+        }
+    }];
+    [alertVC addAction:cancelAC];
+    [alertVC addAction:addAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
 #pragma mark - 数据逻辑
 - (void)reloadData {
     // TODO:刷新礼物列表界面
@@ -409,19 +420,8 @@
         bFlag = YES;
         
     } else {
-        if (self.dialogGiftAddCredit) {
-            [self.dialogGiftAddCredit removeFromSuperview];
-        }
-        WeakObject(self, weakSelf);
-        self.dialogGiftAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"SENDGIFT_ERR_ADD_CREDIT");
-        [self.dialogGiftAddCredit showDialog:self.liveRoom.superView
-                                 actionBlock:^{
-                                     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     if ([weakSelf.vcDelegate respondsToSelector:@selector(didCreditAction:)]) {
-                                         [weakSelf.vcDelegate didCreditAction:weakSelf];
-                                     }
-                                 }];
-
+        [self showAddCreditsView:NSLocalizedStringFromSelf(@"SENDGIFT_ERR_ADD_CREDIT")];
+        
         // 钱不够,清队列
         [self.sendGiftTheQueueManager removeAllSendGift];
         
@@ -718,17 +718,15 @@
 #pragma mark - Im通知
 - (void)onRecvLevelUpNotice:(int)level {
     NSLog(@"GiftPageViewController::onRecvLevelUpNotice( [接收观众等级升级通知], level : %d )", level);
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.liveRoom.imLiveRoom.manLevel = level;
+        self.liveRoom.imLiveRoom.manLevel = level;
     });
 }
 
 - (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *  _Nonnull)loveLevelItem {
     NSLog(@"GiftPageViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d, anchorId: %@, anchorName: %@ )", loveLevelItem.loveLevel, loveLevelItem.anchorId, loveLevelItem.anchorName);
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.liveRoom.imLiveRoom.loveLevel = loveLevelItem.loveLevel;
+        self.liveRoom.imLiveRoom.loveLevel = loveLevelItem.loveLevel;
     });
 }
 
@@ -746,11 +744,10 @@
 
 - (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"LiveViewController::onSendGift( [发送直播间礼物消息], errmsg : %@, credit : %f, rebateCredit : %f )", errmsg, credit, rebateCredit);
-    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!success && errType == LCC_ERR_NO_CREDIT) {
             // 钱不够清队列
-            [weakSelf.sendGiftTheQueueManager removeAllSendGift];
+            [self.sendGiftTheQueueManager removeAllSendGift];
         }
     });
 }

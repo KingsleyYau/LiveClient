@@ -75,6 +75,14 @@
 		FA1451252150854E00D6E75D /* HttpUpdateProfileTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA14511B2150854E00D6E75D /* HttpUpdateProfileTask.cpp */; };
 		FA164F1420FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA164F1220FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.cpp */; };
 		FA296FA521F1C69E00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA296FA321F1C69D00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp */; };
+		FA2C900822681AF2001F2DCF /* HttpResourceConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C900722681AF2001F2DCF /* HttpResourceConfigTask.cpp */; };
+		FA2C900E226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C900C226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp */; };
+		FA2C90122268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C90112268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp */; };
+		FA2C901522682B46001F2DCF /* HttpSendSayHiTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C901422682B46001F2DCF /* HttpSendSayHiTask.cpp */; };
+		FA2C9018226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9016226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp */; };
+		FA2C901C22685050001F2DCF /* HttpGetResponseSayHiListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C901A2268504F001F2DCF /* HttpGetResponseSayHiListTask.cpp */; };
+		FA2C90202268572A001F2DCF /* HttpSayHiDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C901F2268572A001F2DCF /* HttpSayHiDetailTask.cpp */; };
+		FA2C90242268672C001F2DCF /* HttpReadResponseTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C90232268672C001F2DCF /* HttpReadResponseTask.cpp */; };
 		FA3A97B82060E1FF0004F85A /* ZBHttpDealTalentRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A977E2060E1F40004F85A /* ZBHttpDealTalentRequestTask.cpp */; };
 		FA3A97B92060E1FF0004F85A /* ZBHttpGetConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97812060E1F40004F85A /* ZBHttpGetConfigTask.cpp */; };
 		FA3A97BA2060E1FF0004F85A /* ZBHttpSetAutoPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97822060E1F50004F85A /* ZBHttpSetAutoPushTask.cpp */; };
@@ -405,6 +413,29 @@
 		FA164F1320FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetPrivateMsgReadedTask.h; sourceTree = "<group>"; };
 		FA296FA321F1C69D00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetHangoutOnlineAnchorTask.cpp; sourceTree = "<group>"; };
 		FA296FA421F1C69D00C40272 /* HttpGetHangoutOnlineAnchorTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetHangoutOnlineAnchorTask.h; sourceTree = "<group>"; };
+		FA2C900622681AF1001F2DCF /* HttpResourceConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpResourceConfigTask.h; sourceTree = "<group>"; };
+		FA2C900722681AF2001F2DCF /* HttpResourceConfigTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpResourceConfigTask.cpp; sourceTree = "<group>"; };
+		FA2C900922681BDD001F2DCF /* HttpSayHiResourceConfigItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSayHiResourceConfigItem.h; sourceTree = "<group>"; };
+		FA2C900A22681BDD001F2DCF /* HttpTextItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpTextItem.h; sourceTree = "<group>"; };
+		FA2C900B22681BDE001F2DCF /* HttpThemeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpThemeItem.h; sourceTree = "<group>"; };
+		FA2C900C226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetSayHiAnchorListTask.cpp; sourceTree = "<group>"; };
+		FA2C900D226822BF001F2DCF /* HttpGetSayHiAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetSayHiAnchorListTask.h; sourceTree = "<group>"; };
+		FA2C900F226824C1001F2DCF /* HttpSayHiAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSayHiAnchorItem.h; sourceTree = "<group>"; };
+		FA2C90102268284B001F2DCF /* HttpIsCanSendSayHiTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpIsCanSendSayHiTask.h; sourceTree = "<group>"; };
+		FA2C90112268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpIsCanSendSayHiTask.cpp; sourceTree = "<group>"; };
+		FA2C901322682B46001F2DCF /* HttpSendSayHiTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSendSayHiTask.h; sourceTree = "<group>"; };
+		FA2C901422682B46001F2DCF /* HttpSendSayHiTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSendSayHiTask.cpp; sourceTree = "<group>"; };
+		FA2C9016226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetAllSayHiListTask.cpp; sourceTree = "<group>"; };
+		FA2C9017226847F4001F2DCF /* HttpGetAllSayHiListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetAllSayHiListTask.h; sourceTree = "<group>"; };
+		FA2C901922684A42001F2DCF /* HttpAllSayHiListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAllSayHiListItem.h; sourceTree = "<group>"; };
+		FA2C901A2268504F001F2DCF /* HttpGetResponseSayHiListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetResponseSayHiListTask.cpp; sourceTree = "<group>"; };
+		FA2C901B22685050001F2DCF /* HttpGetResponseSayHiListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetResponseSayHiListTask.h; sourceTree = "<group>"; };
+		FA2C901D226853E7001F2DCF /* HttpResponseSayHiListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpResponseSayHiListItem.h; sourceTree = "<group>"; };
+		FA2C901E2268572A001F2DCF /* HttpSayHiDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSayHiDetailTask.h; sourceTree = "<group>"; };
+		FA2C901F2268572A001F2DCF /* HttpSayHiDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSayHiDetailTask.cpp; sourceTree = "<group>"; };
+		FA2C902122686031001F2DCF /* HttpSayHiDetailItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSayHiDetailItem.h; sourceTree = "<group>"; };
+		FA2C90222268672C001F2DCF /* HttpReadResponseTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpReadResponseTask.h; sourceTree = "<group>"; };
+		FA2C90232268672C001F2DCF /* HttpReadResponseTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpReadResponseTask.cpp; sourceTree = "<group>"; };
 		FA3A977E2060E1F40004F85A /* ZBHttpDealTalentRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpDealTalentRequestTask.cpp; sourceTree = "<group>"; };
 		FA3A977F2060E1F40004F85A /* ZBHttpGetConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetConfigTask.h; sourceTree = "<group>"; };
 		FA3A97802060E1F40004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpManBookingUnreadUnhandleNumTask.h; sourceTree = "<group>"; };
@@ -620,6 +651,7 @@
 		FABB26062047A320005EDF51 /* ZBHttpBookingInviteListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpBookingInviteListItem.h; sourceTree = "<group>"; };
 		FABD5AA021BE3DB1006694BA /* HttpAuthorityItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAuthorityItem.h; sourceTree = "<group>"; };
 		FABD5AAA21BE86AC006694BA /* CommonItemDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonItemDef.h; sourceTree = "<group>"; };
+		FAC50B62226D8EDB006375FF /* HttpAppPushConfigItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAppPushConfigItem.h; sourceTree = "<group>"; };
 		FACE54812044F7CB00CC3B45 /* HttpBannerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBannerTask.h; sourceTree = "<group>"; };
 		FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCloseAdAnchorListTask.cpp; sourceTree = "<group>"; };
 		FACE54832044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAcceptInstanceInviteTask.h; sourceTree = "<group>"; };
@@ -766,6 +798,22 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				FA2C90232268672C001F2DCF /* HttpReadResponseTask.cpp */,
+				FA2C90222268672C001F2DCF /* HttpReadResponseTask.h */,
+				FA2C901F2268572A001F2DCF /* HttpSayHiDetailTask.cpp */,
+				FA2C901E2268572A001F2DCF /* HttpSayHiDetailTask.h */,
+				FA2C901A2268504F001F2DCF /* HttpGetResponseSayHiListTask.cpp */,
+				FA2C901B22685050001F2DCF /* HttpGetResponseSayHiListTask.h */,
+				FA2C9016226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp */,
+				FA2C9017226847F4001F2DCF /* HttpGetAllSayHiListTask.h */,
+				FA2C901422682B46001F2DCF /* HttpSendSayHiTask.cpp */,
+				FA2C901322682B46001F2DCF /* HttpSendSayHiTask.h */,
+				FA2C90112268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp */,
+				FA2C90102268284B001F2DCF /* HttpIsCanSendSayHiTask.h */,
+				FA2C900C226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp */,
+				FA2C900D226822BF001F2DCF /* HttpGetSayHiAnchorListTask.h */,
+				FA2C900722681AF2001F2DCF /* HttpResourceConfigTask.cpp */,
+				FA2C900622681AF1001F2DCF /* HttpResourceConfigTask.h */,
 				FACE54852044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp */,
 				FACE54832044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.h */,
 				FA5FDC8A215351E600C6B68B /* HttpAddTokenTask.cpp */,
@@ -777,18 +825,18 @@
 				FACE54842044F7CC00CC3B45 /* HttpBannerTask.cpp */,
 				FACE54812044F7CB00CC3B45 /* HttpBannerTask.h */,
 				5007B1DD1ECAAA5900C2C17F /* HttpBaseTask.cpp */,
+				FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */,
 				5007B1DE1ECAAA5900C2C17F /* HttpBaseTask.h */,
 				FA905E2121C39DAF00A9966E /* HttpBuyPrivatePhotoVideoTask.cpp */,
 				FA905E2221C39DAF00A9966E /* HttpBuyPrivatePhotoVideoTask.h */,
-				FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */,
 				FA6E142020872A79004F8B92 /* HttpBuyProgramTask.h */,
 				FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */,
 				FA075CCB209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.h */,
 				FA62D35621E8872C00C28294 /* HttpCanSendEmfTask.cpp */,
+				FA5FDC932153780700C6B68B /* HttpChangePasswordTask.cpp */,
 				FA62D35521E8872B00C28294 /* HttpCanSendEmfTask.h */,
 				FA6E142220872B15004F8B92 /* HttpChangeFavouriteTask.cpp */,
 				FA6E142320872B15004F8B92 /* HttpChangeFavouriteTask.h */,
-				FA5FDC932153780700C6B68B /* HttpChangePasswordTask.cpp */,
 				FA5FDC942153780700C6B68B /* HttpChangePasswordTask.h */,
 				FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */,
 				FACE54B32044F7E500CC3B45 /* HttpCloseAdAnchorListTask.h */,
@@ -1003,6 +1051,14 @@
 		5007B1E41ECAB05700C2C17F /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FAC50B62226D8EDB006375FF /* HttpAppPushConfigItem.h */,
+				FA2C902122686031001F2DCF /* HttpSayHiDetailItem.h */,
+				FA2C901D226853E7001F2DCF /* HttpResponseSayHiListItem.h */,
+				FA2C901922684A42001F2DCF /* HttpAllSayHiListItem.h */,
+				FA2C900F226824C1001F2DCF /* HttpSayHiAnchorItem.h */,
+				FA2C900922681BDD001F2DCF /* HttpSayHiResourceConfigItem.h */,
+				FA2C900A22681BDD001F2DCF /* HttpTextItem.h */,
+				FA2C900B22681BDE001F2DCF /* HttpThemeItem.h */,
 				FA8C006121F7F95C00211ACA /* HttpHangoutStatusItem.h */,
 				FAEB996321F5585C00A0E8D9 /* HttpFriendsInfoItem.h */,
 				FAEB996421F5585D00A0E8D9 /* HttpHangoutListItem.h */,
@@ -1524,10 +1580,12 @@
 			files = (
 				FACE551A2044F7F400CC3B45 /* HttpGetConfigTask.cpp in Sources */,
 				FA43DEEC2092A7BE00BE5F6C /* HttpShowListWithAnchorIdTask.cpp in Sources */,
+				FA2C90242268672C001F2DCF /* HttpReadResponseTask.cpp in Sources */,
 				507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */,
 				FACE55282044F7F400CC3B45 /* HttpGetGiftDetailTask.cpp in Sources */,
 				FAF25E16215A04EF00E50788 /* HttpGetValidateCodeTask.cpp in Sources */,
 				FA7AD2A020A676A0005AF56D /* HttpGetFriendRelationTask.cpp in Sources */,
+				FA2C9018226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp in Sources */,
 				FACE54F52044F7F400CC3B45 /* HttpGetManBaseInfoTask.cpp in Sources */,
 				504CDA451C7FDB0500DBB429 /* HttpClient.cpp in Sources */,
 				504CDA291C7FDA2D00DBB429 /* tinystr.cpp in Sources */,
@@ -1566,6 +1624,7 @@
 				504CDA2D1C7FDA2D00DBB429 /* xmltest.cpp in Sources */,
 				FA5FDC952153780800C6B68B /* HttpChangePasswordTask.cpp in Sources */,
 				FAE9BAA12124047B0058AE0E /* IAutoLockWrapper.cpp in Sources */,
+				FA2C900E226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp in Sources */,
 				FACE55082044F7F400CC3B45 /* HttpLoginTask.cpp in Sources */,
 				FA3A97BC2060E1FF0004F85A /* ZBHttpRequestTask.cpp in Sources */,
 				FAA5CD5520A1C0DE00EC050A /* HttpGetHangoutGiftListTask.cpp in Sources */,
@@ -1588,6 +1647,7 @@
 				FAAB2E272091691C0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp in Sources */,
 				FA3A97C02060E1FF0004F85A /* ZBHttpAcceptInstanceInviteTask.cpp in Sources */,
 				504CDA2B1C7FDA2D00DBB429 /* tinyxmlerror.cpp in Sources */,
+				FA2C901C22685050001F2DCF /* HttpGetResponseSayHiListTask.cpp in Sources */,
 				FACE55072044F7F400CC3B45 /* HttpSetRideTask.cpp in Sources */,
 				FACE551D2044F7F400CC3B45 /* HttpOwnRegisterTask.cpp in Sources */,
 				FA905E2321C39DB000A9966E /* HttpBuyPrivatePhotoVideoTask.cpp in Sources */,
@@ -1621,9 +1681,11 @@
 				FACE551E2044F7F400CC3B45 /* HttpGetAllGiftListTask.cpp in Sources */,
 				FA3A97BD2060E1FF0004F85A /* ZBHttpLiveFansListTask.cpp in Sources */,
 				FACE54862044F7CC00CC3B45 /* HttpCloseAdAnchorListTask.cpp in Sources */,
+				FA2C90122268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp in Sources */,
 				FA3A97D12060E1FF0004F85A /* ZBHttpLoginTask.cpp in Sources */,
 				FAAB2E242091691C0048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp in Sources */,
 				FAAB2E292091691C0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp in Sources */,
+				FA2C900822681AF2001F2DCF /* HttpResourceConfigTask.cpp in Sources */,
 				FACE550E2044F7F400CC3B45 /* HttpGetIOSPayTask.cpp in Sources */,
 				FACE54FA2044F7F400CC3B45 /* HttpGetAdAnchorListTask.cpp in Sources */,
 				501BF3AC1C7EFF460052C59F /* Arithmetic.cpp in Sources */,
@@ -1665,6 +1727,7 @@
 				FA3A97C42060E1FF0004F85A /* ZBHttpSetRoomCountDownTask.cpp in Sources */,
 				504CDA091C7FD6AF00DBB429 /* pngwtran.c in Sources */,
 				FA3A97C52060E1FF0004F85A /* ZBHttpRequestController.cpp in Sources */,
+				FA2C90202268572A001F2DCF /* HttpSayHiDetailTask.cpp in Sources */,
 				FA1451252150854E00D6E75D /* HttpUpdateProfileTask.cpp in Sources */,
 				FACE55022044F7F400CC3B45 /* HttpManHandleBookingListTask.cpp in Sources */,
 				FA6CECB7216B0F32009CB0F0 /* HttpStartEditResumeTask.cpp in Sources */,
@@ -1710,6 +1773,7 @@
 				FA031FBE209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp in Sources */,
 				FACE55152044F7F400CC3B45 /* HttpSubmitFeedBackTask.cpp in Sources */,
 				FA5FDC9B2153841400C6B68B /* HttpIOSGetPayTask.cpp in Sources */,
+				FA2C901522682B46001F2DCF /* HttpSendSayHiTask.cpp in Sources */,
 				504CDA551C7FDD7F00DBB429 /* PngWriter.cpp in Sources */,
 				FA8C006021F7F29F00211ACA /* HttpGetHangoutStatusTask.cpp in Sources */,
 				FACE550A2044F7F400CC3B45 /* HttpSetManBaseInfoTask.cpp in Sources */,

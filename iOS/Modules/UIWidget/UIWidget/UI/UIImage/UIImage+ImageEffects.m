@@ -490,7 +490,7 @@
 
 
 - (UIImage *)scaleImageWithSize:(CGSize)size {
-    UIGraphicsBeginImageContextWithOptions(size, YES, self.scale);
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
     [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -637,5 +637,84 @@
     return img;
 }
 
+
+
+/**
+ 图片压缩的逻辑:
+ • 宽高均 ≤ 1280，图片尺寸大小保持不变
+ • 长边 > 1280 & 短边 ＜ 1280 & 宽高比 > 2，图片尺寸大小保持不变
+ • 宽或高 > 1280 & 宽高比 ≤ 2，取较大值等于1280，较小值等比例压缩
+ • 宽高均 > 1280 & 宽高比 > 2，取较小值等于1280，较大值等比例压缩
+ */
+- (UIImage *)imageCompressForSize:(NSInteger)tagetSize {
+    UIImage *newImage = self;  // 尺寸压缩后的新图片
+    CGSize imageSize = self.size; // 源图片的size
+    CGFloat width = imageSize.width; // 源图片的宽
+    CGFloat height = imageSize.height; // 原图片的高
+    BOOL drawImge = NO;   // 是否需要重绘图片 默认是NO
+    CGFloat scaleFactor = 0.0;  // 压缩比例
+    CGFloat scaledWidth = 0;
+    CGFloat scaledHeight = 0;
+    NSInteger targetPx = 1280;
+    
+    // 先进行图片的尺寸的判断
+    
+    // a.图片宽高均≤参照像素时，图片尺寸保持不变
+    if (width < targetPx && height < targetPx) {
+        newImage = self;
+    }
+    // b.宽或高均＞1280px时
+    else if (width > targetPx && height > targetPx) {
+        drawImge = YES;
+        CGFloat factor = width / height;
+        if (factor <= 2) {
+            // b.1图片宽高比≤2，则将图片宽或者高取大的等比压缩至1280px
+            if (width > height) {
+                scaleFactor  = targetPx / width;
+            } else {
+                scaleFactor = targetPx / height;
+            }
+        } else {
+            // b.2图片宽高比＞2时，则宽或者高取小的等比压缩至1280px
+            if (width > height) {
+                scaleFactor  = targetPx / height;
+            } else {
+                scaleFactor = targetPx / width;
+            }
+        }
+    }
+    // c.宽高一个＞1280px，另一个＜1280px 宽大于1280
+    else if (width > targetPx &&  height < targetPx ) {
+        if (width / height > 2) {
+            newImage = self;
+        } else {
+            drawImge = YES;
+            scaleFactor = targetPx / width;
+        }
+    }
+    // c.宽高一个＞1280px，另一个＜1280px 高大于1280
+    else if (width < targetPx &&  height > targetPx) {
+        if (height / width > 2) {
+            newImage = self;
+        } else {
+            drawImge = YES;
+            scaleFactor = targetPx / height;
+        }
+    }
+    
+    // 如果图片需要重绘 就按照新的宽高压缩重绘图片
+    if (drawImge == YES) {
+        scaledWidth = width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+        UIGraphicsBeginImageContext(CGSizeMake(scaledWidth, scaledHeight));
+        // 绘制改变大小的图片
+        [self drawInRect:CGRectMake(0, 0, scaledWidth,scaledHeight)];
+        // 从当前context中创建一个改变大小后的图片
+        newImage = UIGraphicsGetImageFromCurrentImageContext();
+        // 使当前的context出堆栈
+        UIGraphicsEndImageContext();
+    }
+    return newImage;
+}
 
 @end

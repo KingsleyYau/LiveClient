@@ -212,8 +212,21 @@ bool LSLCNormalInviteManager::InsertInviteUser(LSLCUserItem* item)
 	bool result = false;
 	if (NULL != item)
 	{
-		// 插入用户
-		m_inviteUserList.push_back(item);
+        bool isSame = false;
+        for (LCUserList::iterator iter = m_inviteUserList.begin();
+             iter != m_inviteUserList.end();
+             iter++)
+        {
+            if (item == (*iter)) {
+                isSame = true;
+                break;
+            }
+        }
+        if (!isSame) {
+            // 插入用户
+            m_inviteUserList.push_back(item);
+        }
+
 		// 排序
 		SortInviteList();
 	}

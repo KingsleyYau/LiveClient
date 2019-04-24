@@ -93,6 +93,7 @@ static const string CMD_HANGOUTSENDLIVECHAT = "imShare/hangoutSendLiveChat"; //1
 static const string CMD_HANGOUTSENDCHATNOTICE = "imShare/hangoutSendChatNotice"; //10.13.接收直播间文本消息
 static const string CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE = "imShare/receiveAnchorCountDownEnterRoomNotice"; //10.14.接收进入多人互动直播间倒数通知
 static const string CMD_RECVHANGOURINVITENOTICE = "imMan/receiveHangoutInviteNotice"; //10.15.接收主播Hang-out邀请通知
+static const string CMD_RECVHANGOUTCREDITRUNNINGOUTNOTICE = "imMan/creditRunningOutNotice"; //10.16.接收Hangout直播间男士信用点不足两个周期通知
 
 // ------------- 节目 -------------
 static const string CMD_RECVPROGRAMPLAYNOTICE = "imMan/showToStartNotice";    // 11.1.节目开播通知

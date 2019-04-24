@@ -57,6 +57,16 @@
     [self clickPlayOrPause:self.playButton];
 }
 
+- (void)setPlaySuspendOrStart:(BOOL)isSuspend {
+    self.playButton.selected = isSuspend;
+    [self clickPlayOrPause:self.playButton];
+}
+
+- (void)hiddenPlayTime {
+    self.beginTimeLabelWidth.constant = 0;
+    self.endTimeLabelWidth.constant = 0;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
 }

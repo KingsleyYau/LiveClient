@@ -26,20 +26,19 @@
 #import "LSSessionRequestManager.h"
 #import "SendGiftTheQueueManager.h"
 #import "LiveRoomCreditRebateManager.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 
 #import "LSGiftManagerItem.h"
 
 #import "LSChatEmotion.h"
 #import "LSChatMessageObject.h"
 
-#import "DialogOK.h"
 #import "DialogTip.h"
 
 #define CrrSysVer [[UIDevice currentDevice] systemVersion].doubleValue
 
 @interface PlayViewController () <UITextFieldDelegate, LSCheckButtonDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate,
-                                  IMLiveRoomManagerDelegate, LiveViewControllerDelegate, LSLiveStandardEmotionViewDelegate, LSPageChooseKeyboardViewDelegate, LSLiveAdvancedEmotionViewDelegate, LiveSendBarViewDelegate, UIGestureRecognizerDelegate, LSGiftManagerDelegate,                                   CreditViewDelegate, RewardViewDelegate, LiveRoomCreditRebateManagerDelegate, GiftPageViewControllerDelegate>
+                                  IMLiveRoomManagerDelegate, LiveViewControllerDelegate, LSLiveStandardEmotionViewDelegate, LSPageChooseKeyboardViewDelegate, LSLiveAdvancedEmotionViewDelegate, LiveSendBarViewDelegate, UIGestureRecognizerDelegate, LSGiftManagerDelegate, CreditViewDelegate, RewardViewDelegate, LiveRoomCreditRebateManagerDelegate, GiftPageViewControllerDelegate>
 
 /** 键盘弹出 **/
 @property (nonatomic, assign) BOOL isKeyboradShow;
@@ -86,10 +85,9 @@
 
 #pragma mark - 3秒toast控件
 @property (nonatomic, strong) DialogTip *dialogTipView;
-@property (strong) DialogOK *dialogGiftAddCredit;
 
 #pragma mark - 用户信息管理器
-@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
 
 // 返点详情约束
 @property (nonatomic, assign) int creditOffset;
@@ -107,6 +105,11 @@
     [super initCustomParam];
 
     NSLog(@"PlayViewController::initCustomParam()");
+
+    // 隐藏导航栏
+    self.isShowNavBar = NO;
+    // 禁止导航栏后退手势
+    self.canPopWithGesture = NO;
 
     // 直播间展现管理器
     self.liveVC = [[LiveViewController alloc] initWithNibName:nil bundle:nil];
@@ -137,7 +140,7 @@
     // 初始化表情管理器
     self.emotionManager = [LSChatEmotionManager emotionManager];
     // 初始化用户信息管理器
-    self.userInfoManager = [LSUserInfoManager manager];
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
 
     // 初始化键盘是否弹出
     self.isKeyboradShow = NO; // 键盘是否弹出
@@ -166,9 +169,6 @@
     self.giftVC.liveRoom = self.liveRoom;
     // 初始化进入房间时间
     self.roomInDate = [NSDate date];
-
-    // 禁止导航栏后退手势
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 
     // 初始化公共界面
     [self.view addSubview:self.liveVC.view];
@@ -218,10 +218,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // 隐藏导航栏
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-
     // 请求账户余额
     [self getLeftCreditRequest];
 }
@@ -247,7 +243,7 @@
 
     // 添加手势
     [self addSingleTap];
-    
+
     [self.giftVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.chooseGiftListView);
         make.width.equalTo(self.chooseGiftListView);
@@ -343,18 +339,18 @@
         self.creditViewBottom = make.top.equalTo(self.view.mas_bottom).offset(self.creditOffset);
     }];
     // 设置默认的用户id为登录使用用户的id
-    self.creditView.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",[LSLoginManager manager].loginItem.userId];
+    self.creditView.userIdLabel.text = [NSString stringWithFormat:@"ID:%@", [LSLoginManager manager].loginItem.userId];
     NSString *nickName = [LSLoginManager manager].loginItem.nickName;
     if (nickName.length > 20) {
         nickName = [nickName substringToIndex:17];
-        nickName = [NSString stringWithFormat:@"%@...",nickName];
+        nickName = [NSString stringWithFormat:@"%@...", nickName];
     }
     self.creditView.nameLabel.text = nickName;
-    WeakObject(self, waekSelf);
-    [self.userInfoManager getFansBaseInfo:self.loginManager.loginItem.userId
-                            finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                [waekSelf.creditView updateUserBalanceCredit:waekSelf.creditRebateManager.mCredit userInfo:item];
-                            }];
+    WeakObject(self, weakSelf);
+    [self.roomUserInfoManager getFansBaseInfo:self.loginManager.loginItem.userId
+                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                    [weakSelf.creditView updateUserBalanceCredit:weakSelf.creditRebateManager.mCredit userInfo:item];
+                                }];
 }
 
 #pragma mark - 买点 (CreditViewDelegate)
@@ -525,14 +521,13 @@
 
 #pragma mark - 请求账号余额
 - (void)getLeftCreditRequest {
-    WeakObject(self, waekSelf);
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit, int coupon, double postStamp) {
         NSLog(@"PlayViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon : %d, postStamp : %f)", success, (long)errnum, errmsg, credit, coupon, postStamp);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [waekSelf.creditView userCreditChange:credit];
-                [waekSelf.creditRebateManager setCredit:credit];
+                [self.creditView userCreditChange:credit];
+                [self.creditRebateManager setCredit:credit];
             } else {
             }
         });
@@ -594,15 +589,14 @@
 
 - (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"PlayViewController::onSendGift( [发送直播间礼物消息], errmsg : %@, credit : %f, rebateCredit : %f )", errmsg, credit, rebateCredit);
-    WeakObject(self, waekSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             if (credit > 0) {
-                [waekSelf.creditRebateManager setCredit:credit];
-                
-                waekSelf.liveRoom.imLiveRoom.rebateInfo.curCredit = rebateCredit;
+                [self.creditRebateManager setCredit:credit];
+
+                self.liveRoom.imLiveRoom.rebateInfo.curCredit = rebateCredit;
                 // 更新返点控件
-                [waekSelf.rewardView updataCredit:rebateCredit];
+                [self.rewardView updataCredit:rebateCredit];
             }
         }
     });
@@ -610,13 +604,12 @@
 
 - (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"PlayViewController::onSendToast( [发送直播间弹幕消息, %@], errmsg : %@, credit : %f, rebateCredit : %f )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errmsg, credit, rebateCredit);
-    WeakObject(self, waekSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             if (credit > 0) {
-                waekSelf.liveRoom.imLiveRoom.rebateInfo.curCredit = rebateCredit;
+                self.liveRoom.imLiveRoom.rebateInfo.curCredit = rebateCredit;
                 // 更新返点控件
-                [waekSelf.rewardView updataCredit:rebateCredit];
+                [self.rewardView updataCredit:rebateCredit];
             }
         } else if (errType == LCC_ERR_NO_CREDIT) {
         }
@@ -625,7 +618,6 @@
 
 - (void)onRecvRebateInfoNotice:(NSString *_Nonnull)roomId rebateInfo:(RebateInfoObject *_Nonnull)rebateInfo {
     NSLog(@"PlayViewController::onRecvRebateInfoNotice( [接收返点通知], roomId : %@", roomId);
-    WeakObject(self, waekSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 设置余额及返点信息管理器
         IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
@@ -635,39 +627,37 @@
         imRebateItem.preTime = rebateInfo.preTime;
 
         // 更新本地返点信息
-        waekSelf.liveRoom.imLiveRoom.rebateInfo = rebateInfo;
+        self.liveRoom.imLiveRoom.rebateInfo = rebateInfo;
         // 更新返点控件
         @synchronized(self) {
-            [waekSelf.rewardView setupTimeAndCredit:imRebateItem];
+            [self.rewardView setupTimeAndCredit:imRebateItem];
         }
     });
 }
 
 - (void)onRecvLevelUpNotice:(int)level {
     NSLog(@"PlayViewController::onRecvLevelUpNotice( [接收观众等级升级通知], level : %d )", level);
-    WeakObject(self, waekSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新blanceview等级
-        [waekSelf.creditView userLevelUp:level];
+        [self.creditView userLevelUp:level];
     });
 }
 
-- (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *  _Nonnull)loveLevelItem {
+- (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *_Nonnull)loveLevelItem {
     NSLog(@"PlayViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知],  loveLevel : %d, anchorId: %@, anchorName: %@ )", loveLevelItem.loveLevel, loveLevelItem.anchorId, loveLevelItem.anchorName);
     dispatch_async(dispatch_get_main_queue(), ^{
-    });
+                   });
 }
 
 - (void)onRecvSendTalentNotice:(ImTalentReplyObject *)item {
     NSLog(@"PlayViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
-    WeakObject(self, waekSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (item.credit >= 0) {
-            [waekSelf.creditRebateManager setCredit:item.credit];
+            [self.creditRebateManager setCredit:item.credit];
         }
-        [waekSelf.creditRebateManager updateRebateCredit:item.rebateCredit];
+        [self.creditRebateManager updateRebateCredit:item.rebateCredit];
         // 更新返点控件
-        [waekSelf.rewardView updataCredit:item.rebateCredit];
+        [self.rewardView updataCredit:item.rebateCredit];
     });
 }
 
@@ -682,7 +672,7 @@
     // 随机礼物按钮默认选中礼物列表
     if (sender == self.randomGiftBtn) {
         [self.giftListKeyboardView toggleButtonSelect:0];
-    }else {
+    } else {
         [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickGiftList eventCategory:EventCategoryBroadcast];
     }
 
@@ -700,24 +690,23 @@
         self.creditViewBottom = make.top.equalTo(self.view.mas_bottom).offset(self.creditOffset);
     }];
     // 设置默认的用户id为登录使用用户的id
-    self.creditView.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",[LSLoginManager manager].loginItem.userId];
+    self.creditView.userIdLabel.text = [NSString stringWithFormat:@"ID:%@", [LSLoginManager manager].loginItem.userId];
     NSString *nickName = [LSLoginManager manager].loginItem.nickName;
     if (nickName.length > 20) {
         nickName = [nickName substringToIndex:17];
-        nickName = [NSString stringWithFormat:@"%@...",nickName];
+        nickName = [NSString stringWithFormat:@"%@...", nickName];
     }
     self.creditView.nameLabel.text = nickName;
-    WeakObject(self, waekSelf);
     [UIView animateWithDuration:0.25
         animations:^{
             [self.view layoutIfNeeded];
 
         }
         completion:^(BOOL finished) {
-            [waekSelf.userInfoManager getLiverInfo:waekSelf.loginManager.loginItem.userId
-                                     finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                         [waekSelf.creditView updateUserBalanceCredit:waekSelf.creditRebateManager.mCredit userInfo:item];
-                                     }];
+            [self.roomUserInfoManager getLiverInfo:self.loginManager.loginItem.userId
+                                         finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                             [self.creditView updateUserBalanceCredit:self.creditRebateManager.mCredit userInfo:item];
+                                         }];
         }];
 }
 
@@ -769,9 +758,9 @@
             if (self.liveVC.unReadMsgCount) {
                 self.liveVC.msgTipsView.hidden = NO;
             }
-            
+
             [self.giftVC reset];
-            
+
         }];
 }
 

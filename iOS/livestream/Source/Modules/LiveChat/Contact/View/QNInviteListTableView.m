@@ -83,7 +83,7 @@
     // 创建新的
     cell.imageViewLoader = [LSImageViewLoader loader];
     // 加载
-    [cell.imageViewLoader refreshCachedImage:cell.ladyImage options:SDWebImageRefreshCached imageUrl:item.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [cell.imageViewLoader loadImageFromCache:cell.ladyImage options:SDWebImageRefreshCached imageUrl:item.photoURL placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
     // 最后一条消息
     if( item.lastInviteMessage != nil && item.lastInviteMessage.length > 0 ) {
@@ -95,7 +95,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSLog(@"QNInviteListTableView %i self.items.count %i",indexPath.row,self.items.count);
     if (indexPath.row < self.items.count) {
         if([self.tableViewDelegate respondsToSelector:@selector(tableView:didSelectContact:)]) {
             [self.tableViewDelegate tableView:self didSelectContact:[self.items objectAtIndex:indexPath.row]];

@@ -26,7 +26,7 @@ fileprivate class JTItemView : UIView {
     fileprivate func itemWidth() -> CGFloat {
         if let text = titleLabel.text {
             let string = text as NSString
-            let size = string.size(attributes: [NSFontAttributeName:selectedFont!])
+            let size = string.size(withAttributes: [NSAttributedString.Key.font:selectedFont!])
             return size.width + JTSegmentPattern.itemBorder
         }
         return 0.0
@@ -133,7 +133,7 @@ fileprivate class JTItemView : UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        titleImageView.contentMode = UIViewContentMode.scaleAspectFit;
+        titleImageView.contentMode = UIView.ContentMode.scaleAspectFit;
         addSubview(titleImageView)
         
         titleLabel.textAlignment = .center
@@ -176,7 +176,7 @@ fileprivate class JTItemView : UIView {
     @objc optional func didSelected(segement:JTSegmentControl, index: Int)
 }
 
-open class JTSegmentItem: NSObject {
+@objcMembers open class JTSegmentItem: NSObject {
     open var image: UIImage?
     open var selectedImage: UIImage?
     open var title: String?
@@ -189,7 +189,7 @@ open class JTSegmentItem: NSObject {
     }
 }
 
-open class JTSegmentControl: UIControl {
+@objcMembers open class JTSegmentControl: UIControl {
     
     fileprivate struct Constants {
         static let height : CGFloat = 40.0
@@ -342,7 +342,7 @@ open class JTSegmentControl: UIControl {
             }
             self.selectedIndex = 0
             
-            self.contentView.bringSubview(toFront: self.sliderView)
+            self.contentView.bringSubviewToFront(self.sliderView)
         }
     }
     

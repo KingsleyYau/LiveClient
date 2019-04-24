@@ -23,6 +23,8 @@
 
 - (void)reloadData:(BOOL)animated;
 
+- (void)sendDelegate;
+
 - (void)removeAllButton;
 
 @end

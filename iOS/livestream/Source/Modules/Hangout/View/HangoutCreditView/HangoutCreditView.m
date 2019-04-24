@@ -50,7 +50,7 @@
         self.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",userInfo.userId];
     }
     
-    [self.imageLoader refreshCachedImage:self.userHeadImageView options:SDWebImageRefreshCached imageUrl:userInfo.photoUrl
+    [self.imageLoader loadImageFromCache:self.userHeadImageView options:SDWebImageRefreshCached imageUrl:userInfo.photoUrl
                         placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
                         }];
     

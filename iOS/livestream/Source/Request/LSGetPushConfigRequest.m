@@ -23,7 +23,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getPushConfig:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, BOOL isPriMsgAppPush, BOOL isMailAppPush) {
+        NSInteger request = [self.manager getPushConfig:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSAppPushConfigItemObject *item) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理
@@ -33,7 +33,7 @@
             }
             
             if( !bFlag && weakSelf.finishHandler ) {
-                weakSelf.finishHandler(success, errnum, errmsg, isPriMsgAppPush, isMailAppPush);
+                weakSelf.finishHandler(success, errnum, errmsg, item);
                 [weakSelf finishRequest];
             }
         }];
@@ -44,7 +44,8 @@
 
 - (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
-        self.finishHandler(NO, errnum, errmsg, NO, NO);
+        LSAppPushConfigItemObject *item = [[LSAppPushConfigItemObject alloc] init];
+        self.finishHandler(NO, errnum, errmsg, item);
     }
     
     [super callRespond:success errnum:errnum errmsg:errmsg];

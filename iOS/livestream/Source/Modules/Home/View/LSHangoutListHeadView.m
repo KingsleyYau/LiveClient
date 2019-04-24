@@ -65,6 +65,7 @@
     
 }
 - (IBAction)clickAction:(id)sender {
+
     if ([self.hangoutHeadDelegate respondsToSelector:@selector(LSHangoutListHeadViewDidShowMore:)]) {
         [self.hangoutHeadDelegate LSHangoutListHeadViewDidShowMore:self];
     }
@@ -73,21 +74,21 @@
 - (void)selectedChanged:(id)sender {
     UIButton *showMoreBtn = (UIButton *)sender;
     if (showMoreBtn.selected == YES) {
-        
-        // 弹出底部emotion的键盘
+
+        [self.showMoreBtn setImage:[UIImage imageNamed:@"HangoutList_banner_hide"] forState:UIControlStateSelected];
+        [self.showMoreBtn setImage:[UIImage imageNamed:@"HangoutList_banner_hide"] forState:UIControlStateNormal];
         if ([self.hangoutHeadDelegate respondsToSelector:@selector(LSHangoutListHeadViewDidShowMore:)]) {
             [self.hangoutHeadDelegate LSHangoutListHeadViewDidShowMore:self];
         }
-        
     } else {
-        
-        
+        [self hideHangoutListMoreIconStatus];
         if ([self.hangoutHeadDelegate respondsToSelector:@selector(LSHangoutListHeadViewDidHideMore:)]) {
             [self.hangoutHeadDelegate LSHangoutListHeadViewDidHideMore:self];
         }
     }
 }
 - (IBAction)getTipNotShow:(id)sender {
+    [self hideHangoutListMoreIconStatus];
     if ([self.hangoutHeadDelegate respondsToSelector:@selector(LSHangoutListHeadViewDidGetTips:)]) {
         [self.hangoutHeadDelegate LSHangoutListHeadViewDidGetTips:self];
     }
@@ -99,6 +100,12 @@
         [sender setSelected:YES];
     }
     
+}
+
+
+- (void)hideHangoutListMoreIconStatus {
+    [self.showMoreBtn setImage:[UIImage imageNamed:@"HangoutList_banner_show"] forState:UIControlStateSelected];
+    [self.showMoreBtn setImage:[UIImage imageNamed:@"HangoutList_banner_show"] forState:UIControlStateNormal];
 }
 
 

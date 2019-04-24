@@ -43,6 +43,7 @@ using namespace std;
 #define SHARELINK_PARAM        "share_link"
 #define HASTALENT_PARAM        "has_talent"
 #define PRIV_PARAM             "priv"
+#define HANGOUTPRIV_PARAM      "hangout_priv"
 
 class RoomInfoItem {
 public:
@@ -174,6 +175,10 @@ public:
                 priv.Parse(root[PRIV_PARAM]);
             }
             
+            if (root[HANGOUTPRIV_PARAM].isNumeric()) {
+                isHangoutPriv = root[HANGOUTPRIV_PARAM].asInt() == 0 ? false : true;
+            }
+            
         }
 
         result = true;
@@ -205,6 +210,7 @@ public:
         shareLink = "";
         liveShowType = IMPUBLICROOMTYPE_COMMON;
         isHasTalent = false;
+        isHangoutPriv = true;
     }
     
     virtual ~RoomInfoItem() {
@@ -241,6 +247,7 @@ public:
      * liveShowType             公开直播间类型（IMPUBLICROOMTYPE_COMMON：普通公开，IMPUBLICROOMTYPE_PROGRAM：节目）
      * isHasTalent              是否有才艺（false：否，ture：是）
      * priv                     权限
+     * isHangoutPriv            多人互动开播权限（0：没有权限，1：有权限）
      */
     string          userId;
     string          nickName;
@@ -271,6 +278,7 @@ public:
     IMPublicRoomType liveShowType;
     bool            isHasTalent;
     IMAuthorityItem priv;
+    bool            isHangoutPriv;
 };
 
 

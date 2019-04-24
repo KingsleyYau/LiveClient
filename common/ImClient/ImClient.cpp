@@ -68,7 +68,7 @@ ImClient::ImClient()
 
 ImClient::~ImClient()
 {
-	FileLog("ImClient", "ImClient::~ImClient()");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "ImClient::~ImClient()");
 	// 注销
 	Logout();
 	
@@ -79,7 +79,7 @@ ImClient::~ImClient()
 	IAutoLock::ReleaseAutoLock(m_lastHearbeatTimeLock);
     IAutoLock::ReleaseAutoLock(m_listenerListLock);
     
-	FileLog("ImClient", "ImClient::~ImClient() end");
+	FileLevelLog("ImClient", KLog::LOG_WARNING, "ImClient::~ImClient() end");
 }
 
 // ------------------------ IImClient接口函数 -------------------------
@@ -350,7 +350,7 @@ TH_RETURN_PARAM ImClient::HearbeatThread(void* arg)
 
 void ImClient::HearbeatProc()
 {
-    FileLog("ImClient", "ImClient::HearbeatProc() begin");
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "ImClient::HearbeatProc() begin");
     
     const unsigned long nSleepStep = 200;	// ms
     
@@ -377,14 +377,14 @@ void ImClient::HearbeatProc()
 		long long lastHearbeatTime = m_lastHearbeatTime;
 		m_lastHearbeatTimeLock->Unlock();
 		if (DiffTime(lastHearbeatTime, curTime) > HEARTBEAT_TIMEOUT) {
-            FileLog("ImClient", "ImClient::HearbeatProc() Stop() start");
+            FileLevelLog("ImClient", KLog::LOG_WARNING, "ImClient::HearbeatProc() Stop() start");
 			m_taskManager->Stop();
-            FileLog("ImClient", "ImClient::HearbeatProc() Stop() end");
+            FileLevelLog("ImClient", KLog::LOG_WARNING,"ImClient::HearbeatProc() Stop() end");
 		}
         Sleep(nSleepStep);
     } while (m_isHearbeatThreadRun);
     
-    FileLog("ImClient", "ImClient::HearbeatProc() end");
+    FileLevelLog("ImClient", KLog::LOG_WARNING, "ImClient::HearbeatProc() end");
 }
 
 // ------------------------ 登录函数 ------------------------------
@@ -1069,20 +1069,21 @@ void ImClient::OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const s
  *
  *  @param reqId            请求序列号
  *  @param roomId           直播间ID
+ *  @param isCreateOnly     是否仅创建新的Hangout直播间，若已有Hangout直播间则先关闭
  *
  */
-bool ImClient::EnterHangoutRoom(SEQ_T reqId, const string& roomId) {
+bool ImClient::EnterHangoutRoom(SEQ_T reqId, const string& roomId, bool isCreateOnly) {
     bool result = false;
     m_loginStatusLock->Lock();
     LoginStatus loginStatus = m_loginStatus;
     m_loginStatusLock->Unlock();
-    FileLog("ImClient", "ImClient::EnterHangoutRoom() begin, m_taskManager:%p roomId:%s", m_taskManager, roomId.c_str());
+    FileLog("ImClient", "ImClient::EnterHangoutRoom() begin, m_taskManager:%p roomId:%s isCreateOnly:%d", m_taskManager, roomId.c_str(), isCreateOnly);
     // 若为已登录状态
     if (LOGINED == loginStatus) {
         EnterHangoutRoomTask* task = new EnterHangoutRoomTask();
         if (NULL != task) {
             task->Init(this);
-            task->InitParam(roomId);
+            task->InitParam(roomId, isCreateOnly);
 
             task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
@@ -2006,6 +2007,19 @@ void ImClient::OnRecvHandoutInviteNotice(const IMHangoutInviteItem& item) {
          itr++) {
         IImClientListener* callback = *itr;
         callback->OnRecvHandoutInviteNotice(item);
+    }
+    FileLog("ImClient", "ImClient::OnRecvHandoutInviteNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+void ImClient::OnRecvHangoutCreditRunningOutNotice(const string& roomId, LCC_ERR_TYPE errNo, const string& errMsg) {
+    FileLog("ImClient", "ImClient::OnRecvHangoutCreditRunningOutNotice() begin, ImClient:%p roomId:%s errNo:%d errMsg:%s", this, roomId.c_str(), errNo, errMsg.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvHangoutCreditRunningOutNotice(roomId, errNo, errMsg);
     }
     FileLog("ImClient", "ImClient::OnRecvHandoutInviteNotice() end, ImClient:%p", this);
     m_listenerListLock->Unlock();

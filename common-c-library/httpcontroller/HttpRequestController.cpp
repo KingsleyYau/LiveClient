@@ -49,7 +49,7 @@ long long HttpRequestController::Login(
                                        LSLoginSidType userSidType,
                                        IRequestLoginCallback* callback
                                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLoginTask* task = new HttpLoginTask();
     task->Init(pHttpRequestManager);
@@ -70,7 +70,7 @@ long long HttpRequestController::Login(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -80,7 +80,7 @@ long long HttpRequestController::Logout(
                                         HttpRequestManager *pHttpRequestManager,
                                         IRequestLogoutCallback* callback
                                         ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLogoutTask* task = new HttpLogoutTask();
     task->Init(pHttpRequestManager);
@@ -101,7 +101,7 @@ long long HttpRequestController::Logout(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -113,7 +113,7 @@ long long HttpRequestController::UpdateTokenId(
                                                 const string& tokenId,
                                                 IRequestUpdateTokenIdCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpUpdateTokenIdTask* task = new HttpUpdateTokenIdTask();
     task->Init(pHttpRequestManager);
@@ -134,7 +134,7 @@ long long HttpRequestController::UpdateTokenId(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -155,7 +155,7 @@ long long HttpRequestController::OwnFackBookLogin(
                                                   GenderType gender,
                                                   IRequestOwnFackBookLoginCallback* callback
                                                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnFackBookLoginTask* task = new HttpOwnFackBookLoginTask();
     task->Init(pHttpRequestManager);
@@ -176,7 +176,7 @@ long long HttpRequestController::OwnFackBookLogin(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -196,7 +196,7 @@ long long HttpRequestController::OwnRegister(
                                              const string utmReferrer,
                                              IRequestOwnRegisterCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnRegisterTask* task = new HttpOwnRegisterTask();
     task->Init(pHttpRequestManager);
@@ -217,7 +217,7 @@ long long HttpRequestController::OwnRegister(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -232,7 +232,7 @@ long long HttpRequestController::OwnEmailLogin(
                                                const string manufacturer,
                                                IRequestOwnEmailLoginCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnEmailLoginTask* task = new HttpOwnEmailLoginTask();
     task->Init(pHttpRequestManager);
@@ -253,7 +253,7 @@ long long HttpRequestController::OwnEmailLogin(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -265,7 +265,7 @@ long long HttpRequestController::OwnFindPassword(
                                                  const string checkCode,
                                                  IRequestOwnFindPasswordCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnFindPasswordTask* task = new HttpOwnFindPasswordTask();
     task->Init(pHttpRequestManager);
@@ -286,7 +286,7 @@ long long HttpRequestController::OwnFindPassword(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -297,7 +297,7 @@ long long HttpRequestController::OwnCheckMail(
                                               const string email,
                                               IRequestOwnCheckMailRegistrationCallback* callback
                                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnCheckMailRegistrationTask* task = new HttpOwnCheckMailRegistrationTask();
     task->Init(pHttpRequestManager);
@@ -318,7 +318,7 @@ long long HttpRequestController::OwnCheckMail(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -329,7 +329,7 @@ long long HttpRequestController::OwnUploadPhoto(
                                                 const string photoName,
                                                 IRequestUploadPhotoCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpUploadPhotoTask* task = new HttpUploadPhotoTask();
     task->Init(pHttpRequestManager);
@@ -350,7 +350,7 @@ long long HttpRequestController::OwnUploadPhoto(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -362,7 +362,7 @@ long long HttpRequestController::GetVerificationCode(
                                                      bool useCode,
                                                      IRequestGetVerificationCodeCallback* callback
                                                      ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetVerificationCodeTask* task = new HttpGetVerificationCodeTask();
     task->Init(pHttpRequestManager);
@@ -383,7 +383,7 @@ long long HttpRequestController::GetVerificationCode(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -395,7 +395,7 @@ long long HttpRequestController::GetValidsiteId(
                               const string& password,
                               IRequestGetValidsiteIdCallback* callback
                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetValidsiteIdTask* task = new HttpGetValidsiteIdTask();
     task->Init(pHttpRequestManager);
@@ -416,7 +416,7 @@ long long HttpRequestController::GetValidsiteId(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -429,7 +429,7 @@ long long HttpRequestController::AddToken(
                    const string deviceId,
                    IRequestAddTokenCallback* callback
                                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpAddTokenTask* task = new HttpAddTokenTask();
     task->Init(pHttpRequestManager);
@@ -450,7 +450,7 @@ long long HttpRequestController::AddToken(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -460,7 +460,7 @@ long long HttpRequestController::DestroyToken(
                                           HttpRequestManager *pHttpRequestManager,
                                           IRequestDestroyTokenCallback* callback
                                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpDestroyTokenTask* task = new HttpDestroyTokenTask();
     task->Init(pHttpRequestManager);
@@ -481,7 +481,7 @@ long long HttpRequestController::DestroyToken(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -493,7 +493,7 @@ long long HttpRequestController::FindPassword(
                        const string checkCode,
                        IRequestFindPasswordCallback* callback
                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpFindPasswordTask* task = new HttpFindPasswordTask();
     task->Init(pHttpRequestManager);
@@ -514,7 +514,7 @@ long long HttpRequestController::FindPassword(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -526,7 +526,7 @@ long long HttpRequestController::ChangePassword(
                                                 const string passwordOld,
                                                 IRequestChangePasswordCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpChangePasswordTask* task = new HttpChangePasswordTask();
     task->Init(pHttpRequestManager);
@@ -547,7 +547,7 @@ long long HttpRequestController::ChangePassword(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -563,7 +563,7 @@ long long HttpRequestController::DoLogin(
                                          const string& manufacturer,
                                          IRequestDoLoginCallback* callback
                                          ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpDoLoginTask* task = new HttpDoLoginTask();
     task->Init(pHttpRequestManager);
@@ -584,7 +584,7 @@ long long HttpRequestController::DoLogin(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -596,7 +596,7 @@ long long HttpRequestController::GetToken(
                                           HTTP_OTHER_SITE_TYPE siteId,
                                           IRequestGetTokenCallback* callback
                                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetTokenTask* task = new HttpGetTokenTask();
     task->Init(pHttpRequestManager);
@@ -617,7 +617,7 @@ long long HttpRequestController::GetToken(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -634,7 +634,7 @@ long long HttpRequestController::PasswordLogin(
                                                const string& deviceId,
                                                IRequestPasswordLoginCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpPasswordLoginTask* task = new HttpPasswordLoginTask();
     task->Init(pHttpRequestManager);
@@ -655,7 +655,7 @@ long long HttpRequestController::PasswordLogin(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -667,7 +667,7 @@ long long HttpRequestController::TokenLogin(
                                             const string& sid,
                                             IRequestTokenLoginCallback* callback
                                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpTokenLoginTask* task = new HttpTokenLoginTask();
     task->Init(pHttpRequestManager);
@@ -688,7 +688,7 @@ long long HttpRequestController::TokenLogin(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -699,7 +699,7 @@ long long HttpRequestController::GetValidateCode(
                                                  LSValidateCodeType validateCodeType,
                                                  IRequestGetValidateCodeCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetValidateCodeTask* task = new HttpGetValidateCodeTask();
     task->Init(pHttpRequestManager);
@@ -720,7 +720,7 @@ long long HttpRequestController::GetValidateCode(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -734,7 +734,7 @@ long long HttpRequestController::GetAnchorList(
                                                bool isForTest,
                                                IRequestGetAnchorListCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetAnchorListTask* task = new HttpGetAnchorListTask();
     task->Init(pHttpRequestManager);
@@ -755,7 +755,7 @@ long long HttpRequestController::GetAnchorList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -767,7 +767,7 @@ long long HttpRequestController::GetFollowList(
                                                 int step,
                                                 IRequestGetFollowListCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetFollowListTask* task = new HttpGetFollowListTask();
     task->Init(pHttpRequestManager);
@@ -788,7 +788,7 @@ long long HttpRequestController::GetFollowList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -798,7 +798,7 @@ long long HttpRequestController::GetRoomInfo(
                                              HttpRequestManager *pHttpRequestManager,
                                              IRequestGetRoomInfoCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetRoomInfoTask* task = new HttpGetRoomInfoTask();
     task->Init(pHttpRequestManager);
@@ -819,7 +819,7 @@ long long HttpRequestController::GetRoomInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -833,7 +833,7 @@ long long HttpRequestController::LiveFansList(
                                               int step,
                                               IRequestLiveFansListCallback* callback
                                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLiveFansListTask* task = new HttpLiveFansListTask();
     task->Init(pHttpRequestManager);
@@ -854,7 +854,7 @@ long long HttpRequestController::LiveFansList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -866,7 +866,7 @@ long long HttpRequestController::GetAllGiftList(
                                                 HttpRequestManager *pHttpRequestManager,
                                                 IRequestGetAllGiftListCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetAllGiftListTask* task = new HttpGetAllGiftListTask();
     task->Init(pHttpRequestManager);
@@ -887,7 +887,7 @@ long long HttpRequestController::GetAllGiftList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -898,7 +898,7 @@ long long HttpRequestController::GetGiftListByUserId(
                                                      const string& roomId,
                                                      IRequestGetGiftListByUserIdCallback* callback
                                                      ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetGiftListByUserIdTask* task = new HttpGetGiftListByUserIdTask();
     task->Init(pHttpRequestManager);
@@ -919,7 +919,7 @@ long long HttpRequestController::GetGiftListByUserId(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -930,7 +930,7 @@ long long HttpRequestController::GetGiftDetail(
                                                const string& giftId,
                                                IRequestGetGiftDetailCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
 
     HttpGetGiftDetailTask* task = new HttpGetGiftDetailTask();
     task->Init(pHttpRequestManager);
@@ -951,7 +951,7 @@ long long HttpRequestController::GetGiftDetail(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
 
     return requestId;
@@ -961,7 +961,7 @@ long long HttpRequestController::GetEmoticonList(
                                                  HttpRequestManager *pHttpRequestManager,
                                                  IRequestGetEmoticonListCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetEmoticonListTask* task = new HttpGetEmoticonListTask();
     task->Init(pHttpRequestManager);
@@ -982,7 +982,7 @@ long long HttpRequestController::GetEmoticonList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -993,7 +993,7 @@ long long HttpRequestController::GetInviteInfo(
                         const string& inviteId,
                         IRequestGetInviteInfoCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetInviteInfoTask* task = new HttpGetInviteInfoTask();
     task->Init(pHttpRequestManager);
@@ -1014,7 +1014,7 @@ long long HttpRequestController::GetInviteInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1025,7 +1025,7 @@ long long HttpRequestController::GetTalentList(
                                                const string& roomId,
                                                IRequestGetTalentListCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetTalentListTask* task = new HttpGetTalentListTask();
     task->Init(pHttpRequestManager);
@@ -1046,7 +1046,7 @@ long long HttpRequestController::GetTalentList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1058,7 +1058,7 @@ long long HttpRequestController::GetTalentStatus(
                           const string& talentInviteId,
                           IRequestGetTalentStatusCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetTalentStatusTask* task = new HttpGetTalentStatusTask();
     task->Init(pHttpRequestManager);
@@ -1079,7 +1079,7 @@ long long HttpRequestController::GetTalentStatus(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1091,7 +1091,7 @@ long long HttpRequestController::GetNewFansBaseInfo(
                                                     const string& userId,
                                                     IRequestGetNewFansBaseInfoCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetNewFansBaseInfoTask* task = new HttpGetNewFansBaseInfoTask();
     task->Init(pHttpRequestManager);
@@ -1112,7 +1112,7 @@ long long HttpRequestController::GetNewFansBaseInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1124,7 +1124,7 @@ long long HttpRequestController::ControlManPush(
                                                 ControlType type,
                                                 IRequestControlManPushCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpControlManPushTask* task = new HttpControlManPushTask();
     task->Init(pHttpRequestManager);
@@ -1145,7 +1145,7 @@ long long HttpRequestController::ControlManPush(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1158,7 +1158,7 @@ long long HttpRequestController::GetPromoAnchorList(
                              const string& userId,
                              IRequestGetPromoAnchorListCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetPromoAnchorListTask* task = new HttpGetPromoAnchorListTask();
     task->Init(pHttpRequestManager);
@@ -1179,7 +1179,7 @@ long long HttpRequestController::GetPromoAnchorList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1192,7 +1192,7 @@ long long HttpRequestController::ManHandleBookingList(
                                                       int step,
                                                       IRequestManHandleBookingListCallback* callback
                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpManHandleBookingListTask* task = new HttpManHandleBookingListTask();
     task->Init(pHttpRequestManager);
@@ -1213,7 +1213,7 @@ long long HttpRequestController::ManHandleBookingList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1225,7 +1225,7 @@ long long HttpRequestController::HandleBooking(
                                                bool isConfirm,
                                                IRequestHandleBookingCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpHandleBookingTask* task = new HttpHandleBookingTask();
     task->Init(pHttpRequestManager);
@@ -1246,7 +1246,7 @@ long long HttpRequestController::HandleBooking(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1257,7 +1257,7 @@ long long HttpRequestController::SendCancelPrivateLiveInvite(
                                                       const string& invitationId,
                                                       IRequestSendCancelPrivateLiveInviteCallback* callback
                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSendCancelPrivateLiveInviteTask* task = new HttpSendCancelPrivateLiveInviteTask();
     task->Init(pHttpRequestManager);
@@ -1278,7 +1278,7 @@ long long HttpRequestController::SendCancelPrivateLiveInvite(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1288,7 +1288,7 @@ long long HttpRequestController::ManBookingUnreadUnhandleNum(
                                                              HttpRequestManager *pHttpRequestManager,
                                                              IRequestManBookingUnreadUnhandleNumCallback* callback
                                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpManBookingUnreadUnhandleNumTask* task = new HttpManBookingUnreadUnhandleNumTask();
     task->Init(pHttpRequestManager);
@@ -1309,7 +1309,7 @@ long long HttpRequestController::ManBookingUnreadUnhandleNum(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1320,7 +1320,7 @@ long long HttpRequestController::GetCreateBookingInfo(
                                  const string& userId,
                                  IRequestGetCreateBookingInfoCallback* callback
                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetCreateBookingInfoTask* task = new HttpGetCreateBookingInfoTask();
     task->Init(pHttpRequestManager);
@@ -1341,7 +1341,7 @@ long long HttpRequestController::GetCreateBookingInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1357,7 +1357,7 @@ long long HttpRequestController::SendBookingRequest(
                              bool needSms,
                              IRequestSendBookingRequestCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSendBookingRequestTask* task = new HttpSendBookingRequestTask();
     task->Init(pHttpRequestManager);
@@ -1378,7 +1378,7 @@ long long HttpRequestController::SendBookingRequest(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1391,7 +1391,7 @@ long long HttpRequestController::AcceptInstanceInvite(
                                                       bool isConfirm,
                                                       IRequestAcceptInstanceInviteCallback* callback
                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpAcceptInstanceInviteTask* task = new HttpAcceptInstanceInviteTask();
     task->Init(pHttpRequestManager);
@@ -1412,7 +1412,7 @@ long long HttpRequestController::AcceptInstanceInvite(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1422,7 +1422,7 @@ long long HttpRequestController::GiftList(
                    HttpRequestManager *pHttpRequestManager,
                    IRequestGiftListCallback* callback
                                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGiftListTask* task = new HttpGiftListTask();
     task->Init(pHttpRequestManager);
@@ -1443,7 +1443,7 @@ long long HttpRequestController::GiftList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1453,7 +1453,7 @@ long long HttpRequestController::VoucherList(
                                              HttpRequestManager *pHttpRequestManager,
                                              IRequestVoucherListCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpVoucherListTask* task = new HttpVoucherListTask();
     task->Init(pHttpRequestManager);
@@ -1474,7 +1474,7 @@ long long HttpRequestController::VoucherList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1484,7 +1484,7 @@ long long HttpRequestController::RideList(
                                           HttpRequestManager *pHttpRequestManager,
                                           IRequestRideListCallback* callback
                                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpRideListTask* task = new HttpRideListTask();
     task->Init(pHttpRequestManager);
@@ -1505,7 +1505,7 @@ long long HttpRequestController::RideList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1516,7 +1516,7 @@ long long HttpRequestController::SetRide(
                                          const string& rideId,
                                          IRequestSetRideCallback* callback
                                          ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSetRideTask* task = new HttpSetRideTask();
     task->Init(pHttpRequestManager);
@@ -1537,7 +1537,7 @@ long long HttpRequestController::SetRide(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1547,7 +1547,7 @@ long long HttpRequestController::GetBackpackUnreadNum(
                                                       HttpRequestManager *pHttpRequestManager,
                                                       IRequestGetBackpackUnreadNumCallback* callback
                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetBackpackUnreadNumTask* task = new HttpGetBackpackUnreadNumTask();
     task->Init(pHttpRequestManager);
@@ -1568,7 +1568,7 @@ long long HttpRequestController::GetBackpackUnreadNum(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1578,7 +1578,7 @@ long long HttpRequestController::GetVoucherAvailableInfo(
                                                          HttpRequestManager *pHttpRequestManager,
                                                          IRequestGetVoucherAvailableInfoCallback* callback
                                                          ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetVoucherAvailableInfoTask* task = new HttpGetVoucherAvailableInfoTask();
     task->Init(pHttpRequestManager);
@@ -1599,7 +1599,7 @@ long long HttpRequestController::GetVoucherAvailableInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1609,7 +1609,7 @@ long long HttpRequestController::GetConfig(
                                            HttpRequestManager *pHttpRequestManager,
                                            IRequestGetConfigCallback* callback
                                            ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetConfigTask* task = new HttpGetConfigTask();
     task->Init(pHttpRequestManager);
@@ -1630,7 +1630,7 @@ long long HttpRequestController::GetConfig(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1640,7 +1640,7 @@ long long HttpRequestController::GetLeftCredit(
                                            HttpRequestManager *pHttpRequestManager,
                                            IRequestGetLeftCreditCallback* callback
                                            ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetLeftCreditTask* task = new HttpGetLeftCreditTask();
     task->Init(pHttpRequestManager);
@@ -1661,7 +1661,7 @@ long long HttpRequestController::GetLeftCredit(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1674,7 +1674,7 @@ long long HttpRequestController::SetFavorite(
                                              bool isFav,
                                              IRequestSetFavoriteCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSetFavoriteTask* task = new HttpSetFavoriteTask();
     task->Init(pHttpRequestManager);
@@ -1695,7 +1695,7 @@ long long HttpRequestController::SetFavorite(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1707,7 +1707,7 @@ long long HttpRequestController::GetAdAnchorList(
                                                  int number,
                                                  IRequestGetAdAnchorListCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetAdAnchorListTask* task = new HttpGetAdAnchorListTask();
     task->Init(pHttpRequestManager);
@@ -1728,7 +1728,7 @@ long long HttpRequestController::GetAdAnchorList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1738,7 +1738,7 @@ long long HttpRequestController::CloseAdAnchorList(
                                                    HttpRequestManager *pHttpRequestManager,
                                                    IRequestCloseAdAnchorListCallback* callback
                                                    ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpCloseAdAnchorListTask* task = new HttpCloseAdAnchorListTask();
     task->Init(pHttpRequestManager);
@@ -1759,7 +1759,7 @@ long long HttpRequestController::CloseAdAnchorList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1772,7 +1772,7 @@ long long HttpRequestController::GetPhoneVerifyCode(
                                                     const string& phoneNo,
                                                     IRequestGetPhoneVerifyCodeCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetPhoneVerifyCodeTask* task = new HttpGetPhoneVerifyCodeTask();
     task->Init(pHttpRequestManager);
@@ -1793,7 +1793,7 @@ long long HttpRequestController::GetPhoneVerifyCode(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1807,7 +1807,7 @@ long long HttpRequestController::SubmitPhoneVerifyCode(
                                                     const string& verifyCode,
                                                     IRequestSubmitPhoneVerifyCodeCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSubmitPhoneVerifyCodeTask* task = new HttpSubmitPhoneVerifyCodeTask();
     task->Init(pHttpRequestManager);
@@ -1828,7 +1828,7 @@ long long HttpRequestController::SubmitPhoneVerifyCode(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1840,7 +1840,7 @@ long long HttpRequestController::ServerSpeed(
                                              int res,
                                              IRequestServerSpeedCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpServerSpeedTask* task = new HttpServerSpeedTask();
     task->Init(pHttpRequestManager);
@@ -1861,7 +1861,7 @@ long long HttpRequestController::ServerSpeed(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1871,7 +1871,7 @@ long long HttpRequestController::Banner(
                                         HttpRequestManager *pHttpRequestManager,
                                         IRequestBannerCallback* callback
                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpBannerTask* task = new HttpBannerTask();
     task->Init(pHttpRequestManager);
@@ -1892,7 +1892,7 @@ long long HttpRequestController::Banner(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1903,7 +1903,7 @@ long long HttpRequestController::GetUserInfo(
                                              const string& userId,
                                              IRequestGetUserInfoCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetUserInfoTask* task = new HttpGetUserInfoTask();
     task->Init(pHttpRequestManager);
@@ -1924,7 +1924,7 @@ long long HttpRequestController::GetUserInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1938,7 +1938,7 @@ long long HttpRequestController::GetShareLink(
                                               SharePageType sharePageType,
                                               IRequestGetShareLinkCallback* callback
                                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetShareLinkTask* task = new HttpGetShareLinkTask();
     task->Init(pHttpRequestManager);
@@ -1959,7 +1959,7 @@ long long HttpRequestController::GetShareLink(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -1970,7 +1970,7 @@ long long HttpRequestController::SetShareSuc(
                                              const string& shareId,
                                              IRequestSetShareSucCallback* callback
                                              ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSetShareSucTask* task = new HttpSetShareSucTask();
     task->Init(pHttpRequestManager);
@@ -1991,7 +1991,7 @@ long long HttpRequestController::SetShareSuc(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2003,7 +2003,7 @@ long long HttpRequestController::SubmitFeedBack(
                                                 const string& msg,
                                                 IRequestSubmitFeedBackCallback* callback
                                                 )   {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSubmitFeedBackTask* task = new HttpSubmitFeedBackTask();
     task->Init(pHttpRequestManager);
@@ -2024,7 +2024,7 @@ long long HttpRequestController::SubmitFeedBack(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2034,7 +2034,7 @@ long long HttpRequestController::GetManBaseInfo(
                          HttpRequestManager *pHttpRequestManager,
                          IRequestGetManBaseInfoCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetManBaseInfoTask* task = new HttpGetManBaseInfoTask();
     task->Init(pHttpRequestManager);
@@ -2055,7 +2055,7 @@ long long HttpRequestController::GetManBaseInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2066,7 +2066,7 @@ long long HttpRequestController::SetManBaseInfo(
                                                 const string& nickName,
                                                 IRequestSetManBaseInfoCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSetManBaseInfoTask* task = new HttpSetManBaseInfoTask();
     task->Init(pHttpRequestManager);
@@ -2087,7 +2087,7 @@ long long HttpRequestController::SetManBaseInfo(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2099,7 +2099,7 @@ long long HttpRequestController::CrashFile(
                                             const string& crashFile,
                                             IRequestCrashFileCallback* callback
                                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpCrashFileTask* task = new HttpCrashFileTask();
     task->Init(pHttpRequestManager);
@@ -2120,7 +2120,7 @@ long long HttpRequestController::CrashFile(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2130,7 +2130,7 @@ long long HttpRequestController::GetTotalNoreadNum(
                                                    HttpRequestManager *pHttpRequestManager,
                                                    IRequestGetTotalNoreadNumCallback* callback
                                                    ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetTotalNoreadNumTask* task = new HttpGetTotalNoreadNumTask();
     task->Init(pHttpRequestManager);
@@ -2151,7 +2151,7 @@ long long HttpRequestController::GetTotalNoreadNum(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2162,7 +2162,7 @@ long long HttpRequestController::GetMyProfile(
                                               
                                               IRequestGetMyProfileCallback* callback
                                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetMyProfileTask* task = new HttpGetMyProfileTask();
     task->Init(pHttpRequestManager);
@@ -2183,7 +2183,7 @@ long long HttpRequestController::GetMyProfile(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2207,7 +2207,7 @@ long long HttpRequestController::UpdateProfile(
                         int zodiac,
                         IRequestUpdateProfileCallback* callback
                         ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpUpdateProfileTask* task = new HttpUpdateProfileTask();
     task->Init(pHttpRequestManager);
@@ -2228,7 +2228,7 @@ long long HttpRequestController::UpdateProfile(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2239,7 +2239,7 @@ long long HttpRequestController::VersionCheck(
                        int currVersion,
                        IRequestVersionCheckCallback* callback
                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpVersionCheckTask* task = new HttpVersionCheckTask();
     task->Init(pHttpRequestManager);
@@ -2260,7 +2260,7 @@ long long HttpRequestController::VersionCheck(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2270,7 +2270,7 @@ long long HttpRequestController::StartEditResume(
                           HttpRequestManager *pHttpRequestManager,
                           IRequestStartEditResumeCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpStartEditResumeTask* task = new HttpStartEditResumeTask();
     task->Init(pHttpRequestManager);
@@ -2291,7 +2291,7 @@ long long HttpRequestController::StartEditResume(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2309,7 +2309,7 @@ long long HttpRequestController::PhoneInfo(
                                            int phoneType, int networkType, const string& deviceId,
                                            IRequestPhoneInfoCallback* callback
                                            ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpPhoneInfoTask* task = new HttpPhoneInfoTask();
     task->Init(pHttpRequestManager);
@@ -2337,7 +2337,7 @@ long long HttpRequestController::PhoneInfo(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2350,7 +2350,7 @@ long long HttpRequestController::PremiumMembership(
                                                    const string& siteId,
                                                    IRequestPremiumMembershipCallback* callback
                                                    ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpPremiumMembershipTask* task = new HttpPremiumMembershipTask();
     task->Init(pHttpRequestManager);
@@ -2371,7 +2371,7 @@ long long HttpRequestController::PremiumMembership(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2385,7 +2385,7 @@ long long HttpRequestController::GetIOSPay(
                                            const string& siteid,
                                            IRequestGetIOSPayCallback* callback
                                            ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetIOSPayTask* task = new HttpGetIOSPayTask();
     task->Init(pHttpRequestManager);
@@ -2406,7 +2406,7 @@ long long HttpRequestController::GetIOSPay(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2421,7 +2421,7 @@ long long HttpRequestController::IOSPayCall(
                                             AppStorePayCodeType code,
                                             IRequestIOSPayCallCallback* callback
                                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpIOSPayCallTask* task = new HttpIOSPayCallTask();
     task->Init(pHttpRequestManager);
@@ -2442,7 +2442,7 @@ long long HttpRequestController::IOSPayCall(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2455,7 +2455,7 @@ long long HttpRequestController::IOSGetPay(
                     const string& number,
                     IRequestIOSGetPayCallback* callback
                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpIOSGetPayTask* task = new HttpIOSGetPayTask();
     task->Init(pHttpRequestManager);
@@ -2476,7 +2476,7 @@ long long HttpRequestController::IOSGetPay(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2491,7 +2491,7 @@ long long HttpRequestController::IOSCheckPayCall(
                           AppStorePayCodeType code,
                           IRequestIOSCheckPayCallCallback* callback
                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpIOSCheckPayCallTask* task = new HttpIOSCheckPayCallTask();
     task->Init(pHttpRequestManager);
@@ -2512,7 +2512,7 @@ long long HttpRequestController::IOSCheckPayCall(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2522,7 +2522,7 @@ long long HttpRequestController::IOSPremiumMemberShip(
                                HttpRequestManager *pHttpRequestManager,
                                IRequestIOSPremiumMemberShipCallback* callback
                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpIOSPremiumMemberShipTask* task = new HttpIOSPremiumMemberShipTask();
     task->Init(pHttpRequestManager);
@@ -2543,7 +2543,7 @@ long long HttpRequestController::IOSPremiumMemberShip(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2558,7 +2558,7 @@ long long HttpRequestController::MobilePayGoto(
                                                const string& number,
                                                IRequestMobilePayGotoCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpMobilePayGotoTask* task = new HttpMobilePayGotoTask();
     task->Init(pHttpRequestManager);
@@ -2579,7 +2579,7 @@ long long HttpRequestController::MobilePayGoto(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2593,7 +2593,7 @@ long long HttpRequestController::GetCanHangoutAnchorList(
                                   int step,
                                   IRequestGetCanHangoutAnchorListCallback* callback
                                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
 
     HttpGetCanHangoutAnchorListTask* task = new HttpGetCanHangoutAnchorListTask();
     task->Init(pHttpRequestManager);
@@ -2614,7 +2614,7 @@ long long HttpRequestController::GetCanHangoutAnchorList(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
 
     return requestId;
@@ -2625,13 +2625,14 @@ long long HttpRequestController::SendInvitationHangout(
                                                        const string& roomId,
                                                        const string& anchorId,
                                                        const string& recommendId,
+                                                       bool isCreateOnly,
                                                        IRequestSendInvitationHangoutCallback* callback
                                                        ){
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
 
     HttpSendInvitationHangoutTask* task = new HttpSendInvitationHangoutTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(roomId, anchorId, recommendId);
+    task->SetParam(roomId, anchorId, recommendId, isCreateOnly);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
 
@@ -2648,7 +2649,7 @@ long long HttpRequestController::SendInvitationHangout(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
 
     return requestId;
@@ -2659,7 +2660,7 @@ long long HttpRequestController::CancelInviteHangout(
                                                      const string& inviteId,
                                                      IRequestCancelInviteHangoutCallback* callback
                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
 
     HttpCancelInviteHangoutTask* task = new HttpCancelInviteHangoutTask();
     task->Init(pHttpRequestManager);
@@ -2680,7 +2681,7 @@ long long HttpRequestController::CancelInviteHangout(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
 
     return requestId;
@@ -2691,7 +2692,7 @@ long long HttpRequestController::GetHangoutInvitStatus(
                                                        const string& inviteId,
                                                        IRequestGetHangoutInvitStatusCallback* callback
                                                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
 
     HttpGetHangoutInvitStatusTask* task = new HttpGetHangoutInvitStatusTask();
     task->Init(pHttpRequestManager);
@@ -2712,7 +2713,7 @@ long long HttpRequestController::GetHangoutInvitStatus(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
 
     return requestId;
@@ -2723,7 +2724,7 @@ long long HttpRequestController::DealKnockRequest(
                                                   const string& knockId,
                                                   IRequestDealKnockRequestCallback* callback
                                                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
 
     HttpDealKnockRequestTask* task = new HttpDealKnockRequestTask();
     task->Init(pHttpRequestManager);
@@ -2744,7 +2745,7 @@ long long HttpRequestController::DealKnockRequest(
 //        mRequestMap.Unlock();
 //
 //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
 
     return requestId;
@@ -2755,7 +2756,7 @@ long long HttpRequestController::GetHangoutGiftList(
                                                     const string& roomId,
                                                     IRequestGetHangoutGiftListCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetHangoutGiftListTask* task = new HttpGetHangoutGiftListTask();
     task->Init(pHttpRequestManager);
@@ -2776,7 +2777,7 @@ long long HttpRequestController::GetHangoutGiftList(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2786,7 +2787,7 @@ long long HttpRequestController::GetHangoutOnlineAnchor(
                                  HttpRequestManager *pHttpRequestManager,
                                  IRequestGetHangoutOnlineAnchorCallback* callback
                                                         ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetHangoutOnlineAnchorTask* task = new HttpGetHangoutOnlineAnchorTask();
     task->Init(pHttpRequestManager);
@@ -2807,7 +2808,7 @@ long long HttpRequestController::GetHangoutOnlineAnchor(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2818,7 +2819,7 @@ long long HttpRequestController::GetHangoutFriends(
                                                     const string& anchorId,
                                                     IRequestGetHangoutFriendsCallback* callback
                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetHangoutFriendsTask* task = new HttpGetHangoutFriendsTask();
     task->Init(pHttpRequestManager);
@@ -2839,7 +2840,7 @@ long long HttpRequestController::GetHangoutFriends(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2848,13 +2849,14 @@ long long HttpRequestController::GetHangoutFriends(
 long long HttpRequestController::AutoInvitationHangoutLiveDisplay(
                                                    HttpRequestManager *pHttpRequestManager,
                                                    const string& anchorId,
+                                                   bool isAuto,
                                                    IRequestAutoInvitationHangoutLiveDisplayCallback* callback
                                                    ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpAutoInvitationHangoutLiveDisplayTask* task = new HttpAutoInvitationHangoutLiveDisplayTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(anchorId);
+    task->SetParam(anchorId, isAuto);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -2871,7 +2873,7 @@ long long HttpRequestController::AutoInvitationHangoutLiveDisplay(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2880,13 +2882,14 @@ long long HttpRequestController::AutoInvitationHangoutLiveDisplay(
 long long HttpRequestController::AutoInvitationClickLog(
                                                    HttpRequestManager *pHttpRequestManager,
                                                    const string& anchorId,
+                                                   bool isAuto,
                                                    IRequestAutoInvitationClickLogCallback* callback
                                                    ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpAutoInvitationClickLogTask* task = new HttpAutoInvitationClickLogTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(anchorId);
+    task->SetParam(anchorId, isAuto);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -2903,7 +2906,7 @@ long long HttpRequestController::AutoInvitationClickLog(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2913,7 +2916,7 @@ long long HttpRequestController::GetHangoutStatus(
                                                   HttpRequestManager *pHttpRequestManager,
                                                   IRequestGetHangoutStatusCallback* callback
                                                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetHangoutStatusTask* task = new HttpGetHangoutStatusTask();
     task->Init(pHttpRequestManager);
@@ -2934,7 +2937,7 @@ long long HttpRequestController::GetHangoutStatus(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2944,7 +2947,7 @@ long long HttpRequestController::GetNoReadNumProgram(
                               HttpRequestManager *pHttpRequestManager,
                               IRequestGetNoReadNumProgramCallback* callback
                                                      ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetNoReadNumProgramTask* task = new HttpGetNoReadNumProgramTask();
     task->Init(pHttpRequestManager);
@@ -2965,7 +2968,7 @@ long long HttpRequestController::GetNoReadNumProgram(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -2978,7 +2981,7 @@ long long HttpRequestController::GetProgramList(
                                                 int step,
                                                 IRequestGetProgramListCallback* callback
                                                 ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetProgramListTask* task = new HttpGetProgramListTask();
     task->Init(pHttpRequestManager);
@@ -2999,7 +3002,7 @@ long long HttpRequestController::GetProgramList(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3010,7 +3013,7 @@ long long HttpRequestController::BuyProgram(
                                             const string& liveShowId,
                                             IRequestBuyProgramCallback* callback
                                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpBuyProgramTask* task = new HttpBuyProgramTask();
     task->Init(pHttpRequestManager);
@@ -3031,7 +3034,7 @@ long long HttpRequestController::BuyProgram(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3043,7 +3046,7 @@ long long HttpRequestController::FollowShow(
                                             bool isCancel,
                                             IRequestChangeFavouriteCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpChangeFavouriteTask* task = new HttpChangeFavouriteTask();
     task->Init(pHttpRequestManager);
@@ -3064,7 +3067,7 @@ long long HttpRequestController::FollowShow(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3075,7 +3078,7 @@ long long HttpRequestController::GetShowRoomInfo(
                                                  const string& liveShowId,
                                                  IRequestGetShowRoomInfoCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetShowRoomInfoTask* task = new HttpGetShowRoomInfoTask();
     task->Init(pHttpRequestManager);
@@ -3096,7 +3099,7 @@ long long HttpRequestController::GetShowRoomInfo(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3110,7 +3113,7 @@ long long HttpRequestController::ShowListWithAnchorId(
                                                       ShowRecommendListType sortType,
                                                       IRequestShowListWithAnchorIdTCallback* callback
                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpShowListWithAnchorIdTask* task = new HttpShowListWithAnchorIdTask();
     task->Init(pHttpRequestManager);
@@ -3131,7 +3134,7 @@ long long HttpRequestController::ShowListWithAnchorId(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3150,7 +3153,7 @@ long long HttpRequestController::GetPrivateMsgFriendList(
                  ") \n\n",
                  pHttpRequestManager,
                  this);
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetPrivateMsgFriendListTask* task = new HttpGetPrivateMsgFriendListTask();
     task->Init(pHttpRequestManager);
@@ -3171,7 +3174,7 @@ long long HttpRequestController::GetPrivateMsgFriendList(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3181,7 +3184,7 @@ long long HttpRequestController::GetFollowPrivateMsgFriendList(
                                                                HttpRequestManager *pHttpRequestManager,
                                                                IRequestGetFollowPrivateMsgFriendListCallback* callback
                                                                ){
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetFollowPrivateMsgFriendListTask* task = new HttpGetFollowPrivateMsgFriendListTask();
     task->Init(pHttpRequestManager);
@@ -3202,7 +3205,7 @@ long long HttpRequestController::GetFollowPrivateMsgFriendList(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3217,7 +3220,7 @@ long long HttpRequestController::GetPrivateMsgHistoryById(
                                                           int reqId,
                                                           IRequestGetPrivateMsgHistoryByIdCallback* callback
                                                           ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetPrivateMsgHistoryByIdTask* task = new HttpGetPrivateMsgHistoryByIdTask();
     task->Init(pHttpRequestManager);
@@ -3238,7 +3241,7 @@ long long HttpRequestController::GetPrivateMsgHistoryById(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3250,7 +3253,7 @@ long long HttpRequestController::SetPrivateMsgReaded(
                               const string& msgId,
                               IRequestSetPrivateMsgReadedCallback* callback
                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSetPrivateMsgReadedTask* task = new HttpSetPrivateMsgReadedTask();
     task->Init(pHttpRequestManager);
@@ -3271,7 +3274,7 @@ long long HttpRequestController::SetPrivateMsgReaded(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3281,7 +3284,7 @@ long long HttpRequestController::GetPushConfig(
                         HttpRequestManager *pHttpRequestManager,
                         IRequestGetPushConfigCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetPushConfigTask* task = new HttpGetPushConfigTask();
     task->Init(pHttpRequestManager);
@@ -3302,7 +3305,7 @@ long long HttpRequestController::GetPushConfig(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3313,13 +3316,14 @@ long long HttpRequestController::SetPushConfig(
                         HttpRequestManager *pHttpRequestManager,
                         bool isPriMsgAppPush,
                         bool isMailAppPush,
+                        bool isSayHiAppPush,
                         IRequestSetPushConfigCallback* callback
                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSetPushConfigTask* task = new HttpSetPushConfigTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(isPriMsgAppPush, isMailAppPush);
+    task->SetParam(isPriMsgAppPush, isMailAppPush, isSayHiAppPush);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -3336,7 +3340,7 @@ long long HttpRequestController::SetPushConfig(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3349,7 +3353,7 @@ long long HttpRequestController::GetLoiList(
                                             int step,
                                             IRequestGetLoiListCallback* callback
                                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetLoiListTask* task = new HttpGetLoiListTask();
     task->Init(pHttpRequestManager);
@@ -3370,7 +3374,7 @@ long long HttpRequestController::GetLoiList(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3381,7 +3385,7 @@ long long HttpRequestController::GetLoiDetail(
                                               string loiId,
                                               IRequestGetLoiDetailCallback* callback
                                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetLoiDetailTask* task = new HttpGetLoiDetailTask();
     task->Init(pHttpRequestManager);
@@ -3402,7 +3406,7 @@ long long HttpRequestController::GetLoiDetail(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3416,7 +3420,7 @@ long long HttpRequestController::GetEmfboxList(
                           int step,
                           IRequestGetEmfListCallback* callback
                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetEmfListTask* task = new HttpGetEmfListTask();
     task->Init(pHttpRequestManager);
@@ -3437,7 +3441,7 @@ long long HttpRequestController::GetEmfboxList(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3449,7 +3453,7 @@ long long HttpRequestController::GetEmfDetail(
                                               string emfId,
                                               IRequestGetEmfDetailCallback* callback
                                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetEmfDetailTask* task = new HttpGetEmfDetailTask();
     task->Init(pHttpRequestManager);
@@ -3470,7 +3474,7 @@ long long HttpRequestController::GetEmfDetail(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3486,7 +3490,7 @@ long long HttpRequestController::SendEmf(
                   LSLetterComsumeType comsumeType,
                   IRequestSendEmfCallback* callback
                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSendEmfTask* task = new HttpSendEmfTask();
     task->Init(pHttpRequestManager);
@@ -3507,7 +3511,7 @@ long long HttpRequestController::SendEmf(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3528,7 +3532,7 @@ long long HttpRequestController::UploadLetterPhoto(
                             string fileName,
                             IRequestUploadLetterPhotoCallback* callback
                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpUploadLetterPhotoTask* task = new HttpUploadLetterPhotoTask();
     task->Init(pHttpRequestManager);
@@ -3549,7 +3553,7 @@ long long HttpRequestController::UploadLetterPhoto(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3562,7 +3566,7 @@ long long HttpRequestController::BuyPrivatePhotoVideo(
                                LSLetterComsumeType comsumeType,
                                IRequestBuyPrivatePhotoVideoCallback* callback
                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpBuyPrivatePhotoVideoTask* task = new HttpBuyPrivatePhotoVideoTask();
     task->Init(pHttpRequestManager);
@@ -3583,7 +3587,7 @@ long long HttpRequestController::BuyPrivatePhotoVideo(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3594,7 +3598,7 @@ long long HttpRequestController::GetSendMailPrice(
                                                   int imgNumber,
                                                   IRequestGetSendMailPriceCallback* callback
                                                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetSendMailPriceTask* task = new HttpGetSendMailPriceTask();
     task->Init(pHttpRequestManager);
@@ -3615,7 +3619,7 @@ long long HttpRequestController::GetSendMailPrice(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;
@@ -3626,7 +3630,7 @@ long long HttpRequestController::CanSendEmf(
                                             const string& anchorId,
                                             IRequestCanSendEmfCallback* callback
                                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpCanSendEmfTask* task = new HttpCanSendEmfTask();
     task->Init(pHttpRequestManager);
@@ -3647,7 +3651,268 @@ long long HttpRequestController::CanSendEmf(
         //        mRequestMap.Unlock();
         //
         //        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SayHiConfig(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             IRequestResourceConfigCallback* callback
+                                             ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpResourceConfigTask* task = new HttpResourceConfigTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetSayHiAnchorList(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    IRequestGetSayHiAnchorListCallback* callback
+                                                    ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetSayHiAnchorListTask* task = new HttpGetSayHiAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::IsCanSendSayHi(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string& anchorId,
+                                                IRequestIsCanSendSayHiCallback* callback
+                                                ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpIsCanSendSayHiTask* task = new HttpIsCanSendSayHiTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SendSayHi(
+                                           HttpRequestManager *pHttpRequestManager,
+                                           const string& anchorId,
+                                           int themeId,
+                                           int textId,
+                                           IRequestSendSayHiCallback* callback
+                                           ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSendSayHiTask* task = new HttpSendSayHiTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId, themeId, textId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetAllSayHiList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 int start,
+                                                 int step,
+                                                 IRequestGetAllSayHiListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetAllSayHiListTask* task = new HttpGetAllSayHiListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetResponseSayHiList(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      LSSayHiListType type,
+                                                      int start,
+                                                      int step,
+                                                      IRequestGetResponseSayHiListCallback* callback
+                                                      ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetResponseSayHiListTask* task = new HttpGetResponseSayHiListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SayHiDetail(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             LSSayHiDetailType type,
+                                             const string& sayHiId,
+                                             IRequestSayHiDetailCallback* callback
+                                             ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSayHiDetailTask* task = new HttpSayHiDetailTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, sayHiId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::ReadResponse(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              const string& sayHiId,
+                                              const string& responseId,
+                                              IRequestReadResponseCallback* callback
+                                              ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpReadResponseTask* task = new HttpReadResponseTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(sayHiId, responseId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     }
     
     return requestId;

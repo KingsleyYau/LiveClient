@@ -39,15 +39,18 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="284"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W9L-36-kum" userLabel="Retry Button">
-                            <rect key="frame" x="136" y="130" width="103" height="25"/>
+                            <rect key="frame" x="135.5" y="129.5" width="104" height="26"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <state key="normal" title=" Tap to retry" image="Hangout_Invite_Fail">
                                 <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <state key="highlighted" title=" Tap to retry" image="Hangout_Invite_Fail"/>
+                            <connections>
+                                <action selector="retryListAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="BsD-Ub-Umc"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qNK-Ha-o9I" userLabel="Noyet Button">
-                            <rect key="frame" x="135.5" y="130" width="104" height="25"/>
+                            <rect key="frame" x="135" y="129.5" width="105" height="26"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <state key="normal" title=" No gifts yet" image="Live_No_Yet_Gifts">
                                 <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -100,8 +103,8 @@
         </view>
     </objects>
     <resources>
-        <image name="Hangout_Invite_Fail" width="25" height="25"/>
-        <image name="Live_No_Yet_Gifts" width="25" height="25"/>
+        <image name="Hangout_Invite_Fail" width="26" height="26"/>
+        <image name="Live_No_Yet_Gifts" width="26" height="26"/>
         <image name="button:qNK-Ha-o9I:image" width="25" height="25">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGVVZYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QEgcI

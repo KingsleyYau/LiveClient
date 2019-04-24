@@ -15,6 +15,7 @@
 #import "LSSendinvitationHangoutRequest.h"
 #import "LSCancelInviteHangoutRequest.h"
 #import "LSGetHangoutStatusRequest.h"
+#import "LSGetHangoutInvitStatusRequest.h"
 #import "LSSessionRequestManager.h"
 
 #import "HangOutViewController.h"
@@ -112,6 +113,10 @@ typedef enum {
 - (void)initCustomParam {
     [super initCustomParam];
     
+    self.isShowNavBar = NO;
+    // 禁止导航栏后退手势
+    self.canPopWithGesture = NO;
+    
     self.loginManager = [LSLoginManager manager];
     
     self.imManager = [LSImManager manager];
@@ -176,12 +181,10 @@ typedef enum {
     }
     self.collectionViewWidth.constant = self.anchorArray.count * 100;
     [self.collectionView reloadData];
-    // 禁止导航栏后退手势
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     if (self.roomId.length > 0 && self.roomId != nil) {
         // 进入房间
-        [self enterHangoutRoom:self.roomId];
+        [self enterHangoutRoom:self.roomId isCreateOnly:NO];
     } else {
         // 请求数据
         [self getHangoutStatus];
@@ -190,10 +193,6 @@ typedef enum {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // 隐藏导航栏
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
     
     if (!self.viewDidAppearEver) {
         [self startHandleTimer];
@@ -214,21 +213,26 @@ typedef enum {
 - (void)getHangoutStatus {
     self.preType = HANGOUT_PERIOD_GETSTATUS;
     // TODO:获取当前会员hangout直播状态
+    WeakObject(self, weakSelf);
     LSGetHangoutStatusRequest *request = [[LSGetHangoutStatusRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSHangoutStatusItemObject *> *list) {
         NSLog(@"HangOutPreViewController::getHangoutStatus ([获取当前会员hangout直播状态] success : %@, errnum : %d, errmsg : %@,)", BOOL2SUCCESS(success), errnum, errmsg);
-        WeakObject(self, weakSelf);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.exitLeftSecond > 0) {
                 if (errnum == HTTP_LCC_ERR_EXIST_HANGOUT) {
                     
-                    LSHangoutStatusItemObject *obj = list.firstObject;
-                    NSLog(@"HangOutPreViewController::HangoutStatus (anchorList : %lu)",(unsigned long)obj.anchorList.count);
-                    
                     weakSelf.status = list;
-                    [weakSelf showHttpErrorType:errnum tip:errmsg];
+                    LSHangoutStatusItemObject *obj = weakSelf.status.firstObject;
+                    
+                    NSLog(@"HangOutPreViewController::HangoutStatus (roomid : %@, anchorListCount : %lu)",obj.liveRoomId,(unsigned long)obj.anchorList.count);
+                    
+                    if (obj.anchorList.count > 0) {
+                        [weakSelf showHttpErrorType:errnum tip:errmsg];
+                    } else {
+                        [weakSelf enterHangoutRoom:weakSelf.roomId isCreateOnly:YES];
+                    }
                 } else {
-                    [weakSelf enterHangoutRoom:weakSelf.roomId];
+                    [weakSelf enterHangoutRoom:weakSelf.roomId isCreateOnly:YES];
                 }
             }
         });
@@ -236,16 +240,16 @@ typedef enum {
     [self.sessionManager sendRequest:request];
 }
 
-- (void)enterHangoutRoom:(NSString *)roomId {
+- (void)enterHangoutRoom:(NSString *)roomId isCreateOnly:(BOOL)isCreateOnly {
     // TODO:观众新建/进入多人互动直播间
     self.preType = HANGOUT_PERIOD_ENTERING;
     if (!roomId.length) {
         roomId = @"";
         self.preType = HANGOUT_PERIOD_ENTERNEW;
     }
-    BOOL bFlag = [self.imManager enterHangoutRoom:roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull item) {
-        NSLog(@"HangOutPreViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", BOOL2SUCCESS(success), errType, errMsg, item.roomId);
-        WeakObject(self, weakSelf);
+    WeakObject(self, weakSelf);
+    BOOL bFlag = [self.imManager enterHangoutRoom:roomId isCreateOnly:isCreateOnly finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull item) {
+        NSLog(@"HangOutPreViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ isCreateOnly : %d )", BOOL2SUCCESS(success), errType, errMsg, item.roomId, isCreateOnly);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.exitLeftSecond > 0) {
                 if (success) {
@@ -288,7 +292,7 @@ typedef enum {
                     } else {
                         if (item.roomId.length > 0) {
                             weakSelf.roomId = item.roomId;
-                            [weakSelf sendHangoutInvite];
+                            [weakSelf sendHangoutInvite:NO];
                         }
                     }
                 } else {
@@ -303,17 +307,18 @@ typedef enum {
     }
 }
 
-- (void)sendHangoutInvite {
+- (void)sendHangoutInvite:(BOOL)isCreateOnly {
     // TODO:发起多人互动邀请
     self.preType = HANGOUT_PERIOD_INVITING;
+    WeakObject(self, weakSelf);
     LSSendinvitationHangoutRequest *request = [[LSSendinvitationHangoutRequest alloc] init];
     request.roomId = self.roomId;
     request.anchorId = self.inviteAnchorId;
     request.recommendId = nil;
+    request.isCreateOnly = isCreateOnly;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, NSString * _Nonnull inviteId, int expire) {
         NSLog(@"HangOutPreViewController::sendHangoutInvite( [发起多人互动邀请 %@] errnum : %d, errmsg : %@,"
-              "roomId : %@, inviteId : %@, erpire : %d )", BOOL2SUCCESS(success), errnum, errmsg, roomId, inviteId, expire);
-        WeakObject(self, weakSelf);
+              "roomId : %@, inviteId : %@, erpire : %d isCreateOnly : %d )", BOOL2SUCCESS(success), errnum, errmsg, roomId, inviteId, expire, isCreateOnly);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.exitLeftSecond > 0) {
                 if (success) {
@@ -338,10 +343,90 @@ typedef enum {
     [self.sessionManager sendRequest:request];
 }
 
+- (void)getHangoutInviteStatu {
+    // TODO:查询Hangout邀请状态
+    WeakObject(self, weakSelf);
+    if (self.inviteId.length > 0 && self.preType == HANGOUT_PERIOD_INVITING) {
+        LSGetHangoutInvitStatusRequest *request = [[LSGetHangoutInvitStatusRequest alloc] init];
+        request.inviteId = self.inviteId;
+        request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, HangoutInviteStatus status, NSString *_Nonnull roomId, int expire) {
+            NSLog(@"HangOutPreViewController::getHangoutInviteStatu( [查询多人互动邀请状态] success : %@, errnum : %d, errmsg : %@,"
+                  "status : %d, roomId : %@, expire : %d )",
+                  BOOL2SUCCESS(success), errnum, errmsg, status, roomId, expire);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (success) {
+                    if ([weakSelf.roomId isEqualToString:roomId]) {
+                        weakSelf.inviteAnchor = [[IMLivingAnchorItemObject alloc] init];
+                        weakSelf.inviteAnchor.anchorId = weakSelf.inviteAnchorId;
+                        weakSelf.inviteAnchor.nickName = weakSelf.inviteAnchorName;
+                        weakSelf.inviteAnchor.anchorStatus = LIVEANCHORSTATUS_UNKNOW;
+                        weakSelf.inviteAnchor.inviteId = weakSelf.inviteId;
+                        weakSelf.inviteAnchor.leftSeconds = 0;
+                        weakSelf.inviteAnchor.loveLevel = 0;
+                        
+                        switch (status) {
+                            // 同意 直接进入直播间
+                            case IMREPLYINVITETYPE_AGREE: {
+                                HangOutViewController *vc = [[HangOutViewController alloc] initWithNibName:nil bundle:nil];
+                                [vc anchorArrayAddObject:weakSelf.inviteAnchor];
+                                weakSelf.liveRoom.roomId = roomId;
+                                vc.liveRoom = weakSelf.liveRoom;
+                                vc.inviteAnchorId = weakSelf.inviteAnchorId;
+                                vc.inviteAnchorName = weakSelf.inviteAnchorName;
+                                self.hangoutVC = vc;
+                                [weakSelf.navigationController pushViewController:vc animated:YES];
+                                
+                            } break;
+                                
+                            // 拒绝/超时
+                            case IMREPLYINVITETYPE_REJECT:
+                            case IMREPLYINVITETYPEE_OUTTIME:{
+                                NSString *errmsg = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITE_REJECT"),weakSelf.inviteAnchorName];
+                                [weakSelf showErrorType:0 tip:errmsg];
+                            }break;
+                                
+                            // 没钱
+                            case IMREPLYINVITETYPE_NOCREDIT:{
+                                [weakSelf showErrorType:LCC_ERR_NO_CREDIT tip:NSLocalizedStringFromSelf(@"NO_CREDIT")];
+                            }break;
+                                
+                            // 主播忙
+                            case IMREPLYINVITETYPE_BUSY:{
+                                [weakSelf showErrorType:0 tip:NSLocalizedStringFromSelf(@"INVITE_BUSY")];
+                            }break;
+                                
+                            default:{
+                            }break;
+                        }
+                    }
+                }
+            });
+        };
+        [self.sessionManager sendRequest:request];
+    }
+}
+
+#pragma mark - IM通知
+- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ImLoginReturnObject *)item {
+    NSLog(@"HangOutPreViewController::onLogin( [IM登陆, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+    });
+}
+
+- (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
+    NSLog(@"HangOutViewController::onLogout( [IM注销通知], errType : %d, errmsg : %@ )", errType, errmsg);
+}
+
 - (void)onRecvDealInviteHangoutNotice:(IMRecvDealInviteItemObject *)item {
     NSLog(@"HangOutPreViewController::onRecvDealInviteHangoutNotice( [接收主播回复观众多人互动邀请通知] invteId : %@, roomId : %@,"
           "anchorId : %@, type : %d)", item.inviteId, item.roomId, item.anchorId, item.type);
-    BOOL isEquelAnchorId = [item.anchorId isEqualToString:self.inviteAnchorId];
+    BOOL isEquelAnchorId = NO;
+    if (self.hangoutAnchorId.length > 0 && ![self.hangoutAnchorId isEqualToString:@""]) {
+        isEquelAnchorId = [item.anchorId isEqualToString:self.hangoutAnchorId];
+    } else {
+        isEquelAnchorId = [item.anchorId isEqualToString:self.inviteAnchorId];
+    }
     BOOL isEquelRoomId = [item.roomId isEqualToString:self.roomId];
     if (isEquelAnchorId && isEquelRoomId) {
         self.inviteAnchor = [[IMLivingAnchorItemObject alloc] init];
@@ -353,8 +438,9 @@ typedef enum {
         self.inviteAnchor.leftSeconds = 0;
         self.inviteAnchor.loveLevel = 0;
         
+        WeakObject(self, weakSelf);
         dispatch_async(dispatch_get_main_queue(), ^{
-            WeakObject(self, weakSelf);
+            
             if (weakSelf.exitLeftSecond > 0) {
                 [weakSelf stopHandleTimer];
                 
@@ -582,8 +668,8 @@ typedef enum {
         tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITE_ANCHOR"),self.inviteAnchorName];
     }
     [self resetView:YES tip:tip];
-    self.roomId = nil;
-    [self enterHangoutRoom:self.roomId];
+    self.roomId = @"";
+    [self enterHangoutRoom:self.roomId isCreateOnly:YES];
 }
 
 - (IBAction)closeAction:(id)sender {
@@ -591,6 +677,11 @@ typedef enum {
     
     if (self.inviteId.length > 0 && self.preType == HANGOUT_PERIOD_INVITING) {
         [self sendCancelHangoutInvit];
+    }
+    if (self.roomId.length > 0) {
+        [[LSImManager manager] leaveHangoutRoom:self.roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg) {
+            NSLog(@"HangOutPreViewController::leaveHangoutRoom - closeAction[退出旧的多人互动直播间 %@]",BOOL2SUCCESS(success));
+        }];
     }
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
     [nvc forceToDismissAnimated:YES completion:nil];
@@ -611,8 +702,6 @@ typedef enum {
     LSHangoutStatusItemObject *obj = self.status.firstObject;
     self.roomId = obj.liveRoomId;
     
-    NSLog(@"HangOutPreViewController::goMyRoomAction (anchorList : %lu)",(unsigned long)obj.anchorList.count);
-    
     NSString *tip;
     for (int index = 0; index < obj.anchorList.count; index++) {
         LSFriendsInfoItemObject *item = obj.anchorList[index];
@@ -621,7 +710,12 @@ typedef enum {
         anchor.nickName = item.nickName;
         [self.anchorArray addObject:anchor];
     
+        NSLog(@"HangOutPreViewController::goMyRoomAction (anchorIndex : %d, anchorID : %@)",index, item.anchorId);
+        
         if (index == 0) {
+            // 重置邀请主播ID 防止进入直播间发起错误邀请
+            self.inviteAnchorId = item.anchorId;
+            
             tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITE_ANCHOR"),item.nickName];
             // 重新赋值邀请名称
             if (self.hangoutAnchorName.length > 0 && ![self.hangoutAnchorName isEqualToString:@""]) {
@@ -631,11 +725,12 @@ typedef enum {
             }
         }
     }
+    
     self.collectionViewWidth.constant = self.anchorArray.count * 100;
     [self.collectionView reloadData];
     [self resetView:YES tip:tip];
     
-    [self enterHangoutRoom:self.roomId];
+    [self enterHangoutRoom:self.roomId isCreateOnly:NO];
 }
 
 - (IBAction)startNewRoomAction:(id)sender {
@@ -650,7 +745,7 @@ typedef enum {
     }
     [self resetView:YES tip:tip];
     
-    [self enterHangoutRoom:self.roomId];
+    [self enterHangoutRoom:self.roomId isCreateOnly:YES];
 }
 
 @end

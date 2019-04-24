@@ -9,6 +9,7 @@
 #import "MainNotificaitonCell.h"
 #import "QNChatTextAttachment.h"
 #import "LSMainNotificationManager.h"
+#import "LSShadowView.h"
 @implementation MainNotificaitonCell
 
 - (void)awakeFromNib {
@@ -45,45 +46,27 @@
     self.imageViewLoader = [LSImageViewLoader loader];
     
     // 加载
-    [self.imageViewLoader loadImageWithImageView:self.chatHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.imageViewLoader loadImageWithImageView:self.chatHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
     
     self.chatName.text = item.userName;
     
-    [self updateNameFrame:item.userName];
+    [self updateNameFrame:item.userName isChat:YES];
     
-//    NSString * newStr = @"";
-//    //是否inChat
-//    if (item.isInChat) {
-//        self.msgStatus.text = @"[New]";
-//        [self updateMsgFrame:self.msgStatus.text];
-//        self.chatName.textColor = Color(252, 91, 7, 255);
-//        self.onlineImage.image = [UIImage imageNamed:@"LS_ChatList_InChatIcon"];
-//    }
-//    else
-//    {
-//        self.msgStatus.text = @"[Invitation]";
-//        [self updateMsgFrame:self.msgStatus.text];
-//        self.chatName.textColor = [UIColor blackColor];
-//        self.onlineImage.image = nil;
-//    }
-    
-   // self.chatMsg.attributedText = [self parseMessageTextEmotion:item.contentStr newMessage:newStr font:self.chatMsg.font];
-    
-    self.chatMsg.text = item.contentStr;
-    
+    self.chatMsg.attributedText = [self parseMessageTextEmotion:item.contentStr font:self.chatMsg.font];
+        
     self.countdownLabel.text = @"Chat Now";
-    
+    self.colorView.image = nil;
     self.colorView.backgroundColor = COLOR_WITH_16BAND_RGB(0x21A225);
     self.scheduledTimeView.backgroundColor = COLOR_WITH_16BAND_RGB(0x5BC563);
 }
 
 - (void)loadLiveNotificationViewUI:(LSMainNotificaitonModel *)item {
+    [[LSImageViewLoader loader] loadImageWithImageView:self.liveHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
     
-    [[LSImageViewLoader loader] loadImageWithImageView:self.liveHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
-    
-    [[LSImageViewLoader loader] loadImageWithImageView:self.liveFriendHead options:SDWebImageRefreshCached imageUrl:item.friendUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [[LSImageViewLoader loader] loadImageWithImageView:self.liveFriendHead options:SDWebImageRefreshCached imageUrl:item.friendUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
     
     self.liveName.text = [NSString stringWithFormat:@"%@'s circle",item.userName];
+    [self updateNameFrame:self.liveName.text isChat:NO];
     
     self.liveMsg.text = item.contentStr;
     
@@ -93,39 +76,46 @@
     msgRect.size.width = self.tx_width - msgRect.origin.x - self.scheduledTimeView.tx_width - 20;
     self.liveMsg.frame = msgRect;
     
-    self.colorView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFC1615);
+ 
+    self.colorView.backgroundColor = [UIColor clearColor];
+    self.colorView.image = [self gradientImageWithBounds:self.colorView.bounds andColors:@[COLOR_WITH_16BAND_RGB(0xFF5756),COLOR_WITH_16BAND_RGB(0xFF8500)] andGradientType:1];
+    
     self.scheduledTimeView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFDAC0D);
 }
 
-- (void)updateNameFrame:(NSString *)name
+- (void)updateNameFrame:(NSString *)name isChat:(BOOL)isChat
 {
-    CGSize nameSize = CGSizeMake(screenSize.width, self.chatName.frame.size.height);
-    
-    CGRect rect = [name boundingRectWithSize:nameSize options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : self.chatName.font} context:nil];
-    
-    CGFloat w =  ceil(rect.size.width);
-    
-    CGRect nameRect = self.chatName.frame;
-    nameRect.size.width = w + 10;
-    self.chatName.frame = nameRect;
-    
-    CGRect msgRect = self.chatMsg.frame;
-    msgRect.size.width = self.tx_width - msgRect.origin.x - self.scheduledTimeView.tx_width - 20;
-    self.chatMsg.frame = msgRect;
+    if (isChat) {
+        CGRect nameRect = self.chatName.frame;
+        nameRect.size.width = self.tx_width - (self.chatHead.tx_width +self.chatHead.tx_x) - self.scheduledTimeView.tx_width - 20;
+        self.chatName.frame = nameRect;
+        
+        CGRect msgRect = self.chatMsg.frame;
+        msgRect.size.width = self.tx_width - self.chatMsg.tx_x - self.scheduledTimeView.tx_width - 20;
+        self.chatMsg.frame = msgRect;
+    }else {
+        CGRect nameRect = self.liveName.frame;
+        nameRect.size.width = self.tx_width - (self.liveFriendHead.tx_width +self.liveFriendHead.tx_x) - self.scheduledTimeView.tx_width - 20;
+        self.liveName.frame = nameRect;
+        
+        CGRect msgRect = self.liveMsg.frame;
+        msgRect.size.width = self.tx_width - self.liveMsg.tx_x - self.scheduledTimeView.tx_width - 20;
+        self.liveMsg.frame = msgRect;
+    }
 }
 
-- (void)updateMsgFrame:(NSString *)msg {
-    CGFloat msgStatusW = [msg sizeWithAttributes:@{NSFontAttributeName:self.msgStatus.font}].width;
-    CGRect msgStatusWRect = self.msgStatus.frame;
-    msgStatusWRect.size.width = msgStatusW;
-    self.msgStatus.frame = msgStatusWRect;
-    
-
-    CGRect msgRect = self.chatMsg.frame;
-    msgRect.origin.x = msgStatusWRect.origin.x + msgStatusW;
-    msgRect.size.width = screenSize.width - msgRect.origin.x - 40;
-    self.chatMsg.frame = msgRect;
-}
+//- (void)updateMsgFrame:(NSString *)msg {
+//    CGFloat msgStatusW = [msg sizeWithAttributes:@{NSFontAttributeName:self.msgStatus.font}].width;
+//    CGRect msgStatusWRect = self.msgStatus.frame;
+//    msgStatusWRect.size.width = msgStatusW;
+//    self.msgStatus.frame = msgStatusWRect;
+//
+//
+//    CGRect msgRect = self.chatMsg.frame;
+//    msgRect.origin.x = msgStatusWRect.origin.x + msgStatusW;
+//    msgRect.size.width = screenSize.width - msgRect.origin.x - 40;
+//    self.chatMsg.frame = msgRect;
+//}
 
 - (void)startCountdown:(NSInteger)time {
     
@@ -151,7 +141,7 @@
 }
 
 #pragma mark - 自动替换表情
-- (NSAttributedString *)parseMessageTextEmotion:(NSString *)text newMessage:(NSString *)message font:(UIFont *)font {
+- (NSAttributedString *)parseMessageTextEmotion:(NSString *)text font:(UIFont *)font {
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
     if (text != nil) {
         attributeString = [[NSMutableAttributedString alloc] initWithString:text];
@@ -204,14 +194,42 @@
     }
     
     [attributeString addAttributes:@{NSFontAttributeName : font} range:NSMakeRange(0, attributeString.length)];
-    
-    NSMutableAttributedString *newString = [[NSMutableAttributedString alloc] initWithString:message];
-    
-    [newString appendAttributedString:attributeString];
-    
-    [newString addAttribute:NSForegroundColorAttributeName value:Color(252, 91, 7, 255) range:[newString.string rangeOfString:message]];
-    
-    return newString;
+
+    return attributeString;
     
 }
+
+- (UIImage*)gradientImageWithBounds:(CGRect)bounds andColors:(NSArray*)colors andGradientType:(int)gradientType{
+    NSMutableArray *ar = [NSMutableArray array];
+    
+    for(UIColor *c in colors) {
+        [ar addObject:(id)c.CGColor];
+    }
+    UIGraphicsBeginImageContextWithOptions(bounds.size, YES, 1);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGColorSpaceRef colorSpace = CGColorGetColorSpace([[colors lastObject] CGColor]);
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)ar, NULL);
+    CGPoint start;
+    CGPoint end;
+    
+    switch (gradientType) {
+        case 0:
+            start = CGPointMake(0.0, 0.0);
+            end = CGPointMake(0.0, bounds.size.height);
+            break;
+        case 1:
+            start = CGPointMake(0.0, 0.0);
+            end = CGPointMake(bounds.size.width, 0.0);
+            break;
+    }
+    CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    CGGradientRelease(gradient);
+    CGContextRestoreGState(context);
+    CGColorSpaceRelease(colorSpace);
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 @end

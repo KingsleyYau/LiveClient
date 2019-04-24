@@ -11,7 +11,7 @@
 typedef enum {
     MsgStatus_Chat = 0,
     MsgStatus_Hangout
-} MsgType;
+} NotifiMsgType;
 
 @interface LSMainNotificaitonModel : NSObject
 
@@ -21,8 +21,9 @@ typedef enum {
 @property (nonatomic, copy) NSString * friendUrl;
 @property (nonatomic, copy) NSString * userName;
 @property (nonatomic, copy) NSString * contentStr;
-@property (nonatomic, assign) MsgType msgType;
+@property (nonatomic, assign) NotifiMsgType msgType;
 @property (nonatomic, assign) NSInteger createTime;
+@property (nonatomic, assign) BOOL isAuto;
 @end
 
 

@@ -136,6 +136,23 @@ static LSFileCacheManager *gManager = nil;
     }
 }
 
+- (NSString *)imageUploadSCompressSizeCachePath:(UIImage *)image fileName:(NSString *)fileName {
+    NSData *data = nil;
+    
+    data = [self imageCompressForSize:image];
+    
+    NSString *path = [[self cacheDirectory] stringByAppendingPathComponent:@"uploadImage/"];
+    if (data && [self createDirectory:path]) {
+        NSString *uploadPath = [path stringByAppendingPathComponent:fileName];
+        [data writeToFile:uploadPath atomically:YES];
+        return uploadPath;
+    } else {
+        return nil;
+    }
+}
+
+
+
 #pragma mark - 大礼物缓存目录
 - (NSString *)bigGiftCachePathWithGiftId:(NSString *)giftId {
     NSString *filePath = nil;
@@ -280,5 +297,23 @@ static LSFileCacheManager *gManager = nil;
         success = [fileManager removeItemAtPath:path error:nil];
     }
     return success;
+}
+
+
+- (NSData *)imageCompressForSize:(UIImage *)sourceImage {
+  
+    //进行图像文件的大小
+    NSData *data = UIImageJPEGRepresentation(sourceImage, 1.0);
+    static NSInteger MaxImageSize = 5 * 1024 * 1024;
+    CGFloat compress = 1.0;
+    for (int i = 10; i >= 0; i--) {
+        compress = 1.0 * i / 10;
+        data = UIImageJPEGRepresentation(sourceImage, compress);
+        if (data.length < MaxImageSize) {
+            break;
+        }
+    }
+    
+    return data;
 }
 @end

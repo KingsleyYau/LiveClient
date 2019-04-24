@@ -124,8 +124,9 @@ public:
     virtual void OnCheckCamCoupon(bool success, const string& errNo, const string& errMsg, const string& userId, CouponStatus status, int couponTime) = 0;
     virtual void OnUseCamCoupon(LSLIVECHAT_LCC_ERR_TYPE errType, const string& errmsg, const string& userId) = 0;
     
-    // test
+    // 根据http的接口错误码是token过期回调到上层处理
     virtual void OnTokenOverTimeHandler(const string& errNo, const string& errmsg) = 0;
+    
 };
 
 class LSLiveChatHttpRequestManager;
@@ -157,7 +158,7 @@ public:
                     , double minCamshareBalance
 					, ILSLiveChatManManagerListener* listener) = 0;
 	// 登录
-	virtual bool Login(const string& userId, const string& userName, const string& sid, CLIENT_TYPE clientType, const list<string>& cookies, const string& deviceId, bool isRecvVideoMsg, LIVECHATINVITE_RISK_TYPE riskType, bool liveChatRisk, bool camShareRisk) = 0;
+	virtual bool Login(const string& userId, const string& userName, const string& sid, CLIENT_TYPE clientType, const list<string>& cookies, const string& deviceId, LIVECHATINVITE_RISK_TYPE riskType, bool liveChatRisk, bool camShareRisk, bool isSendPhotoPriv, bool liveChatPriv, bool isSendVoicePriv) = 0;
 	// 注销
 	virtual bool Logout(bool isResetParam) = 0;
     // 重新登录
@@ -168,6 +169,8 @@ public:
     virtual bool IsGetHistory() = 0;
     // 获取原始socket
     virtual int GetSocket() = 0;
+    // 根据错误码判断是否时余额不足
+    virtual bool IsNoMoneyWithErrCode(const string& errCode) = 0;
     
 	// ---------- 会话操作 ----------
 	// 检测是否可使用试聊券
@@ -216,6 +219,8 @@ public:
     virtual bool GetOtherUserLastRecvMessage(const string& userId, LSLCMessageItem& message) = 0;
     // 获取用户最后一条聊天消息(返回MessageItem类型，不是指针，防止LCMessageItem转换OC类型时，指针被其他线程清除记录)
     virtual bool GetOtherUserLastMessage(const string& userId, LSLCMessageItem& messageItem) = 0;
+    // 获取用户的私密照和视频的消息
+    virtual LCMessageList GetPrivateAndVideoMessageList(const string& userId) = 0;
 
 	// -------- 文本消息 --------
 	// 发送文本消息
@@ -253,7 +258,7 @@ public:
 	// 购买图片（包括付费购买图片(php)）
 	//virtual bool PhotoFee(const string& userId, int msgId) = 0;
     // 购买图片（包括付费购买图片(php)）
-    virtual bool PhotoFee(const string& userId, const string& photoId) = 0;
+    virtual bool PhotoFee(const string& userId, const string& photoId, const string& inviteId) = 0;
 	// 根据消息ID获取图片(模糊或清晰)（包括获取/下载对方私密照片(php)、显示图片(livechat)）    
     virtual bool GetPhoto(const string& userId, const string& photoId, GETPHOTO_PHOTOSIZE_TYPE sizeType, SendType sendType) = 0;
     // 检查私密照片是否已付费
@@ -263,9 +268,9 @@ public:
 	// 获取微视频图片
 	virtual bool GetVideoPhoto(const string& userId, const string& videoId, const string& inviteId) = 0;
 	// 购买微视频
-	virtual bool VideoFee(const string& userId, int msgId) = 0;
+	virtual bool VideoFee(const string& userId, const string& videoId, const string& inviteId) = 0;
 	// 获取微视频播放文件
-	virtual bool GetVideo(const string& userId, const string& videoId, const string& inviteId, const string& videoUrl) = 0;
+	virtual bool GetVideo(const string& userId, const string& videoId, const string& inviteId, const string& videoUrl, int msgId) = 0;
 	// 获取视频当前下载状态
 	virtual bool IsGetingVideo(const string& videoId) = 0;
 	// 获取视频图片文件路径（仅文件存在）

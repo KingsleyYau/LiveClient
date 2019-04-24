@@ -59,11 +59,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // 设置不被NavigationBar和TabBar遮挡
-    self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-
     if (self.items.count == 0) {
         [self.tableView startPullDown:YES];
     }

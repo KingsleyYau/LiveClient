@@ -34,6 +34,8 @@
 @implementation LiveFinshViewController
 - (void)initCustomParam {
     [super initCustomParam];
+    
+    self.isShowNavBar = NO;
 }
 
 - (void)dealloc {
@@ -66,19 +68,24 @@
     self.headImageView.layer.cornerRadius = 49;
     self.headImageView.layer.masksToBounds = YES;
 
-    [self.ladyImageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-    }];
+    [self.ladyImageLoader loadImageFromCache:self.headImageView
+                                     options:SDWebImageRefreshCached
+                                    imageUrl:self.liveRoom.photoUrl
+                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                               finishHandler:^(UIImage *image){
+                               }];
 
     [self.backgroundImageloader loadImageWithImageView:self.backgroundImageView
                                                options:0
                                               imageUrl:self.liveRoom.roomPhotoUrl
                                       placeholderImage:
-                                          nil];
+                                          nil
+                                         finishHandler:nil];
 
-   // if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
-        self.nameLabel.hidden = NO;
-        self.nameLabel.text = self.liveRoom.userName;
-   // }
+    // if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
+    self.nameLabel.hidden = NO;
+    self.nameLabel.text = self.liveRoom.userName;
+    // }
 }
 
 #pragma mark - 根据错误码显示界面
@@ -99,7 +106,7 @@
             self.tipLabel.text = NSLocalizedStringFromSelf(@"WATCHING_ERR_ADD_CREDIT");
         } break;
 
-            // TODO:2 退入后台60s超时
+        // TODO:2 退入后台60s超时
         case LCC_ERR_BACKGROUND_TIMEOUT: {
             self.recommandView.hidden = YES;
             self.bookPrivateBtn.hidden = YES;
@@ -149,8 +156,7 @@
             self.viewHotBtn.hidden = YES;
             self.addCreditBtn.hidden = YES;
             self.tipLabel.text = self.errMsg;
-        }
-            break;
+        } break;
         default: {
             // 默认正常结束页
             [self reportDidShowPage:0];
@@ -165,10 +171,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    // 隐藏导航栏
-    self.navigationController.navigationBar.hidden = YES;
-
     [self handleError:self.errType errMsg:self.errMsg];
 }
 
@@ -201,7 +203,6 @@
 #pragma mark - 请求推荐节目
 - (void)getRecommendedShow {
     NSLog(@"LiveFinshViewController::getRecommendedShow [请求推荐节目]");
-    WeakObject(self, weakSelf);
     LSShowListWithAnchorIdRequest *request = [[LSShowListWithAnchorIdRequest alloc] init];
     request.start = 0;
     request.step = 1;
@@ -211,9 +212,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"LiveFinshViewController::getRecommendedShow [请求推荐节目] success : %@, errmsg : %@, promoNum : %lu", success ? @"成功" : @"失败", errmsg, array.count);
             if (success && array.count > 0) {
-                weakSelf.showItem = [array objectAtIndex:0];
-                weakSelf.showView.hidden = NO;
-                [weakSelf.showView updateUI:weakSelf.showItem];
+                self.showItem = [array objectAtIndex:0];
+                self.showView.hidden = NO;
+                [self.showView updateUI:self.showItem];
             }
         });
     };
@@ -225,7 +226,6 @@
 - (void)getAdvisementList {
 
     NSLog(@"LiveFinshViewController::getAdvisementList [请求推荐列表]");
-    WeakObject(self, weakSelf);
     // TODO:获取推荐列表
     GetPromoAnchorListRequest *request = [[GetPromoAnchorListRequest alloc] init];
     request.number = 2;
@@ -236,8 +236,8 @@
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 刷新推荐列表
-                weakSelf.recommandItems = array;
-                [weakSelf reloadRecommandView];
+                self.recommandItems = array;
+                [self reloadRecommandView];
             });
         }
     };
@@ -262,11 +262,12 @@
 
     cell.imageView.image = nil;
     [cell.imageViewLoader stop];
-    [cell.imageViewLoader refreshCachedImage:cell.imageView
+    [cell.imageViewLoader loadImageFromCache:cell.imageView
                                      options:SDWebImageRefreshCached
                                     imageUrl:item.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-                            }];
+                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                               finishHandler:^(UIImage *image){
+                               }];
 
     cell.nameLabel.text = item.nickName;
 

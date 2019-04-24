@@ -88,4 +88,8 @@
 // 更新子视图界面显示
 - (void)upDateChildView:(NSString *)anchorId;
 
+
+// 关闭/开启直播间声音(LiveChat使用)
+- (void)openOrCloseSuond:(BOOL)isClose;
+
 @end

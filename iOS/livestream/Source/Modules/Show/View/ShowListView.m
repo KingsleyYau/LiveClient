@@ -84,7 +84,7 @@
     if (!self.imageViewLoader) {
         self.imageViewLoader = [LSImageViewLoader loader];
     }
-    [self.imageViewLoader refreshCachedImage:self.headImage options:0 imageUrl:item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageViewLoader loadImageFromCache:self.headImage options:0 imageUrl:item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
 
     [self.bgImageViewLoader stop];
@@ -92,7 +92,7 @@
         self.bgImageViewLoader = [LSImageViewLoader loader];
     }
 
-    [self.bgImageViewLoader loadImageWithImageView:self.showBGView options:0 imageUrl:item.cover placeholderImage:[UIImage imageNamed:@"ShowBG"]];
+    [self.bgImageViewLoader loadImageWithImageView:self.showBGView options:0 imageUrl:item.cover placeholderImage:[UIImage imageNamed:@"ShowBG"] finishHandler:nil];
 
     self.showBGView.layer.masksToBounds = YES;
  

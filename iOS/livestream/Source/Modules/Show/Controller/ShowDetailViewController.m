@@ -36,12 +36,6 @@
     self.isShowTaBar = YES;
     self.isFirstProgram = YES;
     
-    if (@available(iOS 11, *)) {
-        self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }else {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
-
     NSString *webSiteUrl = [LSConfigManager manager].item.showDetailPage;
     if ([webSiteUrl containsString:@"?"]) {
        webSiteUrl = [NSString stringWithFormat:@"%@&live_show_id=%@",webSiteUrl,self.item.showLiveId];
@@ -54,8 +48,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.hidden = NO;
 }
 
 - (void)setupRequestWebview {

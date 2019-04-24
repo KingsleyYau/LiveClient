@@ -17,6 +17,7 @@
  * messageNoreadNum             私信未读数量
  * bookingNoreadNum             预约未读数量
  * backpackNoreadNum            背包未读数量
+ * sayHiNoreadNum               sayhi未读数量
  */
 @property (nonatomic, assign) int ticketNoreadNum;
 @property (nonatomic, assign) int loiNoreadNum;
@@ -24,5 +25,6 @@
 @property (nonatomic, assign) int messageNoreadNum;
 @property (nonatomic, assign) int bookingNoreadNum;
 @property (nonatomic, assign) int backpackNoreadNum;
+@property (nonatomic, assign) int sayHiNoreadNum;
 
 @end

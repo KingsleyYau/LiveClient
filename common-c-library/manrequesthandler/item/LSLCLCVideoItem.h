@@ -18,57 +18,34 @@ using namespace std;
 
 class LSLCVideoItem {
 public:
-	void Parse(TiXmlNode* node) {
-		const char *p = NULL;
-		TiXmlElement* itemElement;
+	void Parse(Json::Value root) {
 
-		// 视频ID
-		TiXmlNode* videoidNode = node->FirstChild(LC_RECENT_VIDEO_VIDEOID);
-		if( videoidNode != NULL ) {
-			itemElement = videoidNode->ToElement();
-			if ( itemElement != NULL ) {
-				p = itemElement->GetText();
-				if( p != NULL ) {
-					videoid = p;
-				}
-			}
-		}
+        if (root.isObject()) {
+            
+            // 视频ID
+            if (root[LC_RECENT_VIDEO_VIDEOID].isString()) {
+                videoid = root[LC_RECENT_VIDEO_VIDEOID].asString();
+            }
+            
+            // 视频标题
+            if (root[LC_RECENT_VIDEO_TITLE].isString()) {
+                title = root[LC_RECENT_VIDEO_TITLE].asString();
+            }
+            
+            // 邀请ID
+            if (root[LC_RECENT_VIDEO_INVITEID].isString()) {
+                inviteid = root[LC_RECENT_VIDEO_INVITEID].asString();
+            }
+            // 视频url
+            if (root[LC_RECENT_VIDEO_VIDEO_URL].isString()) {
+                video_url = root[LC_RECENT_VIDEO_VIDEO_URL].asString();
+            }
+            // 视频url
+            if (root[LC_RECENT_VIDEO_VIDEO_COVER].isString()) {
+                videoCover = root[LC_RECENT_VIDEO_VIDEO_COVER].asString();
+            }
+        }
 
-		// 视频标题
-		TiXmlNode* titleNode = node->FirstChild(LC_RECENT_VIDEO_TITLE);
-		if( titleNode != NULL ) {
-			itemElement = titleNode->ToElement();
-			if ( itemElement != NULL ) {
-				p = itemElement->GetText();
-				if( p != NULL ) {
-					title = p;
-				}
-			}
-		}
-
-		// 邀请ID
-		TiXmlNode* inviteidNode = node->FirstChild(LC_RECENT_VIDEO_INVITEID);
-		if( inviteidNode != NULL ) {
-			itemElement = inviteidNode->ToElement();
-			if ( itemElement != NULL ) {
-				p = itemElement->GetText();
-				if( p != NULL ) {
-					inviteid = p;
-				}
-			}
-		}
-
-		// 视频url
-		TiXmlNode* video_urlNode = node->FirstChild(LC_RECENT_VIDEO_VIDEO_URL);
-		if( video_urlNode != NULL ) {
-			itemElement = video_urlNode->ToElement();
-			if ( itemElement != NULL ) {
-				p = itemElement->GetText();
-				if( p != NULL ) {
-					video_url = p;
-				}
-			}
-		}
 	}
 
 	/**
@@ -77,12 +54,14 @@ public:
 	 * @param title				视频标题
 	 * @param inviteid			邀请ID
 	 * @param video_url			视频url
+     * @param videoCover        视频图片（对应《12.14.获取微视频图片》的“大图”）
 	 */
 	LSLCVideoItem() {
 		videoid = "";
 		title = "";
 		inviteid = "";
 		video_url = "";
+        videoCover = "";
 	}
 
 	virtual ~LSLCVideoItem() {
@@ -93,6 +72,7 @@ public:
 	string title;
 	string inviteid;
 	string video_url;
+    string videoCover;
 };
 
 #endif /* LCVIDEOITEM_H_ */

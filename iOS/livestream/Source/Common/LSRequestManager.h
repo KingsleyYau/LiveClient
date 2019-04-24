@@ -50,6 +50,12 @@
 #import "LSAnchorLetterPrivItemObject.h"
 #import "LSHangoutListItemObject.h"
 #import "LSHangoutStatusItemObject.h"
+#import "LSSayHiResourceConfigItemObject.h"
+#import "LSSayHiAnchorItemObject.h"
+#import "LSSayHiAllItemObject.h"
+#import "LSSayHiResponseItemObject.h"
+#import "LSSayHiDetailInfoItemObject.h"
+#import "LSAppPushConfigItemObject.h"
 #include <httpcontroller/HttpRequestEnum.h>
 
 @interface LSRequestManager : NSObject
@@ -1545,6 +1551,7 @@ typedef void (^SendInvitationHangoutFinishHandler)(BOOL success, HTTP_LCC_ERR_TY
  *  @param roomId           当前发起的直播间ID
  *  @param anchorId         主播ID
  *  @param recommendId      推荐ID（可无，无则表示不是因推荐导致观众发起邀请）
+ *  @param isCreateOnly     是否仅创建新的Hangout直播间，若已有Hangout直播间则先关闭（NO：否，YES：是）（整型）（可无，无则默认为NO）
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
@@ -1552,6 +1559,7 @@ typedef void (^SendInvitationHangoutFinishHandler)(BOOL success, HTTP_LCC_ERR_TY
 - (NSInteger)sendInvitationHangout:(NSString *)roomId
                           anchorId:(NSString *)anchorId
                        recommendId:(NSString *)recommendId
+                      isCreateOnly:(BOOL)isCreateOnly
                      finishHandler:(SendInvitationHangoutFinishHandler)finishHandler;
 
 /**
@@ -1670,7 +1678,7 @@ typedef void (^GetHangoutFriendsFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE e
 /**
  *  8.8.获取指定主播的Hang-out好友列表接口
  *
- *  @param anchorId         主播ID（可无，仅当type=3才存在）
+ *  @param anchorId         主播ID
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
@@ -1691,12 +1699,14 @@ typedef void (^AutoInvitationHangoutLiveDisplayFinishHandler)(BOOL success, HTTP
  *  8.9.自动邀请Hangout直播邀請展示條件接口
  *
  *  @param anchorId         主播ID（可无，仅当type=3才存在）
+ *  @param isAuto         是否自动（1：自动  0：手动）
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
 - (NSInteger)autoInvitationHangoutLiveDisplay:(NSString *)anchorId
-                      finishHandler:(AutoInvitationHangoutLiveDisplayFinishHandler)finishHandler;
+                                       isAuto:(BOOL)isAuto
+                                finishHandler:(AutoInvitationHangoutLiveDisplayFinishHandler)finishHandler;
 
 /**
  *  8.10.自动邀请hangout点击记录接口回调
@@ -1711,12 +1721,14 @@ typedef void (^AutoInvitationClickLogFinishHandler)(BOOL success, HTTP_LCC_ERR_T
  *  8.10.获取指定主播的Hang-out好友列表接口
  *
  *  @param anchorId         主播ID（可无，仅当type=3才存在）
+ *  @param isAuto         是否自动（1：自动  0：手动）
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
 - (NSInteger)autoInvitationClickLog:(NSString *)anchorId
-                                finishHandler:(AutoInvitationClickLogFinishHandler)finishHandler;
+                             isAuto:(BOOL)isAuto
+                      finishHandler:(AutoInvitationClickLogFinishHandler)finishHandler;
 
 /**
  *  8.11.获取当前会员Hangout直播状态接口回调
@@ -1924,10 +1936,9 @@ typedef void (^ShowListWithAnchorIdFinishHandler)(BOOL success, HTTP_LCC_ERR_TYP
  *  @param success      成功失败
  *  @param errnum       错误码
  *  @param errmsg       错误提示
- *  @param isPriMsgAppPush        是否接收私信推送通知
- *  @param isMailAppPush          是否接收私信推送通知
+ *  @param item         App推送设置
  */
-typedef void (^GetPushConfigFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *  errmsg, BOOL isPriMsgAppPush, BOOL isMailAppPush);
+typedef void (^GetPushConfigFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *  errmsg, LSAppPushConfigItemObject* item);
 
 
 /**
@@ -1955,10 +1966,12 @@ typedef void (^SetPushConfigFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnu
  *  @param finishHandler    接口回调
  *  @param isPriMsgAppPush        是否接收私信推送通知
  *  @param isMailAppPush          是否接收私信推送通知
+ *  @param isSayHiAppPush         是否接收SayHi推送通知
  *  @return 成功请求Id
  */
 - (NSInteger)setPushConfig:(BOOL)isPriMsgAppPush
              isMailAppPush:(BOOL)isMailAppPush
+            isSayHiAppPush:(BOOL)isSayHiAppPush
              finishHandler:(SetPushConfigFinishHandler )finishHandler;
 
 /**
@@ -2176,5 +2189,184 @@ typedef void (^GetAnchorLetterPrivFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE
  */
 - (NSInteger)getAnchorLetterPriv:(NSString*)anchorId
                    finishHandler:(GetAnchorLetterPrivFinishHandler)finishHandler;
+
+/**
+ *  14.1.获取发送SayHi的主题和文本信息接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         获取主题、文本配置信息
+ */
+typedef void (^SayHiConfigFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiResourceConfigItemObject * item);
+
+/**
+ *  14.1.获取发送SayHi的主题和文本信息接口（用于观众端获取发送SayHi的主题和文本信息）
+ *
+ *  @param finishHandler     接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)sayHiConfig:(SayHiConfigFinishHandler)finishHandler;
+
+/**
+ *  14.2.获取可发Say Hi的主播列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        合发送Say Hi的主播列表
+ */
+typedef void (^GetSayHiAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg,  NSArray<LSSayHiAnchorItemObject *>*  array);
+
+/**
+ *  14.2.获取可发Say Hi的主播列表接口（用于Say Hi的All列表没有数据时，观众获取可发Say Hi的主播列表）
+ *
+ *  @param finishHandler     接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getSayHiAnchorList:(GetSayHiAnchorListFinishHandler)finishHandler;
+
+/**
+ *  14.3.检测能否对指定主播发送SayHi接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param isCanSend    是否能发送SayHi
+ */
+typedef void (^IsCanSendSayHiFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, BOOL isCanSend);
+
+/**
+ *  14.3.检测能否对指定主播发送SayHi接口（用于检测能否对指定主播发送SayHi，观众端暂无用到本接口）
+ *
+ *  @param anchorId          主播ID
+ *  @param finishHandler     接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)isCanSendSayHi:(NSString*)anchorId
+                   finishHandler:(IsCanSendSayHiFinishHandler)finishHandler;
+
+/**
+ *  14.4.发送sayHi接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param sayHiId      SayHiID （当错误码为 HTTP_LCC_ERR_SUCCESS（发送成功） 和发送失败HTTP_LCC_ERR_SAYHI_MAN_ALREADY_SEND_SAYHI，sayHi没有过期loiId有，sayHi过期loiId为空）
+ *  @param loiId        意向信ID （当错误码为HTTP_LCC_ERR_SAYHI_ANCHOR_ALREADY_SEND_LOI，意向信没有过期loiId有，意向信过期loiId为空）
+ */
+typedef void (^SendSayHiFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *sayHiId, NSString *loiId);
+
+/**
+ *  14.4.发送sayHi接口
+ *
+ *  @param anchorId          主播ID
+ *  @param themeId           主题ID
+ *  @param textId            文本ID
+ *  @param finishHandler     接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)sendSayHi:(NSString*)anchorId
+               themeId:(int)themeId
+                textId:(int)textId
+         finishHandler:(SendSayHiFinishHandler)finishHandler;
+
+/**
+ *  14.5.获取Say Hi的All列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         All ‘Say Hi’列表
+ */
+typedef void (^GetAllSayHiListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiAllItemObject *item);
+
+/**
+ *  14.5.获取Say Hi的All列表接口（用于观众端获取Say Hi的All列表数据）
+ *
+ *  @param start            起始，用于分页，表示从第几个元素开始获取
+ *  @param step             步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getAllSayHiList:(int)start
+                        step:(int)step
+               finishHandler:(GetAllSayHiListFinishHandler)finishHandler;
+
+/**
+ *  14.6.获取SayHi的Response列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         Waiting for your reply列表
+ */
+typedef void (^GetResponseSayHiListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiResponseItemObject *item);
+
+/**
+ *  14.6.获取SayHi的Response列表接口(用于观众端获取Say Hi的Response列表)
+ *
+ *  @param type             排序（LSSAYHIDETAILTYPE_EARLIEST：Unread First，LSSAYHIDETAILTYPE_LATEST：Latest First）
+ *  @param start            起始，用于分页，表示从第几个元素开始获取
+ *  @param step             步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getResponseSayHiList:(LSSayHiListType)type
+                            start:(int)start
+                             step:(int)step
+                    finishHandler:(GetResponseSayHiListFinishHandler)finishHandler;
+
+/**
+ *  14.7.获取SayHi详情接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         SayHi详情
+ */
+typedef void (^SayHiDetailFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiDetailInfoItemObject *item);
+
+/**
+ *  14.7.获取SayHi详情接口(用于观众端获取SayHi详情)
+ *
+ *  @param type             排序（LSSAYHIDETAILTYPE_EARLIEST：Earliest first，LSSAYHIDETAILTYPE_LATEST：Latest First, LSSAYHIDETAILTYPE_UNREAD:Unread first）
+ *  @param sayHiId          sayHi的ID
+ *  @param finishHandler    接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)sayHiDetail:(LSSayHiDetailType)type
+                 sayHiId:(NSString*)sayHiId
+           finishHandler:(SayHiDetailFinishHandler)finishHandler;
+
+/**
+ *  14.8.获取SayHi回复详情接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             回复sayhi的详情
+ */
+typedef void (^ReadResponseFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiDetailResponseListItemObject *item);
+
+/**
+ *  14.8.获取SayHi回复详情接口
+ *
+ *  @param sayHiId          sayHi的ID
+ *  @param responseId       回复ID
+ *  @param finishHandler    接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)readResponse:(NSString*)sayHiId
+               responseId:(NSString*)responseId
+            finishHandler:(ReadResponseFinishHandler)finishHandler;
 
 @end

@@ -65,6 +65,8 @@ typedef enum {
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tipIconViewWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tipMessageViewTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tipMessageViewBottom;
+
 
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 

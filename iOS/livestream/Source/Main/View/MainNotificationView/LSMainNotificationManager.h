@@ -7,28 +7,28 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LSMainNotificaitonModel.h"
 
 @protocol LSMainNotificationManagerDelegate <NSObject>
 
-- (void)mainNotificationManagerShowNotificaitonView;
+- (void)mainNotificationManagerShowNotificaitonView:(LSMainNotificaitonModel *)model;
 
-- (void)mainNotificationManagerHideNotificaitonView;
+- (void)mainNotificationManagerHideNotificaitonView:(LSMainNotificaitonModel *)model;
 
 - (void)mainNotificationManagerRemoveNotificaitonView;
 
+- (void)mainNotificationManagerRemoveselectedItem;
 @end
 
 @interface LSMainNotificationManager : NSObject
 
 + (instancetype)manager;
 
-@property (strong, readonly) NSArray * items;
-
 @property (nonatomic, assign) CGFloat timeOutNum;
 
 @property (nonatomic, weak) id<LSMainNotificationManagerDelegate> delegate;
 
-- (void)selectedShowArrayRow:(NSInteger)row;
+- (void)selectedShowArrayRowItem:(LSMainNotificaitonModel*)item;
 @end
 
 

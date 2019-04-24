@@ -282,7 +282,7 @@ void LSLCUserItem::ClearFinishedMsgList(string inviteId)
                 ){
                 
                 if ((*iter)->IsSubItemProcssign()) {
-                    if ((*iter)->m_msgType == MT_Photo && (*iter)->m_sendType == SendType_Recv) {
+                    if (((*iter)->m_msgType == MT_Photo && (*iter)->m_sendType == SendType_Recv) || (*iter)->m_msgType == MT_Video) {
                         tempList.push_back(*iter);
                     }
                     
@@ -605,4 +605,46 @@ bool LSLCUserItem::Sort(LSLCUserItem* item1, LSLCUserItem* item2)
 	item1->UnlockMsgList();
 
 	return result;
+}
+
+LCMessageList LSLCUserItem::GetPrivateAndVideoMessageList() {
+    LockMsgList();
+    //    LCMessageList tempList = m_msgList;
+    LCMessageList tempList;
+    
+    for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
+        LSLCMessageItem* item = *itr;
+        bool bFlag = false;
+        
+        if( MT_Photo == item->m_msgType || MT_Video == item->m_msgType) {
+            bFlag = true;
+        }
+        
+        if( bFlag ) {
+            tempList.push_back(item);
+        }
+    }
+    UnlockMsgList();
+    return tempList;
+}
+
+// 根据videoId获取用户item
+LSLCMessageItem* LSLCUserItem::GetMsgItemWithVideoId(const string& videoId, const string& inviteId) {
+    LSLCMessageItem* msgItem = NULL;
+    
+    LockMsgList();
+    
+    for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
+        LSLCMessageItem* item = *itr;
+        bool bFlag = false;
+        
+        if( NULL != item->GetVideoItem() && item->GetVideoItem()->m_videoId == videoId && item->m_sendType == SendType_Recv && item->m_inviteId == inviteId) {
+            msgItem = item;
+            break;
+        }
+
+    }
+    UnlockMsgList();
+    
+    return msgItem;
 }

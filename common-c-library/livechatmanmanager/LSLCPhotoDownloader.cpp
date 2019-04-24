@@ -118,7 +118,7 @@ long LSLCPhotoDownloader::GetRequestId() const
 
 void LSLCPhotoDownloader::OnGetPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath)
 {
-	FileLog("LiveChatManager", "LSLCPhotoDownloader::OnGetPhoto() requestId:%d, m_requestId:%d, success:%d, errnum:%s, errmsg:%s, filePath:%s"
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLCPhotoDownloader::OnGetPhoto() requestId:%d, m_requestId:%d, success:%d, errnum:%s, errmsg:%s, filePath:%s"
 			, requestId, m_requestId, success, errnum.c_str(), errmsg.c_str(), filePath.c_str());
 
 	if (m_requestId == requestId)
@@ -151,7 +151,11 @@ void LSLCPhotoDownloader::OnGetPhoto(long requestId, bool success, const string&
             RemoveFile(filePath);
             
 			// 获取图片失败
-			m_item->m_procResult.SetResult(LSLIVECHAT_LCC_ERR_FAIL, errnum, errmsg);
+            LSLIVECHAT_LCC_ERR_TYPE errType = LSLIVECHAT_LCC_ERR_FAIL;
+            if (errnum == LOCAL_ERROR_CODE_TIMEOUT) {
+                errType = LSLIVECHAT_LCC_ERR_CONNECTFAIL;
+            }
+			m_item->m_procResult.SetResult(errType, errnum, errmsg);
 			m_callback->onFail(this, m_sizeType, m_item->m_procResult.m_errNum, m_item->m_procResult.m_errMsg, m_item);
 		}
         

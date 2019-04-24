@@ -163,6 +163,8 @@ public:
     void SetUserOnlineStatusWithLccErrType(LSLCUserItem* userItem, LSLIVECHAT_LCC_ERR_TYPE errType) override;
     // 自动过滤器回调自动邀请消息到livechatmanmanager
     void OnAutoInviteFilterCallback(LSLCAutoInviteItem* autoInviteItem, const string& message) override;
+     // 发送私密照的上传私密照成功回调
+    void OnUploadPhoto(LSLCMessageItem* photoItem) override;
 private:
     // 改变用户状态
     void SetUserOnlineStatus(LSLCUserItem* userItem, USER_STATUS_TYPE statusType);
@@ -185,13 +187,15 @@ public:
                     , double minCamshareBalance
 					, ILSLiveChatManManagerListener* listener) override;
 	// 登录
-	bool Login(const string& userId, const string& userName, const string& sid, CLIENT_TYPE clientType, const list<string>& cookies, const string& deviceId, bool isRecvVideoMsg, LIVECHATINVITE_RISK_TYPE riskType, bool liveChatRisk, bool camShareRisk) override;
+	bool Login(const string& userId, const string& userName, const string& sid, CLIENT_TYPE clientType, const list<string>& cookies, const string& deviceId, LIVECHATINVITE_RISK_TYPE riskType, bool liveChatRisk, bool camShareRisk, bool isSendPhotoPriv, bool liveChatPriv, bool isSendVoicePriv) override;
 	// 注销
 	bool Logout(bool isResetParam) override;
     // 重新登录
     bool Relogin() override;
     // 获取原始socket
     int GetSocket() override;
+    // 根据错误码判断是否时余额不足
+   bool IsNoMoneyWithErrCode(const string& errCode) override;
     
 	// ---------- 会话操作 ----------
 	// 检测是否可使用试聊券
@@ -239,6 +243,8 @@ public:
     bool GetOtherUserLastRecvMessage(const string& userId, LSLCMessageItem& messageItem) override;
     // 获取用户最后一条聊天消息(返回MessageItem类型，不是指针，防止LCMessageItem转换OC类型时，指针被其他线程清除记录)
     bool GetOtherUserLastMessage(const string& userId, LSLCMessageItem& messageItem) override;
+    // 获取用户的私密照和视频的消息
+    LCMessageList GetPrivateAndVideoMessageList(const string& userId) override;
 	// -------- 文本消息 --------
 	// 发送文本消息
 	LSLCMessageItem* SendTextMessage(const string& userId, const string& message) override;
@@ -273,7 +279,7 @@ public:
 	// 发送图片（包括上传图片文件(php)、发送图片(livechat)）
 	LSLCMessageItem* SendPhoto(const string& userId, const string& photoPath) override;
 	// 购买图片（包括付费购买图片(php)）
-    bool PhotoFee(const string& userId, const string& photoId) override;
+    bool PhotoFee(const string& userId, const string& photoId, const string& inviteId) override;
 	// 根据消息ID获取图片(模糊或清晰)（包括获取/下载对方私密照片(php)、显示图片(livechat)）
     bool GetPhoto(const string& userId, const string& photoId, GETPHOTO_PHOTOSIZE_TYPE sizeType, SendType sendType) override;
     // 检查私密照片是否已付费
@@ -283,9 +289,9 @@ public:
 	// 获取微视频图片
 	bool GetVideoPhoto(const string& userId, const string& videoId, const string& inviteId) override;
 	// 购买微视频
-	bool VideoFee(const string& userId, int msgId) override;
+	bool VideoFee(const string& userId, const string& videoId, const string& inviteId) override;
 	// 获取微视频播放文件
-	bool GetVideo(const string& userId, const string& videoId, const string& inviteId, const string& videoUrl) override;
+	bool GetVideo(const string& userId, const string& videoId, const string& inviteId, const string& videoUrl, int msgId) override;
 	// 获取视频当前下载状态
 	bool IsGetingVideo(const string& videoId) override;
 	// 获取视频图片文件路径（仅文件存在）
@@ -359,6 +365,8 @@ private:
     bool IsManInviteChatState(const LSLCUserItem* userItem);
     // 清空用户历史记录（当endtalk的返回不是断网时就清空历史， 1.endtalk没发出去 2，onendtalk因为断网，返回ondisconnect 都不用清空历史）
     void CleanHistotyMessage(const string& userId);
+    // 处理错误码是否时Token过期
+    void HandleTokenOver(const string& errNo, const string& errmsg);
     // --------- 所有消息 --------
     bool SendMsg(LSLCUserItem* userItem, LSLCMessageItem* msgItem);
 	// --------- 高级表情消息 --------
@@ -373,13 +381,28 @@ private:
     // --------- 小高级表情消息 --------
     // 获取小高级表情配置
     bool GetMagicIconConfig();
+    // --------- 视频 ---------------
+    // 由上传成功私密照后，发送http私密照
+    void SendPhotoWithUrl(LSLCMessageItem* msgItem);
     
    // --------- 风控操作 ---------
     bool IsRecvInviteRisk(bool charge, TALK_MSG_TYPE msgType, INVITE_TYPE inviteType);
     // 判断能不能接收邀请（ps：上面那个也有判断能不能接收邀请， 还包含聊天权限处理）这个是android处理，自动邀请也根据android
     bool IsRecvMessageLimited(const string& userId);
+    // 判断是否时livechat总权限
+    bool IsLiveChatPriv();
+    // 插入发送消息回调
+    bool InsertSendBackcall(LSLCMessageItem* item);
+    // 对发送消息回调的处理
+    void HandleSendbackcall(LSLCMessageItem* item);
+    // 插入购买消息回调
+    bool InsertFeeBackcall(LSLCMessageItem* item);
+    // 对购买消息回调的处理
+    void HandleFeebackcall(LSLCMessageItem* item);
     
-    
+    // ----------- 公共 ---------------------
+    // 获取当前会话信息（用于发送时的上传私密，购买私密照，购买视频。 或者定时获取当前会话信息）
+    void GetTalkInfo(const string& userId);
     
 private:
     // -------- 回调获取聊天列表处理 ---------
@@ -471,7 +494,7 @@ private:
     virtual void OnCheckCoupon(long requestId, bool success, const LSLCCoupon& item, const string& userId, const string& errnum, const string& errmsg) override;
 	virtual void OnQueryChatRecord(long requestId, bool success, int dbTime, const list<LSLCRecord>& recordList, const string& errnum, const string& errmsg, const string& inviteId) override;
 	virtual void OnQueryChatRecordMutiple(long requestId, bool success, int dbTime, const list<LSLCRecordMutiple>& recordMutiList, const string& errnum, const string& errmsg) override;
-	virtual void OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg) override;
+	virtual void OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId) override;
 	virtual void OnGetPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath) override;
 	virtual void OnUploadVoice(long requestId, bool success, const string& errnum, const string& errmsg, const string& voiceId) override;
 	virtual void OnPlayVoice(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath) override;
@@ -479,7 +502,7 @@ private:
 	virtual void OnGetVideo(long requestId, bool success, const string& errnum, const string& errmsg, const string& url) override;
     //获取小高级表情配置回调 alex 2016-09-09
     virtual void OnGetMagicIconConfig(long requestId, bool success, const string& errnum, const string& errmsg,const LSLCMagicIconConfig& config) override;
-    virtual void OnCheckPhoto(long requestId, bool success, const string& errnum, const string& errmsg) override;
+    virtual void OnCheckPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId, bool isCharge) override;
     
 	// ------------------- ILSLiveChatRequestOtherControllerCallback -------------------
 private:
@@ -507,7 +530,9 @@ private:
 	LIVECHATINVITE_RISK_TYPE            m_riskControl;                  // 风控标志（true:需要风控, 用于邀请风控）
     bool            m_riskLiveChat;                                     // livechat聊天风控
     bool            m_riskCamShare;                                     // camshare风控
-	bool            m_isRecvVideoMsg;               // 是否接收视频消息
+    bool            m_isSendPhotoPriv;                                      // 观众发送私密照权限
+    bool            m_isSendVoicePriv;                                  // 观众发送语音权限
+    bool            m_liveChatPriv;                                     // livechat总权限（感觉和m_riskLiveChat相反）
 	bool            m_isLogin;                      // 是否已经登录
     bool            m_isGetHistory;                 // 是否获取历史记录
     bool            m_isResetParam;                 // 是否重置参数

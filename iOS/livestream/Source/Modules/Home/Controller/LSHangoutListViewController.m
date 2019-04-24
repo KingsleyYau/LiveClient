@@ -16,11 +16,12 @@
 #import "LSHangoutListHeadView.h"
 #import "LiveModule.h"
 #import "LSAnchorCardViewController.h"
+#import "LiveGobalManager.h"
 #define PageSize 10
 
-@interface LSHangoutListViewController () <UIScrollViewRefreshDelegate, LSHangoutTableViewDelegate,LSHangoutListHeadViewDelegate>
+@interface LSHangoutListViewController () <UIScrollViewRefreshDelegate, LSHangoutTableViewDelegate, LSHangoutListHeadViewDelegate>
 
-@property (nonatomic, strong) NSMutableArray *items;
+@property (nonatomic, strong) NSArray *items;
 
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 /**
@@ -45,22 +46,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     if (@available(iOS 11, *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-    
-    self.items = [NSMutableArray array];
+
+    self.items = [NSArray array];
     self.sessionManager = [LSSessionRequestManager manager];
     // 初始化下拉
     [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
     [self setupTableView];
-//    [self setupTableHeaderView];
-    
+    //    [self setupTableHeaderView];
 }
-
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -69,8 +68,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self viewDidAppearGetList:NO];
-//    [self setupTableHeaderView];
-    
+    //    [self setupTableHeaderView];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -110,19 +108,18 @@
     }
 }
 
-
 - (void)setupTableView {
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
     self.tableView.tableViewDelegate = self;
+    self.tableView.delaysContentTouches = NO;
 }
-
 
 - (void)setupTableHeaderView {
     NSString *showHangoutListTips = [[NSUserDefaults standardUserDefaults] objectForKey:@"ShowHangoutListTips"];
-    
+
     if (!(showHangoutListTips && showHangoutListTips.length > 0)) {
         LSHangoutListHeadView *view = [[LSHangoutListHeadView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 110)];
         view.hangoutHeadDelegate = self;
@@ -132,11 +129,10 @@
     }
 }
 
-
 - (void)LSHangoutListHeadViewDidShowMore:(LSHangoutListHeadView *)view {
     view.moreContentViewHeight.constant = 44;
     view.moreContentView.hidden = NO;
-    view.frame = CGRectMake(0, 0, screenSize.width, 270);
+    view.frame = CGRectMake(0, 0, screenSize.width, 280);
     [self.tableView setTableHeaderView:view];
 }
 
@@ -156,21 +152,18 @@
         view.showMoreBtn.selected = NO;
         [self LSHangoutListHeadViewDidHideMore:view];
     }
-    
 }
 
 // 显示没有数据页面
 - (void)showTipsContent {
     self.noDataTips.hidden = NO;
     self.noDataIcon.hidden = NO;
-    
 }
 
 - (void)hideNoDataTipsContent {
     self.noDataTips.hidden = YES;
     self.noDataIcon.hidden = YES;
 }
-
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
     self.failView.hidden = YES;
@@ -198,26 +191,28 @@
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSHangoutListItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"LSHangoutListViewController::getListRequest( [%@], count : %ld )", BOOL2SUCCESS(success), (long)array.count);
-            
+
             if (success) {
                 self.failView.hidden = YES;
                 self.isLoadData = NO;
-                [self.items addObjectsFromArray:array];
+                self.items = array;
                 if (self.items.count == 0) {
                     //显示没有数据页面
                     [self showTipsContent];
                 }
             } else {
-                // 停止头部
-                [self.items removeAllObjects];
+                self.items = [NSArray array];
                 self.failView.hidden = NO;
+                // 加载失败会自动刷新
+                self.isLoadData = YES;
             }
+            // 停止头部
             [self.tableView finishPullDown:NO];
             [self reloadData];
             self.view.userInteractionEnabled = YES;
         });
     };
-    
+
     [self.sessionManager sendRequest:request];
 }
 
@@ -228,7 +223,7 @@
 
 - (void)tableView:(LSHangoutTableView *)tableView didShowItem:(NSIndexPath *)index {
     // TODO: 主播资料页点击
-    LSHangoutListItemObject * item = [self.items objectAtIndex:index.row];
+    LSHangoutListItemObject *item = [self.items objectAtIndex:index.row];
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = item.anchorId;
     listViewController.enterRoom = 1;
@@ -237,24 +232,19 @@
 
 - (void)tableView:(LSHangoutTableView *)tableView didClickHangout:(LSHangoutListItemObject *)item {
     // TODO: 多人互动弹窗
-    HangoutDialogViewController *vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
+    HangoutDialogViewController *vc = [[LiveGobalManager manager] addDialogVc];
     vc.item = item;
     vc.anchorId = item.anchorId;
     vc.anchorName = item.nickName;
-    UIViewController *topVc = [LiveModule module].moduleVC.navigationController;
-    [topVc addChildViewController:vc];
-    [topVc.view addSubview:vc.view];
     [vc showhangoutView];
-    
 }
 
 - (void)tableView:(LSHangoutTableView *)tableView didClickHangoutFriendCardMsg:(LSFriendsInfoItemObject *)item {
     // 好友卡片弹窗
     LSAnchorCardViewController *vc = [[LSAnchorCardViewController alloc] initWithNibName:nil bundle:nil];
-    vc.anchorPhotourl = item.coverImg;
     vc.userId = item.anchorId;
     vc.nickName = item.nickName;
-    [vc showAnchorCardView];
+    [vc showAnchorCardView:self.navigationController];
 }
 
 

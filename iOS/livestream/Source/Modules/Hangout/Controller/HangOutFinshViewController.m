@@ -16,6 +16,9 @@
 #import "LSAddCreditsViewController.h"
 #import "HangOutPreAnchorPhotoCell.h"
 
+#define BUTTONHEIGHT 44
+#define STARTBUTTONTOP 20
+
 @interface HangOutFinshViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -23,6 +26,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UIButton *startAgainBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addCreditBtn;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *addCreditBtnHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *startHangoutBtnTop;
+
 
 @property (nonatomic, strong) NSMutableArray *anchorArray;
 
@@ -90,6 +97,13 @@
 - (void)showErrorCredieBtn:(BOOL)hiddenCredit starAgain:(BOOL)hiddenStart errmsg:(NSString *)errmsg {
     self.startAgainBtn.hidden = hiddenStart;
     self.addCreditBtn.hidden = hiddenCredit;
+    if (hiddenCredit) {
+        self.addCreditBtnHeight.constant = 0;
+        self.startHangoutBtnTop.constant = 0;
+    } else {
+        self.addCreditBtnHeight.constant = BUTTONHEIGHT;
+        self.startHangoutBtnTop.constant = STARTBUTTONTOP;
+    }
     self.tipLabel.text = errmsg;
 }
 
@@ -100,7 +114,7 @@
         }break;
             
         case HANGOUTERROR_NOCREDIT:{
-            [self showErrorCredieBtn:NO starAgain:YES errmsg:errMsg];
+            [self showErrorCredieBtn:NO starAgain:NO errmsg:errMsg];
         }break;
             
         default:{

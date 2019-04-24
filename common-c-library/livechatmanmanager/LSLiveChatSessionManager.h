@@ -74,6 +74,9 @@ private:
 
     // 是否检测试聊券
     bool IsCheckCoupon(LSLCUserItem* userItem);
+                                    
+   // 处理错误码是否时Token过期(根据字符串和整形)
+   void HandleTokenOverErrCode(int errNum, const string& errNo, const string& errmsg);
 
     // 试聊券请求处理函数
     bool UseTryTicketProc(LSLCUserItem* userItem);

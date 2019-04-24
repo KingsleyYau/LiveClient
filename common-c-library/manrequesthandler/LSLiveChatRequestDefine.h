@@ -11,9 +11,9 @@
 
 /* 本地错误代码 */
 #define LOCAL_ERROR_CODE_TIMEOUT			"LOCAL_ERROR_CODE_TIMEOUT"
-#define LOCAL_ERROR_CODE_TIMEOUT_DESC		"Trouble connecting to the server, please try again later."
+#define LOCAL_ERROR_CODE_TIMEOUT_DESC		"Trouble connecting to the server. Please try again later."
 #define LOCAL_ERROR_CODE_PARSEFAIL			"LOCAL_ERROR_CODE_PARSEFAIL"
-#define LOCAL_ERROR_CODE_PARSEFAIL_DESC		"Trouble connecting to the server, please try again later."
+#define LOCAL_ERROR_CODE_PARSEFAIL_DESC		"Trouble connecting to the server. Please try again later."
 #define LOCAL_ERROR_CODE_FILEOPTFAIL		"LOCAL_ERROR_CODE_FILEOPTFAIL"
 #define LOCAL_ERROR_CODE_FILEOPTFAIL_DESC	"Error encountered while writing your file storage."
 

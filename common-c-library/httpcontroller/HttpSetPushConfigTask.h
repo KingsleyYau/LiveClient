@@ -36,7 +36,8 @@ public:
      */
     void SetParam(
                   bool isPriMsgAppPush,
-                  bool isMailAppPush
+                  bool isMailAppPush,
+                  bool isSayHiAppPush
                   );
     
 protected:

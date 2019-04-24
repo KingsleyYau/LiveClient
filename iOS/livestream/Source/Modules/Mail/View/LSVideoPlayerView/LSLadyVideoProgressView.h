@@ -23,6 +23,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *ladyBeginLabel;
 @property (weak, nonatomic) IBOutlet UISlider *videoSiider;
 @property (weak, nonatomic) IBOutlet UILabel *ladyEndLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *beginTimeLabelWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *endTimeLabelWidth;
 @property (weak, nonatomic) id <LSLadyVideoProgressViewDelegate> delegate;
 - (void)setPlayButtonSelected;
+- (void)hiddenPlayTime;
+- (void)setPlaySuspendOrStart:(BOOL)isSuspend;
 @end

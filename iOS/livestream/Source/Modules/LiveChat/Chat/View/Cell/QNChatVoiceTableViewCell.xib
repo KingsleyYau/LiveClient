@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,34 +27,42 @@
                             <constraint firstAttribute="height" constant="8" id="t1E-nV-ViO"/>
                         </constraints>
                     </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Chat_Anchor_Rectangle" translatesAutoresizingMaskIntoConstraints="NO" id="6mV-65-3GU">
+                        <rect key="frame" x="16" y="8" width="80" height="25"/>
+                    </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bc4-qI-XnC">
-                        <rect key="frame" x="16" y="8" width="80" height="21"/>
-                        <color key="backgroundColor" red="0.074509803921568626" green="0.40784313725490196" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <rect key="frame" x="16" y="8" width="80" height="25"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="Kgu-k1-ajo"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
-                        <state key="normal" title="30&quot;" image="LS_ChatVoiceSelf_PlayIcon">
-                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <state key="normal" title="30&quot;" image="LS_ChatVoiceLady_PlayIcon">
+                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </state>
                         <connections>
                             <action selector="palyButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="B30-74-cud"/>
                         </connections>
                     </button>
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="heW-Ab-LU4">
-                        <rect key="frame" x="116" y="8.5" width="20" height="20"/>
+                        <rect key="frame" x="116" y="10.5" width="20" height="20"/>
                     </activityIndicatorView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="bc4-qI-XnC" firstAttribute="centerY" secondItem="heW-Ab-LU4" secondAttribute="centerY" id="MJe-lg-38q"/>
+                    <constraint firstItem="bc4-qI-XnC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="5gd-WH-pmQ"/>
+                    <constraint firstItem="6mV-65-3GU" firstAttribute="leading" secondItem="bc4-qI-XnC" secondAttribute="leading" id="7jm-7d-iGb"/>
+                    <constraint firstItem="r1n-dU-IHW" firstAttribute="leading" secondItem="6mV-65-3GU" secondAttribute="trailing" constant="8" id="9Jp-EG-nAp"/>
+                    <constraint firstItem="6mV-65-3GU" firstAttribute="top" secondItem="bc4-qI-XnC" secondAttribute="top" id="G1L-0P-iqu"/>
+                    <constraint firstItem="6mV-65-3GU" firstAttribute="bottom" secondItem="bc4-qI-XnC" secondAttribute="bottom" id="GbG-YC-JBe"/>
                     <constraint firstItem="r1n-dU-IHW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="SaF-TC-YIS"/>
-                    <constraint firstItem="bc4-qI-XnC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-3" id="dAe-o0-Xdc"/>
-                    <constraint firstItem="bc4-qI-XnC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="e7j-90-iKj"/>
+                    <constraint firstItem="6mV-65-3GU" firstAttribute="trailing" secondItem="bc4-qI-XnC" secondAttribute="trailing" id="TZN-6k-qIE"/>
+                    <constraint firstItem="heW-Ab-LU4" firstAttribute="leading" secondItem="6mV-65-3GU" secondAttribute="trailing" constant="20" id="bKc-YJ-hGd"/>
+                    <constraint firstAttribute="bottom" secondItem="bc4-qI-XnC" secondAttribute="bottom" constant="8" id="bxH-s2-Lh5"/>
                     <constraint firstAttribute="bottomMargin" secondItem="r1n-dU-IHW" secondAttribute="bottom" constant="31" id="gJp-LT-1uh"/>
-                    <constraint firstItem="heW-Ab-LU4" firstAttribute="leading" secondItem="bc4-qI-XnC" secondAttribute="trailing" constant="20" id="p7X-dK-2JZ"/>
+                    <constraint firstItem="6mV-65-3GU" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="gcm-fv-QCT"/>
+                    <constraint firstItem="heW-Ab-LU4" firstAttribute="centerY" secondItem="6mV-65-3GU" secondAttribute="centerY" id="m8q-QD-vKP"/>
                     <constraint firstItem="heW-Ab-LU4" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="r5c-cY-WYH"/>
-                    <constraint firstItem="r1n-dU-IHW" firstAttribute="leading" secondItem="bc4-qI-XnC" secondAttribute="trailing" constant="8" id="tNt-zv-YZu"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -66,6 +75,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="LS_ChatVoiceSelf_PlayIcon" width="20" height="20"/>
+        <image name="Chat_Anchor_Rectangle" width="17" height="25"/>
+        <image name="LS_ChatVoiceLady_PlayIcon" width="20" height="20"/>
     </resources>
 </document>

@@ -182,9 +182,10 @@
  *
  *  @param reqId            请求序列号
  *  @param roomId           直播间ID
+ *  @param isCreateOnly     是否仅创建新的Hangout直播间，若已有Hangout直播间则先关闭（NO：否，YES：是）（可无，无则默认为NO）
  *
  */
-- (BOOL)enterHangoutRoom:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId;
+- (BOOL)enterHangoutRoom:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId isCreateOnly:(BOOL)isCreateOnly;
 
 /**
  *  10.4.退出多人互动直播间接口

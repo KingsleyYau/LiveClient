@@ -21,7 +21,7 @@
 
 using namespace std;
 
-static long long g_handleTimeInterval = 25 * 1000;	// 处理邀请时间间隔(25s)
+static long long g_handleTimeInterval = 10 * 1000;	// 处理邀请时间间隔(25s)
 static int g_maxNoRandomCount = 10;					// 最大非随机处理数（最多多少次就要有一次随机）
 
 LSLCInviteManager::LSLCInviteManager()

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LSSvrItemObject.h"
-#import "LSMailPrivItemObject.h"
+#import "LSUserPrivItemObject.h"
 
 @interface LSLoginItemObject : NSObject
 /**
@@ -34,6 +34,7 @@
                                      LSHTTP_LIVECHATINVITE_RISK_LIMITREV：限制接受邀请，
                                      LSHTTP_LIVECHATINVITE_RISK_LIMITALL：收发全部限制）
  * mailPriv         信件及意向信权限相关
+ * userPriv         信件及意向信权限相关
  */
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* token;
@@ -44,15 +45,16 @@
 @property (nonatomic, assign) BOOL isPushAd;
 @property (nonatomic, strong) NSArray<LSSvrItemObject *>* svrList;
 @property (nonatomic, assign) UserType userType;
-@property (nonatomic, strong) NSString* qnMainAdUrl;
-@property (nonatomic, strong) NSString* qnMainAdTitle;
-@property (nonatomic, strong) NSString* qnMainAdId;
+//@property (nonatomic, strong) NSString* qnMainAdUrl;
+//@property (nonatomic, strong) NSString* qnMainAdTitle;
+//@property (nonatomic, strong) NSString* qnMainAdId;
 @property (nonatomic, strong) NSString* gaUid;
 @property (nonatomic, copy) NSString* sessionId;
 @property (nonatomic, assign) BOOL isLiveChatRisk;
-@property (nonatomic, assign) BOOL isHangoutRisk;
-@property (nonatomic, assign) LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
-@property (nonatomic, strong) LSMailPrivItemObject* mailPriv;
+//@property (nonatomic, assign) BOOL isHangoutRisk;
+//@property (nonatomic, assign) LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
+//@property (nonatomic, strong) LSMailPrivItemObject* mailPriv;
+@property (nonatomic, strong) LSUserPrivItemObject* userPriv;
 
 
 @end

@@ -15,9 +15,9 @@
 
 /* 本地错误代码 */
 #define IMLOCAL_ERROR_CODE_TIMEOUT			"LOCAL_ERROR_CODE_TIMEOUT"
-#define IMLOCAL_ERROR_CODE_TIMEOUT_DESC		"Trouble connecting to the server, please try again later."
+#define IMLOCAL_ERROR_CODE_TIMEOUT_DESC		"Trouble connecting to the server. Please try again later."
 #define IMLOCAL_ERROR_CODE_PARSEFAIL			"LOCAL_ERROR_CODE_PARSEFAIL"
-#define IMLOCAL_ERROR_CODE_PARSEFAIL_DESC		"Trouble connecting to the server, please try again later."
+#define IMLOCAL_ERROR_CODE_PARSEFAIL_DESC		"Trouble connecting to the server. Please try again later."
 #define IMLOCAL_ERROR_CODE_FILEOPTFAIL		"LOCAL_ERROR_CODE_FILEOPTFAIL"
 #define IMLOCAL_ERROR_CODE_FILEOPTFAIL_DESC	"Error encountered while writing your file storage."
 
@@ -93,6 +93,9 @@ typedef enum {
     LCC_ERR_REPEAT_INVITEING_TALENT = 10052,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
     LCC_ERR_RECV_REGULAR_CLOSE_ROOM = 10088,           // 用户接收正常关闭直播间
     LCC_ERR_PRIVTE_INVITE_AUTHORITY = 17002,           // 主播无立即私密邀请权限
+    LCC_ERR_NO_CREDIT_CLOSE_LIVE = 10190,              // 余额不足(用于3.3.接收直播间关闭通知 接口)
+    LCC_ERR_NO_CREDIT_DOUBLE_VIDEO = 10091,            // 私密直播间开始双向视频时，信用点不足(用于3.14.观众开始/结束视频互动 接口)
+    LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO = 10146,   // Hangout直播间开始双向视频时，信用点不足(用于10.11.多人互动观众开始/结束视频互动 接口)
 } LCC_ERR_TYPE;
 
 // 客户端端类型

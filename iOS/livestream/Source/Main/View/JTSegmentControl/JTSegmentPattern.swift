@@ -31,6 +31,6 @@ struct JTSegmentPattern {
     
     //MARK - inline func
     @inline(__always) static func color(red:Float, green:Float, blue:Float, alpha:Float) -> UIColor {
-        return UIColor(colorLiteralRed: red/255.0, green: green/255.0, blue: blue/255.0, alpha: alpha)
+        return UIColor(_colorLiteralRed: red/255.0, green: green/255.0, blue: blue/255.0, alpha: alpha)
     }
 }

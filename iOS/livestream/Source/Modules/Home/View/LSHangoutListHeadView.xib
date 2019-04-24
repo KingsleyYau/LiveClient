@@ -78,7 +78,7 @@
                                     <rect key="frame" x="226" y="0.0" width="121" height="36"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="36" id="oqq-39-6yC"/>
+                                        <constraint firstAttribute="height" priority="750" constant="36" id="oqq-39-6yC"/>
                                         <constraint firstAttribute="width" constant="121" id="rIY-0H-CQu"/>
                                     </constraints>
                                     <state key="normal" title="I GOT IT!">
@@ -116,7 +116,7 @@
                                 <constraint firstItem="nVn-3m-bIX" firstAttribute="centerY" secondItem="WOD-MP-feh" secondAttribute="centerY" id="W1O-h4-T9i"/>
                                 <constraint firstItem="1V3-1s-rPI" firstAttribute="top" secondItem="SwT-zF-ZY4" secondAttribute="top" id="coK-zQ-VDf"/>
                                 <constraint firstAttribute="bottom" secondItem="1V3-1s-rPI" secondAttribute="bottom" constant="8" id="hhV-Lr-jP4"/>
-                                <constraint firstAttribute="height" constant="44" id="xYR-VO-wDA"/>
+                                <constraint firstAttribute="height" priority="750" constant="44" id="xYR-VO-wDA"/>
                             </constraints>
                         </view>
                     </subviews>

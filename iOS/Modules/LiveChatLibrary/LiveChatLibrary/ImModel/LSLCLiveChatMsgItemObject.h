@@ -17,6 +17,7 @@
 #import "LSLCLiveChatEmotionItemObject.h"
 #import "LSLCLiveChatMagicIconItemObject.h"
 #import "LSLCLiveChatMsgVoiceItem.h"
+#import "LSLCLiveChatMsgVideoItem.h"
 
 typedef enum {
     IniviteTypeChat		= 0,		     // livechat
@@ -55,6 +56,8 @@ typedef enum {
 @property (nonatomic,strong) LSLCLiveChatMsgPhotoItem* secretPhoto;
 /** 语音消息 */
 @property (nonatomic,strong) LSLCLiveChatMsgVoiceItem* voiceMsg;
+/** 视频消息 */
+@property (nonatomic,strong) LSLCLiveChatMsgVideoItem* videoMsg;
 /** 私密照下载成功状态 */
 @property (nonatomic,assign,getter=isDownloadSuccess) BOOL downloadSuccess;
 /** 私密照下载成功状态 */

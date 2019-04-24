@@ -52,7 +52,6 @@
     [super viewWillAppear:animated];
     if( !self.viewDidAppearEver ) {
         [UIView setAnimationsEnabled:YES];
-        [self setupNavigationBar];
         [self setupFailView];
         // 失败页默认提示
         [self reloadFailViewFailTipsText:List_FailTips failBtnText:List_Reload];

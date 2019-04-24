@@ -23,13 +23,17 @@
 @property (weak, nonatomic) IBOutlet UIImageView *secretPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *detailLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageW;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageH;
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingPhoto;
 /** 代理 */
 @property (nonatomic,weak) id<ChatPhotoLadyTableViewCellDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIView *privateLock;
+@property (weak, nonatomic) IBOutlet UIImageView *privateUnlock;
+@property (weak, nonatomic) IBOutlet UIView *actionView;
+@property (weak, nonatomic) IBOutlet UIImageView *loadPhotoFailIcon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageH;
 
 + (NSString *)cellIdentifier;
-+ (NSInteger)cellHeight;
++ (NSInteger)cellHeight:(BOOL)isCross;
 + (id)getUITableViewCell:(UITableView*)tableView;
 @end

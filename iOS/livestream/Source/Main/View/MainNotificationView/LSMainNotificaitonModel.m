@@ -20,6 +20,7 @@
         self.userName = @"";
         self.contentStr = @"";
         self.msgType = MsgStatus_Chat;
+        self.isAuto = NO;
         self.createTime = [[NSDate date] timeIntervalSince1970];
     }
     return self;

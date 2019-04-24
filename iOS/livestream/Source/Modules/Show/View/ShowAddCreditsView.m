@@ -10,7 +10,7 @@
 #import "LSImageViewLoader.h"
 #import "DialogTip.h"
 #import "LiveModule.h"
-@interface ShowAddCreditsView ()<UIAlertViewDelegate>
+@interface ShowAddCreditsView ()
 @property (weak, nonatomic) IBOutlet UIView *bgView;
 @property (weak, nonatomic) IBOutlet UIImageView *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -56,7 +56,7 @@
     if (!self.imageViewLoader) {
         self.imageViewLoader = [LSImageViewLoader loader];
     }
-    [self.imageViewLoader refreshCachedImage:self.headImage options:SDWebImageRefreshCached imageUrl:item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
     
     self.titleLabel.text = item.showTitle;

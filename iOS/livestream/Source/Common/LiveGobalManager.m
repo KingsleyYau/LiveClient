@@ -11,6 +11,7 @@
 #import "LiveModule.h"
 #import "LSImManager.h"
 
+
 static LiveGobalManager *gManager = nil;
 @interface LiveGobalManager () {
     BOOL _canShowInvite;
@@ -25,6 +26,12 @@ static LiveGobalManager *gManager = nil;
  直播间弹出的导航栏
  */
 @property (nonatomic, weak) LSNavigationController *liveRoomNVC;
+@property (nonatomic, strong) HangoutDialogViewController *vc;
+
+// 关闭直播间声音
+@property (nonatomic, weak) HangOutViewController *hangoutVC;
+@property (nonatomic, weak) LiveViewController *liveVC;
+
 @end
 ;
 
@@ -45,9 +52,9 @@ static LiveGobalManager *gManager = nil;
 
         // 注册前后台切换通知
         _isBackground = NO;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
-
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        
         _canShowInvite = YES;
 
         _isHangouting = NO;
@@ -59,7 +66,7 @@ static LiveGobalManager *gManager = nil;
     NSLog(@"LiveGobalManager::dealloc()");
 
     // 注销前后台切换通知
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
@@ -139,9 +146,46 @@ static LiveGobalManager *gManager = nil;
     }
 }
 
-- (void)pushVCWithCurrentNVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC {
+- (void)pushAndPopVCWithNVCFromVC:(UIViewController *)fromVC toVC:(LSViewController *)toVC {
+    NSLog(@"LiveGobalManager::pushAndPopVCWithNVCFromVC( fromVC : %@, toVC : %@ )", [fromVC class].description, [toVC class].description);
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UINavigationController *nvc = self.liveRoomNVC;
+        
+        if (!nvc) {
+            nvc = fromVC.navigationController;
+        }
+        
+        // 处理界面栈中的相同模块并且参数相同的VC
+        BOOL bIsExistVC = NO;
+        UIViewController *pvc = toVC;
+        for (UIViewController *vc in nvc.viewControllers) {
+            if( [vc isKindOfClass:[LSViewController class]] ) {
+                LSViewController *cvc = (LSViewController *)vc;
+                if( [cvc isSameVC:toVC] ) {
+                    bIsExistVC = YES;
+                    pvc = cvc;
+                    break;
+                }
+            }
+        }
+        
+        if (nvc) {
+            if( bIsExistVC ) {
+                // 已经存在相同的VC
+                [nvc popToViewController:pvc animated:NO];
+            } else {
+                // 推进新的VC
+                [nvc pushViewController:pvc animated:NO];
+            }
+        }
+        
+    });
+}
+
+- (void)pushWithNVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC {
     // TODO:根据当前的导航栏推进界面
-    NSLog(@"LiveGobalManager::pushVCWithCurrentNVCFromVC( fromVC : %@, toVC : %@ )", [fromVC class].description, [toVC class].description);
+    NSLog(@"LiveGobalManager::pushWithNVCFromVC( fromVC : %@, toVC : %@ )", [fromVC class].description, [toVC class].description);
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         UINavigationController *nvc = self.liveRoomNVC;
@@ -165,6 +209,30 @@ static LiveGobalManager *gManager = nil;
         UINavigationController *nvc = moduleVC.navigationController;
         [nvc popToRootViewControllerAnimated:NO];
     }
+}
+
+- (HangoutDialogViewController *)addDialogVc{
+    // TODO:添加弹窗,防止多次点击弹出多个弹层
+    if(!self.vc) {
+        self.vc = [[HangoutDialogViewController alloc] initWithNibName:nil bundle:nil];
+        // 根据是否在直播间内打开添加对应的
+        if (self.liveRoomNVC) {
+            [self.liveRoomNVC addChildViewController:self.vc];
+            [self.liveRoomNVC.view addSubview:self.vc.view];
+        }else {
+            UIViewController *moduleVC = [LiveModule module].moduleVC;
+            if (moduleVC.navigationController) {
+                UINavigationController *nvc = moduleVC.navigationController;
+                [nvc addChildViewController:self.vc];
+                [nvc.view addSubview:self.vc.view];
+            }
+        }
+    }
+    return self.vc;
+}
+
+- (void)removeDialogVc {
+    self.vc = nil;
 }
 
 #pragma mark - 后台处理
@@ -236,6 +304,20 @@ static LiveGobalManager *gManager = nil;
         self.enterRoomBackgroundTime = nil;
         
         NSLog(@"LiveGobalManager::willEnterForeground()");
+    }
+}
+
+- (void)setupLiveVC:(LiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC {
+    self.liveVC = liveVC;
+    self.hangoutVC = hangoutVC;
+}
+
+- (void)openOrCloseLiveSound:(BOOL)isClose {
+    if (self.liveVC) {
+        [self.liveVC openOrCloseSuond:isClose];
+    }
+    if (self.hangoutVC) {
+        [self.hangoutVC openOrCloseSuond:isClose];
     }
 }
 

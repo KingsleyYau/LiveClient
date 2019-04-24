@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,9 +18,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="55.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Chat_Self_Rectangle" translatesAutoresizingMaskIntoConstraints="NO" id="g23-Sa-ij0">
+                        <rect key="frame" x="224" y="8" width="80" height="39.5"/>
+                    </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="icZ-ZV-Y8B">
                         <rect key="frame" x="224" y="8" width="80" height="39.5"/>
-                        <color key="backgroundColor" red="0.074509803921568626" green="0.41176470588235292" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="fhB-GV-eH4"/>
                         </constraints>
@@ -37,22 +40,27 @@
                     </activityIndicatorView>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bFC-Gi-OVC">
                         <rect key="frame" x="182" y="11" width="40" height="33.5"/>
-                        <state key="normal" image="LS_Chat_RetryButton"/>
+                        <state key="normal" image="LS_Chat_MsgFail"/>
                         <connections>
                             <action selector="retryBtnAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="1Tj-yt-71X"/>
                         </connections>
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="88g-Xg-tJo" firstAttribute="centerY" secondItem="icZ-ZV-Y8B" secondAttribute="centerY" id="3CE-79-BTI"/>
+                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="trailing" secondItem="g23-Sa-ij0" secondAttribute="trailing" id="88m-9S-9GG"/>
+                    <constraint firstItem="g23-Sa-ij0" firstAttribute="centerY" secondItem="88g-Xg-tJo" secondAttribute="centerY" id="9ec-Fs-fKI"/>
                     <constraint firstItem="bFC-Gi-OVC" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="EgK-aA-WdG"/>
-                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-3" id="R1N-ld-dNd"/>
                     <constraint firstItem="bFC-Gi-OVC" firstAttribute="centerY" secondItem="88g-Xg-tJo" secondAttribute="centerY" id="S77-F1-tNM"/>
+                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="bottom" secondItem="g23-Sa-ij0" secondAttribute="bottom" id="Sa0-GQ-lLB"/>
                     <constraint firstItem="bFC-Gi-OVC" firstAttribute="centerX" secondItem="88g-Xg-tJo" secondAttribute="centerX" id="W7m-dU-Qbr"/>
-                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="XGr-VX-0A3"/>
-                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="leading" secondItem="88g-Xg-tJo" secondAttribute="trailing" constant="12" id="e8R-0c-8MQ"/>
-                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="leading" secondItem="bFC-Gi-OVC" secondAttribute="trailing" constant="2" id="jpW-Pg-Lq3"/>
+                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="ciD-62-9A9"/>
+                    <constraint firstAttribute="bottom" secondItem="icZ-ZV-Y8B" secondAttribute="bottom" constant="8" id="i0q-ix-rYk"/>
+                    <constraint firstAttribute="trailing" secondItem="g23-Sa-ij0" secondAttribute="trailing" constant="16" id="k7k-bj-CwF"/>
+                    <constraint firstItem="g23-Sa-ij0" firstAttribute="leading" secondItem="bFC-Gi-OVC" secondAttribute="trailing" constant="2" id="kLa-Dl-2eA"/>
+                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="leading" secondItem="g23-Sa-ij0" secondAttribute="leading" id="udz-86-Xmw"/>
                     <constraint firstItem="bFC-Gi-OVC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="wz6-kE-efr"/>
+                    <constraint firstItem="icZ-ZV-Y8B" firstAttribute="top" secondItem="g23-Sa-ij0" secondAttribute="top" id="yam-Bg-VFD"/>
+                    <constraint firstItem="g23-Sa-ij0" firstAttribute="leading" secondItem="88g-Xg-tJo" secondAttribute="trailing" constant="12" id="ybi-Ym-Avn"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -65,7 +73,8 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="Chat_Self_Rectangle" width="17.5" height="26.5"/>
         <image name="LS_ChatVoiceSelf_PlayIcon" width="20" height="20"/>
-        <image name="LS_Chat_RetryButton" width="24" height="24"/>
+        <image name="LS_Chat_MsgFail" width="18" height="18"/>
     </resources>
 </document>

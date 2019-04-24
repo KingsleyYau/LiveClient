@@ -19,21 +19,22 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImageView;
 
+@property (nonatomic, strong) LSImageViewLoader *loader;
 @end
 
 @implementation LSGreetingsDetailTableViewCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if( self ) {
-        // Initialization code
-        NSBundle *bundle = [LiveBundle mainBundle];
-        NSArray *nib = [bundle loadNibNamedWithFamily:@"LSGreetingsDetailTableViewCell" owner:nil options:nil];
-        self = [nib objectAtIndex:0];
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    return self;
-}
+//- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+//    if( self ) {
+//        // Initialization code
+//        NSBundle *bundle = [LiveBundle mainBundle];
+//        NSArray *nib = [bundle loadNibNamedWithFamily:@"LSGreetingsDetailTableViewCell" owner:nil options:nil];
+//        self = [nib objectAtIndex:0];
+//        self.selectionStyle = UITableViewCellSelectionStyleNone;
+//    }
+//    return self;
+//}
 
 + (id)getUITableViewCell:(UITableView *)tableView {
     LSGreetingsDetailTableViewCell *cell = (LSGreetingsDetailTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[LSGreetingsDetailTableViewCell cellIdentifier]];
@@ -43,6 +44,9 @@
         NSArray *nib = [bundle loadNibNamedWithFamily:[LSGreetingsDetailTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if (!cell.loader) {
+            cell.loader = [LSImageViewLoader loader];
+        }
     }
     return cell;
 }
@@ -62,8 +66,9 @@
     }
     
     if (url.length > 0) {
-        [[LSImageViewLoader loader] sdWebImageLoadView:self.contentImageView options:0 imageUrl:url placeholderImage:nil finishHandler:^(UIImage *image) {
-            WeakObject(self, weakSelf);
+        WeakObject(self, weakSelf);
+        [self.loader stop];
+        [self.loader loadImageWithImageView:self.contentImageView options:0 imageUrl:url placeholderImage:nil finishHandler:^(UIImage *image) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (image) {
                     if (!weakSelf.placeholderImageView.hidden) {
@@ -81,7 +86,7 @@
 }
 
 + (NSString *)cellIdentifier {
-    return @"LSGreetingsDetailIdentifier";
+    return @"LSGreetingsDetailTableViewCell";
 }
 
 

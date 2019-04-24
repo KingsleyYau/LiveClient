@@ -190,15 +190,16 @@
         // 更新联系人消息
         self.msg = msg;
 
-        NSString *premiumSticker = NSLocalizedStringFromSelf(@"Message_MaxPhiz");
-        NSString *animationSticker = NSLocalizedStringFromSelf(@"Message_minPhiz");
-        NSString *photoSticker = NSLocalizedStringFromSelf(@"Message_Photo");
-        NSString *voiceSticker = NSLocalizedStringFromSelf(@"Message_Voice");
+        NSString *premiumSticker = NSLocalizedString(@"NOTICE_MESSAGE_ANIMATING_STICKER", nil);
+        NSString *animationSticker = NSLocalizedString(@"NOTICE_MESSAGE_PREMIUM_STICKER", nil);
+        NSString *photoSticker = NSLocalizedString(@"NOTICE_MESSAGE_PHOTO", nil);
+        NSString *voiceSticker = NSLocalizedString(@"NOTICE_MESSAGE_VOICE", nil);
+        NSString *videoSticker = NSLocalizedString(@"NOTICE_MESSAGE_VIDEO", nil);
 
         if (msg.msgType == MT_Text && msg.textMsg) {
             NSString *string = [LSStringEncoder htmlEntityDecode:msg.textMsg.displayMsg];
             NSString *trimmedString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            self.lastInviteMessage = [self parseMessageTextEmotion:trimmedString font:[UIFont systemFontOfSize:15]];
+            self.lastInviteMessage = [self parseMessageTextEmotion:trimmedString font:[UIFont systemFontOfSize:14]];
             switch (msg.sendType) {
                 case SendType_Send: {
                     self.unreadCount = 0;
@@ -211,10 +212,10 @@
         } else if (msg.msgType == MT_Emotion) {
             switch (msg.sendType) {
                 case SendType_Recv: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, premiumSticker] font:[UIFont systemFontOfSize:15]];
+                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, premiumSticker] font:[UIFont systemFontOfSize:14]];
                 } break;
                 case SendType_Send: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", premiumSticker] font:[UIFont systemFontOfSize:15]];
+                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", premiumSticker] font:[UIFont systemFontOfSize:14]];
                 } break;
                 default:
                     break;
@@ -222,10 +223,10 @@
         } else if (msg.msgType == MT_MagicIcon) {
             switch (msg.sendType) {
                 case SendType_Recv: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, animationSticker] font:[UIFont systemFontOfSize:15]];
+                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, animationSticker] font:[UIFont systemFontOfSize:14]];
                 } break;
                 case SendType_Send: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", animationSticker] font:[UIFont systemFontOfSize:15]];
+                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", animationSticker] font:[UIFont systemFontOfSize:14]];
                 } break;
 
                 default:
@@ -234,10 +235,17 @@
         } else if (msg.msgType == MT_Photo) {
             switch (msg.sendType) {
                 case SendType_Recv: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, photoSticker] font:[UIFont systemFontOfSize:15]];
+            
+                   NSAttributedString *attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:@"  %@ %@", self.firstname, photoSticker] font:[UIFont systemFontOfSize:14]];
+                        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
+                    //TODO 照片信息icon
+                    self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LSChatlist_Photo"];
                 } break;
                 case SendType_Send: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", photoSticker] font:[UIFont systemFontOfSize:15]];
+                    NSAttributedString *attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:@"  You %@", photoSticker] font:[UIFont systemFontOfSize:14]];
+                    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
+                    //TODO 照片信息icon
+                    self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LSChatlist_Photo"];
                 } break;
                 default:
                     break;
@@ -245,16 +253,35 @@
         } else if (msg.msgType == MT_Voice) {
             switch (msg.sendType) {
                 case SendType_Recv: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, voiceSticker] font:[UIFont systemFontOfSize:15]];
+                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, voiceSticker] font:[UIFont systemFontOfSize:14]];
                 } break;
                 case SendType_Send: {
-                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", voiceSticker] font:[UIFont systemFontOfSize:15]];
+                    self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"You %@", voiceSticker] font:[UIFont systemFontOfSize:14]];
                 } break;
 
                 default:
                     break;
             }
-        } else {
+        }else if (msg.msgType == MT_Video) {
+            switch (msg.sendType) {
+                case SendType_Recv: {
+                    
+                    NSAttributedString *attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:@"  %@ %@", self.firstname, videoSticker] font:[UIFont systemFontOfSize:14]];
+                    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
+                    //TODO 视频图片icon
+                    self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LSChatlist_Video"];
+
+                } break;
+                case SendType_Send: {
+                    NSAttributedString *attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:@"  You %@", videoSticker] font:[UIFont systemFontOfSize:14]];
+                    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
+                    //TODO 视频图片icon
+                    self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LSChatlist_Video"];
+                } break;
+                default:
+                    break;
+            }
+        }else {
             // 如果消息被清空,当前联系还是保存之前的内容,需要置空
             self.lastInviteMessage = [[NSMutableAttributedString alloc] initWithString:@""];
         }
@@ -269,8 +296,8 @@
     // 更新为未读
     self.unreadCount = 0;
 
-    NSString *premiumSticker = NSLocalizedStringFromSelf(@"Message_MaxPhiz");
-    NSString *animationSticker = NSLocalizedStringFromSelf(@"Message_minPhiz");
+    NSString *premiumSticker = NSLocalizedStringFromSelf(@"NOTICE_MESSAGE_ANIMATING_STICKER");
+    NSString *animationSticker = NSLocalizedStringFromSelf(@"NOTICE_MESSAGE_PREMIUM_STICKER");
 
     if ([self isLastMsgChange:msg]) {
         // 更新邀请
@@ -358,9 +385,27 @@
         findString = attributeString.string;
     }
     
-    [attributeString addAttributes:@{ NSFontAttributeName : font } range:NSMakeRange(0, attributeString.length)];
+    [attributeString addAttributes:@{ NSFontAttributeName : font,
+                                      NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x383838)
+                                      } range:NSMakeRange(0, attributeString.length)];
+
     
     return attributeString;
 }
+
+- (NSAttributedString *)addShowIconImageText:(NSMutableAttributedString *)attributeString withImage:(NSString *)imageName {
+    //NSTextAttachment可以将要插入的图片作为特殊字符处理
+    NSTextAttachment *attch = [[NSTextAttachment alloc] init];
+    //定义图片内容及位置和大小
+    attch.image = [UIImage imageNamed:imageName];
+    attch.bounds = CGRectMake(0, -2, 12, 12);
+    //创建带有图片的富文本
+    NSAttributedString *string = [NSAttributedString attributedStringWithAttachment:attch];
+    //将图片放在第一位
+    [attributeString insertAttributedString:string atIndex:0];
+    
+    return attributeString;
+}
+
 
 @end

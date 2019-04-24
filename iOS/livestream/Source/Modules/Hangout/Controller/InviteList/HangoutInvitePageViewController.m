@@ -26,6 +26,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
     
+    self.isShowNavBar = NO;
+    
     self.curIndex = 0;
 }
 
@@ -67,13 +69,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // 初始化分栏
-    [self setupSegment];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    // 初始化分栏
+    [self setupSegment];
     
     // 加载默认页
     [self reloadData];
@@ -108,7 +110,7 @@
     NSMutableArray *sliderArray = [NSMutableArray arrayWithArray:self.sliderFixArray];
     NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.vcFixArray];
     // 填充好友分栏和分页
-    if( self.anchorIdArray.count > 0 ) {
+    if( self.anchorIdArray.count > 0 && !self.viewControllers.count) {
         for(HangoutInviteAnchor *item in self.anchorIdArray) {
             NSString *title = [NSString stringWithFormat:@"%@'s Friend", item.anchorName];
             JTSegmentItem *segmentItem = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:title];
@@ -121,12 +123,12 @@
             [self addChildViewController:vc];
             [viewControllers addObject:vc];
         }
+        self.segment.items = sliderArray;
+        [self.segment setupViewOpen];
+        // 选中默认分页界面
+        self.viewControllers = viewControllers;
     }
-    self.segment.items = sliderArray;
-    [self.segment setupViewOpen];
     
-    // 选中默认分页界面
-    self.viewControllers = viewControllers;
     for(HangoutInviteTableViewController *vc in self.viewControllers) {
         vc.inviteDelegate = self.inviteDelegate;
         [vc reloadInviteList];

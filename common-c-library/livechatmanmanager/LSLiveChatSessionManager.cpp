@@ -7,6 +7,7 @@
 //
 
 #include "LSLiveChatSessionManager.h"
+#include "LSLiveChatEnumDefine.h"
 
 // 定时业务类型
 typedef enum {
@@ -215,9 +216,8 @@ void LSLiveChatSessionManager::OnCheckCoupon(long requestId, bool success, const
         }
         
     }
-    if (errnum == "ERROR900010") {
-        m_listener->OnTokenOverTimeHandler(errnum, errmsg);
-    }
+
+    HandleTokenOverErrCode(0, errnum, errmsg);
     
 }
 
@@ -236,10 +236,8 @@ void LSLiveChatSessionManager::OnUseCoupon(long requestId, bool success, const s
         requestItem->param = (TaskParam)userItem;
 		m_operator->InsertRequestTask(this, (TaskParam)requestItem);
 	}
-    
-    if (errnum == "ERROR900010") {
-        m_listener->OnTokenOverTimeHandler(errnum, errmsg);
-    }
+
+    HandleTokenOverErrCode(0, errnum, errmsg);
 }
 
 bool LSLiveChatSessionManager::SendMsg(LSLCUserItem* userItem, LSLCMessageItem* msgItem) {
@@ -287,6 +285,13 @@ bool LSLiveChatSessionManager::IsCheckCoupon(LSLCUserItem* userItem)
                || userItem->m_chatType == LC_CHATTYPE_IN_CHAT_USE_TRY_TICKET
                || userItem->m_chatType == LC_CHATTYPE_MANINVITE );
     return result;
+}
+
+void LSLiveChatSessionManager::HandleTokenOverErrCode(int errNum, const string& errNo, const string& errmsg)
+{
+    if (IsTokenOverWithString(errNo) || IsTokenOverWithInt(errNum)) {
+        m_listener->OnTokenOverTimeHandler(LIVECHATERRCODE_TOKEN_OVER, errmsg);
+    }
 }
 
 bool LSLiveChatSessionManager::UseTryTicketProc(LSLCUserItem* userItem)
@@ -429,9 +434,7 @@ void LSLiveChatSessionManager::OnGetLeftCredit(long requestId, bool success, int
     // 连接失败
     else
     {
-        if (errnum == 10004 || errnum == 10002) {
-            m_listener->OnTokenOverTimeHandler("ERROR900010", errmsg);
-        }
+        HandleTokenOverErrCode(errnum, "", errmsg);
         LSLIVECHAT_LCC_ERR_TYPE fErrType = LSLIVECHAT_LCC_ERR_CONNECTFAIL;
         m_liveChatSender->SendMessageListFailProc(userItem, fErrType);
     }

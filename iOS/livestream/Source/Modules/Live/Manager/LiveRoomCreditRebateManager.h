@@ -26,7 +26,7 @@ typedef void (^GetCreditFinshtHandler)(BOOL success, double credit, int coupon, 
 @property (nonatomic, assign) int mCoupon;
 @property (nonatomic, assign) double mPostStamp;
 @property (nonatomic, strong) IMRebateItem * _Nullable imRebateItem;
-@property (nonatomic, weak) id <LiveRoomCreditRebateManagerDelegate> delegate;
+@property (nonatomic, weak) id <LiveRoomCreditRebateManagerDelegate> _Nullable delegate;
 
 /** 单例实例 */
 + (instancetype _Nullable )creditRebateManager;
@@ -36,7 +36,7 @@ typedef void (^GetCreditFinshtHandler)(BOOL success, double credit, int coupon, 
 - (BOOL)removeDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate;
 
 //请求账号余额
-- (void)getLeftCreditRequest:(GetCreditFinshtHandler)handler;
+- (void)getLeftCreditRequest:(GetCreditFinshtHandler _Nonnull )handler;
 // 设置信用点
 - (void)setCredit:(double)credit;
 // 获取信用点

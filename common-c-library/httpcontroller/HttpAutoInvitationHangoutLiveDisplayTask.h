@@ -34,7 +34,8 @@ public:
      *
      */
     void SetParam(
-                  const string& anchorId
+                  const string& anchorId,
+                  bool isAuto
                   );
     
 protected:

@@ -458,6 +458,27 @@ void LSLCPhotoManager::ClearBindMap()
     m_photoBindMap.unlock();
 }
 
+void LSLCPhotoManager::ClearBindMapWithUserId(const string &userId) {
+    m_photoBindMap.lock();
+    for (PhotoMsgMap::iterator iter = m_photoBindMap.begin();
+         iter != m_photoBindMap.end();
+         iter++) {
+        LCMessageList messageList = (*iter).second;
+        for (LCMessageList::iterator msgIter = messageList.begin();
+             msgIter != messageList.end();
+             msgIter++) {
+            LSLCMessageItem *item = (*msgIter);
+            if ((item->m_sendType == SendType_Recv && item->m_fromId == userId) || (item->m_sendType == SendType_Send && item->m_toId == userId)) {
+                (*iter).second.erase(msgIter);
+            }
+        }
+        if (messageList.size() <= 0) {
+            m_photoBindMap.erase(iter);
+        }
+    }
+    m_photoBindMap.unlock();
+}
+
 // --------------------- sending（正在发送） --------------------------
 // 获取指定票根的item并从待发送map表中移除
 LSLCMessageItem* LSLCPhotoManager::GetAndRemoveSendingItem(int msgId)
@@ -671,6 +692,7 @@ void LSLCPhotoManager::ClearAllFinishDownloader()
 
 void LSLCPhotoManager::onSuccess(LSLCPhotoDownloader* downloader, GETPHOTO_PHOTOSIZE_TYPE sizeType, LSLCMessageItem* item)
 {
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLCPhotoManager::onSuccess(sizeType:%d) begin", sizeType);
 	// downloader添加到释放列表
 	FinishDownloaderItem finishItem;
 	finishItem.downloader = downloader;
@@ -688,12 +710,14 @@ void LSLCPhotoManager::onSuccess(LSLCPhotoDownloader* downloader, GETPHOTO_PHOTO
     LCMessageList msgList;
     if (NULL != item && NULL != item->GetPhotoItem()) {
         msgList = GetMsgListWithBindMap(item->GetPhotoItem()->m_photoId);
+        FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLCPhotoManager::onSuccess(photoId:%s showFuzzyFilePath:%s thumbFuzzyFilePath:%s srcFilePath:%s showSrcFilePath:%s thumbSrcFilePath:%s)", item->GetPhotoItem()->m_photoId.c_str(), item->GetPhotoItem()->m_showFuzzyFilePath.c_str(), item->GetPhotoItem()->m_thumbFuzzyFilePath.c_str(), item->GetPhotoItem()->m_srcFilePath.c_str(), item->GetPhotoItem()->m_showSrcFilePath.c_str(), item->GetPhotoItem()->m_thumbSrcFilePath.c_str());
     }
 
 	// 回调
 	if (NULL != m_callback) {
 		m_callback->OnDownloadPhoto(true, sizeType, "", "", msgList);
 	}
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLCPhotoManager::onSuccess() end");
 }
 
 void LSLCPhotoManager::onFail(LSLCPhotoDownloader* downloader, GETPHOTO_PHOTOSIZE_TYPE sizeType, const string& errnum, const string& errmsg, LSLCMessageItem* item)
@@ -833,7 +857,8 @@ bool LSLCPhotoManager::RequestCheckPhotoList(const string& userId, const string&
              msgIter++)
         {
             LSLCMessageItem *item = (*msgIter);
-            if (item->m_sendType == SendType_Recv && !item->GetPhotoItem()->m_charge) {
+            // 判断item->GetPhotoItem()为空，因为endtalk时没有把m_photoBindMap的message释放
+            if (item->m_sendType == SendType_Recv && NULL != item->GetPhotoItem() && !item->GetPhotoItem()->m_charge) {
                 RequestCheckPhoto(item,userId,sid);
             }
         }

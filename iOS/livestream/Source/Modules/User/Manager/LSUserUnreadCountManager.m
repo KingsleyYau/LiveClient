@@ -257,6 +257,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
                 self.unreadModel.messageNoreadNum = userInfoItem.privateMessageUnreadNum;
                 self.unreadModel.bookingNoreadNum = userInfoItem.bookingUnreadNum;
                 self.unreadModel.backpackNoreadNum = userInfoItem.backpackUnreadNum;
+                self.unreadModel.sayHiNoreadNum = userInfoItem.sayHiResponseUnreadNum;
             }
             finshHandler(success, self.unreadModel);
         });
@@ -295,7 +296,9 @@ static LSUserUnreadCountManager * unreadCountinstance;
         case LSUnreadType_Booking:{ // Booking
             unreadNum = self.unreadModel.bookingNoreadNum;
         }break;
-            
+        case LSUnreadType_SayHi: { // SaiHi
+            unreadNum = self.unreadModel.sayHiNoreadNum;
+        }break;
         default:{ // BackPack
             unreadNum = self.unreadModel.backpackNoreadNum;
         }break;

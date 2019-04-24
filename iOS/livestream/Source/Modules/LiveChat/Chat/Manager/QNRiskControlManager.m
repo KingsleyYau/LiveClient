@@ -22,7 +22,7 @@ static QNRiskControlManager* riskControlManager = nil;
     return riskControlManager;
 }
 
-- (BOOL)isRiskControlType:(RiskType)type
+- (BOOL)isRiskControlType:(RiskType)type withController:(UIViewController *_Nullable)vc
 {
     BOOL isRisk = NO;
     switch (type) {
@@ -41,10 +41,16 @@ static QNRiskControlManager* riskControlManager = nil;
 //            }
 //            break;
         case RiskType_livechat:
-             isRisk = [LSLoginManager manager].loginItem.isLiveChatRisk;
+            // isLiveChatRisk 改用为isLiveChatPriv
+             //isRisk = [LSLoginManager manager].loginItem.isLiveChatRisk;
+            if ([LSLoginManager manager].loginItem.isLiveChatRisk || !([LSLoginManager manager].loginItem.userPriv.liveChatPriv.isLiveChatPriv)) {
+                isRisk = YES;
+            }
             if (isRisk) {
-                UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedString(@"RiskControl_Chat", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                [alertView show];
+                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"RiskControl_Chat", nil) preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil];
+                [alertVC addAction:cancelAC];
+                [vc presentViewController:alertVC animated:YES completion:nil];
             }
             break;
 //        case RiskType_admirer:

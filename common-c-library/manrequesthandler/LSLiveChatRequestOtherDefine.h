@@ -173,6 +173,11 @@
 #define OTHER_GETLEFTCREDIT_CREDIT  "credit"
 #define OTHER_GETLEFTCREDIT_COUPON  "coupon"
 
+#define OTHER_UPLOADMANPHOTO_PATH    "/api/?act=uploadChatImg"
+#define OTHER_UPLOADMANPHOTO_FILE    "file"
+#define OTHER_UPLOADMANPHOTO_URL    "url"
+#define OTHER_UPLOADMANPHOTO_MD5    "md5"
+
 #include <string>
 using namespace std;
 

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LSImageViewLoader.h"
 #import "LSHangoutListItemObject.h"
+#import "HangoutListFriendCollectionViewCell.h"
 @class HangoutListCell;
 @protocol HangoutListCellDelegate <NSObject>
 @optional
@@ -16,7 +17,7 @@
 - (void)hangoutListCellDidAchorPhoto:(NSInteger)row;
 - (void)hangoutListCell:(HangoutListCell *)cell didClickAchorFriendPhoto:(NSInteger)row;
 @end
-@interface HangoutListCell : UITableViewCell
+@interface HangoutListCell : UITableViewCell<UICollectionViewDataSource,UICollectionViewDelegate,HangoutListFriendCollectionViewCellDelegate>
 
 @property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewHeader;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
@@ -31,6 +32,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *inviteMsg;
 @property (weak, nonatomic) IBOutlet UIView *actionView;
 @property (weak, nonatomic) IBOutlet UILabel *anchorName;
+@property (nonatomic, strong) NSMutableArray *friendArray;
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

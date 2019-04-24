@@ -32,7 +32,7 @@ public:
                 logId = root[HANGOUTINVITE_LOG_ID_PARAM].asInt();
             }
             if (root[HANGOUTINVITE_IS_AUTO_PARAM].isNumeric()) {
-                isAnto =  GetReplyType(root[HANGOUTINVITE_IS_AUTO_PARAM].asInt() == 0 ? false : true);
+                isAuto =  GetReplyType(root[HANGOUTINVITE_IS_AUTO_PARAM].asInt() == 0 ? false : true);
             }
             if (root[HANGOUTINVITE_ANCHOR_ID_PARAM].isString()) {
                 anchorId = root[HANGOUTINVITE_ANCHOR_ID_PARAM].asString();
@@ -62,7 +62,7 @@ public:
 
     IMHangoutInviteItem() {
         logId = 0;
-        isAnto = false;
+        isAuto = false;
         anchorId = "";
         nickName = "";
         cover = "";
@@ -78,7 +78,7 @@ public:
     /**
      * 邀请信息
      * logId            记录ID
-     * isAnto           是否自动邀请
+     * isAuto           是否自动邀请
      * anchorId         主播ID
      * nickName         主播昵称
      * cover            封面图URL
@@ -86,8 +86,8 @@ public:
      * weights          权重值
      * avatarImg        主播头像
      */
-    int        logId;
-    bool          isAnto;
+    int          logId;
+    bool          isAuto;
     string        anchorId;
     string        nickName;
     string        cover;

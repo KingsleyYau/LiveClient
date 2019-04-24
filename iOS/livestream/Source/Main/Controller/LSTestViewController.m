@@ -36,18 +36,19 @@
 //        config.item.httpSvrUrl = @"http://demo-live.charmdate.com:3007";
 //        config.item.imSvrUrl = @"ws://demo-live.charmdate.com:3006";
 
-    config.item.httpSvrUrl = @"http://172.25.32.17:8617";
-    config.item.imSvrUrl = @"ws://172.25.32.17:8617";
+//    config.item.httpSvrUrl = @"http://172.25.32.17:8617";
+//    config.item.imSvrUrl = @"ws://172.25.32.17:8617";
 //    config.item.httpSvrUrl = @"http://192.168.88.17:8817";
 //    config.item.imSvrUrl = @"ws://192.168.88.17:8816";
 
-    [[LiveModule module] setServiceManager:nil];
+//    [[LiveModule module] setServiceManager:nil];
     [LiveModule module].delegate = self;
-
+    
 //    [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8817"];
-    [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8617"];
+//    [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8617"];
 
-//    [[LiveModule module] setConfigUrl:@"https://demo-live.charmdate.com:446"];
+    [[LiveModule module] setConfigUrl:@"https://demo.charmlive.com"];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,7 +82,7 @@
         // 保存输入
         self.token = self.textField.text;
         [self saveLoginParam];
-
+        
         // 开始登陆
         [[LiveModule module] start:@"manId123" token:self.textField.text];
 
@@ -119,7 +120,7 @@
     if (!_token || _token.length == 0) {
         _token = MAX_TOKEN;
     }
-    _token = CALVIN_TOKEN;
+    _token = MAX_TOKEN;
 }
 
 - (void)moduleOnLogin:(LiveModule *)module {
@@ -151,15 +152,17 @@
                                                        }];
             [vc addAction:ok];
             [self presentViewController:vc animated:NO completion:nil];
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }
     });
 }
 
+/*
 - (void)moduleOnNotification:(LiveModule *)module {
     NSLog(@"LSTestViewController::moduleOnNotification()");
     dispatch_async(dispatch_get_main_queue(), ^{
         UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-        
+
         UIViewController *vc = [LiveModule module].notificationVC;
         CGRect frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 20 + 5, self.view.frame.size.width, vc.view.frame.size.height);
         self.window = [[UIWindow alloc] initWithFrame:frame];
@@ -167,14 +170,14 @@
         UIWindow *parentView = self.window;
         [self.window addSubview:vc.view];
         [self.window makeKeyAndVisible];
-        
+
         [vc.view mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(parentView).offset(0);
             make.left.equalTo(parentView).offset(10);
             make.right.equalTo(parentView).offset(-10);
             make.height.equalTo(@(vc.view.frame.size.height));
         }];
-        
+
         // Keep the original keyWindow and avoid some unpredictable problems
         [keyWindow makeKeyWindow];
     });
@@ -184,5 +187,6 @@
     NSLog(@"LSTestViewController::moduleOnNotificationDisappear()");
     self.window = nil;
 }
+ */
 
 @end

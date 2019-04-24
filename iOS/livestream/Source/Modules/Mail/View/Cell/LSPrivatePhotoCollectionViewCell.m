@@ -46,13 +46,13 @@
             self.tipView.hidden = NO;
             [self.tipImageView setImage:[UIImage imageNamed:@"EMF_Private_Lock"]];
             self.tipLabel.text = NSLocalizedStringFromSelf(@"axA-EL-g1h.text");
-            [self.imageLoader loadImageWithImageView:self.privateImageView options:0 imageUrl:model.blurImgUrl placeholderImage:placeholderImage];
+            [self.imageLoader loadImageWithImageView:self.privateImageView options:0 imageUrl:model.blurImgUrl placeholderImage:placeholderImage finishHandler:nil];
         }break;
         
         case ExpenseTypeYes:{
             self.unlockImageView.hidden = NO;
             self.tipView.hidden = YES;
-            [self.imageLoader loadImageWithImageView:self.privateImageView options:0 imageUrl:model.smallImgUrl placeholderImage:placeholderImage];
+            [self.imageLoader loadImageWithImageView:self.privateImageView options:0 imageUrl:model.smallImgUrl placeholderImage:placeholderImage finishHandler:nil];
         }break;
             
         default:{
@@ -60,7 +60,7 @@
             self.tipView.hidden = NO;
             [self.tipImageView setImage:[UIImage imageNamed:@"Mail_Private_Photo_Expired"]];
             self.tipLabel.text = NSLocalizedStringFromSelf(@"EXPIRED");
-            [self.imageLoader loadImageWithImageView:self.privateImageView options:0 imageUrl:model.blurImgUrl placeholderImage:placeholderImage];
+            [self.imageLoader loadImageWithImageView:self.privateImageView options:0 imageUrl:model.blurImgUrl placeholderImage:placeholderImage finishHandler:nil];
         }break;
     }
 }

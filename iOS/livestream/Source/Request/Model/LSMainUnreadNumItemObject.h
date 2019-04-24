@@ -16,6 +16,7 @@
  * privateMessageUnreadNum      私信未读数量
  * bookingUnreadNum             预约未读数量
  * backpackUnreadNum            背包未读数量
+ * sayHiResponseUnreadNum       sayHi回复未读数量
  */
 @property (nonatomic, assign) int showTicketUnreadNum;
 @property (nonatomic, assign) int loiUnreadNum;
@@ -23,5 +24,6 @@
 @property (nonatomic, assign) int privateMessageUnreadNum;
 @property (nonatomic, assign) int bookingUnreadNum;
 @property (nonatomic, assign) int backpackUnreadNum;
+@property (nonatomic, assign) int sayHiResponseUnreadNum;
 
 @end

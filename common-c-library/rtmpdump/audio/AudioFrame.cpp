@@ -26,7 +26,7 @@ AudioFrame::AudioFrame() {
 
 AudioFrame::~AudioFrame() {
     if( mpAVFrame ) {
-        av_free(mpAVFrame);
+    	av_frame_free(&mpAVFrame);
         mpAVFrame = NULL;
     }
 }

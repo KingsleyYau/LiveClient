@@ -32,11 +32,11 @@
     self.isShowTaBar= YES;
     self.isFirstProgram = YES;
     
-    if (@available(iOS 11, *)) {
-     self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }else {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
+//    if (@available(iOS 11, *)) {
+//     self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+//    }else {
+//        self.automaticallyAdjustsScrollViewInsets = NO;
+//    }
     
     // webview请求url
     NSString *webSiteUrl = self.bannerUrl;
@@ -47,8 +47,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.hidden = NO;
 }
 
 - (void)setupRequestWebview {
@@ -61,8 +59,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.hidden = NO;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

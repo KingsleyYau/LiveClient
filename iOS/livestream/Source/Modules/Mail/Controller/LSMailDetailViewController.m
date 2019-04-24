@@ -51,15 +51,14 @@
 #define PRIVATEVIDEO @"PRIVATEVIDEO"
 
 typedef enum : NSUInteger {
-    AlertViewTypeDefault = 0,//默认无操作
-    AlertViewTypeBack,//返回草稿
-    AlertViewTypeSendTip,//发送二次确认提示
-    AlertViewTypeSendSuccessfully,//发送成功
+    AlertViewTypeDefault = 0,      //默认无操作
+    AlertViewTypeBack,             //返回草稿
+    AlertViewTypeSendTip,          //发送二次确认提示
+    AlertViewTypeSendSuccessfully, //发送成功
     AlertViewTypeNoSendPermissions //没有发信权限
 } AlertViewType;
 
-@interface LSMailDetailViewController ()<WKNavigationDelegate, WKUIDelegate, LSMailAttachmentViewControllerDelegate, UITextViewDelegate, UIScrollViewDelegate, LSChatTextViewDelegate, LSOutOfPoststampViewDelegate, LSOutOfCreditsViewDelegate, UITableViewDelegate, UITableViewDataSource, LSMailDetailFreePhotoCellDelegate, LSMailDetailPrivatePhotoCellDelegate, LSMailPrivateVideoCellDelegate, LSSendMailViewControllerDelegate, UINavigationBarDelegate>
-
+@interface LSMailDetailViewController () <WKNavigationDelegate, WKUIDelegate, LSMailAttachmentViewControllerDelegate, UITextViewDelegate, UIScrollViewDelegate, LSChatTextViewDelegate, LSOutOfPoststampViewDelegate, LSOutOfCreditsViewDelegate, UITableViewDelegate, UITableViewDataSource, LSMailDetailFreePhotoCellDelegate, LSMailDetailPrivatePhotoCellDelegate, LSMailPrivateVideoCellDelegate, LSSendMailViewControllerDelegate, UINavigationBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
@@ -124,9 +123,9 @@ typedef enum : NSUInteger {
 //发信需要的邮票
 @property (nonatomic, assign) NSInteger stamps;
 //买点弹窗
-@property (nonatomic, strong) LSOutOfCreditsView * creditsView;
+@property (nonatomic, strong) LSOutOfCreditsView *creditsView;
 //邮票弹窗
-@property (nonatomic, strong) LSOutOfPoststampView * poststampView;
+@property (nonatomic, strong) LSOutOfPoststampView *poststampView;
 
 @property (nonatomic, assign) CGFloat freeCellHeight;
 @property (nonatomic, assign) CGFloat privateCellHeight;
@@ -150,151 +149,133 @@ typedef enum : NSUInteger {
 
 - (void)initCustomParam {
     [super initCustomParam];
+
+    self.isShowNavBar = NO;
+    self.isHideNavBackButton = NO;
     
     self.isShowKeyBorad = NO;
     self.isSpendStamp = NO;
-    
+
     self.freeCellHeight = 0;
     self.privateCellHeight = 0;
     self.scrollViewOffy = 0;
-    
+
     self.items = [[NSMutableArray alloc] init];
-    
+
     self.typeArray = [[NSMutableArray alloc] init];
     self.freeImages = [[NSMutableArray alloc] init];
     self.privateImages = [[NSMutableArray alloc] init];
     self.videos = [[NSMutableArray alloc] init];
-    
+
     self.sessionManager = [[LSSessionRequestManager alloc] init];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.wkWebView.UIDelegate = self;
     self.wkWebView.navigationDelegate = self;
-    
+
     self.scrollView.delegate = self;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    [self.tableView registerClass:[LSMailDetailFreePhotoCell class] forCellReuseIdentifier:[LSMailDetailFreePhotoCell cellIdentifier]];
-    [self.tableView registerClass:[LSMailDetailPrivatePhotoCell class] forCellReuseIdentifier:[LSMailDetailPrivatePhotoCell cellIdentifier]];
-    [self.tableView registerClass:[LSMailPrivateVideoCell class] forCellReuseIdentifier:[LSMailPrivateVideoCell cellIdentifier]];
-    
+
     // 默认隐藏内容列表
     self.attachmentsTip.text = @"";
     self.attachmentsTipTop = 0;
     self.tableViewHeight.constant = 0;
     self.tableView.scrollEnabled = NO;
     self.tableView.bounces = NO;
-    
+
     self.replyBtn.hidden = YES;
-    
+
     self.navTitleLabel = [[UILabel alloc] init];
-    self.navTitleLabel.text = NSLocalizedStringFromSelf(@"TITLE");;
+    self.navTitleLabel.text = NSLocalizedStringFromSelf(@"TITLE");
+    ;
     self.navTitleLabel.frame = CGRectMake(0, 0, 100, 44);
     self.navTitleLabel.textAlignment = NSTextAlignmentCenter;
     self.navTitleLabel.font = [UIFont systemFontOfSize:19];
-    
+
     self.navLeftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.navLeftBtn addTarget:self action:@selector(backToAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navLeftBtn setImage:[UIImage imageNamed:@"LS_Nav_Back_b"] forState:UIControlStateNormal];
-    self.navLeftBtn.frame = CGRectMake(0, 0, 44, 44);
-    
+    self.navLeftBtn.frame = CGRectMake(0, 0, 30, 44);
+
     self.navRightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.navRightBtn addTarget:self action:@selector(replyAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navRightBtn setImage:[UIImage imageNamed:@"Mail_Detail_Reply"] forState:UIControlStateNormal];
     self.navRightBtn.frame = CGRectMake(0, 0, 44, 44);
-    
+
     [self setupTapLabelStyle];
     [self setupCornerRadius];
     [self setupTextView];
-    
+
     self.wkWebView.scrollView.scrollEnabled = NO;
 
     // 头像
-    [[LSImageViewLoader loader] refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.letterItem.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-    }];
+    [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
+                                           options:SDWebImageRefreshCached
+                                          imageUrl:self.letterItem.anchorAvatar
+                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                     finishHandler:^(UIImage *image){
+                                     }];
     // 姓名
-    self.nameLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"FROM_ANCHOR"),self.letterItem.anchorNickName];
+    self.nameLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"FROM_ANCHOR"), self.letterItem.anchorNickName];
     // 发信时间信件ID
     LSDateTool *tool = [[LSDateTool alloc] init];
     NSString *time = [tool showGreetingDetailTimeOfDate:[NSDate dateWithTimeIntervalSince1970:self.letterItem.letterSendTime]];
-    self.sendTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"MAIL_ID"),time, self.letterItem.letterId];
-    
+    self.sendTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"MAIL_ID"), time, self.letterItem.letterId];
+
     // 添加键盘事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
-    
-    if (IS_IPHONE_X) {
-        self.topDistance.constant = -NavIphoneXHeight;
-    }else {
-        self.topDistance.constant = -NavNormalHeight;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
     if (@available(iOS 11, *)) {
-        // translucent为yes防止在ios11系统上,透明会失效
-        self.navigationController.navigationBar.translucent = YES;
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
-        self.navigationController.navigationBar.translucent = NO;
     }
-    [self hideNavgationBarBottomLine:YES];
-    // 判断是否读信受阻
-    
-    [self getLeftCredit];
-//    if ([LiveRoomCreditRebateManager creditRebateManager].mPostStamp < 1 && [LiveRoomCreditRebateManager creditRebateManager].mCredit < 0.8 && !self.letterItem.hasRead) {
-//        self.addCreditsBtn.layer.cornerRadius = 5;
-//        self.noCreditsView.hidden = NO;
-//        self.nodataView.hidden = YES;
-//    } else {
-//        self.noCreditsView.hidden = YES;
-//        if (self.letterItem.letterId.length > 0 && !self.viewDidAppearEver) {
-//            [self getMailDeatail:self.letterItem.letterId];
-//        }
-//    }
-    
-    
 
-    // 初始化草稿管理器
-    [[LSSendMailDraftManager manager] initMailDraftLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName];
-    self.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:self.letterItem.anchorId];
-    self.replyTextView.text = self.quickReplyStr;
+    // 判断是否读信受阻
+    [self getLeftCredit];
+
+    if (!self.viewDidAppearEver) {
+        // 初始化草稿管理器
+        [[LSSendMailDraftManager manager] initMailDraftLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName];
+    }
+
+    // 不在当前显示
+    if( !self.viewIsAppear ) {
+        self.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:self.letterItem.anchorId];
+        self.replyTextView.text = self.quickReplyStr;
+    }
     
     [self setupAlphaStatus:self.scrollView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
 
     self.navigationItem.titleView = self.navTitleLabel;
-    
+
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.navLeftBtn];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
-    
+
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.navRightBtn];
     self.navigationItem.rightBarButtonItem = barButtonItem;
     
+    self.navigationController.navigationBar.hidden = NO;
     [self setupAlphaStatus:self.scrollView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self hideNavgationBarBottomLine:NO];
-    // 还原状态
-    self.navigationController.navigationBar.translucent = NO;
-    if (self.navigationController.navigationBar.subviews.count > 0) {
-        self.navigationController.navigationBar.subviews[0].alpha = 1.0;
-    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -306,26 +287,26 @@ typedef enum : NSUInteger {
     self.headImageView.layer.borderWidth = 1;
     self.headImageView.layer.borderColor = [UIColor whiteColor].CGColor;
     self.headImageView.layer.masksToBounds = YES;
-    
+
     self.onlineImageView.layer.cornerRadius = self.onlineImageView.frame.size.height / 2;
     self.onlineImageView.layer.borderWidth = 1;
     self.onlineImageView.layer.borderColor = [UIColor whiteColor].CGColor;
     self.onlineImageView.layer.masksToBounds = YES;
-    
+
     self.replyBtn.layer.cornerRadius = self.replyBtn.frame.size.height / 2;
     self.replyBtn.layer.masksToBounds = YES;
     self.replyBtn.layer.shadowColor = Color(0, 0, 0, 0.5).CGColor;
     self.replyBtn.layer.shadowOffset = CGSizeMake(0, 0);
     self.replyBtn.layer.shadowOpacity = 0.5;
     self.replyBtn.layer.shadowRadius = 1.0f;
-    
+
     self.replyTextView.layer.cornerRadius = 5;
     self.replyTextView.layer.masksToBounds = YES;
-    
+
     self.replySendBtn.layer.cornerRadius = 5;
     self.replySendBtn.layer.masksToBounds = YES;
-    
-    LSShadowView * shadowView = [[LSShadowView alloc]init];
+
+    LSShadowView *shadowView = [[LSShadowView alloc] init];
     [shadowView showShadowAddView:self.replySendBtn];
 }
 
@@ -333,7 +314,7 @@ typedef enum : NSUInteger {
     self.replyTextView.placeholder = NSLocalizedStringFromSelf(@"TYPE_YOUR_MSG");
     self.replyTextView.chatTextViewDelegate = self;
     self.replyTextView.delegate = self;
-    
+
     self.textShadowView.layer.cornerRadius = 5;
     self.textShadowView.clipsToBounds = NO;
     self.textShadowView.layer.shadowColor = Color(162, 180, 206, 1).CGColor;
@@ -341,29 +322,29 @@ typedef enum : NSUInteger {
     self.textShadowView.layer.shadowOpacity = 0.5;
     self.textShadowView.layer.shadowRadius = 1;
     self.textShadowView.layer.masksToBounds = NO;
-    
+
     self.replyTextView.layer.cornerRadius = 5;
     self.replyTextView.layer.masksToBounds = YES;
-    
-    self.replyTextView.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DEAR"),self.letterItem.anchorNickName];
+
+    self.replyTextView.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DEAR"), self.letterItem.anchorNickName];
 }
 
 - (void)setupTapLabelStyle {
-    
+
     // 信用點及郵票都沒有，或者有超過1個郵票或以上，默認使用郵票，如果沒有郵票有信用點默認使用信用點。
     if ([LiveRoomCreditRebateManager creditRebateManager].mPostStamp >= 1 || ([LiveRoomCreditRebateManager creditRebateManager].mCredit <= 0 && [LiveRoomCreditRebateManager creditRebateManager].mPostStamp < 1)) {
         self.isSpendStamp = YES;
-        self.infoStr = [LSLoginManager manager].loginItem.mailPriv.userSendMailImgPriv.quickPostStampMsg;
+        self.infoStr = [LSLoginManager manager].loginItem.userPriv.mailPriv.userSendMailImgPriv.quickPostStampMsg;
     } else {
         self.isSpendStamp = NO;
-        self.infoStr = [LSLoginManager manager].loginItem.mailPriv.userSendMailImgPriv.quickCoinMsg;
+        self.infoStr = [LSLoginManager manager].loginItem.userPriv.mailPriv.userSendMailImgPriv.quickCoinMsg;
     }
     //没有发信权限(隐藏快捷回复)
-    if (![LSLoginManager manager].loginItem.mailPriv.userSendMailPriv) {
+    if (![LSLoginManager manager].loginItem.userPriv.mailPriv.userSendMailPriv) {
         self.replyViewHeight.constant = 0;
         [self.view layoutSubviews];
     }
-    
+
     // 邮票提示
     [self setupInfoTip];
     [self setupInfoTipLabel];
@@ -375,9 +356,9 @@ typedef enum : NSUInteger {
     self.infoTipLabel.preferredMaxLayoutWidth = SCREEN_WIDTH - 40;
     self.infoTipLabel.font = [UIFont systemFontOfSize:12];
     self.infoTipLabel.displaysAsynchronously = NO;
-    
+
     WeakObject(self, weakSelf);
-    [self.infoTipLabel setHighlightTapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+    [self.infoTipLabel setHighlightTapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
         YYTextHighlight *highlight = [text yy_attribute:YYTextHighlightAttributeName atIndex:range.location];
         NSString *link = highlight.userInfo[@"linkUrl"];
         if ([link isEqualToString:TAP_HERE_URL]) {
@@ -390,33 +371,35 @@ typedef enum : NSUInteger {
 - (void)setupInfoTipLabel {
     //TODO: 判断是否有邮票
     if (self.isSpendStamp) {
-        self.infoStr = [LSLoginManager manager].loginItem.mailPriv.userSendMailImgPriv.quickPostStampMsg;
+        self.infoStr = [LSLoginManager manager].loginItem.userPriv.mailPriv.userSendMailImgPriv.quickPostStampMsg;
+    } else {
+        self.infoStr = [LSLoginManager manager].loginItem.userPriv.mailPriv.userSendMailImgPriv.quickCoinMsg;
     }
-    else {
-        self.infoStr = [LSLoginManager manager].loginItem.mailPriv.userSendMailImgPriv.quickCoinMsg;
-    }
-    NSString *titleString = [NSString stringWithFormat:@"<font face=\"arialMT\" color=\"#999999\">%@</font>",self.infoStr];
+    NSString *titleString = [NSString stringWithFormat:@"<font face=\"arialMT\" color=\"#999999\">%@</font>", self.infoStr];
     if (titleString.length > 0) {
         //创建  NSMutableAttributedString 富文本对象
-        NSMutableAttributedString *maTitleString = [[NSMutableAttributedString alloc] initWithData:[titleString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                                                                                                                                      NSFontAttributeName : [UIFont systemFontOfSize:12],
-                                                                                                                                                                      } documentAttributes:nil error:nil];
+        NSMutableAttributedString *maTitleString = [[NSMutableAttributedString alloc] initWithData:[titleString dataUsingEncoding:NSUnicodeStringEncoding]
+                                                                                           options:@{ NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType,
+                                                                                                      NSFontAttributeName : [UIFont systemFontOfSize:12],
+                                                                                           }
+                                                                                documentAttributes:nil
+                                                                                             error:nil];
         UIImage *image = [UIImage imageNamed:@"Mail_Reply_Tip_Button"];
         //添加到富文本对象里
         NSMutableAttributedString *imageStr = [NSMutableAttributedString yy_attachmentStringWithContent:image contentMode:UIViewContentModeCenter attachmentSize:image.size alignToFont:[UIFont systemFontOfSize:12] alignment:YYTextVerticalAlignmentCenter];
         //加入文字后面
         [maTitleString appendAttributedString:imageStr];
-        
+
         YYTextHighlight *highlight = [YYTextHighlight new];
         NSRange imgRange = [maTitleString.string rangeOfString:imageStr.string];
-        highlight.userInfo = @{@"linkUrl":TAP_HERE_URL};
+        highlight.userInfo = @{ @"linkUrl" : TAP_HERE_URL };
         [maTitleString yy_setTextHighlight:highlight range:imgRange];
-        
+
         YYTextContainer *container = [[YYTextContainer alloc] init];
         container.size = CGSizeMake(SCREEN_WIDTH - 40, 56);
         YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:maTitleString];
         self.infoTipLabel.textLayout = layout;
-        
+
         //        self.infoTipLabel.attributedText = maTitleString;
     }
 }
@@ -428,7 +411,7 @@ typedef enum : NSUInteger {
     [self.creditsView removeFromSuperview];
     self.creditsView = nil;
     self.poststampView = [LSOutOfPoststampView initWithActionViewDelegate:self];
-    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"%0.1f",self.credit]];
+    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"%0.1f", self.credit]];
 }
 
 - (void)lsOutOfPoststampView:(LSOutOfPoststampView *)addView didSelectAddCredit:(UIButton *)creditBtn {
@@ -445,7 +428,7 @@ typedef enum : NSUInteger {
     [self.poststampView removeFromSuperview];
     self.poststampView = nil;
     self.creditsView = [LSOutOfCreditsView initWithActionViewDelegate:self];
-    [self.creditsView outOfCreditShowPoststampAndAddCreditView:self.view poststampCount:[NSString stringWithFormat:@"%ld",(long)self.stamps]];
+    [self.creditsView outOfCreditShowPoststampAndAddCreditView:self.view poststampCount:[NSString stringWithFormat:@"%ld", (long)self.stamps]];
 }
 
 - (void)lsOutOfCreditsView:(LSOutOfCreditsView *)addView didSelectAddCredit:(UIButton *)creditBtn {
@@ -465,40 +448,62 @@ typedef enum : NSUInteger {
 #pragma mark - AlertView回调
 - (void)showAlertViewMsg:(NSString *)titleMsg cancelBtnMsg:(NSString *)cancelMsg otherBtnMsg:(NSString *)otherMsg alertViewType:(AlertViewType)type {
     [self.view endEditing:YES];
-    WeakObject(self, weakSelf);
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.56 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:titleMsg delegate:weakSelf cancelButtonTitle:cancelMsg otherButtonTitles:otherMsg, nil];
-        alertView.tag = type;
-        [alertView show];
-    });
+    if (self.isShowKeyBorad) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.56 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:titleMsg preferredStyle:UIAlertControllerStyleAlert];
+            if (cancelMsg.length > 0) {
+                UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:cancelMsg style:UIAlertActionStyleCancel handler:nil];
+                [alertVC addAction:cancelAC];
+            }
+            if (otherMsg.length > 0) {
+                UIAlertAction *otherAC = [UIAlertAction actionWithTitle:otherMsg style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self alertView:type clickCancleOrOther:1];
+                }];
+                [alertVC addAction:otherAC];
+            }
+            [self presentViewController:alertVC animated:YES completion:nil];
+        });
+    } else {
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:titleMsg preferredStyle:UIAlertControllerStyleAlert];
+        if (cancelMsg.length > 0) {
+            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:cancelMsg style:UIAlertActionStyleCancel handler:nil];
+            [alertVC addAction:cancelAC];
+        }
+        if (otherMsg.length > 0) {
+            UIAlertAction *otherAC = [UIAlertAction actionWithTitle:otherMsg style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self alertView:type clickCancleOrOther:1];
+            }];
+            [alertVC addAction:otherAC];
+        }
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    switch (alertView.tag) {
-        case AlertViewTypeBack:{//返回弹窗
-            if (buttonIndex == 0) {
+- (void)alertView:(NSInteger)tag clickCancleOrOther:(NSInteger)index {
+    switch (tag) {
+        case AlertViewTypeBack: { //返回弹窗
+            if (index == 0) {
                 //Save Draft
                 [[LSSendMailDraftManager manager] saveMailDraftFromLady:self.letterItem.anchorId content:self.replyTextView.text];
                 [self.navigationController popViewControllerAnimated:YES];
-            } else if (buttonIndex == 1) {
+            } else if (index == 1) {
                 //Delete Draft
                 [[LSSendMailDraftManager manager] deleteMailDraft:self.letterItem.anchorId];
                 [self.navigationController popViewControllerAnimated:YES];
             }
             
-        }break;
-        case AlertViewTypeSendTip:{//发送二次确认提示
-            if (alertView.cancelButtonIndex != buttonIndex) {
+        } break;
+        case AlertViewTypeSendTip: { //发送二次确认提示
+            if (index != 0) {
                 [self getSendMailPrice];
             }
-        }break;
-        case AlertViewTypeSendSuccessfully:{//发送成功
+        } break;
+        case AlertViewTypeSendSuccessfully: { //发送成功
             [self.navigationController popViewControllerAnimated:YES];
-        }break;
-        case AlertViewTypeNoSendPermissions:{//没有发信权限
+        } break;
+        case AlertViewTypeNoSendPermissions: { //没有发信权限
             [self.navigationController popViewControllerAnimated:YES];
-        }break;
+        } break;
         default:
             break;
     }
@@ -508,13 +513,13 @@ typedef enum : NSUInteger {
 - (void)loadMailContentWebView:(NSString *)contentStr {
     NSString *path = [[LiveBundle mainBundle] pathForResource:@"Mail_Content" ofType:@"html"];
     NSString *html = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    
+
     NSRange startRange = [html rangeOfString:@"<div class=\"content\">"];
     NSRange endRange = [html rangeOfString:@"</div>"];
     NSRange range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
     NSString *result = [html substringWithRange:range];
     NSString *tempContent = [html stringByReplacingOccurrencesOfString:result withString:contentStr];
-    
+
     NSURL *url = [[LiveBundle mainBundle] URLForResource:@"Mail_Content.html" withExtension:nil];
     [self.wkWebView loadHTMLString:tempContent baseURL:url];
 }
@@ -522,8 +527,8 @@ typedef enum : NSUInteger {
 #pragma mark - HTTP请求
 - (void)getLeftCredit {
     [self showLoading];
-    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
-        WeakObject(self, weakSelf);
+    WeakObject(self, weakSelf);
+    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 // 判断是否读信受阻
@@ -534,9 +539,9 @@ typedef enum : NSUInteger {
                     [weakSelf hideLoading];
                 } else {
                     weakSelf.noCreditsView.hidden = YES;
-                    
+
                     // 如果用户可以发信 则获取主播信件权限 反之请求信件详情
-                    if ([LSLoginManager manager].loginItem.mailPriv.userSendMailPriv) {
+                    if ([LSLoginManager manager].loginItem.userPriv.mailPriv.userSendMailPriv) {
                         if (weakSelf.letterItem.anchorId.length > 0) {
                             [weakSelf getAnchorLetterPriv:weakSelf.letterItem.anchorId];
                         }
@@ -546,21 +551,21 @@ typedef enum : NSUInteger {
                         }
                     }
                 }
-            }else {
+            } else {
                 [weakSelf hideLoading];
                 [[DialogTip dialogTip] showDialogTip:weakSelf.view tipText:errmsg];
             }
         });
-      
+
     }];
 }
 
 - (void)getAnchorLetterPriv:(NSString *)anchorId {
+    WeakObject(self, weakSelf);
     LSAnchorLetterPrivRequest *request = [[LSAnchorLetterPrivRequest alloc] init];
     request.anchorId = anchorId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSAnchorLetterPrivItemObject *item) {
-        NSLog(@"LSMailDetailViewController::LSAnchorLetterPrivRequest ([获取主播信件权限 success : %@, errnum : %d, errmsg : %@, userCanSend : %d, anchorCanSend : %d])",BOOL2SUCCESS(success), errnum, errmsg, item.userCanSend, item.anchorCanSend);
-        WeakObject(self, weakSelf);
+        NSLog(@"LSMailDetailViewController::LSAnchorLetterPrivRequest ([获取主播信件权限 success : %@, errnum : %d, errmsg : %@, userCanSend : %d, anchorCanSend : %d])", BOOL2SUCCESS(success), errnum, errmsg, item.userCanSend, item.anchorCanSend);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 if (!item.anchorCanSend) {
@@ -582,12 +587,12 @@ typedef enum : NSUInteger {
 
 - (void)getSendMailPrice {
     [self showLoading];
-    LSGetSendMailPriceRequest * request = [[LSGetSendMailPriceRequest alloc]init];
+    WeakObject(self, weakSelf);
+    LSGetSendMailPriceRequest *request = [[LSGetSendMailPriceRequest alloc] init];
     request.imgNumber = 0;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, double creditPrice, double stampPrice) {
-        WeakObject(self, weakSelf);
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSMailDetailViewController::LSGetSendMailPriceRequest (获取发送信件所需余额 %@ errmsg: %@ errnum: %d creditPrice: %f stampPrice : %f)",BOOL2SUCCESS(success),errmsg,errnum,creditPrice, stampPrice);
+            NSLog(@"LSMailDetailViewController::LSGetSendMailPriceRequest (获取发送信件所需余额 %@ errmsg: %@ errnum: %d creditPrice: %f stampPrice : %f)", BOOL2SUCCESS(success), errmsg, errnum, creditPrice, stampPrice);
             [weakSelf hideLoading];
             if (success) {
                 weakSelf.credit = creditPrice;
@@ -604,6 +609,7 @@ typedef enum : NSUInteger {
 - (void)sendMail {
     // 快捷回复
     [self showLoading];
+    WeakObject(self, weakSelf);
     LSSendEmfRequest *request = [[LSSendEmfRequest alloc] init];
     request.anchorId = self.letterItem.anchorId;
     request.emfId = self.letterItem.letterId;
@@ -614,8 +620,7 @@ typedef enum : NSUInteger {
         request.comsumeType = LSLETTERCOMSUMETYPE_CREDIT;
     }
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
-        NSLog(@"LSMailDetailViewController::sendMail (发送信件 %@ errmsg: %@ errnum: %d)",BOOL2SUCCESS(success),errmsg,errnum);
-        WeakObject(self, weakSelf);
+        NSLog(@"LSMailDetailViewController::sendMail (发送信件 %@ errmsg: %@ errnum: %d)", BOOL2SUCCESS(success), errmsg, errnum);
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideLoading];
             if (success) {
@@ -624,10 +629,10 @@ typedef enum : NSUInteger {
                 if ([weakSelf.mailDetailDelegate respondsToSelector:@selector(lsMailDetailViewController:haveReplyMailDetailMail:index:)]) {
                     [weakSelf.mailDetailDelegate lsMailDetailViewController:weakSelf haveReplyMailDetailMail:weakSelf.letterItem index:weakSelf.mailIndex];
                 }
-                
+
                 [weakSelf showAlertViewMsg:NSLocalizedStringFromSelf(@"SEND_MAIL_SUCCESSFULLY") cancelBtnMsg:NSLocalizedString(@"OK", nil) otherBtnMsg:nil alertViewType:AlertViewTypeSendSuccessfully];
-                [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
-                    
+                [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg){
+
                 }];
                 [[LSSendMailDraftManager manager] deleteMailDraft:weakSelf.letterItem.anchorId];
             } else {
@@ -650,24 +655,24 @@ typedef enum : NSUInteger {
 
 - (void)getMailDeatail:(NSString *)mailId {
     [self showAndResetLoading];
+    WeakObject(self, weakSelf);
     LSGetEmfDetailRequest *request = [[LSGetEmfDetailRequest alloc] init];
     request.emfId = mailId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSHttpLetterDetailItemObject *item) {
-        NSLog(@"LSMailDetailViewController::getMailDeatail (请求信件详情 success : %@, errnum : %d, errmsg : %@, letterId : %@)",BOOL2SUCCESS(success), errnum, errmsg, item.letterId);
+        NSLog(@"LSMailDetailViewController::getMailDeatail (请求信件详情 success : %@, errnum : %d, errmsg : %@, letterId : %@)", BOOL2SUCCESS(success), errnum, errmsg, item.letterId);
         dispatch_async(dispatch_get_main_queue(), ^{
-            WeakObject(self, weakSelf);
             [weakSelf hideAndResetLoading];
             if (success) {
-                [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
-                    
+                [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg){
+
                 }];
-                
+
                 // 设置已读
                 weakSelf.letterItem.hasRead = YES;
                 [weakSelf setupMailDetail:item];
                 // 刷新列表已读信息
                 if ([weakSelf.mailDetailDelegate
-                     respondsToSelector:@selector(lsMailDetailViewController:haveReadMailDetailMail:index:)]) {
+                        respondsToSelector:@selector(lsMailDetailViewController:haveReadMailDetailMail:index:)]) {
                     [weakSelf.mailDetailDelegate lsMailDetailViewController:weakSelf haveReadMailDetailMail:weakSelf.letterItem index:weakSelf.mailIndex];
                 }
             } else {
@@ -690,7 +695,7 @@ typedef enum : NSUInteger {
     // 信件内容
     NSString *contentStr = [item.letterContent stringByReplacingOccurrencesOfString:@"\n" withString:@"<br>"];
     [self loadMailContentWebView:contentStr];
-    
+
     // 显示邮件内容
     [self setupTableView:item];
 }
@@ -701,9 +706,9 @@ typedef enum : NSUInteger {
     [self.freeImages removeAllObjects];
     [self.privateImages removeAllObjects];
     [self.videos removeAllObjects];
-    
+
     CGFloat imageWidth = (self.tableView.frame.size.width - 40) / 3;
-    
+
     if (item.letterImgList.count > 0) {
         for (LSHttpLetterImgItemObject *obj in item.letterImgList) {
             LSMailAttachmentModel *model = [[LSMailAttachmentModel alloc] init];
@@ -715,7 +720,7 @@ typedef enum : NSUInteger {
                 model.blurImgUrl = obj.blurImg;
                 [self.items insertObject:model atIndex:0];
                 [self.freeImages addObject:model];
-                
+
             } else {
                 model.attachType = AttachmentTypePrivatePhoto;
                 model.mailId = item.letterId;
@@ -730,7 +735,7 @@ typedef enum : NSUInteger {
             }
         }
     }
-    
+
     if (item.letterVideoList.count > 0) {
         for (LSHttpLetterVideoItemObject *obj in item.letterVideoList) {
             LSMailAttachmentModel *model = [[LSMailAttachmentModel alloc] init];
@@ -747,7 +752,7 @@ typedef enum : NSUInteger {
             [self.videos addObject:model];
         }
     }
-    
+
     CGFloat tableHeight = 0;
     if (self.freeImages.count > 0) {
         self.freeCellHeight = imageWidth + 46;
@@ -763,7 +768,7 @@ typedef enum : NSUInteger {
         tableHeight += [LSMailPrivateVideoCell cellHeight];
         [self.typeArray addObject:PRIVATEVIDEO];
     }
-    
+
     if (self.typeArray.count > 0) {
         self.attachmentsTip.text = NSLocalizedStringFromSelf(@"0PN-Cz-SU5.text");
         self.attachmentsTipTop.constant = ATTACHMRNTSTIPTOP;
@@ -780,11 +785,19 @@ typedef enum : NSUInteger {
         return;
     }
     if ([[LSSendMailDraftManager manager] isShowDraftDialogLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName content:self.replyTextView.text]) {
-        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedStringFromSelf(@"Back_Tip") delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedStringFromSelf(@"Save Draft"),NSLocalizedStringFromSelf(@"Delete Draft"),NSLocalizedString(@"Cancel", nil), nil];
-        alertView.tag = AlertViewTypeBack;
-        [alertView show];
-    }
-    else{
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"Back_Tip") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *saveAC = [UIAlertAction actionWithTitle:NSLocalizedStringFromSelf(@"Save Draft") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self alertView:AlertViewTypeBack clickCancleOrOther:0];
+        }];
+        UIAlertAction *deleAC = [UIAlertAction actionWithTitle:NSLocalizedStringFromSelf(@"Delete Draft") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self alertView:AlertViewTypeBack clickCancleOrOther:1];
+        }];
+        UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil];
+        [alertVC addAction:saveAC];
+        [alertVC addAction:deleAC];
+        [alertVC addAction:cancelAC];
+        [self presentViewController:alertVC animated:YES completion:nil];
+    } else {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -815,14 +828,13 @@ typedef enum : NSUInteger {
     vc.photoUrl = self.letterItem.anchorAvatar;
     vc.quickReplyStr = self.replyTextView.text;
     [self.navigationController pushViewController:vc animated:YES];
-    
 }
 
 - (IBAction)replySendAction:(id)sender {
     [[LiveModule module].analyticsManager reportActionEvent:MailClickQuickReply eventCategory:EventCategoryMail];
     [self hiddenKeyBroad];
-    
-    if ([self.replyTextView.text isEqualToString:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"DEAR"),self.letterItem.anchorNickName]]|| self.replyTextView.text.length == 0 || [self isEmpty:self.replyTextView.text]) {
+
+    if ([self.replyTextView.text isEqualToString:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"DEAR"), self.letterItem.anchorNickName]] || self.replyTextView.text.length == 0 || [self isEmpty:self.replyTextView.text]) {
         [self showAlertViewMsg:NSLocalizedStringFromSelf(@"NO_MAIL_TEXT") cancelBtnMsg:nil otherBtnMsg:NSLocalizedString(@"OK", nil) alertViewType:AlertViewTypeDefault];
         return;
     }
@@ -833,7 +845,7 @@ typedef enum : NSUInteger {
 - (IBAction)addCreditsBtnDid:(id)sender {
     // 跳转充值界面 保存草稿箱
     [[LSSendMailDraftManager manager] saveMailDraftFromLady:self.letterItem.anchorId content:self.replyTextView.text];
-    LSAddCreditsViewController * vc = [[LSAddCreditsViewController alloc]initWithNibName:nil bundle:nil];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -846,14 +858,14 @@ typedef enum : NSUInteger {
 
 #pragma mark - 输入控件管理
 - (void)addSingleTap {
-    if( self.singleTap == nil ) {
+    if (self.singleTap == nil) {
         self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeAllInputView)];
         [self.scrollView addGestureRecognizer:self.singleTap];
     }
 }
 
 - (void)removeSingleTap {
-    if( self.singleTap ) {
+    if (self.singleTap) {
         [self.scrollView removeGestureRecognizer:self.singleTap];
         self.singleTap = nil;
     }
@@ -908,9 +920,9 @@ typedef enum : NSUInteger {
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-                [self presentViewController:nvc animated:NO completion:^{
-                    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                }];
+                [self presentViewController:nvc
+                                   animated:NO
+                                 completion:nil];
                 return;
             }
         }
@@ -932,9 +944,9 @@ typedef enum : NSUInteger {
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-                [self presentViewController:nvc animated:NO completion:^{
-                    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                }];
+                [self presentViewController:nvc
+                                   animated:NO
+                                 completion:nil];
                 return;
             }
         }
@@ -956,9 +968,9 @@ typedef enum : NSUInteger {
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-                [self presentViewController:nvc animated:NO completion:^{
-                    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                }];
+                [self presentViewController:nvc
+                                   animated:NO
+                                 completion:nil];
                 return;
             }
         }
@@ -1025,14 +1037,14 @@ typedef enum : NSUInteger {
     if (![self.replyTextView.text isEqualToString:self.quickReplyStr]) {
         [LSSendMailDraftManager manager].isEdit = YES;
     }
-    
-    if (self.replyTextView.text.length == 0){
+
+    if (self.replyTextView.text.length == 0) {
         self.replySendBtn.userInteractionEnabled = NO;
         self.replySendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x8CAFF7);
-    }else {
+    } else {
         self.replySendBtn.userInteractionEnabled = YES;
         self.replySendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x97AF3);
-        
+
         // 超过字符限制
         NSString *toBeString = textView.text;
         // 获取是否存在高亮部分
@@ -1047,8 +1059,6 @@ typedef enum : NSUInteger {
     }
 }
 
-
-
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     // 增加手势
     [self addSingleTap];
@@ -1060,10 +1070,11 @@ typedef enum : NSUInteger {
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     NSLog(@"LSMailDetailViewController::didFinishNavigation()");
     WeakObject(self, weakSelf);
-    [webView evaluateJavaScript:@"document.body.offsetHeight;" completionHandler:^(id _Nullable height, NSError * _Nullable error) {
-        NSString *heightStr = [NSString stringWithFormat:@"%@",height];
-        weakSelf.contentViewHeight.constant = heightStr.floatValue;
-    }];
+    [webView evaluateJavaScript:@"document.body.offsetHeight;"
+              completionHandler:^(id _Nullable height, NSError *_Nullable error) {
+                  NSString *heightStr = [NSString stringWithFormat:@"%@", height];
+                  weakSelf.contentViewHeight.constant = heightStr.floatValue;
+              }];
 }
 
 #pragma mark -KeyboardNSNotification
@@ -1086,7 +1097,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
-    NSDictionary* userInfo = [notification userInfo];
+    NSDictionary *userInfo = [notification userInfo];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
@@ -1117,27 +1128,27 @@ typedef enum : NSUInteger {
 // 设置透明状态
 - (void)setupAlphaStatus:(UIScrollView *)scrollView {
     CGFloat navHeight = NavNormalHeight;
-    
+
     if (IS_IPHONE_X) {
         navHeight = NavIphoneXHeight;
     }
-    
-    CGFloat per = scrollView.contentOffset.y /navHeight;
+
+    CGFloat per = scrollView.contentOffset.y / navHeight;
     if (scrollView.contentOffset.y >= navHeight) {
         [self setNeedsNavigationBackground:1];
-    }else {
+    } else {
         [self setNeedsNavigationBackground:per];
     }
 }
 
 - (void)setNeedsNavigationBackground:(CGFloat)alpha {
     // 导航栏背景透明度设置
-    
-    NSArray * views = [self.navigationController.navigationBar subviews];
+    [self.navigationController.navigationBar layoutIfNeeded];
+    NSArray *views = [self.navigationController.navigationBar subviews];
     UIView *barBackgroundView = [views objectAtIndex:0];
     UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
     BOOL result = self.navigationController.navigationBar.isTranslucent;
-    NSLog(@"navigationBar.isTranslucent %@  barBackgroundView %@",BOOL2SUCCESS(result),[barBackgroundView subviews]);
+    NSLog(@"navigationBar.isTranslucent %@  barBackgroundView %@", BOOL2SUCCESS(result), [barBackgroundView subviews]);
     if (result) {
         if (backgroundImageView != nil && backgroundImageView.image != nil) {
             barBackgroundView.alpha = alpha;
@@ -1148,13 +1159,14 @@ typedef enum : NSUInteger {
                 if (backgroundEffectView != nil) {
                     backgroundEffectView.alpha = alpha;
                 }
-            }else {
+            } else {
                 barBackgroundView.alpha = alpha;
             }
         }
     } else {
         barBackgroundView.alpha = alpha;
     }
+    
     self.navTitleLabel.alpha = alpha;
 //    self.navLeftBtn.alpha = alpha;
     self.navRightBtn.alpha = alpha;

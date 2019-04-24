@@ -22,6 +22,28 @@ public:
 
 protected:
 	void onRun() {
+        list<string> cookiesInfo = HttpClient::GetCookiesInfo();
+        string cookies = "";
+        for (list<string>::const_iterator iter = cookiesInfo.begin(); iter != cookiesInfo.end(); iter++) {
+            if (!cookies.empty()) {
+                cookies += ", ";
+            }
+            cookies += (*iter);
+        }
+        FileLevelLog(LIVESHOW_HTTP_LOG,
+                     KLog::LOG_WARNING,
+                     "HttpRequest::onRun( "
+                     "request : %p, "
+                     "url : %s, "
+                     "param : %s, "
+                     "cookies : %s "
+                     ") \n\n",
+                     mpHttpRequest,
+                     mpHttpRequest->mUrl.c_str(),
+                     mpHttpRequest->mEntiy.GetContentDesc().c_str(),
+                     cookies.c_str()
+                     );
+        
 		bool bFlag = mpHttpRequest->mHttpClient.Request(&mpHttpRequest->mEntiy);
         if( mpHttpRequest->mpIHttpRequestCallback != NULL ) {
             FileLevelLog(LIVESHOW_HTTP_LOG,
@@ -29,10 +51,12 @@ protected:
                          "HttpRequest::onRun( "
                          "request : %p, "
                          "url : %s, "
+                         "param : %s, "
                          "respond : %s "
                          ") \n\n",
                          mpHttpRequest,
                          mpHttpRequest->mUrl.c_str(),
+                         mpHttpRequest->mEntiy.GetContentDesc().c_str(),
                          mpHttpRequest->mpRespondBuffer);
             mpHttpRequest->mpIHttpRequestCallback->OnFinish(
                                                             mpHttpRequest,

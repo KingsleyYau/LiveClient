@@ -119,6 +119,14 @@
 #include "HttpAutoInvitationClickLogTask.h"
 #include "HttpAutoInvitationHangoutLiveDisplayTask.h"
 #include "HttpGetHangoutStatusTask.h"
+#include "HttpResourceConfigTask.h"
+#include "HttpGetSayHiAnchorListTask.h"
+#include "HttpIsCanSendSayHiTask.h"
+#include "HttpSendSayHiTask.h"
+#include "HttpGetAllSayHiListTask.h"
+#include "HttpGetResponseSayHiListTask.h"
+#include "HttpSayHiDetailTask.h"
+#include "HttpReadResponseTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -126,7 +134,7 @@
 #include <string>
 using namespace std;
 
-#define HTTPREQUEST_INVALIDREQUESTID	0
+#define LS_HTTPREQUEST_INVALIDREQUESTID	0
 
 class IHttpTask;
 typedef KSafeMap<IHttpTask*, IHttpTask*> RequestMap;
@@ -1506,6 +1514,7 @@ public:
                                       const string& roomId,
                                       const string& anchorId,
                                       const string& recommendId,
+                                      bool isCreateOnly = false,
                                       IRequestSendInvitationHangoutCallback* callback = NULL
                                       );
 
@@ -1603,6 +1612,7 @@ public:
      *
      * @param pHttpRequestManager           http管理器
      * @param anchorId                      主播ID
+     * @param isAuto                        是否自动（1：自动  0：手动）
      
      * @param callback                      接口回调
      *
@@ -1611,6 +1621,7 @@ public:
     long long AutoInvitationHangoutLiveDisplay(
                                 HttpRequestManager *pHttpRequestManager,
                                 const string& anchorId,
+                                bool isAuto,
                                 IRequestAutoInvitationHangoutLiveDisplayCallback* callback = NULL
                                 );
     
@@ -1619,6 +1630,7 @@ public:
      *
      * @param pHttpRequestManager           http管理器
      * @param anchorId                      主播ID
+     * @param isAuto                        是否自动（1：自动  0：手动）
      
      * @param callback                      接口回调
      *
@@ -1627,6 +1639,7 @@ public:
     long long AutoInvitationClickLog(
                                 HttpRequestManager *pHttpRequestManager,
                                 const string& anchorId,
+                                bool isAuto,
                                 IRequestAutoInvitationClickLogCallback* callback = NULL
                                 );
     
@@ -1831,6 +1844,7 @@ public:
      * @param pHttpRequestManager           http管理器
      * @param isPriMsgAppPush               是否接收私信推送通知
      * @param isMailAppPush                 是否接收私信推送通知
+     * @param isSayHiAppPush                是否接收SayHi推送通知
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -1839,6 +1853,7 @@ public:
                                   HttpRequestManager *pHttpRequestManager,
                                   bool isPriMsgAppPush,
                                   bool isMailAppPush,
+                                  bool isSayHiAppPush,
                                   IRequestSetPushConfigCallback* callback = NULL
                                   );
     
@@ -2003,6 +2018,137 @@ public:
                          const string& anchorId,
                          IRequestCanSendEmfCallback* callback = NULL
                          );
+    
+    /**
+     * 14.1.获取主题、文本配置信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SayHiConfig(
+                         HttpRequestManager *pHttpRequestManager,
+                         IRequestResourceConfigCallback* callback = NULL
+                         );
+    
+    /**
+     * 14.2.符合发送Say Hi的主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetSayHiAnchorList(
+                          HttpRequestManager *pHttpRequestManager,
+                          IRequestGetSayHiAnchorListCallback* callback = NULL
+                          );
+    
+    /**
+     * 14.3.检测对某主播是否能发送sayHi
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long IsCanSendSayHi(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& anchorId,
+                             IRequestIsCanSendSayHiCallback* callback = NULL
+                             );
+    
+    /**
+     * 14.4.发送sayHi
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                     主播ID
+     * @param themeId                      主题ID
+     * @param textId                       文本ID
+     * @param callback                     接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SendSayHi(
+                         HttpRequestManager *pHttpRequestManager,
+                         const string& anchorId,
+                         int themeId,
+                         int textId,
+                         IRequestSendSayHiCallback* callback = NULL
+                         );
+    
+    /**
+     * 14.5.All ‘Say Hi’列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetAllSayHiList(
+                              HttpRequestManager *pHttpRequestManager,
+                              int start,
+                              int step,
+                              IRequestGetAllSayHiListCallback* callback = NULL
+                              );
+    
+    /**
+     * 14.6.Waiting for your reply列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param type                          排序（LSSAYHIDETAILTYPE_EARLIEST：Unread First，LSSAYHIDETAILTYPE_LATEST：Latest First）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetResponseSayHiList(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   LSSayHiListType type,
+                                   int start,
+                                   int step,
+                                   IRequestGetResponseSayHiListCallback* callback = NULL
+                                   );
+    
+    /**
+     * 14.7.SayHi详情
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param type                          排序（LSSAYHIDETAILTYPE_EARLIEST：Earliest first，LSSAYHIDETAILTYPE_LATEST：Latest First）
+     * @param sayHiId                       sayHi的ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SayHiDetail(
+                           HttpRequestManager *pHttpRequestManager,
+                           LSSayHiDetailType type,
+                           const string& sayHiId,
+                           IRequestSayHiDetailCallback* callback = NULL
+                           );
+    
+    /**
+     * 14.8.查看主播回复(扣费)
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param sayHiId                       sayHi的ID
+     * @param responseId                    回复ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ReadResponse(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string& sayHiId,
+                          const string& responseId,
+                          IRequestReadResponseCallback* callback = NULL
+                          );
+
     
 private:
     void OnTaskFinish(IHttpTask* task);

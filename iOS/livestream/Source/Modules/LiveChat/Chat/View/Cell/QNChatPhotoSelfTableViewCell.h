@@ -26,9 +26,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *retryBtn;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivity;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageW;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageH;
+@property (weak, nonatomic) IBOutlet UIImageView *loadPhotoFailIcon;
 
 + (NSString *)cellIdentifier;
-+ (NSInteger)cellHeight;
++ (NSInteger)cellHeight:(BOOL)isCross;
 + (id)getUITableViewCell:(UITableView*)tableView;
 
 - (IBAction)retryBtnAction:(id)sender;

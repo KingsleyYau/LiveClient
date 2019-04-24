@@ -42,6 +42,12 @@
     NSLog(@"LSUserSettingViewController dealloc");
 }
 
+- (void)initCustomParam {
+    [super initCustomParam];
+
+    self.isShowNavBar = NO;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -65,26 +71,27 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self getPersonalProfile];
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-
     [self getCredit];
+
+    if (!self.viewDidAppearEver) {
+        if (@available(iOS 11, *)) {
+            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+        self.extendedLayoutIncludesOpaqueBars = YES;
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-
-    [super viewDidAppear:animated];
 }
 
 - (void)setTableHeadView {
-
     CGFloat headH = 220;
     CGFloat topH = 20;
     //iPhoneX兼容
@@ -100,7 +107,7 @@
 
     [self.tableView setTableHeaderView:self.headView];
 
-    [self.tableView setContentInset:UIEdgeInsetsMake(-topH, 0, 0, 0)];
+    //    [self.tableView setContentInset:UIEdgeInsetsMake(-topH, 0, 0, 0)];
 
     [self.tableView setTableFooterView:[UIView new]];
 
@@ -113,14 +120,13 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
 #pragma mark - 接口
-- (BOOL)getPersonalProfile{
+- (BOOL)getPersonalProfile {
     LSGetMyProfileRequest *request = [[LSGetMyProfileRequest alloc] init];
-    request.finishHandler = ^(BOOL success,  HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSPersonalProfileItemObject * _Nullable userInfoItem){
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSPersonalProfileItemObject *_Nullable userInfoItem) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                self.headView.nameLabel.text = [NSString stringWithFormat:@"%@ %@",userInfoItem.firstname,userInfoItem.lastname];
+                self.headView.nameLabel.text = [NSString stringWithFormat:@"%@ %@", userInfoItem.firstname, userInfoItem.lastname];
                 [self saveUserData:userInfoItem];
             }
         });
@@ -152,7 +158,7 @@
 
 - (void)getCredit {
     __weak typeof(self) weakSelf = self;
-    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         if (success) {
             weakSelf.creditStr = [NSString stringWithFormat:@"%.2f", credit];
             weakSelf.vouchersStr = [NSString stringWithFormat:@"%d", coupon];
@@ -266,16 +272,14 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-
 // 保存男士资料信息
 - (void)saveUserData:(LSPersonalProfileItemObject *)item {
     NSUserDefaults *userData = [NSUserDefaults standardUserDefaults];
     NSString *key = [LSLoginManager manager].loginItem.userId;
-    NSString *manKey = [NSString stringWithFormat:@"LSManProfile_%@",key];
+    NSString *manKey = [NSString stringWithFormat:@"LSManProfile_%@", key];
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:item];
     [userData setObject:data forKey:manKey];
     [userData synchronize];
 }
-
 
 @end

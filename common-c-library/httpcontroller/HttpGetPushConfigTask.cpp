@@ -51,19 +51,13 @@ bool HttpGetPushConfigTask::ParseData(const string& url, bool bFlag, const char*
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
-    bool isPriMsgAppPush = false;
-    bool isMailAppPush = false;
+    HttpAppPushConfigItem appPushItem;
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             if (dataJson.isObject()) {
-                if (dataJson[GETPUSHCONFIG_PRIVMSG_PUSH].isNumeric()) {
-                    isPriMsgAppPush = dataJson[GETPUSHCONFIG_PRIVMSG_PUSH].asInt() == 0 ? false : true;
-                }
-                if (dataJson[GETPUSHCONFIG_MAIL_PUSH].isNumeric()) {
-                    isMailAppPush = dataJson[GETPUSHCONFIG_MAIL_PUSH].asInt() == 0 ? false : true;
-                }
+                appPushItem.Parse(dataJson);
             }
         }
         
@@ -77,7 +71,7 @@ bool HttpGetPushConfigTask::ParseData(const string& url, bool bFlag, const char*
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGetPushConfig(this, bParse, errnum, errmsg, isPriMsgAppPush, isMailAppPush);
+        mpCallback->OnGetPushConfig(this, bParse, errnum, errmsg, appPushItem);
     }
     
     return bParse;

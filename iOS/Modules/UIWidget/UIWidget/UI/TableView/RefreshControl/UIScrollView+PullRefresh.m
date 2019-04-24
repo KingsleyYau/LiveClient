@@ -72,10 +72,6 @@ static CGFloat headerHeight = 0;
     }
 }
 
-- (void)setHeaderContent:(CGFloat)headerViewHeight {
-    headerHeight = headerViewHeight;
-}
-
 - (void)startPullDown:(BOOL)animation {
     LSPullRefreshView *pullRefreshView = [self viewWithTag:RefreshViewTypePullDown];
     if (pullRefreshView && (pullRefreshView.state == PullRefreshNormal || pullRefreshView.state == PullRefreshPulling)) {

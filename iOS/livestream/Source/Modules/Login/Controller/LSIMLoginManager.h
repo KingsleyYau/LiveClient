@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeDelegate:(id<LSIMLoginManagerDelegate> _Nonnull)delegate;
 
+
+@property (nonatomic, assign, readonly) LoginStatus status;
 @end
 
 NS_ASSUME_NONNULL_END

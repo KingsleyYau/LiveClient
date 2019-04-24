@@ -153,6 +153,17 @@ typedef enum {
     HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP = 17208,                         // 信用点或者邮票不足(17208):(调用13.4.信件详情接口, 调用13.5.发送信件接口)
     HTTP_LCC_ERR_EXIST_HANGOUT = 18003,                                        // 当前会员已在hangout直播间（调用8.11.获取当前会员Hangout直播状态接口）
     
+    /* SayHi */
+    HTTP_LCC_ERR_SAYHI_MAN_NO_PRIV = 17401,                     // 男士无权限(17401)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_LADY_NO_PRIV = 17402,                    // 女士无权限(174012)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_ANCHOR_ALREADY_SEND_LOI = 17403,         // 主播发过意向信（返回值补充"errdata":{"id":"意向信ID"}）(17403)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_MAN_ALREADY_SEND_SAYHI = 17404,          // 男士发过SayHi（返回值补充"errdata":{"id":"sayHi ID"}）(17404)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_ALREADY_CONTACT = 17405,                 // 男士主播已建立联系(17405)(调用14.4.发送SayHi接口)
+    
+    HTTP_LCC_ERR_SAYHI_MAN_LIMIT_NUM_DAY = 17406,               // 男士每日数量限制(17406)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_REPLY = 17407,    // 男士总数量限制-有主播回复(17407)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_UNREPLY = 17408,  // 男士总数量限制-无主播回复(17408)(调用14.4.发送SayHi接口)
+    
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
     HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE = -22335,                 // 其他设备登录，这里时本地返回的，仅用于ios
@@ -852,6 +863,60 @@ typedef enum {
 // int 转换 LIVECHATINVITE_RISK_TYPE
 inline LSSendImgRiskType GetLSSendImgRiskType(int value) {
     return LSSENDIMGRISKTYPE_BEGIN <= value && value <= LSSENDIMGRISKTYPE_END ? (LSSendImgRiskType)value : LSSENDIMGRISKTYPE_NORMAL;
+}
+
+// SayHi列表类型
+typedef enum {
+    LSSAYHILISTTYPE_UNKOWN = 0,
+    LSSAYHILISTTYPE_UNREAD = 1,
+    LSSAYHILISTTYPE_LATEST = 2,
+    LSSAYHILISTTYPE_BEGIN = LSSAYHILISTTYPE_UNKOWN,
+    LSSAYHILISTTYPE_END = LSSAYHILISTTYPE_LATEST,
+}LSSayHiListType;
+
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline int GetLSSayHiListTypeWithInt(LSSayHiListType type) {
+    int value = 1;
+    switch (type) {
+        case LSSAYHILISTTYPE_UNREAD:
+            value = 1;
+            break;
+        case LSSAYHILISTTYPE_LATEST:
+            value = 2;
+            break;
+        default:
+            break;
+    }
+    return value;
+}
+
+// SayHi详情类型
+typedef enum {
+    LSSAYHIDETAILTYPE_UNKOWN = 0,
+    LSSAYHIDETAILTYPE_EARLIEST = 1,
+    LSSAYHIDETAILTYPE_LATEST = 2,
+    LSSAYHIDETAILTYPE_UNREAD = 3,
+    LSSAYHIDETAILTYPE_BEGIN = LSSAYHIDETAILTYPE_UNKOWN,
+    LSSAYHIDETAILTYPE_END = LSSAYHIDETAILTYPE_UNREAD,
+}LSSayHiDetailType;
+
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline int GetLSSayHiDetailTypeWithInt(LSSayHiDetailType type) {
+    int value = 1;
+    switch (type) {
+        case LSSAYHIDETAILTYPE_EARLIEST:
+            value = 1;
+            break;
+        case LSSAYHIDETAILTYPE_LATEST:
+            value = 2;
+            break;
+        case LSSAYHIDETAILTYPE_UNREAD:
+            value = 3;
+            break;
+        default:
+            break;
+    }
+    return value;
 }
 
 #endif

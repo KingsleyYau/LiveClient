@@ -10,7 +10,8 @@
 #define HttpAutoInvitationClickLogTask_H_
 
 #include "HttpRequestTask.h"
-#include "item/HttpHangoutAnchorItem.h"
+#include "HttpLoginProtocol.h"
+#include "HttpRequestEnum.h"
 
 class HttpAutoInvitationClickLogTask;
 
@@ -34,7 +35,8 @@ public:
      *
      */
     void SetParam(
-                  const string& anchorId
+                  const string& anchorId,
+                  bool isAuto
                   );
     
 protected:

@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "You will be charged 2.5 credits to play this video. View videos will remain free for 3 days."; ObjectID = "2V1-2N-V89"; */
+"2V1-2N-V89.text" = "You will be charged 2.5 credits to play this video. View videos will remain free for 3 days.";
+
+/* Class = "UILabel"; text = "Trouble loading full video"; ObjectID = "6Vs-AX-cjx"; */
+"6Vs-AX-cjx.text" = "Trouble loading full video";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fTn-3v-GZ6"; */
+"fTn-3v-GZ6.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = " Tap to Retry"; ObjectID = "ipA-zD-0X8"; */
+"ipA-zD-0X8.normalTitle" = " Tap to Retry";
+
+/* Class = "UILabel"; text = "This is broadcaster's private video."; ObjectID = "xvU-mc-pD8"; */
+"xvU-mc-pD8.text" = "This is broadcaster's private video.";

@@ -79,6 +79,7 @@ public:
 private:
     // Http
     virtual void OnSendPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const LSLCLCSendPhotoItem& item) override;
+    virtual void OnUploadManPhoto(long requestId, bool success, int errnum, const string& errmsg, const string& url, const string& md5) override;
    
     // ------------------- ILSLiveChatRequestLiveChatControllerCallback -------------------
 private:
@@ -103,6 +104,10 @@ private:
 	void SendPhotoLiveChatMsgProc(LSLCMessageItem* item);
     // 发送消息成功后，更新会话状态(包括文字，表情，图片)，功能：为了endtalk的取消，判断是否时男士自动邀请
     void OnSendMessageSessionProcess(LSLCMessageItem* item);
+    // 处理错误码是否时Token过期(根据字符串和整形)
+    void HandleTokenOverWithErrCode(int errNum, const string& errNo, const string& errmsg);
+    // 根据错误码判断是否余额不足
+    void HandleNotSufficientFunds(const string& errNo, const string& userId);
     
 private:
     ILSLiveChatManManagerOperator* m_operator;

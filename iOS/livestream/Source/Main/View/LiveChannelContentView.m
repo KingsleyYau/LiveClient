@@ -125,7 +125,8 @@ static NSString *footerViewIdentifier = @"footerView";
     [cell.imageViewLoader loadImageWithImageView:cell.coverImageView
                                          options:0
                                         imageUrl:item.roomPhotoUrl
-                                placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
+                                placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]
+                                   finishHandler:nil];
 
     return cell;
 }

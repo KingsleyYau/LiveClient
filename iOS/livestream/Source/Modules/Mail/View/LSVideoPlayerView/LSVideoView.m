@@ -17,7 +17,6 @@
 @interface LSVideoView ()<LSVideoProgressViewDelegate, LSLadyVideoProgressViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic,strong) AVPlayer * player;
 @property (nonatomic,strong) AVPlayerItem * item;
-@property (nonatomic,strong) MPMoviePlayerController *movewController;
 @property (nonatomic,strong) id playTimeObserver; // 观察者
 @property (nonatomic,strong) LSVideoProgressView * progressView;
 @property (nonatomic,strong) UIView * playView;
@@ -28,6 +27,10 @@
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 
 @property (nonatomic, strong) UILabel *shortLabel;
+
+@property (nonatomic, assign) BOOL isPerformShow;
+
+@property (nonatomic, strong) UIView *bottomShadowView;
 @end
 
 @implementation LSVideoView
@@ -35,6 +38,7 @@
 - (instancetype)initWithFrame:(CGRect)frame isShowProgress:(BOOL)isShow {
     self = [super initWithFrame:frame];
     if (self) {
+        self.isPerformShow = YES;
         [self removeObserveAndNOtification];
         [self.playView removeFromSuperview];
         self.playView = nil;
@@ -47,7 +51,7 @@
             [self addSubview:self.progressView];
         }
         
-        self.isFill = NO;
+        self.isFill = YES;
     }
     return self;
 }
@@ -55,29 +59,18 @@
 - (void)play {
     if (self.url.length > 0) {
         NSURL * url = [NSURL URLWithString:self.url];
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
-            
-            self.progressView.frame = CGRectMake(0, self.frame.size.height - 40, self.frame.size.width, 40);
-            self.item = [[AVPlayerItem alloc] initWithURL:url];
-            self.player = [AVPlayer playerWithPlayerItem:self.item];
-            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-            if (self.isFill) {
-                self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-            } else {
-                self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-            }
-            self.playerLayer.frame =self.playView.frame;
-            [self.playView.layer addSublayer:self.playerLayer];
-            [self addObserveAndNOtification];
-            
+        self.progressView.frame = CGRectMake(0, self.frame.size.height - 40, self.frame.size.width, 40);
+        self.item = [[AVPlayerItem alloc] initWithURL:url];
+        self.player = [AVPlayer playerWithPlayerItem:self.item];
+        self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        if (self.isFill) {
+            self.playerLayer.videoGravity =AVLayerVideoGravityResizeAspectFill;
         } else {
-            self.movewController = [[MPMoviePlayerController alloc] initWithContentURL:url];
-            [self.movewController setControlStyle:MPMovieControlStyleNone];
-            self.movewController.repeatMode = MPMovieRepeatModeOne;
-            [self.movewController.view setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-            [self addSubview:self.movewController.view];
-            [self.movewController play];
+            self.playerLayer.videoGravity =AVLayerVideoGravityResizeAspect ;
         }
+        self.playerLayer.frame =self.playView.frame;
+        [self.playView.layer addSublayer:self.playerLayer];
+        [self addObserveAndNOtification];
     }
 }
 
@@ -108,9 +101,6 @@
     [self.playerLayer removeFromSuperlayer];
     self.player = nil;
     self.playerLayer = nil;
-    if (self.movewController) {
-        [self.movewController stop];
-    }
 }
 
 // 观察播放进度
@@ -157,6 +147,9 @@
                 if (!(self.playTime > 0)) {
                     [self setMaxDuration:CMTimeGetSeconds(duration)];
                 }
+                if ([self.delegate respondsToSelector:@selector(videoIsReadyToPlay)]) {
+                    [self.delegate videoIsReadyToPlay];
+                }
             }
                 break;
             case AVPlayerItemStatusUnknown: {
@@ -194,6 +187,7 @@
         [self.player play];
     } else {
         [self removeObserveAndNOtification];
+        [self.ladyProgressView setPlaySuspendOrStart:NO];
         // 播放完成
         if ([self.delegate respondsToSelector:@selector(onRecvVideoViewPlayDone)]) {
             [self.delegate onRecvVideoViewPlayDone];
@@ -230,17 +224,72 @@
 
 #pragma mark - LadyVideoShow
 // 女士详情播放视频模式
-- (instancetype)initWithFrame:(CGRect)frame isSlider:(BOOL)isShow {
+- (instancetype)initWithFrame:(CGRect)frame isSlider:(BOOL)isShow isShowPlayTime:(BOOL)isShowPlayTime {
     self = [super initWithFrame:frame];
     if (self) {
+        self.isPerformShow = YES;
         [self removeObserveAndNOtification];
         self.playView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self addSubview:self.playView];
         if (isShow) {
             self.ladyProgressView = [[LSLadyVideoProgressView alloc] init];
             self.ladyProgressView.delegate = self;
+            if (!isShowPlayTime) {
+                [self.ladyProgressView hiddenPlayTime];
+            }
             [self addSubview:self.ladyProgressView];
             [self showLadyVideoProgress:NO];
+            [self createGesture];
+        } else {
+            self.shortLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 46, frame.size.width - 10, 46)];
+            self.shortLabel.textAlignment = NSTextAlignmentRight;
+            self.shortLabel.font = [UIFont systemFontOfSize:16];
+            self.shortLabel.textColor = [UIColor whiteColor];
+            [self addSubview:self.shortLabel];
+        }
+    }
+    return self;
+}
+
+// 聊天视频播放视频模式
+- (instancetype)initWithFrame:(CGRect)frame isSlider:(BOOL)isShow isShowPlayTime:(BOOL)isShowPlayTime isPerformShow:(BOOL)isPerformShow {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.isPerformShow = isPerformShow;
+        [self removeObserveAndNOtification];
+        self.playView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        [self addSubview:self.playView];
+//        [self.playView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.edges.equalTo(self);
+//        }];
+        
+        self.bottomShadowView = [[UIView alloc] init];
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0xD4000000).CGColor,(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0x25000000).CGColor, (__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0x00000000).CGColor];
+        gradientLayer.locations = @[@0,@0.75,@1.0];
+        gradientLayer.startPoint = CGPointMake(0, 1.0);
+        gradientLayer.endPoint = CGPointMake(0, 0.0);
+        gradientLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, 110);
+        [self.bottomShadowView.layer addSublayer:gradientLayer];
+        [self addSubview:self.bottomShadowView];
+        [self.bottomShadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self);
+            make.height.equalTo(@110);
+        }];
+        
+        if (isShow) {
+            self.ladyProgressView = [[LSLadyVideoProgressView alloc] init];
+            self.ladyProgressView.delegate = self;
+            [self.ladyProgressView setBackgroundColor:[UIColor clearColor]];
+            if (!isShowPlayTime) {
+                [self.ladyProgressView hiddenPlayTime];
+            }
+            [self addSubview:self.ladyProgressView];
+            [self.ladyProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.bottom.equalTo(self);
+                make.height.equalTo(@46);
+            }];
+            [self showLadyVideoProgress:YES];
             [self createGesture];
         } else {
             self.shortLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 46, frame.size.width - 10, 46)];
@@ -257,37 +306,54 @@
 - (void)playLadyVideo {
     if (self.url.length > 0) {
         NSURL * url = [NSURL URLWithString:self.url];
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
-            self.ladyProgressView.frame = CGRectMake(0, self.frame.size.height - 46, self.frame.size.width, 46);
-            self.item = [[AVPlayerItem alloc] initWithURL:url];
-            self.player = [AVPlayer playerWithPlayerItem:self.item];
-            AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-            if (self.isFill) {
-                playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-            } else {
-                playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-            }
-            
-            if (self.playTime > 0) {
-                int time = floor(self.playTime);
-                self.maxTime = self.playTime;
-                if (self.ladyProgressView) {
-                    self.ladyProgressView.ladyEndLabel.text = [self timeFormatted:time];
-                }
-            }
-            
-            playerLayer.frame =self.playView.frame;
-            [self.playView.layer addSublayer:playerLayer];
-            [self addObserveAndNOtification];
+        self.ladyProgressView.frame = CGRectMake(0, self.frame.size.height - 46, self.frame.size.width, 46);
+        self.item = [[AVPlayerItem alloc] initWithURL:url];
+        self.player = [AVPlayer playerWithPlayerItem:self.item];
+        AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        if (self.isFill) {
+            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
         } else {
-            self.movewController =[[MPMoviePlayerController alloc] initWithContentURL:url];
-            [self.movewController setControlStyle:MPMovieControlStyleNone];
-            self.movewController.repeatMode = MPMovieRepeatModeOne;
-            [self.movewController.view setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-            [self addSubview:self.movewController.view];
-            [self.movewController play];
+            playerLayer.videoGravity =AVLayerVideoGravityResizeAspect;
         }
+        
+        if (self.playTime > 0) {
+            int time = floor(self.playTime);
+            self.maxTime = self.playTime;
+            if (self.ladyProgressView) {
+                self.ladyProgressView.ladyEndLabel.text = [self timeFormatted:time];
+            }
+        }
+        
+        playerLayer.frame =self.playView.frame;
+        [self.playView.layer addSublayer:playerLayer];
+        [self addObserveAndNOtification];
     }
+}
+
+// 播放LiveChat视频
+- (void)playChatVideo {
+    if (self.url.length > 0) {
+        NSURL * url = [NSURL fileURLWithPath:self.url];
+        self.ladyProgressView.frame = CGRectMake(0, self.frame.size.height - 40, self.frame.size.width, 40);
+//        NSString * mimeType = @"video/mp4";
+//            AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:@{@"AVURLAssetOutOfBandMIMETypeKey": mimeType}];
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
+        self.item = [[AVPlayerItem alloc] initWithAsset:asset];
+        self.player = [AVPlayer playerWithPlayerItem:self.item];
+        AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        if (self.isFill) {
+            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill ;
+        } else {
+            playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        }
+        playerLayer.frame = self.playView.frame;
+        [self.playView.layer addSublayer:playerLayer];
+        [self addObserveAndNOtification];
+    }
+}
+
+- (void)setProgressPlaySuspendOrStart:(BOOL)isSuspend {
+    [self.ladyProgressView setPlaySuspendOrStart:isSuspend];
 }
 
 // 更新滑动条
@@ -330,7 +396,11 @@
 
 - (void)showLadyVideoProgress:(BOOL)isShow {
     self.ladyProgressView.hidden = !isShow;
-    if (isShow) {
+    self.bottomShadowView.hidden = !isShow;
+    if ([self.delegate respondsToSelector:@selector(isShowLadyProgressView:)]) {
+        [self.delegate isShowLadyProgressView:!isShow];
+    }
+    if (isShow && self.isPerformShow) {
         [self playerCancelAutoHideLadyControlView];
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideLadyControlView) object:nil];
         [self performSelector:@selector(hideLadyControlView) withObject:nil afterDelay:3.0];
@@ -356,6 +426,9 @@
     } else {
         [self.player play];
     }
+    if ([self.delegate respondsToSelector:@selector(videoIsPlayOrSuspeng:)]) {
+        [self.delegate videoIsPlayOrSuspeng:isPause];
+    }
 }
 
 // 开始滑动
@@ -363,7 +436,7 @@
     if (!self.ladyProgressView.hidden) {
         [self playerCancelAutoHideLadyControlView];
     }
-    [self.player pause];
+    [self.ladyProgressView setPlayButtonSelected];
 }
 
 // 滑动中
@@ -386,8 +459,8 @@
     if (!self.ladyProgressView.hidden) {
         [self showLadyVideoProgress:YES];
     }
-//    [self.ladyProgressView setPlayButtonSelected];
-    [self.player play];
+    [self.ladyProgressView setPlayButtonSelected];
+//    [self.player play];
 }
 
 #pragma mark - UIGestureRecognizerDelegate

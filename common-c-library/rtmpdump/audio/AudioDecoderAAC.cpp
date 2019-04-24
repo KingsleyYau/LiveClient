@@ -335,7 +335,7 @@ void AudioDecoderAAC::ClearAudioFrame() {
                  );
     
     AudioFrame* frame = NULL;
-    // 释放未编码Buffer
+    // 释放未解码Buffer
     mDecodeBufferList.lock();
     while( !mDecodeBufferList.empty() ) {
         frame = (AudioFrame* )mDecodeBufferList.front();
@@ -581,7 +581,7 @@ void AudioDecoderAAC::DecodeAudioHandle() {
                          KLog::LOG_STAT,
                          "AudioDecoderAAC::DecodeAudioHandle( "
                          "this : %p, "
-                         "mEncodeBufferList.size() : %d "
+                         "mDecodeBufferList.size() : %d "
                          ")",
                          this,
                          mDecodeBufferList.size()

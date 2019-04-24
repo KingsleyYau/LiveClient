@@ -30,41 +30,36 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.isShowTaBar = YES;
     self.isFirstProgram = YES;
-    
+
     NSString *intimacyUrl; // 拼接url
-    NSString *anchorID = [NSString stringWithFormat:@"&anchorid=%@",self.anchorId];
+    NSString *anchorID = [NSString stringWithFormat:@"&anchorid=%@", self.anchorId];
 
     if (self.isIntimacy) {
         // 亲密度
         NSString *webSiteUrl = [LSConfigManager manager].item.intimacy;
         if (webSiteUrl.length > 0) {
             if ([webSiteUrl containsString:@"?"]) {
-                intimacyUrl = [NSString stringWithFormat:@"%@&%@",webSiteUrl,anchorID];
+                intimacyUrl = [NSString stringWithFormat:@"%@&%@", webSiteUrl, anchorID];
             } else {
-                intimacyUrl = [NSString stringWithFormat:@"%@?%@",webSiteUrl,anchorID];
+                intimacyUrl = [NSString stringWithFormat:@"%@?%@", webSiteUrl, anchorID];
             }
         }
     } else {
         intimacyUrl = self.url;
         if (!_isUserProtocol) {
             if (![intimacyUrl containsString:@"?"])
-                intimacyUrl = [NSString stringWithFormat:@"%@?%@",intimacyUrl,anchorID];
-            }
+                intimacyUrl = [NSString stringWithFormat:@"%@?%@", intimacyUrl, anchorID];
+        }
     }
     self.requestUrl = intimacyUrl;
 }
 
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // 显示导航栏
-    self.navigationController.navigationBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.translucent = NO;
-     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
 }
 
 - (void)setupRequestWebview {

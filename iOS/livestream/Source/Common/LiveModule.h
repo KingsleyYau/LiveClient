@@ -45,14 +45,14 @@
 
  @param module 模块实例
  */
-- (void)moduleOnNotification:(LiveModule *)module;
+//- (void)moduleOnNotification:(LiveModule *)module;
 
 /**
  直播模块需要消失浮窗
 
  @param module 模块实例
  */
-- (void)moduleOnNotificationDisappear:(LiveModule *)module;
+//- (void)moduleOnNotificationDisappear:(LiveModule *)module;
 
 @end
 
@@ -206,10 +206,6 @@
  */
 - (void)cleanCache;
 
-/**
- 私密邀请push通知
- */
-- (void)pushInviteNotice;
 #pragma mark - Application(通知)
 - (void)applicationDidEnterBackground:(UIApplication *)application;
 - (void)applicationWillEnterForeground:(UIApplication *)application;

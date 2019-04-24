@@ -89,7 +89,7 @@
                                      options:0
                                     imageUrl:item.infoItem.middleImgUrl
                             placeholderImage:
-     [UIImage imageNamed:@"Live_Gift_Nomal"]];
+     [UIImage imageNamed:@"Live_Gift_Nomal"] finishHandler:nil];
     
     // 礼物名字
     self.giftNameLabel.text = item.infoItem.name;

@@ -16,6 +16,7 @@
                 <outlet property="closeBtn" destination="23g-vX-uiz" id="4am-vW-ivB"/>
                 <outlet property="followBtn" destination="XxR-vI-fte" id="JQp-UR-5BS"/>
                 <outlet property="followBtnWidth" destination="g0L-e9-Juv" id="Gcy-Ca-OEL"/>
+                <outlet property="hangoutBtn" destination="4fb-FF-ozO" id="b9J-F7-k3u"/>
                 <outlet property="intimacyHeadView" destination="Iwf-Rl-g11" id="nK2-J9-inP"/>
                 <outlet property="intimacyImageView" destination="5hV-9j-qBA" id="0E4-hu-czl"/>
                 <outlet property="intimacyLadyImageView" destination="PW0-vW-nfX" id="2r3-Em-wje"/>
@@ -159,8 +160,14 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fb-FF-ozO" userLabel="Hangout Button">
-                    <rect key="frame" x="188" y="38" width="72" height="25"/>
-                    <state key="normal" image="Navigation_Right_Button"/>
+                    <rect key="frame" x="188" y="37.5" width="100" height="26"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="7kV-2v-tqj"/>
+                        <constraint firstAttribute="height" constant="26" id="WVs-67-WrJ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="5" maxY="0.0"/>
+                    <state key="normal" title="Hang-out" image="LS_Hangout_icon" backgroundImage="Home_hangoutBg"/>
                     <connections>
                         <action selector="hangoutAction:" destination="-1" eventType="touchUpInside" id="OxK-cI-IJa"/>
                     </connections>
@@ -190,9 +197,10 @@
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
         <image name="Default_Img_Man_Circyle" width="75" height="75"/>
+        <image name="Home_hangoutBg" width="3" height="3"/>
+        <image name="LS_Hangout_icon" width="27" height="27"/>
         <image name="Live_Private_Img_Intimacy_Head_0" width="58" height="45"/>
         <image name="Live_Private_Vip_Btn_Follow" width="31" height="31"/>
         <image name="Live_Public_Btn_Close" width="16" height="16"/>
-        <image name="Navigation_Right_Button" width="72" height="25"/>
     </resources>
 </document>

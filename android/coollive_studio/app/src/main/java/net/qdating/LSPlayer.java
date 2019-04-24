@@ -13,6 +13,7 @@ import net.qdating.player.ILSPlayerCallback;
 import net.qdating.player.ILSPlayerStatusCallback;
 import net.qdating.player.LSAudioPlayer;
 import net.qdating.player.LSPlayerJni;
+import net.qdating.player.LSPlayerRendererBinder;
 import net.qdating.player.LSVideoHardDecoder;
 import net.qdating.player.LSVideoHardPlayer;
 import net.qdating.player.LSVideoPlayer;
@@ -87,12 +88,10 @@ public class LSPlayer implements ILSPlayerCallback {
 
 	/***
 	 * 初始化流播放器
-	 * @param surfaceView	显示界面
-	 * @param fillMode 渲染模式
 	 * @param statusCallback 状态回调接口
 	 * @return true:成功/false:失败
 	 */
-	public boolean init(GLSurfaceView surfaceView, FillMode fillMode, ILSPlayerStatusCallback statusCallback) {
+	public boolean init(ILSPlayerStatusCallback statusCallback) {
 		boolean bFlag = true;
 
 		if( LSConfig.LOGDIR != null && LSConfig.LOGDIR.length() > 0 ) {
@@ -117,15 +116,7 @@ public class LSPlayer implements ILSPlayerCallback {
 			// 强制使用硬解码
 			useHardDecoder = true;
 		}
-		
-		if( useHardDecoder ) {
-			// 初始化视频硬渲染器
-			videoHardPlayer.init(surfaceView, fillMode);
-		} else {
-			// 初始化视频播放器
-			videoPlayer.init(surfaceView, fillMode);
-		}
-		
+
 		if( bFlag ) {
 			// 初始化播放器
 			bFlag = player.Create(this, useHardDecoder, videoPlayer, audioPlayer, videoHardDecoder, videoHardPlayer);
@@ -210,40 +201,16 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		// 销毁播放器
 		player.Destroy();
-		
-		if( useHardDecoder ) {
-			// 销毁视频硬渲染器
-			videoHardPlayer.uninit();
-		} else {
-			// 销毁视渲染放器
-			videoPlayer.uninit();
-		}
 	}
 
-	/**
-	 * 设置自定义滤镜
-	 * @param customFilter 自定义滤镜
-	 */
-	public void setCustomFilter(LSImageFilter customFilter) {
+	public void setRendererBinder(LSPlayerRendererBinder rendererBinder) {
 		if( useHardDecoder ) {
-			videoHardPlayer.setCustomFilter(customFilter);
+			// 初始化视频硬渲染器
+			videoHardPlayer.setRendererBinder(rendererBinder);
 		} else {
-			videoPlayer.setCustomFilter(customFilter);
+			// 初始化视频播放器
+			videoPlayer.setRendererBinder(rendererBinder);
 		}
-	}
-
-	/**
-	 * 获取自定义滤镜
-	 * @return 自定义滤镜
-	 */
-	public LSImageFilter getCustomFilter() {
-		LSImageFilter filter = null;
-		if( useHardDecoder ) {
-			filter = videoHardPlayer.getCustomFilter();
-		} else {
-			filter = videoPlayer.getCustomFilter();
-		}
-		return filter;
 	}
 
 	/***

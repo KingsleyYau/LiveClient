@@ -220,7 +220,10 @@ bool LSLCMessageItem::InitWithRecord(
 					, record.videoSendId
 					, record.videoDesc
 					, ""
-					, record.videoCharge);
+					, record.videoCharge
+                    , videoMgr->GetVideoPhotoPath(userId, record.videoId, inviteId, VPT_DEFAULT)
+                    , videoMgr->GetVideoPhotoPath(userId, record.videoId, inviteId, VPT_BIG)
+                    , videoMgr->GetVideoPath(userId, record.videoId, inviteId));
 			SetVideoItem(videoItem);
 			result = true;
 		}
@@ -231,7 +234,7 @@ bool LSLCMessageItem::InitWithRecord(
                 SetMagicIconItem(magicIconItem);
                 result = true;
             }
-        }
+        }break;
 	default: {
 		FileLog("LiveChatManager", "LSLCMessageItem::InitWithRecord() unknow message type");
 	}break;

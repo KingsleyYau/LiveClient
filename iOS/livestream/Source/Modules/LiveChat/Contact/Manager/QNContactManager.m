@@ -102,7 +102,7 @@ static QNContactManager *gManager = nil;
 #pragma mark - 触发同步联系人列表
 - (void)onGetContactList:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errMsg usersInfo:(NSArray<LSLCLiveChatUserInfoItemObject *> *_Nonnull)usersInfo {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"QNContactManager::syncRecentContactList( [同步服务器联系人列表, %@], count : %ld )", errMsg, (long)usersInfo.count);
+        NSLog(@"QNContactManager::onGetContactList( [同步服务器联系人列表], errMsg : %@ )", errMsg);
         if (LSLIVECHAT_LCC_ERR_SUCCESS == errType) {
             [self syncLivechatUserList:usersInfo];
         }
@@ -139,6 +139,8 @@ static QNContactManager *gManager = nil;
  @param array <#array description#>
  */
 - (void)syncLivechatUserList:(NSArray<LSLCLiveChatUserInfoItemObject *> *_Nonnull)array {
+    NSLog(@"QNContactManager::syncLivechatUserList( [同步服务器联系人列表], count : %ld )", (long)array.count);
+    
     for (LSLCLiveChatUserInfoItemObject *user in array) {
         
         LSLadyRecentContactObject *recentItem = [[LSLadyRecentContactObject alloc] init];
@@ -148,8 +150,8 @@ static QNContactManager *gManager = nil;
         recentItem.firstname = user.userName;
         recentItem.photoURL = user.avatarImg;
         
-        NSString *premiumSticker = NSLocalizedStringFromSelf(@"Message_MaxPhiz");
-        NSString *animationSticker = NSLocalizedStringFromSelf(@"Message_minPhiz");
+        NSString *premiumSticker = NSLocalizedString(@"NOTICE_MESSAGE_ANIMATING_STICKER", nil);
+        NSString *animationSticker = NSLocalizedString(@"NOTICE_MESSAGE_PREMIUM_STICKER", nil);
         BOOL bFlag = [self.liveChatManager isChatingUserInChatState:user.userId];
         recentItem.isInChat = bFlag;
         
@@ -664,6 +666,13 @@ static QNContactManager *gManager = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"QNContactManager::onRecvPhoto( [收到私密照消息], fromId : %@ )", msg.fromId);
         [self reloadDataWithRecvMsg:msg];
+    });
+}
+
+- (void)onRecvVideo:(LSLCLiveChatMsgItemObject *)msgItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"QNContactManager::onRecvVideo( [收到视频消息], fromId : %@ )", msgItem.fromId);
+        [self reloadDataWithRecvMsg:msgItem];
     });
 }
 

@@ -53,7 +53,8 @@
 @property (nonatomic, strong) TXScrollLabelView *scrollLabelView;
 @property (weak, nonatomic) IBOutlet UIImageView *showIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *freeIcon;
-
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollShowTitleHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *shadowHeight;
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;
 

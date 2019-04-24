@@ -49,6 +49,7 @@
 #include "RecvTalentListNoticeTask.h"
 #include "RecvPrivateMessageNoticeTask.h"
 #include "RecvHandoutInviteNoticeTask.h"
+#include "RecvHangoutCreditRunningOutNoticeTask.h"
 #include "IImClientDef.h"
 
 #include "RecvEMFNoticeTask.h"
@@ -202,6 +203,10 @@ ITask* ITask::CreateTaskWithCmd(const string& cmd)
     else if (cmd == CMD_RECVHANGOURINVITENOTICE) {
         // 10.15.接收主播Hang-out邀请通知Task实现类
         task = new RecvHandoutInviteNoticeTask();
+    }
+    else if (cmd == CMD_RECVHANGOUTCREDITRUNNINGOUTNOTICE) {
+        // 10.16.接收Hangout直播间男士信用点不足两个周期通知Task实现类
+        task = new RecvHangoutCreditRunningOutNoticeTask();
     }
     else if (cmd == CMD_RECVPROGRAMPLAYNOTICE) {
         // 11.1.节目开播通知

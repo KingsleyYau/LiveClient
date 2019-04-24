@@ -7,7 +7,6 @@
 //
 
 #import "LSVideoPlayManager.h"
-#import "LSVideoView.h"
 
 #define TIMEOUT 90
 #define VideoType @"mp4"
@@ -29,7 +28,7 @@
 - (id)init {
     if( self = [super init] ) {
         self.downloadTask = nil;
-        self.isFill = NO;
+        self.isFill = YES;
         self.isPlayConstant = NO;
     }
     return self;
@@ -51,23 +50,6 @@
         return;
     }
     self.vId = vId;
-    
-    //判断本地是否有视频，如果有，直接返回
-    if ([self isLocalVideoPath:vId].length > 0) {        
-        if ([self.delegate respondsToSelector:@selector(onRecvVideoDownloadSucceed:)]) {
-            [self.delegate onRecvVideoDownloadSucceed:[self isLocalVideoPath:vId]];
-        }
-    } else {
-        //如果本地没有视频，那就下载
-//        if (!AppShareDelegate().isNetwork) {
-//            if ([self.delegate respondsToSelector:@selector(onRecvVideoDownloadFail)]) {
-//                [self.delegate onRecvVideoDownloadFail];
-//            }
-//        } else {
-//          [self downloadVideo];
-//        }
-        
-    }
 }
 
 - (void)downloadVideo {
@@ -136,20 +118,6 @@
     self.isFill = isAspectFill;
 }
 
-#pragma mark 判断本地是否有该视频
-- (NSString *)isLocalVideoPath:(NSString *)vId {
-    self.videoPath = [NSString stringWithFormat:@"%@/video",CachesPath];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *filePath = [self.videoPath  stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",vId,VideoType]];
-    if ([fileManager fileExistsAtPath:filePath]) {
-        return filePath;
-    } else {
-        [fileManager createDirectoryAtPath:self.videoPath withIntermediateDirectories:YES attributes:nil error:nil];
-        return @"";
-    }
-    return @"";
-}
-
 #pragma mark 删除本地视频
 - (void)removeLocalVideo:(NSString *)vId {
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -179,14 +147,25 @@
     self.videoView = nil;
 }
 
+- (void)removeVideoView {
+    [self.videoView removeFromSuperview];
+}
+
+- (void)setVideoPlayAndSuspend:(BOOL)isSuspend {
+    if (self.videoView) {
+        [self.videoView setProgressPlaySuspendOrStart:isSuspend];
+    }
+}
+
 #pragma mark - 女士详情
-// 播放视频，视频的大小view，显示滑动条
-- (void)playLdayVideo:(NSString*_Nonnull)path forView:(UIView *_Nonnull)view playTime:(CGFloat)playTime isShowSlider:(BOOL)isShow {
+// TODO:播放视频，视频的大小view，显示滑动条
+- (void)playLdayVideo:(NSString*_Nonnull)path forView:(UIView *_Nonnull)view playTime:(CGFloat)playTime isShowSlider:(BOOL)isShow isShowPlayTime:(BOOL)isShowPlayTime {
     self.videoView.delegate = nil;
     [self.videoView removeFromSuperview];
     self.videoView = nil;
     //女士详情框，是否包括滑条
-    self.videoView = [[LSVideoView alloc] initWithFrame:view.bounds isSlider:isShow];
+    self.videoView = [[LSVideoView alloc] initWithFrame:view.bounds isSlider:isShow isShowPlayTime:isShowPlayTime];
+    self.videoView.userInteractionEnabled = YES;
     // 视频路径
     self.videoView.url = path;
     // 是否满屏
@@ -198,6 +177,31 @@
     [view addSubview:self.videoView];
     // 播放女士视频
     [self.videoView playLadyVideo];
+}
+
+// TODO:播放LiveChat视频
+- (void)playChatVideo:(NSString*_Nonnull)path forView:(UIView *_Nonnull)view playTime:(CGFloat)playTime isShowSlider:(BOOL)isShow isShowPlayTime:(BOOL)isShowPlayTime isUrlPlay:(BOOL)isUrlPlay {
+    self.videoView.delegate = nil;
+    [self.videoView removeFromSuperview];
+    self.videoView = nil;
+    //女士详情框，是否包括滑条
+    self.videoView = [[LSVideoView alloc] initWithFrame:view.bounds isSlider:isShow isShowPlayTime:isShowPlayTime isPerformShow:NO];
+    self.videoView.userInteractionEnabled = YES;
+    // 视频路径
+    self.videoView.url = path;
+    // 是否满屏
+    self.videoView.isFill = self.isFill;
+    // 设置播放时间
+    self.videoView.playTime = playTime;
+    // 设置代理
+    self.videoView.delegate = self;
+    [view addSubview:self.videoView];
+    // 播放LiveChat视频
+    if (isUrlPlay) {
+        [self.videoView playLadyVideo];
+    } else {
+        [self.videoView playChatVideo];
+    }
 }
 
 // 缓冲加载中
@@ -216,7 +220,6 @@
 
 // 播放失败
 - (void)onRecvVideoViewPlayFailed {
-    [self removeNotification];
     [self removeLocalVideo:self.vId];
     if ([self.delegate respondsToSelector:@selector(onRecvVideoPlayFailed)]) {
         [self.delegate onRecvVideoPlayFailed];
@@ -224,10 +227,27 @@
 }
 
 - (void)onRecvVideoViewPlayDone {
-    [self removeNotification];
     // 播放完成
     if ([self.delegate respondsToSelector:@selector(onRecvVideoPlayDone)]) {
         [self.delegate onRecvVideoPlayDone];
+    }
+}
+
+- (void)isShowLadyProgressView:(BOOL)isShow {
+    if ([self.delegate respondsToSelector:@selector(onRecvShowLadyProgressView:)]) {
+        [self.delegate onRecvShowLadyProgressView:isShow];
+    }
+}
+
+- (void)videoIsPlayOrSuspeng:(BOOL)isSuspend {
+    if ([self.delegate respondsToSelector:@selector(onRecvVideoPlayOrSuspend:)]) {
+        [self.delegate onRecvVideoPlayOrSuspend:isSuspend];
+    }
+}
+
+- (void)videoIsReadyToPlay {
+    if ([self.delegate respondsToSelector:@selector(onRecvVideoIsReadyToPlay)]) {
+        [self.delegate onRecvVideoIsReadyToPlay];
     }
 }
 

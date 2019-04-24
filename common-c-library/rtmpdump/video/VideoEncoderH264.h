@@ -49,6 +49,7 @@ public:
 private:
     bool Start();
     void Stop();
+    void ClearVideoFrame();
 
     /**
      重采样一个视频帧

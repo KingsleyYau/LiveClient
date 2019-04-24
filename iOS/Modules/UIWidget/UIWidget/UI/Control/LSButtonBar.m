@@ -93,6 +93,10 @@
         }
     }
     
+    [self sendDelegate];
+}
+
+- (void)sendDelegate {
     if([self.delegate respondsToSelector:@selector(itemsDidLayout:)]) {
         [self.delegate itemsDidLayout:self];
     }

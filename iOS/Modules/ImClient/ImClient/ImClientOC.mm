@@ -143,6 +143,8 @@ class ImClientCallback;
 
 - (void)onRecvHandoutInviteNotice:(const IMHangoutInviteItem&)item;
 
+- (void)onRecvHangoutCreditRunningOutNotice:(const string&)roomId err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg;
+
 // ------------- 节目 -------------
 
 - (void)onRecvProgramPlayNotice:(const IMProgramItem&)item type:(IMProgramNoticeType)type msg:(const string&)msg;
@@ -496,6 +498,12 @@ class ImClientCallback : public IImClientListener {
             [clientOC onRecvHandoutInviteNotice:item];
         }
     }
+    
+   virtual void  OnRecvHangoutCreditRunningOutNotice(const string& roomId, LCC_ERR_TYPE errNo, const string& errMsg) override {
+       if (nil != clientOC) {
+           [clientOC onRecvHangoutCreditRunningOutNotice:roomId err:errNo errMsg:errMsg];
+       }
+   }
 
     // ------------- 节目 -------------
     virtual void OnRecvProgramPlayNotice(const IMProgramItem& item, IMProgramNoticeType type, const string& msg) override {
@@ -890,7 +898,7 @@ class ImClientCallback : public IImClientListener {
 }
 
 // ------------- 多人互动 -------------
-- (BOOL)enterHangoutRoom:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId {
+- (BOOL)enterHangoutRoom:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId isCreateOnly:(BOOL)isCreateOnly {
     BOOL result = NO;
     if (NULL != self.client) {
         
@@ -899,7 +907,7 @@ class ImClientCallback : public IImClientListener {
             strRoomId = [roomId UTF8String];
         }
         
-        result = self.client->EnterHangoutRoom(reqId, strRoomId);
+        result = self.client->EnterHangoutRoom(reqId, strRoomId, isCreateOnly);
     }
     
     return result;
@@ -1161,6 +1169,7 @@ class ImClientCallback : public IImClientListener {
     obj.shareLink = @"";
     obj.liveShowType = item.liveShowType;
     obj.isHasTalent = item.isHasTalent;
+    obj.isHangoutPriv = item.isHangoutPriv;
     
     ImAuthorityItemObject *privObject = [[ImAuthorityItemObject alloc] init];
     privObject.isHasOneOnOneAuth = priv.isHasOneOnOneAuth;
@@ -1246,6 +1255,7 @@ class ImClientCallback : public IImClientListener {
     obj.shareLink = [NSString stringWithUTF8String:item.shareLink.c_str()];
     obj.liveShowType = item.liveShowType;
     obj.isHasTalent = NO;
+    obj.isHangoutPriv = item.isHangoutPriv;
     ImAuthorityItemObject *privObject = [[ImAuthorityItemObject alloc] init];
     privObject.isHasOneOnOneAuth = priv.isHasOneOnOneAuth;
     privObject.isHasBookingAuth = priv.isHasBookingAuth;
@@ -2183,7 +2193,7 @@ class ImClientCallback : public IImClientListener {
 - (void)onRecvHandoutInviteNotice:(const IMHangoutInviteItem&)item {
     IMHangoutInviteItemObject* obj = [[IMHangoutInviteItemObject alloc] init];
     obj.logId = item.logId;
-    obj.isAnto = item.isAnto;
+    obj.isAuto = item.isAuto;
     obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
     obj.anchorNickName = [NSString stringWithUTF8String:item.nickName.c_str()];
     obj.anchorCover = [NSString stringWithUTF8String:item.cover.c_str()];
@@ -2196,6 +2206,19 @@ class ImClientCallback : public IImClientListener {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if ([delegate respondsToSelector:@selector(onRecvHandoutInviteNotice:)]) {
                 [delegate onRecvHandoutInviteNotice:obj];
+            }
+        }
+    }
+}
+
+- (void)onRecvHangoutCreditRunningOutNotice:(const string&)roomId err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg {
+    NSString* strRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* strErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvHangoutCreditRunningOutNotice:err:errMsg:)]) {
+                [delegate onRecvHangoutCreditRunningOutNotice:strRoomId err:err errMsg:strErrMsg];
             }
         }
     }

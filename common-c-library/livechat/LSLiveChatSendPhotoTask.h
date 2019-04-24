@@ -1,6 +1,6 @@
 /*
- * author: Samson.Fan
- *   date: 2015-04-11
+ * author: Alex
+ *   date: 2019-03-18
  *   file: LSLiveChatSendPhotoTask.h
  *   desc: 发送图片Task实现类
  */

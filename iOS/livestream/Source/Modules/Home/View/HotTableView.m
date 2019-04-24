@@ -22,7 +22,7 @@
 @synthesize tableViewDelegate;
 @synthesize items;
 
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
     self = [super initWithFrame:frame style:style];
     if (self) {
         // Initialization code
@@ -71,26 +71,29 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     return [HotTableViewCell cellHeight];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *tableViewCell = nil;
-    
+
     HotTableViewCell *cell = [HotTableViewCell getUITableViewCell:tableView];
     tableViewCell = cell;
-    
+
     // 数据填充
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
-    
+
     cell.tag = indexPath.row;
-    
+
     // 房间名
     cell.labelRoomTitle.text = item.nickName;
-    
+
     cell.hotCellDelegate = self;
-    
+
+    // 默认没有节目描述
+    cell.scrollShowTitleHeight.constant = 0;
+
     if (item.onlineStatus == ONLINE_STATUS_LIVE) {
         // 恢复界面按钮状态
         cell.roomType.hidden = YES;
@@ -104,6 +107,7 @@
         cell.vipPrivateBtn.hidden = YES;
         cell.roomType.hidden = YES;
         cell.showIcon.hidden = YES;
+        cell.titleView.hidden = YES;
         if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM) {
             // 免费公开直播间
             cell.viewPublicFreeBtn.hidden = NO;
@@ -118,23 +122,21 @@
             cell.liveStatus.animationRepeatCount = 0;
             cell.liveStatus.animationDuration = 0.6;
             [cell.liveStatus startAnimating];
-            
+
             //显示节目名字
             if (item.showInfo.showTitle.length > 0) {
                 cell.viewBtnTopDistance.constant = 50;
                 cell.titleView.hidden = NO;
                 cell.roomType.hidden = YES;
+                cell.scrollShowTitleHeight.constant = 40;
                 [cell setScrollLabelViewText:item.showInfo.showTitle];
-            }
-            else
-            {
+            } else {
                 cell.titleView.hidden = YES;
                 cell.viewBtnTopDistance.constant = 2;
+                cell.scrollShowTitleHeight.constant = 0;
             }
-            
-        }
-        else if (item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM)
-        {
+
+        } else if (item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
             // 付费公开直播间
             cell.viewPublicFeeBtn.hidden = NO;
             cell.liveStatus.hidden = NO;
@@ -150,68 +152,51 @@
             [cell.liveStatus startAnimating];
 
             //显示节目名字
-            if (item.showInfo.showTitle.length > 0)
-            {
+            if (item.showInfo.showTitle.length > 0) {
                 cell.viewBtnTopDistance.constant = 50;
                 cell.titleView.hidden = NO;
                 cell.roomType.hidden = YES;
+                cell.scrollShowTitleHeight.constant = 40;
                 [cell setScrollLabelViewText:item.showInfo.showTitle];
-            }
-            else
-            {
+            } else {
                 cell.titleView.hidden = YES;
+                cell.scrollShowTitleHeight.constant = 0;
                 cell.viewBtnTopDistance.constant = 9;
             }
-            
-            if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType])
-            {
+
+            if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                 //显示Free
                 cell.freeIcon.hidden = NO;
-            }
-            else
-            {
+            } else {
                 //不显示Free
                 cell.freeIcon.hidden = YES;
             }
-            
-        
-        }
-        else if (item.roomType == HTTPROOMTYPE_COMMONPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_NOLIVEROOM )
-        {
+
+        } else if (item.roomType == HTTPROOMTYPE_COMMONPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_NOLIVEROOM) {
             // 普通私密和付费私密,没有直播间
             // 是否有私密邀请的权限权限
-            if (item.priv.isHasOneOnOneAuth)
-            {
+            if (item.priv.isHasOneOnOneAuth) {
                 cell.onlineStatus.hidden = NO;
                 cell.vipPrivateBtn.hidden = NO;
-                
+
                 if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                     //显示Free
                     cell.freeIcon.hidden = NO;
-                }
-                else
-                {
+                } else {
                     //不显示Free
                     cell.freeIcon.hidden = YES;
                 }
-                
-            }
-            else
-            {
+
+            } else {
                 // 没有私密邀请权限判断是否livechat在线显示对应按钮
-                if (item.chatOnlineStatus == IMCHATONLINESTATUS_ONLINE)
-                {
+                if (item.chatOnlineStatus == IMCHATONLINESTATUS_ONLINE) {
                     cell.chatNowBtn.hidden = NO;
-                }
-                else
-                {
+                } else {
                     cell.sendMailBtn.hidden = NO;
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         // 不在线,只能显示发送邮件的按钮
         cell.roomType.hidden = YES;
         cell.onlineStatus.hidden = YES;
@@ -223,18 +208,18 @@
         cell.vipPrivateBtn.hidden = YES;
         cell.liveStatus.hidden = YES;
         cell.sendMailBtn.hidden = NO;
-        
+        cell.titleView.hidden = YES;
     }
 
-    
     // 头像
     cell.imageViewHeader.image = nil;
     [cell.imageViewLoader stop];
-    [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader
+    [cell.imageViewLoader loadHDListImageWithImageView:cell.imageViewHeader
                                          options:0
                                         imageUrl:item.roomPhotoUrl
-                                placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
-    
+                                placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]
+                                   finishHandler:nil];
+
     return tableViewCell;
 }
 
@@ -269,8 +254,6 @@
             break;
     }
 }
-
-
 
 #pragma mark - 滚动界面回调 (UIScrollViewDelegate)
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -11,6 +11,9 @@
 #import "LiveRoom.h"
 #import "LiveStreamPlayer.h"
 #import "LiveStreamPublisher.h"
+#import "HangoutDialogViewController.h"
+#import "HangOutViewController.h"
+#import "LiveViewController.h"
 
 #define BACKGROUND_TIMEOUT 60
 
@@ -18,10 +21,9 @@
 @protocol LiveGobalManagerDelegate <NSObject>
 @optional
 
-- (void)enterBackgroundTimeOut:(NSDate * _Nullable)time;
+- (void)enterBackgroundTimeOut:(NSDate *)time;
 
 @end
-
 
 @interface LiveGobalManager : NSObject
 
@@ -33,19 +35,19 @@
 /**
  当前直播间信息
  */
-@property (strong) LiveRoom * _Nullable liveRoom;
+@property (strong) LiveRoom *liveRoom;
 
 /**
  进入房间时间
  */
-@property (strong) NSDate * _Nullable enterRoomBackgroundTime;
+@property (strong) NSDate *enterRoomBackgroundTime;
 
 /**
  *  获取实例
  *
  *  @return 实例
  */
-+ (instancetype _Nonnull)manager;
++ (instancetype)manager;
 
 /**
  能否显示立即邀请
@@ -53,7 +55,7 @@
  @param uesrId 主播Id
  @return 能否
  */
-- (BOOL)canShowInvite:(NSString * _Nonnull)uesrId;
+- (BOOL)canShowInvite:(NSString *)uesrId;
 
 /**
  设置能否立即显示邀请
@@ -67,18 +69,29 @@
  *
  *  @param delegate 监听器
  */
-- (void)addDelegate:(id<LiveGobalManagerDelegate> _Nonnull)delegate;
+- (void)addDelegate:(id<LiveGobalManagerDelegate>)delegate;
 
 /**
  *  移除监听器
  *
  *  @param delegate 监听器
  */
-- (void)removeDelegate:(id<LiveGobalManagerDelegate> _Nonnull)delegate;
+- (void)removeDelegate:(id<LiveGobalManagerDelegate>)delegate;
 
+#pragma mark - 统一导航栏跳转
 - (void)presentLiveRoomVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC;
 - (void)dismissLiveRoomVC;
-- (void)pushVCWithCurrentNVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC;
+- (void)pushAndPopVCWithNVCFromVC:(UIViewController *)fromVC toVC:(LSViewController *)toVC;
+- (void)pushWithNVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC;
 - (void)popToRootVC;
+
+#pragma mark - Hangout
+- (HangoutDialogViewController *)addDialogVc;
+- (void)removeDialogVc;
+
+
+#pragma mark - 开启/关闭直播间声音
+- (void)setupLiveVC:(LiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC;
+- (void)openOrCloseLiveSound:(BOOL)isClose;
 
 @end

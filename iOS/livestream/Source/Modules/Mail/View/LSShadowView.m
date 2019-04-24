@@ -28,8 +28,7 @@
 
 - (void)showShadowAddView:(UIView*)view {
     self.radiusView = view;
-    [view.superview addSubview:self];
-    [view.superview sendSubviewToBack:self];
+    [view.superview insertSubview:self belowSubview:view];
     
     [self mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(view);

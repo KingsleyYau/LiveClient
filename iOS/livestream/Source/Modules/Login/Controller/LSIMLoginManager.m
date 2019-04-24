@@ -37,6 +37,8 @@ static LSIMLoginManager *imLoginManager = nil;
         
         [[LSLoginManager manager] addDelegate:self];
         [[LSImManager manager].client addDelegate:self];
+        
+        _status = NONE;
     }
     return self;
 }
@@ -62,10 +64,12 @@ static LSIMLoginManager *imLoginManager = nil;
 - (LoginStatus)login:(NSString *)user password:(NSString *)password checkcode:(NSString *)checkcode userId:(NSString *)userId token:(NSString *)token handler:(AppLoginFinishHandler)handler {
     self.loginBlock = handler;
     self.isFirstLogin = YES;
+    _status = LOGINING;
     return [[LSLoginManager manager]login:user password:password checkcode:checkcode userId:userId token:token];
 }
 
 - (void)logout:(LogoutType)type {
+    _status = NONE;
     [[LSLoginManager manager]logout:type];
 }
 
@@ -82,6 +86,7 @@ static LSIMLoginManager *imLoginManager = nil;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!success) {
+            _status = NONE;
             if (self.loginBlock) {
                 ErrorType errType = success ? ErrorType_Success : ErrorType_UnknowError;
                 if (!success) {
@@ -113,25 +118,27 @@ static LSIMLoginManager *imLoginManager = nil;
             BOOL isIMLogin = errType==LCC_ERR_SUCCESS?YES:NO;
             NSLog(@"LSIMLoginManager::IM onLogin( [IM登录, %@], manId : %@, token : %@, errType : %d, errmsg : %@ )", BOOL2SUCCESS(isIMLogin), [LSLoginManager manager].manId, [LSLoginManager manager].token, errType, errmsg);
             if (isIMLogin) {
+                _status = LOGINED;
                 if (self.loginBlock) {
                     self.loginBlock(isIMLogin, ErrorType_Success, @"",  [LSLoginManager manager].manId);
                 }
             }
             else{
+                [self logout:LogoutTypeActive];
                 if (self.loginBlock) {
                     ErrorType errnum = ErrorType_UnknowError;
                     if (errType == LCC_ERR_CONNECTFAIL) {
                         // TODO:网络错误
                         errnum = ErrorType_NetworkError;
+                        
                     }  else {
                         // TODO:其他错误
                         errnum = ErrorType_UnknowError;
                     }
-                    self.loginBlock(isIMLogin, errnum, errmsg,  [LSLoginManager manager].manId);
+                    self.loginBlock(isIMLogin, errnum, errmsg.length > 0?errmsg:NSLocalizedString(@"NetworkError", nil),  [LSLoginManager manager].manId);
                 }
             }
         }
- 
     });
 
 }

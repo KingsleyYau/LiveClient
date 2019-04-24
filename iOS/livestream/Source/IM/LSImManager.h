@@ -259,7 +259,7 @@ typedef void (^EnterHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSSt
  *  @param roomId           直播间ID
  *
  */
-- (BOOL)enterHangoutRoom:(NSString *)roomId finishHandler:(EnterHangoutRoomHandler)finishHandler;
+- (BOOL)enterHangoutRoom:(NSString *)roomId isCreateOnly:(BOOL)isCreateOnly finishHandler:(EnterHangoutRoomHandler)finishHandler;
 
 typedef void (^LeaveHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *errMsg);
 /**

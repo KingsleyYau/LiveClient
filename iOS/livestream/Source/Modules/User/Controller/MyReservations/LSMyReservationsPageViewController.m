@@ -80,8 +80,6 @@
     }
 }
 
-
-
 - (void)loadData {
     [self.loadtimer invalidate];
     self.loadtimer = nil;
@@ -275,13 +273,8 @@
         if (!cell.imageViewLoader) {
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
-        //        cell.imageViewLoader.url = obj.oppositePhotoUrl;
-        //        cell.imageViewLoader.path = [[LSFileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-        //        cell.imageViewLoader.view = cell.headImage;
-        //        [cell.imageViewLoader loadImage];
-        //        [cell.imageViewLoader sdWebImageLoadView:cell.headImage options:0 imageUrl:obj.oppositePhotoUrl placeholderImage:nil finishHandler:nil];
 
-        [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
 
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];

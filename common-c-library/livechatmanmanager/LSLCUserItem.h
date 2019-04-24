@@ -67,6 +67,10 @@ public:
 	static bool Sort(LSLCUserItem* item1, LSLCUserItem* item2);
     
     void isSamePhotoId(LSLCMessageItem* messageItem);
+    // 获取用户的私密照和视频的消息
+    LCMessageList GetPrivateAndVideoMessageList();
+    // 根据videoId获取用户item
+    LSLCMessageItem* GetMsgItemWithVideoId(const string& videoId, const string& inviteId);
 
 public:
 	// 聊天消息列表加锁

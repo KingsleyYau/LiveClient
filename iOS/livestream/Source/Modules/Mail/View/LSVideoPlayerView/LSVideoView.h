@@ -15,12 +15,18 @@
 @optional
 //缓冲加载中
 - (void)onRecvVideoViewBufferEmpty;
-//缓冲可以播放
+//进行跳转后有数据可以播放
 - (void)onRecvVideoViewLikelyToKeepUp;
 //播放失败
 - (void)onRecvVideoViewPlayFailed;
 //播放完成
 - (void)onRecvVideoViewPlayDone;
+//是否显示进度条
+- (void)isShowLadyProgressView:(BOOL)isShow;
+//是否正在播放
+- (void)videoIsPlayOrSuspeng:(BOOL)isSuspend;
+//视频准备播放
+- (void)videoIsReadyToPlay;
 @end
 
 @interface LSVideoView : UIView
@@ -35,7 +41,13 @@
 - (void)pause;
 - (void)removeObserveAndNOtification;
 // 女士详情播放视频模式
-- (instancetype)initWithFrame:(CGRect)frame isSlider:(BOOL)isShow;
+- (instancetype)initWithFrame:(CGRect)frame isSlider:(BOOL)isShow isShowPlayTime:(BOOL)isShowPlayTime;
+// 聊天视频播放视频模式
+- (instancetype)initWithFrame:(CGRect)frame isSlider:(BOOL)isShow isShowPlayTime:(BOOL)isShowPlayTime isPerformShow:(BOOL)isPerformShow;
 // 播放女士视频
 - (void)playLadyVideo;
+// 播放LiveChat视频
+- (void)playChatVideo;
+// 设置进度条暂停/播放
+- (void)setProgressPlaySuspendOrStart:(BOOL)isSuspend;
 @end

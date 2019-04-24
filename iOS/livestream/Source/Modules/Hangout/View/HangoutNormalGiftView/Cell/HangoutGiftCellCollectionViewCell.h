@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "LSGiftManager.h"
 
+@class HangoutGiftCellCollectionViewCell;
+@protocol HangoutGiftCellCollectionViewCellDelegate <NSObject>
+- (void)sendGiftToAnchor:(NSInteger)index;
+@end
+
 @interface HangoutGiftCellCollectionViewCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *giftImageView;
@@ -17,9 +22,9 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *signImageView;
 
-@property (assign, nonatomic) BOOL selectCell;
+@property (weak, nonatomic) id<HangoutGiftCellCollectionViewCellDelegate> delegate;
 
-- (void)reloadStyle;
+- (void)setHighlightButtonTag:(NSInteger)tag;
 
 - (void)updataCellViewItem:(LSGiftManagerItem *)item;
 

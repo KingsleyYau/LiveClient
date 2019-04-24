@@ -38,8 +38,6 @@
     if (nil == cell){
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[QNChatVoiceSelfTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
-        cell.palyButton.layer.cornerRadius = cell.palyButton.frame.size.height/2;
-        cell.palyButton.layer.masksToBounds = YES;
     }
     
     return cell;

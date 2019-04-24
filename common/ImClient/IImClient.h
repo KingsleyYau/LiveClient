@@ -700,6 +700,16 @@ public:
      */
     virtual void OnRecvHandoutInviteNotice(const IMHangoutInviteItem& item) {};
     
+    /**
+     *  10.16.接收Hangout直播间男士信用点不足两个周期通知接口 回调
+     *
+     *  @param roomId         直播间ID
+     *  @param errNo          错误码
+     *  @param errMsg         错误描述
+     *
+     */
+    virtual void OnRecvHangoutCreditRunningOutNotice(const string& roomId, LCC_ERR_TYPE errNo, const string& errMsg) {};
+    
     // ------------- 节目 -------------
     /**
      *  11.1.接收节目开播通知接口 回调
@@ -948,9 +958,10 @@ public:
      *
      *  @param reqId            请求序列号
      *  @param roomId           直播间ID
+     *  @param isCreateOnly     是否仅创建新的Hangout直播间，若已有Hangout直播间则先关闭（0：否，1：是）（整型）（可无，无则默认为0）
      *
      */
-    virtual bool EnterHangoutRoom(SEQ_T reqId, const string& roomId) = 0;
+    virtual bool EnterHangoutRoom(SEQ_T reqId, const string& roomId, bool isCreateOnly) = 0;
     
     /**
      *  10.4.退出多人互动直播间接口

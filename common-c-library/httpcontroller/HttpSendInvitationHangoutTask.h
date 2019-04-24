@@ -37,7 +37,8 @@ public:
     void SetParam(
                   const string& roomId,
                   const string& anchorId,
-                  const string& recommendId
+                  const string& recommendId,
+                  bool isCreateOnly
                   );
     
 protected:

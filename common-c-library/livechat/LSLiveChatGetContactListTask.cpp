@@ -83,8 +83,8 @@ bool LSLiveChatGetContactListTask::Handle(const LSLiveChatTransportProtocol* tp)
 		}
 	}
 
-	FileLog("LiveChatClient", "LSLiveChatGetContactListTask::Handle() listType:%d, result:%d, errType:%d, list.size:%d"
-			, m_listType, result, m_errType, list.size());
+    FileLevelLog("LiveChatClient", KLog::LOG_WARNING,"LSLiveChatGetContactListTask::Handle() listType:%d, result:%d, errType:%d, list.size:%d m_listener:%p"
+			, m_listType, result, m_errType, list.size(), m_listener);
 
 	// 通知listener
 	if (NULL != m_listener) {

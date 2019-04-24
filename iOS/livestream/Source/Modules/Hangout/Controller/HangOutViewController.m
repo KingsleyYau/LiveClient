@@ -17,7 +17,7 @@
 #import "LSGiftManager.h"
 #import "LSChatEmotionManager.h"
 #import "LiveStreamSession.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "HangoutMsgManager.h"
 #import "LiveModule.h"
@@ -31,7 +31,6 @@
 #import "SelectNumButton.h"
 #import "DialogTip.h"
 #import "DialogWarning.h"
-#import "DialogOK.h"
 #import "MsgTableViewCell.h"
 #import "HangOutOpenDoorCell.h"
 #import "BigGiftAnimationView.h"
@@ -48,6 +47,8 @@
 #import "LSGetHangoutGiftListRequest.h"
 #import "SendGiftTheQueueManager.h"
 #import "LSAddCreditsViewController.h"
+
+#import "LSUserInfoManager.h"
 
 #import <objc/runtime.h>
 
@@ -77,7 +78,7 @@
 
 @interface HangOutViewController ()<IMManagerDelegate, IMLiveRoomManagerDelegate, HangOutLiverViewControllerDelegate,
                                     HangoutSendBarViewDelegate, LSCheckButtonDelegate, MsgTableViewCellDelegate, HangOutControlViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, HangOutOpenDoorCellDelegate
-                                        ,HangoutGiftViewControllerDelegate, HangoutCreditViewDelegate, HangoutInviteDelegate, LiveGobalManagerDelegate, HangOutUserViewControllerDelegate, UIAlertViewDelegate>
+                                        ,HangoutGiftViewControllerDelegate, HangoutCreditViewDelegate, HangoutInviteDelegate, LiveGobalManagerDelegate, HangOutUserViewControllerDelegate>
 
 // 当前直播间中的主播队列
 @property (nonatomic, strong) NSMutableArray<IMLivingAnchorItemObject *> *anchorArray;
@@ -122,7 +123,7 @@
 @property (nonatomic, strong) LSChatEmotionManager *chatEmotionManager;
 
 // 个人信息管理器
-@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
 
 #pragma mark - 消息管理器
 @property (nonatomic, strong) HangoutMsgManager *msgManager;
@@ -166,8 +167,6 @@
 @property (strong) DialogTip *dialogTipView;
 // 警告提示框
 @property (strong) DialogWarning *dialogView;
-// 充值dialog
-@property (strong) DialogOK *dialogGiftAddCredit;
 
 // 控制台控件
 @property (nonatomic, strong) HangOutControlView *controlView;
@@ -193,14 +192,11 @@
 @property (strong) MASConstraint *creditViewBottom;
 
 #pragma mark - 后台处理
-@property (nonatomic) BOOL isBackground;
+@property (nonatomic, assign) BOOL isBackground;
 // 是否已退入后台超时
-@property (nonatomic) BOOL isTimeOut;
+@property (nonatomic, assign) BOOL isTimeOut;
 
 @property (nonatomic, strong) UIButton *backgroundBtn;
-
-// 信用点不足提示
-@property (nonatomic, strong) UIAlertView *alertView;
 
 // 横竖分割线
 @property (weak, nonatomic) IBOutlet UIView *verticalView;
@@ -230,12 +226,9 @@
     [self.hangoutArray removeAllObjects];
     [self.hangoutDic removeAllObjects];
     
-    if (self.dialogGiftAddCredit) {
-        [self.dialogGiftAddCredit removeFromSuperview];
-    }
-    
     // 标记退出hangout直播间
     [LiveGobalManager manager].isHangouting = NO;
+    [[LiveGobalManager manager] setupLiveVC:nil orHangOutVC:nil];
     
     // 发送退出多人互动直播间
     if (self.liveRoom.roomId.length > 0) {
@@ -248,6 +241,11 @@
 
 - (void)initCustomParam {
     [super initCustomParam];
+    
+    // 隐藏导航栏
+    self.isShowNavBar = NO;
+    // 禁止导航栏后退手势
+    self.canPopWithGesture = NO;
     
     // 初始化当前直播间中的主播队列
     self.anchorArray = [[NSMutableArray alloc] init];
@@ -284,7 +282,7 @@
     self.chatEmotionManager = [LSChatEmotionManager emotionManager];
     
     // 初始化用户信息管理器
-    self.userInfoManager = [LSUserInfoManager manager];
+    self.roomUserInfoManager = [LSRoomUserInfoManager manager];
     
     // 初始化信用点管理器
     self.creditManager = [LiveRoomCreditRebateManager creditRebateManager];
@@ -317,8 +315,8 @@
     // 注册前后台切换通知
     self.isBackground = NO;
     self.isTimeOut = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     self.isFinshHangout = NO;
 }
@@ -334,6 +332,8 @@
     
     // 赋值到全局变量, 用于后台计时操作
     [LiveGobalManager manager].liveRoom = self.liveRoom;
+    // 赋值到全局变量 用于观看信件或chat视频关闭直播声音
+    [[LiveGobalManager manager] setupLiveVC:nil orHangOutVC:self];
     
     // 初始化直播间文本样式
     [self setUpLiveRoomType];
@@ -347,9 +347,6 @@
         self.videoBottomViewTop.constant = 0;
         self.openControlBtnBottom.constant = 58;
     }
-    
-    // 初始化充点提示控件
-    self.alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedString(@"INVITE_HANGOUT_ADDCREDIT", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"ADD_CREDITS", nil), nil];
     
     // 禁止锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
@@ -406,16 +403,12 @@
     [self reloadWindowGiftCountView];
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.navigationBar.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -434,8 +427,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    
     [self.dialogTipView removeShow];
 }
 
@@ -476,7 +467,7 @@
         switch (i) {
             case 1:{
                 [liverVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.left.equalTo(self.videoBottomView);
+                    make.top.right.equalTo(self.videoBottomView);
                     make.width.height.equalTo(@(length));
                 }];
                 liverVC.firstIcon.hidden = YES;
@@ -484,7 +475,7 @@
                 
             case 2:{
                 [liverVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.top.right.equalTo(self.videoBottomView);
+                    make.bottom.left.equalTo(self.videoBottomView);
                     make.width.height.equalTo(@(length));
                 }];
                 liverVC.firstIcon.hidden = YES;
@@ -589,28 +580,21 @@
                     [vc sendHangoutComboGift:item clickId:clickId isPrivate:self.isPrivate];
                 } else {
                     NSString *giftName = item.infoItem.name;
-                    [self.userInfoManager getUserInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                    [self.roomUserInfoManager getUserInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                         [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ANCHOR_LEAVE"),giftName ,item.nickName]];
                     }];
                 }
             }
         } else {
-            [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ERROR"),item.infoItem.name]];
+            if (self.chatAnchorArray.count > 0) {
+                [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_NO_SELECT"),item.infoItem.name]];
+            } else {
+                [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ERROR"),item.infoItem.name]];
+            }
         }
         
     } else {
-        if (self.dialogGiftAddCredit) {
-            [self.dialogGiftAddCredit removeFromSuperview];
-        }
-        WeakObject(self, weakSelf);
-        self.dialogGiftAddCredit = [DialogOK dialog];
-        self.dialogGiftAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"SENDGIFT_ERR_ADD_CREDIT");
-        [self.dialogGiftAddCredit showDialog:self.liveRoom.superView
-                                 actionBlock:^{
-                                     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-                                     [weakSelf.navigationController pushViewController:vc animated:YES];
-                                 }];
+        [self showAddCreditsView:NSLocalizedStringFromSelf(@"HANGOUT_NO_CREDITS") tag:1];
     }
 }
 
@@ -632,30 +616,22 @@
                         [vc sendHangoutGift:item clickId:clickId isPrivate:self.isPrivate];
                     } else {
                         NSString *giftName = item.infoItem.name;
-                        [self.userInfoManager getUserInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                        [self.roomUserInfoManager getUserInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                             [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ANCHOR_LEAVE"),giftName ,item.nickName]];
                         }];
                     }
                 }
             } else {
-                [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ERROR"),item.infoItem.name]];
+                if (self.chatAnchorArray.count > 0) {
+                    [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_NO_SELECT"),item.infoItem.name]];
+                } else {
+                    [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ERROR"),item.infoItem.name]];
+                }
             }
         }
         
     } else {
-        if (self.dialogGiftAddCredit) {
-            [self.dialogGiftAddCredit removeFromSuperview];
-        }
-        WeakObject(self, weakSelf);
-        self.dialogGiftAddCredit = [DialogOK dialog];
-        self.dialogGiftAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"SENDGIFT_ERR_ADD_CREDIT");
-        [self.dialogGiftAddCredit showDialog:self.liveRoom.superView
-                                 actionBlock:^{
-                                     NSLog(@"没钱了。。");
-                                     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-                                     [weakSelf.navigationController pushViewController:vc animated:YES];
-                                 }];
+        [self showAddCreditsView:NSLocalizedStringFromSelf(@"HANGOUT_NO_CREDITS") tag:1];
     }
 }
 
@@ -713,7 +689,7 @@
     }
     self.creditView.nameLabel.text = nickName;
     WeakObject(self, waekSelf);
-    [self.userInfoManager getFansBaseInfo:self.loginManager.loginItem.userId
+    [self.roomUserInfoManager getFansBaseInfo:self.loginManager.loginItem.userId
                             finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                 [waekSelf.creditView updateUserBalanceCredit:waekSelf.creditManager.mCredit userInfo:item];
                             }];
@@ -785,13 +761,35 @@
 
 - (void)endHangOutLiveRoom:(HangOutControlView *)view {
     // TODO:关闭Hangout直播间
-    
-    // 发送退出多人互动直播间
-    if (self.liveRoom.roomId.length > 0) {
-        [self.imManager leaveHangoutRoom:self.liveRoom.roomId finishHandler:nil];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"LEAVE_ROOM_TIP") preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"NO", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *okAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"YES", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        // 退出多人互动直播间
+        LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+        [nvc forceToDismissAnimated:YES completion:nil];
+    }];
+    [alertVC addAction:cancelAC];
+    [alertVC addAction:okAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+#pragma mark - 关闭/开启直播间声音(LiveChat使用)
+- (void)openOrCloseSuond:(BOOL)isClose {
+    if (self.hangoutArray.count > 0) {
+        for (HangOutLiverViewController *liverVC in self.hangoutArray) {
+            [liverVC setThePlayMute:isClose];
+        }
     }
-    // 显示结束页
-    [self stopLiveWithErrtype:HANGOUTERROR_NORMAL errMsg:NSLocalizedStringFromSelf(@"HANGOUT_IS_ENDED")];
+    if (self.hangoutDic.count > 0) {
+        NSArray *keys = self.hangoutDic.allKeys;
+        for (int index = 0; index < keys.count; index++) {
+            HangOutLiverViewController *liverVC = [self.hangoutDic objectForKey:keys[index]];
+            [liverVC setThePlayMute:isClose];
+        }
+    }
+    [self.userVC setThePublishMute:isClose];
 }
 
 #pragma mark - 文本和表情输入控件管理
@@ -1004,9 +1002,18 @@
     if (at.count > 0) {
         NSMutableArray *nameArray = [[NSMutableArray alloc] init];
         for (NSString *userId in at) {
-            [self.userInfoManager getUserInfo:userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
-                [nameArray addObject:item.nickName];
-            }];
+            for (LSUserInfoModel *item in self.chatAnchorArray) {
+                if ([userId isEqualToString:item.userId]) {
+                    [nameArray addObject:item.nickName];
+                }
+            }
+        }
+        if (!nameArray.count) {
+            for (NSString *userId in at) {
+                [self.roomUserInfoManager getUserInfo:userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                    [nameArray addObject:item.nickName];
+                }];
+            }
         }
         msgItem.nameArray = nameArray;
         if (text.length > 0) {
@@ -1055,7 +1062,7 @@
         [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
     } else {
         if (toUserId.length > 0) {
-            [self.userInfoManager getUserInfo:toUserId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            [self.roomUserInfoManager getUserInfo:toUserId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                 msgItem.toName = item.nickName;
                 attributeString = [self.msgManager setupGiftMessageStyle:self.roomStyleItem msgItem:msgItem];
                 msgItem.attText = attributeString;
@@ -1370,6 +1377,12 @@
             }
             
             [liverVC sendHangoutInvite:obj];
+        } else {
+            if ([liverVC getTheLiveType] == LIVETYPE_INVITING) {
+                [self showdiaLog:NSLocalizedStringFromSelf(@"ANCHOR_IS_INVITINF")];
+            } else if ([liverVC getTheLiveType] == LIVETYPE_ONLIVRROOM) {
+                [self showdiaLog:NSLocalizedStringFromSelf(@"ANCHOR_HAS_JOIN")];
+            }
         }
     } else {
         [self showdiaLog:NSLocalizedStringFromSelf(@"ROOM_IS_FULL")];
@@ -1559,7 +1572,7 @@
         [self resetAnchorWindow:liverVC userId:anchorId];
         
         if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
-            [self.alertView show];
+            [self showAddCreditsView:NSLocalizedStringFromSelf(@"SEND_INVITE_NO_CREDIT") tag:0];
         } else {
             [self showdiaLog:errMsg];
         }
@@ -1577,7 +1590,7 @@
 
 - (void)inviteHangoutNotAgreeNotice:(IMRecvDealInviteItemObject *)item liverVC:(HangOutLiverViewController *)liverVC {
     if (item.type == IMREPLYINVITETYPE_NOCREDIT) {
-        [self.alertView show];
+        [self showAddCreditsView:NSLocalizedStringFromSelf(@"SEND_INVITE_NO_CREDIT") tag:0];
     } else if (item.type != IMREPLYINVITETYPE_CANCEL) {
         // 邀请主播Hangout拒绝或者超时回调
         MsgItem *msgModel = [[MsgItem alloc] init];
@@ -1608,6 +1621,13 @@
             [liverVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.height.equalTo(@(length * 1.6));
             }];
+            [UIView animateWithDuration:0.1
+                             animations:^{
+                                 [liverVC.view layoutIfNeeded];
+                             }
+                             completion:^(BOOL finished) {
+                                 liverVC.view.userInteractionEnabled = YES;
+                             }];
         }
     } else {
         self.resetBtn.hidden = YES;
@@ -1615,6 +1635,13 @@
         [liverVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.height.equalTo(@(length));
         }];
+        [UIView animateWithDuration:0.1
+                         animations:^{
+                             [liverVC.view layoutIfNeeded];
+                         }
+                         completion:^(BOOL finished) {
+                             liverVC.view.userInteractionEnabled = YES;
+                         }];
     }
 }
 
@@ -1659,30 +1686,10 @@
 }
 
 - (void)showManPushError:(NSString *)errmsg errNum:(LCC_ERR_TYPE)errNum {
-    if (errNum == LCC_ERR_NO_CREDIT) {
-        if (self.dialogGiftAddCredit) {
-            [self.dialogGiftAddCredit removeFromSuperview];
-        }
-        WeakObject(self, weakSelf);
-        self.dialogGiftAddCredit = [DialogOK dialog];
-        self.dialogGiftAddCredit.tipsLabel.text = errmsg;
-        [self.dialogGiftAddCredit showDialog:self.liveRoom.superView
-                                 actionBlock:^{
-                                     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-                                     [weakSelf.navigationController pushViewController:vc animated:YES];
-                                 }];
+    if (errNum == LCC_ERR_NO_CREDIT || errNum == LCC_ERR_NO_CREDIT_DOUBLE_VIDEO) {
+        [self showAddCreditsView:errmsg tag:1];
     } else {
         [self showdiaLog:errmsg];
-    }
-}
-
-#pragma mark - UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex != alertView.cancelButtonIndex) {
-        LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:vc animated:NO];
     }
 }
 
@@ -1861,6 +1868,24 @@
 }
 
 #pragma mark - 界面显示/隐藏
+/** 显示买点弹框 **/
+- (void)showAddCreditsView:(NSString *)tip tag:(NSInteger)tag {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tip preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *canaelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *addAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"ADD_CREDITS", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (tag > 0) {
+            [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
+        }
+        LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:vc animated:NO];
+    }];
+    [alertVC addAction:canaelAC];
+    [alertVC addAction:addAC];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
 /** 显示聊天选择框 **/
 - (void)showButtonBar {
     [self updataAnchorArray:self.chatAnchorArray];
@@ -2030,7 +2055,7 @@
                          
                      }
                      completion:^(BOOL finished) {
-                         [waekSelf.userInfoManager getLiverInfo:waekSelf.loginManager.loginItem.userId
+                         [waekSelf.roomUserInfoManager getLiverInfo:waekSelf.loginManager.loginItem.userId
                                                   finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                                       [waekSelf.creditView updateUserBalanceCredit:waekSelf.creditManager.mCredit userInfo:item];
                                                   }];
@@ -2186,8 +2211,7 @@
                 [self resetAnchorWindow:liverVC userId:item.knockItem.anchorId];
                 [liverVC resetView:YES];
                 if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
-                    [self.alertView setMessage:errmsg];
-                    [self.alertView show];
+                    [self showAddCreditsView:NSLocalizedStringFromSelf(@"OPEN_DOOR_NO_CREDIT") tag:0];
                 } else {
                     [self showdiaLog:errmsg];
                 }
@@ -2250,7 +2274,7 @@
         if (errType == LCC_ERR_SUCCESS) {
             
             if (self.liveRoom.roomId.length > 0) {
-                [self.imManager enterHangoutRoom:self.liveRoom.roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull item) {
+                [self.imManager enterHangoutRoom:self.liveRoom.roomId isCreateOnly:NO finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                        NSLog(@"HangOutViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", BOOL2SUCCESS(success), errType, errMsg, item.roomId);
                         if (success) {
@@ -2274,13 +2298,11 @@
                             [self.userVC reloadVideoStatus];
                             
                         } else {
-                            [self stopLiveWithErrtype:HANGOUTERROR_NORMAL errMsg:errmsg];
+                            [self stopLiveWithErrtype:HANGOUTERROR_NORMAL errMsg:errMsg];
                         }
                     });
                 }];
             }
-        } else {
-            [self stopLiveWithErrtype:HANGOUTERROR_NORMAL errMsg:NSLocalizedStringFromSelf(@"CONNECT_SEVER_FAIL")];
         }
     });
 }
@@ -2492,7 +2514,7 @@
             model.nickName = item.nickName;
             model.photoUrl = item.photoUrl;
             model.isAnchor = item.isAnchor;
-            [self.userInfoManager setLiverInfoDic:model];
+            [self.roomUserInfoManager setLiverInfoDic:model];
             
             @synchronized(self) {
                 BOOL isHave = YES;
@@ -2554,6 +2576,17 @@
                 [self.creditManager setCredit:credit];
                 self.giftVC.creditLabel.text = [NSString stringWithFormat:@"%.2f",self.creditManager.mCredit];
             }
+        }
+    });
+}
+
+- (void)onRecvHangoutCreditRunningOutNotice:(NSString *)roomId err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg {
+    NSLog(@"HangOutViewController::onRecvHangoutCreditRunningOutNotice( [接收Hangout直播间男士信用点不足两个周期通知接口], roomId : %@", roomId);
+    WeakObject(self, weakSelf);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:weakSelf.liveRoom.roomId]) {
+            // 设置余额及返点信息管理器
+            [weakSelf showAddCreditsView:errMsg tag:1];
         }
     });
 }
@@ -2626,8 +2659,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.liveRoom.priv = priv;
         BOOL isEqualRoomId = [self.liveRoom.roomId isEqualToString:roomId];
-        if (isEqualRoomId && !self.isBackground) {
-            if (errType == LCC_ERR_NO_CREDIT) {
+        if (isEqualRoomId && !self.isTimeOut) {
+            if (errType == LCC_ERR_NO_CREDIT_CLOSE_LIVE) {
                 [self stopLiveWithErrtype:HANGOUTERROR_NOCREDIT errMsg:errmsg];
             } else {
                 [self stopLiveWithErrtype:HANGOUTERROR_NORMAL errMsg:errmsg];

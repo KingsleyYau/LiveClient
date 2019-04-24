@@ -9,17 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "LSGiftManager.h"
 
+@class CeleBrationGiftViewCell;
+@protocol CeleBrationGiftViewCellDelegate <NSObject>
+- (void)sendGiftToAnchor:(NSInteger)index;
+@end
+
 @interface CeleBrationGiftViewCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *giftImageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *creditsLabel;
 
-@property (nonatomic, assign) BOOL selectCell;
+@property (weak, nonatomic) id<CeleBrationGiftViewCellDelegate> delegate;
 
 + (NSString *)cellIdentifier;
 
-- (void)reloadStyle;
+- (void)setHighlightButtonTag:(NSInteger)tag;
 
 - (void)updataCellViewItem:(LSGiftManagerItem *)item;
 

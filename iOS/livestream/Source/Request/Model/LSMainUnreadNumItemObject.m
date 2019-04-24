@@ -21,7 +21,7 @@
         self.privateMessageUnreadNum = 0;
         self.bookingUnreadNum = 0;
         self.backpackUnreadNum = 0;
-
+        self.sayHiResponseUnreadNum = 0;
     }
     return self;
 }
@@ -34,6 +34,7 @@
         self.privateMessageUnreadNum = [coder decodeIntForKey:@"privateMessageUnreadNum"];
         self.bookingUnreadNum = [coder decodeIntForKey:@"bookingUnreadNum"];
         self.backpackUnreadNum = [coder decodeIntForKey:@"backpackUnreadNum"];
+        self.sayHiResponseUnreadNum = [coder decodeIntForKey:@"sayHiResponseUnreadNum"];
     }
     return self;
 }
@@ -45,6 +46,7 @@
     [coder encodeInt:self.privateMessageUnreadNum forKey:@"privateMessageUnreadNum"];
     [coder encodeInt:self.bookingUnreadNum forKey:@"bookingUnreadNum"];
     [coder encodeInt:self.backpackUnreadNum forKey:@"backpackUnreadNum"];
+    [coder encodeInt:self.sayHiResponseUnreadNum forKey:@"sayHiResponseUnreadNum"];
 }
 
 @end

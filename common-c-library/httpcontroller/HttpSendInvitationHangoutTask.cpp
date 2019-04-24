@@ -27,9 +27,11 @@ void HttpSendInvitationHangoutTask::SetCallback(IRequestSendInvitationHangoutCal
 void HttpSendInvitationHangoutTask::SetParam(
                                              const string& roomId,
                                              const string& anchorId,
-                                             const string& recommendId
+                                             const string& recommendId,
+                                             bool isCreateOnly
                                           ) {
 
+    char temp[16];
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
@@ -48,19 +50,23 @@ void HttpSendInvitationHangoutTask::SetParam(
         mRecommendId = recommendId;
     }
     
-
+    snprintf(temp, sizeof(temp), "%d", isCreateOnly == true ? 1 : 0 );
+    mHttpEntiy.AddContent(LIVEROOM_SENDINVITATIONHANGOUT_CREATEONLY, temp);
 
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendInvitationHangoutTask::SetParam( "
             "task : %p, "
             "roomId : %s,"
             "anchorId : %s,"
-            "recommendId : %s"
+            "recommendId : %s,"
+            "isCreateOnly : %d"
+            ""
             ")",
             this,
             roomId.c_str(),
             anchorId.c_str(),
-            recommendId.c_str()
+            recommendId.c_str(),
+            isCreateOnly
             );
 }
 

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSSayHiListViewController">
+            <connections>
+                <outlet property="pagingScrollView" destination="8eS-Yy-Lwf" id="QWA-9O-ZZ1"/>
+                <outlet property="titleSegment" destination="ffk-yv-0k6" id="x8c-7c-lgc"/>
+                <outlet property="view" destination="F0L-nX-RAo" id="VwX-yx-Ocg"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="F0L-nX-RAo">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ffk-yv-0k6" userLabel="Segment">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="51"/>
+                    <subviews>
+                        <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fsb-C0-pKe">
+                            <rect key="frame" x="0.0" y="50" width="375" height="1"/>
+                            <color key="backgroundColor" red="0.89411764705882346" green="0.89411764705882346" blue="0.89411764705882346" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="ipc-D9-tfH"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="Fsb-C0-pKe" secondAttribute="bottom" id="EDV-yV-4UK"/>
+                        <constraint firstItem="Fsb-C0-pKe" firstAttribute="leading" secondItem="ffk-yv-0k6" secondAttribute="leading" id="PH4-hG-XAU"/>
+                        <constraint firstAttribute="trailing" secondItem="Fsb-C0-pKe" secondAttribute="trailing" id="d2j-yG-m1T"/>
+                        <constraint firstAttribute="height" constant="51" id="nOg-JJ-ZJp"/>
+                    </constraints>
+                </view>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8eS-Yy-Lwf" customClass="LSPZPagingScrollView">
+                    <rect key="frame" x="0.0" y="51" width="375" height="616"/>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8eS-Yy-Lwf" firstAttribute="bottom" secondItem="F0L-nX-RAo" secondAttribute="bottom" id="1Z3-nj-22D"/>
+                <constraint firstItem="8eS-Yy-Lwf" firstAttribute="leading" secondItem="F0L-nX-RAo" secondAttribute="leading" id="IrQ-nZ-dKE"/>
+                <constraint firstItem="ffk-yv-0k6" firstAttribute="leading" secondItem="F0L-nX-RAo" secondAttribute="leading" id="fLU-fh-hVX"/>
+                <constraint firstItem="8eS-Yy-Lwf" firstAttribute="top" secondItem="ffk-yv-0k6" secondAttribute="bottom" id="fqH-hE-XCE"/>
+                <constraint firstItem="ffk-yv-0k6" firstAttribute="top" secondItem="F0L-nX-RAo" secondAttribute="top" id="pv0-bs-7ed"/>
+                <constraint firstItem="8eS-Yy-Lwf" firstAttribute="width" secondItem="F0L-nX-RAo" secondAttribute="width" id="tQc-VZ-gnF"/>
+                <constraint firstItem="ffk-yv-0k6" firstAttribute="width" secondItem="F0L-nX-RAo" secondAttribute="width" id="z1z-QM-fnu"/>
+            </constraints>
+            <point key="canvasLocation" x="35.5" y="54.5"/>
+        </view>
+    </objects>
+</document>

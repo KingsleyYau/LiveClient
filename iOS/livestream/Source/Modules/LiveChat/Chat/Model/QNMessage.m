@@ -16,7 +16,7 @@
         self.sender = MessageSenderUnknow;
         self.type = MessageTypeUnknow;
         self.status = MessageStatusUnknow;
-        self.text = nil;
+        self.text = @"";
         self.attText = nil;
         self.secretPhotoImage = nil;
         self.emotionDefault = nil;

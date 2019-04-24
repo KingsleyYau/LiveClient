@@ -10,17 +10,15 @@
 
 #pragma mark - 界面
 #import "LSMainViewController.h"
-#import "PushInviteViewController.h"
-#import "PushBookingViewController.h"
 
 #pragma mark - 登录
 #import "LSGiftManager.h"
 #import "LSChatEmotionManager.h"
 #import "LSStreamSpeedManager.h"
+#import "LSSayHiManager.h"
 
 #pragma mark - 公共
 #import "LSFileCacheManager.h"
-#import "LSUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveBundle.h"
 #import "LSImageViewLoader.h"
@@ -35,6 +33,7 @@
 #import "LSLiveChatManagerOC.h"
 #import "LSIMLoginManager.h"
 #import "LSLCSessionRequestManager.h"
+#import "LSLiveChatRequestManager.h"
 
 #pragma mark - 私信
 #import "LSPrivateMessageManager.h"
@@ -56,16 +55,14 @@
 #import "LiveAnalyticsManager.h"
 #import "LiveNotificationService.h"
 
-#pragma mark - 界面
-#import "PushShowViewController.h"
-
 #import "LSPaymentManager.h"
+#import "QNContactManager.h"
 
 #define HTTP_AUTHOR @"test"
 #define HTTP_PASSWORD @"5179"
 
 static LiveModule *gModule = nil;
-@interface LiveModule () <LoginManagerDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate,LSLiveChatManagerListenerDelegate> {
+@interface LiveModule () <LoginManagerDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate, LSLiveChatManagerListenerDelegate> {
     UIViewController *_moduleVC;
 }
 
@@ -83,7 +80,9 @@ static LiveModule *gModule = nil;
 @property (strong, nonatomic) LSGiftManager *giftDownloadManager;
 @property (strong, nonatomic) LSChatEmotionManager *emotionManager;
 @property (strong, nonatomic) LSStreamSpeedManager *speedManager;
-@property (strong, nonatomic) LSLiveChatManagerOC * liveChatManager;
+@property (strong, nonatomic) LSLiveChatManagerOC *liveChatManager;
+@property (strong, nonatomic) LSLiveChatRequestManager *liveChatRequestManager;
+@property (strong, nonatomic) LSSayHiManager *sayHiManager;
 // 余额及返点信息管理器
 @property (strong, nonatomic) LiveRoomCreditRebateManager *creditRebateManager;
 // 通知界面
@@ -124,7 +123,9 @@ static LiveModule *gModule = nil;
         [LiveAnalyticsManager manager];
 
         [LiveNotificationService service];
-    
+        
+        // 初始化SayHi管理器
+        self.sayHiManager = [LSSayHiManager manager];
         // 初始化流媒体管理器
         self.liveGobalManager = [LiveGobalManager manager];
         // 初始化测速管理器
@@ -142,17 +143,17 @@ static LiveModule *gModule = nil;
         // 初始化livechat管理器
         self.liveChatManager = [LSLiveChatManagerOC manager];
         [self.liveChatManager addDelegate:self];
-        
+
+        self.liveChatRequestManager = [LSLiveChatRequestManager manager];
+
         [LSLCSessionRequestManager manager];
-        
+
         // 初始化礼物下载器
         self.giftDownloadManager = [LSGiftManager manager];
         // 初始化聊天表情管理器
         self.emotionManager = [LSChatEmotionManager emotionManager];
         // 初始session管理器
         self.sessionManager = [LSSessionRequestManager manager];
-        // 初始化用户信息管理器
-        [LSUserInfoManager manager];
         // 初始化余额及返点信息管理器
         self.creditRebateManager = [LiveRoomCreditRebateManager creditRebateManager];
         // 清除webview的缓存
@@ -165,8 +166,10 @@ static LiveModule *gModule = nil;
         LSRequestManager *manager = [LSRequestManager manager];
         [manager setWebSite:@""];
         [manager setAuthorization:HTTP_AUTHOR password:HTTP_PASSWORD];
-        //[LSRequestManager setProxy:@"http://172.25.32.80:8888"];
-
+       // [LSRequestManager setProxy:@"http://172.25.32.80:8888"];
+        // 初始化联系人管理器
+        [QNContactManager manager];
+        
         // 创建直播服务
         self.liveSiteService = [[LiveSiteService alloc] init];
     }
@@ -284,26 +287,21 @@ static LiveModule *gModule = nil;
     return [LiveBundle mainBundle];
 }
 
-
-- (void)pushInviteNotice {
-    PushInviteViewController *vc = self.notificationVC;
-    // TODO:添加判断是否存在该方法是否存在
-    if ([vc respondsToSelector:@selector(pushMessageToCenter)]) {
-        [vc pushMessageToCenter];
-    }
-
-}
-
 #pragma mark - HTTP登录回调
 - (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *_Nonnull)errmsg {
     if (success) {
         // Http登陆成功
         // livechat登录
-        ConfigItemObject* configItem = [LSLoginManager manager].configItem;
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *cachesDirectory = [paths objectAtIndex:0];
+        ConfigItemObject *configItem = [LSLoginManager manager].configItem;
+        NSString *cachesDirectory = [[LSFileCacheManager manager] cacheDirectory];
         NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
-        [[LSLiveChatManagerOC manager] loginUser:configItem.socketHostDomain port:configItem.socketPort webSite:configItem.httpSvrUrl appSite:configItem.httpSvrUrl chatVoiceHostUrl:configItem.chatVoiceHostUrl httpUser:@"test" httpPassword:@"5179" versionCode:[LSRequestManager manager].versionCode appId:appId cachesDirectory:cachesDirectory minChat:configItem.minBalanceForChat user:loginItem.userId userName:loginItem.nickName sid:loginItem.sessionId device:[[LSRequestManager manager] getDeviceId] livechatInvite:(NSInteger)loginItem.liveChatInviteRiskType isLivechat:loginItem.isLiveChatRisk];
+        BOOL isLiveChatRisk = NO;
+        if (loginItem.isLiveChatRisk || !loginItem.userPriv.liveChatPriv.isLiveChatPriv) {
+            isLiveChatRisk = YES;
+        }
+        [[LSLiveChatRequestManager manager] setWebSite:configItem.httpSvrUrl appSite:configItem.httpSvrUrl wapSite:@""];
+        [[LSLiveChatRequestManager manager] setAuthorization:@"test" password:@"5179"];
+        [[LSLiveChatManagerOC manager] loginUser:configItem.socketHostDomain port:configItem.socketPort webSite:configItem.httpSvrUrl appSite:configItem.httpSvrUrl chatVoiceHostUrl:configItem.chatVoiceHostUrl httpUser:@"test" httpPassword:@"5179" versionCode:[LSRequestManager manager].versionCode appId:appId cachesDirectory:cachesDirectory minChat:configItem.minBalanceForChat user:loginItem.userId userName:loginItem.nickName sid:loginItem.sessionId device:[[LSRequestManager manager] getDeviceId] livechatInvite:(NSInteger)loginItem.userPriv.liveChatPriv.liveChatInviteRiskType isLivechat:isLiveChatRisk isSendPhotoPriv:loginItem.userPriv.liveChatPriv.isSendLiveChatPhotoPriv isLiveChatPriv:loginItem.userPriv.liveChatPriv.isLiveChatPriv isSendVoicePriv:loginItem.userPriv.liveChatPriv.isSendLiveChatVoicePriv];
         if ([self.delegate respondsToSelector:@selector(moduleOnLogin:)]) {
             [self.delegate moduleOnLogin:self];
         }
@@ -330,8 +328,8 @@ static LiveModule *gModule = nil;
             _moduleVC = nil;
         }
         BOOL kick = (type != LogoutTypeRelogin);
-        [[LSLiveChatManagerOC manager]logoutUser:kick];
-        
+        [[LSLiveChatManagerOC manager] logoutUser:kick];
+
         [self.imManager resetIMStatus];
         // 通知外部模块停止
         if ([self.delegate respondsToSelector:@selector(moduleOnLogout:type:msg:)]) {
@@ -374,17 +372,8 @@ static LiveModule *gModule = nil;
             if ([_liveGobalManager canShowInvite:anchorId] || !_liveGobalManager.isHangouting) {
                 // 生成直播间跳转的URL
                 NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:inviteId anchorId:anchorId anchorName:nickName];
-                // 调用QN弹出通知
-                PushInviteViewController *vc = [[PushInviteViewController alloc] initWithNibName:nil bundle:nil];
-                vc.url = url;
-                vc.inviteId = inviteId;
-                vc.anchorId = anchorId;
-                vc.nickName = nickName;
-                _notificationVC = vc;
-
-                if ([self.noticeDelegate respondsToSelector:@selector(moduleOnNotification:)]) {
-                    [self.noticeDelegate moduleOnNotification:self];
-                }
+                // 弹出通知
+                [self pushMessageToCenter:[url absoluteString] andNickName:nickName];
             } else {
                 // 无法显示主播立即私密邀请
                 [self.imManager InstantInviteUserReport:inviteId
@@ -400,43 +389,11 @@ static LiveModule *gModule = nil;
 - (void)onRecvBookingNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg leftSeconds:(int)leftSeconds {
     // TODO:接收主播预约开始倒数邀请通知
     NSLog(@"LiveModule::onRecvBookingNotice( [接收预约开始倒数通知], roomId : %@, userId : %@, userName : %@, leftSeconds : %d )", roomId, userId, nickName, leftSeconds);
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId anchorId:userId roomType:LiveRoomType_Private];
-        // 调用QN弹出通知
-        PushBookingViewController *vc = [[PushBookingViewController alloc] initWithNibName:nil bundle:nil];
-        vc.url = url;
-        vc.userId = userId;
-        _notificationVC = vc;
-
-        if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
-            [self.delegate moduleOnNotification:self];
-        }
-    });
 }
 
 - (void)onRecvProgramPlayNotice:(IMProgramItemObject *)item type:(IMProgramNoticeType)type msg:(NSString *_Nonnull)msg {
     // TODO:接收节目开播通知接口
     NSLog(@"LiveModule::onRecvProgramPlayNotice( [接收节目开播通知], showLiveId : %@, anchorId : %@, anchorNickName : %@, type : %d )", item.showLiveId, item.anchorId, item.anchorNickName, type);
-
-    if (type == IMPROGRAMNOTICETYPE_BUYTICKET) {
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // 生成直播间跳转的URL
-            NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId anchorId:item.anchorId];
-            // 调用QN弹出通知
-            PushShowViewController *vc = [[PushShowViewController alloc] initWithNibName:nil bundle:nil];
-            vc.url = url;
-            vc.tips = msg;
-            vc.anchorId = item.anchorId;
-            _notificationVC = vc;
-
-            if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
-                [self.delegate moduleOnNotification:self];
-            }
-        });
-    }
 }
 
 - (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList {
@@ -453,10 +410,10 @@ static LiveModule *gModule = nil;
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"LiveModule::applicationWillEnterForeground()");
     [LiveGobalManager manager].enterRoomBackgroundTime = nil;
-    
-//    if (self.loginManager.status == LOGINED) {
-//      [[LSLiveChatManagerOC manager] relogin];
-//    }
+
+    //    if (self.loginManager.status == LOGINED) {
+    //      [[LSLiveChatManagerOC manager] relogin];
+    //    }
 }
 
 #pragma mark - LiveChat
@@ -466,7 +423,6 @@ static LiveModule *gModule = nil;
         if (KOT_OTHER_LOGIN == kickType) {
             // 注销PHP
             [[LSLoginManager manager] logout:LogoutTypeKick msg:NSLocalizedString(@"Tips_You_Have_Been_Kick", nil)];
-            
         }
     });
 }
@@ -477,5 +433,22 @@ static LiveModule *gModule = nil;
     });
 }
 
+- (void)pushMessageToCenter:(NSString *)url andNickName:(NSString *)nickName {
+    [[LiveModule module].analyticsManager reportActionEvent:ShowInvitation eventCategory:EventCategoryGobal];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+    
+    UILocalNotification *notification = [[UILocalNotification alloc]init];
+    notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"PUSH_INVITE_TIP", nil),nickName];
+    notification.userInfo = @{@"jumpurl":url};
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
+        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
+        notification.repeatInterval = NSCalendarUnitDay;
+    }else{
+        notification.repeatInterval = NSCalendarUnitDay;
+    }
+    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+}
 @end
 

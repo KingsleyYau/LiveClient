@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "AFNetworking.h"
+
 #import "UIView+WebCache.h"
 
 @class LSImageViewLoader;
 
-typedef void (^SDWebImageCallBack)( UIImage *image );
+typedef void (^LSImageViewLoaderCallBack)(UIImage *image);
 
 @interface LSImageViewLoader : NSObject
 
@@ -29,32 +29,36 @@ typedef void (^SDWebImageCallBack)( UIImage *image );
 + (void)gobalInit;
 
 /**
- *  停止请求
+ 停止请求
  */
 - (void)stop;
 
 /**
- *  加载图片
- *
- *  view 加载图片view
- *  option 枚举参数
- *  imageUrl 图片URL
- *  placeholderImage 占位图
+ 加载图片
+ 
+ @param view 加载图片view
+ @param option 枚举参数
+ @param url 图片URL
+ @param placeholderImage 占位图
  */
-- (void)loadImageWithImageView:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)image;
-
-- (void)sdWebImageLoadView:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(SDWebImageCallBack)finishHandler;
+- (void)loadImageWithImageView:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(LSImageViewLoaderCallBack)finishHandler;
 
 /**
- 加载图片,处理304url缓存
+ 加载图片(仅用于需要处理304的链接)
 
  @param imageView 加载图片view
  @param url 图片URL
  @param placeholderImage 默认图片
  */
-- (void)refreshCachedImage:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(SDWebImageCallBack)finishHandler;
+- (void)loadImageFromCache:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(LSImageViewLoaderCallBack)finishHandler;
 
-
-//- (BOOL)loadImage;
-
+/**
+ 加载高清图片 (仅用于列表加载的大图)
+ 
+ @param view 加载图片view
+ @param option 枚举参数
+ @param url 图片URL
+ @param placeholderImage 占位图
+ */
+- (void)loadHDListImageWithImageView:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(LSImageViewLoaderCallBack)finishHandler;
 @end

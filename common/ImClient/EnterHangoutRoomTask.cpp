@@ -15,6 +15,7 @@
 
 // 请求参数定义
 #define ENTERHANGOUTROOM_ROOMID_PARAM           "room_id"
+#define ENTERHANGOUTROOM_CREATE_ONLY_PARAM      "create_only"
 EnterHangoutRoomTask::EnterHangoutRoomTask(void)
 {
     m_listener = NULL;
@@ -91,7 +92,7 @@ bool EnterHangoutRoomTask::GetSendData(Json::Value& data)
         Json::Value value;
         Json::Value strArray;
         value[ENTERHANGOUTROOM_ROOMID_PARAM] = m_roomId;
-
+        value[ENTERHANGOUTROOM_CREATE_ONLY_PARAM] = (m_isCreateOnly == true ? 1 : 0);
         data = value;
     }
     
@@ -134,13 +135,14 @@ void EnterHangoutRoomTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg
 }
 
 // 初始化参数
-bool EnterHangoutRoomTask::InitParam(const string& roomId)
+bool EnterHangoutRoomTask::InitParam(const string& roomId, bool isCreateOnly)
 {
-    bool result = false;
+    bool result = true;
     if (!roomId.empty()) {
         m_roomId = roomId;
-        result = true;
     }
+    
+    m_isCreateOnly = isCreateOnly;
 
     return result;
 }

@@ -15,6 +15,7 @@
 
 /* 公共字段 */
 #define LIVECHAT_INFO					"info"
+#define LIVECHAT_STATUS                 "status"
 
 /* 5.1.查询是否符合试聊条件 */
 #define LIVECHAT_WOMAN_ID 				"womanid"
@@ -121,24 +122,24 @@ typedef enum {
 #define QUERY_CHAT_RECORD_MUTI_PATH "/pman/livechat/setStatus/?action=maninvitemsgbatch"
 
 /**
- * 5.6.发送私密照片
+ * 12.9.发送私密照片
  */
-#define LC_SENDPHOTO_PATH	"/livechat/setstatus.php?action=man_send_photo"
+#define LC_SENDPHOTO_PATH	"/pman/livechat/setStatus/?action=man_send_photo"
 
 /**
- * 5.7.付费获取私密照片
+ * 12.10.付费获取私密照片
  */
-#define LC_PHOTOFEE_PATH	"/livechat/setstatus.php?action=man_get_photoview"
+#define LC_PHOTOFEE_PATH	"/pman/livechat/setStatus/?action=man_get_photoview"
 
 /**
- * 5.8.检查私密照片是否已付费
+ * 12.11.检查私密照片是否已付费
  */
-#define LC_CHECKPHOTO_PATH	"/livechat/setstatus.php?action=man_get_photofee"
+#define LC_CHECKPHOTO_PATH	"/pman/livechat/setStatus/?action=man_get_photofee"
 
 /**
- * 5.9.获取对方私密照片
+ * 12.12.获取对方私密照片
  */
-#define LC_GETPHOTO_PATH	"/livechat/setstatus.php?action=load_private_photo"
+#define LC_GETPHOTO_PATH	"/pman/livechat/setStatus/?action=load_private_photo"
 
 /** 
  * 12.3.上传语音文件
@@ -212,9 +213,9 @@ typedef enum {
 
 // 获取类型
 typedef enum {
-	GTT_WOMANGETMAN = 0,		// 女士获取男士
-	GTT_MANGETWOMAN = 1,		// 男士获取女士
-	GTT_WOMANGETSELF = 2,		// 女士获取自己
+	GTT_WOMANGETMAN = 0,		// 主播获取男士
+	GTT_MANGETWOMAN = 1,		// 男士获取男士
+	GTT_WOMANGETSELF = 2,		// 男士获取自己
 	GTT_MANGETSELF = 3,			// 男士获取自己
 } GETPHOTO_TOFLAG_TYPE;
 
@@ -243,9 +244,9 @@ static const char* USET_TYPE_ARRAY[] = {
 		"chat"
 };
 
-/* ######################## 6.12.获取最近已看微视频列表（http post）（New）  ######################## */
+/* ######################## 12.13.获取最近已看微视频列表（http post）（New）  ######################## */
 /* 接口路径  */
-#define LC_RECENT_VIDEO_PATH 	"/livechat/setstatus.php?action=viewed_short_video_recent"
+#define LC_RECENT_VIDEO_PATH 	"/pman/livechat/setStatus/?action=viewed_short_video_recent"
 
 /**
  * 请求
@@ -258,16 +259,17 @@ static const char* USET_TYPE_ARRAY[] = {
  * 返回
  */
 #define	LC_RECENT_VIDEO_VIDEO				"video"
-#define	LC_RECENT_VIDEO_LIST				"list"
+#define	LC_RECENT_VIDEO_LIST				"videolist"
 
 #define	LC_RECENT_VIDEO_VIDEOID				"videoid"
 #define	LC_RECENT_VIDEO_TITLE				"title"
 #define	LC_RECENT_VIDEO_INVITEID			"inviteid"
 #define	LC_RECENT_VIDEO_VIDEO_URL			"video_url"
+#define LC_RECENT_VIDEO_VIDEO_COVER         "video_cover"
 
-/* ########################	6.13.获取微视频图片（http get）（New）  ######################## */
+/* ########################	12.14.获取微视频图片（http get）（New）  ######################## */
 /* 接口路径  */
-#define LC_GET_VIDEO_PHOTO_PATH 	"/livechat/setstatus.php?action=view_short_video_photo"
+#define LC_GET_VIDEO_PHOTO_PATH 	"/pman/livechat/setStatus/?action=view_short_video_photo"
 
 /**
  * 请求
@@ -284,9 +286,9 @@ typedef enum {
 	VPT_BIG				// 大图
 } VIDEO_PHOTO_TYPE;
 
-/* ######################## 6.14.	获取微视频文件URL（http post）（New）  ######################## */
+/* ######################## 12.15.	获取微视频文件URL（http post）（New）  ######################## */
 /* 接口路径  */
-#define LC_GET_VIDEO_PATH 	"/livechat/setstatus.php?action=view_short_video"
+#define LC_GET_VIDEO_PATH 	"/pman/livechat/setStatus/?action=view_short_video"
 
 /**
  * 请求

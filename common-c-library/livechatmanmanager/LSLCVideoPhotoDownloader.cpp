@@ -9,6 +9,7 @@
 #include <common/CheckMemoryLeak.h>
 #include <httpclient/HttpRequestDefine.h>
 #include <common/CommonFunc.h>
+#include "LSLCMessageItem.h"
 
 LSLCVideoPhotoDownloader::LSLCVideoPhotoDownloader()
 {
@@ -61,13 +62,15 @@ bool LSLCVideoPhotoDownloader::StartDownload(
 			, const string& videoId
 			, const string& inviteId
 			, VIDEO_PHOTO_TYPE type
-			, const string& filePath)
+			, const string& filePath
+            , LSLCMessageItem* item)
 {
 	bool result = false;
 	if (NULL != m_videoMgr
 		&& NULL != m_requestMgr
 		&& NULL != m_requestController
 		&& NULL != callback
+        && NULL != item
 		&& !userId.empty()
 		&& !sid.empty()
 		&& !womanId.empty()
@@ -86,6 +89,7 @@ bool LSLCVideoPhotoDownloader::StartDownload(
 			m_inviteId = inviteId;
 			m_type = type;
 			m_filePath = filePath;
+            m_item = item;
 		}
 
 		FileLog("LiveChatManager", "LSLCVideoPhotoDownloader::StartDownload() requestId:%d, result:%d", m_requestId, result);
@@ -146,8 +150,19 @@ void LSLCVideoPhotoDownloader::OnGetVideoPhoto(long requestId, bool success, con
 	{
 		if (success) {
 			isSuccess = IsFileExist(filePath);
-		}
+        } else {
+            // 获取图片失败
+            LSLIVECHAT_LCC_ERR_TYPE errType = LSLIVECHAT_LCC_ERR_FAIL;
+            if (errnum == LOCAL_ERROR_CODE_TIMEOUT) {
+                errType = LSLIVECHAT_LCC_ERR_CONNECTFAIL;
+            }
+            m_item->m_procResult.SetResult(errType, errnum, errmsg);
+        }
 		
+        if (isSuccess) {
+            m_item->m_procResult.SetSuccess();
+        }
+        
 		m_callback->onFinish(this, isSuccess, errnum, errmsg);
 	}
 }

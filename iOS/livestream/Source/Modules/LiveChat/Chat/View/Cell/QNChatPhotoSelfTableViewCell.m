@@ -14,8 +14,8 @@
     return @"QNChatPhotoSelfTableViewCell";
 }
 
-+ (NSInteger)cellHeight {
-    return 150;
++ (NSInteger)cellHeight:(BOOL)isCross {
+    return isCross?120:160;
 }
 
 + (id)getUITableViewCell:(UITableView*)tableView {

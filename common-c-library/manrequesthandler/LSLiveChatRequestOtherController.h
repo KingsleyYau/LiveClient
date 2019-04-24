@@ -28,6 +28,8 @@ public:
 	virtual void OnInstallLogs(long requestId, bool success, const string& errnum, const string& errmsg) {};
     // 直播http接口6.2.获取帐号余额
     virtual void OnGetLeftCredit(long requestId, bool success, int errnum, const string& errmsg, double credit, int coupon) {};
+    // 12.16.上传LiveChat相关附件
+    virtual void OnUploadManPhoto(long requestId, bool success, int errnum, const string& errmsg, const string& url, const string& md5) {};
 };
 
 
@@ -53,7 +55,8 @@ public:
 			, const string& model, const string& manufacturer, const string& os, const string& release
 			, const string& sdk, int width, int height, const string& referrer, bool isSimulator, const string& checkInfo);
     long GetLeftCredit();
-
+    // 12.16.上传LiveChat相关附件, file:照片二进制流（用于发送私密照前使用）
+    long UploadManPhoto(const string& file);
 
 private:
 	void EmotionConfigCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
@@ -66,6 +69,7 @@ private:
 	void UploadCrashLogCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
 	void InstallLogsCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
     void GetLeftCreditCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
+    void UploadManPhotoCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
 protected:
 	void onSuccess(long requestId, string path, const char* buf, int size);
 	void onFail(long requestId, string path);

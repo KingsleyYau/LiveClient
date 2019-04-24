@@ -23,21 +23,28 @@ void HttpAutoInvitationHangoutLiveDisplayTask::SetCallback(IRequestAutoInvitatio
 }
 
 void HttpAutoInvitationHangoutLiveDisplayTask::SetParam(
-                                         const string& anchorId
+                                         const string& anchorId,
+                                         bool isAuto
                                   ) {
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
+    char temp[16];
     if (anchorId.length() >  0 ) {
         mHttpEntiy.AddContent(LIVEROOM_AUTOINVITATIONHANGOUTLIVEDISPLAY_ANCHORID, anchorId.c_str());
     }
+    
+    snprintf(temp, sizeof(temp), "%d", isAuto == true ? 1 : 0);
+    mHttpEntiy.AddContent(LIVEROOM_AUTOINVITATIONHANGOUTLIVEDISPLAY_IS_AUTO, temp);
 
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpAutoInvitationHangoutLiveDisplayTask::SetParam( "
             "task : %p, "
             "anchorId : %s,"
+            "isAuto : %d"
             ")",
             this,
-            anchorId.c_str()
+            anchorId.c_str(),
+            isAuto
             );
 }
 

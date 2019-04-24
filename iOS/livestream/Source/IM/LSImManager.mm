@@ -11,10 +11,11 @@
 #import "LiveGobalManager.h"
 #import "LSConfigManager.h"
 #import "LSLoginManager.h"
-#import "LSUserInfoManager.h"
+#import "LSRoomUserInfoManager.h"
 #import "LSSessionRequestManager.h"
 #import "LiveFansListRequest.h"
 #import "LiveModule.h"
+#import "LSIMLoginManager.h"
 @interface LSImManager () <IMLiveRoomManagerDelegate,LoginManagerDelegate>
 @property (nonatomic, strong) NSMutableArray *delegates;
 // Http登陆管理器
@@ -29,6 +30,8 @@
 @property (nonatomic, strong) NSMutableDictionary *requestDictionary;
 // 上次发送返回的邀请
 @property (nonatomic, strong) NSString *inviteId;
+// 用户管理器
+@property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
 
 @end
 
@@ -59,6 +62,8 @@ static LSImManager *imManager = nil;
         
         self.sessionManager = [LSSessionRequestManager manager];
 
+        self.roomUserInfoManager = [LSRoomUserInfoManager manager];
+        
         self.requestDictionary = [NSMutableDictionary dictionary];
         self.isIMLogin = NO;
         self.isFirstLogin = YES;
@@ -176,7 +181,7 @@ static LSImManager *imManager = nil;
         @synchronized(self) {
 
             // IM登录成功,同步用户本地Level
-            [[LSUserInfoManager manager] getLiverInfo:self.loginManager.loginItem.userId
+            [self.roomUserInfoManager getLiverInfo:self.loginManager.loginItem.userId
                                         finishHandler:^(LSUserInfoModel *item){
 
                                         }];
@@ -225,7 +230,7 @@ static LSImManager *imManager = nil;
     } else if (errType == LCC_ERR_CONNECTFAIL) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             // IM断线, 3秒后重连
-            if (self.loginManager.status == LOGINED) {
+            if ([LSIMLoginManager manager].status == LOGINED) {
                 [self login];
             }
         });
@@ -465,6 +470,7 @@ static LSImManager *imManager = nil;
     }
 }
 
+//3.3.接收直播间关闭通知(观众)回调 （LCC_ERR_NO_CREDIT_CLOSE_LIVE // 余额不足）
 - (void)onRecvRoomCloseNotice:(NSString *)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg priv:(ImAuthorityItemObject * _Nonnull)priv{
     NSLog(@"LSImManager::onRecvRoomCloseNotice( [接收直播间关闭通知], roomId : %@, errType : %d, errMsg : %@, isHasOneOnOneAuth : %d, isHasOneOnOneAuth : %d )", roomId, errType, errmsg, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
 }
@@ -713,6 +719,7 @@ static LSImManager *imManager = nil;
     return bFlag;
 }
 
+//    处理错误码为 LCC_ERR_NO_CREDIT_DOUBLE_VIDEO : 私密直播间开始双向视频时，信用点不足(用于3.14.观众开始/结束视频互动 接口)
 - (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg manPushUrl:(NSArray<NSString *> *)manPushUrl {
     NSLog(@"LSImManager::onControlManPush( [发送视频互动, %@], errType : %d, errmsg : %@ manPushUrl.count : %lu )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, (unsigned long)manPushUrl.count);
 
@@ -834,15 +841,15 @@ static LSImManager *imManager = nil;
 }
 
 #pragma mark - 多人互动
-- (BOOL)enterHangoutRoom:(NSString *)roomId finishHandler:(EnterHangoutRoomHandler)finishHandler {
-    NSLog(@"LSImManager::enterHangoutRoom( [发送多人互动, 进入直播间], roomId : %@ )", roomId);
+- (BOOL)enterHangoutRoom:(NSString *)roomId isCreateOnly:(BOOL)isCreateOnly finishHandler:(EnterHangoutRoomHandler)finishHandler {
+    NSLog(@"LSImManager::enterHangoutRoom( [发送多人互动, 进入直播间], roomId : %@, isCreateOnly : %@ )", roomId, BOOL2YES(isCreateOnly));
     BOOL bFlag = NO;
 
     @synchronized(self) {
         // 标记IM登陆未登陆
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            bFlag = [self.client enterHangoutRoom:reqId roomId:roomId];
+            bFlag = [self.client enterHangoutRoom:reqId roomId:roomId isCreateOnly:isCreateOnly];
             if (bFlag && finishHandler) {
                 [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
             }
@@ -852,7 +859,7 @@ static LSImManager *imManager = nil;
 }
 
 - (void)onEnterHangoutRoom:(SEQ_T)reqId succes:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg item:(IMHangoutRoomItemObject *)item {
-    NSLog(@"LSImManager::onEnterHangoutRoom( [发送多人互动, 进入直播间, %@], errMsg : %@, roomId : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errMsg, item.roomId);
+    NSLog(@"LSImManager::onEnterHangoutRoom( [发送多人互动, 进入直播间, %@], errMsg : %@, roomId : %@ )", BOOL2SUCCESS(err == LCC_ERR_SUCCESS), errMsg, item.roomId);
     @synchronized(self) {
         NSString *key = [NSString stringWithFormat:@"%u", reqId];
         EnterHangoutRoomHandler finishHandler = [self.requestDictionary valueForKey:key];
@@ -885,7 +892,7 @@ static LSImManager *imManager = nil;
 }
 
 - (void)onLeaveHangoutRoom:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg {
-    NSLog(@"LSImManager::onLeaveHangoutRoom( [发送多人互动, 退出直播间, %@], errMsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errMsg);
+    NSLog(@"LSImManager::onLeaveHangoutRoom( [发送多人互动, 退出直播间, %@], errMsg : %@ )", BOOL2SUCCESS(err == LCC_ERR_SUCCESS), errMsg);
     @synchronized(self) {
         NSString *key = [NSString stringWithFormat:@"%u", reqId];
         LeaveHangoutRoomHandler finishHandler = [self.requestDictionary valueForKey:key];
@@ -914,7 +921,7 @@ static LSImManager *imManager = nil;
 }
 
 - (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg credit:(double)credit {
-    NSLog(@"LSImManager::onSendHangoutGift( [发送多人互动, 直播间礼物消息, %@], errMsg : %@ credit:%f)", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errMsg, credit);
+    NSLog(@"LSImManager::onSendHangoutGift( [发送多人互动, 直播间礼物消息, %@], errMsg : %@ credit : %f )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errMsg, credit);
     @synchronized(self) {
         NSString *key = [NSString stringWithFormat:@"%u", reqId];
         SendHangoutGiftHandler finishHandler = [self.requestDictionary valueForKey:key];
@@ -942,6 +949,7 @@ static LSImManager *imManager = nil;
     return bFlag;
 }
 
+//    处理错误码为 LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO : Hangout直播间开始双向视频时，信用点不足(用于10.11.多人互动观众开始/结束视频互动 接口)
 - (void)onControlManPushHangout:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg manPushUrl:(NSArray<NSString *> *)manPushUrl {
     NSLog(@"LSImManager::onControlManPushHangout( [发送多人互动, 观众开始/结束视频互动, %@], errType : %d, errmsg : %@ manPushUrl.count : %lu )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, (unsigned long)manPushUrl.count);
 
@@ -1024,6 +1032,10 @@ static LSImManager *imManager = nil;
             [delegate onRecvHandoutInviteNotice:item];
         }
     }
+}
+
+- (void)onRecvHangoutCreditRunningOutNotice:(NSString * _Nonnull)roomId err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg {
+    NSLog(@"LSImManager::onRecvHangoutCreditRunningOutNotice( 接收Hangout直播间男士信用点不足两个周期通知) roomId : %@, err : %d, errMsg : %@", roomId, err, errMsg);
 }
 
 #pragma mark - 节目通知

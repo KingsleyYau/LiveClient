@@ -7,6 +7,8 @@
 //
 
 #import "LSNavigationController.h"
+#import "LSViewController.h"
+
 #import <objc/runtime.h>
 
 @interface LSNavigationController () <UINavigationControllerDelegate, UINavigationBarDelegate, UIGestureRecognizerDelegate>
@@ -31,12 +33,14 @@
  */
 - (void)setupNavigationBar:(UIViewController *)viewController;
 
-
-
-
 @end
 
 @implementation LSNavigationController
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    UIViewController* topVC = self.topViewController;
+    return [topVC preferredStatusBarStyle];
+}
 
 #pragma mark - 界面旋转控制
 - (BOOL)shouldAutorotate {
@@ -87,15 +91,15 @@
     if (self.kkDelegate && [self.kkDelegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
         [self.kkDelegate navigationController:self willShowViewController:viewController animated:animated];
     }
-    
+
     // 获取导航控制器的顶部控制的的转场动画
-    id <UIViewControllerTransitionCoordinator>tc = navigationController.topViewController.transitionCoordinator;
-    
+    id<UIViewControllerTransitionCoordinator> tc = navigationController.topViewController.transitionCoordinator;
+
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version.doubleValue >= 10.0) {
         // 针对 10.0 以上的iOS系统进行处理
         // 监听事件转变
-        [tc notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [tc notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
             // 获取事件是否被取消
             BOOL result = [context isCancelled];
             // 被取消恢复导航栏的交互
@@ -104,11 +108,11 @@
                 self.view.userInteractionEnabled = YES;
                 self.navigationItem.leftBarButtonItem.enabled = YES;
             }
-            
+
         }];
     } else {
         // 针对 10.0 以下的iOS系统进行处理
-        [tc notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [tc notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
             // 获取事件是否被取消
             BOOL result = [context isCancelled];
             // 被取消恢复导航栏的交互
@@ -119,7 +123,7 @@
             }
         }];
     }
-    
+
     // 界面即将切换的状态禁止导航栏操作,防止在为完成点击操作导致导航栏错乱
     self.navigationBar.userInteractionEnabled = NO;
     self.view.userInteractionEnabled = NO;
@@ -130,7 +134,7 @@
     if (self.kkDelegate && [self.kkDelegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
         [self.kkDelegate navigationController:self didShowViewController:viewController animated:animated];
     }
-    
+
     self.canReceiveTouch = YES;
     // 界面切换成功恢复导航栏操作状态
     self.navigationBar.userInteractionEnabled = YES;
@@ -211,12 +215,12 @@
     BOOL bFlag = NO;
     if (self.canReceiveTouch) {
         // 关闭手势右滑返回
-        if (self.viewControllers.count == 1) {
-            bFlag = NO;
-
-        } else {
-            // 开启手势右滑返回
-            bFlag = YES;
+        if (self.viewControllers.count > 1) {
+            UIViewController *vc = self.viewControllers[self.viewControllers.count - 1];
+            if ([vc isKindOfClass:[LSViewController class]] && ((LSViewController *)vc).canPopWithGesture) {
+                // 开启手势右滑返回
+                bFlag = YES;
+            }
         }
     }
 
@@ -276,8 +280,6 @@
         [self popViewControllerAnimated:YES];
     }
 }
-
-
 
 /**
  

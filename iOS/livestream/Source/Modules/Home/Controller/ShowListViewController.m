@@ -57,7 +57,7 @@
     [super initCustomParam];
 
     self.navigationTitle = @"Calendar";
-
+    
     // 是否第一次登录
     self.isFirstLogin = NO;
     // 是否刷新数据
@@ -102,16 +102,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    // 设置不被NavigationBar和TabBar遮挡
-    self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-
-    //    if (self.dataArray.count == 0 || self.isLoadData) {
-    //      self.isLoadData = NO;
-    //      [self.tableView startPullDown:YES];
-    //    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -391,8 +381,16 @@
             } else {
 
                 if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedStringFromSelf(@"ADD_CREDITS_MSG") delegate:self cancelButtonTitle:NSLocalizedStringFromSelf(@"Cancel") otherButtonTitles:NSLocalizedStringFromSelf(@"Add Credit"), nil];
-                    [alertView show];
+                    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"ADD_CREDITS_MSG") preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedStringFromSelf(@"Cancel") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    UIAlertAction *addAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"ADD_CREDITS", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [self pushAddCreditVC];
+                    }];
+                    [alertVC addAction:cancelAC];
+                    [alertVC addAction:addAC];
+                    [self presentViewController:alertVC animated:YES completion:nil];
                 } else {
                     [[DialogTip dialogTip] showDialogTip:[LiveModule module].moduleVC.view.window tipText:errmsg];
                 }
@@ -406,12 +404,6 @@
     [self.addCreditsView removeFromSuperview];
     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:vc animated:NO];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.cancelButtonIndex != buttonIndex) {
-        [self pushAddCreditVC];
-    }
 }
 
 #pragma mark 时间分组

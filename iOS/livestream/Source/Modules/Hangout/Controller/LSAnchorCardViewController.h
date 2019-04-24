@@ -20,5 +20,5 @@
 @property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *nickName;
 @property (nonatomic, copy) NSString *anchorPhotourl;
-- (void)showAnchorCardView;
+- (void)showAnchorCardView:(UIViewController *)vc;
 @end

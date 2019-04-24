@@ -46,6 +46,7 @@ private:
 private:
     bool CreateContext();
     void DestroyContext();
+    void ClearAudioFrame();
 
 private:
     AudioEncoderCallback* mpCallback;
