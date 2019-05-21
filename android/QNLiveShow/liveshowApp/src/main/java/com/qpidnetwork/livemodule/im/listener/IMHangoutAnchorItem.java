@@ -2,7 +2,9 @@ package com.qpidnetwork.livemodule.im.listener;
 
 import java.io.Serializable;
 
-public class IMHangoutAnchorItem{
+public class IMHangoutAnchorItem implements Serializable{
+
+	private static final long serialVersionUID = 943761240665259647L;
 
 	/**
 	 * 其它主播列表
@@ -10,7 +12,6 @@ public class IMHangoutAnchorItem{
 	 *
 	 */
 	public enum IMAnchorStatus {
-		Unknown,				//未知
 		Invitation,				//邀请中
 		InviteConfirm,			//邀请已确认
 		KnockConfirm,			//敲门已确认
@@ -44,7 +45,7 @@ public class IMHangoutAnchorItem{
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
 		if( anchorStatus < 0 || anchorStatus >= IMAnchorStatus.values().length ) {
-			this.anchorStatus = IMAnchorStatus.Unknown;
+			this.anchorStatus = IMAnchorStatus.Invitation;
 		} else {
 			this.anchorStatus = IMAnchorStatus.values()[anchorStatus];
 		}

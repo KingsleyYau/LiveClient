@@ -10,7 +10,7 @@
 /*********************************** 11.1.获取推送设置  ****************************************/
 
 class RequestGetPushConfigCallback : public IRequestGetPushConfigCallback{
-	void OnGetPushConfig(HttpGetPushConfigTask* task, bool success, int errnum, const string& errmsg, bool isPriMsgAppPush, bool isMailAppPush) {
+	void OnGetPushConfig(HttpGetPushConfigTask* task, bool success, int errnum, const string& errmsg, const HttpAppPushConfigItem& appPushItem) {
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -31,7 +31,7 @@ class RequestGetPushConfigCallback : public IRequestGetPushConfigCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, isPriMsgAppPush, isMailAppPush);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, appPushItem.isPriMsgAppPush, appPushItem.isMailAppPush);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -104,6 +104,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniSe
     taskId = gHttpRequestController.SetPushConfig(&gHttpRequestManager,
                                                   isPriMsgAppPush,
                                                   isMailAppPush,
+                                                  false,
                                                   &gRequestSetPushConfigCallbackk);
 
     jobject obj = env->NewGlobalRef(callback);

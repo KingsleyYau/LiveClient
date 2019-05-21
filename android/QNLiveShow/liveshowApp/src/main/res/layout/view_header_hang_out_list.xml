@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--注:如果最外层设置layout_margin会同时影响分组头的边距 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 详细 -->
+    <LinearLayout
+        android:id="@+id/ll_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hangout_list_header"
+        android:orientation="vertical"
+        android:padding="@dimen/live_size_10dp">
+
+        <!-- title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_hang_out" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/live_size_8dp"
+                android:text="@string/hand_out_list_header_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="@string/hand_out_list_header_tips_long"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_12sp" />
+
+        <FrameLayout
+            android:id="@+id/fl_operation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cb_dont_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:checked="false"
+                android:text="@string/hand_out_list_header_dont_show"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                android:button="@drawable/cb_white_selector"/>
+
+            <Button
+                android:id="@+id/btn_got"
+                style="@style/btn_orange_stroke_style"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_gravity="right"
+                android:paddingLeft="@dimen/live_size_20dp"
+                android:paddingRight="@dimen/live_size_20dp"
+                android:text="@string/hand_out_list_header_btn" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- 按钮 -->
+    <FrameLayout
+        android:id="@+id/fl_toggle"
+        android:layout_width="56dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_orange_toggle">
+
+        <ImageView
+            android:id="@+id/img_arrow"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_arrow_down_white"/>
+
+    </FrameLayout>
+
+</LinearLayout>

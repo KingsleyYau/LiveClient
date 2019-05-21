@@ -480,14 +480,13 @@ static LMClientListener g_listener;
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_LMSetLogDirectory
 	(JNIEnv *env, jclass cls, jstring directory) {
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	string cpDirectory = JString2String(env, directory);
 
 	KLog::SetLogDirectory(cpDirectory);
 
 
-	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::LMSetLogDirectory ( directory : %s ) ", cpDirectory);
+	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::LMSetLogDirectory ( directory : %s ) ", cpDirectory.c_str());
 
-	env->ReleaseStringUTFChars(directory, cpDirectory);
 }
 
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_InitLMManager
@@ -512,16 +511,20 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_
     }
     env->ReleaseIntArrayElements(supportArray, tempArray, 0);
     // 释放旧的ImClient
-
+    IImClient* jimClient = (IImClient*)imClient;
     if ( g_lmMessageManager == NULL ||  (g_lmMessageManager != NULL && g_lmMessageManager->GetUserId() != strUserId)) {
 
-        ILiveMessageManManager::Release(g_lmMessageManager);
+        if (g_lmMessageManager != NULL) {
+            // Release私信管理器的client是否init里面的client。防止client被release，私信管理器release后又使用client
+            g_lmMessageManager->CheckIMClientRelease(jimClient);
+            ILiveMessageManManager::Release(g_lmMessageManager);
+        }
         g_lmMessageManager = NULL;
 
         g_lmMessageManager = ILiveMessageManManager::Create();
         if (g_lmMessageManager != NULL) {
             result  = g_lmMessageManager->InitUserInfo(strUserId, supportList, strPrivateNotice);
-            IImClient* jimClient = (IImClient*)imClient;
+
 
             // 释放旧的listener
             if (NULL != gListener) {
@@ -541,13 +544,16 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_
 }
 
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_ReleaseLMManager
-        (JNIEnv *env, jclass cls)  {
+        (JNIEnv *env, jclass cls, jlong imClient)  {
     FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::ReleaseLMManager() g_ImMessageClient:%p begin", g_lmMessageManager);
     bool result  = false;
     // 释放旧的ImClient
 
     if (g_lmMessageManager != NULL) {
 
+        IImClient* jimClient = (IImClient*)imClient;
+        // Release私信管理器的client是否init里面的client。防止client被release，私信管理器release后又使用client
+        g_lmMessageManager->CheckIMClientRelease(jimClient);
         ILiveMessageManManager::Release(g_lmMessageManager);
         result  = true;
     }

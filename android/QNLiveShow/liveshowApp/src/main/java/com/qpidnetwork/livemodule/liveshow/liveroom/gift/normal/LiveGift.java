@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal;
 
+import android.graphics.drawable.Drawable;
+
 import java.util.ArrayList;
 
 /**
@@ -12,6 +14,8 @@ public class LiveGift {
     private String giftId ;
     private ArrayList<ClickRange> mClickRanges = new ArrayList<>();
     private ClickRange mNewClickRange;    //最新连击数
+    private int viewType = -1;  //礼物界面类型
+    private Drawable background;
 
     public Object getObj() {
         return obj;
@@ -27,6 +31,22 @@ public class LiveGift {
 
     public void setGiftId(String giftId) {
         this.giftId = giftId;
+    }
+
+    public int getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(int viewType) {
+        this.viewType = viewType;
+    }
+
+    public Drawable getBackground() {
+        return background;
+    }
+
+    public void setBackground(Drawable background) {
+        this.background = background;
     }
 
     public ArrayList<ClickRange> getRanges() {

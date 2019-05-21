@@ -1,0 +1,61 @@
+@charset "utf-8";
+@media screen and (max-width: 320px) {
+      body{font-size: 14px;} 
+  }
+  @media screen and (min-width: 321px) and (max-width: 413px) {
+      body{font-size: 16px;}
+  }
+  @media screen and (min-width: 414px) and (max-width: 639px) {
+      body{font-size: 17px;}
+  }
+  @media screen and (min-width: 640px) {
+      body{font-size: 18px;}
+  }
+ 
+
+/* reset */
+html{
+  -ms-text-size-adjust:100%;
+  -webkit-text-size-adjust:100%;
+}
+body, html {
+/*	height: 100%;*/
+	-webkit-tap-highlight-color: transparent;
+}
+body,textarea{
+	font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+  	font-family:-apple-system-font, "Open Sans", sans-serif;
+  	line-height:1.6;
+}
+ul {
+	list-style: none
+}
+
+*{
+  margin:0;
+  padding:0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+a img{
+  border:0;
+}
+img{
+  border:0; vertical-align:middle; 
+}
+a{
+  text-decoration:none;
+  -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+}
+button{
+ border-radius: 0; border:0;
+} 
+input:focus{
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  -webkit-user-modify:read-write-plaintext-only;
+}
+input:focus, textarea:focus ,button{
+  outline: none;
+}

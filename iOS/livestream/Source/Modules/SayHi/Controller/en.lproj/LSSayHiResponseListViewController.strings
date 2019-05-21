@@ -1,0 +1,16 @@
+
+/* Class = "UILabel"; text = "You haven't got any responses yet.\nWhy not find someone and Say Hi to her?"; ObjectID = "GaH-4F-3J1"; */
+"GaH-4F-3J1.text" = "You haven't got any responses yet.\nWhy not find someone and Say Hi to her?";
+
+/* Class = "UIButton"; normalTitle = "Unread First"; ObjectID = "N3z-Dn-9T4"; */
+"N3z-Dn-9T4.normalTitle" = "Unread First";
+
+/* Class = "UILabel"; text = "You may be interested in"; ObjectID = "bPG-23-zMu"; */
+"bPG-23-zMu.text" = "You may be interested in";
+
+/* Class = "UIButton"; normalTitle = "Search More"; ObjectID = "q8G-DB-eG4"; */
+"q8G-DB-eG4.normalTitle" = "Search More";
+
+"BUY_TIP" = "The first response is FREE to read. Starting from the second response, 1 post stamp or 1 credit will be deducted from your account.";
+
+"AGAIN_TIP" = "Don't Ask Again";

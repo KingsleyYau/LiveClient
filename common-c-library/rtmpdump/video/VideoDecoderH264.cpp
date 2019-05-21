@@ -395,16 +395,18 @@ void VideoDecoderH264::DestroyContext() {
     
 }
     
-void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
+void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
 	FileLog("rtmpdump",
 			"VideoDecoderH264::DecodeVideoKeyFrame( "
 			"this : %p, "
 			"sps_size : %d, "
-			"pps_size : %d "
+			"pps_size : %d, "
+			"timestamp : %u "
 			")",
 			this,
 			sps_size,
-			pps_size
+			pps_size,
+			timestamp
 			);
 
 	mNaluHeaderSize = naluHeaderSize;
@@ -425,7 +427,16 @@ void VideoDecoderH264::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 
 	} else {
 		videoFrame = new VideoFrame();
-        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::DecodeVideoFrame( this : %p, [New View Frame], frame : %p )", this, videoFrame);
+        FileLevelLog("rtmpdump",
+        		KLog::LOG_WARNING,
+				"VideoDecoderH264::DecodeVideoFrame( "
+				"this : %p, "
+				"[New Video Frame], "
+				"frame : %p "
+				")",
+				this,
+				videoFrame
+				);
 	}
 	mFreeBufferList.unlock();
 
@@ -837,7 +848,16 @@ void VideoDecoderH264::DecodeVideoHandle() {
                         mFreeBufferList.pop_front();
                     } else {
                         decodedVideoFrame = new VideoFrame();
-                        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::DecodeVideoHandle( this : %p, [New View Frame], frame : %p )", this, decodedVideoFrame);
+                        FileLevelLog("rtmpdump",
+                        		KLog::LOG_WARNING,
+								"VideoDecoderH264::DecodeVideoHandle( "
+								"this : %p, "
+								"[New Video Frame], "
+								"frame : %p "
+								")",
+								this,
+								decodedVideoFrame
+								);
                     }
                     mFreeBufferList.unlock();
                     
@@ -1003,7 +1023,17 @@ void VideoDecoderH264::ConvertVideoHandle() {
                 mFreeBufferList.pop_front();
             } else {
                 displayFrame = new VideoFrame();
-                FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::ConvertVideoHandle( this : %p, [New View Frame], frame : %p )", this, displayFrame);
+                FileLevelLog(
+                		"rtmpdump",
+                		KLog::LOG_WARNING,
+						"VideoDecoderH264::ConvertVideoHandle( "
+						"this : %p, "
+						"[New Video Frame], "
+						"frame : %p "
+						")",
+						this,
+						displayFrame
+						);
             }
             mFreeBufferList.unlock();
             

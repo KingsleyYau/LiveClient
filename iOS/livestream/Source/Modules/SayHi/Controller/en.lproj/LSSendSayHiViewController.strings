@@ -1,0 +1,8 @@
+
+/* Class = "UILabel"; text = "From %@"; ObjectID = "PwS-Bd-wUz"; */
+"PwS-Bd-wUz.text" = "Dear %@";
+
+/* Class = "UILabel"; text = "To %@"; ObjectID = "Ynh-pD-tdr"; */
+"Ynh-pD-tdr.text" = "%@";
+
+"SAY_HI" = "Say Hi";

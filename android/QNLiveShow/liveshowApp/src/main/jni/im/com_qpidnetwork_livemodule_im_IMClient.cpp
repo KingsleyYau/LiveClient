@@ -480,8 +480,8 @@ public:
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			//string signure = "(Ljava/lang/String;Z[Ljava/lang/String;Ljava/lang/String;)V";
-            string signure = "(Ljava/lang/String;Z[Ljava/lang/String;)V";
+			string signure = "(Ljava/lang/String;Z[Ljava/lang/String;Ljava/lang/String;)V";
+            //string signure = "(Ljava/lang/String;Z[Ljava/lang/String;)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvChangeVideoUrl", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvChangeVideoUrl() callback now");
@@ -489,8 +489,8 @@ public:
 				//playUrl转Java数组
 				jobjectArray jplayUrls = getJavaStringArray(env, playUrl);
                 jstring juserId = env->NewStringUTF(userId.c_str());
-				//env->CallVoidMethod(gListener, jCallback, jroomId, isAnchor, jplayUrls, juserId);
-                env->CallVoidMethod(gListener, jCallback, jroomId, isAnchor, jplayUrls);
+				env->CallVoidMethod(gListener, jCallback, jroomId, isAnchor, jplayUrls, juserId);
+                //env->CallVoidMethod(gListener, jCallback, jroomId, isAnchor, jplayUrls);
 				env->DeleteLocalRef(jroomId);
                 env->DeleteLocalRef(juserId);
 				if(NULL != jplayUrls){
@@ -1869,8 +1869,68 @@ public:
 	}
 
     // 10.15.接收主播Hang-out邀请通知
-	virtual void OnRecvHandoutInviteNotice(const IMHangoutInviteItem& item) {
+	virtual void OnRecvHandoutInviteNotice(const IMHangoutInviteItem& item) override {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+		FileLog(TAG, "OnRecvHandoutInviteNotice() callback, env:%p, isAttachThread:%d", env, isAttachThread);
 
+		jobject jItem = getIMHangoutInviteItem(env, item);
+		//callback 回调
+		if(NULL != gListener){
+			jclass jCallbackCls = env->GetObjectClass(gListener);
+			string signure = "(L";
+			signure += IM_HANGOUT_IMHANGOUTINVITE_ITEM_CLASS;
+			signure += ";";
+			signure += ")V";
+			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvHandoutInviteNotice", signure.c_str());
+			if(NULL != jCallback){
+				FileLog(TAG, "OnRecvHandoutInviteNotice() callback now");
+				env->CallVoidMethod(gListener, jCallback, jItem);
+				FileLog(TAG, "OnRecvHandoutInviteNotice() callback ok");
+			} else {
+				FileLog(TAG, "OnRecvHandoutInviteNotice( callback : %p, signure : %s )",
+						jCallback, signure.c_str());
+			}
+		}
+
+		if (jItem != NULL) {
+			env->DeleteLocalRef(jItem);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+
+	// 10.16.接收Hangout直播间男士信用点不足两个周期通知
+	virtual void OnRecvHangoutCreditRunningOutNotice(const string& roomId, LCC_ERR_TYPE errNo, const string& errMsg) override {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+		FileLog(TAG, "OnRecvHandoutInviteNotice() callback, env:%p, isAttachThread:%d, roomId:%s, errNo:%d, errMsg:%s", env, isAttachThread, roomId.c_str(), errNo, errMsg.c_str());
+
+		//callback 回调
+		if(NULL != gListener){
+			jclass jCallbackCls = env->GetObjectClass(gListener);
+			string signure = "(";
+			signure += "Ljava/lang/String;ILjava/lang/String;";
+			signure += ")V";
+			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvHangoutCreditRunningOutNotice", signure.c_str());
+			if(NULL != jCallback){
+				FileLog(TAG, "OnRecvHangoutCreditRunningOutNotice() callback now");
+				jstring jroomId = env->NewStringUTF(roomId.c_str());
+				int errType = IMErrorTypeToInt(errNo);
+                jstring jerrMsg = env->NewStringUTF(errMsg.c_str());
+				env->CallVoidMethod(gListener, jCallback, jroomId, errType, jerrMsg);
+				FileLog(TAG, "OnRecvHangoutCreditRunningOutNotice() callback ok");
+				env->DeleteLocalRef(jroomId);
+				env->DeleteLocalRef(jerrMsg);
+			} else {
+				FileLog(TAG, "OnRecvHangoutCreditRunningOutNotice( callback : %p, signure : %s )",
+						jCallback, signure.c_str());
+			}
+		}
+
+		ReleaseEnv(isAttachThread);
 	}
 
 // ------------- 节目 -------------
@@ -1996,7 +2056,7 @@ public:
      *  @param loiId            信件ID
      *
      */
-	virtual void OnRecvLoiNotice(const string& anchorId, const string& loiId) {
+	virtual void OnRecvLoiNotice(const string& anchorId, const string& loiId) override {
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
@@ -2032,7 +2092,7 @@ public:
  	*  @param emfId            信件ID
  	*
  	*/
-	virtual void OnRecvEMFNotice(const string& anchorId, const string& emfId) {
+	virtual void OnRecvEMFNotice(const string& anchorId, const string& emfId) override {
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
@@ -2073,14 +2133,13 @@ static IMClientListener g_listener;
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_IMSetLogDirectory
 	(JNIEnv *env, jclass cls, jstring directory) {
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	string cpDirectory = JString2String(env, directory);
 
 	KLog::SetLogDirectory(cpDirectory);
 
 
-	FileLog(TAG, "IMSetLogDirectory ( directory : %s ) ", cpDirectory);
+	FileLog(TAG, "IMSetLogDirectory ( directory : %s ) ", cpDirectory.c_str());
 
-	env->ReleaseStringUTFChars(directory, cpDirectory);
 }
 
 /*
@@ -2437,12 +2496,12 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendTalen
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_EnterHangoutRoom
-        (JNIEnv *env, jclass cls, jint reqId, jstring roomId) {
+        (JNIEnv *env, jclass cls, jint reqId, jstring roomId, jboolean isCreateOnly) {
     bool result = false;
     if(NULL != g_ImClient){
         string strRoomId = JString2String(env, roomId);
-        FileLog(TAG, "EnterHangoutRoom() reqId: %d, strRoomId:%s", reqId, strRoomId.c_str());
-        result = g_ImClient->EnterHangoutRoom(reqId, strRoomId);
+        FileLog(TAG, "EnterHangoutRoom() reqId: %d, strRoomId:%s, isCreateOnly:%d", reqId, strRoomId.c_str(), isCreateOnly);
+        result = g_ImClient->EnterHangoutRoom(reqId, strRoomId, isCreateOnly);
     }
     return result;
 }

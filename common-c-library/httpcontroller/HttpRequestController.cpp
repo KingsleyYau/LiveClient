@@ -3488,13 +3488,14 @@ long long HttpRequestController::SendEmf(
                   string content,
                   list<string> imgList,
                   LSLetterComsumeType comsumeType,
+                  string sayHiResponseId,
                   IRequestSendEmfCallback* callback
                   ) {
     long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSendEmfTask* task = new HttpSendEmfTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(anchorId, loiId, emfId, content, imgList, comsumeType);
+    task->SetParam(anchorId, loiId, emfId, content, imgList, comsumeType, sayHiResponseId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -3754,8 +3755,8 @@ long long HttpRequestController::IsCanSendSayHi(
 long long HttpRequestController::SendSayHi(
                                            HttpRequestManager *pHttpRequestManager,
                                            const string& anchorId,
-                                           int themeId,
-                                           int textId,
+                                           const string& themeId,
+                                           const string& textId,
                                            IRequestSendSayHiCallback* callback
                                            ) {
     long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;

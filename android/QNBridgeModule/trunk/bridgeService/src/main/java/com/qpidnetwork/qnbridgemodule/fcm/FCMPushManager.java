@@ -119,13 +119,15 @@ public class FCMPushManager {
 					// fcm
 					regid = InstanceIDUtil.getFCMToken();
 
-					Log.i(TAG, "Register regid : " + regid + " length: " + regid.length());
 					msg = "Device registered, registration ID=" + regid;
-
-					storeRegistrationId(mContext, regid);
 
 				} catch (Exception e) {
 					msg = "Error : " + e.getMessage();
+				} finally {
+					if (TextUtils.isEmpty(regid)){
+						regid = "";
+					}
+					storeRegistrationId(mContext, regid);
 				}
 
 				callback.onGcmGenerateRegisterId(regid);

@@ -8,7 +8,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -20,6 +19,7 @@ import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.MaterialAppBar;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 
 /**
@@ -146,7 +146,7 @@ public class MyProfileChangePasswordActivity extends BaseFragmentActivity implem
 
             case REQUEST_FAIL: {
                 // 请求失败
-                Toast.makeText(mContext, obj.errMsg, Toast.LENGTH_LONG).show();
+                ToastUtil.showToast(mContext, obj.errMsg);
 //                editTextCurrentPassword.setError(Color.RED, true);
             }
             break;

@@ -100,7 +100,7 @@ public:
          *  avatar          主播头像
          *  age             主播年龄
          *  responseTime    回复时间戳
-         *  content         回复内容
+         *  content         回复内容的摘要
          *  hasImg          是否有图片（1：有，0：无）
          *  hasRead         是否已读（1：是，0：否）
          *  isFree          是否免费（1：是，0：否）

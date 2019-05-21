@@ -11,6 +11,10 @@
 
 @implementation QNChatTextView
 
+- (void)dealloc {
+//    [self removeObserver:self forKeyPath:@"text"];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -75,6 +79,10 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+    // KVO监听(settext方法)
+//    [self addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+    
     // 注册通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textChange:) name:UITextViewTextDidChangeNotification object:nil];
 }
@@ -82,6 +90,23 @@
 - (void)textChange:(NSNotification* )notice {
     // 刷新界面
     [self setNeedsDisplay];
+}
+
+- (void)setText:(NSString *)text {
+    [super setText:text];
+    [self setNeedsDisplay];
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+    [super setAttributedText:attributedText];
+    [self setNeedsDisplay];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
+    if (object == self && [keyPath isEqualToString:@"text"]) {
+        // 刷新界面
+        [self setNeedsDisplay];
+    }
 }
 
 - (NSString* )text {
@@ -150,8 +175,8 @@
         //如果文字内容高度没有超过textView的高度
         if(contentSize.height <= self.frame.size.height) {
             //textView的高度减去文字高度除以2就是Y方向的偏移量，也就是textView的上内边距
-            CGFloat offsetY = (self.frame.size.height - contentSize.height) / 2;
-            offset = UIEdgeInsetsMake(offsetY, 0, 0, 0);
+//            CGFloat offsetY = (self.frame.size.height - contentSize.height) / 2;
+            offset = UIEdgeInsetsMake(0, 0, 0, 0);
             [self setContentInset:offset];
         }
         

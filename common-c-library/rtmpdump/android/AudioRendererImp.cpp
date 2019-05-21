@@ -61,12 +61,11 @@ AudioRendererImp::~AudioRendererImp() {
 void AudioRendererImp::RenderAudioFrame(void* frame) {
 	AudioFrame* audioFrame = (AudioFrame *)frame;
 
-    // 播放视频
 	JNIEnv* env;
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
-	// 回调图像
+	// 回调音频
 	if( mJniRenderer ) {
 		if( mJniRendererMethodID ) {
 			// 创建新Buffer

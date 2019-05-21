@@ -163,6 +163,10 @@ typedef enum {
     HTTP_LCC_ERR_SAYHI_MAN_LIMIT_NUM_DAY = 17406,               // 男士每日数量限制(17406)(调用14.4.发送SayHi接口)
     HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_REPLY = 17407,    // 男士总数量限制-有主播回复(17407)(调用14.4.发送SayHi接口)
     HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_UNREPLY = 17408,  // 男士总数量限制-无主播回复(17408)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_NO_EXIST = 17409,                        // sayHi不存在（17409）（调用14.8.获取SayHi回复详情）
+    HTTP_LCC_ERR_SAYHI_RESPONSE_NO_EXIST = 17410,               // sayHi回复不存在（17410）（调用14.8.获取SayHi回复详情）
+    
+    HTTP_LCC_ERR_SAYHI_READ_NO_CREDIT = 17411,                  // sayHi购买阅读信用点或邮票不足（17411）（调用14.8.获取SayHi回复详情）
     
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
@@ -208,9 +212,10 @@ typedef enum {
     HTTPROOMTYPE_FREEPUBLICLIVEROOM = 1,          // 免费公开直播间
     HTTPROOMTYPE_COMMONPRIVATELIVEROOM = 2,       // 普通私密直播间
     HTTPROOMTYPE_CHARGEPUBLICLIVEROOM = 3,        // 付费公开直播间
-    HTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4,        // 豪华私密直播间
+    HTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4,       // 豪华私密直播间
+    HTTPROOMTYPE_HANGOUTLIVEROOM = 5,             // Hangout直播间
     HTTPROOMTYPE_BEGIN = HTTPROOMTYPE_NOLIVEROOM,
-    HTTPROOMTYPE_END = HTTPROOMTYPE_LUXURYPRIVATELIVEROOM,
+    HTTPROOMTYPE_END = HTTPROOMTYPE_HANGOUTLIVEROOM,
 }HttpRoomType;
 
 // int 转换 HttpRoomType

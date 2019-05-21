@@ -237,6 +237,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selected = NO;
     if (indexPath.section == 0) {
         [self.navigationController popViewControllerAnimated:NO];
         NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHomePage:LiveUrlMainListUrlTypeFollow];

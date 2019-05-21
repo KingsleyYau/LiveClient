@@ -150,6 +150,9 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
 
         //状态栏:必须调用该方法，防止内存泄漏
         ImmersionBar.with(this).destroy();
+
+        //清除所有消息通知
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     /**

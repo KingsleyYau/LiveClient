@@ -12,12 +12,35 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="LSSayHiThemeListCollectionViewCell">
-            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zc5-bK-sII" userLabel="Theme Image View">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Select_Theme_Select_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="dMc-jv-pYF">
+                        <rect key="frame" x="65" y="65" width="35" height="35"/>
+                    </imageView>
+                </subviews>
             </view>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="zc5-bK-sII" secondAttribute="trailing" id="9JA-Rh-zGI"/>
+                <constraint firstAttribute="bottom" secondItem="zc5-bK-sII" secondAttribute="bottom" id="Fmf-8d-oAf"/>
+                <constraint firstItem="zc5-bK-sII" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="QfO-40-r8A"/>
+                <constraint firstItem="dMc-jv-pYF" firstAttribute="trailing" secondItem="zc5-bK-sII" secondAttribute="trailing" id="Vbs-bQ-EV8"/>
+                <constraint firstItem="zc5-bK-sII" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="pwJ-Kb-QA6"/>
+                <constraint firstItem="dMc-jv-pYF" firstAttribute="bottom" secondItem="zc5-bK-sII" secondAttribute="bottom" id="uSv-Bi-9zL"/>
+            </constraints>
+            <connections>
+                <outlet property="selectImageView" destination="dMc-jv-pYF" id="qrW-BT-J7C"/>
+                <outlet property="themeImageView" destination="zc5-bK-sII" id="FHv-FK-5A7"/>
+            </connections>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="Select_Theme_Select_Icon" width="35" height="35"/>
+    </resources>
 </document>

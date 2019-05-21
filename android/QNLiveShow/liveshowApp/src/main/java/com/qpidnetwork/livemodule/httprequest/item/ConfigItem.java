@@ -23,6 +23,7 @@ public class ConfigItem {
 	 * @param pmStartNotice         // 私信聊天界面没有聊天记录时的提示（New）
 	 * @param httpSvrMobileUrl      // http mobile服务器的URL（包括mobile.charmlive.com或demo-mobile.charmlive.com）
 	 * @param sendLetter            // 发送信件页URL
+	 * @param hangoutCreditPrice    // 多人互动信用点资费价格
 	 */
 	public ConfigItem(String imServerUrl,
                       String httpServerUrl,
@@ -44,7 +45,8 @@ public class ConfigItem {
 					  int port,
 					  double minChat,
 					  String chatVoiceHostUrl,
-					  String sendLetter){
+					  String sendLetter,
+					  double hangoutCreditPrice){
 		this.imServerUrl = imServerUrl;
 		this.httpServerUrl = httpServerUrl;
 		this.addCreditsUrl = addCreditsUrl;
@@ -66,6 +68,7 @@ public class ConfigItem {
 		this.minChat = minChat;
 		this.chatVoiceHostUrl = chatVoiceHostUrl;
 		this.sendLetter = sendLetter;
+		this.hangoutCreditPrice = hangoutCreditPrice;
 	}
 	
 	public String imServerUrl;
@@ -78,7 +81,6 @@ public class ConfigItem {
 
 	public String showDetailPage;
 	public String showDescription;
-	public String hangoutCreditMsg;
 	public String loiH5Url;
 	public String emfH5Url;
 	public String pmStartNotice;
@@ -97,4 +99,8 @@ public class ConfigItem {
 
 	// 发送信件页URL
 	public String sendLetter;
+
+	// Hangout相关
+	public String hangoutCreditMsg;
+	public double hangoutCreditPrice;
 }

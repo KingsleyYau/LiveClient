@@ -188,9 +188,10 @@ public class IMClient {
 	 * 10.3.观众新建/进入多人互动直播间
 	 * @param reqId
 	 * @param roomId		直播间ID（可无，无则表示新建，否则表示进入）
+	 * @param isCreateOnly	是否仅创建新的Hangout直播间，若已有Hangout直播间则先关闭（false：否，true：是）（整型）（可无，无则默认为0）
 	 * @return
 	 */
-	static public native boolean EnterHangoutRoom(int reqId, String roomId);
+	static public native boolean EnterHangoutRoom(int reqId, String roomId, boolean isCreateOnly);
 
 	/**
 	 * 10.4.退出多人互动直播间

@@ -12,6 +12,11 @@
 #define LOGIN_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/LoginItem"
 #define SERVER_ITEM_CLASS               "com/qpidnetwork/livemodule/httprequest/item/ServerItem"
 #define LSVALIDSITEID_ITEM_CLASS        "com/qpidnetwork/livemodule/httprequest/item/LSValidSiteIdItem"
+#define USERSENDMAILPRIV_ITEM_CLASS     "com/qpidnetwork/livemodule/httprequest/item/UserSendMailPrivItem"
+#define MAILPRIV_ITEM_CLASS             "com/qpidnetwork/livemodule/httprequest/item/MailPrivItem"
+#define LIVECHATPRIV_ITEM_CLASS         "com/qpidnetwork/livemodule/httprequest/item/LiveChatPrivItem"
+#define HANGOUTPRIV_ITEM_CLASS          "com/qpidnetwork/livemodule/httprequest/item/HangoutPrivItem"
+#define USERPRIV_ITEM_CLASS             "com/qpidnetwork/livemodule/httprequest/item/UserPrivItem"
 
 /* 3.直播间模块   */
 #define HOTLIST_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/HotListItem"
@@ -55,7 +60,8 @@
 /* 8.多人互动 */
 #define HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/HangoutAnchorInfoItem"
 #define HANGOUT_HANGOUGIFTLIST_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/HangoutGiftListItem"
-
+#define HANGOUT_HANGOUTONLINEANCHOR_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/HangoutOnlineAnchorItem"
+#define HANGOUT_HANGOUTROOMSTATUS_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/HangoutRoomStatusItem"
 
 /* 9.节目 */
 #define PROGRAM_PROGRAMINFO_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/ProgramInfoItem"

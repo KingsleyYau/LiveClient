@@ -91,10 +91,10 @@ LiveMessageManManager::~LiveMessageManManager()
 
     m_contactRequstStatus = LMRequstHandleType_Unknow;
 
-    // 去除回调
-    if( m_client ) {
-        m_client->RemoveListener(this);
-    }
+//    // 去除回调 (防止imclient已经delede)
+//    if( m_client ) {
+//        m_client->RemoveListener(this);
+//    }
 
 //    // 释放连接
 //    ILiveChatClient::ReleaseClient(m_client);
@@ -182,6 +182,22 @@ bool LiveMessageManManager::Init(IImClient* client,
     }
     
     FileLevelLog(LIVESHOW_LIVEMESSAGE_LOG, KLog::LOG_MSG, "LiveMessageManManager::Init( client : %p, listener:%p, result:%d ) end", client, listener, result);
+    
+    return result;
+}
+
+bool LiveMessageManManager::CheckIMClientRelease(IImClient* client)
+{
+    FileLevelLog(LIVESHOW_LIVEMESSAGE_LOG, KLog::LOG_MSG, "LiveMessageManManager::CheckIMClientRelease( client : %p) begin", client);
+    bool result = false;
+    
+    if (NULL != client && NULL != m_client && client == m_client) {
+        // 去除回调, 用在~LiveMessageManManager()时
+         m_client->RemoveListener(this);
+        result = true;
+    }
+    
+    FileLevelLog(LIVESHOW_LIVEMESSAGE_LOG, KLog::LOG_MSG, "LiveMessageManManager::CheckIMClientRelease( client : %p) end", client);
     
     return result;
 }

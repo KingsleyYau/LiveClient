@@ -27,6 +27,7 @@
         self.showInfo = [coder decodeObjectForKey:@"showInfo"];
         self.priv = [coder decodeObjectForKey:@"priv"];
         self.chatOnlineStatus = [coder decodeIntForKey:@"chatOnlineStatus"];
+        self.isFollow = [coder decodeBoolForKey:@"isFollow"];
     }
     return self;
 }
@@ -45,6 +46,7 @@
     [coder encodeObject:self.showInfo forKey:@"showInfo"];
     [coder encodeObject:self.priv forKey:@"priv"];
     [coder encodeInt:self.chatOnlineStatus forKey:@"chatOnlineStatus"];
+    [coder encodeBool:self.isFollow forKey:@"isFollow"];
 }
 
 @end

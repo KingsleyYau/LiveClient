@@ -18,7 +18,8 @@
 #define ROW_SIZE @"ROW_SIZE"
 typedef enum {
     RowTypePrivateMsg,
-    RowTypeMail
+    RowTypeMail,
+    RowTypeSayHi,
 } RowType;
 @interface LSPushNoticeViewController ()<UITableViewDataSource,UITableViewDelegate,LSPushSettingTableViewCellDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *openSettingBtn;
@@ -30,6 +31,8 @@ typedef enum {
 @property (nonatomic, assign) BOOL isPriMsgAppPush;
 /** isMailAppPush */
 @property (nonatomic, assign) BOOL isMailAppPush;
+/** isSayHiAppPush */
+@property (nonatomic, assign) BOOL isSayHiAppPush;
 
 @end
 
@@ -70,12 +73,20 @@ typedef enum {
 //    [dictionary setValue:[NSNumber numberWithInteger:RowTypePrivateMsg] forKey:ROW_TYPE];
 //    [array addObject:dictionary];
     
-    // 姓名
+    // 邮件
     dictionary = [NSMutableDictionary dictionary];
     viewSize = CGSizeMake(self.tableView.frame.size.width, [LSPushSettingTableViewCell cellHeight]);
     rowSize = [NSValue valueWithCGSize:viewSize];
     [dictionary setValue:rowSize forKey:ROW_SIZE];
     [dictionary setValue:[NSNumber numberWithInteger:RowTypeMail] forKey:ROW_TYPE];
+    [array addObject:dictionary];
+    
+    // sayhi
+    dictionary = [NSMutableDictionary dictionary];
+    viewSize = CGSizeMake(self.tableView.frame.size.width, [LSPushSettingTableViewCell cellHeight]);
+    rowSize = [NSValue valueWithCGSize:viewSize];
+    [dictionary setValue:rowSize forKey:ROW_SIZE];
+    [dictionary setValue:[NSNumber numberWithInteger:RowTypeSayHi] forKey:ROW_TYPE];
     [array addObject:dictionary];
     
     
@@ -167,7 +178,10 @@ typedef enum {
             cell.pushSettingTitle.text = @"Mails from CharmLive";
             cell.pushSwitch.on = self.isMailAppPush;
         }break;
-            
+        case RowTypeSayHi:{
+            cell.pushSettingTitle.text = @"New Say Hi Response";
+            cell.pushSwitch.on = self.isSayHiAppPush;
+        }break;
         default:
             break;
     }
@@ -198,6 +212,9 @@ typedef enum {
         case RowTypeMail:{
             [self setupPushMail:sender.isOn];
         }break;
+        case RowTypeSayHi: {
+            [self setupPushSayHi:sender.isOn];
+        }break;
         default:
             break;
     }
@@ -205,12 +222,18 @@ typedef enum {
 }
 
 
+/**
+ 获取推送配置
+
+ @return 是否成功
+ */
 - (BOOL)getPushConfig {
     LSGetPushConfigRequest *request = [[LSGetPushConfigRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSAppPushConfigItemObject *item) {
         if (success) {
             self.isPriMsgAppPush = item.isPriMsgAppPush;
             self.isMailAppPush = item.isMailAppPush;
+            self.isSayHiAppPush = item.isSayHiAppPush;
             [self reloadData:YES];
         }else {
             [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
@@ -222,6 +245,13 @@ typedef enum {
     return [self.sessionManager sendRequest:request];
 }
 
+
+/**
+ 设置推送配置
+
+ @param isPush 是否推送
+ @return 是否成功
+ */
 - (BOOL)setPushPrivateMessage:(BOOL)isPush {
     if (isPush) {
         [[LiveModule module].analyticsManager reportActionEvent:TurnOnMessagePush eventCategory:EventCategoryMessage];
@@ -231,6 +261,7 @@ typedef enum {
     LSSetPushConfigRequest *request = [[LSSetPushConfigRequest alloc] init];
     request.isPriMsgAppPush = isPush;
     request.isMailAppPush = self.isMailAppPush;
+    request.isSayHiAppPush = self.isSayHiAppPush;
     [self showLoading];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -250,6 +281,13 @@ typedef enum {
     return [self.sessionManager sendRequest:request];
 }
 
+
+/**
+ 设置邮件推送配送
+
+ @param isPush 是否推送
+ @return 是否成功
+ */
 - (BOOL)setupPushMail:(BOOL)isPush {
     if (isPush) {
         [[LiveModule module].analyticsManager reportActionEvent:TurnOnNewMailPush eventCategory:EventCategoryMail];
@@ -259,6 +297,7 @@ typedef enum {
     LSSetPushConfigRequest *request = [[LSSetPushConfigRequest alloc] init];
     request.isMailAppPush = isPush;
     request.isPriMsgAppPush = self.isMailAppPush;
+    request.isSayHiAppPush = self.isSayHiAppPush;
     [self showLoading];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -277,4 +316,34 @@ typedef enum {
     return [self.sessionManager sendRequest:request];
 }
 
+
+
+/**
+ 设置sayhi推送
+
+ @param isPush 是否推送
+ @return 是否成功
+ */
+- (BOOL)setupPushSayHi:(BOOL)isPush {
+    LSSetPushConfigRequest *request = [[LSSetPushConfigRequest alloc] init];
+    request.isMailAppPush = self.isMailAppPush;
+    request.isPriMsgAppPush = self.isMailAppPush;
+    request.isSayHiAppPush = isPush;
+    [self showLoading];
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self hideLoading];
+            if (success) {
+                self.isSayHiAppPush = isPush;
+                [[DialogIconTips dialogIconTips] showDialogIconTips:self.view tipText:@"Done" tipIcon:nil];
+            }else {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
+            }
+            [self reloadData:YES];
+        });
+    };
+    
+    
+    return [self.sessionManager sendRequest:request];
+}
 @end

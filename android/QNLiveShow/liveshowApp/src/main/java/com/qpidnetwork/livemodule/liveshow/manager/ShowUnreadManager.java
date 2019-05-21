@@ -125,11 +125,8 @@ public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizatio
     @SuppressLint("HandlerLeak")
     private ShowUnreadManager(Context context){
         mUnreadListenerList = new ArrayList<OnShowUnreadListener>();
-        if(null != LMManager.getInstance()){
-            LMManager.getInstance().registerLMLiveRoomEventListener(this);
-        }
 
-        this.mContext = context;
+        this.mContext = context.getApplicationContext();
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -138,10 +135,6 @@ public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizatio
             }
         };
 
-        //add by Jagger 2018-9-29
-        if(LoginManager.getInstance() != null){
-            LoginManager.getInstance().register(this);
-        }
     }
 
     /**

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#76FFFFFF">
+
+    <!--
+        2019/04/19 Hardy
+
+        引用 android:drawable="图片资源"
+        即可将水波纹限制在图片资源的大小范围内，特别适用于带几个 px 的阴影效果的图片，避免了水波纹由于阴影效果而比图片大一些的问题
+
+        设置在 ImageView 的前景属性 foreground ，才能不被 src 属性遮挡住水波纹效果，background 属性可不设置.
+        android:foreground="@drawable/touch_feedback_btn_hot_list"
+    -->
+    <item
+        android:id="@android:id/mask"
+        android:drawable="@drawable/list_button_start_private_broadcast_free" />
+</ripple>

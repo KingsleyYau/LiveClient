@@ -612,13 +612,19 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if(mLMManager != null){
             //注销当前正在聊天的主播id
             mLMManager.RemovePrivateMsgLiveChatList(mUserId);
 
             mLMManager.unregisterLMLiveRoomEventListener(this);
         }
+
+        //解绑监听器，防止泄漏
+        if(sl_root != null){
+            sl_root.removeOnResizeListener(this);
+        }
+
+        super.onDestroy();
     }
 
     /**

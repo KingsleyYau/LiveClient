@@ -11,14 +11,12 @@ import android.os.Message;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dou361.dialogui.DialogUIUtils;
 import com.qpidnetwork.livemodule.R;
@@ -31,6 +29,8 @@ import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
+import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.KeyBoardManager;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout;
 
@@ -189,10 +189,15 @@ public class LoginActivity extends BaseFragmentActivity
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
-		
 		// 去除登录状态改变监听
 		LoginManager.getInstance().unRegister(this);
+
+		//解绑监听器，防止泄漏
+		if(sl_root != null){
+			sl_root.removeOnResizeListener(this);
+		}
+
+		super.onDestroy();
 	}
 	
 	/**
@@ -401,7 +406,7 @@ public class LoginActivity extends BaseFragmentActivity
 //					// 本地错误
 //					}
 //				case RequestErrorCode.LOCAL_ERROR_CODE_PARSEFAIL:{
-//					Toast.makeText(mContext, obj.errmsg, Toast.LENGTH_SHORT).show();
+//			ToastUtil.showToast(mContext, obj.errMsg);
 //					}break;
 //				case RequestErrorCode.MBCE1001:{
 //					// 用户名与密码不正确
@@ -448,7 +453,7 @@ public class LoginActivity extends BaseFragmentActivity
 //			}
 
 			Log.i("Jagger" , "REQUEST_FAIL:" + obj.errMsg);
-			Toast.makeText(mContext , obj.errMsg, Toast.LENGTH_LONG).show();
+			ToastUtil.showToast(mContext, obj.errMsg);
 			buttonForget.setVisibility(View.VISIBLE);
 			doGetCheckCode();
 		}break;
@@ -482,12 +487,12 @@ public class LoginActivity extends BaseFragmentActivity
 //				// 本地错误
 //				}
 //			case RequestErrorCode.LOCAL_ERROR_CODE_PARSEFAIL:{
-//				Toast.makeText(mContext, obj.errmsg, Toast.LENGTH_SHORT).show();
+//			ToastUtil.showToast(mContext, obj.errMsg);
 //				}break;
 //			default:{
 //				}break;
 //			}
-			Toast.makeText(mContext, obj.errMsg, Toast.LENGTH_SHORT).show();
+			ToastUtil.showToast(mContext, obj.errMsg);
 		}break;
 //		case REQUEST_ONLINE_SUCCESS:{
 //			// 获取站点在线人数成功

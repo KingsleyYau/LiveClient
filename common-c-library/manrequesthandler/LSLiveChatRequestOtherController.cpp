@@ -66,9 +66,6 @@ void LSLiveChatRequestOtherController::onSuccess(long requestId, string url, con
     else if ( url.compare(OTHER_GETLEFTCREDIT_PATH) == 0 ) {
         GetLeftCreditCallbackHandle(requestId, url, true, buf, size);
     }
-    else if ( url.compare(OTHER_UPLOADMANPHOTO_PATH) == 0 ) {
-        UploadManPhotoCallbackHandle(requestId, url, true, buf, size);
-    }
 	FileLog("httprequest", "LSLiveChatRequestOtherController::onSuccess() end, url:%s", url.c_str());
 }
 
@@ -108,9 +105,7 @@ void LSLiveChatRequestOtherController::onFail(long requestId, string url)
     else if ( url.compare(OTHER_GETLEFTCREDIT_PATH) == 0 ) {
         GetLeftCreditCallbackHandle(requestId, url, false, NULL, 0);
     }
-    else if ( url.compare(OTHER_UPLOADMANPHOTO_PATH) == 0 ) {
-        UploadManPhotoCallbackHandle(requestId, url, false, NULL, 0);
-    }
+
 	FileLog("httprequest", "LSLiveChatRequestOtherController::onFail() end, url:%s", url.c_str());
 }
 
@@ -858,52 +853,3 @@ void LSLiveChatRequestOtherController::GetLeftCreditCallbackHandle(long requestI
     }
 }
 
-// 12.16.上传LiveChat相关附件, file:照片二进制流， fileName：文件名便于查找哪个文件上传的(用于发送私密照前使用)
-long LSLiveChatRequestOtherController::UploadManPhoto(const string& file) {
-    HttpEntiy entiy;
-    
-    if ( file.length() > 0 ) {
-        entiy.AddFile(OTHER_UPLOADMANPHOTO_FILE, file);
-    }
-    
-    string url = OTHER_UPLOADMANPHOTO_PATH;
-    
-    FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestOtherController::GetLeftCredit"
-            "(url:%s, "
-            "file:%s )",
-            url.c_str(),
-            file.c_str());
-    
-    return StartRequest(url, entiy, this);
-}
-
-void LSLiveChatRequestOtherController::UploadManPhotoCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size) {
-    int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
-    string errmsg = "";
-    bool bFlag = false;
-    string photoUrl = "";
-    string photomd5 = "";
-    
-    if (requestRet) {
-        // request success
-        Json::Value dataJson;
-        bFlag = HandleLSResult(buf, size, errnum, errmsg, &dataJson);
-        if (dataJson.isObject()) {
-            if (dataJson[OTHER_UPLOADMANPHOTO_URL].isString()) {
-                photoUrl = dataJson[OTHER_UPLOADMANPHOTO_URL].asString();
-            }
-            if (dataJson[OTHER_UPLOADMANPHOTO_MD5].isString()) {
-                photomd5 = dataJson[OTHER_UPLOADMANPHOTO_MD5].asString();
-            }
-        }
-    }
-    else {
-        // request fail
-        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
-    }
-    
-    if( NULL != m_Callback ) {
-        m_Callback->OnUploadManPhoto(requestId, bFlag, errnum, errmsg, photoUrl, photomd5);
-    }
-}

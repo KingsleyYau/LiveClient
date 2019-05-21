@@ -22,10 +22,30 @@ public interface IModule {
 
     /**
      * 获取当前站点token，用于换站统一处理
-     * @param targetWebsiteType
+     * @param targetWebsiteType 目标站点
      * @param callback
      */
     public void getWebSiteToken(WebSiteConfigManager.WebSiteType targetWebsiteType, OnGetTokenCallback callback);
+
+    /**
+     * 登陆接口
+     * @param email
+     * @param password
+     * @param checkcode
+     */
+    public void login(String email, String password, String checkcode);
+
+    /**
+     * Token登录
+     * @param token
+     */
+    public void loginByToken(String token, String memberId);
+
+    /**
+     * 获取验证码
+     * @param callback
+     */
+    public void getVerifyCode(OnGetVerifyCodeCallback callback);
 
     /**
      * 换站统一处理，注销逻辑

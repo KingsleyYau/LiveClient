@@ -261,6 +261,8 @@ static QNContactManager *gManager = nil;
     if (nil == item) {
         item = [[LSLadyRecentContactObject alloc] init];
         item.womanId = userId;
+        // 创建邀请用户时候默认为在线
+        item.isOnline = YES;
         [self.invites addObject:item];
     }
     return item;

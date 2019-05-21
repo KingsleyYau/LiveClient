@@ -15,7 +15,6 @@
 #import "LSGiftManager.h"
 #import "LSChatEmotionManager.h"
 #import "LSStreamSpeedManager.h"
-#import "LSSayHiManager.h"
 
 #pragma mark - 公共
 #import "LSFileCacheManager.h"
@@ -44,7 +43,6 @@
 
 #pragma mark - 广告
 #import "GetAnchorListRequest.h"
-#import "LiveChannelAdView.h"
 
 #pragma mark - URL跳转
 #import "LiveUrlHandler.h"
@@ -57,6 +55,8 @@
 
 #import "LSPaymentManager.h"
 #import "QNContactManager.h"
+
+#import "LSSendSayHiViewController.h"
 
 #define HTTP_AUTHOR @"test"
 #define HTTP_PASSWORD @"5179"
@@ -82,7 +82,6 @@ static LiveModule *gModule = nil;
 @property (strong, nonatomic) LSStreamSpeedManager *speedManager;
 @property (strong, nonatomic) LSLiveChatManagerOC *liveChatManager;
 @property (strong, nonatomic) LSLiveChatRequestManager *liveChatRequestManager;
-@property (strong, nonatomic) LSSayHiManager *sayHiManager;
 // 余额及返点信息管理器
 @property (strong, nonatomic) LiveRoomCreditRebateManager *creditRebateManager;
 // 通知界面
@@ -124,8 +123,6 @@ static LiveModule *gModule = nil;
 
         [LiveNotificationService service];
         
-        // 初始化SayHi管理器
-        self.sayHiManager = [LSSayHiManager manager];
         // 初始化流媒体管理器
         self.liveGobalManager = [LiveGobalManager manager];
         // 初始化测速管理器
@@ -276,6 +273,7 @@ static LiveModule *gModule = nil;
 
 - (UIViewController *)mainVC {
     _moduleVC = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
+//    _moduleVC = [[LSSendSayHiViewController alloc] initWithNibName:nil bundle:nil];
     return _moduleVC;
 }
 

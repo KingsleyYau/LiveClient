@@ -6,6 +6,11 @@ import android.media.MediaRecorder;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;
 
+/**
+ * 音频录制器
+ * @author max
+ *
+ */
 public class LSAudioRecorder {
 	private AudioRecord audioRecorder = null;
     private Thread recordingThread = null;

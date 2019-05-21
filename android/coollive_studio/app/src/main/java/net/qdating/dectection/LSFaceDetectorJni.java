@@ -3,6 +3,11 @@ package net.qdating.dectection;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;
 
+/**
+ * 人面识别器JNI
+ * @author max
+ *
+ */
 public class LSFaceDetectorJni implements ILSFaceDetectorCallbackJni {
 	static {
 		System.loadLibrary("opencv_java3");

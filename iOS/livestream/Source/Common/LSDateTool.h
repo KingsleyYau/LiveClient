@@ -41,4 +41,12 @@
  */
 - (NSString *)showGreetingDetailTimeOfDate:(NSDate *)date;
 
+/**
+ 
+ 显示sayhi列表的时间en_US
+ 
+ @param date 时间数据
+ @return 时间字符串
+ */
+- (NSString *)showSayHiListTimeTextOfDate:(NSDate *)date;
 @end

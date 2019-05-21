@@ -258,7 +258,9 @@ static LSMainNotificationManager *mainNotificationManager = nil;
     }
 
     @synchronized(self.showArray) {
-        [self.showArray removeObjectAtIndex:row];
+        if (row < self.showArray.count) {
+            [self.showArray removeObjectAtIndex:row];
+        }
     }
 
     if ([self.delegate respondsToSelector:@selector(mainNotificationManagerRemoveselectedItem)]) {

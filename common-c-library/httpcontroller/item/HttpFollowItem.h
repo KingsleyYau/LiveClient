@@ -102,6 +102,10 @@ public:
             if (root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].isNumeric()) {
                 chatOnlineStatus = GetIntToIMChatOnlineStatus(root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].asInt());
             }
+            
+            if (root[LIVEROOM_HOT_PROGRAMLIST_ISFOLLOW].isNumeric()) {
+                isFollow = root[LIVEROOM_HOT_PROGRAMLIST_ISFOLLOW].asInt() == 0 ? false : true;
+            }
 
         }
     }
@@ -118,6 +122,7 @@ public:
         anchorType = ANCHORLEVELTYPE_UNKNOW;
         showInfo = NULL;
         chatOnlineStatus = IMCHATONLINESTATUS_OFF;
+        isFollow = false;
 	}
 
 	virtual ~HttpFollowItem() {
@@ -140,6 +145,7 @@ public:
      * anchorType        主播类型（1:白银 2:黄金）
      * showInfo         节目信息
      * priv             权限
+     * isFollow         关注状态（0未关注，1已关注）
      */
     string userId;
 	string nickName;
@@ -154,6 +160,7 @@ public:
     HttpProgramInfoItem* showInfo;
     HttpAuthorityItem    priv;
     IMChatOnlineStatus   chatOnlineStatus;
+    bool                isFollow;
 };
 
 typedef list<HttpFollowItem*> FollowItemList;

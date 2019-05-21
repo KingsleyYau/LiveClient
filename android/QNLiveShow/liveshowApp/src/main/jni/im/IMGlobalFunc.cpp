@@ -143,6 +143,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	InsertJObjectClassToMap(env, IM_HANGOUT_IMRECVKNOCKREQUEST_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_HANGOUT_IMHANGOUTMSG_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_HANGOUT_IMHANGOUTCOUNTDOWN_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_HANGOUT_IMHANGOUTINVITE_ITEM_CLASS);
 
     return JNI_VERSION_1_4;
 }

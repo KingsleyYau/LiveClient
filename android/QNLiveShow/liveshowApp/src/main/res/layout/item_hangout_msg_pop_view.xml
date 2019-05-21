@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/live_size_10dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
+    <!--app:cardBackgroundColor="@color/live_calendar_bubble_bg"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_80dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/live_size_10dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/item_hang_out_msg_pop_iv_user_big"
+                android:layout_width="@dimen/live_size_50dp"
+                android:layout_height="@dimen/live_size_50dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp"
+                tools:src="@drawable/ic_user_icon" />
+
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/item_hang_out_msg_pop_iv_user_small"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="end|bottom"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/live_size_10dp"
+            android:layout_marginRight="@dimen/live_size_10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_hang_out_msg_pop_tv_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_hang_out_msg_pop_tv_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_12sp" />
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/live_size_8dp"
+            android:layout_marginBottom="@dimen/live_size_8dp"
+            android:minWidth="67dp">
+
+            <ProgressBar
+                android:id="@+id/item_hang_out_msg_pop_pb"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:max="100"
+                android:progress="100"
+                android:progressDrawable="@drawable/pb_orange_bg"
+                android:secondaryProgress="100"
+                tools:progress="0" />
+            <!--android:progressDrawable="@drawable/pb_green_bg"-->
+
+            <TextView
+                android:id="@+id/item_hang_out_msg_pop_tv_hang_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:paddingLeft="@dimen/live_size_4dp"
+                android:paddingRight="@dimen/live_size_4dp"
+                android:text="@string/Hand_out"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp" />
+        </FrameLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

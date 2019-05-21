@@ -34,11 +34,12 @@ import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
@@ -49,12 +50,14 @@ import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.MediaUtility;
-import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.File;
+
+import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_EMPTY_PAGE;
+import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_ERROR_CODE_UN_AUTH;
 
 /**
  * Created by Hunter Mun on 2017/11/10.
@@ -459,6 +462,36 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
     }
 
     /**
+     * 2019/4/12 Hardy
+     * <p>
+     * 处理 http 错误
+     * https://blog.csdn.net/lsyz0021/article/details/56677132
+     * <p>
+     * 一般来说该错误消息表明您首先需要登录（输入有效的用户名和密码）。 如果你刚刚输入这些信息，立刻就看到一个 401 错误
+     * https://baike.baidu.com/item/401%E9%94%99%E8%AF%AF/3720974?fr=aladdin
+     * <p>
+     * 方法执行顺序：
+     * onReceivedHttpAuthRequest-host:demo.qpidnetwork.com realm:Web Site Test
+     * |
+     * onReceivedHttpError-errorResponse.mStatusCode:401
+     *
+     * @param httpCode
+     */
+    private void handlerHttpError(int httpCode) {
+        if (httpCode == HTTP_ERROR_CODE_UN_AUTH && !isErrorUnAuthLoad) {  // test:5179 的 401 验证问题
+            isErrorUnAuthLoad = true;
+
+            owv_content.loadUrl(HTTP_EMPTY_PAGE);        // 空白页，避免出现默认的错误界面
+            loadUrl(true, false); // 模拟重新加载页面
+        } else {
+            //Android 6.0以上
+            onLoadError();
+        }
+    }
+
+    private boolean isErrorUnAuthLoad;
+
+    /**
      * 利用接口和webview共用cookie，通过接口cookie过期自动重登陆实现session过期重登陆，刷新cookie
      */
     private void handleSessionTimeout(){
@@ -494,7 +527,7 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                         && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)){
                     LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
                     if(loginStatus == LoginManager.LoginStatus.Logined){
-                        RegisterActivity.launchRegisterActivity(mContext);
+                        LoginNewActivity.launchRegisterActivity(mContext);
                     }else{
                         pb_loading.setVisibility(View.VISIBLE);
                         handleSessionTimeout();
@@ -532,6 +565,11 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                 }
             }
         });
+    }
+
+    @Override
+    public void onShowHangoutAnchor(HangoutAnchorInfoItem item) {
+
     }
 
     /*************************** webview相关 ************************************/
@@ -678,7 +716,10 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                     if (tempUri.getScheme().equals(pageUri.getScheme())
                             && tempUri.getPath().equals(pageUri.getPath())) {
                         //Android 6.0以上
-                        onLoadError();
+//                        onLoadError();
+
+                        // 2019/4/12 Hardy
+                        handlerHttpError(errorResponse.getStatusCode());
                     }
                 }
             }

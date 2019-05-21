@@ -62,11 +62,25 @@ public class SoftKeyboardSizeWatchLayout extends RelativeLayout {
 
     private List<OnResizeListener> mListenerList;
 
+    /**
+     * 绑定监听器
+     * @param l
+     */
     public void addOnResizeListener(OnResizeListener l) {
         if (mListenerList == null) {
             mListenerList = new ArrayList<>();
         }
         mListenerList.add(l);
+    }
+
+    /**
+     * 解除绑定监听器
+     * @param l
+     */
+    public void removeOnResizeListener(OnResizeListener l){
+        if(mListenerList != null){
+            mListenerList.remove(l);
+        }
     }
 
     public interface OnResizeListener {

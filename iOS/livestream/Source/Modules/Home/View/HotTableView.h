@@ -38,6 +38,10 @@
 /** 预约的私密直播间 */
 - (void)tableView:(HotTableView *)tableView didBookPrivateBroadcast:(NSInteger)index;
 
+- (void)tableView:(HotTableView *)tableView didFocusBtn:(NSInteger)index;
+
+- (void)tableView:(HotTableView *)tableView didSayHiBtn:(NSInteger)index;
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 @end

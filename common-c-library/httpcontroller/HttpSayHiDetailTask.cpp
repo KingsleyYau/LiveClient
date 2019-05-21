@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.7.SayHi详情
+ *        desc: 14.7.获取SayHi详情(用于观众端获取SayHi详情)
  */
 
 #include "HttpSayHiDetailTask.h"

@@ -79,7 +79,7 @@ public class DomainManager {
 
     @SuppressLint("HandlerLeak")
     private DomainManager(Context context){
-        mContext = context;
+        mContext = context.getApplicationContext();
         mListenerList = new CopyOnWriteArrayList<>();
         mRequestStatus = mRequestStatus.Default;
 

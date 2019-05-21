@@ -44,6 +44,14 @@ public:
             if (root[LIVEROOM_ALLSAYHILIST_LIST_ANCHORAGE].isNumeric()) {
                 age = root[LIVEROOM_ALLSAYHILIST_LIST_ANCHORAGE].asInt();
             }
+            /* sendTime */
+            if (root[LIVEROOM_ALLSAYHILIST_LIST_SENDTIME].isNumeric()) {
+                sendTime = root[LIVEROOM_ALLSAYHILIST_LIST_SENDTIME].asInt();
+            }
+            /* content */
+            if (root[LIVEROOM_ALLSAYHILIST_LIST_CONTENT].isString()) {
+                content = root[LIVEROOM_ALLSAYHILIST_LIST_CONTENT].asString();
+            }
             /* responseNum */
             if (root[LIVEROOM_ALLSAYHILIST_LIST_RESPONSENUM].isNumeric()) {
                 responseNum = root[LIVEROOM_ALLSAYHILIST_LIST_RESPONSENUM].asInt();
@@ -52,6 +60,11 @@ public:
             if (root[LIVEROOM_ALLSAYHILIST_LIST_UNREADNUM].isNumeric()) {
                 unreadNum = root[LIVEROOM_ALLSAYHILIST_LIST_UNREADNUM].asInt();
             }
+            /* isFree */
+            if (root[LIVEROOM_ALLSAYHILIST_LIST_ISFREE].isNumeric()) {
+                isFree = root[LIVEROOM_ALLSAYHILIST_LIST_ISFREE].asInt() == 1 ? true : false;
+            }
+        
             result = true;
             return result;
         }
@@ -63,8 +76,11 @@ public:
             cover = "";
             avatar = "";
             age = 0;
+            sendTime = 0;
+            content = "";
             responseNum = 0;
             unreadNum = 0;
+            isFree = false;
         }
         
         virtual ~AllSayHiItem() {
@@ -78,8 +94,11 @@ public:
          *  cover           主播封面
          *  avatar          主播头像
          *  age             主播年龄
+         *  sendTime        发送时间戳（1970年起的秒数）
+         *  content         回复内容的摘要（可无，没有回复则为无或空）
          *  responseNum     回复数
          *  unreadNum       未读数
+         *  isFree          是否免费（1：是，0：否）
          */
         string      sayHiId;
         string      anchorId;
@@ -87,8 +106,11 @@ public:
         string      cover;
         string      avatar;
         int         age;
+        long long   sendTime;
+        string      content;
         int         responseNum;
         int         unreadNum;
+        bool        isFree;
     };
     typedef list<AllSayHiItem> AllSayHiList;
     bool Parse(const Json::Value& root) {

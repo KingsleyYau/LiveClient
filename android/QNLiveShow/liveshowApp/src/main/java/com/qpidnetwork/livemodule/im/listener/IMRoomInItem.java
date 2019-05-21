@@ -53,6 +53,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param popPrice			直播间的POP消息资费
 	 * @param liveShowType		公开直播间类型
 	 * @param isHasTalent		是否有才艺
+	 * @param isHangoutPriv     多人互动开播权限（true：没有权限，false：有权限）
 	 * @param
 	 */	
 	public IMRoomInItem(String userId,
@@ -80,7 +81,8 @@ public class IMRoomInItem implements Serializable{
 						double popPrice,
 						int useCoupon,
 						int liveShowType,
-						boolean isHasTalent){
+						boolean isHasTalent,
+						boolean isHangoutPriv){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -117,6 +119,7 @@ public class IMRoomInItem implements Serializable{
 			this.liveShowType = IMPublicRoomType.values()[liveShowType];
 		}
 		this.isHasTalent = isHasTalent;
+		this.isHangoutPriv = isHangoutPriv;
 	}
 	
 	public String userId; 
@@ -145,6 +148,7 @@ public class IMRoomInItem implements Serializable{
 	public int useCoupon;
 	public IMPublicRoomType liveShowType;
 	public boolean isHasTalent;
+	public boolean isHangoutPriv;
 
 	@Override
 	public String toString() {

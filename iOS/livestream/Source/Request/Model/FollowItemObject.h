@@ -27,6 +27,7 @@
  * showInfo          节目信息
  * isHasOneONOneAuth 是否有私密直播权限
  * isHasBookingAuth  是否有预约私密直播权限
+ * isFollow         关注状态（NO:未关注，YES:已关注）
  */
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* nickName;
@@ -49,6 +50,8 @@
 @property (nonatomic, strong) LSHttpAuthorityItemObject* priv;
 
 @property (nonatomic, assign) IMChatOnlineStatus chatOnlineStatus;
+
+@property (nonatomic, assign) BOOL isFollow;
 
 
 @end

@@ -1,8 +1,6 @@
 
 package com.qpidnetwork.livemodule.im.listener;
 
-import java.io.Serializable;
-
 public class IMHangoutRecommendItem {
 
 	/**
@@ -61,6 +59,7 @@ public class IMHangoutRecommendItem {
 	public int friendAge;
 	public String friendCountry;
 	public String recommendId;
+	public String manNickeName;	//男士昵称
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("IMHangoutRecommendItem[");

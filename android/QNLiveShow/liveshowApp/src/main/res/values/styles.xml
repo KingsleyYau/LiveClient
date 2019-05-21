@@ -146,4 +146,31 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <!-- hangout列表 HerFriends人头 -->
+    <style name="img_hangout_her_friends">
+        <item name="android:layout_width">@dimen/live_hangout_list_friends_img_size</item>
+        <item name="android:layout_height">@dimen/live_hangout_list_friends_img_size</item>
+        <item name="android:layout_marginRight">@dimen/live_hangout_list_friends_img_margin</item>
+        <item name="android:layout_marginLeft">@dimen/live_hangout_list_friends_img_margin</item>
+    </style>
+
+    <!-- 按钮控件 -->
+    <style name="btn_orange_stroke_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textColor">@color/live_ho_orange_deep</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:background">@drawable/bg_btn_orange_stroke_shape</item>
+    </style>
+
+    <!-- Hangout详情弹出框 -->
+    <style name="HangoutBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
+    </style>
+    <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
+        <item name="behavior_peekHeight">@dimen/live_hangout_detail_dialog_height</item>
+    </style>
+
 </resources>

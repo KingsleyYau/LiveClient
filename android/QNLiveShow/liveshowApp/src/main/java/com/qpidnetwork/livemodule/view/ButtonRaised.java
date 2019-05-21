@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.CardView;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ public class ButtonRaised extends CardView{
 	
 	private float desity = this.getContext().getResources().getDisplayMetrics().density;
 	private float txt_size = 16.00f;
+	private boolean txt_bold = false;
 	private int space = (int)(8.00 * desity);
 	private int elevation = (int)(2.00 * desity);
 	private int radius = (int)(2.00 * desity);
@@ -44,38 +46,47 @@ public class ButtonRaised extends CardView{
 	private void setThis(AttributeSet attrs){
 
 		int icon = R.mipmap.ic_launcher;
+		int iconWidth = LayoutParams.WRAP_CONTENT;
+		int iconHeight = LayoutParams.WRAP_CONTENT;
 		String title = "Button";
 		int color = Color.GRAY;
 		int background = 0;
+		int backgroundRes = 0;
 		int touch_feedback = 0;
 		
 		
 		if (attrs != null){
 			TypedArray a = this.getContext().obtainStyledAttributes(attrs, R.styleable.RaisedButton);
 			icon = a.getResourceId(R.styleable.RaisedButton_icon, 0);
+			iconWidth = (int)a.getDimension(R.styleable.RaisedButton_icon_width, LayoutParams.WRAP_CONTENT);
+			iconHeight = (int)a.getDimension(R.styleable.RaisedButton_icon_height, LayoutParams.WRAP_CONTENT);
 			title = a.getString(R.styleable.RaisedButton_title);
 			color = a.getColor(R.styleable.RaisedButton_title_color, Color.GRAY);
 			background = a.getColor(R.styleable.RaisedButton_background, 0);
+			backgroundRes = a.getResourceId(R.styleable.RaisedButton_background_res, 0);
 			touch_feedback = a.getResourceId(R.styleable.RaisedButton_touch_feedback, 0);
 			elevation  = (int)a.getDimension(R.styleable.RaisedButton_elevation, elevation);
 			radius = (int)a.getDimension(R.styleable.RaisedButton_raisebutton_radius, radius);
 			txt_size = a.getDimensionPixelSize(R.styleable.RaisedButton_title_text_size,
 					(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, txt_size, getResources().getDisplayMetrics()));
 			txt_size = px2sp(txt_size);
+			txt_bold = a.getBoolean(R.styleable.RaisedButton_title_text_bold, false);
 			a.recycle();
 		}
-		
+
+		this.setPreventCornerOverlap(false);
 		this.setUseCompatPadding(true);
 		this.setClickable(true);
 		this.setCardElevation(elevation);
-		this.setPreventCornerOverlap(false);
 		this.setRadius(radius);
-		this.addView(createButton(title, icon, color, touch_feedback));
+		this.addView(createButton(title, icon, iconWidth, iconHeight, color, touch_feedback));
 		if (background != 0) this.setCardBackgroundColor(background);
-		
+		if (backgroundRes != 0) this.setBackgroundResource(backgroundRes);
+
+		this.setContentPadding(0,0,0,0);
 	}
 
-	private LinearLayout createButton(CharSequence name, int iconResourceId, int textColor, int touch){
+	private LinearLayout createButton(CharSequence name, int iconResourceId, int iconWidth, int iconHeigth, int textColor, int touch){
 		
 		LinearLayout view = new LinearLayout(this.getContext());
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -83,12 +94,12 @@ public class ButtonRaised extends CardView{
 		view.setLayoutParams(params);
 		view.setGravity(Gravity.CENTER);
 		
-		if( Build.VERSION.SDK_INT >= 17 ) {
+//		if( Build.VERSION.SDK_INT >= 17 ) {
 			view.setOrientation(LinearLayout.HORIZONTAL);
-		}
+//		}
 		
 		ImageView icon = new ImageView(this.getContext());
-		LinearLayout.LayoutParams ic_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams ic_params = new LinearLayout.LayoutParams(iconWidth, iconHeigth);
 		ic_params.setMargins(0, 0, space, 0);
 		icon.setImageResource(iconResourceId);
 		icon.setVisibility(View.GONE);
@@ -104,6 +115,11 @@ public class ButtonRaised extends CardView{
 		title.setLayoutParams(tv_params);
 		title.setTextSize(txt_size);
 		title.setTextColor(textColor);
+		if(txt_bold){
+			//粗体
+			TextPaint tp = title.getPaint();
+			tp.setFakeBoldText(true);
+		}
 		title.setVisibility(View.GONE);
 		if (name != null && name.length() != 0){
 			title.setText(name);

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_login"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/fragmentLogin">
+
+    <fragment
+        android:id="@+id/fragmentLogin"
+        android:name="com.qpidnetwork.livemodule.liveshow.authorization.FragmentLogin"
+        android:label="fragment_fragment_other"
+        tools:layout="@layout/fragment_login_firsttime" />
+</navigation>

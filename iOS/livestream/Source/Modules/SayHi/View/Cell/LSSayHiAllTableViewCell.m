@@ -15,7 +15,7 @@
 }
 
 + (NSInteger)cellHeight {
-    return 73;
+    return 82;
 }
 
 
@@ -27,7 +27,10 @@
         if (cell.imageViewLoader == nil) {
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
-
+        cell.headImage.layer.cornerRadius = 3.0f;
+        cell.headImage.layer.masksToBounds = YES;
+        cell.freeIcon.layer.cornerRadius = 2.0f;
+        cell.freeIcon.layer.masksToBounds = YES;
     }
     
     return cell;
@@ -39,11 +42,34 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    self.headImage.layer.cornerRadius = self.headImage.frame.size.height * 0.5f;
-    self.headImage.layer.masksToBounds = YES;
+}
 
+- (void)cellUpdateIsHasRead:(NSInteger)unreadNum {
+    if (unreadNum > 0) {
+        self.backgroundColor = COLOR_WITH_16BAND_RGB(0xFFFECD);
+        self.anchorName.font = [UIFont boldSystemFontOfSize:18];
+        self.content.font = [UIFont boldSystemFontOfSize:16];
+        self.dateTime.font = [UIFont boldSystemFontOfSize:14];
+        self.unreadCount.hidden = NO;
+        self.unreadCount.text = [NSString stringWithFormat:@"%lu unread",(long)unreadNum];
+    }else {
+        self.backgroundColor = [UIColor whiteColor];
+        self.anchorName.font = [UIFont systemFontOfSize:18];
+        self.content.font = [UIFont systemFontOfSize:16];
+        self.dateTime.font = [UIFont systemFontOfSize:14];
+        self.unreadCount.hidden = YES;
+    }
 }
 
 
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    [super setHighlighted:highlighted animated:animated];
+    self.freeIcon.backgroundColor = COLOR_WITH_16BAND_RGB(0xFF4747);
+}
 
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    self.freeIcon.backgroundColor = COLOR_WITH_16BAND_RGB(0xFF4747);
+}
 @end

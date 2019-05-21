@@ -60,4 +60,19 @@ public class IntToEnumUtils {
         return httpErrorType;
     }
 
+    /**
+     * int status 转 enum
+     * @param status
+     * @return
+     */
+    public static HangoutInviteStatus intToHangoutInviteStatus(int status){
+        HangoutInviteStatus hangoutInviteStatus = HangoutInviteStatus.Unknown;
+        if( status < 0 || status >= HangoutInviteStatus.values().length ) {
+            hangoutInviteStatus = HangoutInviteStatus.Unknown;
+        } else {
+            hangoutInviteStatus = HangoutInviteStatus.values()[status];
+        }
+        return hangoutInviteStatus;
+    }
+
 }

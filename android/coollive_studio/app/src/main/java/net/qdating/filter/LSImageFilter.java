@@ -11,6 +11,12 @@ import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.utils.Log;
 
+
+/**
+ * 基础滤镜
+ * @author max
+ *
+ */
 public abstract class LSImageFilter {
 	/**
 	 * 渲染模式
@@ -318,10 +324,6 @@ public abstract class LSImageFilter {
 	 */
 	protected abstract void onDrawFinish(int textureId);
 
-	protected void onDrawRecyle(int textureId) {
-
-	}
-
 	/**
 	 * 改变滤镜输入大小
 	 * @param inputWidth
@@ -367,7 +369,7 @@ public abstract class LSImageFilter {
         int outputHeight = viewHeight;
 
         if( fillMode == FillMode.FillModeAspectRatioFill ) {
-        	// 长边填满
+        	// 输入图像短边填满输出
         	if( inputHeight > 0 && outputHeight > 0 ) {
             	// 目标比例
             	double radioPreview = 1.0 * outputWidth / outputHeight;
@@ -399,7 +401,7 @@ public abstract class LSImageFilter {
             	}
         	}
         } else if ( fillMode == FillMode.FillModeAspectRatioFit ) {
-        	// 短边内嵌
+        	// 输入图像长边内嵌输出
         	if( inputHeight > 0 && outputHeight > 0 ) {
             	// 目标比例
             	double radioPreview = 1.0 * outputWidth / outputHeight;
@@ -432,7 +434,7 @@ public abstract class LSImageFilter {
         	}
         	
         } else {
-        	// 拉伸填满
+        	// 输入图像拉伸填满输出
         	coordinateWidth = outputWidth;
         	coordinateHeight = outputHeight;
 

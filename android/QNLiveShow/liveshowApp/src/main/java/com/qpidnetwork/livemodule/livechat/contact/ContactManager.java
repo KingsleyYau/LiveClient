@@ -173,7 +173,7 @@ public class ContactManager implements IAuthorizationListener,
     }
 
     public ContactManager(Context context) {
-        this.mContext = context;
+        this.mContext = context.getApplicationContext();
         mCallbackList = new ArrayList<OnLCContactUpdateCallback>();
         mContactList = new ArrayList<ContactBean>();
         mContactsMap = new HashMap<String, ContactBean>();

@@ -8,6 +8,7 @@
 
 #import "LSSayHiAllTableView.h"
 #import "LSSayHiAllTableViewCell.h"
+#import "LSDateTool.h"
 
 @implementation LSSayHiAllTableView
 
@@ -45,9 +46,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger number = 0;
-    
-    return number;
+    return self.items.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -58,39 +57,44 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *result = [[UITableViewCell alloc] init];
+    if (indexPath.row < self.items.count) {
+        LSSayHiAllTableViewCell *cell = [LSSayHiAllTableViewCell getUITableViewCell:tableView];
+        result = cell;
+        //    // 数据填充
+        LSSayHiAllListItemObject *item = [self.items objectAtIndex:indexPath.row];
+        cell.anchorName.text = item.nickName;
+        [cell.imageViewLoader stop];
+        // 创建新的
+        cell.imageViewLoader = [LSImageViewLoader loader];
+        // 加载
+        [cell.imageViewLoader loadImageFromCache:cell.headImage options:SDWebImageRefreshCached imageUrl:item.avatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
+        }];
+        
+        cell.freeIcon.hidden = item.isFree?NO:YES;
+        
+        NSDate *lastTime = [NSDate dateWithTimeIntervalSince1970:item.sendTime];
+        cell.dateTime.text = [[[LSDateTool alloc] init] showSayHiListTimeTextOfDate:lastTime];
+        
+        [cell cellUpdateIsHasRead:item.unreadNum];
+        
+        if (item.content.length > 0) {
+            cell.content.text = item.content;
+            cell.content.textColor = COLOR_WITH_16BAND_RGB(0x383838);
+            
+        }else {
+            cell.content.text = @"No responses yet.";
+            cell.content.textColor = COLOR_WITH_16BAND_RGB(0x8B8B8B);
+            cell.content.font = [UIFont italicSystemFontOfSize:16];
+        }
+        
 
-    LSSayHiAllTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[LSSayHiAllTableViewCell cellIdentifier]];
-    result = cell;
-    //    // 数据填充
-    LSSayHiAllListItemObject *item = [self.items objectAtIndex:indexPath.row];
-    cell.anchorName.text = item.nickName;
-    [cell.imageViewLoader stop];
-    // 创建新的
-    cell.imageViewLoader = [LSImageViewLoader loader];
-    // 加载
-    [cell.imageViewLoader loadImageFromCache:cell.headImage options:SDWebImageRefreshCached imageUrl:item.avatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-    }];
-    if (item.responseNum > 0) {
-        cell.totalCount.text = [NSString stringWithFormat:@"%ld",(long)item.responseNum];
-    }else {
-        cell.totalCount.text = @"--";
     }
-    
-    if (item.unreadNum > 0) {
-        cell.unreadCount.hidden = NO;
-        cell.unreadCount.text = [NSString stringWithFormat:@"(%ld Unread)",(long)item.unreadNum];
-    }else {
-        cell.unreadCount.hidden = YES;
-    }
-    
-    
-    
     return result;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSLog(@"LSSayHiAllTableView %ld self.items.count %ld",indexPath.row,self.items.count);
+    NSLog(@"LSSayHiAllTableView %lu self.items.count %lu",(long)indexPath.row,(long)self.items.count);
     if (indexPath.row < self.items.count) {
         if([self.tableViewDelegate respondsToSelector:@selector(tableView:didSelectSayHiDetail:)]) {
             [self.tableViewDelegate tableView:self didSelectSayHiDetail:[self.items objectAtIndex:indexPath.row]];

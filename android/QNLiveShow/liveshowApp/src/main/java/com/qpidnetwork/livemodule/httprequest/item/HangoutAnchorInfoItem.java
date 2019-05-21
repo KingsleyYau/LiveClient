@@ -1,11 +1,15 @@
 package com.qpidnetwork.livemodule.httprequest.item;
 
+import java.io.Serializable;
+
 /**
  * 主播信息Item
  * @author Hunter Mun
  *
  */
-public class HangoutAnchorInfoItem {
+public class HangoutAnchorInfoItem implements Serializable {
+
+	private static final long serialVersionUID = 3602554575197304076L;
 
 	public HangoutAnchorInfoItem(){
 
@@ -19,13 +23,15 @@ public class HangoutAnchorInfoItem {
 	 * @param age			年龄
 	 * @param country		国家
 	 * @param onlineStatus  在线状态（Offline：离线，Online：在线）
+	 * @param coverImg     直播间封面图url
 	 */
 	public HangoutAnchorInfoItem(String anchorId,
                                  String nickName,
                                  String photoUrl,
                                  int    age,
 								 String country,
-								 int onlineStatus){
+								 int onlineStatus,
+								 String coverImg){
 		this.anchorId = anchorId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -37,6 +43,7 @@ public class HangoutAnchorInfoItem {
 		} else {
 			this.onlineStatus = AnchorOnlineStatus.values()[onlineStatus];
 		}
+		this.coverImg = coverImg;
 
 	}
 	
@@ -46,6 +53,7 @@ public class HangoutAnchorInfoItem {
 	public int age;
 	public String country;
 	public AnchorOnlineStatus onlineStatus;
+	public String coverImg;
 
 
 	@Override
@@ -56,6 +64,7 @@ public class HangoutAnchorInfoItem {
 				+ " age:"+age
 				+ " country:"+country
 				+ " onlineStatus:"+onlineStatus
+				+ " coverImg:"+coverImg
 				+ "]";
 	}
 }

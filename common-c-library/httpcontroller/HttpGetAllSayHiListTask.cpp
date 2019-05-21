@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.5.发送sayHi
+ *        desc: 14.5.获取Say Hi的All列表（用于观众端获取Say Hi的All列表数据）
  */
 
 #include "HttpGetAllSayHiListTask.h"

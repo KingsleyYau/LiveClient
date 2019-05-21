@@ -22,9 +22,13 @@ public class AppsFlyerSpUtil {
     /*  每日打开跟踪  */
     // 每日打开时间
     private static final String KEY_OPEN_TIME_STAMP = "open_timeStamp";
+    // 权限未授权前
+    private static final String KEY_OPEN_TIME_STAMP_NO_PERMISSION_AUTH = "open_timeStamp_no_permission_auth";
 
     // 待提交记录列表
     private static final String KEY_OPEN_TIME_STAMP_LIST_UPLOAD = "open_timeStamp_list_upload";
+    // 权限未授权前
+    private static final String KEY_OPEN_TIME_STAMP_LIST_UPLOAD_NO_PERMISSION_AUTH = "open_timestamp_list_upload_no_permission_auth";
     /*
        待提交记录列表
        该列表是一个字符串数组
@@ -56,12 +60,12 @@ public class AppsFlyerSpUtil {
 
     //=============     open timeStamp   =====================================
 
-    public static long getOpenTimeStampSp(Context context) {
-        return getSp(context).getLong(KEY_OPEN_TIME_STAMP, 0);
+    public static long getOpenTimeStampSp(Context context, String spKey) {
+        return getSp(context).getLong(spKey, 0);
     }
 
-    public static void saveOpenTimeStampSp(Context context, long time) {
-        getSp(context).edit().putLong(KEY_OPEN_TIME_STAMP, time).commit();
+    public static void saveOpenTimeStampSp(Context context, long time, String spKey) {
+        getSp(context).edit().putLong(spKey, time).commit();
     }
 
     //=============     open timeStamp   =====================================
@@ -69,12 +73,12 @@ public class AppsFlyerSpUtil {
 
     //=============     open timeStamp list upload =====================================
 
-    public static String getUploadTimeStampListSp(Context context) {
-        return getSp(context).getString(KEY_OPEN_TIME_STAMP_LIST_UPLOAD, "");
+    public static String getUploadTimeStampListSp(Context context, String spKeyList) {
+        return getSp(context).getString(spKeyList, "");
     }
 
-    private static void saveUploadTimeStampListSp(Context context, String uploadTimeStampList) {
-        getSp(context).edit().putString(KEY_OPEN_TIME_STAMP_LIST_UPLOAD, uploadTimeStampList).commit();
+    private static void saveUploadTimeStampListSp(Context context, String uploadTimeStampList, String spKeyList) {
+        getSp(context).edit().putString(spKeyList, uploadTimeStampList).commit();
     }
 
     /**
@@ -82,8 +86,8 @@ public class AppsFlyerSpUtil {
      *
      * @param context
      */
-    public static void clearUploadTimeStampList(Context context) {
-        saveUploadTimeStampListSp(context, "");
+    public static void clearUploadTimeStampList(Context context, String spKeyList) {
+        saveUploadTimeStampListSp(context, "", spKeyList);
     }
 
     /**
@@ -92,8 +96,9 @@ public class AppsFlyerSpUtil {
      * @param context
      * @return
      */
-    public static int[] getUploadTimeStamps(Context context) {
-        String val = getUploadTimeStampListSp(context);
+    public static int[] getUploadTimeStamps(Context context, String spKeyList) {
+        String val = getUploadTimeStampListSp(context, spKeyList);
+
         if (TextUtils.isEmpty(val)) {
             val = "";
         }
@@ -144,20 +149,29 @@ public class AppsFlyerSpUtil {
      * @param context
      * @param time
      */
-    public static void saveUploadTimeStamp(Context context, long time) {
+    public static void saveUploadTimeStamp(Context context, long time, String spKeyList) {
         if (time <= 0) {
             return;
         }
 
-        String val = getUploadTimeStampListSp(context);
+        String val = getUploadTimeStampListSp(context, spKeyList);
+
         if (TextUtils.isEmpty(val)) {
             val = time + OPEN_TIME_STAMP_LIST_PATTEN;
         } else {
             val = val + time + OPEN_TIME_STAMP_LIST_PATTEN;
         }
 
-        saveUploadTimeStampListSp(context, val);
+        saveUploadTimeStampListSp(context, val, spKeyList);
     }
     //=============     open timeStamp list upload =====================================
 
+
+    public static String getKeyOpenTime(boolean isPermissionAuth) {
+        return isPermissionAuth ? KEY_OPEN_TIME_STAMP : KEY_OPEN_TIME_STAMP_NO_PERMISSION_AUTH;
+    }
+
+    public static String getKeyOpenTimeList(boolean isPermissionAuth) {
+        return isPermissionAuth ? KEY_OPEN_TIME_STAMP_LIST_UPLOAD : KEY_OPEN_TIME_STAMP_LIST_UPLOAD_NO_PERMISSION_AUTH;
+    }
 }

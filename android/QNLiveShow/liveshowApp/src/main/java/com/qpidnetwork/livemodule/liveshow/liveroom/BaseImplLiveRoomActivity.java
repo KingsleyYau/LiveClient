@@ -13,6 +13,7 @@ import com.qpidnetwork.livemodule.httprequest.OnGetAudienceListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.im.IMHangoutEventListener;
 import com.qpidnetwork.livemodule.im.IMInviteLaunchEventListener;
 import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
 import com.qpidnetwork.livemodule.im.IMLoginStatusListener;
@@ -20,6 +21,11 @@ import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
 import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+import com.qpidnetwork.livemodule.im.listener.IMDealInviteItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutCountDownItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutInviteItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutRecommendItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteErrItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteReplyItem;
@@ -27,6 +33,9 @@ import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvEnterRoomItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvKnockRequestItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
@@ -49,7 +58,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         IFileDownloadedListener, IMInviteLaunchEventListener,IMLiveRoomEventListener,
         IMOtherEventListener, TariffPromptManager.OnGetRoomTariffInfoListener,
         OnGetAudienceListCallback, OnGetAudienceDetailInfoCallback, IMLoginStatusListener,
-        OnRoomRebateCountTimeEndListener {
+        OnRoomRebateCountTimeEndListener, IMHangoutEventListener {
 
     //数据及管理
     protected String mRoomInId;           //房间ID,从过渡页传入
@@ -68,17 +77,17 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         TAG = BaseImplLiveRoomActivity.class.getSimpleName();
         super.onCreate(savedInstanceState);
         mLiveRoomCreditRebateManager = LiveRoomCreditRebateManager.getInstance();
-        initData();
+        //初始化管理器
+        mIMManager = IMManager.getInstance();
+        parseIntentExtraData();
         //后绑定listener，防止未初始化完成收到通知异常
         initIMListener();
-        //
-        getRoomInItem();
     }
 
     /**
      * 数据初始化
      */
-    private void initData(){
+    private void parseIntentExtraData(){
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             if(bundle.containsKey(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ID)){
@@ -101,6 +110,9 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
                 isHasPermission = bundle.getBoolean(LiveRoomTransitionActivity.KEY_HAS_PERMISSION);
             }
         }
+
+        //从底层缓存取直播间信息对象
+        getRoomInItem();
 
         if(mIMRoomInItem != null){
             //更新本地信用点/返点及房间人数信息
@@ -143,7 +155,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     private void getRoomInItem(){
         if(!TextUtils.isEmpty(mRoomInId)){
             mIMRoomInItem = mIMManager.getRoomInItem(mRoomInId);
-            Log.d(TAG,"getRoomInItem:"+ mIMRoomInItem.roomId);
+            Log.d(TAG,"getRoomInItem:"+ mRoomInId);
         }
     }
 
@@ -193,11 +205,11 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
      * 初始化IM底层相关
      */
     private void initIMListener(){
-        mIMManager = IMManager.getInstance();
         mIMManager.registerIMInviteLaunchEventListener(this);
         mIMManager.registerIMLiveRoomEventListener(this);
         mIMManager.registerIMOtherEventListener(this);
         mIMManager.registerIMLoginStatusListener(this);
+        mIMManager.registerIMHangoutEventListener(this);
     }
 
     /**
@@ -208,6 +220,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         mIMManager.unregisterIMLiveRoomEventListener(this);
         mIMManager.unregisterIMOtherEventListener(this);
         mIMManager.unregisterIMLoginStatusListener(this);
+        mIMManager.unregisterIMHangoutEventListener(this);
     }
 
     //------------------点击事件-------------------------------
@@ -364,7 +377,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {
+    public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId) {
         Log.d(TAG,"OnRecvChangeVideoUrl-roomId:"+roomId+" isAnchor:"+isAnchor+" playUrl:"+playUrls);
         if(!isCurrentRoom(roomId)){
             return;
@@ -612,6 +625,86 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     @Override
     public void onRoomRebateCountTimeEnd() {
         Log.d(TAG,"onRoomRebateCountTimeEnd");
+    }
+
+    @Override
+    public void OnRecvRecommendHangoutNotice(IMHangoutRecommendItem item) {
+
+    }
+
+    @Override
+    public void OnRecvDealInvitationHangoutNotice(IMDealInviteItem item) {
+
+    }
+
+    @Override
+    public void OnEnterHangoutRoom(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMHangoutRoomItem item) {
+
+    }
+
+    @Override
+    public void OnLeaveHangoutRoom(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
+
+    }
+
+    @Override
+    public void OnRecvEnterHangoutRoomNotice(IMRecvEnterRoomItem item) {
+
+    }
+
+    @Override
+    public void OnRecvLeaveHangoutRoomNotice(IMRecvLeaveRoomItem item) {
+
+    }
+
+    @Override
+    public void OnSendHangoutGift(boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem, double credit) {
+
+    }
+
+    @Override
+    public void OnRecvHangoutGiftNotice(IMMessageItem item) {
+
+    }
+
+    @Override
+    public void OnRecvKnockRequestNotice(IMRecvKnockRequestItem item) {
+
+    }
+
+    @Override
+    public void OnRecvLackCreditHangoutNotice(IMRecvLeaveRoomItem item) {
+
+    }
+
+    @Override
+    public void OnControlManPushHangout(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String[] manPushUrl) {
+
+    }
+
+    @Override
+    public void OnSendHangoutRoomMsg(boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
+
+    }
+
+    @Override
+    public void OnRecvHangoutRoomMsg(IMMessageItem item) {
+
+    }
+
+    @Override
+    public void OnRecvAnchorCountDownEnterHangoutRoomNotice(IMHangoutCountDownItem item) {
+
+    }
+
+    @Override
+    public void OnRecvHandoutInviteNotice(IMHangoutInviteItem item) {
+
+    }
+
+    @Override
+    public void OnRecvHangoutCreditRunningOutNotice(String roomId, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
+
     }
 
     //------------------勋章---------------------------------

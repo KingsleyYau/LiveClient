@@ -16,8 +16,16 @@ import net.qdating.filter.LSImageUtil;
  *
  */
 public class LSVideoHardDecoderFrame {
+	/**
+	 * 时间戳
+	 */
 	public int timestamp = -1;
-	
+
+	/**
+	 * 是否错误帧
+	 */
+	public boolean bError = false;
+
 	/***
 	 * @see android.graphics.ImageFormat
 	 */

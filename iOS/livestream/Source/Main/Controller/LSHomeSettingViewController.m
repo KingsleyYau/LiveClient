@@ -84,29 +84,22 @@
 
 
 - (void)loadSettingData {
-    NSMutableArray *sectionFirstArray = [NSMutableArray array];
-    LSHomeSetItemObject *item = [[LSHomeSetItemObject alloc] init];
-    item.iconName = @"Setting_Message_Icon";
-    item.titleName = @"Chat";
-    item.firstType = SettingFirstTypeChat;
-    [sectionFirstArray addObject:item];
     
-    LSHomeSetItemObject *item1 = [[LSHomeSetItemObject alloc] init];
-    item1.iconName = @"Setting_Mail_Icon";
-    item1.titleName = @"Mail";
-    item1.firstType = SettingFirstTypeMail;
-    [sectionFirstArray addObject:item1];
+    
+    
+    
+    
+    NSMutableArray *sectionFirstArray = [NSMutableArray array];
     
     
     // TODO:暂缺少sayhi图标
     if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
         LSHomeSetItemObject *item2 = [[LSHomeSetItemObject alloc] init];
-        item2.iconName = @"Setting_Message_Icon";
+        item2.iconName = @"Setting_SayHi_Icon";
         item2.titleName = @"SayHi";
         item2.firstType = SettingFirstTypeSayHi;
         [sectionFirstArray addObject:item2];
     }
-
     
     
     LSHomeSetItemObject *item3 = [[LSHomeSetItemObject alloc] init];
@@ -114,6 +107,18 @@
     item3.titleName = @"Greeting Mail";
     item3.firstType = SettingFirstTypeGreeting;
     [sectionFirstArray addObject:item3];
+    
+    LSHomeSetItemObject *item1 = [[LSHomeSetItemObject alloc] init];
+    item1.iconName = @"Setting_Mail_Icon";
+    item1.titleName = @"Mail";
+    item1.firstType = SettingFirstTypeMail;
+    [sectionFirstArray addObject:item1];
+    
+    LSHomeSetItemObject *item = [[LSHomeSetItemObject alloc] init];
+    item.iconName = @"Setting_Message_Icon";
+    item.titleName = @"Chat";
+    item.firstType = SettingFirstTypeChat;
+    [sectionFirstArray addObject:item];
     
     if ([LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
         LSHomeSetItemObject *item4 = [[LSHomeSetItemObject alloc] init];
@@ -126,17 +131,19 @@
     self.titleArray = sectionFirstArray;
     
     NSMutableArray *sectionSecondArray = [NSMutableArray array];
-    LSHomeSetItemObject *sectionSecondItem = [[LSHomeSetItemObject alloc] init];
-    sectionSecondItem.iconName = @"Setting_Ticket_Icon";
-    sectionSecondItem.titleName = @"My Show Tickets";
-    sectionSecondItem.secondType = SettingSecondTypeShow;
-    [sectionSecondArray addObject:sectionSecondItem];
     
     LSHomeSetItemObject *sectionSecondItem1 = [[LSHomeSetItemObject alloc] init];
     sectionSecondItem1.iconName = @"Setting_Bookings_Icon";
     sectionSecondItem1.titleName = @"My Bookings";
     sectionSecondItem1.secondType = SettingSecondTypeBooks;
     [sectionSecondArray addObject:sectionSecondItem1];
+    
+  
+    LSHomeSetItemObject *sectionSecondItem = [[LSHomeSetItemObject alloc] init];
+    sectionSecondItem.iconName = @"Setting_Ticket_Icon";
+    sectionSecondItem.titleName = @"My Show Tickets";
+    sectionSecondItem.secondType = SettingSecondTypeShow;
+    [sectionSecondArray addObject:sectionSecondItem];
     
     LSHomeSetItemObject *sectionSecondItem2 = [[LSHomeSetItemObject alloc] init];
     sectionSecondItem2.iconName = @"Setting_BackPack_Icon";

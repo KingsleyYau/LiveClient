@@ -39,7 +39,7 @@ import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
@@ -625,7 +625,7 @@ public class HotListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private boolean isGotoLogin(){
         if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
-            RegisterActivity.launchRegisterActivity(mContext);
+            LoginNewActivity.launchRegisterActivity(mContext);
             return true;
         }
         return false;

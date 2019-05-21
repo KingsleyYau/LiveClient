@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import static net.qdating.filter.LSImageShader.ledChar;
 
 /**
- * YUV渲染滤镜
+ * YUV输出滤镜
  */
 public class LSImageOutputYuvFilter extends LSImageBufferFilter {
 	/**

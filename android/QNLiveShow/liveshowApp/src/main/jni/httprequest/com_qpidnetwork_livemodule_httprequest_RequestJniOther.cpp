@@ -757,9 +757,8 @@ JNIEXPORT jlong Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_Upda
 	jint len = env->GetArrayLength(interests);
 	for(int i = 0; i < len; i++) {
 		jstring interest = (jstring)env->GetObjectArrayElement(interests, i);
-		const char *cpInterest = env->GetStringUTFChars(interest, 0);
+		string cpInterest = JString2String(env, interest);
 		interestList.push_back(cpInterest);
-		env->ReleaseStringUTFChars(interest, cpInterest);
 	}
 
 	taskId = gHttpRequestController.UpdateProfile(&gDomainRequestManager, weight, height, language, ethnicity, religion,
@@ -933,65 +932,52 @@ RequestPhoneInfoCallback gRequestPhoneInfoCallback;
  	// manId
  	string strManId("");
  	if (NULL != manId) {
- 		cpTemp = env->GetStringUTFChars(manId, 0);
- 		strManId = cpTemp;
- 		env->ReleaseStringUTFChars(manId, cpTemp);
+ 		strManId = JString2String(env, manId);
  	}
 
  	// verName
  	string strVerName("");
  	if (NULL != verName) {
- 		cpTemp = env->GetStringUTFChars(verName, 0);
- 		strVerName = cpTemp;
- 		env->ReleaseStringUTFChars(verName, cpTemp);
+ 		strVerName = JString2String(env, verName);
  	}
 
  	// lineNumber
  	string strLineNumber("");
  	if (NULL != lineNumber) {
- 		cpTemp = env->GetStringUTFChars(lineNumber, 0);
- 		strLineNumber = cpTemp;
- 		env->ReleaseStringUTFChars(lineNumber, cpTemp);
+ 		strLineNumber = JString2String(env, lineNumber);
+
  	}
 
  	// simOptName
  	string strSimOptName("");
  	if (NULL != simOptName) {
- 		cpTemp = env->GetStringUTFChars(simOptName, 0);
- 		strSimOptName = cpTemp;
- 		env->ReleaseStringUTFChars(simOptName, cpTemp);
+ 		strSimOptName = JString2String(env, simOptName);
+
  	}
 
  	// simOpt
  	string strSimOpt("");
  	if (simOpt) {
- 		cpTemp = env->GetStringUTFChars(simOpt, 0);
- 		strSimOpt = cpTemp;
- 		env->ReleaseStringUTFChars(simOpt, cpTemp);
+ 		strSimOpt = JString2String(env, simOpt);
+
  	}
 
  	// simCountryIso
  	string strSimCountryIso("");
  	if (NULL != simCountryIso) {
- 		cpTemp = env->GetStringUTFChars(simCountryIso, 0);
- 		strSimCountryIso = cpTemp;
- 		env->ReleaseStringUTFChars(simCountryIso, cpTemp);
+ 		strSimCountryIso = JString2String(env, simCountryIso);
  	}
 
  	// simState
  	string strSimState("");
  	if (NULL != simState) {
- 		cpTemp = env->GetStringUTFChars(simState, 0);
- 		strSimState = cpTemp;
- 		env->ReleaseStringUTFChars(simState, cpTemp);
+ 		strSimState = JString2String(env, simState);
  	}
 
  	// deviceId
  	string strDeviceId("");
  	if (NULL != deviceId) {
- 		cpTemp = env->GetStringUTFChars(deviceId, 0);
- 		strDeviceId = cpTemp;
- 		env->ReleaseStringUTFChars(deviceId, cpTemp);
+ 		strDeviceId = JString2String(env, deviceId);
  	}
 
  	string strDensityDpi = GetPhoneDensityDPI();

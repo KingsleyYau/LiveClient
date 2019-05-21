@@ -111,6 +111,8 @@ void AudioDecoderAAC::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Pause( this : %p )", this);
     
     Stop();
+
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Pause( this : %p, [Success] )", this);
 }
     
 bool AudioDecoderAAC::Start() {
@@ -390,18 +392,18 @@ void AudioDecoderAAC::DecodeAudioFrame(
 
 	} else {
 		audioFrame = new AudioFrame();
+		FileLevelLog("rtmpdump",
+				KLog::LOG_WARNING,
+				"AudioDecoderAAC::DecodeAudioFrame( "
+				"this : %p, "
+				"[New Audio Frame], "
+				"frame : %p "
+				")",
+				this,
+				audioFrame
+				);
 	}
 	mFreeBufferList.unlock();
-    
-//    AudioFrame* newAudioFrame = NULL;
-//    if( !mFreeBufferList.empty() ) {
-//        newAudioFrame = (AudioFrame *)mFreeBufferList.front();
-//        mFreeBufferList.pop_front();
-//        
-//    } else {
-//        newAudioFrame = new AudioFrame();
-//    }
-//    mFreeBufferList.unlock();
     
     // 更新数据格式
 	audioFrame->ResetFrame();
@@ -428,25 +430,7 @@ void AudioDecoderAAC::DecodeAudioFrame(
         mDecodeBufferList.lock();
         mDecodeBufferList.push_back(audioFrame);
         mDecodeBufferList.unlock();
-//        // 解码数据
-//        bFlag = DecodeAudioFrame(audioFrame, newAudioFrame);
-//        if( bFlag ) {
-//            if( mpCallback ) {
-//                mpCallback->OnDecodeAudioFrame(this, newAudioFrame, newAudioFrame->mTimestamp);
-//            } else {
-//                mFreeBufferList.lock();
-//                mFreeBufferList.push_back(newAudioFrame);
-//                mFreeBufferList.unlock();
-//            }
-//        }
     }
-    
-//    mFreeBufferList.lock();
-//    mFreeBufferList.push_back(audioFrame);
-//    if( !bFlag ) {
-//        mFreeBufferList.push_back(newAudioFrame);
-//    }
-//    mFreeBufferList.unlock();
 }
 
 bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAudioFrame) {
@@ -600,6 +584,16 @@ void AudioDecoderAAC::DecodeAudioHandle() {
                 mFreeBufferList.pop_front();
             } else {
                 dstFrame = new AudioFrame();
+        		FileLevelLog("rtmpdump",
+        				KLog::LOG_WARNING,
+        				"AudioDecoderAAC::DecodeAudioHandle( "
+        				"this : %p, "
+        				"[New Audio Frame], "
+        				"frame : %p "
+        				")",
+        				this,
+						dstFrame
+        				);
             }
             mFreeBufferList.unlock();
             
@@ -615,7 +609,7 @@ void AudioDecoderAAC::DecodeAudioHandle() {
             // 释放待编码帧
             ReleaseAudioFrame(srcFrame);
         }
-        
+
         Sleep(1);
     }
     

@@ -64,7 +64,7 @@ public class LMClient {
 	 * LM 消息管理器 释放LM管理器（用于登出）
 	 * @return
 	 */
-	static public native boolean ReleaseLMManager();
+	static public native boolean ReleaseLMManager(long imClient);
 
 
 	/**

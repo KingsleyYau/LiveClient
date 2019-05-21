@@ -133,6 +133,9 @@
                 // TODO:进入SayHi详情界面
                   _sayhiId = [LSURLQueryParam urlParamForKey:@"sayhiid" url:url];
             }break;
+            case LiveUrlTypeGreetMailDetail: {
+                _loiId = [LSURLQueryParam urlParamForKey:@"loi_id" url:url];
+            }break;
             default: {
             } break;
         }
@@ -221,6 +224,8 @@
         type = LiveUrlTypeSendSayHi;
     }else if ([moduleString isEqualToString:@"sayhi_detail"]) {
         type = LiveUrlTypeSayHiDetail;
+    }else if ([moduleString isEqualToString:@"greetmaildetail"]) {
+        type = LiveUrlTypeGreetMailDetail;
     }
     
     return type;

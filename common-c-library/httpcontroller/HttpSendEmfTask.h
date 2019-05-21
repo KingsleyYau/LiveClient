@@ -39,7 +39,8 @@ public:
                   string emfId,
                   string content,
                   list<string> imgList,
-                  LSLetterComsumeType comsumeType
+                  LSLetterComsumeType comsumeType,
+                  string sayHiResponseId
                   );
     
 protected:

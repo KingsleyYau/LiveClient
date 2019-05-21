@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.8.查看主播回复(扣费)
+ *        desc: 14.8.获取SayHi回复详情
  */
 
 #ifndef HttpReadResponseTask_H_

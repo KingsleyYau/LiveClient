@@ -12,6 +12,7 @@ import com.qpidnetwork.livemodule.livemessage.LMManager;
 import com.qpidnetwork.livemodule.livemessage.item.LMPrivateMsgContactItem;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +84,8 @@ public class MessageContactListFragment extends BaseListFragment implements LMLi
     protected void onDefaultEmptyGuide() {
         super.onDefaultEmptyGuide();
         //点击空页引导，跳转回主页
-        MainFragmentActivity.launchActivityWithListType(getActivity(), 0);
+//        MainFragmentActivity.launchActivityWithListType(getActivity(), 0);
+        MainFragmentActivity.launchActivityWithListType(getActivity(), MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER);
     }
 
     /**

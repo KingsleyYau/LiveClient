@@ -1,0 +1,4 @@
+<resources>
+    <!-- Hang-Out -->
+    <dimen name="live_hangout_list_friends_img_margin">3dp</dimen>
+</resources>

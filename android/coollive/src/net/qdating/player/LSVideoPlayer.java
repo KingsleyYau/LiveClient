@@ -12,6 +12,11 @@ import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.utils.Log;
 
+/**
+ * 视频软渲染器
+ * @author max
+ *
+ */
 public class LSVideoPlayer implements ILSVideoRendererJni {
 	/**
 	 * 渲染绑定器
@@ -46,7 +51,7 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
 		drawBitmap(data, size, width, height);
 
 		synchronized (this) {
-			if( rendererBinder != null ) {
+			if( rendererBinder != null && rendererBinder.playerRenderer != null && rendererBinder.playerSurfaceView != null ) {
 				// 更新滤镜输入
 				rendererBinder.playerRenderer.updateBmpFrame(bitmap);
 				// 通知界面刷新
@@ -73,7 +78,7 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
     	}
 
 		synchronized (this) {
-			if( rendererBinder != null ) {
+			if( rendererBinder != null && rendererBinder.playerRenderer != null ) {
 				rendererBinder.playerRenderer.setOriginalSize(width, height);
 			}
 		}

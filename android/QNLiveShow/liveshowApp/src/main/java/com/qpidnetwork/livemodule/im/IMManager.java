@@ -11,7 +11,6 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetUserInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
@@ -19,7 +18,9 @@ import com.qpidnetwork.livemodule.im.listener.IMBookingReplyItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMDealInviteItem;
 import com.qpidnetwork.livemodule.im.listener.IMGiftMessageContent;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutAnchorItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutCountDownItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutInviteItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutMsgItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutRecommendItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutRoomItem;
@@ -38,7 +39,6 @@ import com.qpidnetwork.livemodule.im.listener.IMRecvHangoutGiftItem;
 import com.qpidnetwork.livemodule.im.listener.IMRecvKnockRequestItem;
 import com.qpidnetwork.livemodule.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
-import com.qpidnetwork.livemodule.im.listener.IMScheduleRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMTextMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
@@ -85,7 +85,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	private final int mAutoReloginTime = 30 * 1000;	//自动登录间隔时长30秒
 
 	/* 直播间相关 */
-	private HashMap<String , IMRoomInItem> mMapRoomItems = new HashMap<>();	//在这维护房间信息为了解决:BUG#14463 add by Jagger 2019-1-17
+	private HashMap<String , Object> mRoomInfoMap = new HashMap<>();	//在这维护房间信息为了解决:BUG#14463 add by Jagger 2019-1-17
 
 	/*基础管理类*/
 	private IMUserBaseInfoManager mIMUserBaseInfoManager;
@@ -322,6 +322,24 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	public boolean unregisterIMShowEventListener(IMShowEventListener listener){
 		return mListenerManager.unregisterIMShowEventListener(listener);
 	}
+
+	/**
+	 * 注册hangout事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean registerIMHangoutEventListener(IMHangoutEventListener listener){
+		return mListenerManager.registerIMHangoutEventListener(listener);
+	}
+
+	/**
+	 * 注销hangout事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean unregisterIMHangoutEventListener(IMHangoutEventListener listener){
+		return mListenerManager.unregisterIMHangoutEventListener(listener);
+	}
 	
 	/**
 	 * 初始化Client及相关
@@ -530,17 +548,72 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	 * @return
 	 */
 	public IMRoomInItem getRoomInItem(String roomId){
-		if(mMapRoomItems.containsKey(roomId)){
-			return mMapRoomItems.get(roomId);
+		IMRoomInItem item = null;
+		Object roomInfo = getLiveRoomInfo(roomId);
+		if(roomInfo instanceof IMRoomInItem){
+			item = (IMRoomInItem)roomInfo;
 		}
-		return null;
+		return item;
+	}
+
+	/**
+	 * 获取直播间类型
+	 * @param roomId
+	 * @return
+	 */
+	public IMRoomInItem.IMLiveRoomType getRoomType(String roomId){
+		IMRoomInItem.IMLiveRoomType roomType = IMRoomInItem.IMLiveRoomType.Unknown;
+		Object roomInfo = getLiveRoomInfo(roomId);
+		if(roomInfo instanceof IMRoomInItem){
+			roomType = ((IMRoomInItem)roomInfo).roomType;
+		}else if(roomInfo instanceof IMHangoutRoomItem){
+			roomType = ((IMHangoutRoomItem)roomInfo).roomType;
+		}
+		return roomType;
 	}
 
 	/**
 	 * 清空所有直播间信息缓存
 	 */
 	public void cleanRoomInItems(){
-		mMapRoomItems.clear();
+		synchronized (mRoomInfoMap){
+			mRoomInfoMap.clear();
+		}
+	}
+
+	/**
+	 * 添加到进行中直播间列表
+	 * @param item
+	 */
+	private void addToRunningRoomList(String roomId, Object item){
+		synchronized (mRoomInfoMap){
+			if(item != null){
+				mRoomInfoMap.put(roomId, item);
+			}
+		}
+	}
+
+	/**
+	 * 清除直播间信息
+	 * @param roomId
+	 */
+	private void deleteFromRunningRoomList(String roomId){
+		synchronized (mRoomInfoMap){
+			mRoomInfoMap.remove(roomId);
+		}
+	}
+
+	/**
+	 * 获取直播间信息
+	 * @param roomId
+	 * @return
+	 */
+	public Object getLiveRoomInfo(String roomId){
+		Object item =  null;
+		synchronized (mRoomInfoMap){
+			item = mRoomInfoMap.get(roomId);
+		}
+		return item;
 	}
 
 	/***************************** IM Client 功能接口   ********************************************/
@@ -935,7 +1008,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		if(success && roomInfo != null){
 			mRoomId = roomInfo.roomId;
 			mLiveInAnchorId = roomInfo.userId;
-			mMapRoomItems.put(mRoomId, roomInfo);
+			addToRunningRoomList(roomInfo.roomId, roomInfo);
 			Log.i(TAG, "OnRoomIn success mInvitationId: " + mInvitationId
 					+ " mRoomId: " + mRoomId + " mLiveInAnchorId: " + mLiveInAnchorId);
 			if(null != LoginManager.getInstance() && null != LoginManager.getInstance().getLoginItem()){
@@ -965,7 +1038,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		if(success && roomInfo != null){
 			mRoomId = roomInfo.roomId;
 			mLiveInAnchorId = roomInfo.userId;
-			mMapRoomItems.put(mRoomId, roomInfo);
+			addToRunningRoomList(mRoomId, roomInfo);
 			Log.i(TAG, "OnPublicRoomIn success mInvitationId: " + mInvitationId
 					+ " mRoomId: " + mRoomId + " mLiveInAnchorId: " + mLiveInAnchorId);
 			if(null != LoginManager.getInstance() && null != LoginManager.getInstance().getLoginItem()){
@@ -1049,31 +1122,6 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType,
 							 String errMsg, String talentInviteId, String talentId) {
 		mListenerManager.OnSendTalent(reqId , success , errType ,errMsg, talentInviteId, talentId);
-	}
-
-	@Override
-	public void OnEnterHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMHangoutRoomItem item) {
-
-	}
-
-	@Override
-	public void OnLeaveHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
-
-	}
-
-	@Override
-	public void OnSendHangoutGift(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, double credit) {
-
-	}
-
-	@Override
-	public void OnControlManPushHangout(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] manPushUrl) {
-
-	}
-
-	@Override
-	public void OnSendHangoutRoomMsg(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
-
 	}
 
 	@Override
@@ -1182,8 +1230,24 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {
-		mListenerManager.OnRecvChangeVideoUrl(roomId, isAnchor, playUrls);
+	public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId) {
+		if(playUrls != null && playUrls.length > 0){
+			for(String url : playUrls){
+				Log.i(TAG, "OnRecvChangeVideoUrl videoUrl: " + url);
+			}
+		}
+
+		//收到主播流切换
+		IMHangoutRoomItem hangoutRoomInfo = getHangoutRoomInfo(roomId);
+		if(hangoutRoomInfo != null && hangoutRoomInfo.livingAnchorList != null){
+			for(IMHangoutAnchorItem anchorItem : hangoutRoomInfo.livingAnchorList){
+				if(anchorItem.anchorId.equals(userId)){
+					anchorItem.videoUrl = playUrls;
+				}
+			}
+		}
+
+		mListenerManager.OnRecvChangeVideoUrl(roomId, isAnchor, playUrls, userId);
 	}
 
 	@Override
@@ -1200,12 +1264,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	@Override
 	public void OnRecvSendSystemNotice(String roomId, String message, String link, IMSystemType type){
 		Log.d(TAG,"OnRecvSendSystemNotice-roomId:"+roomId+" message:"+message+" link:"+link+" type:"+type);
-		IMSysNoticeMessageContent msgContent = new IMSysNoticeMessageContent(message,link,
-				type == IMSystemType.warn ? IMSysNoticeMessageContent.SysNoticeType.Warning :
-						IMSysNoticeMessageContent.SysNoticeType.Normal);
-		IMMessageItem msgItem = new IMMessageItem(roomId,mMsgIdIndex.getAndIncrement(),"",
-				IMMessageItem.MessageType.SysNotice,msgContent);
-		mListenerManager.OnRecvSendSystemNotice(msgItem);
+		buildSystemNoticeMessage(roomId, message, link, type);
 	}
 
 	@Override
@@ -1331,49 +1390,428 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	// ---------------   多人互动   --------------
-	@Override
-	public void OnRecvRecommendHangoutNotice(IMHangoutRecommendItem item) {
+	/**
+	 * 获取直播间信息
+	 * @param roomId
+	 * @return
+	 */
+	public IMHangoutRoomItem getHangoutRoomInfo(String roomId){
+		IMHangoutRoomItem item = null;
+		Object roomInfo = getLiveRoomInfo(roomId);
+		if(roomInfo instanceof IMHangoutRoomItem){
+			item = (IMHangoutRoomItem)roomInfo;
+		}
+		return item;
+	}
 
+	/**
+	 * 创建多人互动直播间
+	 * @return
+	 */
+	public int createHangoutRoom(){
+		int reqId = IM_INVALID_REQID;
+		Log.i(TAG, "createHangoutRoom");
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			Log.d(TAG,"createHangoutRoom-reqId1:"+reqId);
+			if(!IMClient.EnterHangoutRoom(reqId, "", true)){
+				reqId = IM_INVALID_REQID;
+				Log.d(TAG,"createHangoutRoom-reqId2:"+reqId);
+			}
+		}
+		if(reqId == IM_INVALID_REQID){
+			//未登录或本地调用错误
+			mListenerManager.OnEnterHangoutRoom(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), null);
+		}
+		return reqId;
+	}
+
+	/**
+	 * 进入多人互动直播间
+	 * @param roomId
+	 * @return
+	 */
+	public int enterHangoutRoom(String roomId){
+		int reqId = IM_INVALID_REQID;
+		Log.i(TAG, "enterHangoutRoom");
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			Log.d(TAG,"enterHangoutRoom-reqId1:"+reqId);
+			if(!IMClient.EnterHangoutRoom(reqId, roomId, false)){
+				reqId = IM_INVALID_REQID;
+				Log.d(TAG,"enterHangoutRoom-reqId2:"+reqId);
+			}
+		}
+		if(reqId == IM_INVALID_REQID){
+			//未登录或本地调用错误
+			mListenerManager.OnEnterHangoutRoom(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), null);
+		}
+		return reqId;
+	}
+
+	/**
+	 * 退出直播间并清除房间id
+	 * @param roomId
+	 * @return
+	 */
+	public int outHangOutRoomAndClearFlag(String roomId){
+		if(!TextUtils.isEmpty(mRoomId) && mRoomId.equals(roomId)){
+			mRoomId = "";
+		}
+		return exitHangoutRoom(roomId);
+	}
+
+	/**
+	 * 退出多人互动直播间
+	 * @param roomId
+	 * @return
+	 */
+	public int exitHangoutRoom(String roomId){
+		//清除主播信息，解决互斥
+		mRoomId = "";
+
+		//删除直播间本地缓存信息
+		deleteFromRunningRoomList(roomId);
+
+		int reqId = IM_INVALID_REQID;
+		Log.i(TAG, "exitHangoutRoom");
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			Log.d(TAG,"exitHangoutRoom-reqId1:"+reqId);
+			if(!IMClient.LeaveHangoutRoom(reqId, roomId)){
+				reqId = IM_INVALID_REQID;
+				Log.d(TAG,"exitHangoutRoom-reqId2:"+reqId);
+			}
+		}
+		if(reqId == IM_INVALID_REQID){
+			//未登录或本地调用错误
+			mListenerManager.OnLeaveHangoutRoom(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description));
+		}
+		return reqId;
+	}
+
+	/**
+	 * 直播间互动，开启或关闭视频
+	 * @param roomId
+	 * @param operateType
+	 * @return
+	 */
+	public int ControlHangoutManPush(String roomId, IMClient.IMVideoInteractiveOperateType operateType){
+		int reqId = IM_INVALID_REQID;
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			if(!IMClient.ControlManPushHangout(reqId, roomId, operateType)){
+				reqId = IM_INVALID_REQID;
+			}
+		}
+		if(reqId == IM_INVALID_REQID){
+			//未登录或本地调用错误
+			mListenerManager.OnControlManPushHangout(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), null);
+		}
+		return reqId;
+	}
+
+	/**
+	 * 发送多人互动直播间礼物
+	 * @param roomId
+	 * @param toUid
+	 * @param giftItem
+	 * @param isPackage
+	 * @param isPrivate
+	 * @param count
+	 * @param isMultiClick
+	 * @param multiStart
+	 * @param multiEnd
+	 * @param multiClickId
+	 * @return
+	 */
+	public IMMessageItem sendHangoutRoomGift(String roomId, String[] toUid, GiftItem giftItem, boolean isPackage, boolean isPrivate,
+											 int count, boolean isMultiClick, int multiStart, int multiEnd, int multiClickId){
+		int reqId = IMClient.GetReqId();
+		IMGiftMessageContent msgContent = new IMGiftMessageContent(giftItem.id, giftItem.name, count,
+				isMultiClick, multiStart, multiEnd, multiClickId,isPrivate);
+		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(),
+				mLoginItem.userId, mLoginItem.nickName, "", mLoginItem.level, isPrivate, toUid,
+				IMMessageItem.MessageType.Gift, null, msgContent);
+
+		String tempToUid = "";
+		if(toUid != null && toUid.length == 1){
+			//当且仅当用户数目为1时，视为发送给某人
+			tempToUid = toUid[0];
+		}else{
+			tempToUid = "";
+		}
+		if(!mIsLogin || !IMClient.SendHangoutGift(reqId, roomId, mLoginItem.nickName, tempToUid, giftItem.id,
+				giftItem.name, isPackage, isPrivate, count, isMultiClick, multiStart, multiEnd, multiClickId)){
+			mListenerManager.OnSendHangoutGift(false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), msgItem, 0);
+			return null;
+		}else{
+			//存储发送中消息
+			mSendingMsgMap.put(Integer.valueOf(reqId), msgItem);
+		}
+		return msgItem;
+	}
+
+	/**
+	 * 发送消息
+	 * @param roomId
+	 * @param msg
+	 * @param targetIds
+	 * @return
+	 */
+	public IMMessageItem sendHangoutRoomMessage(String roomId, String msg, String[] targetIds){
+		int reqId = IMClient.GetReqId();
+		Log.logD(TAG,"sendRoomMsg-roomId:"+roomId+" msg:"+msg+" reqId0:"+reqId);
+		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(),
+				mLoginItem.userId, mLoginItem.nickName, "", mLoginItem.level, false, targetIds,
+				IMMessageItem.MessageType.Normal, new IMTextMessageContent(msg), null);
+		boolean result = !mIsLogin || !IMClient.SendHangoutRoomMsg(reqId, roomId, mLoginItem.nickName, msg, targetIds);
+		Log.d(TAG,"sendRoomMsg-mIsLogin:"+mIsLogin+" result:"+result);
+		if(result){
+			mListenerManager.OnSendHangoutRoomMsg(false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), msgItem);
+			return null;
+		}else{
+			//存储发送中消息
+			mSendingMsgMap.put(Integer.valueOf(reqId), msgItem);
+		}
+		return msgItem;
 	}
 
 	@Override
-	public void OnRecvDealInvitationHangoutNotice(IMDealInviteItem item) {
+	public void OnEnterHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMHangoutRoomItem item) {
+		//缓存直播间信息
+		if(success && item != null){
+			Log.d(TAG,"OnEnterHangoutRoom roomid:" + item.roomId );
+			if(item.livingAnchorList != null && item.livingAnchorList.size() > 0){
+				for(IMHangoutAnchorItem anchorItem : item.livingAnchorList){
+					Log.d(TAG,"OnEnterHangoutRoom livingAnchorList anchorId:" + anchorItem.anchorId + ",anchorStatus:" + anchorItem.anchorStatus.name());
+					if(anchorItem.videoUrl != null && anchorItem.videoUrl.length > 0){
+						for(String videoUrl : anchorItem.videoUrl) {
+							Log.d(TAG, "OnEnterHangoutRoom livingAnchorList videoUrl:" + videoUrl);
+						}
+					}
+				}
+			}
+			//清除主播信息，解决互斥
+			mRoomId = item.roomId;
+			addToRunningRoomList(item.roomId, item);
+		}
 
+		mListenerManager.OnEnterHangoutRoom(reqId , success , errType ,errMsg, item);
+	}
+
+	@Override
+	public void OnLeaveHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
+		mListenerManager.OnLeaveHangoutRoom(reqId , success , errType ,errMsg);
+	}
+
+	@Override
+	public void OnSendHangoutGift(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, double credit) {
+		Log.d(TAG,"OnSendGift-errType:"+errType+" errMsg:"+errMsg+" reqId:"+reqId
+				+" success:"+success+" credit:"+credit);
+		IMMessageItem msgItem = mSendingMsgMap.remove(Integer.valueOf(reqId));
+		mListenerManager.OnSendHangoutGift(success , errType ,errMsg, msgItem, credit);
+	}
+
+	@Override
+	public void OnControlManPushHangout(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] manPushUrl) {
+		mListenerManager.OnControlManPushHangout(reqId , success , errType ,errMsg, manPushUrl);
+	}
+
+	@Override
+	public void OnSendHangoutRoomMsg(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
+		Log.d(TAG,"OnSendHangoutRoomMsg-errType:"+errType+" errMsg:"+errMsg+" reqId:"+reqId+" success:"+success);
+		IMMessageItem msgItem = mSendingMsgMap.remove(Integer.valueOf(reqId));
+		mListenerManager.OnSendHangoutRoomMsg(success , errType ,errMsg, msgItem);
+	}
+
+	@Override
+	public void OnRecvRecommendHangoutNotice(IMHangoutRecommendItem item) {
+		//生成系统公告通知
+		String message = "";
+		IMRoomInItem.IMLiveRoomType roomType = getRoomType(item.roomId);
+		if(roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
+			|| roomType == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom){
+			message = mContext.getString(R.string.hangout_anchor_recommand_private_tips , item.nickName , item.friendNickName);
+		}else if(roomType == IMRoomInItem.IMLiveRoomType.HangoutRoom){
+			message = mContext.getString(R.string.hangout_anchor_recommand_hangout_tips , item.nickName , item.friendNickName);
+		}
+		if(!TextUtils.isEmpty(message)){
+			buildSystemNoticeMessage(item.roomId, message, "", IMSystemType.common);
+		}
+
+		mListenerManager.OnRecvRecommendHangoutNotice(item);
+	}
+
+	@Override
+	public void  OnRecvDealInvitationHangoutNotice(IMDealInviteItem item) {
+		//如果主播应邀，更新房间中主播信息
+		addOrUpdateHangoutRoomInfo(item);
+
+		mListenerManager.OnRecvDealInvitationHangoutNotice(item);
 	}
 
 	@Override
 	public void OnRecvEnterHangoutRoomNotice(IMRecvEnterRoomItem item) {
-
+		if(item != null && item.pullUrl != null &&  item.pullUrl.length > 0){
+			for(String url : item.pullUrl){
+				Log.d(TAG,"OnRecvEnterHangoutRoomNotice pullUrl: " + url);
+			}
+		}
+		//同步主播信息到直播间信息
+		addOrUpdateHangoutRoomInfo(item);
+		mListenerManager.OnRecvEnterHangoutRoomNotice(item);
 	}
 
 	@Override
 	public void OnRecvLeaveHangoutRoomNotice(IMRecvLeaveRoomItem item) {
-
+		mListenerManager.OnRecvLeaveHangoutRoomNotice(item);
 	}
 
 	@Override
 	public void OnRecvHangoutGiftNotice(IMRecvHangoutGiftItem item) {
+//		mListenerManager.OnRecvHangoutGiftNotice(new IMMessageItem(mMsgIdIndex.getAndIncrement(), item));
+        Log.d(TAG,"OnRecvHangoutGiftNotice OnSendGift-errType :" + item.toUid);
 
+		// 2019/3/20 Hardy
+		IMMessageItem imMessageItem = new IMMessageItem(mMsgIdIndex.getAndIncrement(), item);
+
+		IMUserBaseInfoItem infoItem = getUserInfo(item.toUid);
+		IMTextMessageContent imTextMessageContent = null;
+		if (infoItem != null) {
+			imTextMessageContent = new IMTextMessageContent(infoItem.nickName);
+		}
+		imMessageItem.textMsgContent = imTextMessageContent;
+
+		mListenerManager.OnRecvHangoutGiftNotice(imMessageItem);
 	}
 
 	@Override
 	public void OnRecvKnockRequestNotice(IMRecvKnockRequestItem item) {
+		//生成系统公告通知
+		String message = mContext.getString(R.string.hangout_anchor_knock_tips , item.nickName);
+		if(!TextUtils.isEmpty(message)){
+			buildSystemNoticeMessage(item.roomId, message, "", IMSystemType.common);
+		}
 
+		mListenerManager.OnRecvKnockRequestNotice(item);
 	}
 
 	@Override
 	public void OnRecvLackCreditHangoutNotice(IMRecvLeaveRoomItem item) {
+		Log.i(TAG,"OnRecvLackCreditHangoutNotice-----> : "+item.isAnchor+"--> "+item.nickName);
 
+		// 2019/3/27 Hardy  直播中信用点不足，主播被踢
+        String msg = mContext.getString(R.string.hangout_system_no_credits, item.nickName);
+        buildSystemNoticeMessage(item.roomId, msg,"", IMSystemType.common);
+
+		mListenerManager.OnRecvLackCreditHangoutNotice(item);
 	}
 
 	@Override
 	public void OnRecvHangoutRoomMsg(IMHangoutMsgItem item) {
+		//收到普通文本消息
+//		mListenerManager.OnRecvHangoutRoomMsg(new IMMessageItem(mMsgIdIndex.getAndIncrement(), item));
 
+		// 2019/3/20 Hardy
+		//HangOut直播间接受消息的时候做@昵称文本插入处理
+		if(null != item && null != item.at && item.at.length > 0){
+			StringBuilder sb = new StringBuilder();
+			for(String id : item.at){
+				IMUserBaseInfoItem imUserBaseInfoItem = getUserInfo(id);
+				if(null != imUserBaseInfoItem){
+					sb.append("@");
+					sb.append(imUserBaseInfoItem.nickName);
+					sb.append(" ");
+				}
+			}
+			sb.append(item.msg);
+			item.msg = sb.toString();
+		}
+
+		mListenerManager.OnRecvHangoutRoomMsg(new IMMessageItem(mMsgIdIndex.getAndIncrement(), item));
 	}
 
 	@Override
 	public void OnRecvAnchorCountDownEnterHangoutRoomNotice(IMHangoutCountDownItem item) {
+		//同步信息主播倒数信息到直播间
+		IMHangoutRoomItem hangoutRoomInfo = getHangoutRoomInfo(item.roomId);
+		if(hangoutRoomInfo != null && hangoutRoomInfo.livingAnchorList != null){
+			for(IMHangoutAnchorItem anchorItem : hangoutRoomInfo.livingAnchorList){
+				if(anchorItem.anchorId.equals(item.anchorId)){
+					anchorItem.anchorStatus = IMHangoutAnchorItem.IMAnchorStatus.ReciprocalEnter;
+					anchorItem.leftSeconds = item.leftSecond;
+				}
+			}
+		}
 
+		mListenerManager.OnRecvAnchorCountDownEnterHangoutRoomNotice(item);
+	}
+
+	@Override
+	public void OnRecvHandoutInviteNotice(IMHangoutInviteItem item) {
+		mListenerManager.OnRecvHandoutInviteNotice(item);
+	}
+
+	@Override
+	public void OnRecvHangoutCreditRunningOutNotice(String roomId, LCC_ERR_TYPE errType, String errMsg) {
+		mListenerManager.OnRecvHangoutCreditRunningOutNotice(roomId, errType, errMsg);
+	}
+
+	/**
+	 * 更新或增加hangout直播间主播心信息
+	 * @param item
+	 */
+	private void addOrUpdateHangoutRoomInfo(IMDealInviteItem item){
+		if(item != null && item.type == IMDealInviteItem.IMAnchorReplyInviteType.Agree){
+			IMHangoutRoomItem hangoutRoomItem = getHangoutRoomInfo(item.roomId);
+			if(hangoutRoomItem != null){
+				boolean isExist = false;
+				if(hangoutRoomItem.livingAnchorList != null && hangoutRoomItem.livingAnchorList.size() > 0) {
+					for (IMHangoutAnchorItem anchorItem : hangoutRoomItem.livingAnchorList) {
+						if (anchorItem.anchorId.equals(item.anchorId)) {
+							isExist = true;
+						}
+					}
+				}
+				if(!isExist){
+					IMHangoutAnchorItem tempAnchorItem = new IMHangoutAnchorItem(item.anchorId, item.nickName, item.photoUrl, IMHangoutAnchorItem.IMAnchorStatus.InviteConfirm.ordinal(), "", 30, 0, null);
+					if(hangoutRoomItem.livingAnchorList == null){
+						hangoutRoomItem.livingAnchorList = new ArrayList<IMHangoutAnchorItem>();
+					}
+					hangoutRoomItem.livingAnchorList.add(tempAnchorItem);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 主播进入直播间，更新或添加主播信息
+	 * @param item
+	 */
+	private void addOrUpdateHangoutRoomInfo(IMRecvEnterRoomItem item){
+		if(item != null){
+			IMHangoutRoomItem hangoutRoomItem = getHangoutRoomInfo(item.roomId);
+			if(hangoutRoomItem != null){
+				boolean isExist = false;
+				if(hangoutRoomItem.livingAnchorList != null && hangoutRoomItem.livingAnchorList.size() > 0) {
+					for (IMHangoutAnchorItem anchorItem : hangoutRoomItem.livingAnchorList) {
+						if (anchorItem.anchorId.equals(item.userId)) {
+							//更新主播信息
+							anchorItem.videoUrl = item.pullUrl;
+							isExist = true;
+						}
+					}
+				}
+				if(!isExist){
+					IMHangoutAnchorItem tempAnchorItem = new IMHangoutAnchorItem(item.userId, item.nickName, item.photoUrl, IMHangoutAnchorItem.IMAnchorStatus.InviteConfirm.ordinal(), "", 30, 0, null);
+					if(hangoutRoomItem.livingAnchorList == null){
+						hangoutRoomItem.livingAnchorList = new ArrayList<IMHangoutAnchorItem>();
+					}
+					hangoutRoomItem.livingAnchorList.add(tempAnchorItem);
+				}
+			}
+		}
 	}
 
 	// ---------------  end 多人互动   --------------
@@ -1459,6 +1897,23 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		}
 	}
 
+	/*************************************** 消息生成器 *********************************/
+	/**
+	 * 生成系统公告消息通知
+	 * @param roomId
+	 * @param message
+	 * @param link
+	 * @param type
+	 */
+	private void buildSystemNoticeMessage(String roomId, String message, String link, IMSystemType type){
+		IMSysNoticeMessageContent msgContent = new IMSysNoticeMessageContent(message, link,
+				type == IMSystemType.warn ? IMSysNoticeMessageContent.SysNoticeType.Warning :
+						IMSysNoticeMessageContent.SysNoticeType.Normal);
+		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(),"",
+				IMMessageItem.MessageType.SysNotice,msgContent);
+		mListenerManager.OnRecvSendSystemNotice(msgItem);
+	}
+
 	/*************************************** 更新用户信息 *********************************/
 	/**
 	 * 更新当前用户信息
@@ -1504,5 +1959,14 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 			notify = true;
 		}
 		return notify;
+	}
+
+
+	/**
+	 * 记录IM是否登录
+	 * @return
+	 */
+	public boolean isIMLogined(){
+		return mIsLogin;
 	}
 }

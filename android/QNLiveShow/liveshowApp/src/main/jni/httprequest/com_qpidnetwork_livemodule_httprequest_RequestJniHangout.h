@@ -21,7 +21,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHa
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnSendInvitationHangoutCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_SendInvitationHangout
-  (JNIEnv *, jclass, jstring, jstring, jstring, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jstring, jboolean, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
@@ -55,6 +55,46 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHa
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutGiftList
         (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    GetHangoutOnlineAnchor
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutOnlineAnchor
+        (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    GetHangoutFriends
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnOnGetHangoutFriendsCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutFriends
+        (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    AutoInvitationHangoutLiveDisplay
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_AutoInvitationHangoutLiveDisplay
+        (JNIEnv *, jclass, jstring, jboolean, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    AutoInvitationClickLog
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_AutoInvitationClickLog
+        (JNIEnv *, jclass, jstring, jboolean, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    GetHangoutStatus
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutStatus
+        (JNIEnv *, jclass, jobject);
 
 
 #ifdef __cplusplus

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_controll"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/live_hangout_room_ctrl_min_size"
+    android:background="#B2000000"
+    android:gravity="right|bottom"
+    android:orientation="vertical"
+    android:paddingRight="13dp">
+
+    <!-- 退出 -->
+    <LinearLayout
+        android:id="@+id/ll_exitHangout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/live_size_8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:text="@string/hangout_liveroom_controll_exit"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_exitHangout"
+            android:layout_width="@dimen/live_hangout_bottom_opera_btn_size"
+            android:layout_height="@dimen/live_hangout_bottom_opera_btn_size"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_hangout_vediocontroll_exit" />
+
+
+    </LinearLayout>
+
+    <!-- 静音 -->
+    <LinearLayout
+        android:id="@+id/ll_silent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/live_size_8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:text="@string/hangout_liveroom_controll_silent"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_silent"
+            android:layout_width="@dimen/live_hangout_bottom_opera_btn_size"
+            android:layout_height="@dimen/live_hangout_bottom_opera_btn_size"
+            android:background="@drawable/selected_hangout_silent"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+    <!-- 禁言 -->
+    <LinearLayout
+        android:id="@+id/ll_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/live_size_8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:text="@string/hangout_liveroom_controll_mute"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_mute"
+            android:layout_width="@dimen/live_hangout_bottom_opera_btn_size"
+            android:layout_height="@dimen/live_hangout_bottom_opera_btn_size"
+            android:background="@drawable/selected_hangout_mute"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+    <!-- X -->
+    <ImageView
+        android:id="@+id/iv_closeVedioControll"
+        android:layout_width="@dimen/live_hangout_bottom_opera_btn_size"
+        android:layout_height="@dimen/live_hangout_bottom_opera_btn_size"
+        android:layout_marginTop="@dimen/live_size_8dp"
+        android:layout_marginBottom="58dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_hangout_vediocontroll_close"
+        android:visibility="visible" />
+</LinearLayout>

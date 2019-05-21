@@ -156,7 +156,7 @@ public class LoginManager {
                             }
                             mLoginItem = item;
 
-                            //清空上一个帐号个人资料(缓存)
+                            //清空上一个帐号个人资料(缓存)]
                             MyProfilePerfenceLive.clearProfileItem(mContext);
 
                             //上传phoneInfo
@@ -431,7 +431,7 @@ public class LoginManager {
         mLoginParam.password = password;
 
         //
-        SynConfigerManager.getInstance(mContext).setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
+        SynConfigerManager.getInstance().setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
             @Override
             public void accept(SynConfigerManager.ConfigResult configResult){
                 if(configResult.isSuccess && (configResult.item != null)){
@@ -512,7 +512,7 @@ public class LoginManager {
      * @param memberId 用户ID(CM2178)
      * @param token　　其它站点的加密串
      */
-    private void loginByToken(final String memberId, final String token){
+    public void loginByToken(final String memberId, final String token){
         Log.i("Jagger" , "LIVE LoginManager memberId:" + memberId + ",token:" + token);
         //避免重复登录
         if(mLoginStatus != LoginStatus.Default){
@@ -526,7 +526,7 @@ public class LoginManager {
         mLoginParam.memberId = memberId;
 
         //
-        SynConfigerManager.getInstance(mContext).setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
+        SynConfigerManager.getInstance().setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
             @Override
             public void accept(SynConfigerManager.ConfigResult configResult){
                 if(configResult.isSuccess && (configResult.item != null)){
@@ -691,11 +691,23 @@ public class LoginManager {
     }
 
     /**
+     * 获取Livechat是否有发送语音权限
+     * @return
+     */
+    public boolean isLivechatSendVoicePermit(){
+        boolean isPermit = false;
+        if(mLoginItem != null && mLoginItem.userPriv != null && mLoginItem.userPriv.liveChatPriv != null){
+            isPermit = mLoginItem.userPriv.liveChatPriv.isSendLiveChatVoicePriv;
+        }
+        return isPermit;
+    }
+
+    /**
      * 获取同步配置配置内容
      * @return
      */
     public ConfigItem getSynConfig(){
-        return SynConfigerManager.getInstance(mContext).getConfigItemCache();
+        return SynConfigerManager.getInstance().getConfigItemCache();
     }
 
     /**
@@ -755,7 +767,7 @@ public class LoginManager {
      * @return
      */
     public ConfigItem getLocalConfigItem(){
-        return SynConfigerManager.getInstance(mContext).getConfigItemCache();
+        return SynConfigerManager.getInstance().getConfigItemCache();
     }
 
     /**
@@ -1010,6 +1022,7 @@ public class LoginManager {
     /**
      * 上传手机信息
      */
+    @SuppressLint("MissingPermission")
     private void uploadPhoneInfo(LoginItem loginItem){
         PhoneInfoCheckResult result = PhoneInfoManager.CheckRequestPhoneInfo(mContext, loginItem.userId);
         if(result != null && result.isRequst){

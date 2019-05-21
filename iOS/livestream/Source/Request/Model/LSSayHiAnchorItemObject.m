@@ -19,6 +19,7 @@
         self.nickName = @"";
         self.coverImg = @"";
         self.onlineStatus = ONLINE_STATUS_LIVE;
+        self.roomType = HTTPROOMTYPE_NOLIVEROOM;
     }
     return self;
 }
@@ -29,6 +30,7 @@
         self.nickName = [coder decodeObjectForKey:@"nickName"];
         self.coverImg = [coder decodeObjectForKey:@"coverImg"];
         self.onlineStatus = [coder decodeIntForKey:@"onlineStatus"];
+        self.roomType = [coder decodeIntForKey:@"roomType"];
     }
     return self;
 }
@@ -38,6 +40,7 @@
     [coder encodeObject:self.nickName forKey:@"nickName"];
     [coder encodeObject:self.coverImg forKey:@"coverImg"];
     [coder encodeInt:self.onlineStatus forKey:@"onlineStatus"];
+    [coder encodeInt:self.roomType forKey:@"roomType"];
 
 }
 

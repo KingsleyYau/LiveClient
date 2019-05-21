@@ -26,6 +26,7 @@
         fresco:backgroundImage="@color/black4"
         />
 
+    <!-- 底部渐变层 -->
     <View
         android:layout_width="match_parent"
         android:layout_height="92dp"
@@ -183,7 +184,9 @@
                 android:src="@drawable/list_button_start_private_broadcast"
                 android:clickable="true"
                 android:visibility="gone"
+                android:foreground="@drawable/touch_feedback_btn_hot_list"
                 android:layout_marginTop="12dp"/>
+
             <ImageView
                 android:id="@+id/btnPublic"
                 android:layout_width="wrap_content"
@@ -191,6 +194,7 @@
                 android:src="@drawable/list_button_view_paid_public_broadcast"
                 android:clickable="true"
                 android:visibility="visible"
+                android:foreground="@drawable/touch_feedback_btn_hot_list"
                 android:layout_marginTop="12dp"/>
             <ImageView
                 android:id="@+id/btnSchedule"
@@ -199,6 +203,7 @@
                 android:src="@drawable/list_button_send_schedule"
                 android:clickable="true"
                 android:visibility="gone"
+                android:foreground="@drawable/touch_feedback_btn_hot_list"
                 android:layout_marginTop="12dp"/>
             <ImageView
                 android:id="@+id/btnChat"
@@ -207,6 +212,7 @@
                 android:src="@drawable/list_button_chat_now"
                 android:clickable="true"
                 android:visibility="gone"
+                android:foreground="@drawable/touch_feedback_btn_hot_list"
                 android:layout_marginTop="12dp"/>
             <ImageView
                 android:id="@+id/btnSendMail"
@@ -215,6 +221,7 @@
                 android:src="@drawable/list_button_send_mail"
                 android:clickable="true"
                 android:visibility="gone"
+                android:foreground="@drawable/touch_feedback_btn_hot_list"
                 android:layout_marginTop="12dp"/>
         </LinearLayout>
     

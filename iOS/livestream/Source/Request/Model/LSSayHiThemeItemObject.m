@@ -15,7 +15,7 @@
 
 - (id)init {
     if( self = [super init] ) {
-        self.themeId = 0;
+        self.themeId = @"";
         self.themeName = @"";
         self.smallImg = @"";
         self.bigImg = @"";
@@ -25,7 +25,7 @@
 
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
-        self.themeId = [coder decodeIntForKey:@"themeId"];
+        self.themeId = [coder decodeObjectForKey:@"themeId"];
         self.themeName = [coder decodeObjectForKey:@"themeName"];
         self.smallImg = [coder decodeObjectForKey:@"smallImg"];
         self.bigImg = [coder decodeObjectForKey:@"bigImg"];
@@ -35,7 +35,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeInt:self.themeId forKey:@"themeId"];
+    [coder encodeObject:self.themeId forKey:@"themeId"];
     [coder encodeObject:self.themeName forKey:@"themeName"];
     [coder encodeObject:self.smallImg forKey:@"smallImg"];
     [coder encodeObject:self.bigImg forKey:@"bigImg"];

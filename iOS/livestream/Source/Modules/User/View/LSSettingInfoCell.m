@@ -36,7 +36,7 @@
     if( nil == cell ) {
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[LSSettingInfoCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
     
     return cell;

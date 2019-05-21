@@ -17,9 +17,13 @@ public class CommonConstant {
     //本地缓存用户账号信息key
     public static final String LOCAL_CORE_DATACACHE_KEY_ACCOUNT_INFO = "accountInfo";
     //GoogleReferrer
-    public static final  String KEY_SP_GoogleReferrer = "KEY_SP_GoogleReferrer";
+    public static final String KEY_SP_GoogleReferrer = "KEY_SP_GoogleReferrer";
     //是否第一次注册
-    public static final  String KEY_INSTALL_FIRST_REGISTER_FLAGS = "firstRegister";
+    public static final String KEY_INSTALL_FIRST_REGISTER_FLAGS = "firstRegister";
+    //是否提交过InstallLog
+    public static final String SP_KEY_INSTALL_LOGS_BEFORE_AUTH_IS_SUMMIT = "sp_key_install_log_before_auth_is_summit";
+    //HangOut列表头是否可视
+    public static final String SP_KEY_HANG_OUT_LIST_HEADER_IS_VISIBLE = "sp_key_hang_out_list_header_is_visible";
 
     /***********************************  通知广播相关  ******************************************/
     //通知广播Action

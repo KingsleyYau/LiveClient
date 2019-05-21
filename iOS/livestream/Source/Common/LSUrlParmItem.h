@@ -31,6 +31,7 @@ typedef enum {
     LiveUrlTypeSayHiList,
     LiveUrlTypeSayHiDetail,
     LiveUrlTypeSendSayHi,
+    LiveUrlTypeGreetMailDetail,
     LiveUrlTypeUnknow,
 } LiveUrlType;
 
@@ -142,7 +143,7 @@ typedef enum {
 /**
  sayhi列表类型
  */
-@property (assign, readonly) LiveUrlBackpackListType sayHiListType;
+@property (assign, readonly) LiveUrlSayHiListType sayHiListType;
 #pragma mark - 节目参数
 /**
  节目Id
@@ -150,9 +151,14 @@ typedef enum {
 @property (strong, readonly) NSString *liveShowId;
 #pragma mark - sayhi参数
 /**
- 节目Id
+ sayId
  */
 @property (strong, readonly) NSString *sayhiId;
+#pragma mark - 意向信参数
+/**
+ 意向信id
+ */
+@property (strong, readonly) NSString *loiId;
 #pragma mark - 对话框参数
 @property (strong, readonly) NSString *title;
 @property (strong, readonly) NSString *msg;

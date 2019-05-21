@@ -53,6 +53,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * setUserVisibleHint->onAttach->onCreate->onCreateView->onActivityCreated---->onResume
      *                                                                          ^
      *                                                                      onReVisible
+     *
      */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -96,6 +97,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * Fragment重新可见时调用
      * 1.Fragment只有重新创建时才调用onResume
      * 2.setUserVisibleHint优先级太高，在onAttach前就被调用
+     * https://blog.csdn.net/czhpxl007/article/details/51277319
+     *
+     * setUserVisibleHint->onAttach->onCreate->onCreateView->onActivityCreated---->onResume
+     *                                                                          ^
+     *                                                                      onReVisible
      *
      * 这个方法作用相当于Activity的onResume
      * @add by Jagger 2018-7-13

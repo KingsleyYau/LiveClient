@@ -42,10 +42,15 @@ public class SynConfigerManager {
 
 	//单例
 	private static SynConfigerManager instance = null;
-	public static synchronized SynConfigerManager getInstance(Context context) {
-	   if (instance == null)
-	          instance = new SynConfigerManager(context);
-	          return instance;
+
+	public static synchronized SynConfigerManager newInstance(Context context){
+		if (instance == null)
+			instance = new SynConfigerManager(context);
+		return instance;
+	}
+
+	public static synchronized SynConfigerManager getInstance() {
+		return instance;
 	}
 	private SynConfigerManager(Context context){
 		mContext = context;
@@ -60,7 +65,7 @@ public class SynConfigerManager {
 		//正式代码 检测版本接口未通 2018-10-8
 		if(!mIsSynchroning){
 			mIsSynchroning = true;
-			VersionCheckManager.getInstance(mContext).setVersionResultObserver(new Consumer<VersionCheckManager.VersionResult>() {
+			VersionCheckManager.getInstance().setVersionResultObserver(new Consumer<VersionCheckManager.VersionResult>() {
 				@Override
 				public void accept(VersionCheckManager.VersionResult versionResult) throws Exception {
 					doGetSynConfig(versionResult.isSuccess, versionResult.errno, versionResult.errmsg);

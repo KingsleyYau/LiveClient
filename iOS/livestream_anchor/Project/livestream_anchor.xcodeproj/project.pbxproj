@@ -208,7 +208,6 @@
 		50EB8C491ED3E869003145B7 /* ImageCVPixelBufferInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EB8C481ED3E869003145B7 /* ImageCVPixelBufferInput.m */; };
 		50F3100C1EEA3D6C008CA70D /* LiveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50F3100E1EEA3D6C008CA70D /* LiveViewController.xib */; };
 		50F3101C1EEA55D5008CA70D /* AFNetWorkHelpr.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F3101B1EEA55D5008CA70D /* AFNetWorkHelpr.m */; };
-		50F383A71EE68EA3003D2765 /* libImClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F383431EE68825003D2765 /* libImClient.a */; };
 		50F4E8932043E59100A35F10 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F4E8892043E59000A35F10 /* main.m */; };
 		50F4E8952043E59100A35F10 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F4E88D2043E59100A35F10 /* AppIcon.xcassets */; };
 		50F4E8AF2043E67400A35F10 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50F4E8AE2043E67400A35F10 /* Info.plist */; };
@@ -347,19 +346,12 @@
 			remoteGlobalIDString = 505D868B1C7EF748006FDAC7;
 			remoteInfo = "Common-C-Library";
 		};
-		50F383421EE68825003D2765 /* PBXContainerItemProxy */ = {
+		FA9B20AC226434470045A940 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 50F3833E1EE68825003D2765 /* ImClient.xcodeproj */;
+			containerPortal = FA9B20A8226434460045A940 /* ZBImClient.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 50F383321EE68807003D2765;
-			remoteInfo = ImClient;
-		};
-		50F383A11EE68A45003D2765 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 50F3833E1EE68825003D2765 /* ImClient.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 50F383311EE68807003D2765;
-			remoteInfo = ImClient;
+			remoteInfo = ZBImClient;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -771,7 +763,6 @@
 		50F310101EEA3D6D008CA70D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LiveViewController.strings; sourceTree = "<group>"; };
 		50F3101A1EEA55D5008CA70D /* AFNetWorkHelpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetWorkHelpr.h; sourceTree = "<group>"; };
 		50F3101B1EEA55D5008CA70D /* AFNetWorkHelpr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetWorkHelpr.m; sourceTree = "<group>"; };
-		50F3833E1EE68825003D2765 /* ImClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImClient.xcodeproj; path = ../../Modules/ImClient/ImClient.xcodeproj; sourceTree = "<group>"; };
 		50F4E8892043E59000A35F10 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = livestream_anchor/main.m; sourceTree = SOURCE_ROOT; };
 		50F4E88D2043E59100A35F10 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = AppIcon.xcassets; path = livestream_anchor/AppIcon.xcassets; sourceTree = SOURCE_ROOT; };
 		50F4E8AE2043E67400A35F10 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = livestream_anchor/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -852,6 +843,7 @@
 		FA4C8FA01F7B8BD1001E9CBF /* AnchorPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AnchorPhotoViewController.xib; sourceTree = "<group>"; };
 		FA7C1DC5208F042800FE5A7B /* LSAnchorProgramItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAnchorProgramItemObject.m; sourceTree = "<group>"; };
 		FA7C1DC6208F042800FE5A7B /* LSAnchorProgramItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAnchorProgramItemObject.h; sourceTree = "<group>"; };
+		FA9B20A8226434460045A940 /* ZBImClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZBImClient.xcodeproj; path = ../../Modules/ZBImClient/ZBImClient.xcodeproj; sourceTree = "<group>"; };
 		FA9C05822073189100AAA61B /* AnchorItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnchorItemObject.h; sourceTree = "<group>"; };
 		FA9C05832073189100AAA61B /* AnchorItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnchorItemObject.m; sourceTree = "<group>"; };
 		FA9C059020732F9900AAA61B /* AnchorBaseInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnchorBaseInfoItemObject.m; sourceTree = "<group>"; };
@@ -900,7 +892,6 @@
 				5027D5B91EF906B900EE3B0E /* Photos.framework in Frameworks */,
 				503A70641EEF701700BA8FF8 /* Accelerate.framework in Frameworks */,
 				503A70621EEF700400BA8FF8 /* CoreText.framework in Frameworks */,
-				50F383A71EE68EA3003D2765 /* libImClient.a in Frameworks */,
 				505D6E191EC97E75007FF4C6 /* libUIWidget.a in Frameworks */,
 				505D6E181EC97E66007FF4C6 /* libCommonWidget.a in Frameworks */,
 				50D1BAD31E98D76500088B9D /* libCommon-C-Library.a in Frameworks */,
@@ -1764,9 +1755,9 @@
 		50BF28EA1E98976E00B8ED5D = {
 			isa = PBXGroup;
 			children = (
+				FA9B20A8226434460045A940 /* ZBImClient.xcodeproj */,
 				50BF29141E9897E000B8ED5D /* Common-C-Library.xcodeproj */,
 				505D6DCD1EC979B9007FF4C6 /* CommonWidget.xcodeproj */,
-				50F3833E1EE68825003D2765 /* ImClient.xcodeproj */,
 				50BF29241E9897ED00B8ED5D /* RtmpClient.xcodeproj */,
 				505D6DD31EC979C1007FF4C6 /* UIWidget.xcodeproj */,
 				506142461F8E0DF400825358 /* Config */,
@@ -1914,14 +1905,6 @@
 			path = QNService;
 			sourceTree = "<group>";
 		};
-		50F3833F1EE68825003D2765 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				50F383431EE68825003D2765 /* libImClient.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		50F383A31EE68B85003D2765 /* IM */ = {
 			isa = PBXGroup;
 			children = (
@@ -2048,6 +2031,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		FA9B20A9226434460045A940 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA9B20AD226434470045A940 /* libZBImClient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FABB251A20479715005EDF51 /* AnchorRequest */ = {
 			isa = PBXGroup;
 			children = (
@@ -2118,7 +2109,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				50F383A21EE68A45003D2765 /* PBXTargetDependency */,
 				5063A4031ECEC9F500361942 /* PBXTargetDependency */,
 				505D6DDF1EC979D9007FF4C6 /* PBXTargetDependency */,
 				505D6DDD1EC979D6007FF4C6 /* PBXTargetDependency */,
@@ -2141,7 +2131,7 @@
 				TargetAttributes = {
 					50BF28F21E98976E00B8ED5D = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = B9TY63HELA;
+						DevelopmentTeam = MK37J4UMHH;
 						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -2173,16 +2163,16 @@
 					ProjectRef = 505D6DCD1EC979B9007FF4C6 /* CommonWidget.xcodeproj */;
 				},
 				{
-					ProductGroup = 50F3833F1EE68825003D2765 /* Products */;
-					ProjectRef = 50F3833E1EE68825003D2765 /* ImClient.xcodeproj */;
-				},
-				{
 					ProductGroup = 50BF29251E9897ED00B8ED5D /* Products */;
 					ProjectRef = 50BF29241E9897ED00B8ED5D /* RtmpClient.xcodeproj */;
 				},
 				{
 					ProductGroup = 505D6DD41EC979C1007FF4C6 /* Products */;
 					ProjectRef = 505D6DD31EC979C1007FF4C6 /* UIWidget.xcodeproj */;
+				},
+				{
+					ProductGroup = FA9B20A9226434460045A940 /* Products */;
+					ProjectRef = FA9B20A8226434460045A940 /* ZBImClient.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -2228,11 +2218,11 @@
 			remoteRef = 50BF29281E9897ED00B8ED5D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		50F383431EE68825003D2765 /* libImClient.a */ = {
+		FA9B20AD226434470045A940 /* libZBImClient.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libImClient.a;
-			remoteRef = 50F383421EE68825003D2765 /* PBXContainerItemProxy */;
+			path = libZBImClient.a;
+			remoteRef = FA9B20AC226434470045A940 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2591,11 +2581,6 @@
 			isa = PBXTargetDependency;
 			name = "Common-C-Library";
 			targetProxy = 50BF292E1E9897FD00B8ED5D /* PBXContainerItemProxy */;
-		};
-		50F383A21EE68A45003D2765 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ImClient;
-			targetProxy = 50F383A11EE68A45003D2765 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3032,7 +3017,7 @@
 				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
 				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
 				COMMON_WIDGET_ROOT = "${MODULES_ROOT}/CommonWidget/CommonWidget";
-				DEVELOPMENT_TEAM = B9TY63HELA;
+				DEVELOPMENT_TEAM = MK37J4UMHH;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				EXTERN_ROOT = "$(PROJECT_DIR)/../Extern";
@@ -3158,7 +3143,7 @@
 				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
 				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
 				COMMON_WIDGET_ROOT = "${MODULES_ROOT}/CommonWidget/CommonWidget";
-				DEVELOPMENT_TEAM = B9TY63HELA;
+				DEVELOPMENT_TEAM = MK37J4UMHH;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				EXTERN_ROOT = "$(PROJECT_DIR)/../Extern";

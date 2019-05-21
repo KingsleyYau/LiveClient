@@ -6,6 +6,11 @@ import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.utils.Log;
 
+/**
+ * 视频硬渲染器
+ * @author max
+ *
+ */
 public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
 	/**
 	 * 渲染绑定器
@@ -51,16 +56,17 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
 				height = videoFrame.height;
 			}
 
-			if( rendererBinder != null ) {
+			if( rendererBinder != null && rendererBinder.playerHardRenderer != null ) {
+				// 更新滤镜大小
 				rendererBinder.playerHardRenderer.setOriginalSize(videoFrame.width, videoFrame.height);
 			}
 
-			if( rendererBinder != null ) {
+			if( rendererBinder != null && rendererBinder.playerHardRenderer != null ) {
 				// 更新滤镜输入
 				rendererBinder.playerHardRenderer.updateDecodeFrame(videoFrame);
 			}
 
-			if( rendererBinder != null ) {
+			if( rendererBinder != null && rendererBinder.playerSurfaceView != null ) {
 				// 通知界面刷新
 				rendererBinder.playerSurfaceView.requestRender();
 			}

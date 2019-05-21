@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.HangoutGiftListBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/live_size_20dp"
+    android:paddingRight="@dimen/live_size_20dp"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_hang_out_gift_list_base" />
+
+</com.qpidnetwork.livemodule.view.HangoutGiftListBarLayout>

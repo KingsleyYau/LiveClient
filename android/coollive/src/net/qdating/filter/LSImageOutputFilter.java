@@ -3,7 +3,7 @@ package net.qdating.filter;
 import android.opengl.GLES20;
 
 /**
- * RGB渲染滤镜
+ * RGB输出滤镜
  * @author max
  *
  */

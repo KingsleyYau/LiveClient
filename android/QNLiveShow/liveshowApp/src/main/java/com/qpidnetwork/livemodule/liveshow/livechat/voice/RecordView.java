@@ -8,10 +8,10 @@ import android.media.MediaRecorder.OnErrorListener;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.io.IOException;
 
@@ -83,7 +83,7 @@ public class RecordView extends View implements OnErrorListener{
 			canRecord = false;
 		}catch (IOException e) {
 			e.printStackTrace();
-			Toast.makeText(mContext, "Record not support" , Toast.LENGTH_LONG).show();
+			ToastUtil.showToast(mContext, "Record not support");
 			recorder = null;
 			canRecord = false;
 		}catch (Exception e) {

@@ -227,10 +227,6 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
     public void addData(int position, T bean) {
         if (bean != null) {
             this.mList.add(position, bean);
-            // old
-            //            this.notifyDataSetChanged();
-
-            // 2017/8/24 效率高,并且自带动画
             this.notifyItemInserted(position);
         }
     }
@@ -246,6 +242,25 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
             addData(list);
         } else {
             setData(list);
+        }
+    }
+
+
+    /**
+     * 批量删除连续位置
+     * @param startPostion
+     * @param count
+     */
+    public void removeRange(int startPostion, int count){
+        if(isValidPosition(startPostion)){
+            List<T> dataList = new ArrayList<T>();
+            int endPostion = mList.size() > (startPostion + count) ? (startPostion + count):mList.size();
+            for (int i = startPostion; i < endPostion; i++) {
+                dataList.add(mList.get(i));
+            }
+            mList.removeAll(dataList);
+
+            this.notifyItemRangeRemoved(startPostion, count);
         }
     }
 

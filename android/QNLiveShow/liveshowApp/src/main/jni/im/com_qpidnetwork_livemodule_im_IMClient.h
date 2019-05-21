@@ -155,10 +155,10 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendTalen
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
  * Method:    EnterHangoutRoom
- * Signature: (ILjava/lang/String;)Z
+ * Signature: (ILjava/lang/String;Z)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_EnterHangoutRoom
-        (JNIEnv *, jclass, jint, jstring);
+        (JNIEnv *, jclass, jint, jstring, jboolean);
 
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient

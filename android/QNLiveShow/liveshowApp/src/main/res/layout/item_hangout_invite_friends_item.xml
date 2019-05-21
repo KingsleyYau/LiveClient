@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/btnInvite"
+        android:layout_width="80dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/btn_back_padding_20dp"
+        android:background="@drawable/btn_hangout_list_stroke_shape"
+        android:textColor="@color/white"
+        android:text="@string/live_common_invite"
+        android:textSize="@dimen/live_size_14sp"
+        android:gravity="center"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="34dp"
+        android:layout_toLeftOf="@id/btnInvite"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/live_size_20dp">
+
+        <RelativeLayout
+            android:id="@+id/rlPhoto"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_anchor_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                fresco:actualImageScaleType="focusCrop"
+                fresco:backgroundImage="@color/black4"
+                fresco:placeholderImage="@drawable/ic_default_photo_woman_rect"
+                fresco:roundAsCircle="true"
+                fresco:roundBottomLeft="true"
+                fresco:roundBottomRight="true"
+                fresco:roundTopLeft="true"
+                fresco:roundTopRight="true"
+                fresco:roundedCornerRadius="30dp"
+                />
+                <!--fresco:roundingBorderColor="@color/white"-->
+                <!--fresco:roundingBorderWidth="2dp" -->
+
+            <View
+                android:id="@+id/ivOnline"
+                android:layout_width="@dimen/live_size_10dp"
+                android:layout_height="@dimen/live_size_10dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/live_size_2dp"
+                android:background="@drawable/bg_green_online" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_anchor_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/rlPhoto"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_anchor_name"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/rlPhoto"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="name"
+            android:textColor="#999999"
+            android:textSize="@dimen/live_size_14sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -44,9 +44,23 @@
 
         <attr name="marqueeview_isclickalbe_stop" format="boolean"/><!--是否点击暂停-->
         <attr name="marqueeview_is_resetLocation" format="boolean"/><!--重新改变内容的时候 ， 是否初始化 位置，默认为true，改变-->
-
-
-
-
     </declare-styleable>
+
+
+    <!--2019/04/19 Hardy 水波纹的自定义 View-->
+    <declare-styleable name="MaterialRippleLayout">
+        <attr name="mrl_rippleColor" format="color" localization="suggested" />
+        <attr name="mrl_rippleDimension" format="dimension" localization="suggested" />
+        <attr name="mrl_rippleOverlay" format="boolean" localization="suggested" />
+        <attr name="mrl_rippleAlpha" format="float" localization="suggested" />
+        <attr name="mrl_rippleDuration" format="integer" localization="suggested" />
+        <attr name="mrl_rippleFadeDuration" format="integer" localization="suggested" />
+        <attr name="mrl_rippleHover" format="boolean" localization="suggested" />
+        <attr name="mrl_rippleBackground" format="color" localization="suggested" />
+        <attr name="mrl_rippleDelayClick" format="boolean" localization="suggested" />
+        <attr name="mrl_ripplePersistent" format="boolean" localization="suggested" />
+        <attr name="mrl_rippleInAdapter" format="boolean" localization="suggested" />
+        <attr name="mrl_rippleRoundedCorners" format="dimension" localization="suggested" />
+    </declare-styleable>
+
 </resources>

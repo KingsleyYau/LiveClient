@@ -38,13 +38,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-                android:id="@+id/civ_userPhoto"
+            <!--<com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView-->
+                <!--android:id="@+id/civ_userPhoto"-->
+                <!--android:layout_width="68dp"-->
+                <!--android:layout_height="68dp"-->
+                <!--android:src="@drawable/ic_default_photo_man"-->
+                <!--app:civ_border_color="@color/white"-->
+                <!--app:civ_border_width="@dimen/menu_photo_border" />-->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_userPhoto"
                 android:layout_width="68dp"
-                android:layout_height="68dp"
-                android:src="@drawable/ic_default_photo_man"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="@dimen/menu_photo_border" />
+                android:layout_height="68dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_talents"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 毛玻璃 (作为背景 透的是 输入栏)-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="328dp"
+        android:background="@color/live_ho_grey_blur_bg">
+        <com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView
+            android:id="@+id/blurring_view_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:blurRadius="3"
+            app:downsampleFactor="6"
+            app:overlayColor="@color/live_ho_grey_blur_bg_half" />
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="328dp"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_size_40dp">
+
+            <!-- 如果用一个TextView把尾部省略，当名字太长，会直播把名字变成省略号 BUG#11906-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hangout_dialog_title"
+                    android:textColor="@color/live_ho_orange_deep"
+                    android:textSize="@dimen/live_size_16sp"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_size_2dp"
+            android:background="@drawable/bg_hangout_room_friend_divider"/>
+
+        <!-- List -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="286dp">
+            <com.qpidnetwork.livemodule.view.RefreshRecyclerView
+                android:id="@+id/rv_recommend_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="#ECEDF1">
+
+            </com.qpidnetwork.livemodule.view.RefreshRecyclerView>
+
+            <!--空数据-->
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayoutEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/dialog_ho_gift_ll_emptyData"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ivEmpty"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/hangout_no_broadcaster" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/text_color_grey_light"
+                        android:textSize="@dimen/live_size_14sp" />
+                </LinearLayout>
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <!--错误重试-->
+            <LinearLayout
+                android:id="@+id/dialog_ho_gift_ll_errorRetry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/ivError"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_hangout_load_error" />
+
+                <TextView
+                    android:id="@+id/tv_errerReload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/hangout_gift_retry"
+                    android:textColor="@color/text_color_grey_light"
+                    android:textSize="@dimen/live_size_14sp" />
+            </LinearLayout>
+
+            <!--loading-->
+            <LinearLayout
+                android:id="@+id/dialog_ho_gift_ll_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_gravity="center_horizontal"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/live_loading_progress"
+                    android:indeterminateDuration="1000"
+                    android:scrollbarStyle="insideInset" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+</FrameLayout>

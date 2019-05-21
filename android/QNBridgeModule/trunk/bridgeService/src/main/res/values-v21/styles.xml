@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 权限 -->
+    <style name="permission_PermissionActivity" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
+    </style>
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert"/>
+
+</resources>

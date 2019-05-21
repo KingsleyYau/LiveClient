@@ -184,6 +184,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <!--2019/03/05 Hardy-->
+        <include
+            android:id="@+id/view_hang_out_msg_pop"
+            layout="@layout/view_hang_out_msg_pop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            />
+
         <!-- 登录中遮罩 -->
         <!--<RelativeLayout-->
         <!--android:id="@+id/rl_login_loading"-->

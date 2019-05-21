@@ -118,7 +118,7 @@ bool Statistics::CanRecvVideo() {
                  );
     
     mStatusMutex.lock();
-    if( mVideoRecvFrameCount - mVideoPlayFrameCount >= 360 ) {
+    if( mbRunning && mVideoRecvFrameCount - mVideoPlayFrameCount >= 360 ) {
         bFlag = false;
     }
     mStatusMutex.unlock();
@@ -138,7 +138,7 @@ bool Statistics::CanRecvAudio() {
                  );
     
     mStatusMutex.lock();
-    if( mAudioRecvFrameCount - mAudioPlayFrameCount >= 600 ) {
+    if( mbRunning && mAudioRecvFrameCount - mAudioPlayFrameCount >= 600 ) {
         bFlag = false;
     }
     mStatusMutex.unlock();

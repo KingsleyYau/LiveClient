@@ -17,7 +17,7 @@ class HttpSendSayHiTask;
 class IRequestSendSayHiCallback {
 public:
 	virtual ~IRequestSendSayHiCallback(){};
-	virtual void OnSendSayHi(HttpSendSayHiTask* task, bool success, int errnum, const string& errmsg, const string& sayHiId, const string& sayHiOrLoiId) = 0;
+	virtual void OnSendSayHi(HttpSendSayHiTask* task, bool success, int errnum, const string& errmsg, const string& sayHiId, const string& sayHiOrLoiId, bool isFollow, OnLineStatus onlineStatus) = 0;
 };
       
 class HttpSendSayHiTask : public HttpRequestTask {
@@ -35,8 +35,8 @@ public:
      */
     void SetParam(
                     const string& anchorId,
-                    int themeId,
-                    int textId
+                    const string& themeId,
+                    const string& textId
                   );
     
     

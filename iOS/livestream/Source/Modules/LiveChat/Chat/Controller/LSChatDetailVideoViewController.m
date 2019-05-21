@@ -328,8 +328,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"LSChatDetailVideoViewController::onVideoFee([购买视频回调] success : %@, errNo : %@, errMsg : %@, msgId : %ld)",BOOL2SUCCESS(success), errNo, errMsg, (long)msgItem.msgId);
         
-        [weakSelf activeViewIsHidden:YES];
-        
         BOOL isEqUserId = [weakSelf.msgItem.fromId isEqualToString:msgItem.fromId];
         BOOL isEqVideoId = [weakSelf.msgItem.videoMsg.videoId isEqualToString:msgItem.videoMsg.videoId];
         BOOL isEqInviteId = [weakSelf.msgItem.inviteId isEqualToString:msgItem.inviteId];
@@ -342,12 +340,14 @@
                     weakSelf.msgItem.videoMsg.videoUrl = msgItem.videoMsg.videoUrl;
                 }
                 
-                weakSelf.isPlay = NO;
+                weakSelf.isPlay = YES;
                 // 购买成功 下载视频
                 [weakSelf.liveChatManager getVideo:weakSelf.msgItem.fromId videoId:weakSelf.msgItem.videoMsg.videoId inviteId:weakSelf.msgItem.inviteId videoUrl:weakSelf.msgItem.videoMsg.videoUrl msgId:(int)weakSelf.msgItem.msgId];
                 
-                [weakSelf showPlayView];
+//                [weakSelf showPlayView];
             } else {
+                [weakSelf activeViewIsHidden:YES];
+                
                 if ([self.liveChatManager isNoMoneyWithErrCode:errNo]) {
                     if (self.viewDelegate != nil && [self.viewDelegate respondsToSelector:@selector(videoDetailspushAddCreditsViewController)]) {
                         [self.viewDelegate videoDetailspushAddCreditsViewController];

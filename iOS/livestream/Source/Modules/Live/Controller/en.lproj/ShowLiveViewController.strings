@@ -6,3 +6,5 @@
 "ZTD-AZ-ZU2.text" = "Premium Public";
 
 "EXIT_LIVEROOM_TIP" = "Are you sure to leave the broadcast room?";
+
+"FOLLOW_FAIL" = "Failed to follow the broadcaster";

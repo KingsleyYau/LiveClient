@@ -1,7 +1,10 @@
 package com.qpidnetwork.livemodule.im.listener;
 
-public class IMUserBaseInfoItem {
-	
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class IMUserBaseInfoItem implements Parcelable {
+
 	public IMUserBaseInfoItem(){
 		
 	}
@@ -41,4 +44,34 @@ public class IMUserBaseInfoItem {
 	public String nickName;
 	public String photoUrl;				//用于显示的其他用户小头像
 	public boolean isHasTicket = false;	//是否已购票
+
+	/******************************************  Parcelable相关   ****************************************/
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(userId);
+		dest.writeString(nickName);
+		dest.writeString(photoUrl);
+		dest.writeByte((byte) (isHasTicket ? 1 : 0));
+	}
+
+	public static final Parcelable.Creator<IMUserBaseInfoItem> CREATOR = new Parcelable.Creator<IMUserBaseInfoItem>() {
+		public IMUserBaseInfoItem createFromParcel(Parcel in) {
+			return new IMUserBaseInfoItem(in);
+		}
+		public IMUserBaseInfoItem[] newArray(int size) {
+			return new IMUserBaseInfoItem[size];
+		}
+	};
+
+	private IMUserBaseInfoItem(Parcel in) {
+		userId = in.readString();
+		nickName = in.readString();
+		photoUrl = in.readString();
+		isHasTicket = in.readByte() != 0;
+	}
 }

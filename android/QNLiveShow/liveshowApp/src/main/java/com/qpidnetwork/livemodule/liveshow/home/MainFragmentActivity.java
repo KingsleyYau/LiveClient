@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -22,12 +23,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dou361.dialogui.listener.DialogUIListener;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
-import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
+import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.item.LSOtherVersionCheckItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.IMManager;
@@ -37,14 +39,23 @@ import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMProgramInfoItem;
+import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
 import com.qpidnetwork.livemodule.livechat.contact.OnChatUnreadUpdateCallback;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
+import com.qpidnetwork.livemodule.liveshow.bubble.BubbleMessageBean;
+import com.qpidnetwork.livemodule.liveshow.bubble.BubbleMessageManager;
+import com.qpidnetwork.livemodule.liveshow.bubble.BubbleMessageType;
+import com.qpidnetwork.livemodule.liveshow.bubble.HangoutMsgPopView;
+import com.qpidnetwork.livemodule.liveshow.bubble.IBubbleMessageManagerListener;
+import com.qpidnetwork.livemodule.liveshow.bubble.IOnHangoutMsgPopListener;
 import com.qpidnetwork.livemodule.liveshow.home.menu.DrawerAdapter;
+import com.qpidnetwork.livemodule.liveshow.livechat.LiveChatTalkActivity;
+import com.qpidnetwork.livemodule.liveshow.liveroom.HangoutTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.SynConfigerManager;
@@ -55,7 +66,7 @@ import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.liveshow.welcome.PeacockActivity;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
@@ -63,16 +74,19 @@ import com.qpidnetwork.qnbridgemodule.bean.WebSiteBean;
 import com.qpidnetwork.qnbridgemodule.util.BroadcastManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reactivex.functions.Consumer;
 
 public class MainFragmentActivity extends BaseFragmentActivity implements ViewPager.OnPageChangeListener,
         IAuthorizationListener, IMShowEventListener, ShowUnreadManager.OnShowUnreadListener,
-        IMOtherEventListener, OnChatUnreadUpdateCallback {
+        IMOtherEventListener, OnChatUnreadUpdateCallback, IBubbleMessageManagerListener {
 
     private static final String LAUNCH_URL = "launchUrl";
     private static final String CHANGE_WITE_TOKEN = "token";
-    private static final String LAUNCH_PARAMS_LISTTYPE = "listType";
-    private static final int OFF_SCREEN_PAGE_LIMIT = 2;    //VP预加载页面(2是为了避免用户疯狂切换，导致Fragment不断Create的问题)
+    private static final String LAUNCH_PARAMS_TABTYPE = "tabType";
+    private static final int OFF_SCREEN_PAGE_LIMIT = 3;    //VP预加载页面(3是为了避免用户疯狂切换，导致Fragment不断Create的问题)
     private final double DRAWER_WIDTH_IN_SCREEN = 0.85;     //左则菜单占屏幕宽度比
 
     //tab相关常量
@@ -104,12 +118,17 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     private RecyclerView mRvDrawer;
     private DrawerAdapter mDrawerAdapter;
     private LinearLayout mLLHeaderRoot;
-    private CircleImageView mImgDrawerUserPhoto;
+//    private CircleImageView mImgDrawerUserPhoto;
+    private SimpleDraweeView mImgUserPhoto;
     public TextView mTvDrawerUserName;
     public TextView mTvDrawerUserId;
     public ImageView mImgDrawerUserLevel, mImgDrawerSetting;
     private View mViewDrawerChangeWebSite, mViewDrawerAddCredit;
     private TextView mTVDrawerAddCredits, mTvCurrCredits;
+
+    // 2019/3/5 Hardy
+    private HangoutMsgPopView mMsgPopView;
+    private BubbleMessageManager mBubbleMessageManager;
 
     //内容
     private boolean mNeedShowGuide = true;
@@ -147,12 +166,12 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
      * 内部启动或者返回
      *
      * @param context
-     * @param listType
+     * @param tabType
      */
-    public static void launchActivityWithListType(Context context, int listType) {
+    public static void launchActivityWithListType(Context context, MainFragmentPagerAdapter4Top.TABS tabType) {
         Intent intent = new Intent(context, MainFragmentActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(LAUNCH_PARAMS_LISTTYPE, listType);
+        intent.putExtra(LAUNCH_PARAMS_TABTYPE, tabType);
         context.startActivity(intent);
         if (context instanceof Activity) {
             ((Activity) context).overridePendingTransition(R.anim.anim_activity_fade_in, R.anim.anim_activity_fade_out);
@@ -174,7 +193,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             ((Activity) context).overridePendingTransition(R.anim.anim_activity_fade_in, R.anim.anim_activity_fade_out);
         }
         //再去登录
-        RegisterActivity.launchRegisterActivityWithDialog(context, strKickOffTips);
+        LoginNewActivity.launchRegisterActivityWithDialog(context, strKickOffTips);
     }
 
     @Override
@@ -194,7 +213,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         //原本是在登录结果回调检测更新,
         //后来HOT LIST会调取同步配置接口, 同时会取得版本信息,
         //所以改在HOT LIST 初始化之前先监听同步配置, 检测更新, 提高优先级
-        SynConfigerManager.getInstance(mContext).setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
+        SynConfigerManager.getInstance().setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
             @Override
             public void accept(SynConfigerManager.ConfigResult configResult) throws Exception {
                 doCheckUpdate();
@@ -218,6 +237,9 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 
         IMManager.getInstance().registerIMShowEventListener(this);
         IMManager.getInstance().registerIMOtherEventListener(this);
+
+        initBubble();
+
 
         // 2018/9/28 Hardy
 //        PushSettingManager.getInstance().registerLoginOrIMEvent();
@@ -252,6 +274,20 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 
         //自动登录
         doAutoLogin();
+    }
+
+    /**
+     * 初始化冒泡事件
+     */
+    private void initBubble(){
+        //初始化冒泡manager
+        mBubbleMessageManager =  new BubbleMessageManager(this);
+        mBubbleMessageManager.setBubbleMessageManagerListener(this);
+
+        List<BubbleMessageBean> dataList = mBubbleMessageManager.getCurrentShowingList();
+        if(dataList.size() > 0){
+            mMsgPopView.addMsg(dataList);
+        }
     }
 
     @Override
@@ -311,6 +347,14 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         // 2018/11/20 Hardy
         ContactManager.getInstance().unregisterChatUnreadUpdateUpdata(this);
 
+        if (mMsgPopView != null) {
+            mMsgPopView.onDestroy();
+        }
+
+        if(mBubbleMessageManager != null){
+            mBubbleMessageManager.onDestroy();
+        }
+
         super.onDestroy();
     }
 
@@ -333,17 +377,18 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         Log.d(TAG, "parseIntent");
         Bundle bundle = intent.getExtras();
         String url = "";
-        int defaultPage = 0;
+        MainFragmentPagerAdapter4Top.TABS tabType = MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER;
         if (bundle != null) {
             if (bundle.containsKey(LAUNCH_URL)) {
                 url = bundle.getString(LAUNCH_URL);
             }
-            if (bundle.containsKey(LAUNCH_PARAMS_LISTTYPE)) {
-                defaultPage = bundle.getInt(LAUNCH_PARAMS_LISTTYPE);
-            }
+
             if (bundle.containsKey(CHANGE_WITE_TOKEN)) {
                 mQnToken = bundle.getString(CHANGE_WITE_TOKEN);
                 Log.i("Jagger", "MainFragmentActivity parseIntent mQnToken:" + mQnToken);
+            }
+            if (bundle.containsKey(LAUNCH_PARAMS_TABTYPE)) {
+                tabType = (MainFragmentPagerAdapter4Top.TABS)bundle.getSerializable(LAUNCH_PARAMS_TABTYPE);
             }
         }
 
@@ -353,23 +398,11 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             new AppUrlHandler(mContext).urlHandle(url);
             mNeedShowGuide = false;
         } else {
-
-            // 2018/9/26 Hardy
-            if (defaultPage > 0) {
-                // nothing to do
-            } else {
-                defaultPage = URL2ActivityManager.getInstance().getMainListType(Uri.parse(url));
-            }
-
             mNeedShowGuide = true;
         }
 
         //切换默认页
-        if (defaultPage > 0 && defaultPage < getResources().getStringArray(R.array.topTabs).length) {
-            viewPagerContent.setCurrentItem(defaultPage);
-        } else {
-            viewPagerContent.setCurrentItem(0);
-        }
+        viewPagerContent.setCurrentItem(mAdapter.tabTypeToIndex(tabType));
     }
 
     private void initView() {
@@ -405,7 +438,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 ////                    @Override
 ////                    public void onDragStateChanged(int dragState, Badge badge, View targetView) {
 //////                        if (Badge.OnDragStateChangedListener.STATE_SUCCEED == dragState)
-//////                            Toast.makeText(BadgeViewActivity.this, R.string.tips_badge_removed, Toast.LENGTH_SHORT).show();
+//                                    ToastUtil.showToast(MainFragmentActivity.this,R.string.tips_badge_removed);
 ////                    }
 ////                });
 //
@@ -419,7 +452,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 //                .bindTarget(mNavView.getBottomNavigationItemView(MainFragmentPagerAdapter.TABS.TAB_INDEX_CALENDAR.ordinal()));
 
         //初始化ViewPage Adapter
-        mAdapter = new MainFragmentPagerAdapter4Top(this);
+        mAdapter = MainFragmentPagerAdapter4Top.newAdapter4NoHangout(this);
         viewPagerContent.setAdapter(mAdapter);
         //防止间隔点击会出现回收，导致Fragment onresume走出现刷新异常
         viewPagerContent.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
@@ -510,7 +543,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         });
 
         //左则菜单－－人头
-        mImgDrawerUserPhoto = (CircleImageView) findViewById(R.id.civ_userPhoto);
+//        mImgDrawerUserPhoto = (CircleImageView) findViewById(R.id.civ_userPhoto);
+        mImgUserPhoto = findViewById(R.id.img_userPhoto);
 
         //左则菜单－－个人资料
         mImgDrawerSetting = (ImageView) findViewById(R.id.img_setting);
@@ -556,6 +590,48 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         });
         mTvCurrCredits = (TextView) findViewById(R.id.tv_currCredits);
 
+
+        // TODO: 2019/3/5 Hardy
+        mMsgPopView = findViewById(R.id.view_hang_out_msg_pop);
+        mMsgPopView.setVisibility(View.GONE);
+        mMsgPopView.setOnHangoutMsgPopListener(new IOnHangoutMsgPopListener() {
+            @Override
+            public void onHandoutClick(int pos) {
+                Log.i(TAG, "onHandoutClick pos:" + pos);
+                BubbleMessageBean bean = mMsgPopView.getItem(pos);
+                //删除指定pop冒泡
+                mMsgPopView.removeMsg(pos);
+                //通知manager同步
+                mBubbleMessageManager.removeShowingItem(pos, 1);
+                //通知服务器点击
+                notifyHangoutInviteClick(bean);
+                //点击事件处理
+                if(bean.bubbleMsgType == BubbleMessageType.Hangout){
+                    //进入hangout过渡页
+                    //生成被邀请的主播列表（这里是目标主播一人）
+                    ArrayList<IMUserBaseInfoItem> anchorList = new ArrayList<>();
+                    anchorList.add(new IMUserBaseInfoItem(bean.anchorId, bean.anchorName, bean.anchorPhotoUrl));
+                    //过渡页
+                    Intent intent = HangoutTransitionActivity.getIntent(
+                            mContext,
+                            anchorList,
+                            "",
+                            "",
+                            "");
+                    startActivity(intent);
+                }else if(bean.bubbleMsgType == BubbleMessageType.LiveChat){
+                    //进入chat聊天页面
+                    LiveChatTalkActivity.launchChatActivity(mContext, bean.anchorId, bean.anchorName, bean.anchorPhotoUrl);
+                }
+            }
+
+            @Override
+            public void onScrollItemChange(int pos) {
+
+            }
+        });
+
+
 //        //登录遮罩
 //        mRlLoginLoading = (RelativeLayout) findViewById(R.id.rl_login_loading);
 //        mRlLoginLoading.setOnClickListener(new View.OnClickListener() {
@@ -575,6 +651,40 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 //                LoginManager.getInstance().reLogin();
 //            }
 //        });
+    }
+
+    /**
+     * 通知服务器点击了冒泡hangout邀请
+     * @param bean
+     */
+    private void notifyHangoutInviteClick(BubbleMessageBean bean){
+        if(bean != null && bean.bubbleMsgType == BubbleMessageType.Hangout){
+            LiveRequestOperator.getInstance().AutoInvitationClickLog(bean.anchorId, bean.isAuto, new OnRequestCallback() {
+                @Override
+                public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onDataChangeNotify() {
+        Log.i(TAG, "onDataChangeNotify");
+        mMsgPopView.notifyAdapterDataChange();
+    }
+
+
+    @Override
+    public void onDataAdd(BubbleMessageBean bean) {
+        Log.i(TAG, "onDataAdd anchorId:" + bean.anchorId + "  anchorName: " + bean.anchorName);
+        mMsgPopView.addMsg(bean);
+    }
+
+    @Override
+    public void onDataRemove(int startPosition, int count) {
+        Log.i(TAG, "onDataRemove startPosition:" + startPosition + "  count: " + count);
+        mMsgPopView.removeRange(startPosition, count);
     }
 
     //------------------ 登录遮罩 --------------------
@@ -634,6 +744,10 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                 break;
                 case DrawerAdapter.ITEM_ID_GREETS: {//意向信
                     showLoiListWebView();
+                }
+                break;
+                case DrawerAdapter.ITEM_ID_HANGOUT: {//Hang-Out
+                    viewPagerContent.setCurrentItem(mAdapter.tabTypeToIndex(MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_HANGOUT));
                 }
                 break;
                 case DrawerAdapter.ITEM_ID_SHOWTICKETS:
@@ -820,14 +934,20 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 //            showLoging();
             doUpdateHeaderView(false);
             doUpdateCreditView(false);
+            doUpdateDrawerView(false);
+            doUpdateTab(false);
         } else if (LoginManager.getInstance().getLoginStatus() == LoginManager.LoginStatus.Default) {
 //            showLoginFail();
             doUpdateHeaderView(false);
             doUpdateCreditView(false);
+            doUpdateDrawerView(false);
+            doUpdateTab(false);
         } else {
 //            showLoginSuccess();
             doUpdateHeaderView(true);
             doUpdateCreditView(true);
+            doUpdateDrawerView(true);
+            doUpdateTab(true);
         }
     }
 
@@ -1022,7 +1142,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             String urlMyProfileList = URL2ActivityManager.createMyProfile();
             URL2ActivityManager.getInstance().URL2Activity(mContext, urlMyProfileList);
         } else {
-            RegisterActivity.launchRegisterActivity(mContext, null);
+            LoginNewActivity.launchRegisterActivity(mContext, null);
         }
         delayDismissDrawableLayout();
     }
@@ -1044,16 +1164,14 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         if (isLogin) {
             LoginItem loginItem = LoginManager.getInstance().getLoginItem();
             if (null != loginItem) {
-//                Picasso.with(mContext).load(loginItem.photoUrl)
-//                        .resize(DisplayUtil.dip2px(mContext, 70),DisplayUtil.dip2px(mContext, 70))  //imageView是68DP,压缩时比它大一点点
-//                        .centerCrop()
-//                        .error(R.drawable.ic_default_photo_man)
-//                        .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                        .noPlaceholder()
-//                        .into(mImgDrawerUserPhoto);
                 int wh = DisplayUtil.dip2px(mContext, 70);
-                PicassoLoadUtil.loadUrlNoMCache(mImgDrawerUserPhoto, loginItem.photoUrl, R.drawable.ic_default_photo_man, wh, wh);
+                //"http://demo.charmdate.com/man_photo/105/CM68107045.jpg" //头像https+test5149验证不行，但http可以
+                FrescoLoadUtil.loadUrl(mContext, mImgUserPhoto, loginItem.photoUrl, wh,
+                        R.drawable.ic_default_photo_man, true,
+                        getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+                        ContextCompat.getColor(mContext, R.color.white));
 
+                //
                 mTvDrawerUserName.setText(loginItem.nickName);
                 mTvDrawerUserName.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1069,14 +1187,16 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             mTvDrawerUserName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    RegisterActivity.launchRegisterActivity(mContext);
+                    LoginNewActivity.launchRegisterActivity(mContext);
                 }
             });
             mTvDrawerUserId.setText("");
             mImgDrawerUserLevel.setImageDrawable(null);
-//            mImgDrawerUserPhoto.setImageResource(R.drawable.ic_default_photo_man);
-//            Picasso.with(mContext).load(R.drawable.ic_default_photo_man).into(mImgDrawerUserPhoto);
-            PicassoLoadUtil.loadRes(mImgDrawerUserPhoto, R.drawable.ic_default_photo_man);
+            FrescoLoadUtil.loadRes(mContext, mImgUserPhoto, R.drawable.ic_default_photo_man ,
+                    R.drawable.ic_default_photo_man, true,
+                    getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+                    ContextCompat.getColor(mContext, R.color.white));
+
 
         }
     }
@@ -1096,6 +1216,52 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         }
     }
 
+    /**
+     * 更新左则菜单视图
+     * @param isLogin
+     */
+    private void doUpdateDrawerView(boolean isLogin){
+        if (isLogin) {
+            LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+            if (null != loginItem) {
+                if(loginItem.userPriv.hangoutPriv.isHangoutPriv){   //是否有HangOut权限
+                    mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_HANGOUT, true);
+                }else {
+                    mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_HANGOUT, false);
+                }
+            }
+        }else {
+            mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_HANGOUT, false);
+        }
+    }
+
+    /**
+     * 更新顶部Tab
+     * @param isLogin
+     */
+    private void doUpdateTab(boolean isLogin){
+        if (isLogin) {
+            LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+            //是否有HangOut权限
+            if(loginItem.userPriv != null && loginItem.userPriv.hangoutPriv != null && loginItem.userPriv.hangoutPriv.isHangoutPriv){
+                //有HangOut权限
+                mAdapter = MainFragmentPagerAdapter4Top.newAdapter4HasHangout(this);
+                viewPagerContent.setAdapter(mAdapter);
+                tabPageIndicator.notifyDataSetChanged();
+            }else {
+                //无HangOut权限
+                mAdapter = MainFragmentPagerAdapter4Top.newAdapter4NoHangout(this);
+                viewPagerContent.setAdapter(mAdapter);
+                tabPageIndicator.notifyDataSetChanged();
+            }
+        }else{
+            mAdapter = MainFragmentPagerAdapter4Top.newAdapter4NoHangout(this);
+            viewPagerContent.setAdapter(mAdapter);
+            tabPageIndicator.notifyDataSetChanged();
+        }
+    }
+
+
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
@@ -1112,6 +1278,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 //                }
                 doUpdateHeaderView(true);
                 doUpdateCreditView(true);
+                doUpdateDrawerView(true);
+                doUpdateTab(true);
 
                 //检测更新(因为登录时才会去拿同步配置)
 //                doCheckUpdate();
@@ -1123,6 +1291,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                 //更新头像昵称ID
                 doUpdateHeaderView(false);
                 doUpdateCreditView(false);
+                doUpdateDrawerView(false);
+                doUpdateTab(false);
                 break;
         }
     }
@@ -1251,12 +1421,12 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
      * 检测更新
      */
     private void doCheckUpdate() {
-        final LSOtherVersionCheckItem versionCheckItem = VersionCheckManager.getInstance(mContext).getVersionInfoCache();
+        final LSOtherVersionCheckItem versionCheckItem = VersionCheckManager.getInstance().getVersionInfoCache();
         if (versionCheckItem != null) {
             //如果有更新信息
             if (versionCheckItem.isForceUpdate) {
                 if (versionCheckItem.verCode > SystemUtils.getVersionCode(mContext)) {
-                    VersionCheckManager.getInstance(mContext).showUpdateDialog(this, new DialogUIListener() {
+                    VersionCheckManager.getInstance().showUpdateDialog(this, new DialogUIListener() {
                         @Override
                         public void onPositive() {
                             finish();

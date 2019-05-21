@@ -1,15 +1,12 @@
 package com.qpidnetwork.livemodule.liveshow.personal.book;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
@@ -19,6 +16,7 @@ import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 /**
  * 验证号码
@@ -180,7 +178,7 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
                         mConstraintLayoutContent.setVisibility(View.GONE);
                         mConstraintLayoutError.setVisibility(View.VISIBLE);
                     }else{
-                        Toast.makeText(mContext , String.valueOf(msg.obj) , Toast.LENGTH_LONG).show();
+                        ToastUtil.showToast(mContext, String.valueOf(msg.obj));
                     }
                     break;
                 case COUNT_DOWN:
@@ -201,7 +199,7 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
 
                     break;
                 case REQUEST_RESNED_FAILED:
-                    Toast.makeText(mContext , String.valueOf(msg.obj) , Toast.LENGTH_LONG).show();
+                    ToastUtil.showToast(mContext, String.valueOf(msg.obj));
                     break;
             }
         }

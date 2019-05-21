@@ -168,4 +168,13 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         mUnreadTxtBgDrawable = drawable;
     }
 
+
+    /**
+     * 2019/4/22 Hardy
+     */
+    public void onDestroy(){
+        if (mMessageRecyclerView != null) {
+            mMessageRecyclerView.onDestroy();
+        }
+    }
 }

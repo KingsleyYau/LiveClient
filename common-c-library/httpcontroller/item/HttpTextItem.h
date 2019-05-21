@@ -21,8 +21,8 @@ public:
         bool result = false;
         if (root.isObject()) {
             /* textId */
-            if (root[LIVEROOM_RESOURCECONFIG_TESTLIST_ID].isNumeric()) {
-                textId = root[LIVEROOM_RESOURCECONFIG_TESTLIST_ID].asInt();
+            if (root[LIVEROOM_RESOURCECONFIG_TESTLIST_ID].isString()) {
+                textId = root[LIVEROOM_RESOURCECONFIG_TESTLIST_ID].asString();
             }
             /* text */
             if (root[LIVEROOM_RESOURCECONFIG_TESTLIST_TEXT].isString()) {
@@ -35,7 +35,7 @@ public:
     }
 
     HttpTextItem() {
-        textId = 0;
+        textId = "";
         text = "";
     }
     
@@ -48,7 +48,7 @@ public:
      * textId      文本ID
      * text        文本内容
      */
-    int textId;
+    string textId;
     string text;
 
 };

@@ -8,6 +8,7 @@
 
 #import "LSSayHiResponseListTableView.h"
 #import "LSSayHiResponseListTableViewCell.h"
+#import "LSDateTool.h"
 
 @implementation LSSayHiResponseListTableView
 
@@ -44,9 +45,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger number = 0;
-    
-    return number;
+    return self.items.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -57,36 +56,36 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *result = [[UITableViewCell alloc] init];
-    LSSayHiResponseListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[LSSayHiResponseListTableViewCell cellIdentifier]];
-    result = cell;
-    //    // 数据填充
-    LSSayHiResponseListItemObject *item = [self.items objectAtIndex:indexPath.row];
-    cell.anchorName.text = item.nickName;
-    [cell.imageViewLoader stop];
-    // 创建新的
-    cell.imageViewLoader = [LSImageViewLoader loader];
-    // 加载
-    [cell.imageViewLoader loadImageFromCache:cell.headImage options:SDWebImageRefreshCached imageUrl:item.avatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-    }];
-    
-    cell.contentLabel.text = [NSString stringWithFormat:@"...%@...",item.content];
-    cell.photoIcon.hidden = !item.hasImg;
-    cell.freeIcon.hidden = !item.isFree;
-    
-    NSDate *lastTime = [NSDate dateWithTimeIntervalSince1970:item.responseTime];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [formatter setLocale:usLoacal];
-    formatter.dateFormat = @"MMMM dd";
-    cell.dateTime.text = [NSString stringWithFormat:@"%@",[formatter stringFromDate:lastTime]];
-    
+    if (indexPath.row < self.items.count) {
+        LSSayHiResponseListTableViewCell *cell = [LSSayHiResponseListTableViewCell getUITableViewCell:tableView];
+        result = cell;
+        // 数据填充
+        LSSayHiResponseListItemObject *item = [self.items objectAtIndex:indexPath.row];
+        cell.anchorName.text = item.nickName;
+        [cell.imageViewLoader stop];
+        // 创建新的
+        cell.imageViewLoader = [LSImageViewLoader loader];
+        // 加载
+        [cell.imageViewLoader loadImageFromCache:cell.headImage options:SDWebImageRefreshCached imageUrl:item.avatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
+        }];
+        
+        cell.contentLabel.text = item.content;
+        cell.photoIcon.hidden = !item.hasImg;
+        cell.photoIconWidth.constant = item.hasImg?12:0;
+        cell.freeIcon.hidden = !item.isFree;
+        
+        NSDate *lastTime = [NSDate dateWithTimeIntervalSince1970:item.responseTime];
+        cell.dateTime.text = [[[LSDateTool alloc] init] showSayHiListTimeTextOfDate:lastTime];
+        
+        [cell cellUpdateIsHasRead:item.hasRead];
+    }
     
     return result;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSLog(@"LSSayHiResponseListTableView %ld self.items.count %ld",indexPath.row,self.items.count);
+    NSLog(@"LSSayHiResponseListTableView %lu self.items.count %lu",(long)indexPath.row,(long)self.items.count);
     if (indexPath.row < self.items.count) {
         if([self.tableViewDelegate respondsToSelector:@selector(tableView:didSelectSayHiDetail:)]) {
             [self.tableViewDelegate tableView:self didSelectSayHiDetail:[self.items objectAtIndex:indexPath.row]];

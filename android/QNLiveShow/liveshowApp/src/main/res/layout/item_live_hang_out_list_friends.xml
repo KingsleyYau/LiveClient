@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--注:如果最外层设置layout_margin会同时影响分组头的边距 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        style="@style/img_hangout_her_friends"
+        android:padding="@dimen/live_size_2dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img_friend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/live_size_2dp" />
+
+        <Button
+            android:id="@+id/btn_friend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_hangout_friends_item_bg" />
+    </FrameLayout>
+
+
+</FrameLayout>

@@ -40,6 +40,23 @@ public class InstanceIDUtil {
     public static String getFCMToken() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.i("info", "------------getFCMToken--------refreshedToken: " + refreshedToken);
+
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.i("info", "getInstanceId failed", task.getException());
+//                    return;
+//                }
+//
+//                // Get new Instance ID token
+//                String token = task.getResult().getToken();
+//
+//                // Log and toast
+//                Log.i("info", "getInstanceId success---> token: "+token+"----> id: "+Thread.currentThread().getId());
+//            }
+//        });
+
         return refreshedToken;
     }
 }

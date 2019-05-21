@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,7 @@ public class LiveGiftItemView extends LinearLayout{
     //控件
     private View ll_giftItemParentView;
     private LinearLayout mLinearLayoutChildView;
+    private LinearLayout ll_bg;
     private RelativeLayout mLinearLayoutNum;
 
     private ImageView mImgx, mImg0, mImg1, mImg2, mImg3;
@@ -74,16 +76,8 @@ public class LiveGiftItemView extends LinearLayout{
         // 加载布局
         LayoutInflater.from(context).inflate(R.layout.layout_livegiftview, this);
         mLinearLayoutChildView = (LinearLayout)findViewById(R.id.childView);
+        ll_bg = findViewById(R.id.ll_bg);
         ll_giftItemParentView = findViewById(R.id.ll_giftItemParentView);
-
-        if(mContext instanceof BaseCommonLiveRoomActivity){
-            BaseCommonLiveRoomActivity activity = (BaseCommonLiveRoomActivity)mContext;
-            ll_giftItemParentView.setBackgroundDrawable(
-                    activity.roomThemeManager.getRoomRepeatGiftAnimBgDrawable(
-                            activity,
-                            activity.mIMRoomInItem.roomType));
-
-        }
         mLinearLayoutNum = (RelativeLayout)findViewById(R.id.llayout_num);
 
         //数字图片
@@ -103,10 +97,6 @@ public class LiveGiftItemView extends LinearLayout{
         mLiveGift = liveGift;
     }
 
-    public void setGiftItemViewBgDrawable(Drawable bgDrawable){
-        mLinearLayoutChildView.setBackgroundDrawable(bgDrawable);
-    }
-
     public LiveGift getLiveGift() {
         return mLiveGift;
     }
@@ -124,6 +114,14 @@ public class LiveGiftItemView extends LinearLayout{
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_height));
         mLinearLayoutChildView.addView(view,lp);
+    }
+
+    /**
+     * 由于外部定义礼物布局和礼物X数字动画都在礼物背景之上，所以背景不能为外部定义礼物布局，要另外设置
+     * @param background
+     */
+    public void setBg(Drawable background){
+        ll_bg.setBackgroundDrawable(background);
     }
 
     /**
@@ -321,6 +319,10 @@ public class LiveGiftItemView extends LinearLayout{
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        //可以结束了
+        if(mOnPlayListener != null){
+            mOnPlayListener.onPlayEnd(mLocalInLiveGiftView);
+        }
         isDetachWindow = true;      //标注已被删除不可见
         mOnPlayListener = null;
         if(mAnimatorSet != null){

@@ -21,13 +21,18 @@ TransportClient::TransportClient(void)
     m_connState = DISCONNECT;
     m_conn = NULL;
     m_isWebConnected = false;
+    // 初始化websocket的锁
+    mg_global_init();
 }
 
 TransportClient::~TransportClient(void)
 {
     FileLevelLog("ImClient", KLog::LOG_WARNING, "TransportClient::~TransportClient() begin");
+
 	// 释放mgr
 	ReleaseMgrProc();
+    // 释放websocket的锁
+    mg_global_free();
     
     IAutoLock::ReleaseAutoLock(m_connStateLock);
     m_connStateLock = NULL;

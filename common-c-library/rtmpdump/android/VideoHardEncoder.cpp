@@ -140,6 +140,11 @@ VideoHardEncoder::~VideoHardEncoder() {
 		mJniEncoder = NULL;
 	}
 
+	if( dataByteArray ) {
+		env->DeleteGlobalRef(dataByteArray);
+		dataByteArray = NULL;
+	}
+
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}

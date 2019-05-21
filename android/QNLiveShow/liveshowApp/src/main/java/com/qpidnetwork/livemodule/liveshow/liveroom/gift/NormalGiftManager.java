@@ -345,6 +345,9 @@ public class NormalGiftManager {
                 case BigAnimSrc:{
                     url = giftItem.srcWebpUrl;
                 }break;
+                case BigPngSrc:{
+                    url = giftItem.middleImgUrl;        //与ModuleGiftManager.addToAdvanceGiftManager里的判断条件对应
+                }break;
                 default:
                     break;
             }

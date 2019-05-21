@@ -13,7 +13,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -22,6 +21,7 @@ import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.MovingImageView;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.KeyBoardManager;
 
 /**
@@ -285,7 +285,7 @@ public class RegisterActivity extends BaseFragmentActivity implements IAuthoriza
 		switch (msg.what) {
 		case REQUEST_SUCCESS: {
 			// facebook登录成功跳转主界面
-			// Intent intent = new Intent(RegisterActivity.this,
+			// Intent intent = new Intent(LoginNewActivity.this,
 			// HomeActivity.class);
 			// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			// startActivity(intent);
@@ -310,13 +310,13 @@ public class RegisterActivity extends BaseFragmentActivity implements IAuthoriza
 //			switch (loginItem.errno) {
 //			case RequestErrorCode.MBCE64001: {
 //				// facebook没有邮箱，显示输入邮箱
-//				startActivity(new Intent(RegisterActivity.this,
+//				startActivity(new Intent(LoginNewActivity.this,
 //						RegisterByFacebookActivity.class));
 //			}
 //				break;
 //			case RequestErrorCode.MBCE64002: {
 //				// facebook有邮箱，并且已经被qpidnetwork注册，显示输入密码，重新绑定
-//				Intent intent = new Intent(RegisterActivity.this,
+//				Intent intent = new Intent(LoginNewActivity.this,
 //						RegisterFacebookPasswordActivity.class);
 //				intent.putExtra(
 //						RegisterFacebookPasswordActivity.REGISTER_FACEBOOK_LOGINERRORITEM_KEY,
@@ -326,7 +326,7 @@ public class RegisterActivity extends BaseFragmentActivity implements IAuthoriza
 //				break;
 //			default:
 //				if(!TextUtils.isEmpty(loginItem.errmsg)){
-//					Toast.makeText(mContext, loginItem.errmsg, Toast.LENGTH_LONG)
+//			ToastUtil.showToast(mContext, loginItem.errmsg);
 //					.show();
 //				}
 //				break;
@@ -335,7 +335,7 @@ public class RegisterActivity extends BaseFragmentActivity implements IAuthoriza
 			if(msg.obj != null){
 				HttpRespObject httpRespObject = (HttpRespObject)msg.obj;
 				if(!TextUtils.isEmpty((httpRespObject.errMsg))){
-					Toast.makeText(mContext , httpRespObject.errMsg , Toast.LENGTH_LONG).show();
+					ToastUtil.showToast(mContext, httpRespObject.errMsg);
 				}
 			}
 

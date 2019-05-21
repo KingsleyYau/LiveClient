@@ -153,9 +153,11 @@
 #endif
 
 #endif /* CS_COMMON_PLATFORM_H_ */
+
 #ifdef MG_MODULE_LINES
 #line 1 "common/platforms/platform_windows.h"
 #endif
+
 #ifndef CS_COMMON_PLATFORMS_PLATFORM_WINDOWS_H_
 #define CS_COMMON_PLATFORMS_PLATFORM_WINDOWS_H_
 #if CS_PLATFORM == CS_P_WINDOWS
@@ -3302,7 +3304,7 @@ struct mg_connection {
   struct mg_iface *iface;
   unsigned long flags;
     // 增加websocket发送数据的锁
-    struct IAutoLockTag * webSocketSendDataLock;
+    //struct IAutoLockTag * webSocketSendDataLock;
     
     
 /* Flags set by Mongoose */
@@ -3332,6 +3334,15 @@ struct mg_connection {
 #define MG_F_USER_6 (1 << 25)
 };
 
+ /*
+  * init global variable (初始化全局变量 alex)
+  */
+void mg_global_init();
+
+/*
+ * free global variable (释放全局变量 alex)
+ */
+void mg_global_free();
 /*
  * Initialise Mongoose manager. Side effect: ignores SIGPIPE signal.
  * `mgr->user_data` field will be initialised with a `user_data` parameter.

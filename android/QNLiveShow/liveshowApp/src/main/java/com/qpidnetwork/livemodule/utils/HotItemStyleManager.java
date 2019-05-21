@@ -1,6 +1,9 @@
 package com.qpidnetwork.livemodule.utils;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -44,9 +47,27 @@ public class HotItemStyleManager {
                         R.drawable.list_button_start_private_broadcast;
             }
             btnView.setImageDrawable(context.getResources().getDrawable(bgResId));
+
+            // 2019/4/22 Hardy
+            setHotItemButtonForeground(btnView, hasFreeFlag);
+
         }catch (Exception ex){
             ex.printStackTrace();
         }
     }
 
+
+    /**
+     * 2019/04/22 Hardy
+     * 获取图片水波纹的资源
+     * @param btnView
+     * @param hasFreeFlag
+     */
+    public static void setHotItemButtonForeground(ImageView btnView,boolean hasFreeFlag){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int resId = hasFreeFlag ? R.drawable.touch_feedback_btn_hot_list_free : R.drawable.touch_feedback_btn_hot_list;
+            Drawable drawable = ContextCompat.getDrawable(btnView.getContext(), resId);
+            btnView.setForeground(drawable);
+        }
+    }
 }

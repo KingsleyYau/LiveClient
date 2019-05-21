@@ -78,6 +78,7 @@ import com.qpidnetwork.livemodule.view.RefreshRecyclerView;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationTypeEnum;
 import com.qpidnetwork.qnbridgemodule.util.BroadcastManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.KeyBoardManager;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout;
 
@@ -337,8 +338,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
-        super.onDestroy();
-//        msgList.onDestroy();
+        //        msgList.onDestroy();
 
 //        unregisterReceiver(mBroadcastReceiver);
         BroadcastManager.unregisterReceiver(mContext,mBroadcastReceiver);
@@ -353,8 +353,15 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         mLiveChatManager.UnregisterMagicIconListener(this);
 //        mLiveChatManager.UnregisterThemeListener(this);
 
+        //解绑监听器，防止泄漏
+        if(sl_root != null){
+            sl_root.removeOnResizeListener(this);
+        }
+
         /* 清除正在聊天对象 */
         mContactManager.mWomanId = "";
+
+        super.onDestroy();
     }
 
     /**
@@ -1188,7 +1195,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             case REQUEST_ADD_FAVOUR_FAIL: {
                 // 收藏失败
                 LiveChatCallBackItem obj = (LiveChatCallBackItem) msg.obj;
-                Toast.makeText(this, obj.errMsg, Toast.LENGTH_LONG).show();
+                ToastUtil.showToast(this, obj.errMsg);
                 }
                 break;
             case TARGET_PHOTO_UPDATE:
@@ -1299,7 +1306,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
         if(recordTime < 1){
             //录音时长小于1秒，提示不发送
-            Toast.makeText(this, getString(R.string.livechat_record_voice_too_short), Toast.LENGTH_SHORT).show();
+            ToastUtil.showToast(this, R.string.livechat_record_voice_too_short);
             return;
         }
 
@@ -2164,7 +2171,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 //				LiveChatManager.getInstance().BuildAndInsertSystemMsg(targetId, errmsg);
                 //edit by Jagger 2018-5-2
                 //按<节目功能点_20180417>新需求, 结束会话遇网络错误用Toast显示
-                Toast.makeText(mContext, errmsg, Toast.LENGTH_LONG) .show();
+                ToastUtil.showToast(mContext, errmsg);
             }else {
                 Message msg = Message.obtain();
                 msg.what = END_CHAT;

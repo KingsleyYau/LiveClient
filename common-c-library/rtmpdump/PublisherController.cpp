@@ -374,19 +374,22 @@ void PublisherController::OnDisconnect(RtmpDump *rtmpDump) {
     }
 }
 
-void PublisherController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize) {
+void PublisherController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::OnChangeVideoSpsPps( "
                  "this : %p, "
                  "sps_size : %d, "
                  "pps_size : %d, "
-                 "naluHeaderSize : %d "
+                 "naluHeaderSize : %d, "
+				 "timestamp : %u"
                  ")",
                  this,
                  sps_size,
                  pps_size,
-                 naluHeaderSize);
+                 naluHeaderSize,
+				 timestamp
+				 );
 }
 
 void PublisherController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {

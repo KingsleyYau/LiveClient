@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.home.menu;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
@@ -19,10 +21,12 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateM
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.ButtonUtils;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.view.BadgeHelper;
 import com.qpidnetwork.livemodule.view.DotView.DotView;
 import com.qpidnetwork.qnbridgemodule.bean.WebSiteBean;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.websitemanager.WebSiteConfigManager;
 
 import java.util.ArrayList;
@@ -53,8 +57,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     public static final int ITEM_ID_SHOWTICKETS = 4;
     public static final int ITEM_ID_BOOKS = 5;
     public static final int ITEM_ID_BACKPACK = 6;
-    // 2018/11/16 Hardy
-    public static final int ITEM_ID_CHAT = 7;
+    public static final int ITEM_ID_CHAT = 7;   // 2018/11/16 Hardy
+    public static final int ITEM_ID_HANGOUT = 8;
 
     private Context mContext;
 
@@ -66,13 +70,14 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         //初始化菜单数据，动态添加站点信息
         dataList = new ArrayList<DrawerItem>();
         dataList.addAll(Arrays.asList(
-//                new DrawerItemHeader(),
+//                new DrawerItemHeader(),   //由于不需要滑动，移到列表外处理。在MainFragmentActivity ()中处理
 //                new DrawerItemCredits(),
 //                new DrawerItemDivider(),
                 new DrawerItemBlank(),
                 new DrawerItemNormal(ITEM_ID_CHAT, R.drawable.ic_live_menu_item_chat, R.string.Chat),   // 2018/11/16 Hardy
                 new DrawerItemNormal(ITEM_ID_MAIL, R.drawable.ic_live_menu_item_mail, R.string.live_main_drawer_menu_Mail),
                 new DrawerItemNormal(ITEM_ID_GREETS, R.drawable.ic_live_menu_item_greet, R.string.live_main_drawer_menu_GreetMail),
+                new DrawerItemNormal(ITEM_ID_HANGOUT, R.drawable.ic_live_menu_item_hangout, R.string.live_main_drawer_menu_hangout),
 //                new DrawerItemNormal(ITEM_ID_MESSAGE, R.drawable.ic_live_menu_item_message, R.string.live_main_drawer_menu_Message),  //私信
                 new DrawerItemBlank(),
                 new DrawerItemDivider(),
@@ -185,6 +190,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 }
             }
         });
+
+        setVisibility(item.visible, holder.root);
     }
 
     private void setTypeTitleView(TitleViewHolder holder, DrawerItemTypeTitle item) {
@@ -261,6 +268,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 }
             }
             break;
+
+            default:
+                //其它ITEM不处理红点
+                holder.dv_digitalHint.setVisibility(View.GONE);
+                holder.badge.setBadgeNumber(0);
+                break;
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -271,18 +284,17 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 }
             }
         });
+
+        setVisibility(item.visible, holder.root);
     }
 
     private void setHeaderView(HeaderViewHolder holder) {
         LoginItem loginItem = LoginManager.getInstance().getLoginItem();
         if (null != loginItem) {
-//            Picasso.with(mContext).load(loginItem.photoUrl)
-//                    .error(R.drawable.ic_default_photo_man)
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                    .noPlaceholder()
-//                    .into(holder.civ_userPhoto);
-            PicassoLoadUtil.loadUrlNoMCache(holder.civ_userPhoto, loginItem.photoUrl,
-                    R.drawable.ic_default_photo_man);
+            FrescoLoadUtil.loadUrl(mContext, holder.civ_userPhoto, loginItem.photoUrl, mContext.getResources().getDimensionPixelSize(R.dimen.live_size_40dp),
+                    R.drawable.ic_default_photo_man, true,
+                    mContext.getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+                    ContextCompat.getColor(mContext, R.color.white));
 
             holder.tv_userName.setText(loginItem.nickName);
             holder.tv_userId.setText(loginItem.userId);
@@ -315,11 +327,22 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         });
     }
 
-    public OnItemClickListener listener;
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    //防止隐藏item出现空白
+    private void setVisibility(boolean isVisible, View itemView) {
+        ViewGroup.LayoutParams param = (ViewGroup.LayoutParams) itemView.getLayoutParams();
+        if (isVisible) {
+            param.height = ViewGroup.LayoutParams.WRAP_CONTENT;// 这里注意使用自己布局的根布局类型
+            param.width = ViewGroup.LayoutParams.MATCH_PARENT;// 这里注意使用自己布局的根布局类型
+            itemView.setVisibility(View.VISIBLE);
+        } else {
+            itemView.setVisibility(View.GONE);
+            param.height = 0;
+            param.width = 0;
+        }
+        itemView.setLayoutParams(param);
     }
+
+    private OnItemClickListener listener;
 
     /**
      * 菜单点击事件
@@ -358,6 +381,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
          * @param webSiteBean
          */
         void onWebSiteChoose(WebSiteBean webSiteBean);
+    }
+
+    //-------------------------对外方法 start------------------------------
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -402,15 +431,44 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         }
     }
 
+    /**
+     * 设置指定ITEM可视
+     * @param id
+     * @param isVisible
+     */
+    public void setItemVisible(int id, boolean isVisible){
+        if (null == dataList) {
+            return;
+        }
+        for (int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i).id == id) {
+//                if(isVisible){
+//                    dataList.get(i).setVisible(View.VISIBLE);
+//                }else {
+//                    dataList.get(i).setVisible(View.GONE);
+//                }
+                dataList.get(i).setVisible(isVisible);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+    }
+
+    //-------------------------对外方法 end------------------------------
 
     //-------------------------item数据模型------------------------------
     // drawerlayout item统一的数据模型
-    public interface DrawerItem {
+    public class DrawerItem {
+        public int id = -1;
+        public boolean visible = true;
+
+        public void setVisible(boolean isVisible) {
+            this.visible = isVisible;
+        }
     }
 
     //有图片和文字的item
-    public class DrawerItemNormal implements DrawerItem {
-        public int id = -1;
+    public class DrawerItemNormal extends DrawerItem {
         public int iconRes;
         public int titleRes;
         public int unreadNum;
@@ -425,13 +483,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     }
 
     //分割线item
-    public class DrawerItemDivider implements DrawerItem {
+    public class DrawerItemDivider extends DrawerItem {
         public DrawerItemDivider() {
         }
     }
 
     //分割线item
-    public class DrawerItemTypeTitle implements DrawerItem {
+    public class DrawerItemTypeTitle extends DrawerItem {
 
         public int titleRes;
 
@@ -441,12 +499,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     }
 
-    public class DrawerItemBlank implements DrawerItem {
+    public class DrawerItemBlank extends DrawerItem {
         public DrawerItemBlank() {
         }
     }
 
-    public class DrawerItemWebSite implements DrawerItem {
+    public class DrawerItemWebSite extends DrawerItem {
 
         public WebSiteBean mWebSiteBean;
 
@@ -457,13 +515,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     }
 
     //头部item
-    public class DrawerItemHeader implements DrawerItem {
+    public class DrawerItemHeader extends DrawerItem {
         public DrawerItemHeader() {
         }
     }
 
     //头部item
-    public class DrawerItemCredits implements DrawerItem {
+    public class DrawerItemCredits extends DrawerItem {
         public DrawerItemCredits() {
         }
     }
@@ -479,6 +537,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     //有图标有文字ViewHolder
     public class NormalViewHolder extends DrawerViewHolder {
         public View view;
+        public LinearLayout root;
         public TextView tv_itemTitle;
         public ImageView iv_itemIcon;
         public Badge badge;
@@ -487,6 +546,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         public NormalViewHolder(View itemView) {
             super(itemView);
             view = itemView;
+            root = (LinearLayout) itemView.findViewById(R.id.root);
             tv_itemTitle = (TextView) itemView.findViewById(R.id.tv_itemTitle);
             iv_itemIcon = (ImageView) itemView.findViewById(R.id.iv_itemIcon);
             //带数字的未读效果用QBadgeView来实现
@@ -511,7 +571,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     //头部ViewHolder
     public class HeaderViewHolder extends DrawerViewHolder {
 
-        public CircleImageView civ_userPhoto;
+        public SimpleDraweeView civ_userPhoto;
         public TextView tv_userName;
         public TextView tv_userId;
         public View ll_userInfo;
@@ -522,7 +582,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         public HeaderViewHolder(View itemView) {
             super(itemView);
 
-            civ_userPhoto = (CircleImageView) itemView.findViewById(R.id.civ_userPhoto);
+            civ_userPhoto = (SimpleDraweeView)itemView.findViewById(R.id.img_userPhoto);
             tv_userName = (TextView) itemView.findViewById(R.id.tv_userName);
             tv_userId = (TextView) itemView.findViewById(R.id.tv_userId);
             iv_userLevel = (ImageView) itemView.findViewById(R.id.iv_userLevel);

@@ -33,6 +33,7 @@ public:
     virtual void OnResetVideoStream(RtmpPlayer* player) = 0;
     virtual void OnResetAudioStream(RtmpPlayer* player) = 0;
     virtual void OnDelayMaxTime(RtmpPlayer* player) = 0;
+    virtual void OnOverMaxBufferFrameCount(RtmpPlayer* player) = 0;
 };
 
 class PlayVideoRunnable;

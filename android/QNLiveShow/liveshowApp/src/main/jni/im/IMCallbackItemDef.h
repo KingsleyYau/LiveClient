@@ -43,5 +43,6 @@
 #define IM_HANGOUT_IMRECVKNOCKREQUEST_ITEM_CLASS 	"com/qpidnetwork/livemodule/im/listener/IMRecvKnockRequestItem"
 #define IM_HANGOUT_IMHANGOUTMSG_ITEM_CLASS 	        "com/qpidnetwork/livemodule/im/listener/IMHangoutMsgItem"
 #define IM_HANGOUT_IMHANGOUTCOUNTDOWN_ITEM_CLASS 	"com/qpidnetwork/livemodule/im/listener/IMHangoutCountDownItem"
+#define IM_HANGOUT_IMHANGOUTINVITE_ITEM_CLASS 	    "com/qpidnetwork/livemodule/im/listener/IMHangoutInviteItem"
 
 #endif

@@ -19,10 +19,10 @@ static const int HTTPErrorTypeArray[] = {
 	    // 客户端定义的错误
 	    HTTP_LCC_ERR_PROTOCOLFAIL,   	// 协议解析失败（服务器返回的格式不正确）
 	    HTTP_LCC_ERR_CONNECTFAIL,    	// 连接服务器失败/断开连接
-	    HTTP_LCC_ERR_CHECKVERFAIL,   	// 检测版本号失败（可能由于版本过低导致）
+	    //HTTP_LCC_ERR_CHECKVERFAIL,   	// 检测版本号失败（可能由于版本过低导致）
 
-	    HTTP_LCC_ERR_SVRBREAK,       	// 服务器踢下线
-	    HTTP_LCC_ERR_INVITE_TIMEOUT, 	// 邀请超时
+	    //HTTP_LCC_ERR_SVRBREAK,       	// 服务器踢下线
+	    //HTTP_LCC_ERR_INVITE_TIMEOUT, 	// 邀请超时
 	    // 服务器返回错误
 	    HTTP_LCC_ERR_ROOM_FULL,   		// 房间人满
 	    HTTP_LCC_ERR_NO_CREDIT,   		// 信用点不足
@@ -87,6 +87,21 @@ static const int HTTPErrorTypeArray[] = {
         HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_INFODESCLOG_SETGROUPID,   // MBCE12007：update info_desc_log set group_id
         HTTP_LCC_ERR_DEMAIN_APP_EXIST_LOGS,                       // MBCE22001：(APP安装记录已存在。)
         HTTP_LCC_ERR_PRIVTE_INVITE_AUTHORITY,                     // 主播无立即私密邀请权限(17002)
+            /* 信件*/
+        //HTTP_LCC_ERR_LETTER_BUYPHOTO_USESTAMP_NOSTAMP_HASCREDIT,          // 购买图片使用邮票支付时，邮票不足，但信用点可用(17213)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_BUYPHOTO_USESTAMP_NOSTAMP_NOCREDIT,          // 购买图片使用邮票支付时，邮票不足，且信用点不足(17214)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_BUYPHOTO_USECREDIT_NOCREDIT_HASSTAMP,          // 购买图片使用信用点支付时，信用点不足，但邮票可用(17215)(调用13.7.购买信件附件接口)
+
+        //HTTP_LCC_ERR_LETTER_BUYPHOTO_USECREDIT_NOSTAMP_NOCREDIT6,          // 购买图片使用信用点支付时，信用点不足，且邮票不足(17216)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_PHOTO_OVERTIME,                     // 照片已过期(17217)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_BUYPVIDEO_USESTAMP_NOSTAMP_HASCREDIT,          // 购买视频使用邮票支付时，邮票不足，但信用点可用(17218)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_BUYPVIDEO_USESTAMP_NOSTAMP_NOCREDIT,          // 购买视频使用邮票支付时，邮票不足，且信用点不足(17219)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOCREDIT_HASSTAMP,          // 购买视频使用信用点支付时，信用点不足，但邮票可用(17220)(调用13.7.购买信件附件接口)
+
+        //HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOSTAMP_NOCREDIT,          // 购买视频使用信用点支付时，信用点不足，且邮票不足(17221)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_VIDEO_OVERTIME,                                // 视频已过期(17222)(调用13.7.购买信件附件接口)
+        //HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP,                         // 信用点或者邮票不足(17208):(调用13.4.信件详情接口, 调用13.5.发送信件接口)
+        HTTP_LCC_ERR_EXIST_HANGOUT,                                        // 当前会员已在hangout直播间（调用8.11.获取当前会员Hangout直播状态接口）
 };
 
 // 底层状态转换JAVA坐标
@@ -370,6 +385,15 @@ static const int ComIMChatOnlineStatusArray[] = {
 // 底层状态转换JAVA坐标
 int ComIMChatOnlineStatusToInt(IMChatOnlineStatus type);
 
+/*发送信件权限类型*/
+static const int LSSendImgRiskTypeArray[] = {
+		LSSENDIMGRISKTYPE_NORMAL,           // 正常
+		LSSENDIMGRISKTYPE_ONLYFREE,         // 只能发免费
+		LSSENDIMGRISKTYPE_ONLYPAYMENT,      // 只能发付费
+		LSSENDIMGRISKTYPE_NOSEND            // 不能发照片
+};
+int LSSendImgRiskTypeToInt(LSSendImgRiskType type);
+
 //c++对象转Java对象
 jobjectArray getJavaStringArray(JNIEnv *env, const list<string>& sourceList);
 jintArray getJavaIntArray(JNIEnv *env, const list<int>& sourceList);
@@ -415,6 +439,12 @@ jobject getVoucherInfoItem(JNIEnv *env, const HttpVoucherInfoItem& item);
 jobject getHangoutAnchorInfoItem(JNIEnv *env, const HttpHangoutAnchorItem& item);
 jobjectArray getHangoutAnchorInfoArray(JNIEnv *env, const HangoutAnchorList& list);
 jobject getHangoutGiftListItem(JNIEnv *env, const HttpHangoutGiftListItem& item);
+jobjectArray getHangoutOnlineAnchorArray(JNIEnv *env, const HttpHangoutList& list);
+jobject getHangoutListItem(JNIEnv *env, const HttpHangoutListItem& item);
+jobjectArray getFriendsInfoArray(JNIEnv *env, const HttpFriendsInfoList& list);
+jobject getHttpFriendsInfoItem(JNIEnv *env, const HttpFriendsInfoItem& item);
+jobjectArray getHangoutStatusArray(JNIEnv *env, const HttpHangoutStatusList& list);
+jobject getHttpHangoutStatusItem(JNIEnv *env, const HttpHangoutStatusItem& item);
 
 jobject getProgramInfoItem(JNIEnv *env, const HttpProgramInfoItem& item);
 jobjectArray getProgramInfoArray(JNIEnv *env, const ProgramInfoList& list);
@@ -428,5 +458,12 @@ jobject getMyProfileItem(JNIEnv *env, const HttpProfileItem& item);
 jobject getVersionCheckItem(JNIEnv *env, const HttpVersionCheckItem& item);
 
 jobject getHttpAuthorityItem(JNIEnv *env, const HttpAuthorityItem& item);
+
+// 用户权限item
+jobject getUserPrivItem(JNIEnv *env, const HttpLoginItem::HttpUserPrivItem& item);
+jobject getLiveChatPrivItem(JNIEnv *env, const HttpLoginItem::HttpLiveChatPrivItem& item);
+jobject getUserSendMailPrivItem(JNIEnv *env, const HttpLoginItem::HttpUserSendMailPrivItem& item);
+jobject getMailPrivItem(JNIEnv *env, const HttpLoginItem::HttpMailPrivItem& item);
+jobject getHangoutPrivItem(JNIEnv *env, const HttpLoginItem::HttpHangoutPrivItem& item);
 
 #endif

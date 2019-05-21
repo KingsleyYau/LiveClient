@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSSayHiThemeListViewController">
+            <connections>
+                <outlet property="bottomView" destination="vbe-Dc-8NF" id="FU7-n3-nm2"/>
+                <outlet property="buttonView" destination="a8V-wQ-QP2" id="BS7-Ci-HMd"/>
+                <outlet property="pagingScrollView" destination="bI1-Y1-jBB" id="pse-Fa-1eX"/>
+                <outlet property="segmentView" destination="bAi-ag-MZ3" id="9XU-s2-3xr"/>
+                <outlet property="selectThemeBtn" destination="DiB-rq-n87" id="bzo-al-iF8"/>
+                <outlet property="selectWordBtn" destination="jQF-dy-oMj" id="KnR-wE-9ZF"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bAi-ag-MZ3" userLabel="Segment View">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="ZI5-LC-tcl"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a8V-wQ-QP2" userLabel="Button View">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DiB-rq-n87">
+                            <rect key="frame" x="0.0" y="0.0" width="206.66666666666666" height="48"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <state key="normal" title="  Select Theme" image="Select_Theme_Normal">
+                                <color key="titleColor" red="0.16078431369999999" green="0.47843137250000001" blue="0.95294117649999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="didSelectTheme:" destination="-1" eventType="touchUpInside" id="Eez-fp-Z9h"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jQF-dy-oMj">
+                            <rect key="frame" x="207.66666666666663" y="0.0" width="206.33333333333337" height="48"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <state key="normal" title="  Select Note" image="Select_Note_Normal">
+                                <color key="titleColor" red="0.16078431369999999" green="0.47843137250000001" blue="0.95294117649999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="didSelectWord:" destination="-1" eventType="touchUpInside" id="qqB-wT-wBI"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J9p-48-OfI">
+                            <rect key="frame" x="206.66666666666666" y="10" width="1" height="28"/>
+                            <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="Erz-CE-mP7"/>
+                                <constraint firstAttribute="width" constant="1" id="Qqr-RS-7ff"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="J9p-48-OfI" firstAttribute="centerX" secondItem="a8V-wQ-QP2" secondAttribute="centerX" id="8A8-dV-BK0"/>
+                        <constraint firstAttribute="bottom" secondItem="J9p-48-OfI" secondAttribute="bottom" constant="10" id="KWv-3g-VcI"/>
+                        <constraint firstItem="J9p-48-OfI" firstAttribute="leading" secondItem="DiB-rq-n87" secondAttribute="trailing" id="SCp-5P-zZy"/>
+                        <constraint firstAttribute="bottom" secondItem="DiB-rq-n87" secondAttribute="bottom" id="Sem-yx-XtL"/>
+                        <constraint firstAttribute="bottom" secondItem="jQF-dy-oMj" secondAttribute="bottom" id="Vyw-At-cL8"/>
+                        <constraint firstItem="J9p-48-OfI" firstAttribute="top" secondItem="a8V-wQ-QP2" secondAttribute="top" constant="10" id="aqR-h3-DB6"/>
+                        <constraint firstItem="DiB-rq-n87" firstAttribute="top" secondItem="a8V-wQ-QP2" secondAttribute="top" id="iEt-F3-OS1"/>
+                        <constraint firstItem="DiB-rq-n87" firstAttribute="leading" secondItem="a8V-wQ-QP2" secondAttribute="leading" id="mUZ-PB-foh"/>
+                        <constraint firstItem="jQF-dy-oMj" firstAttribute="leading" secondItem="J9p-48-OfI" secondAttribute="trailing" id="xun-An-20O"/>
+                        <constraint firstItem="jQF-dy-oMj" firstAttribute="top" secondItem="a8V-wQ-QP2" secondAttribute="top" id="xww-NK-FJq"/>
+                        <constraint firstAttribute="trailing" secondItem="jQF-dy-oMj" secondAttribute="trailing" id="yI1-jc-by3"/>
+                    </constraints>
+                </view>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bI1-Y1-jBB" customClass="LSPZPagingScrollView">
+                    <rect key="frame" x="0.0" y="48" width="414" height="648"/>
+                </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vbe-Dc-8NF">
+                    <rect key="frame" x="0.0" y="696" width="414" height="40"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3TL-Lr-ZbQ">
+                            <rect key="frame" x="15" y="6" width="384" height="22"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="Send Now" backgroundImage="Home_OneOnOneFreeBg"/>
+                            <connections>
+                                <action selector="submitAction:" destination="-1" eventType="touchUpInside" id="KcK-L3-bVI"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="3TL-Lr-ZbQ" firstAttribute="top" secondItem="vbe-Dc-8NF" secondAttribute="top" constant="6" id="9Az-Cl-NCK"/>
+                        <constraint firstItem="3TL-Lr-ZbQ" firstAttribute="leading" secondItem="vbe-Dc-8NF" secondAttribute="leading" constant="15" id="Hxi-ra-1YA"/>
+                        <constraint firstAttribute="bottom" secondItem="3TL-Lr-ZbQ" secondAttribute="bottom" constant="12" id="Mrf-ah-Aip"/>
+                        <constraint firstAttribute="trailing" secondItem="3TL-Lr-ZbQ" secondAttribute="trailing" constant="15" id="k5k-XT-CZX"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vbe-Dc-8NF" firstAttribute="top" secondItem="bI1-Y1-jBB" secondAttribute="bottom" id="3Zi-1b-bfH"/>
+                <constraint firstItem="a8V-wQ-QP2" firstAttribute="bottom" secondItem="bAi-ag-MZ3" secondAttribute="bottom" id="3d9-o0-3pm"/>
+                <constraint firstAttribute="trailing" secondItem="bAi-ag-MZ3" secondAttribute="trailing" id="DBk-Cf-SMx"/>
+                <constraint firstItem="a8V-wQ-QP2" firstAttribute="leading" secondItem="bAi-ag-MZ3" secondAttribute="leading" id="FrY-bg-e9X"/>
+                <constraint firstItem="bAi-ag-MZ3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Hct-zy-LXx"/>
+                <constraint firstItem="a8V-wQ-QP2" firstAttribute="trailing" secondItem="bAi-ag-MZ3" secondAttribute="trailing" id="NW5-ke-y6e"/>
+                <constraint firstItem="bAi-ag-MZ3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="OAx-8J-wmh"/>
+                <constraint firstItem="a8V-wQ-QP2" firstAttribute="top" secondItem="bAi-ag-MZ3" secondAttribute="top" id="XKg-bk-9Bh"/>
+                <constraint firstAttribute="bottom" secondItem="vbe-Dc-8NF" secondAttribute="bottom" id="bNB-yr-lcV"/>
+                <constraint firstAttribute="trailing" secondItem="vbe-Dc-8NF" secondAttribute="trailing" id="clU-P0-Lez"/>
+                <constraint firstItem="vbe-Dc-8NF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="h0J-Ci-YSz"/>
+                <constraint firstItem="bI1-Y1-jBB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uft-2b-gjp"/>
+                <constraint firstAttribute="trailing" secondItem="bI1-Y1-jBB" secondAttribute="trailing" id="xxg-n5-8lH"/>
+                <constraint firstItem="bI1-Y1-jBB" firstAttribute="top" secondItem="bAi-ag-MZ3" secondAttribute="bottom" id="ykf-OE-xt6"/>
+            </constraints>
+            <point key="canvasLocation" x="34.782608695652179" y="41.576086956521742"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Home_OneOnOneFreeBg" width="231.66667175292969" height="51"/>
+        <image name="Select_Note_Normal" width="20" height="20"/>
+        <image name="Select_Theme_Normal" width="20" height="20"/>
+    </resources>
+</document>

@@ -24,9 +24,10 @@ public interface ILSVideoHardDecoderJni {
 	 * @param pps
 	 * @param pps_size
 	 * @param naluHeaderSize
+	 * @param timestamp
 	 * @return
 	 */
-	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize);
+	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize, int timestamp);
 	
 	/**
 	 * 解码视频帧

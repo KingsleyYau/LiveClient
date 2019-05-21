@@ -22,6 +22,7 @@
     <!--Common-->
     <string name="common_hotlist_guide">Watch Hot Broadcasts</string>
     <string name="live_credits">%1$s credits</string>
+    <string name="live_Credits">%1$s Credits</string>
 
     <!-- 更新 -->
     <string name="live_upgrade_title">New Version Availble</string>
@@ -36,6 +37,7 @@
     <string name="live_login_by_using_our_app_your_agree_to_the_term_of_user">By using our app, your agree to the Terms of Use and Privacy Policy</string>
     <string name="live_kickoff_by_im">You have been signed out because your account is logged in elsewhere.</string>
     <string name="txt_login_loading">Login...</string>
+    <string name="login_forget_password">Forgot?</string>
 
     <!-- 忘记密码 -->
     <string name="live_enter_your_email">Enter your email</string>
@@ -55,7 +57,12 @@
     <string name="live_main_drawer_menu_showtickets">My Show Tickets</string>
     <string name="live_main_drawer_menu_books">My Booking</string>
     <string name="live_main_drawer_menu_backpack">My Backpack</string>
+    <string name="live_main_drawer_menu_hangout">Hang-out</string>
     <string name="live_main_drawer_menu_changewebsize">Switch to our family sites</string>
+    <string name="live_main_tab_discover">DISCOVER</string>
+    <string name="live_main_tab_hangout">HANG-OUT</string>
+    <string name="live_main_tab_follow">FOLLOW</string>
+    <string name="live_main_tab_calendar">CALENDAR</string>
 
     <!--font标签只实现了两个属性 color和face，如要控制字体大小，可以通过small和big来粗略区分，
     具体参考源码android.text.HtmlToSpannedConverter#startFont/android.text.HtmlToSpannedConverter#handleEndTag-->
@@ -112,9 +119,10 @@
                 <jimg src=\"anchor2\"/><font color=\"#5DDE7E\"><xliff:g id="message_username">&#160;%1$s</xliff:g></font><b><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
         ]]></string>
 
-    <string name="live_room_host_nickname_tips">%1$s\'s</string>>
-    <string name="live_room_public_flag">Premium Public</string>>
-    <string name="live_room_private_flag">One-on-One</string>>
+    <string name="live_room_host_nickname_tips">%1$s\'s</string>
+    <string name="live_room_public_flag">Premium Public</string>
+    <string name="live_room_private_flag">One-on-One</string>
+    <string name="live_room_error_pkg_gift_not_enough">The amount of gifts you try to send can not exceed the number of gifts in your storage.</string>
 
     <!--直播间发弹幕消息提示-->
     <string name="txt_hint_input_barrage">%1$s credit per pop-up msg</string>
@@ -139,6 +147,7 @@
     <string name="followinglist_empty_text">No following broadcasters.</string>
     <string name="followinglist_logout_text">Login and view my following broadcasters.</string>
     <string name="live_common_noenough_money_tips">You don\'t have enough credits, please buy more.</string>
+    <string name="hangout_list_empty_text">No Hang-out circles are online at the moment.Please check back later.</string>
 
     <!--room transition-->
     <string name="liveroom_transition_anchor_private_broadcast_exception">The broadcaster is in a One-on-One broadcast. Do you still wish to send the invitation?</string>
@@ -167,13 +176,15 @@
 
     <string name="common_btn_ok">Ok</string>
     <string name="common_btn_cancel">Cancel</string>
+    <string name="common_btn_sure">Sure</string>
     <string name="live_common_btn_add_credit">Add Credit</string>
     <string name="live_common_btn_yes">Yes</string>
     <string name="live_common_btn_no">No</string>
     <string name="live_common_btn_search">Search</string>
     <string name="live_common_btn_close">Close</string>
     <string name="live_common_btn_retry">Retry</string>
-    <string name="common_connect_error_description">Trouble connecting to the server, please try again later.</string>
+    <string name="live_common_start_oneonone">Start one-on-one</string>
+    <string name="common_connect_error_description">Trouble connecting to the server. Please try again later.</string>
 
     <string name="liveroom_my_balance">My Balance</string>
     <string name="liveroom_gift_user_levellimit">This gift is only available for viewers of level %1$s or higher</string>
@@ -190,7 +201,7 @@
     <string name="live_balance_userId">ID:%1$s</string>
 
     <string name="live_gift_coins">%1$s Credits</string>
-    <string name="live_gift_maxnum">99+</string>
+    <string name="live_gift_maxnum">...</string>
 
     <!--系统公告-->
     <string name="system_notice_unlink_carin"><![CDATA[[medal:%1$s]<b><font color=\"#FFD205\">%2$s</font></b>]]></string>
@@ -541,7 +552,119 @@
     <string name="live_chat_kickoff_by_sever_update">You have been disconnected due to the server is now under maintenance.</string>
     <string name="live_chat_end_chat">End Chat</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--Hang out-->
+    <string name="Start">Start</string>
+    <string name="live_common_hangout">Hang-out</string>
+    <string name="live_common_invite">Invite</string>
+    <string name="live_common_open_door">Open Door</string>
+    <string name="live_common_invite_now">Invite Now</string>
+    <string name="live_common_start_hangout">Start Hang-out</string>
+    <string name="live_common_taptoretry">Tap to retry</string>
+    <string name="live_common_no_broadcasters">No broadcasters yet.</string>
+    <string name="Hand_out">Hang-out</string>
+    <string name="Chat_now">Chat Now</string>
+    <string name="hand_out_list_header_title">What is Hang-out?</string>
+    <string name="hand_out_list_header_dont_show">&#160;Don\'t show again</string>
+    <string name="hand_out_list_header_tips_long">With Hang-out you can enjoy fully interacting with broadcasters and their friends in the same live video Hang-out room. By clicking \"Start Hang-out\" below, you will first enter the broadcaster\'s Hang-out room. Then, through your or her invitation, friends of her invited will join the Hang-out for a great time together!\n\nHang-out is billed at 0.3 credits per minute per broadcaster.</string>
+    <string name="hand_out_list_header_btn">I GOT IT!</string>
+    <string name="hand_out_list_her_friends">Her Friends</string>
+    <string name="hand_out_list_start">Start Hang-out</string>
+    <string name="hand_out_list_start_again">Start Hang-out Again</string>
+    <string name="hand_out_detail_title">Hang-out with %s and Her Friends</string>
+    <string name="hand_out_detail_des">Click Start button below, you will first enter %s\'s Hang-out room. Then, through your or %s\'s invitation, %s\'s friends will join the Hang-out.</string>
+    <string name="hand_out_detail_name">%1$s\'s Friends</string>
+    <string name="hand_out_add_credits">Add Credits</string>
+    <string name="hand_out_add_credit">Add Credit</string>
+    <string name="hangout_inviting_tips">Inviting %1$s</string>
+    <string name="hangout_coming_tips">%1$s is coming in</string>
+    <string name="hangout_enter_tips">%1$s will enter in %2$ss</string>
+    <string name="hangout_list_invitationmsg_des">\"%1$s\"</string>
+    <!--<string name="hangout_invite_tips">Recommend a friend to join the Hang-out</string>-->
+    <string name="hangout_invite_tips">Invite Broadcaster</string>
+    <string name="notification_hangout_inite_tips">%1$s is inviting you to Hang-out. Click to join now! </string>
+    <string name="hangout_dialog_title">Bring a friend to Hang-out with&#160;</string>
+    <string name="hangout_dialog_empty_tips">No friends at the moment.</string>
+    <string name="hangout_dialog_error_tips">Could not load your friend list.</string>
+    <string name="hangout_dialog_des">%1$d yrs / %2$s</string>
+    <string name="hangout_liveroom_close_room_notify">Are you sure to exit the Hang-out?</string>
+    <string name="common_normal_newwork_error_tips">Trouble connecting to the server, please try again later.</string>
+    <string name="hangout_liveroom_end">Hang-out has ended.</string>
+    <string name="hangout_liveroom_controll_exit">End Hang-out</string>
+    <string name="hangout_liveroom_controll_silent">Silent</string>
+    <string name="hangout_liveroom_controll_mute">Mute</string>
+    <string name="hangout_gift_empty">No gifts yet</string>
+    <string name="hangout_gift_retry">Tap to retry</string>
+    <string name="hangout_check_all">Check All</string>
+    <string name="hangout_send_to">Send to %1$s</string>
+    <string name="hangout_gift_tab_bar">Bar counter</string>
+    <string name="hangout_gift_tab_giftstore">Gift store</string>
+    <string name="hangout_gift_tab_celeb">Celebration</string>
+    <string name="hangout_gift_Send_Secretly">Send Secretly</string>
+    <string name="hangout_gift_celeb_tip">We have prepared champagne, fireworks and more to help all\nof you celebrate and enjoy a good time.</string>
+    <string name="live_push_stream_network_poor">You have an unstable connection. Broadcast may be jumpy.</string>
+    <string name="hand_out_enter_exist_room">Go to My Hang-out Room</string>
+    <string name="hand_out_enter_new_room">Start a New Hang-out</string>
+    <string name="public_live_sendmsg_manleave_tips">The broadcast room has no viewers or the viewer you @ has left the broadcast room</string>
+    <string name="hang_out_my_balance">My Balance:</string>
+    <string name="hangout_invtite_start_tips">Inviting %s to join Hang-out...</string>
+    <string name="hangout_invtite_success_tips">Hang-out will start soon.</string>
+    <string name="hangout_anchor_recommand_private_tips">%1$s would like to start Hang-out with you and %2$s.</string>
+    <string name="hangout_anchor_recommand_hangout_tips">%1$s Recommended %2$s to join the Hang-out.</string>
+    <string name="hangout_anchor_knock_tips">%1$s has come back and is knocking the door.</string>
+    <string name="hangout_end_over_one_minutes">Hang-out has been ended due to the app has\nbeen put into backstage for over 1 minute.</string>
+    <string name="hangout_end_add_credits">Hang-out has ended.\nYou have insufficient credits. Please\nadd more to start Hang-out again.</string>
+    <string name="hangout_end_normal_tip">Hang-out has ended.</string>
+    <string name="hangout_room_friends_list_title">%1$s\'s Friends</string>
+    <string name="hangout_no_credits_send_invitation_tip">You have insufficient credits to send the invitation.</string>
+    <string name="hangout_invitation_noenough_money_tips">You have insufficient credits to send the invitation.</string>
+    <string name="hangout_sent_invitation_fail_tip1">Invitation has been sent.Please try again later.</string>
+    <string name="hangout_sent_invitation_fail_tip2">The broadcaster has joined this Hang-out.</string>
+    <string name="hangout_pust_video_tips">2-way video require extra 0.2 credits per minute. Are you sure to turn it on?</string>
+    <string name="hangout_open_door_error_already_open">Door already open.</string>
+    <string name="hangout_open_door_error_full">Your broadcast room is full.Please try again later.</string>
+    <string name="hangout_pust_no_credit_tips">You have insufficient credits to start 2-way video.</string>
+
+    <!--hangout transition-->
+    <string name="hangout_transition_inviting">Inviting %s to join Hang-out.</string>
+    <string name="hangout_transition_exist_room">You have already started a Hang-out.Please invite your favorite broadcasters in the Hang-out room or start a new Hang-out with %s.</string>
+    <string name="hangout_transition_add_credit">Add credits to continue enjoying Hang-out! %s and her friends are right here waiting!</string>
+    <string name="hangout_transition_reject_or_timeout">%s is not responding. Please try again later.</string>
+    <string name="hangout_system_low_lollipop">Sorry, you can\'t Hang-out with broadcasters due to your device operating system is too low. We recommend you to upgrade your system and try again.</string>
+    <string name="hangout_system_low_dpi">Sorry. To start Hang-out broadcast, the dpi of your screen width must be at least 720.</string>
+    <string name="hangout_anchor_busy">Sorry,the broadcaster is busy at the moment.Please try again later.</string>
+    <string name="hangout_system_no_credits">%1$s\'s line has been held. Add credits to bring her back to line now!</string>
+
+    <!--Hangout 礼物发送的检查提示-->
+    <string name="hangout_gift_send_no_broadcasters">Failed to send "%1$s". No broadcasters in this Hang-out.</string>
+    <string name="hangout_gift_send_no_broadcasters_select">Failed to send "%1$s". Please chose at least one broadcaster.</string>
+    <string name="hangout_gift_send_no_credits_tip">You have insufficient credits. Please add more credits and try again.</string>
+
+
+    <!--HangOut直播间入场-->
+    <string name="livemsg_temp_roomin_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> joined </font>]]></string>
+    <string name="livemsg_temp_roomin_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> joined </font>]]></string>
+
+    <string name="livemsg_temp_normal_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+    <string name="livemsg_temp_normal_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_bar_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_bar_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_bar_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_giftstore_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_giftstore_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_giftstore_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_celeb_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
+    <string name="livemsg_temp_gift_hangout_celeb_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
+
+    <string name="livemsg_temp_hangout_recommend"><![CDATA[
+        <font color=\"#05C775\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> Recommended </font><font color=\"#05C775\">%2$s</xliff:g></font><font color=\"#FF6D00\"> to join the hang-out. </font>
+    ]]></string>
+    <string name="livemsg_temp_private_recommend"><![CDATA[
+        <font color=\"#FF6D00\">You invited </font><font color=\"#FF6D00\">%1$s</font><font color=\"#FF6D00\"> to hang out with </font><font color=\"#FF6D00\">%2$s</xliff:g></font>
+    ]]></string>
 </resources>
+

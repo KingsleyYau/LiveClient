@@ -53,7 +53,7 @@
 
 
 - (void)layoutSubviews {
-    
+    [super layoutSubviews];
     self.imageView.layer.cornerRadius = 5;
     self.imageView.layer.masksToBounds = YES;
     self.onlineView.layer.cornerRadius = self.onlineView.frame.size.width / 2.0;

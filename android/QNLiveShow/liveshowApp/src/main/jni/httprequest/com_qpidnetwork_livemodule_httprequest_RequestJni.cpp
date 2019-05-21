@@ -21,7 +21,7 @@
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetLogDirectory
   (JNIEnv *env, jclass cls, jstring directory){
 
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	string cpDirectory = JString2String(env, directory);
 
 	KLog::SetLogDirectory(cpDirectory);
 	HttpClient::SetLogDirectory(cpDirectory);
@@ -29,10 +29,9 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 
 	GetPhoneInfo();
 
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::LSSetLogDirectory ( directory : %s ) ", cpDirectory);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::LSSetLogDirectory ( directory : %s ) ", cpDirectory.c_str());
 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::LSSetLogDirectory ( Android CPU ABI : %s ) ", GetPhoneCpuAbi().c_str());
 
-	env->ReleaseStringUTFChars(directory, cpDirectory);
 }
 
 /*
@@ -42,14 +41,13 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetVersionCode
   (JNIEnv *env, jclass cls, jstring version){
-	const char *cpVersion = env->GetStringUTFChars(version, 0);
+	string cpVersion = JString2String(env, version);
 	gPhotoUploadRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	gConfigRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	gDomainRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	gHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 
 	CrashHandler::GetInstance()->SetVersion(cpVersion);
-	env->ReleaseStringUTFChars(version, cpVersion);
 }
 
 /*
@@ -59,13 +57,12 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetCookiesDirectory
   (JNIEnv *env, jclass cls, jstring directory){
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	string cpDirectory = JString2String(env, directory);
 
 	HttpClient::SetCookiesDirectory(cpDirectory);
 
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::LSSetCookiesDirectory ( directory : %s ) ", cpDirectory);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::LSSetCookiesDirectory ( directory : %s ) ", cpDirectory.c_str());
 
-	env->ReleaseStringUTFChars(directory, cpDirectory);
 }
 
 /*
@@ -75,12 +72,10 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetWebSite
   (JNIEnv *env, jclass cls, jstring webSite) {
-	const char *cpWebSite = env->GetStringUTFChars(webSite, 0);
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetWebSite ( webSite : %s ) ", cpWebSite);
+	string cpWebSite = JString2String(env, webSite);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetWebSite ( webSite : %s ) ", cpWebSite.c_str());
 
 	gHttpRequestManager.SetWebSite(cpWebSite);
-
-	env->ReleaseStringUTFChars(webSite, cpWebSite);
 }
 
 /*
@@ -90,13 +85,12 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetPhotoUploadSite
   (JNIEnv *env, jclass cls, jstring uploadSite) {
-	const char *cpUploadSite = env->GetStringUTFChars(uploadSite, 0);
+	string cpUploadSite = JString2String(env, uploadSite);
 
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetPhotoUploadSite ( uploadSite : %s ) ", cpUploadSite);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetPhotoUploadSite ( uploadSite : %s ) ", cpUploadSite.c_str());
 
 	gPhotoUploadRequestManager.SetWebSite(cpUploadSite);
 
-	env->ReleaseStringUTFChars(uploadSite, cpUploadSite);
 }
 
 /*
@@ -106,13 +100,12 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetConfigSite
   (JNIEnv *env, jclass cls, jstring configSite) {
-	const char *cpConfigSite = env->GetStringUTFChars(configSite, 0);
+	string cpConfigSite = JString2String(env, configSite);
 
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetConfigSite ( configSite : %s ) ", cpConfigSite);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetConfigSite ( configSite : %s ) ", cpConfigSite.c_str());
 
 	gConfigRequestManager.SetWebSite(cpConfigSite);
 
-	env->ReleaseStringUTFChars(configSite, cpConfigSite);
 }
 
 /*
@@ -122,28 +115,24 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetDomainSite
 		(JNIEnv *env, jclass cls, jstring domainSite) {
-	const char *cpDomainSite = env->GetStringUTFChars(domainSite, 0);
+	string cpDomainSite = JString2String(env, domainSite);
 
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetDomainSite ( domainSite : %s ) ", cpDomainSite);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetDomainSite ( domainSite : %s ) ", cpDomainSite.c_str());
 
 	gDomainRequestManager.SetWebSite(cpDomainSite);
 
-	env->ReleaseStringUTFChars(domainSite, cpDomainSite);
 }
 
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetAuthorization
           (JNIEnv *env, jclass cls, jstring user, jstring password) {
-   	const char *cpUser = env->GetStringUTFChars(user, 0);
-   	const char *cpPassword = env->GetStringUTFChars(password, 0);
+   	string cpUser = JString2String(env, user);
+   	string cpPassword = JString2String(env, password);
 
-   	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetAuthorization ( user : %s, cpPassword : %s) ", cpUser, cpPassword);
+   	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetAuthorization ( user : %s, cpPassword : %s) ", cpUser.c_str(), cpPassword.c_str());
 
 	gConfigRequestManager.SetAuthorization(cpUser, cpPassword);
     gDomainRequestManager.SetAuthorization(cpUser, cpPassword);
     gHttpRequestManager.SetAuthorization(cpUser, cpPassword);
-
-   	env->ReleaseStringUTFChars(user, cpUser);
-   	env->ReleaseStringUTFChars(password, cpPassword);
 }
 
 
@@ -188,10 +177,9 @@ JNIEXPORT jstring JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetDeviceId
   (JNIEnv *env, jclass cls, jstring deviceId){
-	const char *cpDeviceId = env->GetStringUTFChars(deviceId, 0);
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetDeviceId ( deviceId : %s ) ", cpDeviceId);
+	string cpDeviceId = JString2String(env, deviceId);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetDeviceId ( deviceId : %s ) ", cpDeviceId.c_str());
 	CrashHandler::GetInstance()->SetDeviceId(cpDeviceId);
-	env->ReleaseStringUTFChars(deviceId, cpDeviceId);
 }
 
 
@@ -289,24 +277,22 @@ JNIEXPORT jobjectArray JNICALL Java_com_qpidnetwork_livemodule_httprequest_Reque
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetProxy
   (JNIEnv *env, jclass cls, jstring proxyUrl) {
-	const char *cpProxyUrl = env->GetStringUTFChars(proxyUrl, 0);
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetProxy ( proxyUrl : %s ) ", cpProxyUrl);
+	string cpProxyUrl = JString2String(env, proxyUrl);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetProxy ( proxyUrl : %s ) ", cpProxyUrl.c_str());
 
 	HttpClient::SetProxy(cpProxyUrl);
 
-	env->ReleaseStringUTFChars(proxyUrl, cpProxyUrl);
 }
 
 
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetAppId
   (JNIEnv *env, jclass cls, jstring appId) {
-   	const char *cpAppId = env->GetStringUTFChars(appId, 0);
+   	string cpAppId = JString2String(env, appId);
    	gPhotoUploadRequestManager.SetAppId(cpAppId);
    	gConfigRequestManager.SetAppId(cpAppId);
    	gDomainRequestManager.SetAppId(cpAppId);
    	gHttpRequestManager.SetAppId(cpAppId);
    	Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetAppId(env, cls, appId);
-   	env->ReleaseStringUTFChars(appId, cpAppId);
 
  }
 

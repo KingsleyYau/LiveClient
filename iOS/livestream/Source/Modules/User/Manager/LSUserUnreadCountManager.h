@@ -12,14 +12,14 @@
 #import "TotalUnreadNumObject.h"
 
 typedef enum LSUnreadType {
-    LSUnreadType_Private_Chat = 0,
-    LSUnreadType_EMF = 1,
-    LSUnreadType_Loi = 2,
-    LSUnreadType_Hangout = 3,
-    LSUnreadType_Ticket = 4,
-    LSUnreadType_Booking = 5,
-    LSUnreadType_Backpack = 6,
-    LSUnreadType_SayHi = 7
+    LSUnreadType_SayHi = 0,
+    LSUnreadType_Loi = 1,
+    LSUnreadType_EMF = 2,
+    LSUnreadType_Private_Chat = 3,
+    LSUnreadType_Hangout = 4,
+    LSUnreadType_Ticket = 5,
+    LSUnreadType_Booking = 6,
+    LSUnreadType_Backpack = 7,
 } LSUnreadType;
 
 @protocol LSUserUnreadCountManagerDelegate <NSObject>

@@ -32,4 +32,5 @@
 
 @property (nonatomic, weak) id<LSSendMailViewControllerDelegate> sendDelegate;
 
+@property (nonatomic, copy) NSString * sayHiResponseId;
 @end

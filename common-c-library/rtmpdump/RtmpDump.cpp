@@ -807,7 +807,7 @@ bool RtmpDump::FlvVideo2H264(char *frame, int frame_size, u_int32_t timestamp) {
             }
 
             if (mpRtmpDumpCallback) {
-                mpRtmpDumpCallback->OnChangeVideoSpsPps(this, mpSps, mSpsSize, mpPps, mPpsSize, mNaluHeaderSize);
+                mpRtmpDumpCallback->OnChangeVideoSpsPps(this, mpSps, mSpsSize, mpPps, mPpsSize, mNaluHeaderSize, timestamp);
             }
 
         } else {

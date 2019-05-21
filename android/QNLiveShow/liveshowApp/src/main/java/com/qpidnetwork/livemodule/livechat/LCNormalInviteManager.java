@@ -51,7 +51,7 @@ public class LCNormalInviteManager {
 	private ArrayList<LCUserItem> mInviteUserList;
 	
 	/**
-	 * 超时时间间隔
+	 * 超时时间间隔 单位（秒）
 	 */
 	private final long mOverTimeInterval;
 	
@@ -77,7 +77,7 @@ public class LCNormalInviteManager {
 		mInviteUserList = new ArrayList<LCUserItem>();
 		
 		//设置消息超时间隔
-		mOverTimeInterval = 25 * 1000;
+		mOverTimeInterval = 25;
 		// 当前处理次数 
 		mHandleCount = 0;
 		// 最大非随机处理数

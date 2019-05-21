@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.qpidnetwork.livemodule.R;
@@ -37,6 +36,7 @@ import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.ButtonUtils;
 import com.qpidnetwork.livemodule.view.BadgeHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView;
 
 import java.util.Arrays;
@@ -241,7 +241,7 @@ public class HotListFragment extends BaseImmersedRecyclerViewFragment implements
                 } else {
                     if (mHotList.size() > 0) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
+                            ToastUtil.showToast(getActivity(), response.errMsg);
                         }
                         isNeedRefresh = false;
                     } else {
@@ -263,8 +263,8 @@ public class HotListFragment extends BaseImmersedRecyclerViewFragment implements
      */
     private void queryHotList(final boolean isLoadMore) {
         //先取同步配置
-        if (SynConfigerManager.getInstance(mContext).getConfigItemCache() == null) {
-            SynConfigerManager.getInstance(mContext).setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
+        if (SynConfigerManager.getInstance().getConfigItemCache() == null) {
+            SynConfigerManager.getInstance().setSynConfigResultObserver(new Consumer<SynConfigerManager.ConfigResult>() {
                 @Override
                 public void accept(SynConfigerManager.ConfigResult configResult) {
                     if (configResult.isSuccess && (configResult.item != null)) {

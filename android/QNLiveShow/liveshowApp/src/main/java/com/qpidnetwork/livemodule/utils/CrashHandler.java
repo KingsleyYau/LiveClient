@@ -33,7 +33,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	}
 	
 	public CrashHandler(Context context)  {
-		mContext = context;
+		mContext = context.getApplicationContext();
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();   
         Thread.setDefaultUncaughtExceptionHandler(this);   
 	}

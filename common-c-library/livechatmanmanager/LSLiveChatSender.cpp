@@ -224,7 +224,7 @@ void LSLiveChatSender::SendPhotoProc(LSLCMessageItem* item)
 
     if (photoItem->m_loadUrl.empty()) {
         // 没上传文件成功，请求上传文件
-        long requestId = m_requestOtherController->UploadManPhoto(photoItem->m_srcFilePath);
+        long requestId = m_requestController->UploadManPhoto(photoItem->m_srcFilePath);
         if (HTTPREQUEST_INVALIDREQUESTID != requestId) {
             // 请求成功
             item->m_statusType = StatusType_Processing;

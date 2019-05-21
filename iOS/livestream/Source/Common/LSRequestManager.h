@@ -2087,6 +2087,7 @@ typedef void (^SendEmfFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSS
  * @param content                       回复信件内容
  * @param imgList                       附件数组
  * @param comsumeType                   付费类型（LSLETTERCOMSUMETYPE_CREDIT：信用点，LSLETTERCOMSUMETYPE_STAMP：邮票）
+ * @param sayHiResponseId              SayHi的回复ID（可无，无则表示不是回复）
  * @param finishHandler    接口回调
  * @return 成功请求Id
  */
@@ -2096,6 +2097,7 @@ typedef void (^SendEmfFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSS
              content:(NSString*)content
              imgList:(NSArray<NSString *>*)imgList
          comsumeType:(LSLetterComsumeType)comsumeType
+     sayHiResponseId:(NSString*)sayHiResponseId
             finishHandler:(SendEmfFinishHandler )finishHandler;
 
 /**
@@ -2257,8 +2259,9 @@ typedef void (^IsCanSendSayHiFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errn
  *  @param errmsg       错误提示
  *  @param sayHiId      SayHiID （当错误码为 HTTP_LCC_ERR_SUCCESS（发送成功） 和发送失败HTTP_LCC_ERR_SAYHI_MAN_ALREADY_SEND_SAYHI，sayHi没有过期loiId有，sayHi过期loiId为空）
  *  @param loiId        意向信ID （当错误码为HTTP_LCC_ERR_SAYHI_ANCHOR_ALREADY_SEND_LOI，意向信没有过期loiId有，意向信过期loiId为空）
+ *  @param isFollow     是否已关注（0：否，1：是） 错误才返回
  */
-typedef void (^SendSayHiFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *sayHiId, NSString *loiId);
+typedef void (^SendSayHiFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *sayHiId, NSString *loiId, BOOL isFollow, OnLineStatus onlineStatus);
 
 /**
  *  14.4.发送sayHi接口
@@ -2271,8 +2274,8 @@ typedef void (^SendSayHiFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, N
  *  @return 成功请求Id
  */
 - (NSInteger)sendSayHi:(NSString*)anchorId
-               themeId:(int)themeId
-                textId:(int)textId
+               themeId:(NSString*)themeId
+                textId:(NSString*)textId
          finishHandler:(SendSayHiFinishHandler)finishHandler;
 
 /**

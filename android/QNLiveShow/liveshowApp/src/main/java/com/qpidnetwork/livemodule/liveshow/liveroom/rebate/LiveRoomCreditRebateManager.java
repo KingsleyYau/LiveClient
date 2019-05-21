@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.rebate;
 
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
@@ -131,4 +133,22 @@ public class LiveRoomCreditRebateManager {
         this.coupon = coupon;
     }
     //=============== 2018/09/27  Hardy   ==========================
+
+    //=============== 2019/04/17  Hardy   ==========================
+    public void loadCredits(final OnGetAccountBalanceCallback mCallback) {
+        LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
+            @Override
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance, final int coupon) {
+                if (isSuccess) {
+                    // 更新本地信用点
+                    setCredit(balance);
+                    setCoupon(coupon);
+
+                    if (mCallback != null) {
+                        mCallback.onGetAccountBalance(isSuccess, errCode, errMsg, balance, coupon);
+                    }
+                }
+            }
+        });
+    }
 }

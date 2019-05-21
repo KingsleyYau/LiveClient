@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--<include layout="@layout/view_gaussian_blur_tran"/>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black1">
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="16dp"
+            android:src="@drawable/ic_clear_disabled"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="124dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/llAnchorInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                        android:id="@+id/civAnchorPhoto"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_default_photo_woman" />
+
+                    <TextView
+                        android:id="@+id/tvAnchorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        tools:text="nihaonihaonihao"
+                        android:textColor="@color/text_light_white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llAnchorFriendInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                        android:id="@+id/civAnchorFriendPhoto"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_default_photo_woman" />
+
+                    <TextView
+                        android:id="@+id/tvAnchorFriendName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        tools:text="nihaonihaonihao"
+                        android:textColor="@color/text_light_white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                tools:text="@string/liveroom_transition_broadcast_ended"
+                android:textColor="@color/text_light_white"
+                android:textSize="14sp" />
+
+            <ProgressBar
+                android:id="@+id/pb_waiting"
+                android:layout_width="51dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="40dp"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDrawable="@drawable/live_loading_progress"
+                android:indeterminateDuration="1000"
+                android:scrollbarStyle="insideInset"
+                android:visibility="visible" />
+
+            <!--按钮区域-->
+            <LinearLayout
+                android:id="@+id/llButtonContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnRetry"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/normal_button_height_44dp"
+                    android:layout_marginBottom="@dimen/live_size_24dp"
+                    android:background="@drawable/rectangle_rounded_angle_blue_bg"
+                    android:text="@string/common_btn_retry"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/live_size_16sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btnAddCredit"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/normal_button_height_44dp"
+                    android:layout_marginBottom="@dimen/live_size_24dp"
+                    android:background="@drawable/rectangle_rounded_angle_orange_bg"
+                    android:text="@string/live_common_btn_add_credit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/live_size_16sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/llExistHangout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/normal_button_height_44dp"
+                    android:layout_marginBottom="@dimen/live_size_24dp"
+                    android:background="@drawable/btn_hangout_list_stroke_shape"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_exist_hangout" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/live_size_10dp"
+                        android:text="@string/hand_out_enter_exist_room"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llNewHangout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/normal_button_height_44dp"
+                    android:layout_marginBottom="@dimen/live_size_24dp"
+                    android:background="@drawable/btn_hangout_list_stroke_shape"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_hang_out" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/live_size_10dp"
+                        android:text="@string/hand_out_enter_new_room"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <!--<include layout="@layview_gaussian_blur_tranblur"/>-->
+</FrameLayout>

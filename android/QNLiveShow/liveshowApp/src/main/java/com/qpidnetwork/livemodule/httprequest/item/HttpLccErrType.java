@@ -12,10 +12,10 @@ public enum HttpLccErrType {
     // 客户端定义的错误
     HTTP_LCC_ERR_PROTOCOLFAIL,   	// 协议解析失败（服务器返回的格式不正确）(-10001)
     HTTP_LCC_ERR_CONNECTFAIL,    	// 连接服务器失败/断开连接(-10002)
-    HTTP_LCC_ERR_CHECKVERFAIL,   	// 检测版本号失败（可能由于版本过低导致）(-10003)
-
-    HTTP_LCC_ERR_SVRBREAK,       	// 服务器踢下线(-10004)
-    HTTP_LCC_ERR_INVITE_TIMEOUT, 	// 邀请超时(-10005)
+//    HTTP_LCC_ERR_CHECKVERFAIL,   	// 检测版本号失败（可能由于版本过低导致）(-10003)
+//
+//    HTTP_LCC_ERR_SVRBREAK,       	// 服务器踢下线(-10004)
+//    HTTP_LCC_ERR_INVITE_TIMEOUT, 	// 邀请超时(-10005)
     // 服务器返回错误
     HTTP_LCC_ERR_ROOM_FULL,   		// 房间人满(10023)
     HTTP_LCC_ERR_NO_CREDIT,   		// 信用点不足(10025)
@@ -79,5 +79,20 @@ public enum HttpLccErrType {
     HTTP_LCC_ERR_DEMAIN_DATA_INSERT_INFO_DESC_LOG,            // MBCE12006：insert into info_desc_log(912006)
     HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_INFODESCLOG_SETGROUPID,   // MBCE12007：update info_desc_log set group_id(912007)
     HTTP_LCC_ERR_DEMAIN_APP_EXIST_LOGS,                        // MBCE22001：(APP安装记录已存在。)(912008)
-    HTTP_LCC_ERR_PRIVTE_INVITE_AUTHORITY                        // 主播无立即私密邀请权限(17002)
+    HTTP_LCC_ERR_PRIVTE_INVITE_AUTHORITY,                        // 主播无立即私密邀请权限(17002)
+//    /* 信件*/
+//    HTTP_LCC_ERR_LETTER_BUYPHOTO_USESTAMP_NOSTAMP_HASCREDIT,          // 购买图片使用邮票支付时，邮票不足，但信用点可用(17213)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_BUYPHOTO_USESTAMP_NOSTAMP_NOCREDIT,          // 购买图片使用邮票支付时，邮票不足，且信用点不足(17214)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_BUYPHOTO_USECREDIT_NOCREDIT_HASSTAMP,          // 购买图片使用信用点支付时，信用点不足，但邮票可用(17215)(调用13.7.购买信件附件接口)
+//
+//    HTTP_LCC_ERR_LETTER_BUYPHOTO_USECREDIT_NOSTAMP_NOCREDIT,          // 购买图片使用信用点支付时，信用点不足，且邮票不足(17216)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_PHOTO_OVERTIME,                     // 照片已过期(17217)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USESTAMP_NOSTAMP_HASCREDIT,          // 购买视频使用邮票支付时，邮票不足，但信用点可用(17218)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USESTAMP_NOSTAMP_NOCREDIT,          // 购买视频使用邮票支付时，邮票不足，且信用点不足(17219)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOCREDIT_HASSTAMP,          // 购买视频使用信用点支付时，信用点不足，但邮票可用(17220)(调用13.7.购买信件附件接口)
+//
+//    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOSTAMP_NOCREDIT,          // 购买视频使用信用点支付时，信用点不足，且邮票不足(17221)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_VIDEO_OVERTIME,                                // 视频已过期(17222)(调用13.7.购买信件附件接口)
+//    HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP,                         // 信用点或者邮票不足(17208):(调用13.4.信件详情接口, 调用13.5.发送信件接口)
+    HTTP_LCC_ERR_EXIST_HANGOUT                                        // 当前会员已在hangout直播间（调用8.11.获取当前会员Hangout直播状态接口） 18003
 }

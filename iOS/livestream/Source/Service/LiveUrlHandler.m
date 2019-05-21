@@ -185,6 +185,11 @@ static LiveUrlHandler *gInstance = nil;
                 [self.parseDelegate liveUrlHandler:self didOpenSayHiDetail:item.sayhiId];
             }
         }break;
+        case LiveUrlTypeGreetMailDetail: {
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenGreetingMailDetail:)]) {
+                [self.parseDelegate liveUrlHandler:self didOpenGreetingMailDetail:item.loiId];
+            }
+        }break;
         default: {
             // 进入主界面
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openMainType:)]) {
@@ -301,20 +306,44 @@ static LiveUrlHandler *gInstance = nil;
 }
 
 - (NSString *)encodeParameter:(NSString *)originalPara {
-    CFStringRef encodeParaCf = CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)originalPara, NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
-    NSString *encodePara = (__bridge NSString *)(encodeParaCf);
-    CFRelease(encodeParaCf);
+//    CFStringRef encodeParaCf = CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)originalPara, NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
+//    NSString *encodePara = (__bridge NSString *)(encodeParaCf);
+    
+    NSCharacterSet *allowedCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet];
+    NSString *encodePara = [originalPara stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters];
+    
+//    CFRelease(encodeParaCf);
     return encodePara;
 }
 
 - (NSURL *)createSendmailByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendmail&anchorid=%@&anchorname=%@", anchorId, anchorName];
+    NSString *encodeName = [self encodeParameter:anchorName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendmail&anchorid=%@&anchorname=%@", anchorId, encodeName];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
 - (NSURL *)createLiveChatByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    NSString * urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site=41&service=live&module=livechat&anchorid=%@&anchorname=%@",anchorId,[anchorName UrlEncode]];
+    NSString * urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site=41&service=live&module=livechat&anchorid=%@&anchorname=%@",anchorId,[self encodeParameter:anchorName]];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (NSURL *)createOpenSayHiList:(LiveUrlSayHiListType)type {
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sayhi_list&listtype=%d",type];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (NSURL *)createSendSayhiByAnchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
+    NSString *encodeName = [self encodeParameter:anchorName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendsayhi&anchorid=%@&anchorname=%@",anchorId,encodeName];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (NSURL *)createSayHiDetailBySayhiId:(NSString *)sayhiId {
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sayhi_detail&sayhiid=%@",sayhiId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }

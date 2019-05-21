@@ -28,6 +28,7 @@
  * showInfo          节目信息
  * isHasOneONOneAuth 是否有私密直播权限
  * isHasBookingAuth  是否有预约私密直播权限
+ * isFollow          关注状态（NO:未关注，YES：已关注）
  */
 
 @property (nonatomic, strong) NSString* userId;
@@ -36,7 +37,7 @@
 // 直播间状态（0:离线（Offline） 正在直播（Live））
 @property (nonatomic, assign) OnLineStatus onlineStatus;
 @property (nonatomic, strong) NSString* roomPhotoUrl;
-// 直播间类型（0:（没有直播间） 1:（免费公开直播间） 2:（付费公开直播间） 3:（普通私密直播间） 4:（豪华私密直播间））
+// 直播间类型（0:（没有直播间） 1:（免费公开直播间） 2:（付费公开直播间） 3:（普通私密直播间） 4:（豪华私密直播间）5:Hangout）
 @property (nonatomic, assign) HttpRoomType roomType;
 // 爱好ID列表
  @property (nonatomic, strong) NSMutableArray<NSNumber*>* interest;
@@ -47,6 +48,7 @@
 @property (nonatomic, strong) LSProgramItemObject* showInfo;
 @property (nonatomic, strong) LSHttpAuthorityItemObject* priv;
 @property (nonatomic, assign) IMChatOnlineStatus chatOnlineStatus;
+@property (nonatomic, assign) BOOL isFollow;
 
 @property (nonatomic, assign) int loveLevel;
 @property (nonatomic, assign) NSInteger addDate;

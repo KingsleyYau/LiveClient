@@ -35,7 +35,7 @@ public class VoicePlayerManager {
 	private VoicePlayerManager(Context context){
 		isPlaying = false;
 		currMsgId = -1;
-		mContext = context;
+		mContext = context.getApplicationContext();
 	}
 	
 	/**

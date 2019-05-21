@@ -8,6 +8,9 @@
  * All rights reserved
  */
 
+struct IAutoLockTag * g_webSocketSendDataLock = NULL;
+static int g_isSend = 0;
+
 // add by Alex use tcp connect blocking mode
 #define MG_ESP8266
 
@@ -2061,8 +2064,14 @@ MG_INTERNAL void mg_call(struct mg_connection *nc,
   if (nc->mgr->hexdump_file != NULL && ev != MG_EV_POLL &&
       ev != MG_EV_SEND /* handled separately */) {
     if (ev == MG_EV_RECV) {
+        if (g_webSocketSendDataLock != NULL) {
+            Lock(&(g_webSocketSendDataLock));
+        }
       mg_hexdump_connection(nc, nc->mgr->hexdump_file, nc->recv_mbuf.buf,
                             *(int *) ev_data, ev);
+        if (g_webSocketSendDataLock != NULL) {
+            UnLock(&(g_webSocketSendDataLock));
+        }
     } else {
       mg_hexdump_connection(nc, nc->mgr->hexdump_file, NULL, 0, ev);
     }
@@ -2131,6 +2140,20 @@ void mg_close_conn(struct mg_connection *conn) {
   conn->iface->vtable->destroy_conn(conn);
   mg_call(conn, NULL, MG_EV_CLOSE, NULL);
   mg_destroy_conn(conn, 0 /* destroy_if */);
+}
+
+void mg_global_init() {
+    // alex 初始化锁
+    if (g_webSocketSendDataLock == NULL) {
+        g_webSocketSendDataLock = GetNewAutoLock();
+    }
+}
+
+void mg_global_free() {
+    if (g_webSocketSendDataLock != NULL) {
+        ReleaseAutoLock(&g_webSocketSendDataLock);
+        g_webSocketSendDataLock = NULL;
+    }
 }
 
 void mg_mgr_init(struct mg_mgr *m, void *user_data) {
@@ -2230,7 +2253,14 @@ void mg_mgr_free(struct mg_mgr *m) {
 
   for (conn = m->active_connections; conn != NULL; conn = tmp_conn) {
     tmp_conn = conn->next;
-    mg_close_conn(conn);
+      if (g_webSocketSendDataLock != NULL) {
+          Lock(&(g_webSocketSendDataLock));
+      }
+      g_isSend = 0;
+      mg_close_conn(conn);
+      if (g_webSocketSendDataLock != NULL) {
+          UnLock(&(g_webSocketSendDataLock));
+      }
   }
 
   {
@@ -2340,7 +2370,7 @@ MG_INTERNAL struct mg_connection *mg_create_connection_base(
      * doesn't compile with pedantic ansi flags.
      */
     conn->recv_mbuf_limit = ~0;
-    conn->webSocketSendDataLock = NULL;
+    //g_webSocketSendDataLock = NULL;
   } else {
     MG_SET_PTRPTR(opts.error_string, "failed to create connection");
   }
@@ -2514,6 +2544,9 @@ MG_INTERNAL void mg_recv_common(struct mg_connection *nc, void *buf, int len,
     return;
   }
   nc->last_io_time = (time_t) mg_time();
+    if (g_webSocketSendDataLock != NULL) {
+        Lock(&(g_webSocketSendDataLock));
+    }
   if (!own) {
     mbuf_append(&nc->recv_mbuf, buf, len);
   } else if (nc->recv_mbuf.len == 0) {
@@ -2525,6 +2558,9 @@ MG_INTERNAL void mg_recv_common(struct mg_connection *nc, void *buf, int len,
     mbuf_append(&nc->recv_mbuf, buf, len);
     MG_FREE(buf);
   }
+    if (g_webSocketSendDataLock != NULL) {
+        UnLock(&(g_webSocketSendDataLock));
+    }
   mg_call(nc, NULL, MG_EV_RECV, &len);
 }
 
@@ -2940,8 +2976,14 @@ int mg_check_ip_acl(const char *acl, uint32_t remote_ip) {
 
 /* Move data from one connection to another */
 void mg_forward(struct mg_connection *from, struct mg_connection *to) {
+    if (g_webSocketSendDataLock != NULL) {
+        Lock(&(g_webSocketSendDataLock));
+    }
   mg_send(to, from->recv_mbuf.buf, from->recv_mbuf.len);
   mbuf_remove(&from->recv_mbuf, from->recv_mbuf.len);
+    if (g_webSocketSendDataLock != NULL) {
+        UnLock(&(g_webSocketSendDataLock));
+    }
 }
 
 double mg_set_timer(struct mg_connection *c, double timestamp) {
@@ -3220,12 +3262,24 @@ int mg_socket_if_listen_udp(struct mg_connection *nc,
 
 void mg_socket_if_tcp_send(struct mg_connection *nc, const void *buf,
                            size_t len) {
+    if (g_webSocketSendDataLock != NULL) {
+        Lock(&(g_webSocketSendDataLock));
+    }
   mbuf_append(&nc->send_mbuf, buf, len);
+    if (g_webSocketSendDataLock != NULL) {
+        UnLock(&(g_webSocketSendDataLock));
+    }
 }
 
 void mg_socket_if_udp_send(struct mg_connection *nc, const void *buf,
                            size_t len) {
+    if (g_webSocketSendDataLock != NULL) {
+        Lock(&(g_webSocketSendDataLock));
+    }
   mbuf_append(&nc->send_mbuf, buf, len);
+    if (g_webSocketSendDataLock != NULL) {
+        UnLock(&(g_webSocketSendDataLock));
+    }
 }
 
 void mg_socket_if_recved(struct mg_connection *nc, size_t len) {
@@ -3343,9 +3397,12 @@ MONGOOSELOG(__FUNCTION__, "mongoose::mg_write_to_socket() begin");
     DBG(("%p %d %d %d %s:%hu", nc, nc->sock, n, mg_get_errno(),
          inet_ntoa(nc->sa.sin.sin_addr), ntohs(nc->sa.sin.sin_port)));
     if (n > 0) {
+
       mbuf_remove(io, n);
+
       mg_if_sent_cb(nc, n);
     }
+
     return;
   }
 
@@ -3567,17 +3624,16 @@ void mg_mgr_handle_conn(struct mg_connection *nc, int fd_flags, double now) {
 
   if (!(nc->flags & MG_F_CLOSE_IMMEDIATELY)) {
     if ((fd_flags & _MG_F_FD_CAN_WRITE) && nc->send_mbuf.len > 0) {
-        MONGOOSELOG(__FUNCTION__, "mongoose::mg_mgr_handle_conn() nc:%p mg_write_to_socket(nc->webSocketSendDataLock:%p)Lock begin", nc, nc->webSocketSendDataLock);
-        if (nc->webSocketSendDataLock != NULL) {
-            Lock(&(nc->webSocketSendDataLock));
+        MONGOOSELOG(__FUNCTION__, "mongoose::mg_mgr_handle_conn() nc:%p mg_write_to_socket(nc->g_webSocketSendDataLock:%p)Lock begin", nc, g_webSocketSendDataLock);
+        if (g_webSocketSendDataLock != NULL) {
+            Lock(&(g_webSocketSendDataLock));
         }
-	
         mg_write_to_socket(nc);
-        if (nc->webSocketSendDataLock != NULL) {
-            UnLock(&(nc->webSocketSendDataLock));
+        if (g_webSocketSendDataLock != NULL) {
+            UnLock(&(g_webSocketSendDataLock));
         }
 	
-        MONGOOSELOG(__FUNCTION__, "mongoose::mg_mgr_handle_conn() nc:%p mg_write_to_socket(nc->webSocketSendDataLock:%p)UnLock end", nc, nc->webSocketSendDataLock);
+        MONGOOSELOG(__FUNCTION__, "mongoose::mg_mgr_handle_conn() nc:%p mg_write_to_socket(nc->g_webSocketSendDataLock:%p)UnLock end", nc, g_webSocketSendDataLock);
     }
     mg_if_poll(nc, (time_t) now);
     mg_if_timer(nc, now);
@@ -3771,7 +3827,14 @@ time_t mg_socket_if_poll(struct mg_iface *iface, int timeout_ms) {
     tmp = nc->next;
     if ((nc->flags & MG_F_CLOSE_IMMEDIATELY) ||
         (nc->send_mbuf.len == 0 && (nc->flags & MG_F_SEND_AND_CLOSE))) {
-      mg_close_conn(nc);
+        if (g_webSocketSendDataLock != NULL) {
+            Lock(&(g_webSocketSendDataLock));
+        }
+        g_isSend = 0;
+        mg_close_conn(nc);
+        if (g_webSocketSendDataLock != NULL) {
+            UnLock(&(g_webSocketSendDataLock));
+        }
     }
   }
 
@@ -5751,6 +5814,13 @@ void mg_http_handler(struct mg_connection *nc, int ev, void *ev_data) {
       mbuf_remove(io, req_len);
       nc->proto_handler = mg_ws_handler;
       nc->flags |= MG_F_IS_WEBSOCKET;
+        if (g_webSocketSendDataLock != NULL) {
+            Lock(&(g_webSocketSendDataLock));
+        }
+        g_isSend = 1;
+        if (g_webSocketSendDataLock != NULL) {
+            UnLock(&(g_webSocketSendDataLock));
+        }
       mg_call(nc, nc->handler, MG_EV_WEBSOCKET_HANDSHAKE_DONE, NULL);
       mg_ws_handler(nc, MG_EV_RECV, ev_data);
     } else if (nc->listener != NULL &&
@@ -8001,13 +8071,6 @@ static void mg_spawn_stdio_thread(sock_t sock, HANDLE hPipe,
 
 static void mg_abs_path(const char *utf8_path, char *abs_path, size_t len) {
   wchar_t buf[MAX_PATH_SIZE], buf2[MAX_PATH_SIZE];
-  to_wchar(utf8_path, buf, ARRAY_SIZE(buf));
-  GetFullPathNameW(buf, ARRAY_SIZE(buf2), buf2, NULL);
-  WideCharToMultiByte(CP_UTF8, 0, buf2, wcslen(buf2) + 1, abs_path, len, 0, 0);
-}
-
-static int mg_start_process(const char *interp, const char *cmd,
-                            const char *env, const char *envp[],
                             const char *dir, sock_t sock) {
   STARTUPINFOW si;
   PROCESS_INFORMATION pi;
@@ -9073,23 +9136,24 @@ void mg_send_websocket_frame(struct mg_connection *nc, int op, const void *data,
   struct ws_mask_ctx ctx;
   DBG(("%p %d %d", nc, op, (int) len));
 MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame(nc:%p) mg_ws_mask_frame()Lock begin", nc);
-if (nc->webSocketSendDataLock != NULL) {
-    Lock(&(nc->webSocketSendDataLock));
+if (g_webSocketSendDataLock != NULL) {
+    Lock(&(g_webSocketSendDataLock));
 }
-  mg_send_ws_header(nc, op, len, &ctx);
-  mg_send(nc, data, len);
-
-	
-  mg_ws_mask_frame(&nc->send_mbuf, &ctx);
+    if (g_isSend > 0) {
+        mg_send_ws_header(nc, op, len, &ctx);
+        mg_send(nc, data, len);
+        mg_ws_mask_frame(&nc->send_mbuf, &ctx);
+        MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame(nc:%p) mg_ws_mask_frame()UnLock end", nc);
+        if (op == WEBSOCKET_OP_CLOSE) {
+            nc->flags |= MG_F_SEND_AND_CLOSE;
+        }
+    }
     
-    if (nc->webSocketSendDataLock != NULL) {
-        UnLock(&(nc->webSocketSendDataLock));
+    if (g_webSocketSendDataLock != NULL) {
+        UnLock(&(g_webSocketSendDataLock));
     }
 
-    MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame(nc:%p) mg_ws_mask_frame()UnLock end", nc);
-  if (op == WEBSOCKET_OP_CLOSE) {
-    nc->flags |= MG_F_SEND_AND_CLOSE;
-  }
+
     MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame() end");
 }
 
@@ -9265,8 +9329,14 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
                            &user, &pass, &addr);
 
   if (nc != NULL) {
-            // alex 初始化锁
-            nc->webSocketSendDataLock = GetNewAutoLock();
+      if (g_webSocketSendDataLock != NULL) {
+          Lock(&(g_webSocketSendDataLock));
+      }
+      g_isSend = 0;
+      if (g_webSocketSendDataLock != NULL) {
+          UnLock(&(g_webSocketSendDataLock));
+      }
+
     mg_send_websocket_handshake3(nc, path, addr, protocol, extra_headers, user,
                                  pass);
   }
@@ -9282,7 +9352,6 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
 // for shutdown connection's socket
 void mg_connect_ws_shutdown(struct mg_connection *nc) {
   if (nc != NULL) {
-	ReleaseAutoLock(&nc->webSocketSendDataLock);
     mg_shutdown(nc);
     //nc->flags |= MG_F_CLOSE_IMMEDIATELY;
   }
@@ -11679,7 +11748,13 @@ static void mg_tun_client_handler(struct mg_connection *nc, int ev,
         LOG(LL_DEBUG, ("Closing tunneled connection because got end of stream "
                        "from other end"));
         tc->flags |= MG_F_CLOSE_IMMEDIATELY;
+          if (g_webSocketSendDataLock != NULL) {
+              Lock(&(g_webSocketSendDataLock));
+          }
         mg_close_conn(tc);
+          if (g_webSocketSendDataLock != NULL) {
+              UnLock(&(g_webSocketSendDataLock));
+          }
       }
       break;
     }

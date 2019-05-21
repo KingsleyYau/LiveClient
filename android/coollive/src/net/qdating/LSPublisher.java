@@ -229,7 +229,7 @@ public class LSPublisher {
 
                 @Override
                 public void onVideoCapture(final byte[] data, int size, final int width, final int height) {
-//					Log.d(LSConfig.TAG, String.format("LSPublisher::onVideoCapture( this : 0x%x, index : %d, width : %d, height : %d )", lsPublisher.hashCode(), index, width, height));
+//					Log.d(LSConfig.TAG, String.format("LSPublisher::onVideoCapture( this : 0x%x, width : %d, height : %d )", lsPublisher.hashCode(), width, height));
                     if( isRuning ) {
                         publisher.PushVideoFrame(data, size, width, height);
                     }

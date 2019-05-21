@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/layout_ho_gift_list_base_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="166dp"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/layout_ho_gift_list_base_ll_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <View
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:background="@drawable/bg_gift_indicator_unselected" />
+    </LinearLayout>
+</LinearLayout>

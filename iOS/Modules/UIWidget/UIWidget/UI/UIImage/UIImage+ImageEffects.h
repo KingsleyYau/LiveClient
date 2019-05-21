@@ -187,4 +187,6 @@
 - (UIImage *)fixOrientation ;
 
 - (UIImage *)imageCompressForSize:(NSInteger)tagetSize;
+
+- (UIImage *)imageCropForSize:(NSInteger)tagetSize;
 @end

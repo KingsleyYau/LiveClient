@@ -2,7 +2,6 @@ package com.qpidnetwork.livemodule.liveshow.personal.mypackage;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
@@ -11,6 +10,7 @@ import com.qpidnetwork.livemodule.httprequest.OnGetVouchersListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,7 +91,7 @@ public class VoucherFragment extends BaseListFragment {
             }
         } else {
             if (mVoucherList != null && mVoucherList.size() > 0) {
-                Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
+                ToastUtil.showToast(getActivity(), response.errMsg);
             } else {
                 showErrorPage();
             }

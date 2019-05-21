@@ -3,6 +3,11 @@ package net.qdating.filter;
 import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
+/**
+ * 工具类JNI
+ * @author max
+ *
+ */
 public class LSImageUtilJni {
 	static {
 		System.loadLibrary("lsimageutil");

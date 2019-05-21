@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="HotHeadViewCell">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HotHeadViewCellIdentifier" id="gTV-IL-0wX" customClass="HotHeadViewCell">
             <rect key="frame" x="0.0" y="0.0" width="88" height="88"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -22,6 +21,13 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Discover_Greetings_Btn" translatesAutoresizingMaskIntoConstraints="NO" id="vBh-iW-KAR">
                         <rect key="frame" x="22.5" y="12" width="43" height="43"/>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y8I-pA-aZH" customClass="LSHighlightedButton">
+                        <rect key="frame" x="22.5" y="12" width="43" height="43"/>
+                        <state key="normal" image="Discover_Greetings_Btn"/>
+                        <connections>
+                            <action selector="lightBtnClickAction:" destination="gTV-IL-0wX" eventType="touchUpInside" id="yal-f7-foC"/>
+                        </connections>
+                    </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Greetings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aoR-n8-iPh">
                         <rect key="frame" x="14.5" y="63" width="59" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -62,13 +68,18 @@
                 <constraint firstItem="DfR-Sn-DQW" firstAttribute="centerX" secondItem="vBh-iW-KAR" secondAttribute="trailing" constant="-1" id="8SN-Ay-d3u"/>
                 <constraint firstItem="aoR-n8-iPh" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="LUm-qs-nqQ"/>
                 <constraint firstItem="KDP-oH-djY" firstAttribute="top" secondItem="vBh-iW-KAR" secondAttribute="top" id="O6H-uw-jol"/>
+                <constraint firstItem="Y8I-pA-aZH" firstAttribute="bottom" secondItem="vBh-iW-KAR" secondAttribute="bottom" id="OR3-rI-6ii"/>
                 <constraint firstItem="vBh-iW-KAR" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="12" id="RRZ-km-Ubb"/>
+                <constraint firstItem="Y8I-pA-aZH" firstAttribute="leading" secondItem="vBh-iW-KAR" secondAttribute="leading" id="S4J-17-3Tj"/>
+                <constraint firstItem="Y8I-pA-aZH" firstAttribute="top" secondItem="vBh-iW-KAR" secondAttribute="top" id="X0n-uj-T1Z"/>
                 <constraint firstItem="KDP-oH-djY" firstAttribute="centerX" secondItem="vBh-iW-KAR" secondAttribute="trailing" constant="-1" id="bP4-B9-sdI"/>
                 <constraint firstItem="vBh-iW-KAR" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="cuA-gh-NOy"/>
+                <constraint firstItem="Y8I-pA-aZH" firstAttribute="trailing" secondItem="vBh-iW-KAR" secondAttribute="trailing" id="dmj-Ic-aFL"/>
                 <constraint firstItem="aoR-n8-iPh" firstAttribute="top" secondItem="vBh-iW-KAR" secondAttribute="bottom" constant="8" id="fX8-Ko-Fx6"/>
             </constraints>
             <connections>
                 <outlet property="iconImageView" destination="vBh-iW-KAR" id="kgh-1V-Awm"/>
+                <outlet property="lightIcon" destination="Y8I-pA-aZH" id="aSA-ks-HtE"/>
                 <outlet property="noNumUnreadView" destination="DfR-Sn-DQW" id="UUQ-Yw-dYl"/>
                 <outlet property="titleLabel" destination="aoR-n8-iPh" id="75V-5H-xz4"/>
                 <outlet property="unreadNumLabel" destination="qnn-fV-4D2" id="Fb0-Ge-opF"/>

@@ -21,8 +21,8 @@ public:
         bool result = false;
         if (root.isObject()) {
             /* themeId */
-            if (root[LIVEROOM_RESOURCECONFIG_THEMELIST_ID].isNumeric()) {
-                themeId = root[LIVEROOM_RESOURCECONFIG_THEMELIST_ID].asInt();
+            if (root[LIVEROOM_RESOURCECONFIG_THEMELIST_ID].isString()) {
+                themeId = root[LIVEROOM_RESOURCECONFIG_THEMELIST_ID].asString();
             }
             /* themeName */
             if (root[LIVEROOM_RESOURCECONFIG_THEMELIST_NAME].isString()) {
@@ -43,7 +43,7 @@ public:
     }
 
     HttpThemeItem() {
-        themeId = 0;
+        themeId = "";
         themeName = "";
         smallImg = "";
         bigImg = "";
@@ -60,7 +60,7 @@ public:
      * smallImg     小图
      * bigImg       大图
      */
-    int themeId;
+    string themeId;
     string themeName;
     string smallImg;
     string bigImg;

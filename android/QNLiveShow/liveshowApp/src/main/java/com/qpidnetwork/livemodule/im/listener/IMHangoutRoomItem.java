@@ -1,6 +1,9 @@
 package com.qpidnetwork.livemodule.im.listener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class IMHangoutRoomItem{
 
@@ -49,8 +52,13 @@ public class IMHangoutRoomItem{
 		this.manLevel = manLevel;
 		this.manPushPrice = manPushPrice;
 		this.pushUrl = pushUrl;
-		this.livingAnchorList = livingAnchorList;
-		this.buyforList = buyforList;
+		if(livingAnchorList != null){
+			this.livingAnchorList.addAll(Arrays.asList(livingAnchorList));
+		}
+
+		if(buyforList != null){
+			this.buyforList.addAll(Arrays.asList(buyforList));
+		}
 		this.credit = credit;
 	}
 	
@@ -59,8 +67,8 @@ public class IMHangoutRoomItem{
 	public int manLevel;
 	public double manPushPrice;
 	public String [] pushUrl;
-	public IMHangoutAnchorItem [] livingAnchorList;
-	public IMRecvBuyforGiftItem [] buyforList;
+	public ArrayList<IMHangoutAnchorItem> livingAnchorList = new ArrayList<>();;
+	public ArrayList<IMRecvBuyforGiftItem> buyforList = new ArrayList<>();;
 	public double credit;
 	@Override
 	public String toString() {
@@ -89,11 +97,11 @@ public class IMHangoutRoomItem{
 		sb.append("]");
 		sb.append(" livingAnchorList {");
 		if (livingAnchorList != null) {
-			for (int i = 0; i < livingAnchorList.length; i++) {
+			for (int i = 0; i < livingAnchorList.size(); i++) {
 				sb.append(" [");
 				sb.append(i);
 				sb.append("]: {");
-				sb.append(livingAnchorList[i]);
+				sb.append(livingAnchorList.get(i));
 				sb.append(" }; ");
 			}
 		}
@@ -101,11 +109,11 @@ public class IMHangoutRoomItem{
 		sb.append("]");
 		sb.append(" buyforList {");
 		if (buyforList != null) {
-			for (int i = 0; i < buyforList.length; i++) {
+			for (int i = 0; i < buyforList.size(); i++) {
 				sb.append(" [");
 				sb.append(i);
 				sb.append("]: {");
-				sb.append(buyforList[i]);
+				sb.append(buyforList.get(i));
 				sb.append(" }; ");
 			}
 		}

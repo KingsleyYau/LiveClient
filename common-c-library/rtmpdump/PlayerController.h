@@ -99,7 +99,7 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
     // 传输器回调
     void OnConnect(RtmpDump *rtmpDump);
     void OnDisconnect(RtmpDump *rtmpDump);
-    void OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize);
+    void OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp);
     void OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void OnChangeAudioFormat(RtmpDump *rtmpDump,
                              AudioFrameFormat format,
@@ -117,7 +117,9 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
 
     // 解码器回调
     void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp);
+    void OnDecodeVideoError(VideoDecoder* decoder);
     void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp);
+    void OnDecodeAudioError(AudioDecoder* decoder);
 
   private:
     // 播放器回调
@@ -132,6 +134,9 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
     void OnResetVideoStream(RtmpPlayer *player);
     void OnResetAudioStream(RtmpPlayer *player);
     void OnDelayMaxTime(RtmpPlayer *player);
+    void OnOverMaxBufferFrameCount(RtmpPlayer* player);
+
+    // 传输器回调
     void OnRecvCmdLogin(RtmpDump *rtmpDump,
                         bool bFlag,
                         const string &userName,

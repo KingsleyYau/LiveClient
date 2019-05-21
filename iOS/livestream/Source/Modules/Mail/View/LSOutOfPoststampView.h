@@ -16,6 +16,7 @@
 @end
 
 @interface LSOutOfPoststampView : UIView
+@property (weak, nonatomic) IBOutlet UILabel *TipsNote;
 @property (weak, nonatomic) IBOutlet UIButton *addCreditBtn;
 /** 代理 */
 @property (nonatomic, weak) id<LSOutOfPoststampViewDelegate> delegate;

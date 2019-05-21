@@ -11,6 +11,17 @@
         android:layout_height="wrap_content"
         >
 
+		<Button
+			android:id="@+id/button10"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/layoutButtons100"
+			android:layout_alignBottom="@+id/surfaceView0"
+			android:layout_alignParentLeft="true"
+			android:background="#00000000"
+			android:text=""
+			android:textAllCaps="false"
+			/>
         <android.opengl.GLSurfaceView
             android:id="@+id/surfaceView0"
             android:layout_width="180dp"
@@ -45,6 +56,17 @@
 				/>
 		</LinearLayout>
 
+		<Button
+			android:id="@+id/button20"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/layoutButtons200"
+			android:layout_alignBottom="@+id/surfaceView1"
+			android:layout_alignParentRight="true"
+			android:background="#00000000"
+			android:text=""
+			android:textAllCaps="false"
+			/>
 		<android.opengl.GLSurfaceView
             android:id="@+id/surfaceView1"
             android:layout_width="180dp"
@@ -86,7 +108,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layoutVideo0"
+		android:layout_above="@id/layoutPublish"
         >
+
+		<Button
+			android:id="@+id/button30"
+			android:layout_width="180dp"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/layoutButtons300"
+			android:layout_alignBottom="@+id/surfaceView2"
+			android:layout_alignParentLeft="true"
+			android:background="#00000000"
+			android:text=""
+			android:textAllCaps="false"
+			/>
        	<android.opengl.GLSurfaceView
 	        android:id="@+id/surfaceView2"
 	        android:layout_width="180dp"
@@ -127,7 +162,7 @@
 	        android:layout_width="180dp"
 	        android:layout_height="180dp"
 	        android:layout_alignParentRight="true"
-			android:visibility="invisible"
+			android:visibility="visible"
         />
 
 		<LinearLayout

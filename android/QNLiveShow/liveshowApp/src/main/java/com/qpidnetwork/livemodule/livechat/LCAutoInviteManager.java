@@ -11,7 +11,7 @@ import java.util.List;
 
 public class LCAutoInviteManager {
 	/**
-	 * 超时时间间隔
+	 * 超时时间间隔 单位（秒）
 	 */
 	private final long mOverTimeInterval;
 	/**
@@ -25,7 +25,7 @@ public class LCAutoInviteManager {
 	
 	public LCAutoInviteManager(LCUserManager userMgr){
 		//设置消息超时间隔
-		mOverTimeInterval = 3*60*1000;
+		mOverTimeInterval = 3*60;
 		//auto invite 消息列表
 		mAutoInviteList = new ArrayList<LCMessageItem>();
 		//用户管理器

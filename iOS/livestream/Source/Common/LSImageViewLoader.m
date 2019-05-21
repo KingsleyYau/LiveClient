@@ -143,8 +143,6 @@
     
     self.view = view;
     
-    // 设置默认图
-    [self displayImage:placeholderImage];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         // 显示缓存
         UIImage *cacheImage = [[SDImageCache sharedImageCache] imageFromCacheForKey:url];
@@ -157,6 +155,10 @@
                 }
             });
         } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 设置默认图
+                [self displayImage:placeholderImage];
+            });
             // 网络下载
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
             self.operation = [manager loadImageWithURL:[NSURL URLWithString:url]

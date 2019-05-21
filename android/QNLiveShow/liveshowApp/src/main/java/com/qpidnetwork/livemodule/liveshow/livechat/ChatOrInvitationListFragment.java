@@ -11,6 +11,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
 import com.qpidnetwork.livemodule.livechat.contact.ContactBean;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.qnbridgemodule.util.Log;
@@ -109,7 +110,8 @@ public class ChatOrInvitationListFragment extends BaseListFragment {
             @Override
             public void onClick(View v) {
                 //点击空页引导，跳转回主页
-                MainFragmentActivity.launchActivityWithListType(getActivity(), 0);
+//                MainFragmentActivity.launchActivityWithListType(getActivity(), 0);
+                MainFragmentActivity.launchActivityWithListType(getActivity(), MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER);
             }
         });
 

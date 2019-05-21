@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="83dp"
+    android:background="@drawable/bg_hang_out_gift_item_bar_or_store"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:background="@color/text_black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/live_size_8dp">
+
+        <ImageView
+            android:id="@+id/item_hang_out_gift_iv_icon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_default_gift" />
+
+        <TextView
+            android:id="@+id/item_hang_out_gift_tv_credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/live_ho_orange_credits"
+            android:textSize="@dimen/live_size_11sp"
+            tools:text="你好我您你好我您你好我您你好" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/item_hang_out_gift_iv_flag"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_live_buttom_gift_advance"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</FrameLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+        android:id="@+id/act_hangout_end_iv_anchor_icon"
+        android:layout_width="@dimen/live_size_80dp"
+        android:layout_height="@dimen/live_size_80dp"
+        android:src="@drawable/ic_default_photo_woman" />
+
+    <TextView
+        android:id="@+id/act_hangout_end_tv_anchor_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_10dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_14sp"
+        tools:text="LindaLindaLindaLindaLindaLindaLinda" />
+</LinearLayout>

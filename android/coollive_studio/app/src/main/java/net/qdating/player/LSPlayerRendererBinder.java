@@ -35,16 +35,20 @@ public class LSPlayerRendererBinder {
      * @param fillMode      渲染模式
      */
     public LSPlayerRendererBinder(GLSurfaceView surfaceView, LSConfig.FillMode fillMode) {
-        init(surfaceView, fillMode);
+        init(surfaceView, fillMode, LSConfig.decodeMode);
     }
 
-    private void init(GLSurfaceView surfaceView, LSConfig.FillMode fillMode) {
-        if( LSConfig.decodeMode == LSConfig.DecodeMode.DecodeModeAuto ) {
+    public LSPlayerRendererBinder(GLSurfaceView surfaceView, LSConfig.FillMode fillMode, LSConfig.DecodeMode decodeMode) {
+        init(surfaceView, fillMode, decodeMode);
+    }
+
+    private void init(GLSurfaceView surfaceView, LSConfig.FillMode fillMode, LSConfig.DecodeMode decodeMode) {
+        if( decodeMode == LSConfig.DecodeMode.DecodeModeAuto ) {
             if( LSVideoHardDecoder.supportHardDecoder() ) {
                 // 判断可以使用硬解码
                 useHardDecoder = true;
             }
-        } else if( LSConfig.decodeMode == LSConfig.DecodeMode.DecodeModeHard ) {
+        } else if( decodeMode == LSConfig.DecodeMode.DecodeModeHard ) {
             // 强制使用硬解码
             useHardDecoder = true;
         }

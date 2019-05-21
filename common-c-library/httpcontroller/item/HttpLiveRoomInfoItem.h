@@ -100,6 +100,11 @@ public:
                 chatOnlineStatus = GetIntToIMChatOnlineStatus(root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].asInt());
             }
             
+            /* isFollow */
+            if( root[LIVEROOM_HOT_PROGRAMLIST_ISFOLLOW].isNumeric() ) {
+                isFollow = root[LIVEROOM_HOT_PROGRAMLIST_ISFOLLOW].asInt() == 0 ? false : true;
+            }
+            
         }
     }
 
@@ -113,6 +118,7 @@ public:
         anchorType = ANCHORLEVELTYPE_UNKNOW;
         showInfo = NULL;
         chatOnlineStatus = IMCHATONLINESTATUS_OFF;
+        isFollow = false;
 	}
 
 	virtual ~HttpLiveRoomInfoItem() {
@@ -133,6 +139,7 @@ public:
      * showInfo         节目信息
      * priv             权限
      * chatOnlineStatus  Chat在线状态（IMCHATONLINESTATUS_OFF：离线，IMCHATONLINESTATUS_ONLINE：在线）
+     * isFollow         关注状态（0未关注，1已关注）
      */
     string userId;
 	string nickName;
@@ -145,6 +152,7 @@ public:
     HttpProgramInfoItem* showInfo;
     HttpAuthorityItem priv;
     IMChatOnlineStatus chatOnlineStatus;
+    bool    isFollow;
 };
 
 typedef list<HttpLiveRoomInfoItem* > HotItemList;

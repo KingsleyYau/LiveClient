@@ -5,13 +5,13 @@ import net.qdating.utils.Log;
 /**
  * RTMP推拉流模块初始化配置
  * @author max
- * @version 1.9.0
+ * @version 1.9.2
  */
 public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	public final static String VERSION = "1.9.0";
+	public final static String VERSION = "1.9.2";
 	/**
 	 * 日志TAG
 	 */
@@ -43,6 +43,10 @@ public class LSConfig {
 	 * 总量 = 缓存时间 * FPS <br/>
 	 */
 	public static int VIDEO_DECODE_FRAME_COUNT = 30;
+	/**
+	 * 最大解码缓存(播放器参数) <br/>
+	 */
+	public static final int VIDEO_DECODE_FRAME_MAX_COUNT = 100;
 	/**
 	 * 初始化编码缓存(推流器参数) <br/>
 	 * 总量 = 缓存时间 * FPS <br/>

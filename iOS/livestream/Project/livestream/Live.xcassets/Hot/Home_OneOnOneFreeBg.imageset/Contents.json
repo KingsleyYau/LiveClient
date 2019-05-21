@@ -5,11 +5,33 @@
       "scale" : "1x"
     },
     {
+      "resizing" : {
+        "mode" : "3-part-horizontal",
+        "center" : {
+          "mode" : "tile",
+          "width" : 12
+        },
+        "cap-insets" : {
+          "right" : 291,
+          "left" : 170
+        }
+      },
       "idiom" : "universal",
       "filename" : "Home_OneOnOneFreeBg@2x.png",
       "scale" : "2x"
     },
     {
+      "resizing" : {
+        "mode" : "3-part-horizontal",
+        "center" : {
+          "mode" : "tile",
+          "width" : 23
+        },
+        "cap-insets" : {
+          "right" : 494,
+          "left" : 178
+        }
+      },
       "idiom" : "universal",
       "filename" : "Home_OneOnOneFreeBg@3x.png",
       "scale" : "3x"

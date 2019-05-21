@@ -16,6 +16,7 @@
         self.emfId = @"";
         self.content = @"";
         self.comsumeType = LSLETTERCOMSUMETYPE_CREDIT;
+        self.sayHiResponseId = @"";
     }
     
     return self;
@@ -28,7 +29,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager sendEmf:self.anchorId loiId:self.loiId emfId:self.emfId content:self.content imgList:self.imgList comsumeType:self.comsumeType finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+        NSInteger request = [self.manager sendEmf:self.anchorId loiId:self.loiId emfId:self.emfId content:self.content imgList:self.imgList comsumeType:self.comsumeType sayHiResponseId:self.sayHiResponseId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理

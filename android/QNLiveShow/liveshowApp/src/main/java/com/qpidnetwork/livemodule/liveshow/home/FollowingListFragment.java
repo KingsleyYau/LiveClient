@@ -16,7 +16,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -45,7 +44,7 @@ import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
@@ -58,6 +57,7 @@ import com.qpidnetwork.livemodule.utils.HotItemStyleManager;
 import com.qpidnetwork.livemodule.utils.StringUtil;
 import com.qpidnetwork.livemodule.view.ViewSmartHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -231,7 +231,7 @@ public class FollowingListFragment extends BaseListFragment implements IAuthoriz
                 }else{
                     if(mFollowingList.size()>0){
                         if(getActivity() != null){
-                            Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
+                            ToastUtil.showToast(getActivity(), response.errMsg);
                         }
                         isNeedRefresh = false;
                     }else{
@@ -369,7 +369,7 @@ public class FollowingListFragment extends BaseListFragment implements IAuthoriz
                 showEmptyView();
             }else{
                 //未登录,去登录
-                RegisterActivity.launchRegisterActivity(mContext);
+                LoginNewActivity.launchRegisterActivity(mContext);
                 //add by Jagger 这个无数据登录页不能消失
                 showLoginView();
             }

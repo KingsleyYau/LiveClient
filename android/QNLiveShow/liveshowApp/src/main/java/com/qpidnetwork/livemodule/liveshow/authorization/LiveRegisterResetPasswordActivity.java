@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
@@ -21,6 +20,7 @@ import com.qpidnetwork.livemodule.httprequest.RequestJniAuthorization;
 import com.qpidnetwork.livemodule.httprequest.item.LSValidateCodeType;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.ByteUtil;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 /**
  * Jagger
@@ -105,7 +105,7 @@ public class LiveRegisterResetPasswordActivity extends BaseActionBarFragmentActi
             break;
             case REQUEST_FAIL: {
                 // 收起菊花
-                Toast.makeText(mContext, obj.errMsg, Toast.LENGTH_LONG).show();
+                ToastUtil.showToast(mContext, obj.errMsg);
 
                 // 改变密码失败
 //                switch (obj.errno) {

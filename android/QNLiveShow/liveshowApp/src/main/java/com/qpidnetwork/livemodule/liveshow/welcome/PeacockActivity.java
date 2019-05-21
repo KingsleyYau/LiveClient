@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -18,6 +17,7 @@ import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 /**
  * Description:应用的启动页
@@ -51,7 +51,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
             @Override
             public void onClick(View v) {
                 if(TextUtils.isEmpty(et_token.getText())){
-                    Toast.makeText(PeacockActivity.this,"输入测试帐号的token！",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showToast(PeacockActivity.this, "输入测试帐号的token！");
                     return;
                 }
                 String token = et_token.getText().toString();

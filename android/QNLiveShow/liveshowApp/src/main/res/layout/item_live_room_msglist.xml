@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_msgItemContainer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/ll_msgItemContainer"
+    android:orientation="vertical"
     android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:orientation="vertical">
+    android:paddingRight="4dp">
 
     <TextView
         android:id="@+id/tvMsgDescription"
@@ -23,8 +23,8 @@
         android:id="@+id/llRecommended"
         android:layout_width="215dp"
         android:layout_height="65dp"
-        android:paddingBottom="2dp"
         android:layout_marginTop="@dimen/live_size_4dp"
+        android:paddingBottom="2dp"
         android:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -48,16 +48,119 @@
             android:background="@drawable/rectangle_rounded_angle_talent_recommand"
             android:gravity="center_vertical"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/live_size_12sp"
-                android:maxLines="3"
-                android:ellipsize="end"
                 android:layout_marginLeft="@dimen/live_size_8dp"
-                android:layout_marginRight="@dimen/live_size_8dp"/>
+                android:layout_marginRight="@dimen/live_size_8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--增加hangout推荐及敲门界面-->
+    <LinearLayout
+        android:id="@+id/llAnchorRecommended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_4dp"
+        android:minWidth="@dimen/live_size_200dp"
+        android:minHeight="75dp"
+        android:paddingBottom="2dp"
+        android:visibility="visible">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ivAnchorPhoto"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:backgroundImage="@color/black4"
+            fresco:roundAsCircle="false"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="6dp"
+            fresco:roundingBorderColor="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_hangout_recommend_shape"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/live_size_8dp"
+            android:paddingTop="@dimen/live_size_6dp"
+            android:paddingRight="@dimen/live_size_8dp"
+            android:paddingBottom="@dimen/live_size_2dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvAnchorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold"
+                tools:text="Nico" />
+
+            <TextView
+                android:id="@+id/tvAnchorDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_12sp"
+                tools:text="Nico" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/tvEventButton"-->
+            <!--android:layout_width="@dimen/live_size_90dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+            <!--android:background="@drawable/btn_hangout_invite_white_ba"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="@dimen/live_size_2dp"-->
+            <!--android:paddingBottom="@dimen/live_size_2dp"-->
+            <!--android:textColor="@color/live_ho_orange_deep"-->
+            <!--android:textSize="@dimen/live_size_12sp"-->
+            <!--android:visibility="gone" />-->
+
+            <LinearLayout
+                android:id="@+id/llEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginTop="@dimen/live_size_8dp"
+                android:background="@drawable/btn_hangout_list_stroke_shape"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/live_size_10dp"
+                android:paddingRight="@dimen/live_size_10dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_hang_out" />
+
+                <TextView
+                    android:id="@+id/tvEventButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_2dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/live_common_invite_now"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

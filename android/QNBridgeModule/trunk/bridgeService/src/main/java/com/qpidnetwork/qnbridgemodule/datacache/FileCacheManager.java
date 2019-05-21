@@ -72,6 +72,7 @@ public class FileCacheManager {
      */
     public String getFileCacheHomePath(){
         String appName = mContext.getResources().getString(R.string.app_name);
+        appName = appName.replace(" ", "_"); //去掉字符串中的空格，linux读取路径问题
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
     }
 
@@ -711,6 +712,7 @@ public class FileCacheManager {
      */
     public String GetPublisherPlayerLogLocalPath(){
         String LOCAL_CACHE_ROOT_DIR = mContext.getResources().getString(R.string.app_name);
+        LOCAL_CACHE_ROOT_DIR = LOCAL_CACHE_ROOT_DIR.replace(" ", "_"); //去掉字符串中的空格，linux读取路径问题
         String path = LOCAL_CACHE_ROOT_DIR + "/" + PLAYER_PUBLISHER_LOG_DIR;
         return path;
     }

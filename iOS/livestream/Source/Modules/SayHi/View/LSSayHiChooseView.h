@@ -17,12 +17,9 @@
 
 @interface LSSayHiChooseView : UIView
 @property (weak, nonatomic) IBOutlet UIView *chooseBGView;
-@property (weak, nonatomic) IBOutlet UIImageView *selectedUnread;
-@property (weak, nonatomic) IBOutlet UIImageView *selectedLast;
 @property (weak, nonatomic) IBOutlet UIButton *unreadBtn;
 @property (weak, nonatomic) IBOutlet UIButton *lastBtn;
 @property (nonatomic, assign) BOOL isSelectedUnread;
 @property (weak, nonatomic) id<LSSayHiChooseViewDelegate> delegate;
-- (instancetype)initArrowDirectionIsUp:(BOOL)isUp;
 @end
 

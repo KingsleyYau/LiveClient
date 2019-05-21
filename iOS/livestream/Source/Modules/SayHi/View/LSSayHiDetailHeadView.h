@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "LSSayHiDetailItemObject.h"
+#import "LSImageViewLoader.h"
 @protocol LSSayHiDetailHeadViewDelegate <NSObject>
-
-- (void)sayHiDetailHeadViewDidSortBtn;
 
 - (void)sayHiDetailHeadViewDidNoteBtn;
 
@@ -21,9 +20,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *noteBtn;
-@property (weak, nonatomic) IBOutlet UIButton *sortBtn;
-@property (weak, nonatomic) IBOutlet UILabel *replyLabel;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *bgImage;
+@property (nonatomic, strong) LSImageViewLoader * imageLoader;
+@property (nonatomic, strong) LSImageViewLoader *backgroundImageloader;
 @property (weak, nonatomic) id<LSSayHiDetailHeadViewDelegate> delegate;
+
+- (void)loadData:(LSSayHiDetailItemObject*)obj;
 @end
 
 

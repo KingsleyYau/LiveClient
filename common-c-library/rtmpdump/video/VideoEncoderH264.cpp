@@ -225,6 +225,16 @@ void VideoEncoderH264::EncodeVideoFrame(void* data, int size, void* frame) {
 
     	} else {
     		srcFrame = new VideoFrame();
+        	FileLevelLog("rtmpdump",
+        				 KLog::LOG_WARNING,
+        				 "VideoEncoderH264::EncodeVideoFrame( "
+        				 "this : %p, "
+        				 "[New Video Frame], "
+        				 "frame : %p "
+        				 ")",
+        				 this,
+        				 srcFrame
+        				 );
     	}
     	mFreeBufferList.unlock();
 
@@ -686,7 +696,7 @@ void VideoEncoderH264::ConvertVideoHandle() {
         mConvertBufferList.lock();
         if( !mConvertBufferList.empty() ) {
             FileLevelLog("rtmpdump",
-                          KLog::LOG_STAT,
+                          KLog::LOG_MSG,
                           "VideoEncoderH264::ConvertVideoHandle( "
                           "this : %p, "
                           "mConvertBufferList.size() : %d "
@@ -708,6 +718,16 @@ void VideoEncoderH264::ConvertVideoHandle() {
                 mFreeBufferList.pop_front();
             } else {
                 dstFrame = new VideoFrame();
+            	FileLevelLog("rtmpdump",
+            				 KLog::LOG_WARNING,
+            				 "VideoEncoderH264::ConvertVideoHandle( "
+            				 "this : %p, "
+            				 "[New Video Frame], "
+            				 "frame : %p "
+            				 ")",
+            				 this,
+							 dstFrame
+            				 );
             }
             mFreeBufferList.unlock();
             
@@ -761,7 +781,7 @@ void VideoEncoderH264::EncodeVideoHandle() {
         mEncodeBufferList.lock();
         if( !mEncodeBufferList.empty() ) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "VideoEncoderH264::EncodeVideoHandle( "
                          "this : %p, "
                          "mEncodeBufferList.size() : %d "

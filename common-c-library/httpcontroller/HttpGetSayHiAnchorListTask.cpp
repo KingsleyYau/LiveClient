@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.2.符合发送Say Hi的主播列表
+ *        desc: 14.2.获取可发Say Hi的主播列表（用于Say Hi的All列表没有数据时，观众获取可发Say Hi的主播列表）
  */
 
 #include "HttpGetSayHiAnchorListTask.h"

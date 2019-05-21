@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface LSSayHiThemeListCollectionViewCell : UICollectionViewCell
+
++ (NSString *)cellIdentifier;
+
++ (id)getUICollectionViewCell:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath;
+
+- (void)setupTheme:(NSString *)img;
 
 @end
 
-NS_ASSUME_NONNULL_END

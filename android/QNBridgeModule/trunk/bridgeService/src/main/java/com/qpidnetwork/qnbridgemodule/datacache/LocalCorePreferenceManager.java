@@ -9,6 +9,7 @@ import com.qpidnetwork.qnbridgemodule.bean.AccountInfoBean;
 import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 import com.qpidnetwork.qnbridgemodule.bean.GoogleReferrerItem;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationSettingBean;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,7 +31,7 @@ public class LocalCorePreferenceManager {
                 Context.MODE_PRIVATE);
     }
 
-    private void save(String key, String value) {
+    public void save(String key, String value) {
         if (mSharedPreferences != null) {
             SharedPreferences.Editor edit = mSharedPreferences.edit();
             edit.putString(key, value);
@@ -53,7 +54,7 @@ public class LocalCorePreferenceManager {
         }
     }
 
-    private String getString(String key) {
+    public String getString(String key) {
         String value = null;
         if (mSharedPreferences != null) {
             value = mSharedPreferences.getString(key, "");
@@ -62,9 +63,13 @@ public class LocalCorePreferenceManager {
     }
 
     private boolean getBoolean(String key) {
+        return getBoolean(key, false);
+    }
+
+    private boolean getBoolean(String key, boolean defaultValue) {
         boolean value = false;
         if (mSharedPreferences != null) {
-            value = mSharedPreferences.getBoolean(key, false);
+            value = mSharedPreferences.getBoolean(key, defaultValue);
         }
         return value;
     }
@@ -253,4 +258,47 @@ public class LocalCorePreferenceManager {
         return getBoolean(CommonConstant.KEY_INSTALL_FIRST_REGISTER_FLAGS);
     }
 
+    /**
+     * 保存已提交过InstallLog
+     */
+    public void saveInstallLogSummitedStatus(){
+        try {
+            save(CommonConstant.SP_KEY_INSTALL_LOGS_BEFORE_AUTH_IS_SUMMIT , true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 是否提交过InstallLog
+     * @return
+     */
+    public boolean getInstallLogSummitStatus(){
+        boolean isSummit = false;
+        isSummit = getBoolean(CommonConstant.SP_KEY_INSTALL_LOGS_BEFORE_AUTH_IS_SUMMIT);
+//        Log.i("Jagger" , "InstallLogsManager getSummitStatus:" + isSummit);
+        return isSummit;
+    }
+
+    /**
+     * 保存是否显示hangout列表头
+     */
+    public void saveHangOutListHeaderGone(){
+        try {
+            save(CommonConstant.SP_KEY_HANG_OUT_LIST_HEADER_IS_VISIBLE , false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 是否显示hangout列表头
+     * @return
+     */
+    public boolean getHangOutListHeaderStatus(){
+        boolean isSummit = false;
+        isSummit = getBoolean(CommonConstant.SP_KEY_HANG_OUT_LIST_HEADER_IS_VISIBLE, true);
+//        Log.i("Jagger" , "InstallLogsManager HangOutListHeader:" + isSummit);
+        return isSummit;
+    }
 }

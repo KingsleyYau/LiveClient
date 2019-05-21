@@ -23,7 +23,7 @@ void HttpTester::Test() {
 	FileLevelLog(
 			"rtmpdump",
 			KLog::LOG_WARNING,
-			"HttpTester::Test( "
+			"HttpTester::Test("
 			")"
 			);
 

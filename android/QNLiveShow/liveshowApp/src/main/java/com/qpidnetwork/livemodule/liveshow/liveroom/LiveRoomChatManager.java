@@ -14,18 +14,24 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListAdapter;
 import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView;
 import com.qpidnetwork.livemodule.framework.livemsglist.MessageRecyclerView;
 import com.qpidnetwork.livemodule.framework.livemsglist.ViewHolder;
 import com.qpidnetwork.livemodule.im.IMManager;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutRecommendItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvKnockRequestItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
 import com.qpidnetwork.livemodule.liveshow.model.LiveRoomMsgListItem;
 import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
+import com.qpidnetwork.livemodule.utils.StringUtil;
+import com.qpidnetwork.qnbridgemodule.util.DisplayUtil;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.WeakReference;
@@ -40,7 +46,9 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
 
     private final String TAG = LiveRoomChatManager.class.getSimpleName();
 
-    private WeakReference<BaseCommonLiveRoomActivity> mActivity;
+//    private WeakReference<BaseCommonLiveRoomActivity> mActivity;
+// 2019/3/19 Hardy
+    private WeakReference<BaseFragmentActivity> mActivity;
 //    private HtmlImageGetter mImageGetter;
     private CustomerHtmlTagHandler.Builder mBuilder;
     private LiveMessageListView lvlv_roomMsgList;
@@ -81,8 +89,8 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
         this.roomThemeManager = roomThemeManager;
     }
 
-    public void init(BaseCommonLiveRoomActivity roomActivity, View container){
-        mActivity = new WeakReference<BaseCommonLiveRoomActivity>(roomActivity);
+    public void init(BaseFragmentActivity roomActivity, View container){
+        mActivity = new WeakReference<>(roomActivity);
         //初始化Html图片解析器
         giftImgWidth = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_gift_width);
         giftImgHeight = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_gift_height);
@@ -139,6 +147,9 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
     public void destroy(){
         if(mLiveRoomChatMsglistItemManager != null){
             mLiveRoomChatMsglistItemManager.destroy();
+        }
+        if (lvlv_roomMsgList != null) {
+            lvlv_roomMsgList.onDestroy();
         }
     }
 
@@ -378,6 +389,12 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                 //接收处理从缓冲区回来的数据
                 lvlv_roomMsgList.addNewLiveMsg(liveRoomMsgListItem);
             }
+
+            @Override
+            public void onRefreshList() {
+                //刷新列表（用于礼物图片下载成功回调）
+                lmlAdapter.notifyDataSetChanged();
+            }
         });
     }
 
@@ -397,6 +414,21 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
         View llRecommended = holder.getView(R.id.llRecommended);
         ll_userLevel.setVisibility(View.VISIBLE);
         llRecommended.setVisibility(View.GONE);
+        //增加hangout敲门及推荐逻辑
+        View llAnchorRecommended = holder.getView(R.id.llAnchorRecommended);
+        llAnchorRecommended.setVisibility(View.GONE);
+        SimpleDraweeView ivAnchorPhoto = holder.getView(R.id.ivAnchorPhoto);
+        TextView tvAnchorName = holder.getView(R.id.tvAnchorName);
+        TextView tvAnchorDesc = holder.getView(R.id.tvAnchorDesc);
+
+        TextView tvEventButton = holder.getView(R.id.tvEventButton);
+        View llEventButton = holder.getView(R.id.llEventButton);
+        llEventButton.setOnClickListener(null);
+
+        // 2019/3/22 Hardy
+        //设置默认 padding
+        ll_userLevel.setMinHeight(0);
+        ll_userLevel.setPadding(0,0,0,0);
 
         switch (msgListItem.imMessageItem.msgType){
             case Normal:
@@ -404,9 +436,20 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
 
             }break;
             case Gift:{
-                ll_msgItemContainer.setBackgroundDrawable(
-                        roomThemeManager.getRoomMsgListGiftItemBgDrawable(
-                                mContext, currLiveRoomType));
+                if(currLiveRoomType == IMRoomInItem.IMLiveRoomType.HangoutRoom){
+                    int margin = DisplayUtil.dip2px(mActivity.get(),9f);
+                    int space = DisplayUtil.dip2px(mActivity.get(),3f);
+                    ll_userLevel.setPadding(margin,space,margin,space);
+                    ll_userLevel.setMinHeight(DisplayUtil.dip2px(mActivity.get(),26f));
+
+                    ll_msgItemContainer.setBackgroundDrawable(
+                        roomThemeManager.getRoomMsgListGiftItemBgDrawableByHangout(
+                                mContext, currLiveRoomType, msgListItem.imMessageItem.giftMsgContent.isSecretly));
+                }else {
+                    ll_msgItemContainer.setBackgroundDrawable(
+                            roomThemeManager.getRoomMsgListGiftItemBgDrawable(
+                                    mContext, currLiveRoomType));
+                }
             }break;
             case FollowHost:{
                 //FollowHost系统以公告方式推送给客户端
@@ -452,6 +495,62 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                         }
                     }
                 });
+            }break;
+            case AnchorKnock:{
+                //主播敲门处理
+                ll_userLevel.setVisibility(View.GONE);
+                llAnchorRecommended.setVisibility(View.VISIBLE);
+                IMRecvKnockRequestItem knockItem = msgListItem.imMessageItem.hangoutKnockRequestItem;
+                if(knockItem != null){
+                    FrescoLoadUtil.loadUrl(mContext, ivAnchorPhoto, knockItem.photoUrl,
+                            mContext.getResources().getDimensionPixelSize(R.dimen.live_size_50dp),
+                            R.drawable.ic_default_photo_woman_rect,
+                            false,
+                            mContext.getResources().getDimensionPixelSize(R.dimen.live_size_6dp),0,mContext.getResources().getDimensionPixelSize(R.dimen.live_size_6dp),0);
+
+                    tvAnchorName.setText(StringUtil.truncateName(knockItem.nickName));
+                    tvAnchorDesc.setText(mContext.getResources().getString(R.string.hangout_dialog_des, knockItem.age, knockItem.country));
+                    tvEventButton.setText(mContext.getResources().getString(R.string.live_common_open_door));
+                    llEventButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(mLiveMessageListItemClickListener != null){
+                                mLiveMessageListItemClickListener.onItemClick(msgListItem.imMessageItem);
+                            }
+                        }
+                    });
+                }
+            }break;
+            case AnchorRecommand:{
+                //主播推荐hangout
+                ll_userLevel.setVisibility(View.GONE);
+                llAnchorRecommended.setVisibility(View.VISIBLE);
+                IMHangoutRecommendItem hangoutRecommendItem = msgListItem.imMessageItem.hangoutRecommendItem;
+                if(hangoutRecommendItem != null){
+                    FrescoLoadUtil.loadUrl(mContext, ivAnchorPhoto, hangoutRecommendItem.friendPhotoUrl,
+                            mContext.getResources().getDimensionPixelSize(R.dimen.live_size_50dp),
+                            R.drawable.ic_default_photo_woman_rect,
+                            false,
+                            mContext.getResources().getDimensionPixelSize(R.dimen.live_size_6dp),0,mContext.getResources().getDimensionPixelSize(R.dimen.live_size_6dp),0);
+
+                    tvAnchorName.setText(StringUtil.truncateName(hangoutRecommendItem.friendNickName));
+                    tvAnchorDesc.setText(mContext.getResources().getString(R.string.hangout_dialog_des, hangoutRecommendItem.friendAge, hangoutRecommendItem.friendCountry));
+                    IMRoomInItem.IMLiveRoomType roomType = IMManager.getInstance().getRoomType(hangoutRecommendItem.roomId);
+                    if(roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
+                        || roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom){
+                        tvEventButton.setText(mContext.getResources().getString(R.string.live_common_start_hangout));
+                    }else{
+                        tvEventButton.setText(mContext.getResources().getString(R.string.live_common_invite_now));
+                    }
+                    llEventButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(mLiveMessageListItemClickListener != null){
+                                mLiveMessageListItemClickListener.onItemClick(msgListItem.imMessageItem);
+                            }
+                        }
+                    });
+                }
             }break;
             default:
                 break;

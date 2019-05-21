@@ -393,6 +393,7 @@
 #define LIVEROOM_HOT_PROGRAMLIST_PRIV_ONEONONE                      "oneonone"
 #define LIVEROOM_HOT_PROGRAMLIST_PRIV_BOOKING                       "booking"
 #define LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS         "chat_online_status"
+#define LIVEROOM_HOT_PROGRAMLIST_ISFOLLOW                   "isFollow"
 
 /* 3.2.获取Follow列表 */
 /* 接口路径 */
@@ -1746,6 +1747,7 @@
 #define LETTER_MD5                              "md5"
 #define LETTER_CLICK_TYPE                       "click_type"
 #define LETTER_VIDEO_URL                        "video_url"
+#define LETTER_SAYHI_RESPONSEID                 "say_hi_response_id"
 
 /* 13.1.获取意向信列表 */
 /* 接口路径 */
@@ -1806,7 +1808,7 @@
 #define LIVEROOM_CANSENDEMF_ANCHOR_CAN_SEND               "anchor_can_send"
 
 /**************************** SayHi *****************************/
-/* 14.1.获取主题、文本配置信息 */
+/* 14.1.获取发送SayHi的主题和文本信息 */
 /* 接口路径 */
 #define LIVEROOM_RESOURCECONFIG                       "/pman/sayHi/api/resourceConfig"
 
@@ -1822,7 +1824,7 @@
 #define LIVEROOM_RESOURCECONFIG_TESTLIST_ID                    "id"
 #define LIVEROOM_RESOURCECONFIG_TESTLIST_TEXT                  "text"
 
-/* 14.2.符合发送Say Hi的主播列表 */
+/* 14.2.获取可发Say Hi的主播列表 */
 /* 接口路径 */
 #define LIVEROOM_GETSAYHIANCHORLIST                    "/pman/sayHi/api/getSayHiAnchorList"
 
@@ -1834,8 +1836,9 @@
 #define LIVEROOM_GETSAYHIANCHORLIST_LIST_ANCHORNICKNAME     "anchor_nickname"
 #define LIVEROOM_GETSAYHIANCHORLIST_LIST_ANCHORCOVER        "anchor_cover"
 #define LIVEROOM_GETSAYHIANCHORLIST_LIST_ONLINESTATUS       "online_status"
+#define LIVEROOM_GETSAYHIANCHORLIST_LIST_ROOMTYPE           "room_type"
 
-/* 14.3.检测对某主播是否能发送sayHi */
+/* 14.3.检测能否对指定主播发送SayHi */
 /* 接口路径 */
 #define LIVEROOM_ISCANSENDSAYHI                    "/pman/sayHi/api/isCanSendSayHi"
 
@@ -1865,8 +1868,10 @@
  */
 #define LIVEROOM_SENDSAYHI_SAYHIID              "say_hi_id"
 #define LIVEROOM_SENDSAYHI_ID                   "id"
+#define LIVEROOM_SENDSAYHI_HASFOLLOW            "has_follow"
+#define LIVEROOM_SENDSAYHI_ONLINESTATUS         "online_status"
 
-/* 14.5.All ‘Say Hi’列表 */
+/* 14.5.获取Say Hi的All列表 */
 /* 接口路径 */
 #define LIVEROOM_ALLSAYHILIST                    "/pman/sayHi/api/allSayHiList"
 
@@ -1887,12 +1892,15 @@
 #define LIVEROOM_ALLSAYHILIST_LIST_ANCHORCOVER          "anchor_cover"
 #define LIVEROOM_ALLSAYHILIST_LIST_ANCHORAVATAR         "anchor_avatar"
 #define LIVEROOM_ALLSAYHILIST_LIST_ANCHORAGE            "anchor_age"
+#define LIVEROOM_ALLSAYHILIST_LIST_SENDTIME             "send_time"
+#define LIVEROOM_ALLSAYHILIST_LIST_CONTENT              "content"
 #define LIVEROOM_ALLSAYHILIST_LIST_RESPONSENUM          "response_num"
 #define LIVEROOM_ALLSAYHILIST_LIST_UNREADNUM            "unread_num"
+#define LIVEROOM_ALLSAYHILIST_LIST_ISFREE               "is_free"
 
-/* 14.6.Waiting for your reply列表 */
+/* 14.6.获取SayHi的Response列表 */
 /* 接口路径 */
-#define LIVEROOM_WAITINGREPLYSAYHILIST              "/sayHi/api/waitingReplySayHiList"
+#define LIVEROOM_WAITINGREPLYSAYHILIST              "/pman/sayHi/api/waitingReplySayHiList"
 
 /**
  *  请求
@@ -1919,7 +1927,7 @@
 #define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_HASREAD             "has_read"
 #define LIVEROOM_WAITINGREPLYSAYHILIST_LIST_ISFREE              "is_free"
 
-/* 14.7.SayHi详情 */
+/* 14.7.获取SayHi详情 */
 /* 接口路径 */
 #define LIVEROOM_SAYHIDETAIL                "/pman/sayHi/api/sayHiDetail"
 
@@ -1947,13 +1955,14 @@
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST       "response_list"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSEID    "response_id"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME  "response_time"
+#define LIVEROOM_SAYHIDETAIL_RESPONSELIST_SIMPLECONTENT "simple_content"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_CONTENT       "content"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_ISFREE        "is_free"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_HASREAD       "has_read"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_HASIMG        "has_img"
 #define LIVEROOM_SAYHIDETAIL_RESPONSELIST_IMG           "img"
 
-/* 14.8.查看主播回复(扣费) */
+/* 14.8.获取SayHi回复详情*/
 /* 接口路径 */
 #define LIVEROOM_READRESPONSE                "/pman/sayHi/api/readResponse"
 

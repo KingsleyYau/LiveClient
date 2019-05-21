@@ -96,8 +96,11 @@
         [self.failView addSubview:self.failTips];
         
         CGFloat failBtnY = CGRectGetMaxY(self.failTips.frame) + 44.0f;
-        self.failBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 180, 36)];
+
+        self.failBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        [self.failBtn setFrame:CGRectMake(0, 0, 180, 36)];
         [self.failBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [self.failBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         CGPoint failBtnCenter = self.failBtn.center;
         failBtnCenter.x = iconCenter;
         failBtnCenter.y = failBtnY;

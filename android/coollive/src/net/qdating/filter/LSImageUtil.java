@@ -12,6 +12,11 @@ import android.graphics.Bitmap;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;
 
+/**
+ * 工具类
+ * @author max
+ *
+ */
 public class LSImageUtil {
 	/**
 	 * 目标格式

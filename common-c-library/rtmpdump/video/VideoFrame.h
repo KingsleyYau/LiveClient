@@ -14,8 +14,10 @@
 
 #include <rtmpdump/util/EncodeDecodeBuffer.h>
 
-#define DEFAULT_VIDEO_BUFFER_COUNT 50
-#define DEFAULT_VIDEO_BUFFER_SIZE 480 * 640 * 4
+// 编解码器默认缓冲帧数
+#define DEFAULT_VIDEO_BUFFER_COUNT 15
+// 编解码器默认视频帧分辨率
+#define DEFAULT_VIDEO_BUFFER_SIZE 240 * 320 * 4
 
 struct AVFrame;
 namespace coollive {

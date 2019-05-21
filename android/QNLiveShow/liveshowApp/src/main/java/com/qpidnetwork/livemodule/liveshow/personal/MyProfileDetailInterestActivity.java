@@ -10,7 +10,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -24,6 +23,7 @@ import com.qpidnetwork.livemodule.utils.NetworkUtil;
 import com.qpidnetwork.livemodule.view.MaterialAppBar;
 import com.qpidnetwork.livemodule.view.wrap.WrapBaseAdapter;
 import com.qpidnetwork.livemodule.view.wrap.WrapListView;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -278,7 +278,7 @@ public class MyProfileDetailInterestActivity extends BaseFragmentActivity implem
 
             case REQUEST_FAIL: {
                 hideProgressDialog();
-                Toast.makeText(mContext, obj.errMsg, Toast.LENGTH_LONG).show();
+                showTipToast(obj.errMsg);
             }
             break;
             default:
@@ -287,7 +287,7 @@ public class MyProfileDetailInterestActivity extends BaseFragmentActivity implem
     }
 
     private void showTipToast(String val) {
-        Toast.makeText(this, val, Toast.LENGTH_SHORT).show();
+        ToastUtil.showToast(this, val);
     }
 
 

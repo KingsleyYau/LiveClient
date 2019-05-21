@@ -2,3 +2,7 @@
 "BUY_TIP" = "The first response is FREE to read. Starting from the second response, 1 post stamp or 1 credit will be deducted from your account.";
 
 "AGAIN_TIP" = "Don't Ask Again";
+
+"NO_CREDIT" = "Opps, you have insufficient Post Stamps or Credits to read this response. Would you like to add more and continue?";
+"ADD_CREDIT" = "Add Credits";
+

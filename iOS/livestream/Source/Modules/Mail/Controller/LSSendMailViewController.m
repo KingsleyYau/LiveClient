@@ -371,6 +371,9 @@ typedef enum : NSUInteger {
             [uploadedArray addObject:item.url];
         }
     }
+    if (self.sayHiResponseId.length > 0) {
+        request.sayHiResponseId = self.sayHiResponseId;
+    }
     request.imgList = uploadedArray;
     request.comsumeType = self.isStamps == YES ? LSLETTERCOMSUMETYPE_STAMP : LSLETTERCOMSUMETYPE_CREDIT;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
@@ -412,7 +415,7 @@ typedef enum : NSUInteger {
     [self.poststampView removeFromSuperview];
     self.poststampView = nil;
     self.poststampView = [LSOutOfPoststampView initWithActionViewDelegate:self];
-    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"%0.1f", self.credit]];
+    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"Send by Credits (%0.1f credits)", self.credit]];
 }
 
 - (void)lsOutOfPoststampView:(LSOutOfPoststampView *)addView didSelectAddCredit:(UIButton *)creditBtn {
@@ -674,7 +677,9 @@ typedef enum : NSUInteger {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.56 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:titleMsg preferredStyle:UIAlertControllerStyleAlert];
         if (cancelMsg.length > 0) {
-            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:cancelMsg style:UIAlertActionStyleCancel handler:nil];
+            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:cancelMsg style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                 [self alertView:type clickCancleOrOther:1];
+            }];
             [alertVC addAction:cancelAC];
         }
         if (otherMsg.length > 0) {

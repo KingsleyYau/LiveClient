@@ -86,6 +86,8 @@ public:
 	virtual void OnGetThemeConfig(long requestId, bool success, const string& errnum, const string& errmsg, const LSLCThemeConfig& config){};
 	virtual void OnGetThemeDetail(long requestId, bool success, const string& errnum, const string& errmsg, const ThemeItemList& themeList){};
 	virtual void OnCheckFunctions(long requestId, bool success, const string& errnum, const string& errmsg, const list<string>& flagList) {};
+    // 12.16.上传LiveChat相关附件
+    virtual void OnUploadManPhoto(long requestId, bool success, int errnum, const string& errmsg, const string& url, const string& md5) {};
 };
 
 
@@ -217,6 +219,9 @@ public:
 			GETVIDEO_CLIENT_TYPE toflag,
 			string sendid
 			);
+    
+    // 12.16.上传LiveChat相关附件, file:照片二进制流（用于发送私密照前使用）
+    long UploadManPhoto(const string& file);
 
 	/**
 	 * 6.15 查询小高级表情配置
@@ -285,6 +290,7 @@ private:
 			string &path, string &version);
 	void HandleQueryRecentVideo(Json::Value root, list<LSLCVideoItem> &itemList);
 	void HandleGetVideo(Json::Value root, string &url);
+    void UploadManPhotoCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
 };
 
 #endif /* LSLIVECHATREQUESTLIVECHATCONTROLLER_H_ */

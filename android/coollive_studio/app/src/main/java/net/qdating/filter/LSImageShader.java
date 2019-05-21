@@ -2,6 +2,11 @@ package net.qdating.filter;
 
 import net.qdating.LSConfig;
 
+/**
+ * GL Shader工具类
+ * @author max
+ *
+ */
 public class LSImageShader {
 	private static final String emptyLedChar = "void ledChar(int n, float xa, float xb, float ya, float yb, vec2 vTC) {} \n";
 	private static final String debugLedChar = ""

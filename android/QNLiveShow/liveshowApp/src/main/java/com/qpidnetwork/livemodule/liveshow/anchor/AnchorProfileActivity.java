@@ -10,11 +10,13 @@ import android.webkit.WebView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.livechat.contact.ContactBean;
 import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
 import com.qpidnetwork.livemodule.livechat.contact.OnLCContactUpdateCallback;
 import com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutFriendsDetailDialog;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
@@ -221,4 +223,11 @@ public class AnchorProfileActivity extends BaseWebViewActivity implements OnLCCo
         sendUiMessage(message);
     }
     //==============    2018/11/24 Hardy 设置LiveChat未读数接口    ======================
+
+    /*********************************  显示主播资料  *******************************/
+    @Override
+    public void onShowHangoutAnchor(HangoutAnchorInfoItem item) {
+        super.onShowHangoutAnchor(item);
+        HangOutFriendsDetailDialog.showCheckMailSuccessDialog(this, item);
+    }
 }

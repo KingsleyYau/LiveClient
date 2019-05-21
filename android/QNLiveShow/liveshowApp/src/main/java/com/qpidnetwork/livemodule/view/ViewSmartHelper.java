@@ -62,6 +62,7 @@ public class ViewSmartHelper {
                     if(mOnVisibilityChangedListener != null){
                         mOnVisibilityChangedListener.onVisibilityChanged(false);
                     }
+                    mView.getViewTreeObserver().removeOnWindowAttachListener(this);
                 }
 
                 @Override

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
@@ -656,8 +657,9 @@ public class RoomThemeManager {
     public Drawable getRoomRepeatGiftAnimBgDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
         if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
-                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_public);
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.HangoutRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.bg_multiclick_stroke_shape);
         }else{
             drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_private);
         }
@@ -727,6 +729,44 @@ public class RoomThemeManager {
         }
         return strResId;
     }
+    public int getRoomMsgListGiftMsgStrResIdByHangout(IMRoomInItem.IMLiveRoomType liveRoomType, boolean isAnchor,
+                                                      GiftItem giftItem, boolean isSecretly, boolean hasRecvNickName) {
+        int strResId = 0;
+        if(null != liveRoomType){
+            if(liveRoomType == IMRoomInItem.IMLiveRoomType.HangoutRoom){
+                //HangOut直播间
+                if(null != giftItem){
+                    if(giftItem.giftType == GiftItem.GiftType.Celebrate){
+                        strResId = isAnchor ? R.string.livemsg_temp_gift_hangout_celeb_anchor : R.string.livemsg_temp_gift_hangout_celeb_man;
+                    }else if(giftItem.giftType == GiftItem.GiftType.Bar){
+                        if(isAnchor){
+                            strResId = R.string.livemsg_temp_gift_hangout_bar_anchor;
+                        }else{
+                            strResId = isSecretly ? R.string.livemsg_temp_gift_hangout_bar_man_secretly : R.string.livemsg_temp_gift_hangout_bar_man;
+                        }
+
+                    }else{
+                        if(isAnchor){
+                            strResId = R.string.livemsg_temp_gift_hangout_giftstore_anchor;
+                        }else{
+                            strResId = isSecretly ? R.string.livemsg_temp_gift_hangout_giftstore_man_secretly : R.string.livemsg_temp_gift_hangout_giftstore_man;
+                        }
+                    }
+                }else {
+                    if(hasRecvNickName){//本地礼物详情不存在，toUid不为空，按照普通礼物消息类型展示
+                        if(isAnchor){
+                            strResId = R.string.livemsg_temp_gift_hangout_giftstore_anchor;
+                        }else{
+                            strResId = isSecretly ? R.string.livemsg_temp_gift_hangout_giftstore_man_secretly : R.string.livemsg_temp_gift_hangout_giftstore_man;
+                        }
+                    }else{//本地礼物详情不存在，toUid为空，按照庆祝礼物消息类型展示
+                        strResId = isAnchor ? R.string.livemsg_temp_gift_hangout_celeb_anchor : R.string.livemsg_temp_gift_hangout_celeb_man;
+                    }
+                }
+            }
+        }
+        return strResId;
+    }
 
     /**
      * 直播间消息列表-入场信息类型对应的资源id
@@ -748,6 +788,16 @@ public class RoomThemeManager {
             }else{
                 //私密直播间
                 strResId = R.string.livemsg_temp_roomin_private_self;
+            }
+        }
+        return strResId;
+    }
+    public int getRoomMsgListRoomInMsgStrResIdByHangout(IMRoomInItem.IMLiveRoomType liveRoomType, boolean isMan){
+        int strResId = 0;
+        if(null != liveRoomType){
+            if(liveRoomType == IMRoomInItem.IMLiveRoomType.HangoutRoom){
+                //HangOut直播间
+                strResId = isMan ? R.string.livemsg_temp_roomin_hangout_man : R.string.livemsg_temp_roomin_hangout_anchor;
             }
         }
         return strResId;
@@ -784,8 +834,19 @@ public class RoomThemeManager {
         }
         return strResId;
     }
-
-
+    public int getRoomMsgListNormalStrResIdByHangout(IMRoomInItem.IMLiveRoomType liveRoomType, boolean isAnchor){
+        int strResId = 0;
+        if(null != liveRoomType) {
+            if (liveRoomType == IMRoomInItem.IMLiveRoomType.HangoutRoom) {
+                if (isAnchor) {
+                    strResId = R.string.livemsg_temp_normal_hangout_anchor;
+                } else {
+                    strResId = R.string.livemsg_temp_normal_hangout_man;
+                }
+            }
+        }
+        return strResId;
+    }
 
     public Drawable getRoomMsgListGiftItemBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
@@ -794,6 +855,17 @@ public class RoomThemeManager {
             drawable=context.getResources().getDrawable(R.drawable.bg_live_msg_item_gift_public);
         }else{
             drawable=context.getResources().getDrawable(R.drawable.bg_live_msg_item_gift_private);
+        }
+        return drawable;
+    }
+    public Drawable getRoomMsgListGiftItemBgDrawableByHangout(Context context, IMRoomInItem.IMLiveRoomType liveRoomType, boolean isSecretly){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.HangoutRoom == liveRoomType){
+            if(isSecretly){
+                drawable=context.getResources().getDrawable(R.drawable.bg_live_msg_item_gift_hangout_secretly);
+            }else{
+                drawable=context.getResources().getDrawable(R.drawable.bg_live_msg_item_gift_hangout);
+            }
         }
         return drawable;
     }
@@ -813,5 +885,22 @@ public class RoomThemeManager {
         }
 
         return drawable;
+    }
+
+    /**
+     * 直播间消息列表-推荐主播消息资源ID
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomMsgListRecommendedStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int strResId = 0;
+
+        if(liveRoomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
+                || liveRoomType == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom){
+            strResId = R.string.livemsg_temp_private_recommend;
+        }else if(liveRoomType == IMRoomInItem.IMLiveRoomType.HangoutRoom) {
+            strResId = R.string.livemsg_temp_hangout_recommend;
+        }
+        return strResId;
     }
 }

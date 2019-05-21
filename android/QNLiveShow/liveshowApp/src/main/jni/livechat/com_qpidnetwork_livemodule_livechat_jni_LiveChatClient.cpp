@@ -2915,7 +2915,7 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChat
 	if (NULL == g_liveChatClient) {
 		return false;
 	}
-	int type= IntToInviteType(inviteType);
+	INVITE_TYPE type= IntToInviteType(inviteType);
 	return g_liveChatClient->SendTextMessage(strUserId, strMessage, illegal, ticket, type);
 }
 

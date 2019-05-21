@@ -71,7 +71,7 @@
         NSBundle *bundle = [LiveBundle mainBundle];
         NSArray *nib = [bundle loadNibNamedWithFamily:[MailTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
     
     return cell;

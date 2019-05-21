@@ -208,26 +208,28 @@ void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
     }
 }
 
-void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
+void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "PlayerController::OnChangeVideoSpsPps( "
                  "this : %p, "
                  "sps_size : %d, "
                  "pps_size : %d, "
-                 "naluHeaderSize : %d "
+                 "naluHeaderSize : %d, "
+				 "timestamp : %u "
                  ")",
                  this,
                  sps_size,
                  pps_size,
-                 naluHeaderSize
+                 naluHeaderSize,
+				 timestamp
                  );
     // 录制视频帧
     mVideoRecorderH264.RecordVideoKeyFrame(sps, sps_size, pps, pps_size, naluHeaderSize);
     
     // 解码视频帧
     if( mpVideoDecoder ) {
-        mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, naluHeaderSize);
+        mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, naluHeaderSize, timestamp);
     }
 }
 
@@ -310,10 +312,10 @@ void PlayerController::OnRecvAudioFrame(
                 );
     // 增加分析处理
     mStatistics.AddAudioRecvFrame();
-    
+
     // 录制音频帧
     mAudioRecorderAAC.RecordAudioFrame(data, size);
-    
+
     // 解码音频帧
     if( mpAudioDecoder ) {
         mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);
@@ -326,11 +328,42 @@ void PlayerController::OnDecodeVideoFrame(VideoDecoder* decoder, void* frame, u_
     // 播放视频帧
     mRtmpPlayer.PushVideoFrame(frame, timestamp);
 }
-    
+
+void PlayerController::OnDecodeVideoError(VideoDecoder* decoder) {
+	// 解码视频失败, 可以断开连接
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::OnDecodeVideoError( "
+                "this : %p "
+                ")",
+                this
+                );
+
+    if( mpPlayerStatusCallback ) {
+        mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
+    }
+}
+
 void PlayerController::OnDecodeAudioFrame(AudioDecoder* decoder, void* frame, u_int32_t timestamp) {
     // 播放音频帧
     mRtmpPlayer.PushAudioFrame(frame, timestamp);
 }
+
+void PlayerController::OnDecodeAudioError(AudioDecoder* decoder) {
+	// 解码音频失败, 可以断开连接
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::OnDecodeAudioError( "
+                "this : %p "
+                ")",
+                this
+                );
+
+    if( mpPlayerStatusCallback ) {
+        mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
+    }
+}
+
 /*********************************************** 解码器回调处理 End *****************************************************/
     
 /*********************************************** 播放器回调处理 *****************************************************/
@@ -415,9 +448,6 @@ void PlayerController::OnResetAudioStream(RtmpPlayer* player) {
     
     // 标记需要重置
     mbNeedResetAudioRenderer = true;
-//    if( mpAudioRenderer ) {
-//        mpAudioRenderer->Reset();
-//    }
 }
 
 void PlayerController::OnDelayMaxTime(RtmpPlayer* player) {
@@ -434,7 +464,22 @@ void PlayerController::OnDelayMaxTime(RtmpPlayer* player) {
         mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
     }
 }
-    
+
+void PlayerController::OnOverMaxBufferFrameCount(RtmpPlayer* player) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnOverMaxBufferFrameCount( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+
+    // 可以断开连接
+    if( mpPlayerStatusCallback ) {
+        mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
+    }
+}
+
 void PlayerController::OnRecvCmdLogin(RtmpDump *rtmpDump,
                                          bool bFlag,
                                          const string &userName,

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.HangoutGiftAnchorView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="44dp"
+    android:layout_height="44dp">
+    <!--android:background="@color/text_black"-->
+
+    <com.qpidnetwork.livemodule.view.CircleHaloView
+        android:id="@+id/view_ho_gift_anchor_iv_halo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+        android:id="@+id/view_ho_gift_anchor_iv_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="1dp"
+        tools:src="@drawable/ic_default_photo_woman" />
+
+    <ImageView
+        android:id="@+id/view_ho_gift_anchor_iv_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="@dimen/live_size_4dp"
+        android:layout_marginRight="@dimen/live_size_4dp"
+        android:src="@drawable/ic_crown_small"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/view_ho_gift_anchor_iv_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="@dimen/live_size_4dp"
+        android:layout_marginBottom="@dimen/live_size_4dp"
+        android:src="@drawable/ic_anchor_select"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</com.qpidnetwork.livemodule.view.HangoutGiftAnchorView>

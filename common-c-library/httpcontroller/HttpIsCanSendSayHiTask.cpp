@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.3.检测对某主播是否能发送sayHi
+ *        desc: 14.3.检测能否对指定主播发送SayHi（用于检测能否对指定主播发送SayHi）
  */
 
 #include "HttpIsCanSendSayHiTask.h"

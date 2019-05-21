@@ -2630,7 +2630,13 @@ public class LiveChatManager
 		// 添加到聊天记录中
 		userItem.insertSortMsgList(item);
 
-		SendMessagePreprocess(item);
+		if(!LoginManager.getInstance().isLivechatSendVoicePermit()){
+			item.statusType = StatusType.Fail;
+			//不赋值界面会异常
+			item.setLiveChatErrType(LiveChatErrType.ConnectFail);
+		}else{
+			SendMessagePreprocess(item);
+		}
 //		if (IsSendMessageNow(userItem))
 //		{
 //			// 发送消息

@@ -15,7 +15,7 @@
 }
 
 + (NSInteger)cellHeight {
-    return 150;
+    return 67;
 }
 
 + (id)getUITableViewCell:(UITableView*)tableView {
@@ -24,17 +24,13 @@
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"LSSayHiUnreadReplyCell" owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         
-        cell.readBtn.layer.cornerRadius = cell.readBtn.tx_height/2;
-        cell.readBtn.layer.masksToBounds = YES;
+        cell.ladyHead.layer.cornerRadius = cell.ladyHead.tx_height/2;
+        cell.ladyHead.layer.masksToBounds = YES;
         
-        LSShadowView * btnView = [[LSShadowView alloc]init];
-        [btnView showShadowAddView:cell.readBtn];
+        cell.freeIcon.layer.cornerRadius = 4;
+        cell.freeIcon.layer.masksToBounds = YES;
         
-        cell.bgView.layer.cornerRadius = 5;
-        cell.bgView.layer.masksToBounds = YES;
-        
-        LSShadowView * view = [[LSShadowView alloc]init];
-        [view showShadowAddView:cell.bgView];
+       cell.imageLoader =  [LSImageViewLoader loader];
     }
     return cell;
 }
@@ -44,10 +40,57 @@
     // Initialization code
 }
 
-- (IBAction)readBtnDid:(id)sender {
-    if ([self.cellDelegate respondsToSelector:@selector(sayHiUnreadReplyCellReadNowBtnDid)]) {
-        [self.cellDelegate sayHiUnreadReplyCellReadNowBtnDid];
+- (void)setIsPhoto:(BOOL)isPhoto {
+    CGFloat x = self.photoIcon.tx_x;
+    CGFloat w = self.contentLabel.tx_width;
+    if (isPhoto) {
+        self.photoIcon.hidden = NO;
+        x = x + 20;
     }
+    else {
+        self.photoIcon.hidden = YES;
+        w = w + 20;
+    }
+    CGRect rect = self.contentLabel.frame;
+    rect.origin.x = x;
+    rect.size.width = w;
+    self.contentLabel.frame = rect;
+}
+
+- (void)loadUI:(LSSayHiDetailResponseListItemObject *)obj {
+    self.contentLabel.text = obj.simpleContent;
+    self.titleLabel.text =[NSString stringWithFormat:@"ID:%@ %@",obj.responseId,[self getTime:obj.responseTime type:@"dd MMM,yyyy"]];
+    
+    [self setIsPhoto:obj.hasImg];
+    
+    if (!obj.hasRead) {
+        self.backgroundColor = COLOR_WITH_16BAND_RGB(0xFFFFC2);
+        self.unreadIcon.hidden = NO;
+    }
+    else
+    {
+        self.backgroundColor = [UIColor whiteColor];
+        self.unreadIcon.hidden = YES;
+    }
+    
+    if (obj.isUnfold) {
+        self.selectedIcon.hidden = NO;
+        self.backgroundColor = COLOR_WITH_16BAND_RGB(0xD5F2FF);
+        self.layer.borderWidth = 0.5f;
+        self.layer.borderColor = [UIColor blueColor].CGColor;
+    }
+    
+    if (obj.isFree) {
+        self.freeIcon.hidden = NO;
+        self.unreadIcon.hidden = YES;
+    }
+    else {
+        self.freeIcon.hidden = YES;
+    }
+    
+    [self.imageLoader loadImageWithImageView:self.ladyHead options:0 imageUrl:self.url placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        
+    }];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -56,4 +99,14 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)getTime:(NSInteger)time type:(NSString *)type {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:type];
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:time];
+    NSString *TimespStr = [formatter stringFromDate:confromTimesp];
+    return TimespStr;
+}
 @end

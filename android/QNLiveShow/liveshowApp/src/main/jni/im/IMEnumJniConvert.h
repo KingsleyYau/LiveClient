@@ -79,6 +79,10 @@ static const int IMErrorTypeArray[] = {
 	LCC_ERR_REPEAT_INVITEING_TALENT, 	// 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
 	LCC_ERR_RECV_REGULAR_CLOSE_ROOM,    // 用户接收正常关闭直播间
     LCC_ERR_PRIVTE_INVITE_AUTHORITY,    // 主播无立即私密邀请权限 (17002)
+    LCC_ERR_NO_CREDIT_CLOSE_LIVE,       // 余额不足(10190, 用于3.3.接收直播间关闭通知 接口 )
+    LCC_ERR_NO_CREDIT_DOUBLE_VIDEO,            // 私密直播间开始双向视频时，信用点不足(用于3.14.观众开始/结束视频互动 接口)
+
+    LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO,   // Hangout直播间开始双向视频时，信用点不足(用于10.11.多人互动观众开始/结束视频互动 接口)
 };
 
 // 底层状态转换JAVA坐标
@@ -278,5 +282,6 @@ jobject getHangoutCountDownItem(JNIEnv *env, const string& roomId, const string&
 jobject getIMAuthorityItemItem(JNIEnv *env, const IMAuthorityItem& item);
 jobject getIMInviteReplyItem(JNIEnv *env, const IMInviteReplyItem& item);
 jobject getIMInviteErrItem(JNIEnv *env, const IMInviteErrItem& item);
+jobject getIMHangoutInviteItem(JNIEnv *env, const IMHangoutInviteItem& item);
 
 #endif

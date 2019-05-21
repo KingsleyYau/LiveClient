@@ -152,6 +152,8 @@
     NSDateComponents *selfCmps = [calendar components:unit fromDate:date];
     
     NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+    NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormat setLocale:usLoacal];
     // 判断是否是今年
     if (selfCmps.year == nowCmps.year) {
         [dateFormat setDateFormat:@"MM dd"];
@@ -161,6 +163,31 @@
     showTimeStr = [dateFormat stringFromDate:date];
     return showTimeStr;
 }
+
+
+- (NSString *)showSayHiListTimeTextOfDate:(NSDate *)date {
+    NSString *showTimeStr = nil;
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    int unit = NSCalendarUnitWeekday | NSCalendarUnitMonth | NSCalendarUnitYear;
+    // 获得当前时间的
+    NSDateComponents *nowCmps = [calendar components:unit fromDate:[NSDate date]];
+    // 获得消息时间
+    NSDateComponents *selfCmps = [calendar components:unit fromDate:date];
+    
+    NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+    NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormat setLocale:usLoacal];
+    // 判断是否是今年
+    if (selfCmps.year == nowCmps.year) {
+        [dateFormat setDateFormat:@"MMMM dd"];
+    } else {
+        [dateFormat setDateFormat:@"MMMM dd,YYYY"];
+    }
+    showTimeStr = [dateFormat stringFromDate:date];
+    return showTimeStr;
+}
+
 
 - (NSString *)showGreetingDetailTimeOfDate:(NSDate *)date {
     NSString *showTimeStr = nil;

@@ -71,7 +71,12 @@
     cell.iconImageView.image = [UIImage imageNamed:self.iconArray[indexPath.row]];
     cell.titleLabel.text = [NSString stringWithFormat:@"%@",self.titleArray[indexPath.row]];
     if (indexPath.row != self.iconArray.count - 1) {
-        NSInteger type = indexPath.row;
+        NSInteger type = 0;
+        if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+            type = indexPath.row;
+        }else {
+            type = indexPath.row + 1;
+        }
         int unreadNum = [self.unreadManager getUnreadNum:(LSUnreadType)type];
         if (type == LSUnreadType_Private_Chat) {
             [cell showChatListUnreadNum:unreadNum];

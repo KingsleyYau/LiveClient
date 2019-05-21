@@ -121,17 +121,18 @@ RequestSendInvitationHangoutCallback gRequestSendInvitationHangoutCallback;
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
  * Method:    SendInvitationHangout
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnSendInvitationHangoutCallback;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/qpidnetwork/livemodule/httprequest/OnSendInvitationHangoutCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_SendInvitationHangout
-        (JNIEnv * env, jclass cls, jstring roomId, jstring anchorId, jstring recommendId, jobject callback){
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SendInvitationHangout( roomId : %s, anchorId : %s, recommendId :%s )",
-            JString2String(env, roomId).c_str(), JString2String(env, anchorId).c_str(), JString2String(env, recommendId).c_str());
+        (JNIEnv * env, jclass cls, jstring roomId, jstring anchorId, jstring recommendId, jboolean isCreateOnly, jobject callback){
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SendInvitationHangout( roomId : %s, anchorId : %s, recommendId :%s, isCreateOnly : %d)",
+            JString2String(env, roomId).c_str(), JString2String(env, anchorId).c_str(), JString2String(env, recommendId).c_str(), isCreateOnly);
     jlong taskId = -1;
     taskId = gHttpRequestController.SendInvitationHangout(&gHttpRequestManager,
                                                           JString2String(env, roomId),
                                                           JString2String(env, anchorId),
                                                           JString2String(env, recommendId),
+                                                          isCreateOnly,
                                                           &gRequestSendInvitationHangoutCallback);
 
     jobject obj = env->NewGlobalRef(callback);
@@ -375,6 +376,316 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHa
 	taskId = gHttpRequestController.GetHangoutGiftList(&gHttpRequestManager,
 													 JString2String(env, roomId),
 													 &gRequestGetHangoutGiftListCallback);
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 8.7.获取Hang-out在线主播列表 ****************************************/
+class RequestGetHangoutOnlineAnchorCallback : public IRequestGetHangoutOnlineAnchorCallback {
+	void OnGetHangoutOnlineAnchor(HttpGetHangoutOnlineAnchorTask* task, bool success, int errnum, const string& errmsg, const HttpHangoutList& list) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetHangoutOnlineAnchor( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+		jobjectArray jItemArray = getHangoutOnlineAnchorArray(env, list);
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += HANGOUT_HANGOUTONLINEANCHOR_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetHangoutOnlineAnchor", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetHangoutOnlineAnchor( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		if(jItemArray != NULL){
+        	env->DeleteLocalRef(jItemArray);
+        }
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetHangoutOnlineAnchorCallback gRequestGetHangoutOnlineAnchorCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    GetHangoutOnlineAnchor
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetHangoutOnlineAnchorCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutOnlineAnchor
+		(JNIEnv *env, jclass cls, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetHangoutOnlineAnchor()");
+	jlong taskId = -1;
+	taskId = gHttpRequestController.GetHangoutOnlineAnchor(&gHttpRequestManager,
+													 &gRequestGetHangoutOnlineAnchorCallback);
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 8.8.获取指定主播的Hang-out好友列表 ****************************************/
+class RequestGetHangoutFriendsCallback : public IRequestGetHangoutFriendsCallback {
+	void OnGetHangoutFriends(HttpGetHangoutFriendsTask* task, bool success, int errnum, const string& errmsg, const string& anchorId, const HangoutAnchorList& list) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetHangoutFriends( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+		jobjectArray jItemArray = getHangoutAnchorInfoArray(env, list);
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetHangoutFriends", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetHangoutFriends( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		if(jItemArray != NULL){
+        	env->DeleteLocalRef(jItemArray);
+        }
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetHangoutFriendsCallback gRequestGetHangoutFriendsCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    GetHangoutFriends
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutFriends
+		(JNIEnv *env, jclass cls, jstring anchorId, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetHangoutFriends() anchorId:%s", JString2String(env, anchorId).c_str());
+	jlong taskId = -1;
+	taskId = gHttpRequestController.GetHangoutFriends(&gHttpRequestManager,
+													 JString2String(env, anchorId),
+													 &gRequestGetHangoutFriendsCallback);
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 8.9.自动邀请Hangout直播邀請展示條件 ****************************************/
+class RequestAutoInvitationHangoutLiveDisplayCallback : public IRequestAutoInvitationHangoutLiveDisplayCallback {
+	void OnAutoInvitationHangoutLiveDisplay(HttpAutoInvitationHangoutLiveDisplayTask* task, bool success, int errnum, const string& errmsg) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAutoInvitationHangoutLiveDisplay( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAutoInvitationHangoutLiveDisplay( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestAutoInvitationHangoutLiveDisplayCallback gRequestAutoInvitationHangoutLiveDisplayCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    AutoInvitationHangoutLiveDisplay
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_AutoInvitationHangoutLiveDisplay
+		(JNIEnv *env, jclass cls, jstring anchorId, jboolean isAuto, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::AutoInvitationHangoutLiveDisplay() anchorId:%s isAuto:%d", JString2String(env, anchorId).c_str(), isAuto);
+	jlong taskId = -1;
+	taskId = gHttpRequestController.AutoInvitationHangoutLiveDisplay(&gHttpRequestManager,
+													 JString2String(env, anchorId),
+													 isAuto,
+													 &gRequestAutoInvitationHangoutLiveDisplayCallback);
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 8.10.自动邀请hangout点击记录 ****************************************/
+class RequestAutoInvitationClickLogCallback : public IRequestAutoInvitationClickLogCallback {
+	void OnAutoInvitationClickLog(HttpAutoInvitationClickLogTask* task, bool success, int errnum, const string& errmsg) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAutoInvitationClickLog( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAutoInvitationClickLog( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestAutoInvitationClickLogCallback gRequestAutoInvitationClickLogCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    AutoInvitationHangoutLiveDisplay
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_AutoInvitationClickLog
+		(JNIEnv *env, jclass cls, jstring anchorId, jboolean isAuto, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::AutoInvitationClickLog() anchorId:%s isAuto:%d", JString2String(env, anchorId).c_str(), isAuto);
+	jlong taskId = -1;
+	taskId = gHttpRequestController.AutoInvitationClickLog(&gHttpRequestManager,
+													 JString2String(env, anchorId),
+													 isAuto,
+													 &gRequestAutoInvitationClickLogCallback);
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 8.11.获取当前会员Hangout直播状态 ****************************************/
+class RequestGetHangoutStatusCallback : public IRequestGetHangoutStatusCallback {
+	void OnGetHangoutStatus(HttpGetHangoutStatusTask* task, bool success, int errnum, const string& errmsg, const HttpHangoutStatusList& list) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetHangoutStatus( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+		jobjectArray jItemArray = getHangoutStatusArray(env, list);
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += HANGOUT_HANGOUTROOMSTATUS_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetHangoutStatus", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetHangoutStatus( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		if(jItemArray != NULL){
+        	env->DeleteLocalRef(jItemArray);
+        }
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetHangoutStatusCallback gRequestGetHangoutStatusCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniHangout
+ * Method:    GetHangoutStatus
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetHangoutStatusCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniHangout_GetHangoutStatus
+		(JNIEnv *env, jclass cls, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetHangoutStatus()");
+	jlong taskId = -1;
+	taskId = gHttpRequestController.GetHangoutStatus(&gHttpRequestManager,
+													 &gRequestGetHangoutStatusCallback);
 
 	jobject obj = env->NewGlobalRef(callback);
 	putCallbackIntoMap(taskId, obj);

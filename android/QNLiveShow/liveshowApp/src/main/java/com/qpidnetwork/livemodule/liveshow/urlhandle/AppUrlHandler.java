@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 
 /**
@@ -81,7 +81,7 @@ public class AppUrlHandler {
             case Logining:{
                 // 处于未登录状态, 点击弹出登录界面
                 if( bShowLoginActivity ) {
-                    RegisterActivity.launchRegisterActivity(context, param);
+                    LoginNewActivity.launchRegisterActivity(context, param);
                 }
             }break;
             case Logined: {

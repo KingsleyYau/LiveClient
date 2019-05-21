@@ -32,11 +32,12 @@ import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.recharge.CreditsTipsDialog;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
@@ -45,6 +46,9 @@ import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
 import com.qpidnetwork.livemodule.liveshow.model.js.JSCallbackListener;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+
+import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_EMPTY_PAGE;
+import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_ERROR_CODE_UN_AUTH;
 
 /**
  * Created by Harry52 on 18/8/16.
@@ -422,7 +426,10 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
                     if (tempUri.getScheme().equals(pageUri.getScheme())
                             && tempUri.getPath().equals(pageUri.getPath())) {
                         //Android 6.0以上
-                        onLoadError();
+//                        onLoadError();
+
+                        // 2019/4/12 Hardy
+                        handlerHttpError(errorResponse.getStatusCode());
                     }
                 }
             }
@@ -459,6 +466,36 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
         view_errorpage.setVisibility(View.VISIBLE);
         mWebView.setVisibility(View.GONE);
     }
+
+    /**
+     * 2019/4/12 Hardy
+     * <p>
+     * 处理 http 错误
+     * https://blog.csdn.net/lsyz0021/article/details/56677132
+     * <p>
+     * 一般来说该错误消息表明您首先需要登录（输入有效的用户名和密码）。 如果你刚刚输入这些信息，立刻就看到一个 401 错误
+     * https://baike.baidu.com/item/401%E9%94%99%E8%AF%AF/3720974?fr=aladdin
+     * <p>
+     * 方法执行顺序：
+     * onReceivedHttpAuthRequest-host:demo.qpidnetwork.com realm:Web Site Test
+     * |
+     * onReceivedHttpError-errorResponse.mStatusCode:401
+     *
+     * @param httpCode
+     */
+    private void handlerHttpError(int httpCode) {
+        if (httpCode == HTTP_ERROR_CODE_UN_AUTH && !isErrorUnAuthLoad) {  // test:5179 的 401 验证问题
+            isErrorUnAuthLoad = true;
+
+            mWebView.loadUrl(HTTP_EMPTY_PAGE);        // 空白页，避免出现默认的错误界面
+            loadUrl(true, false); // 模拟重新加载页面
+        } else {
+            //Android 6.0以上
+            onLoadError();
+        }
+    }
+
+    private boolean isErrorUnAuthLoad;
 
     /**
      * Fragment webview 监听返回键
@@ -503,7 +540,7 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
                         if(!TextUtils.isEmpty(errorcode) && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)){
                             LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
                             if(loginStatus == LoginManager.LoginStatus.Logined){
-                                RegisterActivity.launchRegisterActivity(mContext);
+                                LoginNewActivity.launchRegisterActivity(mContext);
                             }else{
                                 pb_loading.setVisibility(View.VISIBLE);
                                 handleSessionTimeout();
@@ -544,6 +581,11 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
                 }
             });
         }
+    }
+
+    @Override
+    public void onShowHangoutAnchor(HangoutAnchorInfoItem item) {
+
     }
 
     /**

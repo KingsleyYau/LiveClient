@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
@@ -30,6 +32,7 @@ import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
@@ -37,6 +40,7 @@ import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.UserInfoUtil;
 import com.qpidnetwork.livemodule.view.ProfileItemView;
@@ -55,7 +59,7 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
     private static final int GET_FOLLOWING_CALLBACK = 1;    // 获取个人关注列表
     private static final int GET_PROFILE_CALLBACK = 2;      // 获取个人信息
 
-    private CircleImageView mIvUserIcon;
+    private SimpleDraweeView mIvUserIcon;
     private TextView mTvUserName;
     private TextView mTvUserAge;
 
@@ -112,7 +116,7 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
         ImageButton mBtnBack = (ImageButton) findViewById(R.id.my_profile_buttonCancel);
         mBtnBack.setOnClickListener(this);
 
-        mIvUserIcon = (CircleImageView) findViewById(R.id.my_profile_iv_userIcon);
+        mIvUserIcon = findViewById(R.id.my_profile_iv_userIcon);
         mIvUserIcon.setOnClickListener(this);
 
         mTvUserName = (TextView) findViewById(R.id.my_profile_tv_userName);
@@ -286,7 +290,8 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
         } else if (id == R.id.my_profile_ll_my_follow) {
             // 2018/9/19 点击my follows列表回到首页并将标签定位至Follow
 
-            MainFragmentActivity.launchActivityWithListType(mContext, 1);
+//            MainFragmentActivity.launchActivityWithListType(mContext, 1);
+            MainFragmentActivity.launchActivityWithListType(mContext, MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_FOLLOW);
             finish();
 
         } else if (id == R.id.my_profile_ll_Credit_Balance) {
@@ -322,7 +327,11 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
 //                    .noPlaceholder()
 //                    .into(mIvUserIcon);
             int wh = DisplayUtil.dip2px(mContext, 100);
-            PicassoLoadUtil.loadUrlNoMCache(mIvUserIcon, loginItem.photoUrl, R.drawable.ic_default_photo_man, wh, wh);
+//            PicassoLoadUtil.loadUrlNoMCache(mIvUserIcon, loginItem.photoUrl, R.drawable.ic_default_photo_man, wh, wh);
+            FrescoLoadUtil.loadUrl(mContext, mIvUserIcon, loginItem.photoUrl, wh,
+                    R.drawable.ic_default_photo_man, true,
+                    getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+                    ContextCompat.getColor(mContext, R.color.white));
 
 //            mTvUserName.setText(loginItem.nickName);  // 由接口获取全名
             mTvUserAge.setText(loginItem.userId);

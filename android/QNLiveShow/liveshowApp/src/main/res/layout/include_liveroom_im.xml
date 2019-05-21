@@ -35,14 +35,14 @@
             android:visibility="visible"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
             <TextView
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@android:color/white"
                 android:text="@string/liveroom_leaving_room_time_count_tips"
-                />
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
             <!--TODO:leftmargin rightmargin-->
             <TextView
                 android:id="@+id/tv_enterPrvRoomTimerCount"
@@ -90,6 +90,16 @@
             android:layout_height="83dp">
 
         </com.facebook.drawee.view.SimpleDraweeView>
+        
+        <TextView
+            android:id="@+id/tvInviteTips"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_liveroom_vedio_tips"
+            android:layout_gravity="bottom"
+            android:textColor="@color/bg_white"
+            android:visibility="gone"/>
 
     </FrameLayout>
 
@@ -99,15 +109,61 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:background="#ECEDF1"
-        android:orientation="vertical">
-        <ImageView
-            android:id="@+id/iv_privateLiveNow"
-            android:layout_width="170dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/llPrivateStart"
+            android:layout_width="142dp"
             android:layout_height="28dp"
-            android:scaleType="fitCenter"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:src="@drawable/ic_live_privatelive_public"/>
+            android:background="@drawable/rectangle_rounded_angle_blue_bg"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_one_on_one" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/live_size_4dp"
+                android:text="@string/live_common_start_oneonone"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_12sp"
+                android:textStyle="bold"
+                android:includeFontPadding="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llHangoutStart"
+            android:layout_width="142dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/btn_hangout_list_stroke_shape"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/live_size_12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_hang_out" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/live_size_4dp"
+                android:text="@string/hand_out_list_start"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_12sp"
+                android:textStyle="bold"
+                android:includeFontPadding="false"/>
+        </LinearLayout>
     </LinearLayout>
 
     <FrameLayout

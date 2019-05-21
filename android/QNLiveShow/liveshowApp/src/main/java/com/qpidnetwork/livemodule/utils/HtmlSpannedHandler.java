@@ -5,9 +5,6 @@ import android.text.Spanned;
 
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by Jagger on 2018/2/5.
  */
@@ -17,13 +14,14 @@ public class HtmlSpannedHandler {
 
     /**
      * * 获取表情文本（HTML格式）
-     * @param input 未格式化的文本内容
+     *
+     * @param input   未格式化的文本内容
      * @param giftMsg 是否为发礼物消息
      * @return
      */
-    public static Spanned getLiveRoomMsgHTML(CustomerHtmlTagHandler.Builder builder , String input, boolean giftMsg) {
-        Log.logD(TAG,"getExpressMsgHTML-input:"+input+" giftMsg:"+giftMsg);
-        String msg ;
+    public static Spanned getLiveRoomMsgHTML(CustomerHtmlTagHandler.Builder builder, String input, boolean giftMsg, boolean isHangoutRoom) {
+        Log.logD(TAG, "getExpressMsgHTML-input:" + input + " giftMsg:" + giftMsg);
+        String msg;
         //
         msg = input.replace("[gift:", "<jimg src=\"gift");
 
@@ -32,8 +30,12 @@ public class HtmlSpannedHandler {
         msg = msg.replace("<img src=\"emoji", "<jimg src=\"emoji");
 
         //为了避免误将实际消息文本中的]替换为">，这里根据消息类型同string资源中对应的格式化字符串匹配检索
-        if(giftMsg){
-            msg = msg.replaceFirst("] </font>", "\"> </font>");
+        if (giftMsg) {
+            if (isHangoutRoom) {
+                msg = msg.replaceFirst("]", "\"/>");
+            } else {
+                msg = msg.replaceFirst("] </font>", "\"> </font>");
+            }
         }
 
         //处理空格
@@ -42,17 +44,30 @@ public class HtmlSpannedHandler {
 //        Pattern pat = Pattern.compile(regEx);
 //        Matcher mat = pat.matcher(msg);
 //        msg = mat.replaceAll("&nbsp;");
-        msg = msg.replace("  " , "&nbsp;&nbsp;");
+        msg = msg.replace("  ", "&nbsp;&nbsp;");
         //处理换行
-        msg = msg.replace("\n" , "<br>");
+        msg = msg.replace("\n", "<br>");
 
         //转出
-        Log.logD(TAG,"getExpressMsgHTML-output:"+msg);
+        Log.logD(TAG, "getExpressMsgHTML-output:" + msg);
 
         CustomerHtmlTagHandler customerHtmlTagHandler = new CustomerHtmlTagHandler();
         customerHtmlTagHandler.setBuilder(builder);
 
         Spanned span = Html.fromHtml(msg, null, customerHtmlTagHandler);
         return span;
+    }
+
+    /**
+     * 2019/03/20 Hardy
+     * 兼容已有的直播间(公开，私密)
+     *
+     * @param builder
+     * @param input
+     * @param giftMsg
+     * @return
+     */
+    public static Spanned getLiveRoomMsgHTML(CustomerHtmlTagHandler.Builder builder, String input, boolean giftMsg) {
+        return getLiveRoomMsgHTML(builder, input, giftMsg, false);
     }
 }

@@ -36,6 +36,7 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.RoomGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.view.ScrollLayout;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.util.UIUtils;
 
 import java.util.ArrayList;
@@ -1130,6 +1131,9 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener{
                         //数量不足，提示不发送
                         //停止连击状态
                         stopRepeatSendGift();
+                        if(mContext != null){
+                            ToastUtil.showToast(mContext, R.string.live_room_error_pkg_gift_not_enough);
+                        }
                     }else{
                         //数量足够，发送礼物
                         GiftSender.getInstance().sendBackpackGift(giftItem, isRepeat, sendNum, packageGiftItem.num, null);

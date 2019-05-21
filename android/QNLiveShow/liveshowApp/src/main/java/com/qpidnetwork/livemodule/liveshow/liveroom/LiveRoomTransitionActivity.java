@@ -1986,7 +1986,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     }
 
     @Override
-    public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {
+    public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId) {
         if(mIMRoomInItem != null && !TextUtils.isEmpty(mIMRoomInItem.roomId)
                 && mIMRoomInItem.roomId.equals(roomId)){
             if((mIMRoomInItem.videoUrls == null) || (mIMRoomInItem.videoUrls.length == 0)){

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="btn_height_46dp">46dp</dimen>
+
+    <dimen name="btn_bottom_height_40dp">40dp</dimen>
+
+    <dimen name="btn_back_padding_20dp">20dp</dimen>
+</resources>

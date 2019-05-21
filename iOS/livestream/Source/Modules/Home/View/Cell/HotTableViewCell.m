@@ -44,6 +44,12 @@
         cell.viewPublicFreeBtn.layer.cornerRadius = cell.viewPublicFreeBtn.frame.size.height * 0.5f;
         cell.viewPublicFreeBtn.layer.masksToBounds = YES;
         
+        cell.liveStatusView.layer.cornerRadius = cell.liveStatusView.frame.size.height * 0.5f;
+        cell.liveStatusView.layer.masksToBounds = YES;
+        
+        cell.onlineStatus.layer.cornerRadius = cell.onlineStatus.frame.size.height * 0.5f;
+        cell.onlineStatus.layer.masksToBounds = YES;
+        
         CGFloat shadowHeight = screenSize.width / 2.5f;
         cell.shadowHeight.constant = shadowHeight;
         
@@ -192,9 +198,22 @@
         [self.hotCellDelegate hotTableViewCell:self didClickViewChatNowBtn:sender];
     }
 }
+
 - (IBAction)sendNowBtnClick:(id)sender {
     if ([self.hotCellDelegate respondsToSelector:@selector(hotTableViewCell:didClickViewSendMailBtn:)]) {
         [self.hotCellDelegate hotTableViewCell:self didClickViewSendMailBtn:sender];
+    }
+}
+
+- (IBAction)focusBtnDid:(UIButton *)sender {
+    if ([self.hotCellDelegate respondsToSelector:@selector(hotTableViewCell:didClickViewFocusBtn:)]) {
+        [self.hotCellDelegate hotTableViewCell:self didClickViewFocusBtn:sender];
+    }
+}
+
+- (IBAction)sayhiBtnDid:(UIButton *)sender {
+    if ([self.hotCellDelegate respondsToSelector:@selector(hotTableViewCell:didClickViewSayHiBtn:)]) {
+        [self.hotCellDelegate hotTableViewCell:self didClickViewSayHiBtn:sender];
     }
 }
 

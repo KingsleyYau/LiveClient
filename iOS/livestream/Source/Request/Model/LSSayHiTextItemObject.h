@@ -13,7 +13,7 @@
  * text       文本内容
  */
 @interface LSSayHiTextItemObject : NSObject
-@property (nonatomic, assign) int textId;
+@property (nonatomic, assign) NSString *textId;
 @property (nonatomic, copy) NSString *text;
 
 @end

@@ -3,6 +3,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.SurfaceView;
 
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
@@ -12,6 +13,7 @@ import com.qpidnetwork.livemodule.utils.SystemUtils;
 import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
 import net.qdating.player.ILSPlayerStatusCallback;
+import net.qdating.player.LSPlayerRendererBinder;
 
 /**
  * 拉流播放器管理器
@@ -34,19 +36,35 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
     private String mPlayerRecordH264FilePath = "";
     private String mPlayerRecordAACFilePath = "";
 
+    private ILSPlayerStatusListener listener;
+    public interface ILSPlayerStatusListener {
+        void onPullStreamConnect(LSPlayer var1);
+
+        void onPullStreamDisconnect(LSPlayer var1);
+    }
+
+    public void setILSPlayerStatusListener(ILSPlayerStatusListener listener){
+        this.listener = listener;
+    }
+
+    public void removeILSPlayerStatusListener(){
+        this.listener = null;
+    }
+
     public LivePlayerManager(Activity activity){
         this.mActivity = activity;
     }
 
     /**
      * 初始化
-     * @param sv_player
+     * @param lsPlayerRendererBinder
      */
-    public void init(GLSurfaceView sv_player){
+    public void init(LSPlayerRendererBinder lsPlayerRendererBinder){
         if(mLSPlayer == null){
             mIsInit = true;
             mLSPlayer = new LSPlayer();
-            mLSPlayer.init(sv_player, LSConfig.FillMode.FillModeAspectRatioFill, this);
+            mLSPlayer.init(this);
+            mLSPlayer.setRendererBinder(lsPlayerRendererBinder);
         }
     }
 
@@ -64,11 +82,53 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
     }
 
     /**
+     * 拉流 -- 静音
+     * @param isSilent
+     */
+    public void setPullStreamSilent(boolean isSilent){
+        if(mLSPlayer != null){
+            mLSPlayer.setMute(isSilent);
+        }
+    }
+
+    /**
+     * manager 回收
+     */
+    public void release(){
+        mIsImDisconnected = true;
+        if(mLSPlayer != null){
+            mIsInit = false;
+            mLSPlayer.stop();
+            mLSPlayer.uninit(); //防止内存泄漏
+        }
+    }
+
+    /**
      * 是否初始化成功
      * @return
      */
     public boolean isInited(){
         return mIsInit;
+    }
+
+    /**
+     * 创建并配置
+     * @param sv_player
+     * @return
+     */
+    public static LSPlayerRendererBinder createPlayerRenderBinder(GLSurfaceView sv_player){
+        LSPlayerRendererBinder binder = new LSPlayerRendererBinder(sv_player, LSConfig.FillMode.FillModeAspectRatioFill);
+        return binder;
+    }
+
+    /**
+     * 更换player显示view
+     */
+    public void changePlayerRenderBinder(LSPlayerRendererBinder lsPlayerRendererBinder){
+        if(isInited() && mLSPlayer != null){
+            Log.i("hunter", "changePlayerRenderBinder lsPlayerRendererBinder: " + lsPlayerRendererBinder);
+            mLSPlayer.setRendererBinder(lsPlayerRendererBinder);
+        }
     }
 
     /**
@@ -113,7 +173,9 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
 
     @Override
     public void onConnect(LSPlayer lsPlayer) {
-
+        if(null != listener){
+            listener.onPullStreamConnect(lsPlayer);
+        }
     }
 
     /**
@@ -139,6 +201,10 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
                     }
                 }
             });
+            if(null != listener){
+                //用于界面提示
+                listener.onPullStreamDisconnect(lsPlayer);
+            }
         }
     }
 

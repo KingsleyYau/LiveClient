@@ -2,6 +2,11 @@ package net.qdating.publisher;
 
 import net.qdating.LSConfig;
 
+/**
+ * 推流配置
+ * @author max
+ *
+ */
 public class LSPublishConfig {
     /**
      * 视频宽度(摄像头参数)

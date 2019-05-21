@@ -124,6 +124,10 @@ public:
             if (root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME].isNumeric()) {
                 responseTime = root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME].asInt();
             }
+            /* simpleContent */
+            if (root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_SIMPLECONTENT].isString()) {
+                simpleContent = root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_SIMPLECONTENT].asString();
+            }
             /* content */
             if (root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_CONTENT].isString()) {
                 content = root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_CONTENT].asString();
@@ -152,6 +156,7 @@ public:
         ResponseSayHiDetailItem() {
             responseId = "";
             responseTime = 0;
+            simpleContent = "";
             content = "";
             isFree = false;
             hasRead = false;
@@ -166,6 +171,7 @@ public:
          *  sayHi回复列表
          *  responseId          回复ID
          *  responseTime        回复时间戳
+         *  simpleContent       回复内容的摘要
          *  content             回复内容
          *  isFree              是否免费（1：是，0：否）
          *  hasRead             是否已读（1：是，0：否）
@@ -174,6 +180,7 @@ public:
          */
         string      responseId;
         long long   responseTime;
+        string      simpleContent;
         string      content;
         bool        isFree;
         bool        hasRead;

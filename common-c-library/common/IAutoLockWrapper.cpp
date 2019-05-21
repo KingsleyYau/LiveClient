@@ -23,7 +23,7 @@ extern "C" {
         if (tag != 0) {
             PrintLog(__FUNCTION__, "mongoose::GetNewAutoLock:%p tag->tagLock:%p begin", tag, tag->tagLock);
             tag->tagLock = IAutoLock::CreateAutoLock();
-            tag->tagLock->Init();
+            tag->tagLock->Init(IAutoLock::IAutoLockType_Recursive);
             PrintLog(__FUNCTION__, "mongoose::GetNewAutoLock:%p tag->tagLock:%p end", tag, tag->tagLock);
         }
          PrintLog(__FUNCTION__, "mongoose::GetNewAutoLock:%p end", tag);

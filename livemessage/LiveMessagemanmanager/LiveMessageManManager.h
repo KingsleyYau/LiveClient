@@ -106,6 +106,8 @@ public:
               IImClient* client,
               const IHttpRequestPrivateMsgControllerHandler& requestListener,
               ILiveMessageManManagerListener* listener) override;
+    // Release私信管理器的client是否init里面的client。防止client被release，私信管理器release后又使用client
+    bool CheckIMClientRelease(IImClient* client) override;
     // -------- 初始化 end ---------------------------------------------------
 
     // ---------- 私信联系人列表操作 公开操作 begin----------

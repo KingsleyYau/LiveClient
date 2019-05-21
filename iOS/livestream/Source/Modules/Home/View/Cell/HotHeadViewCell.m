@@ -30,6 +30,7 @@
     self.noNumUnreadView.layer.cornerRadius = self.noNumUnreadView.frame.size.height / 2.0f;
     self.noNumUnreadView.layer.masksToBounds = YES;
     [self setExclusiveTouch:YES];
+    
 }
 
 - (void)setUnreadNum:(int)num {
@@ -72,5 +73,11 @@
 + (NSString *)cellIdentifier {
     return @"HotHeadViewCellIdentifier";
 }
+- (IBAction)lightBtnClickAction:(id)sender {
+    if ([self.hotHeadDelegate respondsToSelector:@selector(hotHeadViewCell:didSelectIndex:)]) {
+        [self.hotHeadDelegate hotHeadViewCell:self didSelectIndex:self.tag];
+    }
+}
+
 
 @end

@@ -19,4 +19,13 @@
     <!-- 浮窗 -->
     <string name="permission_title_float_window">Keep CamShare on the window</string>
     <string name="permission_message_float_window">Please allow our app display over other apps to keep CamShare float on the window while you put the app to the background.</string>
+
+    <!-- 登录 -->
+    <string name="login_account">Email or ID</string>
+    <string name="login_pw">Password</string>
+    <string name="login_secure_code">Secure code</string>
+    <string name="login">Login</string>
+
+    <string name="By_Login_Email">By Login Email</string>
+    <string name="By_Mobile_Phone">By Mobile Phone</string>
 </resources>

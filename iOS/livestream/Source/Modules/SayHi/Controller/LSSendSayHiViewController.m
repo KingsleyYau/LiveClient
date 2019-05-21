@@ -8,33 +8,48 @@
 
 #import "LSSendSayHiViewController.h"
 #import "LSSayHiDialogViewController.h"
+#import "LSSayHiThemeListViewController.h"
+#import "LSSayHiListViewController.h"
+#import "LSSayHiDetailViewController.h"
+#import "LSSendMailViewController.h"
+#import "QNChatViewController.h"
 
 #import "LSShadowView.h"
 #import "IntroduceView.h"
+#import "QNChatTextView.h"
 
 #import "LSSayHiIsCanSendRequest.h"
 #import "LSSayHiSendSayHiRequest.h"
+#import "SetFavoriteRequest.h"
 #import "LSSessionRequestManager.h"
 
 #import "LSImageViewLoader.h"
 #import "LSLoginManager.h"
 #import "LSSayHiManager.h"
 
+#define SelectViewHeight 117
 
-@interface LSSendSayHiViewController ()<WKUIDelegate, WKNavigationDelegate>
+@interface LSSendSayHiViewController ()<LSSayHiThemeListViewControllerDelegate,ChatTextViewDelegate,LSSayHiDialogViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *themeImageView;
-@property (weak, nonatomic) IBOutlet IntroduceView *webView;
 
-@property (weak, nonatomic) IBOutlet UIButton *submitBtn;
+@property (weak, nonatomic) IBOutlet UILabel *toLabel;
+@property (weak, nonatomic) IBOutlet QNChatTextView *chatTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatTextViewHeight;
 
-@property (weak, nonatomic) IBOutlet UIImageView *freeIcon;
+@property (weak, nonatomic) IBOutlet UILabel *fromLabel;
+
+@property (weak, nonatomic) IBOutlet UIButton *hiddenSelectBtn;
 
 @property (strong, nonatomic) LSSessionRequestManager *sessionManager;
 
 @property (strong, nonatomic) LSImageViewLoader *imageLoader;
 
 @property (strong, nonatomic) LSSayHiManager *sayHiManager;
+
+@property (strong, nonatomic) LSSayHiThemeListViewController *themeListVC;
+
+@property (strong, nonatomic) LSSayHiDialogViewController *dialogVC;
 
 @end
 
@@ -52,141 +67,262 @@
     self.imageLoader = [LSImageViewLoader loader];
     
     self.sayHiManager = [LSSayHiManager manager];
+    
+    self.themeListVC = [[LSSayHiThemeListViewController alloc] initWithNibName:nil bundle:nil];
+    [self addChildViewController:self.themeListVC];
+    self.themeListVC.delegate = self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.submitBtn.layer.cornerRadius = self.submitBtn.frame.size.height / 2;
-    self.submitBtn.layer.masksToBounds = YES;
-    LSShadowView *shadowView = [[LSShadowView alloc] init];
-    [shadowView showShadowAddView:self.submitBtn];
+    self.navigationItem.title = NSLocalizedStringFromSelf(@"SAY_HI");
     
-    self.webView.UIDelegate = self;
-    self.webView.navigationDelegate = self;
-    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.dialogVC = [[LSSayHiDialogViewController alloc] initWithNibName:nil bundle:nil];
+    self.dialogVC.anchorName = self.anchorName;
+    self.dialogVC.anchorId = self.anchorId;
+    self.dialogVC.delegate = self;
     
-    // 界面展示
+    self.themeListVC.view.layer.shadowOffset = CGSizeMake(0, -1);
+    self.themeListVC.view.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.themeListVC.view.layer.shadowOpacity = 0.1;
+    self.themeListVC.view.layer.shadowRadius = 1;
+    [self.view addSubview:self.themeListVC.view];
+    [self.themeListVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self.view);
+        make.height.equalTo(@(SelectViewHeight));
+    }];
+    
+    self.chatTextView.editable = NO;
+    self.chatTextView.selectable = NO;
+    self.chatTextView.chatTextViewDelegate = self;
+    self.chatTextView.font = [UIFont fontWithName:@"TimesNewRomanPS-ItalicMT" size:22];
+    [self.chatTextView setContentOffset:CGPointZero];
+    
+    self.toLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PwS-Bd-wUz.text"),self.anchorName];
+    self.fromLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Ynh-pD-tdr.text"),[LSLoginManager manager].loginItem.nickName];
+    
     if (self.sayHiManager.item) {
+        [self.chatTextView setText:self.sayHiManager.item.text];
         [self.imageLoader loadImageWithImageView:self.themeImageView options:0 imageUrl:self.sayHiManager.item.bigImage placeholderImage:nil finishHandler:^(UIImage *image) {
-            
+
         }];
-        [self loadMailContentWebView:self.sayHiManager.item.text toName:self.anchorName from:[LSLoginManager manager].loginItem.nickName];
     } else {
         WeakObject(self, weakSelf);
         [self.sayHiManager getSayHiConfig:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiResourceConfigItemObject *item) {
             if (success) {
-                LSSayHiThemeItemObject *thmemObj = item.themeList.firstObject;
+                LSSayHiThemeItemObject *themeObj = item.themeList.firstObject;
                 LSSayHiTextItemObject *textObj = item.textList.firstObject;
-                [weakSelf.sayHiManager setLastSayHiConfigItem:thmemObj.themeId bigImg:thmemObj.bigImg textId:textObj.textId text:textObj.text];
+                
+                weakSelf.sayHiManager.item = [[LSLastSayHiConfigItem alloc] init];
+                weakSelf.sayHiManager.item.themeId = themeObj.themeId;
+                weakSelf.sayHiManager.item.bigImage = themeObj.bigImg;
+                weakSelf.sayHiManager.item.textId = textObj.textId;
+                weakSelf.sayHiManager.item.text = textObj.text;
+                
                 [weakSelf.imageLoader loadImageWithImageView:weakSelf.themeImageView options:0 imageUrl:weakSelf.sayHiManager.item.bigImage placeholderImage:nil finishHandler:^(UIImage *image) {
-                    
+
                 }];
-                [weakSelf loadMailContentWebView:weakSelf.sayHiManager.item.text toName:weakSelf.anchorName from:[LSLoginManager manager].loginItem.nickName];
+                [weakSelf.chatTextView setText:weakSelf.sayHiManager.item.text];
             }
         }];
     }
 }
 
-- (void)loadMailContentWebView:(NSString *)contentStr toName:(NSString *)toName from:(NSString *)from {
-    NSRange startRange;     // 截取初始位置
-    NSRange endRange;       // 截取结束位置
-    NSRange range;          // 截取部分的位置
-    NSString *result;       // 截取部分的内容
-    NSString *tempContent;  // 替换后HTML内容
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
-    NSString *path = [[LiveBundle mainBundle] pathForResource:@"SayHi" ofType:@"html"];
-    NSString *html = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    // 替换toName
-    startRange = [html rangeOfString:@"<font>To</font> "];
-    endRange = [html rangeOfString:@"</div>"];
-    range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
-    result = [html substringWithRange:range];
-    tempContent = [html stringByReplacingOccurrencesOfString:result withString:toName];
-    // 替换内容
-    startRange = [tempContent rangeOfString:@"<div class=\"text\">"];
-    endRange = [tempContent rangeOfString:@"</div>"];
-    range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
-    result = [tempContent substringWithRange:range];
-    tempContent = [tempContent stringByReplacingOccurrencesOfString:result withString:contentStr];
-    // 替换fromName
-    startRange = [tempContent rangeOfString:@"<font>From</font> "];
-    endRange = [tempContent rangeOfString:@"</div>"];
-    range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
-    result = [tempContent substringWithRange:range];
-    tempContent = [tempContent stringByReplacingOccurrencesOfString:result withString:contentStr];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     
-    NSURL *url = [[LiveBundle mainBundle] URLForResource:@"SayHi.html" withExtension:nil];
-    [self.webView loadHTMLString:tempContent baseURL:url];
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
 }
 
 #pragma mark - HTTP请求
-- (void)checkCanSayHi:(NSString *)anchorId {
-    WeakObject(self, weakSelf);
-    LSSayHiIsCanSendRequest *request = [[LSSayHiIsCanSendRequest alloc] init];
-    request.anchorId = anchorId;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, BOOL isCanSend) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSSendSayHiViewController::LSSayHiIsCanSendRequest([检测对该主播是否可发送sayhi] success : %@, errnum : %d, errmsg : %@, isCanSend : %d )", BOOL2SUCCESS(success), errnum, errmsg, isCanSend);
-            if (success) {
-                if (isCanSend) {
-                    [weakSelf sendSayHiRequest:anchorId];
-                } else {
-                    
-                }
-            } else {
-                
-            }
-        });
-    };
-    [self.sessionManager sendRequest:request];
-}
-
 - (void)sendSayHiRequest:(NSString *)anchorId {
-//    WeakObject(self, weakSelf);
+    [self showAndResetLoading];
+    WeakObject(self, weakSelf);
     LSSayHiSendSayHiRequest *request = [[LSSayHiSendSayHiRequest alloc] init];
     request.anchorId = anchorId;
     request.themeId = self.sayHiManager.item.themeId;
     request.textId = self.sayHiManager.item.textId;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *sayHiId, NSString *loiId) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *sayHiId, NSString *loiId, BOOL isFollow, OnLineStatus onlineStatus) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"LSSendSayHiViewController::sendSayHiRequest([发送SayHi] success : %@, errnum : %d, errmsg : %@, sayHiId : %@, loiId : %@)",BOOL2SUCCESS(success),errnum,errmsg,sayHiId,loiId);
-            if (success) {
-                
-            } else {
+            [weakSelf hideAndResetLoading];
+            if (!success) {
                 switch (errnum) {
-                    case HTTP_LCC_ERR_SAYHI_ANCHOR_ALREADY_SEND_LOI:{
-                        // 发过意向信
+                    case HTTP_LCC_ERR_SAYHI_ALREADY_CONTACT:{
+                        // 已建立联系
+                        weakSelf.dialogVC.errorType = SAYHIERROR_HAS_CALL;
                     }break;
                     
                     case HTTP_LCC_ERR_SAYHI_MAN_ALREADY_SEND_SAYHI:{
                         // 发过SayHi
+                        weakSelf.dialogVC.sayHiId = sayHiId;
+                        weakSelf.dialogVC.errorType = SAYHIERROR_HAS_SEND;
+                    }break;
+                        
+                    case HTTP_LCC_ERR_SAYHI_MAN_LIMIT_NUM_DAY:{
+                        // 每日总量限制
+                        weakSelf.dialogVC.errorType = SAYHIERROR_DAY_SEND_MAX;
                     }break;
                         
                     case HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_REPLY:{
                         // 总量限制-有主播回复
+                        weakSelf.dialogVC.errorType = SAYHIERROR_SEND_MAX_ISREPLRY;
                     }break;
                         
                     case HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_UNREPLY:{
                         // 总量限制-无主播回复
+                        weakSelf.dialogVC.errorType = SAYHIERROR_SEND_MAX_NOREPLRY;
                     }break;
                         
                     default:{
+                        weakSelf.dialogVC.errorType = SAYHIERROR_NONE;
                     }break;
                 }
             }
+            [weakSelf showDialodViewIsSuccess:success hasFollow:isFollow isOnline:onlineStatus errMsg:errmsg];
         });
     };
     [self.sessionManager sendRequest:request];
 }
 
-- (IBAction)editAction:(id)sender {
-    
+#pragma mark - LSSayHiThemeListViewControllerDelegate
+- (void)didSelectThemeWithItem:(LSSayHiThemeItemObject *)theme {
+    self.sayHiManager.item.themeId = theme.themeId;
+    self.sayHiManager.item.bigImage = theme.bigImg;
+    [self.imageLoader loadImageWithImageView:self.themeImageView options:0 imageUrl:theme.bigImg placeholderImage:nil finishHandler:^(UIImage *image) {
+        
+    }];
 }
 
-- (IBAction)sumbitAction:(id)sender {
+- (void)didSelectWordWithItem:(LSSayHiTextItemObject *)word {
+    self.sayHiManager.item.text = word.text;
+    self.sayHiManager.item.textId = word.textId;
     
+    [self.chatTextView setText:word.text];
 }
 
+- (void)didShowSelectThemeWord:(LSSayHiThemeListViewController *)vc index:(NSInteger)index {
+    self.hiddenSelectBtn.hidden = NO;
+    CGFloat height = SelectViewHeight + (self.view.tx_width / 2);
+    [self.themeListVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@(height));
+    }];
+    [self.themeListVC.view layoutSubviews];
+    [self.themeListVC changeSegementSelect:index];
+}
+
+- (void)didSubmitSayHi {
+    [self sendSayHiRequest:self.anchorId];
+}
+
+#pragma mark - LSSayHiDialogViewControllerDelegate
+- (void)didCloseCurrentView:(LSSayHiDialogViewController *)vc {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)didCloseCilck:(LSSayHiDialogViewController *)vc {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+}
+
+- (void)didViewSayHiClick:(NSString *)sayHiId {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+    LSSayHiDetailViewController *vc = [[LSSayHiDetailViewController alloc]initWithNibName:nil bundle:nil];
+    vc.sayHiID = sayHiId;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)didViewSayHiList:(LiveUrlSayHiListType)type {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+    int index = 0;
+    switch (type) {
+        case LiveUrlSayHiListTypeAll: {
+            index = 0;
+        } break;
+        case LiveUrlSayHiListTypeResponse: {
+            index = 1;
+        } break;
+        default:
+            break;
+    }
+    LSSayHiListViewController *vc = [[LSSayHiListViewController alloc] initWithNibName:nil bundle:nil];
+    vc.curIndex = index;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)didFollowClick:(LSSayHiDialogViewController *)vc {
+    [self.dialogVC showIsFollowBtn];
+    SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
+    request.userId = self.anchorId;
+    request.isFav = YES;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+        NSLog(@"LSSendSayHiViewController::SetFavoriteRequest([关注主播 %@] errnum : %d, errmsg : %@)",BOOL2SUCCESS(success),errnum,errmsg);
+    };
+    [self.sessionManager sendRequest:request];
+}
+
+- (void)didChatClick:(LSSayHiDialogViewController *)vc {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+    QNChatViewController *chatVC = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
+    chatVC.womanId = self.anchorId;
+    chatVC.firstName = self.anchorName;
+    [self.navigationController pushViewController:chatVC animated:YES];
+}
+
+- (void)didStartOneOnOneClick:(LSSayHiDialogViewController *)vc {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorId:self.anchorId roomType:LiveRoomType_Private];
+    [[LiveUrlHandler shareInstance] handleOpenURL:url];
+}
+
+- (void)didSendMailClick:(LSSayHiDialogViewController *)vc {
+    [self.dialogVC.view removeFromSuperview];
+    [self.dialogVC removeFromParentViewController];
+    LSSendMailViewController *mailVC = [[LSSendMailViewController alloc] initWithNibName:nil bundle:nil];
+    mailVC.anchorId = self.anchorId;
+    mailVC.anchorName = self.anchorName;
+    [self.navigationController pushViewController:mailVC animated:YES];
+}
+
+#pragma mark - 输入栏高度改变回调
+- (void)textViewChangeHeight:(QNChatTextView *_Nonnull)textView height:(CGFloat)height {
+    self.chatTextViewHeight.constant = height + 1;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [textView setNeedsDisplay];
+    });
+}
+
+- (IBAction)closeSelectView:(id)sender {
+    self.hiddenSelectBtn.hidden = YES;
+    self.themeListVC.selectWordBtn.selected = NO;
+    self.themeListVC.selectThemeBtn.selected = NO;
+    [self.themeListVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@(SelectViewHeight));
+    }];
+    [self.themeListVC.view layoutSubviews];
+    [self.themeListVC showButtonViewOrSegmentView:NO];
+}
+
+- (void)showDialodViewIsSuccess:(BOOL)isSuccess hasFollow:(BOOL)hasFollow isOnline:(BOOL)isOnline errMsg:(NSString *)errMsg {
+    [self.navigationController addChildViewController:self.dialogVC];
+    [self.navigationController.view addSubview:self.dialogVC.view];
+    [self.dialogVC showDiaLogView:isSuccess hasFollow:hasFollow isOnline:isOnline errMsg:errMsg];
+    [self.dialogVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.navigationController.view);
+    }];
+}
 
 @end

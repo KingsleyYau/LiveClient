@@ -28,6 +28,7 @@ public class WebSiteBean {
     private String termsLink;		// 用户条款
     private String privacyLink;		// 私密条款
     private String membershipLink;	//会员月费相关
+    private String contactusLink;   //contactus链接
 
     private Drawable siteDrawable;  //站点对应头像
 
@@ -49,6 +50,7 @@ public class WebSiteBean {
             String termsLink,
             String privacyLink,
             String membershipLink,
+            String contactusLink,
             Drawable siteDrawable
     ) {
         this.siteId = siteId;
@@ -68,6 +70,7 @@ public class WebSiteBean {
         this.termsLink = termsLink;
         this.privacyLink = privacyLink;
         this.membershipLink = membershipLink;
+        this.contactusLink = contactusLink;
         this.siteDrawable = siteDrawable;
 
         File file = new File(cachePath);
@@ -210,6 +213,14 @@ public class WebSiteBean {
 
     public void setMembershipLink(String membershipLink) {
         this.membershipLink = membershipLink;
+    }
+
+    public String getContactusLink() {
+        return contactusLink;
+    }
+
+    public void setContactusLink(String contactusLink) {
+        this.contactusLink = contactusLink;
     }
 
     public Drawable getSiteDrawable() {

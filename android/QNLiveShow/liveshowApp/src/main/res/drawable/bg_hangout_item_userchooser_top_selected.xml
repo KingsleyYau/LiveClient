@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--corners - 边角弧度-->
+    <corners
+        android:topLeftRadius="5dp"
+        android:topRightRadius="5dp"/>
+
+    <!--solid - 填充色-->
+    <!--<solid-->
+        <!--android:color="#087B4A"/>-->
+    <gradient
+        android:angle="0"
+        android:endColor="@color/live_ho_orange_light"
+        android:startColor="@color/live_ho_orange_deep"
+        android:type="linear" />
+</shape>

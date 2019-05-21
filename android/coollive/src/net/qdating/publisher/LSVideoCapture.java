@@ -16,6 +16,11 @@ import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.utils.Log;
 
+/**
+ * 视频采集器
+ * @author max
+ *
+ */
 @SuppressWarnings("deprecation")
 public class LSVideoCapture implements ILSVideoPreviewCallback {
 	private final int INVALID_FRAMERATE = -1;
@@ -375,13 +380,13 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 			if( frameRate > bestFrameRate ) {
 				bestFrameRate = frameRate;
 			}
-//			if( frameRate == LSConfig.VIDEO_FPS ) {
-//				bestFrameRate = LSConfig.VIDEO_FPS;
+//			if( bestFrameRate > 10 ) {
+//				bestFrameRate = 10;
 //				break;
 //			}
 		}
 		
-		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getBestCameraPreviewFrameRate( this : 0x%x, bestFrameRate : %d )", hashCode(), bestFrameRate));
+		Log.w(LSConfig.TAG, String.format("LSVideoCapture::getBestCameraPreviewFrameRate( this : 0x%x, bestFrameRate : %d )", hashCode(), bestFrameRate));
 		
 		return bestFrameRate;
 	}

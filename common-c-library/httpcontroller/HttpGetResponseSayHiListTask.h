@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.6.Waiting for your reply列表
+ *        desc: 14.6.获取SayHi的Response列表
  */
 
 #ifndef HttpGetResponseSayHiListTask_H_

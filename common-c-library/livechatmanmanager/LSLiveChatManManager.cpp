@@ -1113,6 +1113,10 @@ bool LSLiveChatManManager::IsManInviteChatState(const LSLCUserItem* userItem) {
 void LSLiveChatManManager::CleanHistotyMessage(const string& userId) {
     LSLCUserItem* userItem = m_userMgr->GetUserItem((userId));
     userItem->ClearMsgList();
+    // 清除一些私密照关联的messageItem
+    if (m_photoMgr != NULL) {
+        m_photoMgr->ClearBindMapWithUserId(userId);
+    }
 }
 
 void LSLiveChatManManager::HandleTokenOver(const string& errNo, const string& errmsg) {
@@ -1604,7 +1608,8 @@ bool LSLiveChatManManager::PhotoFee(const string& userId, const string& photoId,
         
         result = PhotoFee(item);
     } else {
-        HandleFeebackcall(item);
+        //HandleFeebackcall(item);
+        InsertFeeBackcall(item);
     }
 
 
@@ -3726,6 +3731,10 @@ void LSLiveChatManManager::OnQueryChatRecord(long requestId, bool success, int d
 		if (userItem != NULL) {
 			// 清除已完成的记录（保留未完成发送的记录）
 			userItem->ClearFinishedMsgList();
+            // 上面清除了message，下面的私密照管理器就要清除相关的messageItem
+            if (m_photoMgr != NULL) {
+                m_photoMgr->ClearBindMapWithUserId(userItem->m_userId);
+            }
 			// 插入历史记录
 			for (list<LSLCRecord>::const_iterator iter = recordList.begin();
 				iter != recordList.end();
@@ -3792,6 +3801,10 @@ void LSLiveChatManManager::OnQueryChatRecordMutiple(long requestId, bool success
 			{
 				// 清除已完成的记录（保留未完成发送的记录）
 				userItem->ClearFinishedMsgList();
+                // 上面清除了message，下面的私密照管理器就要清除相关的messageItem
+                if (m_photoMgr != NULL) {
+                    m_photoMgr->ClearBindMapWithUserId(userItem->m_userId);
+                }
 				// 服务器返回的历史消息是倒序排列的
 				for (list<LSLCRecord>::const_iterator recordIter = (*iter).recordList.begin();
 					recordIter != (*iter).recordList.end();
@@ -4416,6 +4429,14 @@ void LSLiveChatManManager::RequestHandler(RequestItem* item) {
             LSLCMessageItem* msgItem = (LSLCMessageItem*)item->param;
             if (NULL != msgItem) {
                 HandleSendbackcall(msgItem);
+            }
+        }break;
+        case REQUEST_TASK_NOLOGIN_PHOTOANDVIDEOFEE:
+        {
+            // 发送消息的回调
+            LSLCMessageItem* msgItem = (LSLCMessageItem*)item->param;
+            if (NULL != msgItem) {
+                HandleFeebackcall(msgItem);
             }
         }break;
     }

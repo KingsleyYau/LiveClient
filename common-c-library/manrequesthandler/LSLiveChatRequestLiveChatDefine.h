@@ -301,16 +301,26 @@ typedef enum {
 #define	LC_GET_VIDEO_TOFLAG			"toflag"
 #define	LC_GET_VIDEO_SENDID			"sendid"
 
+/* 接口路径  */
 /**
  * 返回
  */
 #define	LC_GET_VIDEO_VIDEO_URL		"video_url"
+
+/* ######################## 12.16    上传LiveChat相关附件（http post）（New）  ######################## */
+#define LC_UPLOADMANPHOTO_PATH    "/api/?act=uploadChatImg"
+#define LC_UPLOADMANPHOTO_FILE    "file"
+#define LC_UPLOADMANPHOTO_URL    "url"
+#define LC_UPLOADMANPHOTO_MD5    "md5"
+
 
 // 客户端类型
 typedef enum {
 	GVCT_WOMAN = 0,	// 女士端
 	GVCT_MAN = 1,	// 男士端
 } GETVIDEO_CLIENT_TYPE;
+
+
 
 /* ######################## 12.5.查询小高级表情配置（http post）  ######################## */
 /* 接口路径  */

@@ -109,8 +109,8 @@
     
     LSShadowView * shadowView = [[LSShadowView alloc]init];
     [shadowView showShadowAddView:self.addCreditBtn];
-    
-    NSString *creditTips = [NSString stringWithFormat:@"Send by Credits(%@ credits)",balanceCount];
+//    Send by Credits(%@ credits)
+    NSString *creditTips = balanceCount;
     [self.addCreditBtn setTitle:creditTips forState:UIControlStateNormal];
     if (self && view) {
         [self mas_updateConstraints:^(MASConstraintMaker *make) {

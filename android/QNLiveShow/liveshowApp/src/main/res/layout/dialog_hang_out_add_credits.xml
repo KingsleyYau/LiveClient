@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/live_ho_grey_blur_bg">
+
+    <!--底部模糊背景-->
+    <!-- 毛玻璃 (作为背景 透的是 消息列表)-->
+    <com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView
+        android:id="@+id/dialog_hang_out_add_credits_iv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:blurRadius="6"
+        app:downsampleFactor="6"
+        app:overlayColor="@color/live_ho_grey_blur_bg_half" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/dialog_hang_out_add_credits_iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingLeft="@dimen/live_size_10dp"
+            android:paddingTop="@dimen/live_size_10dp"
+            android:paddingRight="@dimen/live_size_10dp"
+            android:src="@drawable/ic_live_close_private_room" />
+
+        <FrameLayout
+            android:layout_width="@dimen/live_size_70dp"
+            android:layout_height="@dimen/live_size_70dp">
+
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/dialog_hang_out_add_credits_iv_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@drawable/ic_default_photo_man" />
+
+            <ImageView
+                android:id="@+id/dialog_hang_out_add_credits_iv_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                tools:src="@drawable/ic_level_icon_1" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/live_size_10dp"
+            android:paddingRight="@dimen/live_size_10dp">
+
+            <TextView
+                android:id="@+id/dialog_hang_out_add_credits_tv_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:paddingRight="@dimen/live_size_10dp"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold"
+                tools:text="Mike K" />
+
+            <TextView
+                android:id="@+id/dialog_hang_out_add_credits_tv_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/text_color_grey_light"
+                android:textSize="@dimen/live_size_12sp"
+                tools:text="ID:CM465464" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_4dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/live_size_10dp"
+            android:paddingRight="@dimen/live_size_10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:singleLine="true"
+                android:text="@string/hang_out_my_balance"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp" />
+
+            <TextView
+                android:id="@+id/dialog_hang_out_add_credits_tv_credits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:paddingLeft="@dimen/live_size_4dp"
+                android:singleLine="true"
+                android:textColor="@color/common_normal_orange"
+                android:textSize="@dimen/live_size_14sp"
+                tools:text="4.00 Credits" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/dialog_hang_out_add_credits_btn_add"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/normal_button_height_44dp"
+            android:layout_marginLeft="@dimen/live_size_40dp"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:layout_marginRight="@dimen/live_size_40dp"
+            android:layout_marginBottom="@dimen/live_size_20dp"
+            android:background="@drawable/bg_hang_out_addcredits"
+            android:text="@string/hand_out_add_credits"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_16sp" />
+    </LinearLayout>
+</FrameLayout>

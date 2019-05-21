@@ -6,6 +6,8 @@ import android.opengl.GLUtils;
 
 /**
  * BMP渲染滤镜
+ * @author max
+ *
  */
 public class LSImageBmpFilter extends LSImageInputFilter {
 	private Bitmap bitmap = null;

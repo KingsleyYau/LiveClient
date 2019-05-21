@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_input_edit_body"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/live_ho_grey_blur_bg"
+    android:clickable="true"
+    android:gravity="center"
+    android:minHeight="50dp"
+    android:onClick="onClick"
+    android:orientation="horizontal"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/bg_hangout_bottom_input_solid"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginRight="@dimen/live_size_10dp"
+        android:paddingLeft="@dimen/live_size_10dp"
+        android:paddingRight="@dimen/live_size_10dp">
+
+        <LinearLayout
+            android:id="@+id/ll_audienceChooser"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_hangout_choosed_user"
+            android:gravity="center"
+            android:minHeight="24dp"
+            android:orientation="horizontal"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp">
+
+            <TextView
+                android:id="@+id/tv_audienceNickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:singleLine="true"
+                android:text="Hello"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_14sp" />
+
+            <ImageView
+                android:id="@+id/iv_audienceIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/selector_live_buttom_audience_indicator" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_liveMsg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:hint="@string/txt_hint_input_general"
+            android:imeOptions="actionSend"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="#CCCCCC"
+            android:textSize="@dimen/live_size_14sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_emojiSwitch"
+        android:layout_width="48dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:onClick="onClick"
+        android:paddingLeft="13dp"
+        android:paddingTop="14dp"
+        android:paddingRight="13dp"
+        android:paddingBottom="14dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_liveroom_emojiswitch_hangout"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_gift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="13dp"
+        android:onClick="onClick"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_hangout_buttom_gift" />
+
+</LinearLayout>

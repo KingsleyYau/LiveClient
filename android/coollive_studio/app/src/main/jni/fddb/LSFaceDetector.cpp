@@ -110,10 +110,10 @@ void LSFaceDetector::DetectFaces(const char *data, int size, int width, int heig
         dlib::rectangle face;
 
         if( faces.size() > 0 ) {
-            FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSFaceDetector::DetectFaces( [Face Dectected], size : %d )", faces.size());
+            FileLevelLog("rtmpdump", KLog::LOG_STAT, "LSFaceDetector::DetectFaces( [Face Dectected], size : %d )", faces.size());
 
             for(int i = 0; i < faces.size(); i++) {
-                FileLevelLog("rtmpdump", KLog::LOG_MSG,
+                FileLevelLog("rtmpdump", KLog::LOG_STAT,
                 		"LSFaceDetector::DetectFaces( [Face %d], x : %d, y : %d, width : %d, height : %d )",
 						i, faces[i].left(), faces[i].top(), faces[i].width(), faces[i].height()
 						);

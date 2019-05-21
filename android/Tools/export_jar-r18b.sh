@@ -4,17 +4,17 @@
 # Author:	Max.Chiu
 
 # Change dir
-CUR_PATH=$(dirname $0)
-cd $CUR_PATH
+CUR_PATH=$(cd "$(dirname "$0")";pwd)
 
-LOG_FILE=$CUR_PATH/export.log
+LOG_FILE=$(pwd)/export.log
 rm -f $LOG_FILE
+echo "# LOG_FILE : $LOG_FILE"
 
 NDK_PATH=/Applications/Android/android-sdks-studio/ndk-bundle
 NDK_CMD=$NDK_PATH/ndk-build
-ECLIPSE_PROJECT_PATH=../coollive
+ECLIPSE_PROJECT_PATH=$CUR_PATH/../coollive
 SDK_PATH=/Applications/Android/android-sdks/platforms
-TMP_PATH=./tmp
+TMP_PATH=$(pwd)/tmp
 mkdir -p $TMP_PATH
 
 # Create version
@@ -37,7 +37,7 @@ $ECLIPSE_PROJECT_PATH/src/net/qdating/*.java \
 
 # Compile libs
 cd $ECLIPSE_PROJECT_PATH/jni >/dev/null 2>&1 
-$NDK_CMD >$LOG_FILE 2>&1 
+$NDK_CMD >> $LOG_FILE 2>&1 
 cd - >/dev/null 2>&1 
 
 # package
@@ -52,6 +52,7 @@ find $TMP_PATH -name ".DS_Store" | xargs rm -rf {}
 
 # Export jar
 jar cvf $VERSION/coollive.jar -C $TMP_PATH . >> $LOG_FILE 2>&1
+rm -f $ECLIPSE_PROJECT_PATH/libs/*.jar >> $LOG_FILE 2>&1
 cp -rf $ECLIPSE_PROJECT_PATH/libs $VERSION >> $LOG_FILE 2>&1
 
 mkdir -p $VERSION/doc

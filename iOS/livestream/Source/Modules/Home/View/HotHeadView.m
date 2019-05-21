@@ -10,8 +10,9 @@
 #import "HotHeadViewCell.h"
 #import "LSUserUnreadCountManager.h"
 #import "GiftItemLayout.h"
+#import "LSLoginManager.h"
 
-@interface HotHeadView ()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface HotHeadView ()<UICollectionViewDelegate, UICollectionViewDataSource,HotHeadViewDelegate>
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadManager;
 @end
 
@@ -24,6 +25,7 @@
 
         self.frame = frame;
         self.unreadManager = [LSUserUnreadCountManager shareInstance];
+        self.collectionView.delaysContentTouches = NO;
     }
     return self;
 }
@@ -63,10 +65,19 @@
     HotHeadViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[HotHeadViewCell cellIdentifier] forIndexPath:indexPath];
     cell.iconImageView.image = [UIImage imageNamed:self.iconArray[indexPath.row]];
     cell.titleLabel.text = [NSString stringWithFormat:@"%@",self.titleArray[indexPath.row]];
+    [cell.lightIcon setImage: cell.iconImageView.image forState:UIControlStateNormal];
+    cell.tag = indexPath.row;
+    cell.hotHeadDelegate = self;
     if (indexPath.row != self.iconArray.count - 1) {
-        NSInteger type = indexPath.row;
-        int unreadNum = [self.unreadManager getUnreadNum:(LSUnreadType)type];
-        if (type == LSUnreadType_Private_Chat) {
+        NSInteger rowTpye = 0;
+        if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+            rowTpye = indexPath.row;
+        }else {
+            rowTpye = indexPath.row + 1;
+        }
+    
+        int unreadNum = [self.unreadManager getUnreadNum:(LSUnreadType)rowTpye];
+        if (rowTpye == LSUnreadType_Private_Chat) {
             [cell showChatListUnreadNum:unreadNum];
         }else {
             [cell setUnreadNum:unreadNum];
@@ -86,5 +97,11 @@
     }
 }
 
-
+- (void)hotHeadViewCell:(HotHeadViewCell *)cell didSelectIndex:(NSInteger)index {
+    [self.collectionView reloadData];
+    
+    if ([self.delagate respondsToSelector:@selector(didSelectHeadViewItemWithIndex:)]) {
+        [self.delagate didSelectHeadViewItemWithIndex:index];
+    }
+}
 @end

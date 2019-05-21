@@ -82,7 +82,7 @@
                                                   options:nil
                                             resultHandler:^(UIImage *result, NSDictionary *info) {
                                                 if (result) {
-                                                    result = [result imageCompressForSize:1280];
+                                                    result = [result imageCropForSize:1280];
                                                     NSString *path = [[LSChatPhotoDataManager manager] getOriginalPhotoPath:result andImageName:albumPhoto.fileName];
                                                     albumPhoto.originalPath = path;
                                                     [[LSChatPhotoDataManager manager] choosePhotoURL:path];

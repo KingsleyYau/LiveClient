@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!-- 为了放大功能，男士能覆盖在其它窗口上，要先添加到VIEW内，但要保证男士一定坐在第4个格子上 -->
+    <com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"/>
+
+    <com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"/>
+
+    <com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"/>
+
+
+    <com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"/>
+
+
+
+    <!--<View-->
+        <!--android:layout_width="1dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:background="#19FFFFFF"/>-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:background="#19FFFFFF"/>-->
+
+    <!-- 长按放大蒙层 -->
+    <FrameLayout
+        android:id="@+id/v_float"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/transparent_7">
+
+        <!-- 用于存放需要放大的View -->
+        <FrameLayout
+            android:id="@+id/fl_video"
+            android:layout_width="@dimen/live_size_6dp"
+            android:layout_height="@dimen/live_size_6dp">
+
+        </FrameLayout>
+
+    </FrameLayout>
+</FrameLayout>

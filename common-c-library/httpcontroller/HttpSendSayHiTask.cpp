@@ -24,8 +24,8 @@ void HttpSendSayHiTask::SetCallback(IRequestSendSayHiCallback* callback) {
 
 void HttpSendSayHiTask::SetParam(
                                  const string& anchorId,
-                                 int themeId,
-                                 int textId
+                                 const string& themeId,
+                                 const string& textId
                                           ) {
     char temp[16];
 	mHttpEntiy.Reset();
@@ -35,27 +35,26 @@ void HttpSendSayHiTask::SetParam(
         mHttpEntiy.AddContent(LIVEROOM_SENDSAYHI_ANCHORID, anchorId.c_str());
     }
     
-    if (themeId > 0) {
-        snprintf(temp, sizeof(temp), "%d", themeId);
-        mHttpEntiy.AddContent(LIVEROOM_SENDSAYHI_THEMEID, temp);
+    if (themeId.length() > 0) {
+        mHttpEntiy.AddContent(LIVEROOM_SENDSAYHI_THEMEID, themeId.c_str());
     }
-
-    if (textId > 0) {
-        snprintf(temp, sizeof(temp), "%d", textId);
-        mHttpEntiy.AddContent(LIVEROOM_SENDSAYHI_TEXTID, temp);
+    
+    if (textId.length() > 0) {
+        mHttpEntiy.AddContent(LIVEROOM_SENDSAYHI_TEXTID, textId.c_str());
     }
+    
 
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendSayHiTask::SetParam( "
             "task : %p, "
             "anchorId : %s, "
-            "themeId : %d, "
-            "textId : %d"
+            "themeId : %s, "
+            "textId : %s"
             ")",
             this,
             anchorId.c_str(),
-            themeId,
-            textId
+            themeId.c_str(),
+            textId.c_str()
             );
 }
 
@@ -77,7 +76,8 @@ bool HttpSendSayHiTask::ParseData(const string& url, bool bFlag, const char* buf
     string sayHiId = "";
     string sayHiOrLoiId = "";
     bool bParse = false;
-    
+    bool isFollow = false;
+    OnLineStatus onlineStatus = ONLINE_STATUS_OFFLINE;
     if ( bFlag ) {
         // 公共解
         Json::Value dataJson;
@@ -88,12 +88,23 @@ bool HttpSendSayHiTask::ParseData(const string& url, bool bFlag, const char* buf
                 if( dataJson[LIVEROOM_SENDSAYHI_SAYHIID].isString()) {
                     sayHiId = dataJson[LIVEROOM_SENDSAYHI_SAYHIID].asString();
                 }
+                /* onlineStatus */
+                if (dataJson[LIVEROOM_SENDSAYHI_ONLINESTATUS].isNumeric()) {
+                    onlineStatus = GetIntToOnLineStatus(dataJson[LIVEROOM_SENDSAYHI_ONLINESTATUS].asInt());
+                }
             }
             
         } else {
             if (errDataJson.isObject()) {
                 if( errDataJson[LIVEROOM_SENDSAYHI_ID].isString()) {
                     sayHiOrLoiId = errDataJson[LIVEROOM_SENDSAYHI_ID].asString();
+                }
+                if ( errDataJson[LIVEROOM_SENDSAYHI_HASFOLLOW].isNumeric()) {
+                    isFollow = errDataJson[LIVEROOM_SENDSAYHI_HASFOLLOW].asInt() == 0 ? false : true;
+                }
+                /* onlineStatus */
+                if (errDataJson[LIVEROOM_SENDSAYHI_ONLINESTATUS].isNumeric()) {
+                    onlineStatus = GetIntToOnLineStatus(errDataJson[LIVEROOM_SENDSAYHI_ONLINESTATUS].asInt());
                 }
             }
         }
@@ -108,7 +119,7 @@ bool HttpSendSayHiTask::ParseData(const string& url, bool bFlag, const char* buf
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnSendSayHi(this, bParse, errnum, errmsg, sayHiId, sayHiOrLoiId);
+        mpCallback->OnSendSayHi(this, bParse, errnum, errmsg, sayHiId, sayHiOrLoiId, isFollow, onlineStatus);
     }
     
     return bParse;

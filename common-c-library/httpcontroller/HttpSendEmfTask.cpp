@@ -28,7 +28,8 @@ void HttpSendEmfTask::SetParam(
                                string emfId,
                                string content,
                                list<string> imgList,
-                               LSLetterComsumeType comsumeType
+                               LSLetterComsumeType comsumeType,
+                               string sayHiResponseId
                                   ) {
 
     char temp[16];
@@ -66,6 +67,10 @@ void HttpSendEmfTask::SetParam(
     Json::FastWriter jsonWriter;
     imgListInfo = jsonWriter.write(imgJson);
     mHttpEntiy.AddContent(LETTER_IMG_LIST, imgListInfo.c_str());
+    
+    if (sayHiResponseId.length() >  0 ) {
+        mHttpEntiy.AddContent(LETTER_SAYHI_RESPONSEID, sayHiResponseId.c_str());
+    }
 
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendEmfTask::SetParam( "
@@ -74,6 +79,7 @@ void HttpSendEmfTask::SetParam(
             "loiId : %s,"
             "emfId : %s,"
             "content : %s,"
+            "sayHiResponseId : %s,"
             "comsumeType : %d"
             ")",
             this,
@@ -81,6 +87,7 @@ void HttpSendEmfTask::SetParam(
             loiId.c_str(),
             emfId.c_str(),
             content.c_str(),
+            sayHiResponseId.c_str(),
             comsumeType
             );
 }

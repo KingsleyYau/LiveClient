@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
@@ -36,6 +35,7 @@ import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -363,7 +363,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                     if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_NO_CREDIT){
                         showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
                     }else{
-                        Toast.makeText(mContext , response.errMsg , Toast.LENGTH_SHORT).show();
+                        ToastUtil.showToast(mContext, response.errMsg);
                     }
                     break;
                 default:
@@ -534,7 +534,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if(event.getAction() == MotionEvent.ACTION_DOWN){
-                        Toast.makeText(mContext , getString(R.string.live_book_add_number_tips1) , Toast.LENGTH_SHORT).show();
+                        ToastUtil.showToast(mContext, R.string.live_book_add_number_tips1);
                         return true;
                     }
                     return true;
@@ -551,7 +551,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
      */
     private void showDatePickDialog(){
         if(mDates.size() == 0) {
-            Toast.makeText(mContext , getString(R.string.live_book_no_time_tips) , Toast.LENGTH_LONG).show();
+            ToastUtil.showToast(mContext, R.string.live_book_no_time_tips);
             return;
         }
 
@@ -595,7 +595,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
      */
     private void showTimePickDialog(){
         if(mTimes.size() == 0) {
-            Toast.makeText(mContext , getString(R.string.live_book_no_time_tips) , Toast.LENGTH_LONG).show();
+            ToastUtil.showToast(mContext, R.string.live_book_no_time_tips);
             return;
         }
 

@@ -22,7 +22,7 @@
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetLogDirectory
   (JNIEnv *env, jclass, jstring directory) {
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	string cpDirectory = JString2String(env, directory);
 
 	KLog::SetLogDirectory(cpDirectory);
 	HttpClient::SetLogDirectory(cpDirectory);
@@ -30,10 +30,9 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
 
 	GetPhoneInfo();
 
-	FileLog("httprequest", "SetLogDirectory ( directory : %s ) ", cpDirectory);
+	FileLog("httprequest", "SetLogDirectory ( directory : %s ) ", cpDirectory.c_str());
 	FileLog("httprequest", "SetLogDirectory ( Android CPU ABI : %s ) ", GetPhoneCpuAbi().c_str());
 
-	env->ReleaseStringUTFChars(directory, cpDirectory);
 }
 
 /*
@@ -43,10 +42,9 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetVersionCode
   (JNIEnv *env, jclass cls, jstring version) {
-	const char *cpVersion = env->GetStringUTFChars(version, 0);
+	string cpVersion = JString2String(env, version);
 	gLSLiveChatHttpRequestManager.SetVersionCode(cpVersion);
 	CrashHandler::GetInstance()->SetVersion(cpVersion);
-	env->ReleaseStringUTFChars(version, cpVersion);
 }
 
 /*
@@ -56,13 +54,12 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetCookiesDirectory
   (JNIEnv *env, jclass, jstring directory) {
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	string cpDirectory = JString2String(env, directory);
 
 	HttpClient::SetCookiesDirectory(cpDirectory);
 
-	FileLog("httprequest", "SetCookiesDirectory ( directory : %s ) ", cpDirectory);
+	FileLog("httprequest", "SetCookiesDirectory ( directory : %s ) ", cpDirectory.c_str());
 
-	env->ReleaseStringUTFChars(directory, cpDirectory);
 }
 
 /*
@@ -72,14 +69,12 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetWebSite
   (JNIEnv *env, jclass cls, jstring webSite, jstring appSite) {
-	const char *cpWebSite = env->GetStringUTFChars(webSite, 0);
-	const char *cpAppSite = env->GetStringUTFChars(appSite, 0);
+	string cpWebSite = JString2String(env, webSite);
+	string cpAppSite = JString2String(env, appSite);
 
 	gLSLiveChatHttpRequestHostManager.SetWebSite(cpWebSite);
 	gLSLiveChatHttpRequestHostManager.SetAppSite(cpAppSite);
 
-	env->ReleaseStringUTFChars(webSite, cpWebSite);
-	env->ReleaseStringUTFChars(appSite, cpAppSite);
 
     //HttpClient::CleanCookies();
     //list<string> cookies;
@@ -100,9 +95,9 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetPublicWebSite
   (JNIEnv *env, jclass cls, jstring chatVoiceSite)
 {
-	const char *cpChatVoiceSite = env->GetStringUTFChars(chatVoiceSite, 0);
+	string cpChatVoiceSite = JString2String(env, chatVoiceSite);
 	gLSLiveChatHttpRequestHostManager.SetChatVoiceSite(cpChatVoiceSite);
-	env->ReleaseStringUTFChars(chatVoiceSite, cpChatVoiceSite);
+
 }
 
 /*
@@ -112,9 +107,9 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetChangeSite
 		(JNIEnv *env, jclass cls, jstring changeSite) {
-	const char *cpChangeSite = env->GetStringUTFChars(changeSite, 0);
+	string cpChangeSite = JString2String(env, changeSite);
 	gLSLiveChatHttpRequestHostManager.SetChangeSite(cpChangeSite);
-	env->ReleaseStringUTFChars(changeSite, cpChangeSite);
+
 }
 
 /*
@@ -124,11 +119,9 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetAuthorization
   (JNIEnv *env, jclass, jstring user, jstring password) {
-	const char *cpUser = env->GetStringUTFChars(user, 0);
-	const char *cpPassword = env->GetStringUTFChars(password, 0);
+	string cpUser = JString2String(env, user);
+	string cpPassword = JString2String(env, password);
 	gLSLiveChatHttpRequestManager.SetAuthorization(cpUser, cpPassword);
-	env->ReleaseStringUTFChars(user, cpUser);
-	env->ReleaseStringUTFChars(password, cpPassword);
 
 }
 
@@ -149,9 +142,8 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
  */
 JNIEXPORT jstring JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_GetCookies
   (JNIEnv *env, jclass, jstring site) {
-	const char *cpSite = env->GetStringUTFChars(site, 0);
+	string cpSite = JString2String(env, site);
 	string cookies = HttpClient::GetCookies(cpSite);
-	env->ReleaseStringUTFChars(site, cpSite);
 	return env->NewStringUTF(cookies.c_str());
 }
 
@@ -316,9 +308,8 @@ JNIEXPORT jstring JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LC
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetDeviceId
   (JNIEnv *env, jclass, jstring deviceId) {
-	const char *cpDeviceId = env->GetStringUTFChars(deviceId, 0);
+	string cpDeviceId = JString2String(env, deviceId);
 	CrashHandler::GetInstance()->SetDeviceId(cpDeviceId);
-	env->ReleaseStringUTFChars(deviceId, cpDeviceId);
 }
 
 /*
@@ -406,13 +397,11 @@ JNIEXPORT jint JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
     	if (NULL != cookies) {
     		for (int i = 0; i < env->GetArrayLength(cookies); i++) {
     			jstring cookie = (jstring)env->GetObjectArrayElement(cookies, i);
-    			const char * strCookie = env->GetStringUTFChars(cookie, 0);
-    			string cookieStr = strCookie;
+    			string cookieStr = JString2String(env, cookie);
     			if (!cookieStr.empty()) {
     			FileLog("httprequest", "LiveChat.Native::SetCookiesInfo(strCookie:%s) start", cookieStr.c_str());
-    				cookiesList.push_back(strCookie);
+    				cookiesList.push_back(cookieStr);
     			}
-    			env->ReleaseStringUTFChars(cookie, strCookie);
     		}
     	}
     	if (cookiesList.size() > 0) {
@@ -429,17 +418,15 @@ JNIEXPORT jint JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCReq
      */
     JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetProxy
       (JNIEnv *env, jclass cls, jstring proxyUrl) {
-    	const char *cpProxyUrl = env->GetStringUTFChars(proxyUrl, 0);
-    	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetProxy ( proxyUrl : %s ) ", cpProxyUrl);
+    	string cpProxyUrl = JString2String(env, proxyUrl);
+    	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetProxy ( proxyUrl : %s ) ", cpProxyUrl.c_str());
 
     	HttpClient::SetProxy(cpProxyUrl);
 
-    	env->ReleaseStringUTFChars(proxyUrl, cpProxyUrl);
     }
 
    JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetAppId
        (JNIEnv *env, jclass cls, jstring appId) {
-	    const char *cpAppId = env->GetStringUTFChars(appId, 0);
+	    string cpAppId = JString2String(env, appId);
 	    gLSLiveChatHttpRequestManager.SetAppId(cpAppId);
-	    env->ReleaseStringUTFChars(appId, cpAppId);
     }

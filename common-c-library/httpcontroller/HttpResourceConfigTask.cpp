@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.1.获取主题、文本配置信息
+ *        desc: 14.1.获取发送SayHi的主题和文本信息
  */
 
 #include "HttpResourceConfigTask.h"

@@ -31,7 +31,7 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_ReleaseLMManager
-        (JNIEnv *, jclass);
+        (JNIEnv *, jclass, jlong);
 
 ///*
 // * Class:     com_qpidnetwork_livemodule_livemessage_LMClient

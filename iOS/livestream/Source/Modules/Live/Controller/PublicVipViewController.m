@@ -66,9 +66,9 @@
 @implementation PublicVipViewController
 - (void)initCustomParam {
     [super initCustomParam];
-
+    
     NSLog(@"PublicVipViewController::initCustomParam( self : %p )", self);
-
+    
     // 隐藏导航栏
     self.isShowNavBar = NO;
     // 禁止导航栏后退手势
@@ -79,56 +79,56 @@
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
-
+    
     self.dialogTipView = [DialogTip dialogTip];
     self.audienceArray = [[NSMutableArray alloc] init];
-
+    
     self.ladyImageLoader = [LSImageViewLoader loader];
-
+    
     self.roomUserInfoManager = [LSRoomUserInfoManager manager];
 }
 
 - (void)setupContainView {
     [super setupContainView];
-
+    
     // 初始化头部界面
     //    [self setupHeaderImageView];
-
+    
     // 更新头部直播间数据
     [self setupHeadViewInfo];
 }
 
 - (void)dealloc {
     NSLog(@"PublicVipViewController::dealloc( self : %p )", self);
-
+    
     if (self.closeDialogTipView) {
         [self.closeDialogTipView removeFromSuperview];
     }
-
+    
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.headBackgroundView.layer.cornerRadius = self.headBackgroundView.frame.size.height / 2;
     self.headBackgroundView.layer.masksToBounds = YES;
-
+    
     self.laddyHeadImageView.layer.cornerRadius = self.laddyHeadImageView.frame.size.height / 2;
     self.laddyHeadImageView.layer.masksToBounds = YES;
-
+    
     // 根据时候关注
     if (self.liveRoom.imLiveRoom.favorite) {
         self.followBtnWidth.constant = 0;
     }
-
+    
     self.liveRoom.superView = self.view;
     self.liveRoom.superController = self;
-
+    
     // 初始化播放界面
     [self setupPlayController];
-
+    
     // 请求观众席列表
     [self setupAudienView];
 }
@@ -188,7 +188,7 @@
     self.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 135, 0, 1);
     self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
     self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(181, 181, 181, 0.49);
-
+    
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titleBackGroundView.mas_bottom);
@@ -200,13 +200,13 @@
             make.bottom.equalTo(self.view);
         }
     }];
-
+    
     [self.playVC.liveVC bringSubviewToFrontFromView:self.view];
     [self.view bringSubviewToFront:self.playVC.chooseGiftListView];
     CGRect frame = self.playVC.chooseGiftListView.frame;
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
-
+    
     //是否节目直播间
     if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
         // 隐藏立即私密邀请控件
@@ -217,15 +217,12 @@
             // 隐藏立即私密邀请控件
             self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
         }
-        //有立即私密权限，没有多人互动权限
-        else if (self.liveRoom.priv.isHasOneOnOneAuth) {
-            if ((![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) && !self.liveRoom.imLiveRoom.isHangoutPriv) {
-                self.playVC.liveVC.startOneViewHeigh.constant = 40;
-                self.playVC.liveVC.startOneView.hidden = NO;
-                self.playVC.liveVC.startOneBtn.hidden = NO;
-                self.playVC.liveVC.startHangoutBtn.hidden = YES;
-                self.playVC.liveVC.startOneBtnX.constant = 0;
-            }
+        else if (self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv && self.liveRoom.imLiveRoom.isHangoutPriv) {
+            //有立即私密权限，有多人互动权限，默认UI
+            self.playVC.liveVC.startOneViewHeigh.constant = 40;
+            self.playVC.liveVC.startOneView.hidden = NO;
+            self.playVC.liveVC.startOneBtn.hidden = NO;
+            self.playVC.liveVC.startHangoutBtn.hidden = NO;
         }
         //没有立即私密权限，有多人互动权限
         else if (!self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv && self.liveRoom.imLiveRoom.isHangoutPriv) {
@@ -234,20 +231,27 @@
             self.playVC.liveVC.startOneBtn.hidden = YES;
             self.playVC.liveVC.startHangoutBtn.hidden = NO;
             self.playVC.liveVC.startHangoutBtnX.constant = 0;
-        } else {
-            //有立即私密权限，有多人互动权限，默认UI
+        }
+        //有立即私密权限，没有多人互动权限
+        else if (self.liveRoom.priv.isHasOneOnOneAuth &&(![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) && !self.liveRoom.imLiveRoom.isHangoutPriv) {
             self.playVC.liveVC.startOneViewHeigh.constant = 40;
             self.playVC.liveVC.startOneView.hidden = NO;
             self.playVC.liveVC.startOneBtn.hidden = NO;
-            self.playVC.liveVC.startHangoutBtn.hidden = NO;
+            self.playVC.liveVC.startHangoutBtn.hidden = YES;
+            self.playVC.liveVC.startOneBtnX.constant = 0;
+        }else {
+            
+            
+            
         }
-    }
 
+    }
+    
     // 立即私密按钮
     //    self.playVC.liveVC.cameraBtn.hidden = NO;
     //    [self.playVC.liveVC.cameraBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Invite_Btn"] forState:UIControlStateNormal];
     //    [self.playVC.liveVC.cameraBtn addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     // 礼物按钮
     [self.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Gift_Btn"] forState:UIControlStateNormal];
     // 输入栏目
@@ -256,7 +260,7 @@
     self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0x5D0E86);
     // 视频播放界面
     //        self.playVC.liveVC.videoBgImageView.backgroundColor = self.view.backgroundColor;
-
+    
     // 聊天输入框
     [self.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Send_Btn"] forState:UIControlStateNormal];
     self.playVC.liveSendBarView.louderBtnImage = [UIImage imageNamed:@"Live_Public_Vip_Pop_Btn"];
@@ -272,7 +276,7 @@
 - (void)setupHeaderImageView {
     self.tipView = [[ChardTipView alloc] init];
     self.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
-
+    
     [self.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
                               roomTip:NSLocalizedStringFromSelf(@"VIP_PUBLIC_TIP")
                            creditText:NSLocalizedStringFromSelf(@"CREDIT_TIP")];
@@ -283,7 +287,7 @@
         make.width.equalTo(@(self.roomTypeImageView.frame.size.width * 1.5));
         make.left.equalTo(@0);
     }];
-
+    
     // 图片点击事件
     WeakObject(self, weakSelf);
     [self.roomTypeImageView addTapBlock:^(id obj) {
@@ -299,7 +303,7 @@
             weakSelf.isTipShow = YES;
         }
     }];
-
+    
     // 是否第一次进入该类型直播间 显示资费提示
     BOOL haveCome = [self.firstManager getThisTypeHaveCome:@"Public_VIP_Join"];
     if (haveCome) {
@@ -317,7 +321,7 @@
     } else {
         self.titleBgImageTop.constant = 20;
     }
-
+    
     if (self.liveRoom.userName.length > 0) {
         self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s", self.liveRoom.userName];
     } else {
@@ -329,7 +333,7 @@
                             placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
                                finishHandler:^(UIImage *image){
                                }];
-
+    
     //    NSString *audienceNum = [NSString stringWithFormat:@"(%d/%d)", self.liveRoom.imLiveRoom.fansNum, self.liveRoom.imLiveRoom.maxFansiNum];
 }
 
@@ -342,14 +346,14 @@
     request.start = 0;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg,
                               NSArray<ViewerFansItemObject *> *_Nullable array) {
-
+        
         NSLog(@"PublicViewController::LiveFansListRequest( [请求观众列表], success : %d, errnum : %ld, errmsg : %@, array : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-
+                
                 [self.audienceArray removeAllObjects];
                 for (ViewerFansItemObject *item in array) {
-
+                    
                     AudienModel *model = [[AudienModel alloc] init];
                     model.userId = item.userId;
                     model.nickName = item.nickName;
@@ -360,7 +364,7 @@
                     model.image = [UIImage imageNamed:@"Default_Img_Man_Circyle"];
                     model.isHasTicket = item.isHasTicket;
                     [self.audienceArray addObject:model];
-
+                    
                     // 更新并缓存本地观众数据
                     LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
                     infoItem.userId = item.userId;
@@ -373,7 +377,7 @@
                     infoItem.isHasTicket = item.isHasTicket;
                     [self.roomUserInfoManager setAudienceInfoDicL:infoItem];
                 }
-
+                
                 // 显示最大人数默认头像
                 if (self.audienceArray.count < self.liveRoom.imLiveRoom.maxFansiNum) {
                     NSUInteger count = self.liveRoom.imLiveRoom.maxFansiNum - self.audienceArray.count;
@@ -416,7 +420,7 @@
         infoItem.riderUrl = riderUrl;
         infoItem.isAnchor = 0;
         [self.roomUserInfoManager setAudienceInfoDicL:infoItem];
-
+        
         // 刷观众列表
         [self setupAudienView];
     });

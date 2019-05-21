@@ -269,6 +269,15 @@ static LSUserUnreadCountManager * unreadCountinstance;
     // TODO:获取指定类型未读消息
     int unreadNum = 0;
     switch (type) {
+        case LSUnreadType_SayHi: { // SaiHi
+            unreadNum = self.unreadModel.sayHiNoreadNum;
+        }break;
+        case LSUnreadType_Loi:{ // Greetings
+            unreadNum = self.unreadModel.loiNoreadNum;
+        }break;
+        case LSUnreadType_EMF:{ // Mail
+            unreadNum = self.unreadModel.emfNoreadNum;
+        }break;
         case LSUnreadType_Private_Chat:{ // Chat
             unreadNum = 0;
             NSInteger chatlistUnreadCount =  [[QNContactManager manager] getChatListUnreadCount];
@@ -277,14 +286,6 @@ static LSUserUnreadCountManager * unreadCountinstance;
             }else if ([QNContactManager manager].inviteItems.count > 0) {
                 unreadNum = InvitationListUnread;
             }
-           
-        }break;
-        case LSUnreadType_EMF:{ // Mail
-            unreadNum = self.unreadModel.emfNoreadNum;
-        }break;
-            
-        case LSUnreadType_Loi:{ // Greetings
-            unreadNum = self.unreadModel.loiNoreadNum;
         }break;
         case LSUnreadType_Hangout:{ // Hangout
             unreadNum = 0;
@@ -296,9 +297,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
         case LSUnreadType_Booking:{ // Booking
             unreadNum = self.unreadModel.bookingNoreadNum;
         }break;
-        case LSUnreadType_SayHi: { // SaiHi
-            unreadNum = self.unreadModel.sayHiNoreadNum;
-        }break;
+
         default:{ // BackPack
             unreadNum = self.unreadModel.backpackNoreadNum;
         }break;

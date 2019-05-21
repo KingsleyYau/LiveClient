@@ -45,12 +45,16 @@
 
     self.webView.scrollView.delegate = self;
     self.navTitleLabel = [[UILabel alloc] init];
-
     if (self.alphaType) {
+        self.isShowTaBar = NO;
+        self.isShowNavBar = NO;
         self.navTitleLabel.alpha = 0;
     } else {
+        self.isShowTaBar = YES;
+        self.isShowNavBar = YES;
         self.navTitleLabel.alpha = 1;
     }
+    
     self.requestUrl = self.url;
 }
 

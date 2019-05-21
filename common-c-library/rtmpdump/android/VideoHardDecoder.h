@@ -32,7 +32,7 @@ public:
     bool Reset();
     void Pause();
     void ResetStream();
-    void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize);
+    void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp);
     void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
@@ -59,6 +59,7 @@ private:
     jmethodID mJniDecoderReleaseMethodID;
 
     jfieldID mJniVideoFrameTimestampMethodID;
+    jfieldID mJniVideoFrameErrorMethodID;
 
     // 解码器变量
     char* mpSps;

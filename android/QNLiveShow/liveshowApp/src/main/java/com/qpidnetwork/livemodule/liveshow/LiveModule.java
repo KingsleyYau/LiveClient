@@ -5,40 +5,51 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.LiveDomainRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnRequestGetValidateCodeCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestSidCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
+import com.qpidnetwork.livemodule.httprequest.RequestJniAuthorization;
+import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
+import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.httprequest.item.LSOrderType;
+import com.qpidnetwork.livemodule.httprequest.item.LSValidateCodeType;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.livechat.LiveChatManager;
 import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
 import com.qpidnetwork.livemodule.livemessage.LMClient;
+import com.qpidnetwork.livemodule.livemessage.LMManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.DomainManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
+import com.qpidnetwork.livemodule.liveshow.manager.SynConfigerManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.livemodule.liveshow.manager.VersionCheckManager;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.pay.LiveBuyCreditActivity;
 import com.qpidnetwork.livemodule.liveshow.pay.LiveBuyStampActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationTypeEnum;
+import com.qpidnetwork.qnbridgemodule.bean.RequestErrorCodeCommon;
 import com.qpidnetwork.qnbridgemodule.bean.WebSiteBean;
 import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.interfaces.IModule;
 import com.qpidnetwork.qnbridgemodule.interfaces.IModuleListener;
 import com.qpidnetwork.qnbridgemodule.interfaces.OnGetTokenCallback;
+import com.qpidnetwork.qnbridgemodule.interfaces.OnGetVerifyCodeCallback;
 import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.websitemanager.WebSiteConfigManager;
@@ -48,7 +59,7 @@ import net.qdating.LSConfig;
 import static com.qpidnetwork.livemodule.liveshow.authorization.LoginManager.LoginStatus.Default;
 import static com.qpidnetwork.livemodule.liveshow.authorization.LoginManager.LoginStatus.Logined;
 
-public class LiveModule implements IModule{
+public class LiveModule implements IModule, IAuthorizationListener {
 
     private static final String TAG = LiveModule.class.getName();
 
@@ -124,7 +135,7 @@ public class LiveModule implements IModule{
         // 设置log级别（demo环境才打印log）
         if (mIsDebug) {
             //配置处理推流播流器demo环境打开log
-            LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
+            LSConfig.LOG_LEVEL = android.util.Log.WARN;
         }
         else {
             //配置处理推流播流器正式环境关闭Log
@@ -141,6 +152,7 @@ public class LiveModule implements IModule{
 
         //初始化LoginManager单例
         LoginManager loginManager = LoginManager.newInstance(context);
+        loginManager.register(this);
 
         // LiveChat
         LiveChatManager liveChatManager = LiveChatManager.newInstance(mApplication);
@@ -150,13 +162,26 @@ public class LiveModule implements IModule{
         ContactManager ctm = ContactManager.newInstance(mApplication);
         loginManager.register(ctm);
 
+        //初始化私信
+        LMManager lmManager = LMManager.newInstance(context);
+
         //初始化IMManager
         IMManager imManager = IMManager.newInstance(context);
-        ShowUnreadManager.newInstance(context);
+
+        //未读初始化
+        ShowUnreadManager showUnreadManager = ShowUnreadManager.newInstance(context);
+        loginManager.register(showUnreadManager);
+        lmManager.registerLMLiveRoomEventListener(showUnreadManager);
 
         //http请求工具类
         LiveRequestOperator.newInstance(context);
         LiveDomainRequestOperator.newInstance(context);
+
+        //初始化同步配置
+        SynConfigerManager.newInstance(context);
+
+        //初始化版本检测单例
+        VersionCheckManager.newInstance(context);
 
         //初始化pushManager
         PushManager.newInstance(mApplication);
@@ -205,6 +230,29 @@ public class LiveModule implements IModule{
         }else{
             callback.onGetToken("");
         }
+    }
+
+    @Override
+    public void login(String email, String password, String checkcode) {
+        LoginManager.getInstance().loginByUsernamePassword(email, password, checkcode);
+    }
+
+    @Override
+    public void loginByToken(String token, String memberId) {
+        LoginManager.getInstance().loginByToken(memberId, token);
+    }
+
+    @Override
+    public void getVerifyCode(final OnGetVerifyCodeCallback callback) {
+        RequestJniAuthorization.GetValidateCode(LSValidateCodeType.login, new OnRequestGetValidateCodeCallback(){
+
+            @Override
+            public void OnGetValidateCode(boolean isSuccess, int errno, String errmsg, byte[] data) {
+                if(callback != null){
+                    callback.onGetVerifyCode(isSuccess, String.valueOf(errno), errmsg, data);
+                }
+            }
+        });
     }
 
     @Override
@@ -526,4 +574,46 @@ public class LiveModule implements IModule{
         }
     }
 
+    @Override
+    public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+        if(mModuleListener != null){
+            String errNo = "";
+            String userId = "";
+            if(item != null){
+                userId = item.userId;
+            }
+            mModuleListener.onLogin(isSuccess, switchErroNoToCommon(errCode), errMsg, userId);
+        }
+    }
+
+    @Override
+    public void onLogout(boolean isMannual) {
+
+    }
+
+    /**
+     * 转换错误码到公共，用于公共处理多模块差异化
+     * @return
+     */
+    private String switchErroNoToCommon(int errCode){
+        String errNo = "";
+        HttpLccErrType lccErrType = IntToEnumUtils.intToHttpErrorType(errCode);
+        switch (lccErrType) {
+            case HTTP_LCC_ERR_CONNECTFAIL:{
+                errNo = RequestErrorCodeCommon.COMMON_LOCAL_ERROR_CODE_TIMEOUT;
+            }break;
+            case HTTP_LCC_ERR_PLOGIN_PASSWORD_INCORRECT:{
+                errNo = RequestErrorCodeCommon.COMMON_USERNAME_PASSWORD_ERROR;
+            }break;
+            case HTTP_LCC_ERR_PLOGIN_ENTER_VERIFICATION:
+            case HTTP_LCC_ERR_PLOGIN_VERIFICATION_WRONG:{
+                // 验证码无效
+                errNo = RequestErrorCodeCommon.COMMON_VERIFYCODE_INVALID;
+            }break;
+            default:{
+                errNo = RequestErrorCodeCommon.COMMON_LOCAL_ERROR_DEFAULT;
+            }break;
+        }
+        return errNo;
+    }
 }

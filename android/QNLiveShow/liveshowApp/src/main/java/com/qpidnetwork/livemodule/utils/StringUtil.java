@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 
@@ -52,5 +53,51 @@ public class StringUtil {
             e.printStackTrace();
         }
         return spanned;
+    }
+
+    public static String addAtFirst(String str){
+        return new StringBuilder("@ ").append(str).toString();
+    }
+
+    /**
+     * 主播昵称超过12个字符时从中奖截断(Hangout)
+     * @param name
+     * @return
+     */
+    public static String truncateName(String name){
+        return truncateName(name, 12);
+    }
+
+    /**
+     * 主播昵称超过@length个字符时从中奖截断，前后显示3个字母
+     * @param name
+     * @param length
+     * @return
+     */
+    public static String truncateName(String name, int length) {
+        StringBuffer truncatedName = new StringBuffer();
+        if (length > 7 && name.length() > length) {    //因为前后要保留3个字母，所以至少要大于7个字符才会省略
+            truncatedName.append(name.subSequence(0, 3));
+            truncatedName.append("...");
+            truncatedName.append(name.subSequence(name.length()-3, name.length()));
+        } else {
+            truncatedName.append(name);
+        }
+        return truncatedName.toString();
+    }
+
+    /**
+     * 2019/4/16 Hardy
+     * 截取指定长度的字符串，尾部补全省略号
+     * @param val
+     * @param len
+     * @return
+     */
+    public static String truncateSpecifiedLenString(String val, int len){
+        if (!TextUtils.isEmpty(val) && len > 0 && val.length() > len) {
+            val = val.substring(0, len) + "...";
+        }
+
+        return val;
     }
 }

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dou361.dialogui.DialogUIUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -29,7 +28,7 @@ import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramTicketStatus;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
@@ -37,6 +36,7 @@ import com.qpidnetwork.livemodule.liveshow.personal.tickets.TicketHistoryAdapter
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.stickyDecoration4Recyclerview.PowerfulStickyDecoration;
 import com.qpidnetwork.qnbridgemodule.view.stickyDecoration4Recyclerview.listener.PowerGroupListener;
 
@@ -525,7 +525,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
 
                     DialogUIUtils.dismiss(mDialogGetTicket);
 
-                    Toast.makeText(mContext.getApplicationContext() , mContext.getString(R.string.live_programme_get_ticket_success_tips) ,Toast.LENGTH_LONG ).show();
+                    ToastUtil.showToast(mContext, R.string.live_programme_get_ticket_success_tips);
                 }else {
                     if(response.errCode == HttpLccErrType.HTTP_LCC_ERR_NO_CREDIT.ordinal()){
                         if(getActivity() != null){
@@ -533,7 +533,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                         }
                     }else{
                         if(!TextUtils.isEmpty(response.errMsg)){
-                            Toast.makeText(mContext.getApplicationContext() , response.errMsg , Toast.LENGTH_LONG).show();
+                            ToastUtil.showToast(mContext, response.errMsg);
                         }
                     }
                 }
@@ -643,7 +643,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
         //add by Jagger 2018-9-29
         //优先登录
         if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
-            RegisterActivity.launchRegisterActivity(mContext);
+            LoginNewActivity.launchRegisterActivity(mContext);
             return;
         }
 
@@ -663,7 +663,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
         //add by Jagger 2018-9-29
         //优先登录
         if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
-            RegisterActivity.launchRegisterActivity(mContext);
+            LoginNewActivity.launchRegisterActivity(mContext);
             return;
         }
 
@@ -684,7 +684,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
         //add by Jagger 2018-9-29
         //优先登录
         if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
-            RegisterActivity.launchRegisterActivity(mContext);
+            LoginNewActivity.launchRegisterActivity(mContext);
             return;
         }
 

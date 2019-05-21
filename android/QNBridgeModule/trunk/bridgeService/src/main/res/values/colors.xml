@@ -4,4 +4,23 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="dialogBg">#AA000000</color>
+
+    <color name="white">#FEFEFE</color>
+    <color name="black">#000000</color>
+
+    <color name="circle_edittext_hint">#7D7D7D</color>
+    <color name="circle_edittext_bg">#FFFFFF</color>
+    <color name="circle_edittext_error_bg">#FF6C6C</color>
+    <color name="circle_edittext_normal_text">#000000</color>
+    <color name="circle_edittext_error_text">#FFFFFF</color>
+    <color name="circle_edittext_normal_line">#7D7D7D</color>
+    <color name="circle_edittext_error_line">#FFFFFF</color>
+    <color name="circle_edittext_error_link">#C9C9C9</color>
+
+    <color name="circle_btn_blue_bg">#008CEA</color>
+
+    <color name="text_color_grey">#666666</color>
+    <color name="text_color_dark">#333333</color>
+
+    <color name="grey_light">#F2F2F2</color>
 </resources>

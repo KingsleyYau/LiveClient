@@ -27,6 +27,7 @@ import net.qdating.player.ILSPlayerStatusCallback;
 import net.qdating.player.LSVideoPlayer;
 import net.qdating.player.LSPlayerRendererBinder;
 import net.qdating.publisher.ILSPublisherStatusCallback;
+import net.qdating.utils.LSUtilTesterJni;
 import net.qdating.utils.Log;
 
 import android.provider.MediaStore;
@@ -166,7 +167,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 		}
 
-//		players[0].playUrl("rtmp://172.25.32.17:19351/live/max0", "", playH264File[0], playAACFile[0]);
+//		players[0].playUrl("rtmp://172.25.32.17:19351/live/max2", "", playH264File[0], playAACFile[0]);
 //		players[1].playUrl("rtmp://172.25.32.17:19351/live/max1", "", playH264File[0], playAACFile[0]);
 //		players[2].playUrl("rtmp://172.25.32.17:19351/live/max1", "", playH264File[0], playAACFile[0]);
 
@@ -181,8 +182,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		layoutVideo1.setVisibility(View.VISIBLE);
 //		newRenderderBinder = new LSPlayerRendererBinder(newSurfaceView, FillMode.FillModeAspectRatioFill);
 
-//		// 人面识别测试
-//		previewPlayer.init(surfaceViews[2], FillMode.FillModeAspectRatioFit);
+		// 人面识别测试
 //		previewWaterMarkFilter = new LSImageWaterMarkFilter();
 //		File previewImgFile = new File("/sdcard/input/watermark2.png");
 //		if(previewImgFile.exists()) {
@@ -191,7 +191,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		}
 //		previewWaterMarkFilter.setWaterMarkRect(0f, 0f, 0f, 0f);
 //		previewGroupFilter.addFilter(previewWaterMarkFilter);
-//		previewPlayer.setCustomFilter(previewGroupFilter);
+//		playerRenderderBinders[2] = new LSPlayerRendererBinder(surfaceViews[2], FillMode.FillModeAspectRatioFill, LSConfig.DecodeMode.DecodeModeSoft);
+//		playerRenderderBinders[2].setCustomFilter(previewGroupFilter);
+//		previewPlayer.setRendererBinder(playerRenderderBinders[2]);
 //		faceDetector.setCallback(this);
 
 		// 推送相关
@@ -258,7 +260,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			// TODO Auto-generated method stub
 			if( publisher != null && supportPublish ) {
 				String publishUrl = editTextPublish.getText().toString();
-//				faceDetector.start();
+				faceDetector.start();
 				publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 			}
 			}
@@ -355,6 +357,17 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	}
 
 	private void initItemButtons() {
+		Button playButton10 = (Button) this.findViewById(R.id.button10);
+		playButton10.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if( players[0] != null ) {
+				players[0].playUrl(playerUrls[0], "", playH264File[0], playAACFile[0]);
+			}
+			}
+		});
+
 		Button muteButton100 = (Button) this.findViewById(R.id.button100);
 		muteButton100.setOnClickListener(new OnClickListener() {
 			@Override
@@ -380,6 +393,16 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 		});
 
+		Button playButton20 = (Button) this.findViewById(R.id.button20);
+		playButton20.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( players[1] != null ) {
+					players[1].playUrl(playerUrls[1], "", playH264File[1], playAACFile[1]);
+				}
+			}
+		});
 		Button muteButton200 = (Button) this.findViewById(R.id.button200);
 		muteButton200.setOnClickListener(new OnClickListener() {
 			@Override
@@ -406,6 +429,16 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 		});
 
+		Button playButton30 = (Button) this.findViewById(R.id.button30);
+		playButton30.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( players[2] != null ) {
+					players[2].playUrl(playerUrls[2], "", playH264File[2], playAACFile[2]);
+				}
+			}
+		});
 		Button muteButton300 = (Button) this.findViewById(R.id.button300);
 		muteButton300.setOnClickListener(new OnClickListener() {
 			@Override
@@ -512,7 +545,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
     protected void onPause() {
         super.onPause();
 
-		Log.w(LSConfig.TAG, String.format("PlayActivity::onPause()"));
+//		Log.i(LSConfig.TAG, String.format("PlayActivity::onPause()"));
 //        if( surfaceView != null ) {
 //        	surfaceView.onPause();
 //        }
@@ -522,7 +555,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
     protected void onResume() {
         super.onResume();
 
-		Log.w(LSConfig.TAG, String.format("PlayActivity::onResume()"));
+//		Log.i(LSConfig.TAG, String.format("PlayActivity::onResume()"));
 //        if( surfaceView != null ) {
 //        	surfaceView.onResume();
 //        }
@@ -559,7 +592,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	@Override
 	public void onConnect(LSPlayer player) {
-		Log.w(LSConfig.TAG, String.format("PlayActivity::onConnect( player : 0x%x )", player.hashCode()));
+//		Log.i(LSConfig.TAG, String.format("PlayActivity::onConnect( player : 0x%x )", player.hashCode()));
 //		handler.postDelayed(new Runnable() {
 //			@Override
 //			public void run() {
@@ -571,7 +604,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	@Override
 	public void onDisconnect(LSPlayer player) {
-		Log.w(LSConfig.TAG, String.format("PlayActivity::onDisconnect( player : 0x%x )", player.hashCode()));
+//		Log.i(LSConfig.TAG, String.format("PlayActivity::onDisconnect( player : 0x%x )", player.hashCode()));
 //		handler.postDelayed(new Runnable() {
 //			@Override
 //			public void run() {
@@ -583,12 +616,12 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	@Override
 	public void onConnect(LSPublisher publisher) {
-		Log.w(LSConfig.TAG, String.format("PlayActivity::onConnect( publisher : 0x%x )", publisher.hashCode()));
+//		Log.i(LSConfig.TAG, String.format("PlayActivity::onConnect( publisher : 0x%x )", publisher.hashCode()));
 	}
 
 	@Override
 	public void onDisconnect(LSPublisher publisher) {
-		Log.w(LSConfig.TAG, String.format("PlayActivity::onDisconnect( publisher : 0x%x )", publisher.hashCode()));
+//		Log.i(LSConfig.TAG, String.format("PlayActivity::onDisconnect( publisher : 0x%x )", publisher.hashCode()));
 	}
 
 	@Override

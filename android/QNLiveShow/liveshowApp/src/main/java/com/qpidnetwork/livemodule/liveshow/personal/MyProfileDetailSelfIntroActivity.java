@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -20,6 +19,7 @@ import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.NetworkUtil;
 import com.qpidnetwork.livemodule.view.MaterialAppBar;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 
 /**
@@ -96,7 +96,7 @@ public class MyProfileDetailSelfIntroActivity extends BaseFragmentActivity imple
     }
 
     private void showTipToast(String val) {
-        Toast.makeText(this, val, Toast.LENGTH_SHORT).show();
+        ToastUtil.showToast(this, val);
     }
 
     private void setData(String val) {

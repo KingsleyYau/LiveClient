@@ -1,0 +1,13 @@
+
+/* Class = "UILabel"; text = "You have no Say Hi records.\nWhy not find someone and Say Hi to her?"; ObjectID = "NML-jA-VXI"; */
+"NML-jA-VXI.text" = "You have no Say Hi records.\nWhy not find someone and Say Hi to her?";
+
+/* Class = "UIButton"; normalTitle = "Search More"; ObjectID = "Xwv-gc-ef6"; */
+"Xwv-gc-ef6.normalTitle" = "Search More";
+
+/* Class = "UILabel"; text = "You may be interested in"; ObjectID = "oqa-WW-jHc"; */
+"oqa-WW-jHc.text" = "You may be interested in";
+
+"BUY_TIP" = "The first response is FREE to read. Starting from the second response, 1 post stamp or 1 credit will be deducted from your account.";
+
+"AGAIN_TIP" = "Don't Ask Again";

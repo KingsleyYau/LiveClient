@@ -262,6 +262,8 @@
 		3E5C0C8821A3FEB70060E844 /* QNChatSmallEmotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50ED42E12196774600259CA6 /* QNChatSmallEmotionView.xib */; };
 		3E5C0C8921A3FEB70060E844 /* QNChatTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50ED432D2196774700259CA6 /* QNChatTitleView.xib */; };
 		3E5C0CAE21A641EB0060E844 /* LSEmotionList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E94B5FC219BAC3800679D20 /* LSEmotionList.plist */; };
+		3E5D3B1D22715010008F1451 /* LSHotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5D3B2022715010008F1451 /* LSHotViewController.xib */; };
+		3E5D3B1E22715010008F1451 /* LSHotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5D3B2022715010008F1451 /* LSHotViewController.xib */; };
 		3E5DCEC1226D53E0008C9A31 /* LSSayHiChooseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E5DCEBE226D53E0008C9A31 /* LSSayHiChooseView.h */; };
 		3E5DCEC2226D53E0008C9A31 /* LSSayHiChooseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5DCEBF226D53E0008C9A31 /* LSSayHiChooseView.m */; };
 		3E5DCEC3226D53E0008C9A31 /* LSSayHiChooseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5DCEBF226D53E0008C9A31 /* LSSayHiChooseView.m */; };
@@ -284,6 +286,13 @@
 		3E5DCEE4226D69B1008C9A31 /* LSSayHiNoReplyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCEDF226D69B1008C9A31 /* LSSayHiNoReplyCell.xib */; };
 		3E5DCEEC226E9DFA008C9A31 /* LSSayHiDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCEEF226E9DFA008C9A31 /* LSSayHiDetailViewController.xib */; };
 		3E5DCEED226E9DFA008C9A31 /* LSSayHiDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCEEF226E9DFA008C9A31 /* LSSayHiDetailViewController.xib */; };
+		3E5DCEFC2270397D008C9A31 /* LSSayHiCardDetailsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E5DCEF92270397D008C9A31 /* LSSayHiCardDetailsViewController.h */; };
+		3E5DCEFD2270397D008C9A31 /* LSSayHiCardDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5DCEFA2270397D008C9A31 /* LSSayHiCardDetailsViewController.m */; };
+		3E5DCEFE2270397D008C9A31 /* LSSayHiCardDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5DCEFA2270397D008C9A31 /* LSSayHiCardDetailsViewController.m */; };
+		3E5DCEFF2270397D008C9A31 /* LSSayHiCardDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCEFB2270397D008C9A31 /* LSSayHiCardDetailsViewController.xib */; };
+		3E5DCF002270397D008C9A31 /* LSSayHiCardDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCEFB2270397D008C9A31 /* LSSayHiCardDetailsViewController.xib */; };
+		3E5DCF4A22704CF4008C9A31 /* public in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCF4922704CF3008C9A31 /* public */; };
+		3E5DCF4B22704CF4008C9A31 /* public in Resources */ = {isa = PBXBuildFile; fileRef = 3E5DCF4922704CF3008C9A31 /* public */; };
 		3E5E5E641F72102400A8163A /* TalentOnDemandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E5E621F72102400A8163A /* TalentOnDemandViewController.m */; };
 		3E5E605F20916C9B0023B9C0 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */; };
 		3E5E606020916C9B0023B9C0 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */; };
@@ -318,6 +327,16 @@
 		3E65CA531F949B95005963C9 /* MyRidesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA511F949B95005963C9 /* MyRidesCell.m */; };
 		3E65CA551F94ABC8005963C9 /* MyRidesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */; };
 		3E6ACAB520EB0CFD00CD07E4 /* LSChatTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6ACAB420EB0CFD00CD07E4 /* LSChatTableView.m */; };
+		3E6C9B1A227E96680008D1A1 /* LSSayHiResponseNumCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E6C9B17227E96680008D1A1 /* LSSayHiResponseNumCell.h */; };
+		3E6C9B1B227E96680008D1A1 /* LSSayHiResponseNumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6C9B18227E96680008D1A1 /* LSSayHiResponseNumCell.m */; };
+		3E6C9B1C227E96680008D1A1 /* LSSayHiResponseNumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6C9B18227E96680008D1A1 /* LSSayHiResponseNumCell.m */; };
+		3E6C9B1D227E96680008D1A1 /* LSSayHiResponseNumCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E6C9B19227E96680008D1A1 /* LSSayHiResponseNumCell.xib */; };
+		3E6C9B1E227E96680008D1A1 /* LSSayHiResponseNumCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E6C9B19227E96680008D1A1 /* LSSayHiResponseNumCell.xib */; };
+		3E6C9B29227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E6C9B26227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.h */; };
+		3E6C9B2A227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6C9B27227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m */; };
+		3E6C9B2B227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6C9B27227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m */; };
+		3E6C9B2C227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E6C9B28227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib */; };
+		3E6C9B2D227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E6C9B28227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib */; };
 		3E7491342091B6F800391151 /* ShowAddCreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7491372091B6F800391151 /* ShowAddCreditsView.xib */; };
 		3E7491352091B6F800391151 /* ShowAddCreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7491372091B6F800391151 /* ShowAddCreditsView.xib */; };
 		3E74C6F71F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */; };
@@ -455,6 +474,11 @@
 		3EB3D03322017D0900EC39CE /* TYCyclePagerTransformLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB3D02B22017B4400EC39CE /* TYCyclePagerTransformLayout.m */; };
 		3EB3D03422017D0C00EC39CE /* TYCyclePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB3D02D22017B4400EC39CE /* TYCyclePagerView.m */; };
 		3EB3D03522017D0E00EC39CE /* TYPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB3D02F22017B4400EC39CE /* TYPageControl.m */; };
+		3EB4A12C2282AD6200AF1BEE /* LSSayHiDetailErrorCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EB4A1292282AD6200AF1BEE /* LSSayHiDetailErrorCell.h */; };
+		3EB4A12D2282AD6300AF1BEE /* LSSayHiDetailErrorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB4A12A2282AD6200AF1BEE /* LSSayHiDetailErrorCell.m */; };
+		3EB4A12E2282AD6300AF1BEE /* LSSayHiDetailErrorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB4A12A2282AD6200AF1BEE /* LSSayHiDetailErrorCell.m */; };
+		3EB4A12F2282AD6300AF1BEE /* LSSayHiDetailErrorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB4A12B2282AD6200AF1BEE /* LSSayHiDetailErrorCell.xib */; };
+		3EB4A1302282AD6300AF1BEE /* LSSayHiDetailErrorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB4A12B2282AD6200AF1BEE /* LSSayHiDetailErrorCell.xib */; };
 		3ECBAC952159DC3C005BC09B /* LSUserSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ECBAC932159DC3C005BC09B /* LSUserSettingViewController.m */; };
 		3ECBAC962159DC3C005BC09B /* LSUserSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ECBAC942159DC3C005BC09B /* LSUserSettingViewController.xib */; };
 		3ECBAC9A2159E6AB005BC09B /* LSUserSettingHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ECBAC982159E6AB005BC09B /* LSUserSettingHeadView.m */; };
@@ -531,11 +555,8 @@
 		504D60731F8F8F8C00BBB037 /* LiveWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 252E9CC91F72062E00D32DFF /* LiveWebViewController.xib */; };
 		504D60771F8F8F8C00BBB037 /* LSTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501BF0ED1F7B5513006395B9 /* LSTestViewController.xib */; };
 		504D60781F8F8F8C00BBB037 /* StreamTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910D21EDF9F09003B6813 /* StreamTestViewController.xib */; };
-		504D60791F8F8F8C00BBB037 /* LiveChannelCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D2532A1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib */; };
-		504D607A1F8F8F8C00BBB037 /* LiveChannelAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917CE1F6B7A8900C96398 /* LiveChannelAdView.xib */; };
 		504D607C1F8F8F8C00BBB037 /* LiveChannelBottomCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917DF1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib */; };
 		504D60821F8F8F8C00BBB037 /* UserInfoListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7F6D8F1F8B17120003BC69 /* UserInfoListCell.xib */; };
-		504D60931F8F8F8C00BBB037 /* LSHotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910E21EDF9F25003B6813 /* LSHotViewController.xib */; };
 		504D60981F8F8F8C00BBB037 /* HotTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5063A3F31ECE99F100361942 /* HotTableViewCell.xib */; };
 		504D609C1F8F8F8D00BBB037 /* LiveFinshViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25895C3B1F88C54700FD6232 /* LiveFinshViewController.xib */; };
 		504D609D1F8F8F8D00BBB037 /* LiveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50F3100E1EEA3D6C008CA70D /* LiveViewController.xib */; };
@@ -608,9 +629,6 @@
 		506140F31F8E066C00825358 /* LSMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910CE1EDF9F09003B6813 /* LSMainViewController.m */; };
 		506140F41F8E066C00825358 /* LSTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501BF0EB1F7B5499006395B9 /* LSTestViewController.m */; };
 		506140F51F8E066C00825358 /* StreamTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910D11EDF9F09003B6813 /* StreamTestViewController.m */; };
-		506140F61F8E066C00825358 /* LiveChannelContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D253251F67D2CA00C0C476 /* LiveChannelContentView.m */; };
-		506140F71F8E066C00825358 /* LiveChannelCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D253291F67D49200C0C476 /* LiveChannelCollectionViewCell.m */; };
-		506140F81F8E066C00825358 /* LiveChannelAdView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C917CC1F6B7A7E00C96398 /* LiveChannelAdView.m */; };
 		506140F91F8E066C00825358 /* LiveChannelTopCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C917D91F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.m */; };
 		506140FA1F8E066C00825358 /* LiveChannelBottomCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C917DE1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m */; };
 		506140FB1F8E066C00825358 /* LSUserUnreadCountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E645E5D1F8C764900D06467 /* LSUserUnreadCountManager.m */; };
@@ -904,7 +922,6 @@
 		509910D81EDF9F09003B6813 /* StreamTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910D21EDF9F09003B6813 /* StreamTestViewController.xib */; };
 		509910E31EDF9F25003B6813 /* LSFollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910DB1EDF9F25003B6813 /* LSFollowingViewController.m */; };
 		509910E71EDF9F25003B6813 /* LSHotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910E11EDF9F25003B6813 /* LSHotViewController.m */; };
-		509910E81EDF9F25003B6813 /* LSHotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910E21EDF9F25003B6813 /* LSHotViewController.xib */; };
 		509910F91EDF9F50003B6813 /* LiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910EB1EDF9F50003B6813 /* LiveViewController.m */; };
 		509910FD1EDF9F50003B6813 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910F11EDF9F50003B6813 /* PlayViewController.m */; };
 		509911211EDFA107003B6813 /* LSLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5099110C1EDFA107003B6813 /* LSLoginManager.m */; };
@@ -1117,6 +1134,8 @@
 		520FDE3B215CD81B00FE37CE /* DialogIconTips.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FDE37215CD81800FE37CE /* DialogIconTips.m */; };
 		52125B8121D06CBD005B4463 /* Mail_Content.html in Resources */ = {isa = PBXBuildFile; fileRef = 5769D44C21B8FF0F00AF64FB /* Mail_Content.html */; };
 		52125B8221D06CC3005B4463 /* under_line.png in Resources */ = {isa = PBXBuildFile; fileRef = 5769D44D21B8FF0F00AF64FB /* under_line.png */; };
+		521428A42283BEC1002B67BC /* LSSayHiAllListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521428A72283BEC1002B67BC /* LSSayHiAllListViewController.xib */; };
+		521428A52283BEC1002B67BC /* LSSayHiAllListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521428A72283BEC1002B67BC /* LSSayHiAllListViewController.xib */; };
 		521CC54722278914008AE68E /* HangoutListFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 521CC54522278914008AE68E /* HangoutListFriendCollectionViewCell.m */; };
 		521CC54822278914008AE68E /* HangoutListFriendCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521CC54622278914008AE68E /* HangoutListFriendCollectionViewCell.xib */; };
 		521CC5492227AFD5008AE68E /* HangoutListFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 521CC54522278914008AE68E /* HangoutListFriendCollectionViewCell.m */; };
@@ -1156,17 +1175,13 @@
 		5254EB55226D46F200B3C294 /* LSSayHiDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB53226D46F200B3C294 /* LSSayHiDetailViewController.m */; };
 		5254EB56226D472100B3C294 /* LSSayHiDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB53226D46F200B3C294 /* LSSayHiDetailViewController.m */; };
 		5254EB69226D4EFA00B3C294 /* LSSayHiAllListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB67226D4EFA00B3C294 /* LSSayHiAllListViewController.m */; };
-		5254EB6A226D4EFA00B3C294 /* LSSayHiAllListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5254EB68226D4EFA00B3C294 /* LSSayHiAllListViewController.xib */; };
 		5254EB6E226D4F7500B3C294 /* LSSayHiListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB6C226D4F7400B3C294 /* LSSayHiListViewController.m */; };
 		5254EB71226D4F8200B3C294 /* LSSayHiListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB6C226D4F7400B3C294 /* LSSayHiListViewController.m */; };
 		5254EB72226D4F8E00B3C294 /* LSSayHiListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5254EB75226D4F8E00B3C294 /* LSSayHiListViewController.xib */; };
 		5254EB73226D4F8E00B3C294 /* LSSayHiListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5254EB75226D4F8E00B3C294 /* LSSayHiListViewController.xib */; };
 		5254EB7B226D51D400B3C294 /* LSSayHiResponseListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB79226D51D400B3C294 /* LSSayHiResponseListViewController.m */; };
-		5254EB7C226D51D400B3C294 /* LSSayHiResponseListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5254EB7A226D51D400B3C294 /* LSSayHiResponseListViewController.xib */; };
 		5254EB7D226D53B700B3C294 /* LSSayHiAllListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB67226D4EFA00B3C294 /* LSSayHiAllListViewController.m */; };
 		5254EB7E226D53B700B3C294 /* LSSayHiResponseListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB79226D51D400B3C294 /* LSSayHiResponseListViewController.m */; };
-		5254EB7F226D53C600B3C294 /* LSSayHiAllListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5254EB68226D4EFA00B3C294 /* LSSayHiAllListViewController.xib */; };
-		5254EB80226D53C600B3C294 /* LSSayHiResponseListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5254EB7A226D51D400B3C294 /* LSSayHiResponseListViewController.xib */; };
 		5254EB83226D5D6C00B3C294 /* LSSayHiAllTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB82226D5D6C00B3C294 /* LSSayHiAllTableView.m */; };
 		5254EB86226D5E5F00B3C294 /* LSSayHiResponseListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB85226D5E5F00B3C294 /* LSSayHiResponseListTableView.m */; };
 		5254EB8B226D60BF00B3C294 /* LSSayHiAllTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5254EB89226D60BF00B3C294 /* LSSayHiAllTableViewCell.m */; };
@@ -1243,14 +1258,17 @@
 		52C8B46C21F81216002B8599 /* HangoutDialogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C8B46A21F81216002B8599 /* HangoutDialogViewController.xib */; };
 		52C8B46F21F84690002B8599 /* LSHangoutListHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C8B46E21F84690002B8599 /* LSHangoutListHeadView.m */; };
 		52C8B47121F8469B002B8599 /* LSHangoutListHeadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C8B47021F8469B002B8599 /* LSHangoutListHeadView.xib */; };
-		52C917CD1F6B7A7E00C96398 /* LiveChannelAdView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C917CC1F6B7A7E00C96398 /* LiveChannelAdView.m */; };
-		52C917CF1F6B7A8900C96398 /* LiveChannelAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917CE1F6B7A8900C96398 /* LiveChannelAdView.xib */; };
 		52C917DB1F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C917D91F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.m */; };
 		52C917E01F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C917DE1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m */; };
 		52C917E11F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917DF1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib */; };
-		52D253261F67D2CA00C0C476 /* LiveChannelContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D253251F67D2CA00C0C476 /* LiveChannelContentView.m */; };
-		52D2532B1F67D49200C0C476 /* LiveChannelCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D253291F67D49200C0C476 /* LiveChannelCollectionViewCell.m */; };
-		52D2532C1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D2532A1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib */; };
+		52D4B9E1227554E70074E5AB /* LSSayHiRecommendViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DDF19422753CB500624EC1 /* LSSayHiRecommendViewCell.m */; };
+		52D4B9E2227554E70074E5AB /* LSSayHiRecommendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DDF191227535FC00624EC1 /* LSSayHiRecommendView.m */; };
+		52D4B9E3227555270074E5AB /* LSSayHiRecommendViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52DDF19522753CB500624EC1 /* LSSayHiRecommendViewCell.xib */; };
+		52DC16BA227060C000807112 /* LSSayHiLeadInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DC16B9227060C000807112 /* LSSayHiLeadInfoView.m */; };
+		52DC16BC227060D200807112 /* LSSayHiLeadInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52DC16BB227060D200807112 /* LSSayHiLeadInfoView.xib */; };
+		52DDF192227535FC00624EC1 /* LSSayHiRecommendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DDF191227535FC00624EC1 /* LSSayHiRecommendView.m */; };
+		52DDF19622753CB500624EC1 /* LSSayHiRecommendViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DDF19422753CB500624EC1 /* LSSayHiRecommendViewCell.m */; };
+		52DDF19722753CB500624EC1 /* LSSayHiRecommendViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52DDF19522753CB500624EC1 /* LSSayHiRecommendViewCell.xib */; };
 		52E45E1B1FB578A000846ADE /* LiveApp.js in Resources */ = {isa = PBXBuildFile; fileRef = FAAB702C1FB54FDD00E442A8 /* LiveApp.js */; };
 		52E5551A21703F220037D9E3 /* LiveNotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B2DBB9216F4A4700D403FA /* LiveNotificationService.m */; };
 		52E5551B217040790037D9E3 /* INotificationsService.h in Headers */ = {isa = PBXBuildFile; fileRef = 52B2DBB3216F449A00D403FA /* INotificationsService.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1300,17 +1318,31 @@
 		52F6C16A21D35AA80024F185 /* LSMailAttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52F6C16821D35AA80024F185 /* LSMailAttachmentCollectionViewCell.xib */; };
 		52F6C16B21D35AB00024F185 /* LSMailAttachmentCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F6C16721D35AA80024F185 /* LSMailAttachmentCollectionViewCell.m */; };
 		52F6C16C21D35D690024F185 /* LSMailAttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52F6C16821D35AA80024F185 /* LSMailAttachmentCollectionViewCell.xib */; };
+		52F827542271504400CD19DE /* LSSayHiLeadInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52DC16B9227060C000807112 /* LSSayHiLeadInfoView.m */; };
+		52F827552271505A00CD19DE /* LSSayHiLeadInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52DC16BB227060D200807112 /* LSSayHiLeadInfoView.xib */; };
+		52FF250B2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52FF250E2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib */; };
+		52FF250C2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52FF250E2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib */; };
 		571B37A521F6FFB100F40F9A /* HangoutAnchorLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 571B37A321F6FFAB00F40F9A /* HangoutAnchorLayout.m */; };
+		572F6B8322718E620006876F /* LSSendSayHiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 572F6B8622718E620006876F /* LSSendSayHiViewController.xib */; };
+		572F6B8422718E620006876F /* LSSendSayHiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 572F6B8622718E620006876F /* LSSendSayHiViewController.xib */; };
+		572F6B8922718F350006876F /* LSSayHiThemeListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 572F6B8C22718F350006876F /* LSSayHiThemeListViewController.xib */; };
+		572F6B8A22718F350006876F /* LSSayHiThemeListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 572F6B8C22718F350006876F /* LSSayHiThemeListViewController.xib */; };
+		572FFA1922759AC2009C22B8 /* LSSayHiDialogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 572FFA1C22759AC2009C22B8 /* LSSayHiDialogViewController.xib */; };
+		572FFA1A22759AC2009C22B8 /* LSSayHiDialogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 572FFA1C22759AC2009C22B8 /* LSSayHiDialogViewController.xib */; };
 		5730F822226FED5200A38601 /* LSSayHiDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4E9A226F014D0071D202 /* LSSayHiDialogViewController.m */; };
 		5730F823226FED5200A38601 /* LSSayHiThemeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4E9F226F12A40071D202 /* LSSayHiThemeListViewController.m */; };
 		5730F824226FED5200A38601 /* LSSayHiThemeListCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4EA4226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.m */; };
 		5730F825226FED5200A38601 /* LSSayHiTextListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4EA9226F17580071D202 /* LSSayHiTextListTableViewCell.m */; };
-		5730F826226FED6300A38601 /* LSSayHiDialogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4E9B226F014D0071D202 /* LSSayHiDialogViewController.xib */; };
-		5730F827226FED6300A38601 /* LSSayHiThemeListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4EA0226F12A40071D202 /* LSSayHiThemeListViewController.xib */; };
 		5730F828226FED6300A38601 /* LSSayHiThemeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4EA5226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.xib */; };
 		5730F829226FED6300A38601 /* LSSayHiTextListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4EAA226F17580071D202 /* LSSayHiTextListTableViewCell.xib */; };
+		5730F82D226FFBB900A38601 /* LSSayHiThemeListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5730F82C226FFBB900A38601 /* LSSayHiThemeListLayout.m */; };
+		5730F82E226FFBEC00A38601 /* LSSayHiThemeListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5730F82C226FFBB900A38601 /* LSSayHiThemeListLayout.m */; };
 		5732971520A549F600673193 /* HangOutControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5732971420A549F600673193 /* HangOutControlView.m */; };
 		5732971720A54A0B00673193 /* HangOutControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5732971620A54A0B00673193 /* HangOutControlView.xib */; };
+		573434132274538800B2A1D9 /* LSSelectThemeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B5E182273150B00832E96 /* LSSelectThemeView.m */; };
+		573434142274538800B2A1D9 /* LSSelectWordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B5E1D227324C700832E96 /* LSSelectWordView.m */; };
+		57343415227453A500B2A1D9 /* LSSelectThemeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573B5E1A2273151E00832E96 /* LSSelectThemeView.xib */; };
+		57343416227453A500B2A1D9 /* LSSelectWordView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573B5E1F227324D700832E96 /* LSSelectWordView.xib */; };
 		57388BE321D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57388BE621D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib */; };
 		57388BE421D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57388BE621D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib */; };
 		57388BEC21D394D10063D459 /* LSMailPrivateVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 57388BEA21D394D10063D459 /* LSMailPrivateVideoCell.m */; };
@@ -1318,9 +1350,7 @@
 		57388BEE21D3B1C50063D459 /* LSMailPrivateVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 57388BEA21D394D10063D459 /* LSMailPrivateVideoCell.m */; };
 		57388BEF21D3B1CF0063D459 /* LSMailPrivateVideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57388BEB21D394D10063D459 /* LSMailPrivateVideoCell.xib */; };
 		573968F3226D9DAD000066A1 /* LSSendSayHiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573968F1226D9DAD000066A1 /* LSSendSayHiViewController.m */; };
-		573968F4226D9DAD000066A1 /* LSSendSayHiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573968F2226D9DAD000066A1 /* LSSendSayHiViewController.xib */; };
 		573968F5226D9E8A000066A1 /* LSSendSayHiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573968F1226D9DAD000066A1 /* LSSendSayHiViewController.m */; };
-		573968F6226D9EA1000066A1 /* LSSendSayHiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573968F2226D9DAD000066A1 /* LSSendSayHiViewController.xib */; };
 		573968F8226DA604000066A1 /* SayHi.html in Resources */ = {isa = PBXBuildFile; fileRef = 573968F7226DA604000066A1 /* SayHi.html */; };
 		573968FD226DBA9A000066A1 /* LSSayHiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 573968FC226DBA9A000066A1 /* LSSayHiManager.m */; };
 		57397E4E20E5BD7200CF6213 /* HangOutUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57397E5120E5BD7200CF6213 /* HangOutUserViewController.xib */; };
@@ -1334,15 +1364,17 @@
 		573B429B21D2285F00B725D4 /* LSGreetingsDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573B429621D2156800B725D4 /* LSGreetingsDetailTableViewCell.xib */; };
 		573B429E21D22DC800B725D4 /* LSMailCellHeightItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B429D21D22DC800B725D4 /* LSMailCellHeightItem.m */; };
 		573B429F21D2329300B725D4 /* LSMailCellHeightItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B429D21D22DC800B725D4 /* LSMailCellHeightItem.m */; };
+		573B5E192273150B00832E96 /* LSSelectThemeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B5E182273150B00832E96 /* LSSelectThemeView.m */; };
+		573B5E1B2273151E00832E96 /* LSSelectThemeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573B5E1A2273151E00832E96 /* LSSelectThemeView.xib */; };
+		573B5E1E227324C700832E96 /* LSSelectWordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B5E1D227324C700832E96 /* LSSelectWordView.m */; };
+		573B5E20227324D700832E96 /* LSSelectWordView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573B5E1F227324D700832E96 /* LSSelectWordView.xib */; };
 		573BB95B20B50DAB00E4C2BA /* CeleBrationGiftView.m in Sources */ = {isa = PBXBuildFile; fileRef = 573BB95A20B50DAB00E4C2BA /* CeleBrationGiftView.m */; };
 		573BB95D20B50DB600E4C2BA /* CeleBrationGiftView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573BB95C20B50DB600E4C2BA /* CeleBrationGiftView.xib */; };
 		573BB96020B5198400E4C2BA /* CeleBrationGiftLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 573BB95E20B5198200E4C2BA /* CeleBrationGiftLayout.m */; };
 		573BD47D21A5608D003568F1 /* LSMailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573BD47B21A5608D003568F1 /* LSMailViewController.m */; };
 		573D4E93226EF19B0071D202 /* LSSayHiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 573968FC226DBA9A000066A1 /* LSSayHiManager.m */; };
 		573D4E9C226F014D0071D202 /* LSSayHiDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4E9A226F014D0071D202 /* LSSayHiDialogViewController.m */; };
-		573D4E9D226F014D0071D202 /* LSSayHiDialogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4E9B226F014D0071D202 /* LSSayHiDialogViewController.xib */; };
 		573D4EA1226F12A40071D202 /* LSSayHiThemeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4E9F226F12A40071D202 /* LSSayHiThemeListViewController.m */; };
-		573D4EA2226F12A40071D202 /* LSSayHiThemeListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4EA0226F12A40071D202 /* LSSayHiThemeListViewController.xib */; };
 		573D4EA6226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4EA4226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.m */; };
 		573D4EA7226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573D4EA5226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.xib */; };
 		573D4EAB226F17580071D202 /* LSSayHiTextListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 573D4EA9226F17580071D202 /* LSSayHiTextListTableViewCell.m */; };
@@ -2219,6 +2251,8 @@
 		3E5C0C5E21A3DCE30060E844 /* QNChatHighGradeEmotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNChatHighGradeEmotion.h; sourceTree = "<group>"; };
 		3E5C0C6121A3DE9D0060E844 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/QNChatEmotionListView.xib; sourceTree = "<group>"; };
 		3E5CF1AC20CA7D7200925C5B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PreLiveViewController.strings; sourceTree = "<group>"; };
+		3E5D3B1F22715010008F1451 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSHotViewController.xib; sourceTree = "<group>"; };
+		3E5D3B2222715013008F1451 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSHotViewController.strings; sourceTree = "<group>"; };
 		3E5DCEBE226D53E0008C9A31 /* LSSayHiChooseView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiChooseView.h; sourceTree = "<group>"; };
 		3E5DCEBF226D53E0008C9A31 /* LSSayHiChooseView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiChooseView.m; sourceTree = "<group>"; };
 		3E5DCEC0226D53E0008C9A31 /* LSSayHiChooseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiChooseView.xib; sourceTree = "<group>"; };
@@ -2233,6 +2267,10 @@
 		3E5DCEDF226D69B1008C9A31 /* LSSayHiNoReplyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiNoReplyCell.xib; sourceTree = "<group>"; };
 		3E5DCEEE226E9DFA008C9A31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSayHiDetailViewController.xib; sourceTree = "<group>"; };
 		3E5DCEF1226E9E01008C9A31 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSayHiDetailViewController.strings; sourceTree = "<group>"; };
+		3E5DCEF92270397D008C9A31 /* LSSayHiCardDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiCardDetailsViewController.h; sourceTree = "<group>"; };
+		3E5DCEFA2270397D008C9A31 /* LSSayHiCardDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiCardDetailsViewController.m; sourceTree = "<group>"; };
+		3E5DCEFB2270397D008C9A31 /* LSSayHiCardDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiCardDetailsViewController.xib; sourceTree = "<group>"; };
+		3E5DCF4922704CF3008C9A31 /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		3E5E5E611F72102400A8163A /* TalentOnDemandViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalentOnDemandViewController.h; sourceTree = "<group>"; };
 		3E5E5E621F72102400A8163A /* TalentOnDemandViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalentOnDemandViewController.m; sourceTree = "<group>"; };
 		3E5E606120916C9B0023B9C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyTicketsViewController.xib; sourceTree = "<group>"; };
@@ -2287,6 +2325,12 @@
 		3E65CA591F94ABCB005963C9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyRidesViewController.strings; sourceTree = "<group>"; };
 		3E6ACAB320EB0CFD00CD07E4 /* LSChatTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSChatTableView.h; sourceTree = "<group>"; };
 		3E6ACAB420EB0CFD00CD07E4 /* LSChatTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSChatTableView.m; sourceTree = "<group>"; };
+		3E6C9B17227E96680008D1A1 /* LSSayHiResponseNumCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiResponseNumCell.h; sourceTree = "<group>"; };
+		3E6C9B18227E96680008D1A1 /* LSSayHiResponseNumCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiResponseNumCell.m; sourceTree = "<group>"; };
+		3E6C9B19227E96680008D1A1 /* LSSayHiResponseNumCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiResponseNumCell.xib; sourceTree = "<group>"; };
+		3E6C9B26227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiDetailAddCreditsCell.h; sourceTree = "<group>"; };
+		3E6C9B27227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiDetailAddCreditsCell.m; sourceTree = "<group>"; };
+		3E6C9B28227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiDetailAddCreditsCell.xib; sourceTree = "<group>"; };
 		3E7491362091B6F800391151 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShowAddCreditsView.xib; sourceTree = "<group>"; };
 		3E7491392091B6FA00391151 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ShowAddCreditsView.strings; sourceTree = "<group>"; };
 		3E74C6F91F95E18E0099C1EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyBackpackViewController.xib; sourceTree = "<group>"; };
@@ -2398,6 +2442,9 @@
 		3EB3D02D22017B4400EC39CE /* TYCyclePagerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYCyclePagerView.m; sourceTree = "<group>"; };
 		3EB3D02E22017B4400EC39CE /* TYPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYPageControl.h; sourceTree = "<group>"; };
 		3EB3D02F22017B4400EC39CE /* TYPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYPageControl.m; sourceTree = "<group>"; };
+		3EB4A1292282AD6200AF1BEE /* LSSayHiDetailErrorCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiDetailErrorCell.h; sourceTree = "<group>"; };
+		3EB4A12A2282AD6200AF1BEE /* LSSayHiDetailErrorCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiDetailErrorCell.m; sourceTree = "<group>"; };
+		3EB4A12B2282AD6200AF1BEE /* LSSayHiDetailErrorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiDetailErrorCell.xib; sourceTree = "<group>"; };
 		3ECBAC922159DC3C005BC09B /* LSUserSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUserSettingViewController.h; sourceTree = "<group>"; };
 		3ECBAC932159DC3C005BC09B /* LSUserSettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSUserSettingViewController.m; sourceTree = "<group>"; };
 		3ECBAC942159DC3C005BC09B /* LSUserSettingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSUserSettingViewController.xib; sourceTree = "<group>"; };
@@ -2688,7 +2735,6 @@
 		509910DB1EDF9F25003B6813 /* LSFollowingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSFollowingViewController.m; sourceTree = "<group>"; };
 		509910E01EDF9F25003B6813 /* LSHotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHotViewController.h; sourceTree = "<group>"; };
 		509910E11EDF9F25003B6813 /* LSHotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHotViewController.m; sourceTree = "<group>"; };
-		509910E21EDF9F25003B6813 /* LSHotViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LSHotViewController.xib; sourceTree = "<group>"; };
 		509910EA1EDF9F50003B6813 /* LiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveViewController.h; sourceTree = "<group>"; };
 		509910EB1EDF9F50003B6813 /* LiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveViewController.m; sourceTree = "<group>"; };
 		509910F01EDF9F50003B6813 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
@@ -2905,6 +2951,8 @@
 		520FDE36215CD81700FE37CE /* DialogIconTips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialogIconTips.h; sourceTree = "<group>"; };
 		520FDE37215CD81800FE37CE /* DialogIconTips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialogIconTips.m; sourceTree = "<group>"; };
 		520FDE38215CD81800FE37CE /* DialogIconTips.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DialogIconTips.xib; sourceTree = "<group>"; };
+		521428A62283BEC1002B67BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSayHiAllListViewController.xib; sourceTree = "<group>"; };
+		521428A92283BECA002B67BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSayHiAllListViewController.strings; sourceTree = "<group>"; };
 		521CC54422278914008AE68E /* HangoutListFriendCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangoutListFriendCollectionViewCell.h; sourceTree = "<group>"; };
 		521CC54522278914008AE68E /* HangoutListFriendCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangoutListFriendCollectionViewCell.m; sourceTree = "<group>"; };
 		521CC54622278914008AE68E /* HangoutListFriendCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HangoutListFriendCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -2953,14 +3001,12 @@
 		5254EB53226D46F200B3C294 /* LSSayHiDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSayHiDetailViewController.m; sourceTree = "<group>"; };
 		5254EB66226D4EFA00B3C294 /* LSSayHiAllListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiAllListViewController.h; sourceTree = "<group>"; };
 		5254EB67226D4EFA00B3C294 /* LSSayHiAllListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiAllListViewController.m; sourceTree = "<group>"; };
-		5254EB68226D4EFA00B3C294 /* LSSayHiAllListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiAllListViewController.xib; sourceTree = "<group>"; };
 		5254EB6B226D4F7400B3C294 /* LSSayHiListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSayHiListViewController.h; sourceTree = "<group>"; };
 		5254EB6C226D4F7400B3C294 /* LSSayHiListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSayHiListViewController.m; sourceTree = "<group>"; };
 		5254EB74226D4F8E00B3C294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSayHiListViewController.xib; sourceTree = "<group>"; };
 		5254EB77226D4F9400B3C294 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSayHiListViewController.strings; sourceTree = "<group>"; };
 		5254EB78226D51D400B3C294 /* LSSayHiResponseListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiResponseListViewController.h; sourceTree = "<group>"; };
 		5254EB79226D51D400B3C294 /* LSSayHiResponseListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiResponseListViewController.m; sourceTree = "<group>"; };
-		5254EB7A226D51D400B3C294 /* LSSayHiResponseListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiResponseListViewController.xib; sourceTree = "<group>"; };
 		5254EB81226D5D6C00B3C294 /* LSSayHiAllTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiAllTableView.h; sourceTree = "<group>"; };
 		5254EB82226D5D6C00B3C294 /* LSSayHiAllTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiAllTableView.m; sourceTree = "<group>"; };
 		5254EB84226D5E5F00B3C294 /* LSSayHiResponseListTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiResponseListTableView.h; sourceTree = "<group>"; };
@@ -3020,20 +3066,20 @@
 		52C8B46D21F84690002B8599 /* LSHangoutListHeadView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSHangoutListHeadView.h; sourceTree = "<group>"; };
 		52C8B46E21F84690002B8599 /* LSHangoutListHeadView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSHangoutListHeadView.m; sourceTree = "<group>"; };
 		52C8B47021F8469B002B8599 /* LSHangoutListHeadView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSHangoutListHeadView.xib; sourceTree = "<group>"; };
-		52C917CB1F6B7A7E00C96398 /* LiveChannelAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelAdView.h; sourceTree = "<group>"; };
-		52C917CC1F6B7A7E00C96398 /* LiveChannelAdView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelAdView.m; sourceTree = "<group>"; };
-		52C917CE1F6B7A8900C96398 /* LiveChannelAdView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LiveChannelAdView.xib; sourceTree = "<group>"; };
 		52C917D81F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelTopCollectionReusableView.h; sourceTree = "<group>"; };
 		52C917D91F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelTopCollectionReusableView.m; sourceTree = "<group>"; };
 		52C917DD1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelBottomCollectionReusableView.h; sourceTree = "<group>"; };
 		52C917DE1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelBottomCollectionReusableView.m; sourceTree = "<group>"; };
 		52C917DF1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LiveChannelBottomCollectionReusableView.xib; sourceTree = "<group>"; };
 		52D1E3F91FB2E508007598D8 /* LSGoogleAnalyticsAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSGoogleAnalyticsAction.h; sourceTree = "<group>"; };
-		52D253241F67D2CA00C0C476 /* LiveChannelContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelContentView.h; sourceTree = "<group>"; };
-		52D253251F67D2CA00C0C476 /* LiveChannelContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelContentView.m; sourceTree = "<group>"; };
-		52D253281F67D49200C0C476 /* LiveChannelCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelCollectionViewCell.h; sourceTree = "<group>"; };
-		52D253291F67D49200C0C476 /* LiveChannelCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelCollectionViewCell.m; sourceTree = "<group>"; };
-		52D2532A1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LiveChannelCollectionViewCell.xib; sourceTree = "<group>"; };
+		52DC16B8227060C000807112 /* LSSayHiLeadInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiLeadInfoView.h; sourceTree = "<group>"; };
+		52DC16B9227060C000807112 /* LSSayHiLeadInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiLeadInfoView.m; sourceTree = "<group>"; };
+		52DC16BB227060D200807112 /* LSSayHiLeadInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiLeadInfoView.xib; sourceTree = "<group>"; };
+		52DDF190227535FC00624EC1 /* LSSayHiRecommendView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiRecommendView.h; sourceTree = "<group>"; };
+		52DDF191227535FC00624EC1 /* LSSayHiRecommendView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiRecommendView.m; sourceTree = "<group>"; };
+		52DDF19322753CB500624EC1 /* LSSayHiRecommendViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiRecommendViewCell.h; sourceTree = "<group>"; };
+		52DDF19422753CB500624EC1 /* LSSayHiRecommendViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiRecommendViewCell.m; sourceTree = "<group>"; };
+		52DDF19522753CB500624EC1 /* LSSayHiRecommendViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiRecommendViewCell.xib; sourceTree = "<group>"; };
 		52E70F1A215C701C00BB7E1C /* LSAddCreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAddCreditsViewController.h; sourceTree = "<group>"; };
 		52E70F1B215C701C00BB7E1C /* LSAddCreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAddCreditsViewController.m; sourceTree = "<group>"; };
 		52E70F1F215C701C00BB7E1C /* LSAppStorePayHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAppStorePayHandler.h; sourceTree = "<group>"; };
@@ -3086,11 +3132,20 @@
 		52F6C16621D35AA80024F185 /* LSMailAttachmentCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSMailAttachmentCollectionViewCell.h; sourceTree = "<group>"; };
 		52F6C16721D35AA80024F185 /* LSMailAttachmentCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSMailAttachmentCollectionViewCell.m; sourceTree = "<group>"; };
 		52F6C16821D35AA80024F185 /* LSMailAttachmentCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSMailAttachmentCollectionViewCell.xib; sourceTree = "<group>"; };
+		52FF250D2282CD62006AB2B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSayHiResponseListViewController.xib; sourceTree = "<group>"; };
+		52FF25102282CD6C006AB2B9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSayHiResponseListViewController.strings; sourceTree = "<group>"; };
 		571B37A321F6FFAB00F40F9A /* HangoutAnchorLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HangoutAnchorLayout.m; sourceTree = "<group>"; };
 		571B37A421F6FFAD00F40F9A /* HangoutAnchorLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HangoutAnchorLayout.h; sourceTree = "<group>"; };
+		572F6B8522718E620006876F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSendSayHiViewController.xib; sourceTree = "<group>"; };
+		572F6B8B22718F350006876F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSayHiThemeListViewController.xib; sourceTree = "<group>"; };
+		572F6B8E22718F3D0006876F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSayHiThemeListViewController.strings; sourceTree = "<group>"; };
+		572FFA1B22759AC2009C22B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSSayHiDialogViewController.xib; sourceTree = "<group>"; };
+		5730F82B226FFBB800A38601 /* LSSayHiThemeListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSayHiThemeListLayout.h; sourceTree = "<group>"; };
+		5730F82C226FFBB900A38601 /* LSSayHiThemeListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSayHiThemeListLayout.m; sourceTree = "<group>"; };
 		5732971320A549F600673193 /* HangOutControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangOutControlView.h; sourceTree = "<group>"; };
 		5732971420A549F600673193 /* HangOutControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangOutControlView.m; sourceTree = "<group>"; };
 		5732971620A54A0B00673193 /* HangOutControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HangOutControlView.xib; sourceTree = "<group>"; };
+		573434122273E98800B2A1D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSendSayHiViewController.strings; sourceTree = "<group>"; };
 		57388BE521D37E030063D459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSPrivatePhotoCollectionViewCell.xib; sourceTree = "<group>"; };
 		57388BE821D37E080063D459 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSPrivatePhotoCollectionViewCell.strings; sourceTree = "<group>"; };
 		57388BE921D394D10063D459 /* LSMailPrivateVideoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSMailPrivateVideoCell.h; sourceTree = "<group>"; };
@@ -3098,7 +3153,6 @@
 		57388BEB21D394D10063D459 /* LSMailPrivateVideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSMailPrivateVideoCell.xib; sourceTree = "<group>"; };
 		573968F0226D9DAD000066A1 /* LSSendSayHiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSendSayHiViewController.h; sourceTree = "<group>"; };
 		573968F1226D9DAD000066A1 /* LSSendSayHiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSendSayHiViewController.m; sourceTree = "<group>"; };
-		573968F2226D9DAD000066A1 /* LSSendSayHiViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSendSayHiViewController.xib; sourceTree = "<group>"; };
 		573968F7226DA604000066A1 /* SayHi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = SayHi.html; sourceTree = "<group>"; };
 		573968FB226DBA9A000066A1 /* LSSayHiManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiManager.h; sourceTree = "<group>"; };
 		573968FC226DBA9A000066A1 /* LSSayHiManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiManager.m; sourceTree = "<group>"; };
@@ -3111,6 +3165,13 @@
 		573B429621D2156800B725D4 /* LSGreetingsDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSGreetingsDetailTableViewCell.xib; sourceTree = "<group>"; };
 		573B429C21D22DC800B725D4 /* LSMailCellHeightItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSMailCellHeightItem.h; sourceTree = "<group>"; };
 		573B429D21D22DC800B725D4 /* LSMailCellHeightItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSMailCellHeightItem.m; sourceTree = "<group>"; };
+		573B58502277EFF7009B38C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSSayHiDialogViewController.strings; sourceTree = "<group>"; };
+		573B5E172273150B00832E96 /* LSSelectThemeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSelectThemeView.h; sourceTree = "<group>"; };
+		573B5E182273150B00832E96 /* LSSelectThemeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSelectThemeView.m; sourceTree = "<group>"; };
+		573B5E1A2273151E00832E96 /* LSSelectThemeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSelectThemeView.xib; sourceTree = "<group>"; };
+		573B5E1C227324C700832E96 /* LSSelectWordView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSelectWordView.h; sourceTree = "<group>"; };
+		573B5E1D227324C700832E96 /* LSSelectWordView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSelectWordView.m; sourceTree = "<group>"; };
+		573B5E1F227324D700832E96 /* LSSelectWordView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSelectWordView.xib; sourceTree = "<group>"; };
 		573BB95920B50DAB00E4C2BA /* CeleBrationGiftView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CeleBrationGiftView.h; sourceTree = "<group>"; };
 		573BB95A20B50DAB00E4C2BA /* CeleBrationGiftView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CeleBrationGiftView.m; sourceTree = "<group>"; };
 		573BB95C20B50DB600E4C2BA /* CeleBrationGiftView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CeleBrationGiftView.xib; sourceTree = "<group>"; };
@@ -3120,10 +3181,8 @@
 		573BD47B21A5608D003568F1 /* LSMailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSMailViewController.m; sourceTree = "<group>"; };
 		573D4E99226F014D0071D202 /* LSSayHiDialogViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiDialogViewController.h; sourceTree = "<group>"; };
 		573D4E9A226F014D0071D202 /* LSSayHiDialogViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiDialogViewController.m; sourceTree = "<group>"; };
-		573D4E9B226F014D0071D202 /* LSSayHiDialogViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiDialogViewController.xib; sourceTree = "<group>"; };
 		573D4E9E226F12A40071D202 /* LSSayHiThemeListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiThemeListViewController.h; sourceTree = "<group>"; };
 		573D4E9F226F12A40071D202 /* LSSayHiThemeListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiThemeListViewController.m; sourceTree = "<group>"; };
-		573D4EA0226F12A40071D202 /* LSSayHiThemeListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiThemeListViewController.xib; sourceTree = "<group>"; };
 		573D4EA3226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSSayHiThemeListCollectionViewCell.h; sourceTree = "<group>"; };
 		573D4EA4226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSSayHiThemeListCollectionViewCell.m; sourceTree = "<group>"; };
 		573D4EA5226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LSSayHiThemeListCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -3990,18 +4049,29 @@
 		3E755BCE2268121F009CC58B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5730F82A226FEF2900A38601 /* Layout */,
 				5254EB87226D60A300B3C294 /* Cell */,
-				3E755BCF2268124D009CC58B /* LSSayHiDetailHeadView.h */,
-				3E755BD02268124D009CC58B /* LSSayHiDetailHeadView.m */,
-				3E755BD12268124D009CC58B /* LSSayHiDetailHeadView.xib */,
+				5730F82A226FEF2900A38601 /* Layout */,
+				5254EB81226D5D6C00B3C294 /* LSSayHiAllTableView.h */,
+				5254EB82226D5D6C00B3C294 /* LSSayHiAllTableView.m */,
 				3E5DCEBE226D53E0008C9A31 /* LSSayHiChooseView.h */,
 				3E5DCEBF226D53E0008C9A31 /* LSSayHiChooseView.m */,
 				3E5DCEC0226D53E0008C9A31 /* LSSayHiChooseView.xib */,
-				5254EB81226D5D6C00B3C294 /* LSSayHiAllTableView.h */,
-				5254EB82226D5D6C00B3C294 /* LSSayHiAllTableView.m */,
+				3E755BCF2268124D009CC58B /* LSSayHiDetailHeadView.h */,
+				3E755BD02268124D009CC58B /* LSSayHiDetailHeadView.m */,
+				3E755BD12268124D009CC58B /* LSSayHiDetailHeadView.xib */,
+				52DC16B8227060C000807112 /* LSSayHiLeadInfoView.h */,
+				52DC16B9227060C000807112 /* LSSayHiLeadInfoView.m */,
+				52DC16BB227060D200807112 /* LSSayHiLeadInfoView.xib */,
+				52DDF190227535FC00624EC1 /* LSSayHiRecommendView.h */,
+				52DDF191227535FC00624EC1 /* LSSayHiRecommendView.m */,
 				5254EB84226D5E5F00B3C294 /* LSSayHiResponseListTableView.h */,
 				5254EB85226D5E5F00B3C294 /* LSSayHiResponseListTableView.m */,
+				573B5E172273150B00832E96 /* LSSelectThemeView.h */,
+				573B5E182273150B00832E96 /* LSSelectThemeView.m */,
+				573B5E1A2273151E00832E96 /* LSSelectThemeView.xib */,
+				573B5E1C227324C700832E96 /* LSSelectWordView.h */,
+				573B5E1D227324C700832E96 /* LSSelectWordView.m */,
+				573B5E1F227324D700832E96 /* LSSelectWordView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4066,33 +4136,33 @@
 		3E7F6D841F8B14070003BC69 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5240E5DB215E0E1E00B43159 /* ManProfile */,
+				3E8075F81F90587A00315CF5 /* JDAlertView.h */,
+				3E8075F91F90587A00315CF5 /* JDAlertView.m */,
+				3E8075FA1F90587A00315CF5 /* JDAlertView.xib */,
+				3E4F12AA1F8B651E00444343 /* JDSegmentControl.h */,
+				3E4F12AB1F8B651E00444343 /* JDSegmentControl.m */,
 				5240E5D0215E0E0C00B43159 /* LSAllTagListCollectionView.h */,
 				5240E5D1215E0E0C00B43159 /* LSAllTagListCollectionView.m */,
 				5240E5D4215E0E0D00B43159 /* LSInformationSelectView.h */,
 				5240E5D6215E0E0D00B43159 /* LSInformationSelectView.m */,
 				5240E5D3215E0E0D00B43159 /* LSInformationSelectView.xib */,
-				5240E5D2215E0E0C00B43159 /* LSTagListCollectionView.h */,
-				5240E5D5215E0E0D00B43159 /* LSTagListCollectionView.m */,
-				3E65CA241F946974005963C9 /* MyBackpack */,
-				3E645E641F8C9FA200D06467 /* MyReservations */,
-				3E7F6D8C1F8B17120003BC69 /* UserInfoList */,
-				52E981D4215A08A7002B3376 /* UserSetUpList */,
-				52F1CEC2215B11650059A1CB /* PushSetting */,
-				3E4F12AA1F8B651E00444343 /* JDSegmentControl.h */,
-				3E4F12AB1F8B651E00444343 /* JDSegmentControl.m */,
-				3E8075F81F90587A00315CF5 /* JDAlertView.h */,
-				3E8075F91F90587A00315CF5 /* JDAlertView.m */,
-				3E8075FA1F90587A00315CF5 /* JDAlertView.xib */,
-				3ECBAC972159E6AB005BC09B /* LSUserSettingHeadView.h */,
-				3ECBAC982159E6AB005BC09B /* LSUserSettingHeadView.m */,
-				3ECBAC992159E6AB005BC09B /* LSUserSettingHeadView.xib */,
-				3ECBAC9C215A084F005BC09B /* LSUserSettingFollowCell.h */,
-				3ECBAC9D215A084F005BC09B /* LSUserSettingFollowCell.m */,
-				3ECBAC9E215A084F005BC09B /* LSUserSettingFollowCell.xib */,
 				3ECBACBC215B14DF005BC09B /* LSSettingInfoCell.h */,
 				3ECBACBD215B14DF005BC09B /* LSSettingInfoCell.m */,
 				3ECBACBE215B14DF005BC09B /* LSSettingInfoCell.xib */,
+				5240E5D2215E0E0C00B43159 /* LSTagListCollectionView.h */,
+				5240E5D5215E0E0D00B43159 /* LSTagListCollectionView.m */,
+				3ECBAC9C215A084F005BC09B /* LSUserSettingFollowCell.h */,
+				3ECBAC9D215A084F005BC09B /* LSUserSettingFollowCell.m */,
+				3ECBAC9E215A084F005BC09B /* LSUserSettingFollowCell.xib */,
+				3ECBAC972159E6AB005BC09B /* LSUserSettingHeadView.h */,
+				3ECBAC982159E6AB005BC09B /* LSUserSettingHeadView.m */,
+				3ECBAC992159E6AB005BC09B /* LSUserSettingHeadView.xib */,
+				5240E5DB215E0E1E00B43159 /* ManProfile */,
+				3E65CA241F946974005963C9 /* MyBackpack */,
+				3E645E641F8C9FA200D06467 /* MyReservations */,
+				52F1CEC2215B11650059A1CB /* PushSetting */,
+				3E7F6D8C1F8B17120003BC69 /* UserInfoList */,
+				52E981D4215A08A7002B3376 /* UserSetUpList */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4110,21 +4180,21 @@
 		3E7F6D9C1F8B56C50003BC69 /* MyBackpack */ = {
 			isa = PBXGroup;
 			children = (
-				3E65CA481F949AE3005963C9 /* MyRidesViewController.h */,
-				3E65CA491F949AE3005963C9 /* MyRidesViewController.m */,
-				3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */,
-				3E65CA3C1F9498D2005963C9 /* VouchersListViewController.h */,
-				3E65CA3D1F9498D2005963C9 /* VouchersListViewController.m */,
-				3E8FF07D1FB532450012A212 /* VouchersListViewController.xib */,
 				3E65CA321F94697E005963C9 /* GiftListViewController.h */,
 				3E65CA331F94697E005963C9 /* GiftListViewController.m */,
 				3E8FF0771FB531F60012A212 /* GiftListViewController.xib */,
-				57712401212BAAF400B93308 /* PostStampViewController.h */,
-				57712402212BAAF400B93308 /* PostStampViewController.m */,
-				57712403212BAAF400B93308 /* PostStampViewController.xib */,
 				3E7F6D9D1F8B56C50003BC69 /* MyBackpackViewController.h */,
 				3E7F6D9E1F8B56C50003BC69 /* MyBackpackViewController.m */,
 				3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */,
+				3E65CA481F949AE3005963C9 /* MyRidesViewController.h */,
+				3E65CA491F949AE3005963C9 /* MyRidesViewController.m */,
+				3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */,
+				57712401212BAAF400B93308 /* PostStampViewController.h */,
+				57712402212BAAF400B93308 /* PostStampViewController.m */,
+				57712403212BAAF400B93308 /* PostStampViewController.xib */,
+				3E65CA3C1F9498D2005963C9 /* VouchersListViewController.h */,
+				3E65CA3D1F9498D2005963C9 /* VouchersListViewController.m */,
+				3E8FF07D1FB532450012A212 /* VouchersListViewController.xib */,
 			);
 			path = MyBackpack;
 			sourceTree = "<group>";
@@ -4132,12 +4202,12 @@
 		3E7F6DA01F8B56C50003BC69 /* MyReservations */ = {
 			isa = PBXGroup;
 			children = (
-				3E7F6DA11F8B56C50003BC69 /* LSMyReservationsViewController.h */,
-				3E7F6DA21F8B56C50003BC69 /* LSMyReservationsViewController.m */,
-				2580D2501F944BEA00171722 /* LSMyReservationsViewController.xib */,
 				3E6128DA1F8DACF7000AB8D0 /* LSMyReservationsPageViewController.h */,
 				3E6128DB1F8DACF7000AB8D0 /* LSMyReservationsPageViewController.m */,
 				3E8076111F90B91900315CF5 /* LSMyReservationsPageViewController.xib */,
+				3E7F6DA11F8B56C50003BC69 /* LSMyReservationsViewController.h */,
+				3E7F6DA21F8B56C50003BC69 /* LSMyReservationsViewController.m */,
+				2580D2501F944BEA00171722 /* LSMyReservationsViewController.xib */,
 			);
 			path = MyReservations;
 			sourceTree = "<group>";
@@ -4176,12 +4246,12 @@
 		3EE857E02087306D0095D7CA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				3E1331B4208DB3E200D6AA55 /* MyTicketsViewController.h */,
-				3E1331B5208DB3E200D6AA55 /* MyTicketsViewController.m */,
-				3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */,
 				3E1331C2208DB5FC00D6AA55 /* MyTicketPageViewController.h */,
 				3E1331C3208DB5FC00D6AA55 /* MyTicketPageViewController.m */,
 				3E1331CC208DB65B00D6AA55 /* MyTicketPageViewController.xib */,
+				3E1331B4208DB3E200D6AA55 /* MyTicketsViewController.h */,
+				3E1331B5208DB3E200D6AA55 /* MyTicketsViewController.m */,
+				3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */,
 				3E1331CF208DBDF200D6AA55 /* ShowDetailViewController.h */,
 				3E1331D0208DBDF200D6AA55 /* ShowDetailViewController.m */,
 				3E1331D1208DBDF200D6AA55 /* ShowDetailViewController.xib */,
@@ -4192,17 +4262,17 @@
 		3EE857E1208730860095D7CA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3E06BAB420883C8C009CFF37 /* ShowTipView.h */,
-				3E06BAB520883C8C009CFF37 /* ShowTipView.m */,
-				3EE857E22087309D0095D7CA /* ShowCell.h */,
-				3EE857E32087309D0095D7CA /* ShowCell.m */,
-				3EE857E42087309D0095D7CA /* ShowCell.xib */,
 				3EE857E720874AC00095D7CA /* ShowAddCreditsView.h */,
 				3EE857E820874AC00095D7CA /* ShowAddCreditsView.m */,
 				3E7491372091B6F800391151 /* ShowAddCreditsView.xib */,
+				3EE857E22087309D0095D7CA /* ShowCell.h */,
+				3EE857E32087309D0095D7CA /* ShowCell.m */,
+				3EE857E42087309D0095D7CA /* ShowCell.xib */,
 				3EA6BCFC208D73CB006E0558 /* ShowListView.h */,
 				3EA6BCFD208D73CB006E0558 /* ShowListView.m */,
 				3EA6BCFE208D73CB006E0558 /* ShowListView.xib */,
+				3E06BAB420883C8C009CFF37 /* ShowTipView.h */,
+				3E06BAB520883C8C009CFF37 /* ShowTipView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4210,38 +4280,38 @@
 		3EECA96421C34CA500A46AD2 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				576B54AA21BA4D1C00BE9D65 /* LSVideoPlayerView */,
 				3EECA96A21C3950600A46AD2 /* Cell */,
-				3EECA96521C3944500A46AD2 /* LSSendMailPhotoView.h */,
-				3EECA96621C3944500A46AD2 /* LSSendMailPhotoView.m */,
-				3EECA96721C3944500A46AD2 /* LSSendMailPhotoView.xib */,
-				521E1E9321C796BC00651968 /* LSOutOfPoststampView.h */,
-				521E1E9421C796BC00651968 /* LSOutOfPoststampView.m */,
-				521E1E9621C796D100651968 /* LSOutOfPoststampView.xib */,
-				520D190321C9F95E00079E54 /* LSOutOfCreditsView.h */,
-				520D190421C9F95E00079E54 /* LSOutOfCreditsView.m */,
-				520D190621C9F96A00079E54 /* LSOutOfCreditsView.xib */,
-				576A512A21A6A93D00F726C4 /* LSSelectBoxView.h */,
-				576A512B21A6A93D00F726C4 /* LSSelectBoxView.m */,
-				576A512D21A6A94D00F726C4 /* LSSelectBoxView.xib */,
+				577BB97321AE6E75006EB09B /* LSGreetingVideoPlayView.h */,
+				577BB97421AE6E75006EB09B /* LSGreetingVideoPlayView.m */,
+				577BB97621AE6E81006EB09B /* LSGreetingVideoPlayView.xib */,
+				52F6C16221D359940024F185 /* LSMailAttachmentsCollectionView.h */,
+				52F6C16321D359940024F185 /* LSMailAttachmentsCollectionView.m */,
 				576AE58B21E48D6100D17867 /* LSMailFreePhotoView.h */,
 				576AE58C21E48D6100D17867 /* LSMailFreePhotoView.m */,
 				576AE58E21E48D6E00D17867 /* LSMailFreePhotoView.xib */,
 				576999C521C1EAA900BAA091 /* LSMailLadySecretPhotoView.h */,
 				576999C421C1EAA800BAA091 /* LSMailLadySecretPhotoView.m */,
 				57A112FB21DEF2CA00868521 /* LSMailLadySecretPhotoView.xib */,
-				577BB97321AE6E75006EB09B /* LSGreetingVideoPlayView.h */,
-				577BB97421AE6E75006EB09B /* LSGreetingVideoPlayView.m */,
-				577BB97621AE6E81006EB09B /* LSGreetingVideoPlayView.xib */,
 				576999D921C238B200BAA091 /* LSMailPrivatePlayView.h */,
 				576999DA21C238B200BAA091 /* LSMailPrivatePlayView.m */,
 				57A1130121DEF31400868521 /* LSMailPrivatePlayView.xib */,
-				57769F67219E5718002677ED /* MailTableView.h */,
-				57769F68219E5718002677ED /* MailTableView.m */,
-				52F6C16221D359940024F185 /* LSMailAttachmentsCollectionView.h */,
-				52F6C16321D359940024F185 /* LSMailAttachmentsCollectionView.m */,
+				520D190321C9F95E00079E54 /* LSOutOfCreditsView.h */,
+				520D190421C9F95E00079E54 /* LSOutOfCreditsView.m */,
+				520D190621C9F96A00079E54 /* LSOutOfCreditsView.xib */,
+				521E1E9321C796BC00651968 /* LSOutOfPoststampView.h */,
+				521E1E9421C796BC00651968 /* LSOutOfPoststampView.m */,
+				521E1E9621C796D100651968 /* LSOutOfPoststampView.xib */,
+				576A512A21A6A93D00F726C4 /* LSSelectBoxView.h */,
+				576A512B21A6A93D00F726C4 /* LSSelectBoxView.m */,
+				576A512D21A6A94D00F726C4 /* LSSelectBoxView.xib */,
+				3EECA96521C3944500A46AD2 /* LSSendMailPhotoView.h */,
+				3EECA96621C3944500A46AD2 /* LSSendMailPhotoView.m */,
+				3EECA96721C3944500A46AD2 /* LSSendMailPhotoView.xib */,
 				3E03370821E05CFD00AB41BE /* LSShadowView.h */,
 				3E03370921E05CFD00AB41BE /* LSShadowView.m */,
+				576B54AA21BA4D1C00BE9D65 /* LSVideoPlayerView */,
+				57769F67219E5718002677ED /* MailTableView.h */,
+				57769F68219E5718002677ED /* MailTableView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4250,30 +4320,30 @@
 			isa = PBXGroup;
 			children = (
 				579536CB21C0EDA800388327 /* Layout */,
-				57769F6B219EADA6002677ED /* MailTableViewCell.h */,
-				57769F6C219EADA6002677ED /* MailTableViewCell.m */,
-				57769F6D219EADA6002677ED /* MailTableViewCell.xib */,
-				3EECA96B21C3952600A46AD2 /* LSSendMailPhotoCell.h */,
-				3EECA96C21C3952600A46AD2 /* LSSendMailPhotoCell.m */,
-				3EECA96D21C3952600A46AD2 /* LSSendMailPhotoCell.xib */,
 				573B429421D2156800B725D4 /* LSGreetingsDetailTableViewCell.h */,
 				573B429521D2156800B725D4 /* LSGreetingsDetailTableViewCell.m */,
 				573B429621D2156800B725D4 /* LSGreetingsDetailTableViewCell.xib */,
+				52F6C16621D35AA80024F185 /* LSMailAttachmentCollectionViewCell.h */,
+				52F6C16721D35AA80024F185 /* LSMailAttachmentCollectionViewCell.m */,
+				52F6C16821D35AA80024F185 /* LSMailAttachmentCollectionViewCell.xib */,
 				5777366221D32020005C3F53 /* LSMailDetailFreePhotoCell.h */,
 				5777366321D32020005C3F53 /* LSMailDetailFreePhotoCell.m */,
 				5777366421D32020005C3F53 /* LSMailDetailFreePhotoCell.xib */,
 				5777366721D32263005C3F53 /* LSMailDetailPrivatePhotoCell.h */,
 				5777366821D32263005C3F53 /* LSMailDetailPrivatePhotoCell.m */,
 				5777366921D32263005C3F53 /* LSMailDetailPrivatePhotoCell.xib */,
-				5777366C21D325E9005C3F53 /* LSPrivatePhotoCollectionViewCell.h */,
-				5777366D21D325E9005C3F53 /* LSPrivatePhotoCollectionViewCell.m */,
-				57388BE621D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib */,
 				57388BE921D394D10063D459 /* LSMailPrivateVideoCell.h */,
 				57388BEA21D394D10063D459 /* LSMailPrivateVideoCell.m */,
 				57388BEB21D394D10063D459 /* LSMailPrivateVideoCell.xib */,
-				52F6C16621D35AA80024F185 /* LSMailAttachmentCollectionViewCell.h */,
-				52F6C16721D35AA80024F185 /* LSMailAttachmentCollectionViewCell.m */,
-				52F6C16821D35AA80024F185 /* LSMailAttachmentCollectionViewCell.xib */,
+				5777366C21D325E9005C3F53 /* LSPrivatePhotoCollectionViewCell.h */,
+				5777366D21D325E9005C3F53 /* LSPrivatePhotoCollectionViewCell.m */,
+				57388BE621D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib */,
+				3EECA96B21C3952600A46AD2 /* LSSendMailPhotoCell.h */,
+				3EECA96C21C3952600A46AD2 /* LSSendMailPhotoCell.m */,
+				3EECA96D21C3952600A46AD2 /* LSSendMailPhotoCell.xib */,
+				57769F6B219EADA6002677ED /* MailTableViewCell.h */,
+				57769F6C219EADA6002677ED /* MailTableViewCell.m */,
+				57769F6D219EADA6002677ED /* MailTableViewCell.xib */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -5048,7 +5118,7 @@
 				2580D23E1F943B5F00171722 /* LSFollowingViewController.xib */,
 				509910E01EDF9F25003B6813 /* LSHotViewController.h */,
 				509910E11EDF9F25003B6813 /* LSHotViewController.m */,
-				509910E21EDF9F25003B6813 /* LSHotViewController.xib */,
+				3E5D3B2022715010008F1451 /* LSHotViewController.xib */,
 				3EE857D7208727120095D7CA /* ShowListViewController.h */,
 				3EE857D8208727120095D7CA /* ShowListViewController.m */,
 				52911992212275FD001574AB /* ShowListViewController.xib */,
@@ -5228,14 +5298,9 @@
 				57A265E020F72B0C000DB5EC /* HomeSettingView */,
 				52D253271F67D47500C0C476 /* Cell */,
 				509A8DDC1ECC350C004720CF /* JTSegmentControl */,
-				52C917CB1F6B7A7E00C96398 /* LiveChannelAdView.h */,
-				52C917CC1F6B7A7E00C96398 /* LiveChannelAdView.m */,
-				52C917CE1F6B7A8900C96398 /* LiveChannelAdView.xib */,
 				52C917DD1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.h */,
 				52C917DE1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m */,
 				52C917DF1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib */,
-				52D253241F67D2CA00C0C476 /* LiveChannelContentView.h */,
-				52D253251F67D2CA00C0C476 /* LiveChannelContentView.m */,
 				52C917D81F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.h */,
 				52C917D91F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.m */,
 				3E88F7682000B9C2008F0B08 /* LiveChannelTopCollectionReusableView.xib */,
@@ -5269,12 +5334,12 @@
 				50B2C407216D8A6500073145 /* LiveAnalyticsManager.m */,
 				50854384215A150100A55310 /* LiveMutexService.h */,
 				50854386215A150300A55310 /* LiveMutexService.m */,
+				52B2DBB8216F4A4700D403FA /* LiveNotificationService.h */,
+				52B2DBB9216F4A4700D403FA /* LiveNotificationService.m */,
 				50A5748221465E8C00ED7383 /* LiveSiteService.h */,
 				50A5748321465E8D00ED7383 /* LiveSiteService.m */,
 				50854383215A150000A55310 /* LiveUrlHandler.h */,
 				50854385215A150300A55310 /* LiveUrlHandler.m */,
-				52B2DBB8216F4A4700D403FA /* LiveNotificationService.h */,
-				52B2DBB9216F4A4700D403FA /* LiveNotificationService.m */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -5358,11 +5423,7 @@
 		50BF28F61E98976E00B8ED5D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E94B5FC219BAC3800679D20 /* LSEmotionList.plist */,
 				50135B491F9D8E39003C6555 /* AppIcon.xcassets */,
-				5269E47C215F509A007EA7A8 /* LSCountry_without_code.xml */,
-				5269E47A215F5099007EA7A8 /* LSManInterestTag.plist */,
-				5269E47B215F509A007EA7A8 /* LSManProfile.plist */,
 				50BF29071E98976E00B8ED5D /* Info.plist */,
 				506D60651F0F14AD002CAD3C /* InfoPlist.strings */,
 				50BF29041E98976E00B8ED5D /* LaunchScreen.storyboard */,
@@ -5370,6 +5431,10 @@
 				504D5FD41F8F556B00BBB037 /* livestream-PrefixHeader.pch */,
 				50F2A9E31ED9811400F7EA6D /* Localizable.strings */,
 				50E44F971F7F8BF900DEDD9C /* LocalizableErrorCode.strings */,
+				5269E47C215F509A007EA7A8 /* LSCountry_without_code.xml */,
+				3E94B5FC219BAC3800679D20 /* LSEmotionList.plist */,
+				5269E47A215F5099007EA7A8 /* LSManInterestTag.plist */,
+				5269E47B215F509A007EA7A8 /* LSManProfile.plist */,
 				50BF28F71E98976E00B8ED5D /* main.m */,
 				50BF28FF1E98976E00B8ED5D /* Main.storyboard */,
 			);
@@ -5379,13 +5444,13 @@
 		50BF290D1E9897C600B8ED5D /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				5769D44B21B8FF0F00AF64FB /* HTML */,
 				50B23CC91EC9A65B007A7262 /* Analytics */,
 				50BF290E1E9897C600B8ED5D /* AppDelegate.h */,
 				50BF290F1E9897C600B8ED5D /* AppDelegate.m */,
 				505D6DE01EC979E3007FF4C6 /* Common */,
 				FAA9980D215F060E00B38A33 /* DomainRequest */,
 				50A810AA1F8CE50100C7288A /* Header */,
+				5769D44B21B8FF0F00AF64FB /* HTML */,
 				50F383A31EE68B85003D2765 /* IM */,
 				50D1BADA1E98EA0300088B9D /* LiveStreamClient */,
 				509A8DB21ECBFC4C004720CF /* Main */,
@@ -5553,21 +5618,21 @@
 				3E5794BA223F46D3007ECB7A /* LSChatAlbumListViewController.h */,
 				3E5794BB223F46D4007ECB7A /* LSChatAlbumListViewController.m */,
 				3E5794BC223F46D5007ECB7A /* LSChatAlbumListViewController.xib */,
+				576989C12241F1CB00CBCA19 /* LSChatDetailVideoViewController.h */,
+				576989C22241F1CB00CBCA19 /* LSChatDetailVideoViewController.m */,
+				5757FFA72260291100C5CD9A /* LSChatDetailVideoViewController.xib */,
 				3E5794C4223F4759007ECB7A /* LSChatPhotoPreviewViewController.h */,
 				3E5794C2223F4759007ECB7A /* LSChatPhotoPreviewViewController.m */,
 				3E5794C3223F4759007ECB7A /* LSChatPhotoPreviewViewController.xib */,
 				3E5794D0223F7E57007ECB7A /* LSChatSecretPhotoViewController.h */,
 				3E5794D1223F7E58007ECB7A /* LSChatSecretPhotoViewController.m */,
 				3E5794DB223F83FB007ECB7A /* LSChatSecretPhotoViewController.xib */,
-				50ED42C52196774600259CA6 /* QNChatViewController.h */,
-				50ED42C22196774600259CA6 /* QNChatViewController.m */,
-				50ED42C32196774600259CA6 /* QNChatViewController.xib */,
-				576989C12241F1CB00CBCA19 /* LSChatDetailVideoViewController.h */,
-				576989C22241F1CB00CBCA19 /* LSChatDetailVideoViewController.m */,
-				5757FFA72260291100C5CD9A /* LSChatDetailVideoViewController.xib */,
 				5783BC1B224365130054130F /* LSRecentWatchViewController.h */,
 				5783BC1C224365130054130F /* LSRecentWatchViewController.m */,
 				5778126F224C646D0022A676 /* LSRecentWatchViewController.xib */,
+				50ED42C52196774600259CA6 /* QNChatViewController.h */,
+				50ED42C22196774600259CA6 /* QNChatViewController.m */,
+				50ED42C32196774600259CA6 /* QNChatViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -5592,17 +5657,17 @@
 		50ED42CD2196774600259CA6 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3E5794A92237462F007ECB7A /* ChatPhotoView */,
-				3E94B642219FFDD400679D20 /* QNLadyListNotificationView.h */,
-				3E94B641219FFDD400679D20 /* QNLadyListNotificationView.m */,
-				3E94B640219FFDD300679D20 /* QNLadyListNotificationView.xib */,
 				50ED43022196774600259CA6 /* Cell */,
 				50ED42D32196774600259CA6 /* ChatEmotionView */,
+				3E5794A92237462F007ECB7A /* ChatPhotoView */,
 				50ED42FB2196774600259CA6 /* ChatTextView */,
+				50ED42CE2196774600259CA6 /* ChatVoiceView */,
 				50ED43012196774600259CA6 /* QNChatTitleView.h */,
 				50ED43002196774600259CA6 /* QNChatTitleView.m */,
 				50ED432D2196774700259CA6 /* QNChatTitleView.xib */,
-				50ED42CE2196774600259CA6 /* ChatVoiceView */,
+				3E94B642219FFDD400679D20 /* QNLadyListNotificationView.h */,
+				3E94B641219FFDD400679D20 /* QNLadyListNotificationView.m */,
+				3E94B640219FFDD300679D20 /* QNLadyListNotificationView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5619,6 +5684,7 @@
 		50ED42D32196774600259CA6 /* ChatEmotionView */ = {
 			isa = PBXGroup;
 			children = (
+				3E5C0C4521A3DC630060E844 /* ChatLargeEmotionShowView */,
 				50ED42F02196774600259CA6 /* QNChatEmotionChooseCollectionViewCell.h */,
 				50ED42E02196774600259CA6 /* QNChatEmotionChooseCollectionViewCell.m */,
 				50ED42E52196774600259CA6 /* QNChatEmotionChooseCollectionViewCell.xib */,
@@ -5627,27 +5693,26 @@
 				50ED42EA2196774600259CA6 /* QNChatEmotionChooseView.h */,
 				50ED42D62196774600259CA6 /* QNChatEmotionChooseView.m */,
 				50ED42E22196774600259CA6 /* QNChatEmotionChooseView.xib */,
+				50ED42F12196774600259CA6 /* QNChatEmotionCreditsCollectionViewCell.h */,
+				50ED42DE2196774600259CA6 /* QNChatEmotionCreditsCollectionViewCell.m */,
+				50ED42E42196774600259CA6 /* QNChatEmotionCreditsCollectionViewCell.xib */,
+				50ED42DB2196774600259CA6 /* QNChatEmotionCreditsCollectionViewLayout.h */,
+				50ED42E92196774600259CA6 /* QNChatEmotionCreditsCollectionViewLayout.m */,
 				50ED42DF2196774600259CA6 /* QNChatEmotionKeyboardView.h */,
 				50ED42EF2196774600259CA6 /* QNChatEmotionKeyboardView.m */,
 				50ED42EC2196774600259CA6 /* QNChatEmotionKeyboardView.xib */,
+				3E5C0C5821A3DC930060E844 /* QNChatEmotionListView.h */,
+				3E5C0C5921A3DC940060E844 /* QNChatEmotionListView.m */,
+				3E5C0C6021A3DE9D0060E844 /* QNChatEmotionListView.xib */,
 				3E5C0C5521A3DC920060E844 /* QNChatLargeEmotionLadyTableViewCell.h */,
 				3E5C0C5621A3DC930060E844 /* QNChatLargeEmotionLadyTableViewCell.m */,
 				3E5C0C5721A3DC930060E844 /* QNChatLargeEmotionLadyTableViewCell.xib */,
-				3E5C0C4521A3DC630060E844 /* ChatLargeEmotionShowView */,
 				50ED42FA2196774600259CA6 /* QNChatNomalSmallEmotionView.h */,
 				50ED42E32196774600259CA6 /* QNChatNomalSmallEmotionView.m */,
 				50ED42D82196774600259CA6 /* QNChatNomalSmallEmotionView.xib */,
 				50ED42DC2196774600259CA6 /* QNChatSmallEmotionCollectionViewCell.h */,
 				50ED42E82196774600259CA6 /* QNChatSmallEmotionCollectionViewCell.m */,
 				50ED42D72196774600259CA6 /* QNChatSmallEmotionCollectionViewCell.xib */,
-				50ED42F12196774600259CA6 /* QNChatEmotionCreditsCollectionViewCell.h */,
-				50ED42DE2196774600259CA6 /* QNChatEmotionCreditsCollectionViewCell.m */,
-				50ED42E42196774600259CA6 /* QNChatEmotionCreditsCollectionViewCell.xib */,
-				50ED42DB2196774600259CA6 /* QNChatEmotionCreditsCollectionViewLayout.h */,
-				50ED42E92196774600259CA6 /* QNChatEmotionCreditsCollectionViewLayout.m */,
-				3E5C0C5821A3DC930060E844 /* QNChatEmotionListView.h */,
-				3E5C0C5921A3DC940060E844 /* QNChatEmotionListView.m */,
-				3E5C0C6021A3DE9D0060E844 /* QNChatEmotionListView.xib */,
 				50ED42EE2196774600259CA6 /* QNChatSmallEmotionView.h */,
 				50ED42DD2196774600259CA6 /* QNChatSmallEmotionView.m */,
 				50ED42E12196774600259CA6 /* QNChatSmallEmotionView.xib */,
@@ -5669,6 +5734,9 @@
 		50ED43022196774600259CA6 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				3E5ABCFE2241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.h */,
+				3E5ABCFF2241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.m */,
+				3E5ABD002241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.xib */,
 				50ED43112196774600259CA6 /* QNChatCouponTableViewCell.h */,
 				50ED43262196774700259CA6 /* QNChatCouponTableViewCell.m */,
 				50ED43272196774700259CA6 /* QNChatCouponTableViewCell.xib */,
@@ -5710,9 +5778,6 @@
 				5783BC22224367070054130F /* RecentWatchCollectionViewCell.xib */,
 				5783BC2522436DA70054130F /* RecentWatchLayout.h */,
 				5783BC2622436DA80054130F /* RecentWatchLayout.m */,
-				3E5ABCFE2241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.h */,
-				3E5ABCFF2241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.m */,
-				3E5ABD002241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.xib */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -5720,14 +5785,14 @@
 		50ED437221967BC300259CA6 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				3E91E76421A947C10048D782 /* QNRiskControlManager.h */,
-				3E91E76321A947C10048D782 /* QNRiskControlManager.m */,
-				3E94B62F219EB67F00679D20 /* QNLiveChatLocalPushManager.h */,
-				3E94B630219EB67F00679D20 /* QNLiveChatLocalPushManager.m */,
 				50ED437721967E2000259CA6 /* QNChatAudioPlayer.h */,
 				50ED437621967E2000259CA6 /* QNChatAudioPlayer.m */,
 				50ED437421967BC300259CA6 /* QNChatVoiceManager.h */,
 				50ED437321967BC300259CA6 /* QNChatVoiceManager.m */,
+				3E94B62F219EB67F00679D20 /* QNLiveChatLocalPushManager.h */,
+				3E94B630219EB67F00679D20 /* QNLiveChatLocalPushManager.m */,
+				3E91E76421A947C10048D782 /* QNRiskControlManager.h */,
+				3E91E76321A947C10048D782 /* QNRiskControlManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -5817,10 +5882,10 @@
 			isa = PBXGroup;
 			children = (
 				573B429221D2103300B725D4 /* Controller */,
-				3EECA97021C3AC0100A46AD2 /* Model */,
-				3EECA96421C34CA500A46AD2 /* View */,
 				3EAF505E21D07E6E003B452D /* LSSendMailDraftManager.h */,
 				3EAF505F21D07E6E003B452D /* LSSendMailDraftManager.m */,
+				3EECA97021C3AC0100A46AD2 /* Model */,
+				3EECA96421C34CA500A46AD2 /* View */,
 			);
 			path = Mail;
 			sourceTree = "<group>";
@@ -5853,27 +5918,30 @@
 		5254EB50226D46F200B3C294 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				5254EB6B226D4F7400B3C294 /* LSSayHiListViewController.h */,
-				5254EB6C226D4F7400B3C294 /* LSSayHiListViewController.m */,
-				5254EB75226D4F8E00B3C294 /* LSSayHiListViewController.xib */,
+				5254EB66226D4EFA00B3C294 /* LSSayHiAllListViewController.h */,
+				5254EB67226D4EFA00B3C294 /* LSSayHiAllListViewController.m */,
+				521428A72283BEC1002B67BC /* LSSayHiAllListViewController.xib */,
+				3E5DCEF92270397D008C9A31 /* LSSayHiCardDetailsViewController.h */,
+				3E5DCEFA2270397D008C9A31 /* LSSayHiCardDetailsViewController.m */,
+				3E5DCEFB2270397D008C9A31 /* LSSayHiCardDetailsViewController.xib */,
 				5254EB51226D46F200B3C294 /* LSSayHiDetailViewController.h */,
 				5254EB53226D46F200B3C294 /* LSSayHiDetailViewController.m */,
 				3E5DCEEF226E9DFA008C9A31 /* LSSayHiDetailViewController.xib */,
-				5254EB66226D4EFA00B3C294 /* LSSayHiAllListViewController.h */,
-				5254EB67226D4EFA00B3C294 /* LSSayHiAllListViewController.m */,
-				5254EB68226D4EFA00B3C294 /* LSSayHiAllListViewController.xib */,
-				5254EB78226D51D400B3C294 /* LSSayHiResponseListViewController.h */,
-				5254EB79226D51D400B3C294 /* LSSayHiResponseListViewController.m */,
-				5254EB7A226D51D400B3C294 /* LSSayHiResponseListViewController.xib */,
-				573968F0226D9DAD000066A1 /* LSSendSayHiViewController.h */,
-				573968F1226D9DAD000066A1 /* LSSendSayHiViewController.m */,
-				573968F2226D9DAD000066A1 /* LSSendSayHiViewController.xib */,
 				573D4E99226F014D0071D202 /* LSSayHiDialogViewController.h */,
 				573D4E9A226F014D0071D202 /* LSSayHiDialogViewController.m */,
-				573D4E9B226F014D0071D202 /* LSSayHiDialogViewController.xib */,
+				572FFA1C22759AC2009C22B8 /* LSSayHiDialogViewController.xib */,
+				5254EB6B226D4F7400B3C294 /* LSSayHiListViewController.h */,
+				5254EB6C226D4F7400B3C294 /* LSSayHiListViewController.m */,
+				5254EB75226D4F8E00B3C294 /* LSSayHiListViewController.xib */,
+				5254EB78226D51D400B3C294 /* LSSayHiResponseListViewController.h */,
+				5254EB79226D51D400B3C294 /* LSSayHiResponseListViewController.m */,
+				52FF250E2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib */,
 				573D4E9E226F12A40071D202 /* LSSayHiThemeListViewController.h */,
 				573D4E9F226F12A40071D202 /* LSSayHiThemeListViewController.m */,
-				573D4EA0226F12A40071D202 /* LSSayHiThemeListViewController.xib */,
+				572F6B8C22718F350006876F /* LSSayHiThemeListViewController.xib */,
+				573968F0226D9DAD000066A1 /* LSSendSayHiViewController.h */,
+				573968F1226D9DAD000066A1 /* LSSendSayHiViewController.m */,
+				572F6B8622718E620006876F /* LSSendSayHiViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -5884,24 +5952,36 @@
 				5254EB88226D60BF00B3C294 /* LSSayHiAllTableViewCell.h */,
 				5254EB89226D60BF00B3C294 /* LSSayHiAllTableViewCell.m */,
 				5254EB8A226D60BF00B3C294 /* LSSayHiAllTableViewCell.xib */,
-				5254EB8D226D60D100B3C294 /* LSSayHiResponseListTableViewCell.h */,
-				5254EB8E226D60D100B3C294 /* LSSayHiResponseListTableViewCell.m */,
-				5254EB8F226D60D100B3C294 /* LSSayHiResponseListTableViewCell.xib */,
-				3E5DCECD226D6957008C9A31 /* LSSayHiReadReplyCell.h */,
-				3E5DCECE226D6957008C9A31 /* LSSayHiReadReplyCell.m */,
-				3E5DCECF226D6957008C9A31 /* LSSayHiReadReplyCell.xib */,
-				3E5DCED5226D697D008C9A31 /* LSSayHiUnreadReplyCell.h */,
-				3E5DCED6226D697D008C9A31 /* LSSayHiUnreadReplyCell.m */,
-				3E5DCED7226D697D008C9A31 /* LSSayHiUnreadReplyCell.xib */,
+				3E6C9B26227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.h */,
+				3E6C9B27227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m */,
+				3E6C9B28227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib */,
+				3EB4A1292282AD6200AF1BEE /* LSSayHiDetailErrorCell.h */,
+				3EB4A12A2282AD6200AF1BEE /* LSSayHiDetailErrorCell.m */,
+				3EB4A12B2282AD6200AF1BEE /* LSSayHiDetailErrorCell.xib */,
 				3E5DCEDD226D69B1008C9A31 /* LSSayHiNoReplyCell.h */,
 				3E5DCEDE226D69B1008C9A31 /* LSSayHiNoReplyCell.m */,
 				3E5DCEDF226D69B1008C9A31 /* LSSayHiNoReplyCell.xib */,
-				573D4EA3226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.h */,
-				573D4EA4226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.m */,
-				573D4EA5226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.xib */,
+				3E5DCECD226D6957008C9A31 /* LSSayHiReadReplyCell.h */,
+				3E5DCECE226D6957008C9A31 /* LSSayHiReadReplyCell.m */,
+				3E5DCECF226D6957008C9A31 /* LSSayHiReadReplyCell.xib */,
+				52DDF19322753CB500624EC1 /* LSSayHiRecommendViewCell.h */,
+				52DDF19422753CB500624EC1 /* LSSayHiRecommendViewCell.m */,
+				52DDF19522753CB500624EC1 /* LSSayHiRecommendViewCell.xib */,
+				5254EB8D226D60D100B3C294 /* LSSayHiResponseListTableViewCell.h */,
+				5254EB8E226D60D100B3C294 /* LSSayHiResponseListTableViewCell.m */,
+				5254EB8F226D60D100B3C294 /* LSSayHiResponseListTableViewCell.xib */,
+				3E6C9B17227E96680008D1A1 /* LSSayHiResponseNumCell.h */,
+				3E6C9B18227E96680008D1A1 /* LSSayHiResponseNumCell.m */,
+				3E6C9B19227E96680008D1A1 /* LSSayHiResponseNumCell.xib */,
 				573D4EA8226F17580071D202 /* LSSayHiTextListTableViewCell.h */,
 				573D4EA9226F17580071D202 /* LSSayHiTextListTableViewCell.m */,
 				573D4EAA226F17580071D202 /* LSSayHiTextListTableViewCell.xib */,
+				573D4EA3226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.h */,
+				573D4EA4226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.m */,
+				573D4EA5226F171E0071D202 /* LSSayHiThemeListCollectionViewCell.xib */,
+				3E5DCED5226D697D008C9A31 /* LSSayHiUnreadReplyCell.h */,
+				3E5DCED6226D697D008C9A31 /* LSSayHiUnreadReplyCell.m */,
+				3E5DCED7226D697D008C9A31 /* LSSayHiUnreadReplyCell.xib */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -5960,16 +6040,16 @@
 		52964D2021A5533C00C1C116 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5206C16421AB97C100D138A1 /* QNSementView.h */,
-				5206C16621AB97C200D138A1 /* QNSementView.m */,
-				5206C16821AB97C300D138A1 /* QNUnreadCountBtn.h */,
-				5206C16521AB97C200D138A1 /* QNUnreadCountBtn.m */,
-				5206C16721AB97C200D138A1 /* QNUnreadCountBtn.xib */,
 				52964D2121A5533C00C1C116 /* Cell */,
 				52964D2821A5533C00C1C116 /* QNContactListTableView.h */,
 				52964D2921A5533C00C1C116 /* QNContactListTableView.m */,
 				52964D2A21A5533C00C1C116 /* QNInviteListTableView.h */,
 				52964D2B21A5533C00C1C116 /* QNInviteListTableView.m */,
+				5206C16421AB97C100D138A1 /* QNSementView.h */,
+				5206C16621AB97C200D138A1 /* QNSementView.m */,
+				5206C16821AB97C300D138A1 /* QNUnreadCountBtn.h */,
+				5206C16521AB97C200D138A1 /* QNUnreadCountBtn.m */,
+				5206C16721AB97C200D138A1 /* QNUnreadCountBtn.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -6011,9 +6091,6 @@
 				57A265F420F75664000DB5EC /* LiveHeaderScrollviewCell.h */,
 				57A265F520F75665000DB5EC /* LiveHeaderScrollviewCell.m */,
 				57A265F620F75665000DB5EC /* LiveHeaderScrollviewCell.xib */,
-				52D253281F67D49200C0C476 /* LiveChannelCollectionViewCell.h */,
-				52D253291F67D49200C0C476 /* LiveChannelCollectionViewCell.m */,
-				52D2532A1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib */,
 				3E22E9E020CFE58900A89BCC /* LSHomeSettingCell.h */,
 				3E22E9E120CFE58900A89BCC /* LSHomeSettingCell.m */,
 				5782F894218C3B7C00D0601A /* LSHomeSettingCell.xib */,
@@ -6088,15 +6165,15 @@
 		52E70F30215C701C00BB7E1C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				52E70F52215C752900BB7E1C /* LSCreditTitleTableViewCell.h */,
-				52E70F53215C752A00BB7E1C /* LSCreditTitleTableViewCell.m */,
-				52E70F54215C752A00BB7E1C /* LSCreditTitleTableViewCell.xib */,
 				52E70F31215C701C00BB7E1C /* LSCreditDetailTableViewCell.h */,
 				52E70F32215C701C00BB7E1C /* LSCreditDetailTableViewCell.m */,
 				52E70F33215C701C00BB7E1C /* LSCreditDetailTableViewCell.xib */,
 				52E70F34215C701C00BB7E1C /* LSCreditTableViewCell.h */,
 				52E70F35215C701C00BB7E1C /* LSCreditTableViewCell.m */,
 				52E70F36215C701C00BB7E1C /* LSCreditTableViewCell.xib */,
+				52E70F52215C752900BB7E1C /* LSCreditTitleTableViewCell.h */,
+				52E70F53215C752A00BB7E1C /* LSCreditTitleTableViewCell.m */,
+				52E70F54215C752A00BB7E1C /* LSCreditTitleTableViewCell.xib */,
 				52E70F37215C701C00BB7E1C /* LSPremiumMembershipTableViewCell.h */,
 				52E70F38215C701C00BB7E1C /* LSPremiumMembershipTableViewCell.m */,
 				52E70F39215C701C00BB7E1C /* LSPremiumMembershipTableViewCell.xib */,
@@ -6130,6 +6207,8 @@
 		5730F82A226FEF2900A38601 /* Layout */ = {
 			isa = PBXGroup;
 			children = (
+				5730F82B226FFBB800A38601 /* LSSayHiThemeListLayout.h */,
+				5730F82C226FFBB900A38601 /* LSSayHiThemeListLayout.m */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -6243,8 +6322,9 @@
 		5769D44B21B8FF0F00AF64FB /* HTML */ = {
 			isa = PBXGroup;
 			children = (
-				573968F7226DA604000066A1 /* SayHi.html */,
 				5769D44C21B8FF0F00AF64FB /* Mail_Content.html */,
+				3E5DCF4922704CF3008C9A31 /* public */,
+				573968F7226DA604000066A1 /* SayHi.html */,
 				5769D44D21B8FF0F00AF64FB /* under_line.png */,
 			);
 			path = HTML;
@@ -6596,8 +6676,6 @@
 		FAA9980D215F060E00B38A33 /* DomainRequest */ = {
 			isa = PBXGroup;
 			children = (
-				FAC6880021A9362800A98E5D /* LSPhoneInfoRequest.h */,
-				FAC6880121A9362900A98E5D /* LSPhoneInfoRequest.m */,
 				FAA99819215F2F7700B38A33 /* LSAddTokenRequest.h */,
 				FAA99817215F2F7700B38A33 /* LSAddTokenRequest.m */,
 				FAA99818215F2F7700B38A33 /* LSChangePasswordRequest.h */,
@@ -6620,6 +6698,8 @@
 				FAA9982B215F2F7C00B38A33 /* LSGetValidSiteIdRequest.m */,
 				FAA9981C215F2F7800B38A33 /* LSIOSPayCallRequest.h */,
 				FAA99815215F2F7600B38A33 /* LSIOSPayCallRequest.m */,
+				FAC6880021A9362800A98E5D /* LSPhoneInfoRequest.h */,
+				FAC6880121A9362900A98E5D /* LSPhoneInfoRequest.m */,
 				FAA9982A215F2F7C00B38A33 /* LSPremiumMembershipRequest.h */,
 				FAA99820215F2F7900B38A33 /* LSPremiumMembershipRequest.m */,
 				FA6CECB9216B2742009CB0F0 /* LSStartEditResumeRequest.h */,
@@ -6649,12 +6729,15 @@
 			files = (
 				50C4BD7620F6EDA40055C4F0 /* IService.h in Headers */,
 				3E5DCED0226D6957008C9A31 /* LSSayHiReadReplyCell.h in Headers */,
+				3E5DCEFC2270397D008C9A31 /* LSSayHiCardDetailsViewController.h in Headers */,
 				52E5551B217040790037D9E3 /* INotificationsService.h in Headers */,
 				50C4BD7720F6EDA40055C4F0 /* ILoginService.h in Headers */,
 				50C4BD7820F6EDA40055C4F0 /* IMutexServiceManager.h in Headers */,
+				3EB4A12C2282AD6200AF1BEE /* LSSayHiDetailErrorCell.h in Headers */,
 				3E755BD22268124D009CC58B /* LSSayHiDetailHeadView.h in Headers */,
 				3E5ABD12224370D900DDBE58 /* LSChatAccessoryListViewController.h in Headers */,
 				50BC119B20FDC232009C2670 /* IAnalyticsManager.h in Headers */,
+				3E6C9B29227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.h in Headers */,
 				50796605215C85B300204A19 /* IErrorType.h in Headers */,
 				50BC119C20FDC232009C2670 /* ISiteManager.h in Headers */,
 				3E5DCED8226D697D008C9A31 /* LSSayHiUnreadReplyCell.h in Headers */,
@@ -6664,6 +6747,7 @@
 				3E5794BD223F46D8007ECB7A /* LSChatAlbumListViewController.h in Headers */,
 				3E03370A21E05CFD00AB41BE /* LSShadowView.h in Headers */,
 				3E5DCEC1226D53E0008C9A31 /* LSSayHiChooseView.h in Headers */,
+				3E6C9B1A227E96680008D1A1 /* LSSayHiResponseNumCell.h in Headers */,
 				3E5794C9223F475A007ECB7A /* LSChatPhotoPreviewViewController.h in Headers */,
 				50A5747521464EC800ED7383 /* ISiteService.h in Headers */,
 				3E5794D3223F7E5A007ECB7A /* LSChatSecretPhotoViewController.h in Headers */,
@@ -6879,15 +6963,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5730F826226FED6300A38601 /* LSSayHiDialogViewController.xib in Resources */,
-				5730F827226FED6300A38601 /* LSSayHiThemeListViewController.xib in Resources */,
+				52D4B9E3227555270074E5AB /* LSSayHiRecommendViewCell.xib in Resources */,
+				57343415227453A500B2A1D9 /* LSSelectThemeView.xib in Resources */,
+				57343416227453A500B2A1D9 /* LSSelectWordView.xib in Resources */,
+				572FFA1A22759AC2009C22B8 /* LSSayHiDialogViewController.xib in Resources */,
+				572F6B8A22718F350006876F /* LSSayHiThemeListViewController.xib in Resources */,
 				5730F828226FED6300A38601 /* LSSayHiThemeListCollectionViewCell.xib in Resources */,
 				5730F829226FED6300A38601 /* LSSayHiTextListTableViewCell.xib in Resources */,
-				573968F6226D9EA1000066A1 /* LSSendSayHiViewController.xib in Resources */,
+				572F6B8422718E620006876F /* LSSendSayHiViewController.xib in Resources */,
 				5254EB96226D63D300B3C294 /* LSSayHiAllTableViewCell.xib in Resources */,
 				5254EB97226D63D300B3C294 /* LSSayHiResponseListTableViewCell.xib in Resources */,
-				5254EB7F226D53C600B3C294 /* LSSayHiAllListViewController.xib in Resources */,
-				5254EB80226D53C600B3C294 /* LSSayHiResponseListViewController.xib in Resources */,
+				521428A52283BEC1002B67BC /* LSSayHiAllListViewController.xib in Resources */,
+				52FF250C2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib in Resources */,
 				5757FFA52260291100C5CD9A /* LSChatDetailVideoViewController.xib in Resources */,
 				5778126D224C646D0022A676 /* LSRecentWatchViewController.xib in Resources */,
 				5783BC2E22436E070054130F /* RecentWatchCollectionViewCell.xib in Resources */,
@@ -6944,9 +7031,11 @@
 				3E5C0C8021A3FEAE0060E844 /* QNChatEmotionChooseView.xib in Resources */,
 				3E5C0C8121A3FEAE0060E844 /* QNChatEmotionKeyboardView.xib in Resources */,
 				3E3EAA0021F1B939009B65DD /* MainNotificaitonCell.xib in Resources */,
+				3E5DCF4B22704CF4008C9A31 /* public in Resources */,
 				3E5C0C8221A3FEAE0060E844 /* QNChatLargeEmotionLadyTableViewCell.xib in Resources */,
 				52F6C16C21D35D690024F185 /* LSMailAttachmentCollectionViewCell.xib in Resources */,
 				3E5C0C7221A3FEA60060E844 /* QNChatCouponTableViewCell.xib in Resources */,
+				52F827552271505A00CD19DE /* LSSayHiLeadInfoView.xib in Resources */,
 				3E5C0C7321A3FEA60060E844 /* QNChatLargeEmotionSelfTableViewCell.xib in Resources */,
 				3E5C0C7421A3FEA60060E844 /* QNChatMoonFeeTableViewCell.xib in Resources */,
 				3E5C0C7521A3FEA60060E844 /* QNChatPhotoLadyTableViewCell.xib in Resources */,
@@ -6975,6 +7064,7 @@
 				5269E456215F0F5B007EA7A8 /* LSEditInterestViewController.xib in Resources */,
 				577154F521353A50009CA2F8 /* LSMessageViewController.xib in Resources */,
 				576D34CE212D46C80030147E /* PostStampViewController.xib in Resources */,
+				3E6C9B2D227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib in Resources */,
 				576EA3D1210070EE00E6614D /* LiveSettingLineCell.xib in Resources */,
 				576EA3D0210070DC00E6614D /* LSNavWebViewController.xib in Resources */,
 				3E755BD62268124D009CC58B /* LSSayHiDetailHeadView.xib in Resources */,
@@ -6996,6 +7086,7 @@
 				576A985520BD306100E65806 /* SelectForGiftView.xib in Resources */,
 				3E0C5ACA20B55E1F00CDD05D /* HangoutInvitePageViewController.xib in Resources */,
 				3E0C5ACB20B55E1F00CDD05D /* HangoutInviteTableViewController.xib in Resources */,
+				3E6C9B1E227E96680008D1A1 /* LSSayHiResponseNumCell.xib in Resources */,
 				520FDE1A215CADDF00FE37CE /* LSAddCreditsViewController.xib in Resources */,
 				576AD786221B993F0014EEF0 /* HangoutGiftViewController.xib in Resources */,
 				3E0C5ACD20B55E1F00CDD05D /* HangoutGiftCellCollectionViewCell.xib in Resources */,
@@ -7051,9 +7142,7 @@
 				50DCE69720206F9A00ED28A3 /* LSMainViewController.xib in Resources */,
 				504D60771F8F8F8C00BBB037 /* LSTestViewController.xib in Resources */,
 				504D60781F8F8F8C00BBB037 /* StreamTestViewController.xib in Resources */,
-				504D60791F8F8F8C00BBB037 /* LiveChannelCollectionViewCell.xib in Resources */,
 				3E94B63A219FA26800679D20 /* QNChatViewController.xib in Resources */,
-				504D607A1F8F8F8C00BBB037 /* LiveChannelAdView.xib in Resources */,
 				3E88F7662000B9C2008F0B08 /* LiveChannelTopCollectionReusableView.xib in Resources */,
 				3ECBAD18215F10E1005BC09B /* DialogIconTips.xib in Resources */,
 				3E1331D4208DBDFE00D6AA55 /* ShowDetailViewController.xib in Resources */,
@@ -7072,7 +7161,7 @@
 				2580D2541F944D1400171722 /* NewInvitesCell.xib in Resources */,
 				504D60821F8F8F8C00BBB037 /* UserInfoListCell.xib in Resources */,
 				2580D23C1F943B5F00171722 /* LSFollowingViewController.xib in Resources */,
-				504D60931F8F8F8C00BBB037 /* LSHotViewController.xib in Resources */,
+				3E5D3B1E22715010008F1451 /* LSHotViewController.xib in Resources */,
 				2580D2481F94493900171722 /* IntroduceViewController.xib in Resources */,
 				504D60981F8F8F8C00BBB037 /* HotTableViewCell.xib in Resources */,
 				504D609C1F8F8F8D00BBB037 /* LiveFinshViewController.xib in Resources */,
@@ -7093,6 +7182,7 @@
 				25700B7C1FB4719F0065CFF0 /* RewardView.xib in Resources */,
 				3E74E48920D9E77800808755 /* IntentionletterListViewController.xib in Resources */,
 				3E88F76C2000BAF3008F0B08 /* AddPhoneNumCell.xib in Resources */,
+				3EB4A1302282AD6300AF1BEE /* LSSayHiDetailErrorCell.xib in Resources */,
 				5271ACBC1F95D75600E65C99 /* LSLiveGuideViewController.xib in Resources */,
 				2546A67A1F90BC67004E6D61 /* AddVirtualGiftsCell.xib in Resources */,
 				3E88F7722000BB16008F0B08 /* BookPrivateBroadcastSucceedHeadView.xib in Resources */,
@@ -7124,6 +7214,7 @@
 				504D60B71F8F8F8D00BBB037 /* GiftComboView.xib in Resources */,
 				3EAA5067209A944A00729AFC /* InterimShowViewController.xib in Resources */,
 				3E8D824320BD69E800AD543E /* TalentMsgCell.xib in Resources */,
+				3E5DCF002270397D008C9A31 /* LSSayHiCardDetailsViewController.xib in Resources */,
 				504D60BB1F8F8F8D00BBB037 /* GiftItemCollectionViewCell.xib in Resources */,
 				504D60BC1F8F8F8D00BBB037 /* PresentSendView.xib in Resources */,
 				52E45E1B1FB578A000846ADE /* LiveApp.js in Resources */,
@@ -7179,14 +7270,14 @@
 				5240E5E5215E0E1E00B43159 /* LSManDetailTableViewCell.xib in Resources */,
 				504D5FC51F8F384D00BBB037 /* Pods-livestream_sdk.release.xcconfig in Resources */,
 				50ED43412196774700259CA6 /* QNChatEmotionCreditsCollectionViewCell.xib in Resources */,
-				5254EB6A226D4EFA00B3C294 /* LSSayHiAllListViewController.xib in Resources */,
+				521428A42283BEC1002B67BC /* LSSayHiAllListViewController.xib in Resources */,
 				509910D81EDF9F09003B6813 /* StreamTestViewController.xib in Resources */,
 				3E7F6D911F8B17120003BC69 /* UserInfoListCell.xib in Resources */,
 				576B7D8420C532CC000BECDC /* HangOutFinshViewController.xib in Resources */,
 				2580D24D1F944BEA00171722 /* LSMyReservationsViewController.xib in Resources */,
 				5209540A21746BED002144B4 /* LSChangePasswordViewController.xib in Resources */,
 				50BF29061E98976E00B8ED5D /* LaunchScreen.storyboard in Resources */,
-				573D4EA2226F12A40071D202 /* LSSayHiThemeListViewController.xib in Resources */,
+				572F6B8922718F350006876F /* LSSayHiThemeListViewController.xib in Resources */,
 				3E5DCEEC226E9DFA008C9A31 /* LSSayHiDetailViewController.xib in Resources */,
 				3E5794C7223F475A007ECB7A /* LSChatPhotoPreviewViewController.xib in Resources */,
 				2580D25F1F9457BE00171722 /* VerifyMobileNumberViewController.xib in Resources */,
@@ -7227,11 +7318,12 @@
 				57879B7A21F1709100E2C918 /* HangOutPreAnchorPhotoCell.xib in Resources */,
 				57695EBC20C77CD60046A034 /* StartHangOutTipView.xib in Resources */,
 				504D5FC41F8F384D00BBB037 /* Pods-livestream_sdk.debug.xcconfig in Resources */,
+				3E5DCF4A22704CF4008C9A31 /* public in Resources */,
 				3E52665320E4DBBB00005029 /* HotHeadView.xib in Resources */,
-				573D4E9D226F014D0071D202 /* LSSayHiDialogViewController.xib in Resources */,
+				572FFA1922759AC2009C22B8 /* LSSayHiDialogViewController.xib in Resources */,
 				3E74C6F71F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */,
 				5253FF8521F563600004A333 /* LSHangoutFriendCollectionViewCell.xib in Resources */,
-				573968F4226D9DAD000066A1 /* LSSendSayHiViewController.xib in Resources */,
+				572F6B8322718E620006876F /* LSSendSayHiViewController.xib in Resources */,
 				52911994212275FD001574AB /* ShowListViewController.xib in Resources */,
 				257934F31F67C8B600D785F8 /* CreditView.xib in Resources */,
 				3E3EA9ED21EF2169009B65DD /* HangoutListCell.xib in Resources */,
@@ -7250,7 +7342,9 @@
 				3E74E47620D9E20300808755 /* IntentionletterListViewController.xib in Resources */,
 				504B57C31F67E1B2008101C0 /* PrivateViewController.xib in Resources */,
 				57845D9A20A6D93100283FD2 /* HangOutOpenDoorCell.xib in Resources */,
+				52DDF19722753CB500624EC1 /* LSSayHiRecommendViewCell.xib in Resources */,
 				3E3EA9FF21F1B82A009B65DD /* MainNotificaitonCell.xib in Resources */,
+				573B5E20227324D700832E96 /* LSSelectWordView.xib in Resources */,
 				520D190721C9F96A00079E54 /* LSOutOfCreditsView.xib in Resources */,
 				573D4EAC226F17580071D202 /* LSSayHiTextListTableViewCell.xib in Resources */,
 				5769D44E21B8FF1000AF64FB /* Mail_Content.html in Resources */,
@@ -7305,9 +7399,9 @@
 				50ED43592196774700259CA6 /* QNChatVoiceTableViewCell.xib in Resources */,
 				3E52665B20E4FA7900005029 /* HotTopView.xib in Resources */,
 				57453AB420AE68430097BEC9 /* HangoutInviteTableViewController.xib in Resources */,
+				52DC16BC227060D200807112 /* LSSayHiLeadInfoView.xib in Resources */,
 				50ED43512196774700259CA6 /* QNChatTextLadyTableViewCell.xib in Resources */,
 				577DCC35217D5E0C0047B70E /* LSChatEmotionViewController.xib in Resources */,
-				52D2532C1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib in Resources */,
 				5069F0A41F668145003C8AFE /* DialogChoose.xib in Resources */,
 				FA4C8FA21F7B8BD1001E9CBF /* AnchorPhotoViewController.xib in Resources */,
 				3E60E10F20BE775200F47757 /* TalentDetailViewController.xib in Resources */,
@@ -7315,11 +7409,10 @@
 				505591B01EF3FD9E000AF03A /* PresentSendView.xib in Resources */,
 				2508F16F1F5E7A8000CA2143 /* DriveView.xib in Resources */,
 				57682F51219BF341002A9F4C /* LSGreetingsViewController.xib in Resources */,
-				509910E81EDF9F25003B6813 /* LSHotViewController.xib in Resources */,
+				3E5D3B1D22715010008F1451 /* LSHotViewController.xib in Resources */,
 				50F978DF1F61332D009B22D1 /* RecommandCollectionViewCell.xib in Resources */,
-				5254EB7C226D51D400B3C294 /* LSSayHiResponseListViewController.xib in Resources */,
+				52FF250B2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib in Resources */,
 				3E990F1820E0CAB2008552F7 /* LSChatEmotionKeyboardView.xib in Resources */,
-				52C917CF1F6B7A8900C96398 /* LiveChannelAdView.xib in Resources */,
 				3E22E9F620D0B7E000A89BCC /* LSHomeSettingHaedView.xib in Resources */,
 				3E8FF0801FB532DC0012A212 /* MyRidesCell.xib in Resources */,
 				3E8FF06E1FB530F30012A212 /* LSUserInfoListViewController.xib in Resources */,
@@ -7333,6 +7426,7 @@
 				50ED435F2196774700259CA6 /* QNChatVoiceSelfTableViewCell.xib in Resources */,
 				5206C16B21AB97C300D138A1 /* QNUnreadCountBtn.xib in Resources */,
 				573968F8226DA604000066A1 /* SayHi.html in Resources */,
+				3EB4A12F2282AD6300AF1BEE /* LSSayHiDetailErrorCell.xib in Resources */,
 				579536E721C1103800388327 /* LSMailAttachmentViewController.xib in Resources */,
 				50ED43532196774700259CA6 /* QNChatPhotoSelfTableViewCell.xib in Resources */,
 				57453AB220AE68430097BEC9 /* HangoutInvitePageViewController.xib in Resources */,
@@ -7357,6 +7451,7 @@
 				5776AEAD20B2A7E70079ABEA /* HangoutGiftCellCollectionViewCell.xib in Resources */,
 				576AE58F21E48D6E00D17867 /* LSMailFreePhotoView.xib in Resources */,
 				5254EB72226D4F8E00B3C294 /* LSSayHiListViewController.xib in Resources */,
+				3E6C9B2C227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.xib in Resources */,
 				50ED435E2196774700259CA6 /* QNChatSmallEmotionLadyTableViewCell.xib in Resources */,
 				5759180A20B9400C00BF37FF /* SelectForGiftView.xib in Resources */,
 				5777366621D32021005C3F53 /* LSMailDetailFreePhotoCell.xib in Resources */,
@@ -7365,6 +7460,7 @@
 				509911391EDFB8FA003B6813 /* GiftComboView.xib in Resources */,
 				52E70F4B215C701C00BB7E1C /* LSPremiumMembershipTableViewCell.xib in Resources */,
 				3E3EA9E321EF1985009B65DD /* LSHangoutListViewController.xib in Resources */,
+				573B5E1B2273151E00832E96 /* LSSelectThemeView.xib in Resources */,
 				5739FB1A209C4DD30037ECBC /* HangOutViewController.xib in Resources */,
 				3E5ABD042241E6E200DDBE58 /* LSChatVideoLadyTableViewCell.xib in Resources */,
 				5240E5D8215E0E0E00B43159 /* LSInformationSelectView.xib in Resources */,
@@ -7393,6 +7489,7 @@
 				577A7705221E3596003C30A1 /* HangoutCreditView.xib in Resources */,
 				3ECBACC0215B14DF005BC09B /* LSSettingInfoCell.xib in Resources */,
 				52F1CEC9215B191E0059A1CB /* LSPushSettingTableViewCell.xib in Resources */,
+				3E6C9B1D227E96680008D1A1 /* LSSayHiResponseNumCell.xib in Resources */,
 				50ED43392196774700259CA6 /* QNChatNomalSmallEmotionView.xib in Resources */,
 				52C8B46C21F81216002B8599 /* HangoutDialogViewController.xib in Resources */,
 				3EAA5064209A944900729AFC /* InterimShowViewController.xib in Resources */,
@@ -7408,6 +7505,7 @@
 				25700B7B1FB4719F0065CFF0 /* RewardView.xib in Resources */,
 				5240E5E7215E0E1E00B43159 /* LSTagListCollectionViewCell.xib in Resources */,
 				5240E5B6215E0C0200B43159 /* LSManProfileViewController.xib in Resources */,
+				3E5DCEFF2270397D008C9A31 /* LSSayHiCardDetailsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7526,6 +7624,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D4B9E1227554E70074E5AB /* LSSayHiRecommendViewCell.m in Sources */,
+				52D4B9E2227554E70074E5AB /* LSSayHiRecommendView.m in Sources */,
+				573434132274538800B2A1D9 /* LSSelectThemeView.m in Sources */,
+				573434142274538800B2A1D9 /* LSSelectWordView.m in Sources */,
+				5730F82E226FFBEC00A38601 /* LSSayHiThemeListLayout.m in Sources */,
 				5730F822226FED5200A38601 /* LSSayHiDialogViewController.m in Sources */,
 				5730F823226FED5200A38601 /* LSSayHiThemeListViewController.m in Sources */,
 				5730F824226FED5200A38601 /* LSSayHiThemeListCollectionViewCell.m in Sources */,
@@ -7611,6 +7714,7 @@
 				50ADC65E219AEA3C005C0E48 /* QNChatSmallGradeEmotion.m in Sources */,
 				50ADC65F219AEA3C005C0E48 /* QNChatEmotion.m in Sources */,
 				50ADC660219AEA3C005C0E48 /* QNMessage.m in Sources */,
+				3E6C9B1C227E96680008D1A1 /* LSSayHiResponseNumCell.m in Sources */,
 				50ADC661219AEA3C005C0E48 /* QNChatCouponTableViewCell.m in Sources */,
 				50ADC663219AEA3C005C0E48 /* QNChatLargeEmotionSelfTableViewCell.m in Sources */,
 				50ADC664219AEA3C005C0E48 /* QNChatMoonFeeTableViewCell.m in Sources */,
@@ -7681,6 +7785,7 @@
 				FAA99840215F67F300B38A33 /* LSDestroyTokenRequest.m in Sources */,
 				3E4FB69B2109B16E003D9567 /* LSHomeSettingViewController.m in Sources */,
 				3EA1DB5420F3034F0075A5DC /* LSChatTableView.m in Sources */,
+				3E6C9B2B227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m in Sources */,
 				3E990F6E20E369E7008552F7 /* LSHomeSettingHaedView.m in Sources */,
 				520FDE3B215CD81B00FE37CE /* DialogIconTips.m in Sources */,
 				3E990F6F20E369E7008552F7 /* LSHomeSettingCell.m in Sources */,
@@ -7835,12 +7940,9 @@
 				506140F41F8E066C00825358 /* LSTestViewController.m in Sources */,
 				506140F51F8E066C00825358 /* StreamTestViewController.m in Sources */,
 				FAA9984B215F681200B38A33 /* LSDomainSessionRequestManager.m in Sources */,
-				506140F61F8E066C00825358 /* LiveChannelContentView.m in Sources */,
-				506140F71F8E066C00825358 /* LiveChannelCollectionViewCell.m in Sources */,
 				520607FF22685C0900AAE6E5 /* LSHomeSetItemObject.m in Sources */,
 				3ECBACCD215B30DD005BC09B /* LSSettingInfoCell.m in Sources */,
 				3E3EA9F021EF237F009B65DD /* HangoutListCell.m in Sources */,
-				506140F81F8E066C00825358 /* LiveChannelAdView.m in Sources */,
 				506140F91F8E066C00825358 /* LiveChannelTopCollectionReusableView.m in Sources */,
 				5269E44D215F0F27007EA7A8 /* LSTagListCollectionView.m in Sources */,
 				FA8B7C0F215E2946003B7BD9 /* LSSetPushConfigRequest.m in Sources */,
@@ -7851,6 +7953,7 @@
 				506140FD1F8E066C00825358 /* LSMyReservationsViewController.m in Sources */,
 				506140FE1F8E066C00825358 /* LSMyReservationsPageViewController.m in Sources */,
 				506140FF1F8E066C00825358 /* LSUserInfoListViewController.m in Sources */,
+				3E5DCEFE2270397D008C9A31 /* LSSayHiCardDetailsViewController.m in Sources */,
 				506141001F8E066C00825358 /* NewInvitesCell.m in Sources */,
 				FA06AF032269AADD00AF47AB /* LSSayHiAnchorItemObject.m in Sources */,
 				5254EB71226D4F8200B3C294 /* LSSayHiListViewController.m in Sources */,
@@ -7973,6 +8076,8 @@
 				5061416D1F8E066C00825358 /* TableSuperView.m in Sources */,
 				5061416E1F8E066C00825358 /* LSChatEmotion.m in Sources */,
 				5061416F1F8E066C00825358 /* LSChatMessageObject.m in Sources */,
+				52F827542271504400CD19DE /* LSSayHiLeadInfoView.m in Sources */,
+				3EB4A12E2282AD6300AF1BEE /* LSSayHiDetailErrorCell.m in Sources */,
 				520E988821A636ED0073DA65 /* QNChatAndInvitationViewController.m in Sources */,
 				506141701F8E066C00825358 /* LSChatTextAttachment.m in Sources */,
 				506141711F8E066C00825358 /* LSChatTextView.m in Sources */,
@@ -8296,6 +8401,7 @@
 				FA19BFF321C79B03008114C8 /* LSHttpLetterDetailItemObject.m in Sources */,
 				52964D3D21A5533D00C1C116 /* QNContactManager.m in Sources */,
 				3E03370B21E05CFD00AB41BE /* LSShadowView.m in Sources */,
+				3E5DCEFD2270397D008C9A31 /* LSSayHiCardDetailsViewController.m in Sources */,
 				3E65CA301F946974005963C9 /* VouchersCell.m in Sources */,
 				576A90CF2215001F007D6C08 /* SelectAnchorSendLayout.m in Sources */,
 				579536DE21C1101D00388327 /* LSMailAttachmentViewController.m in Sources */,
@@ -8325,6 +8431,7 @@
 				506BC3441F59027F001C2962 /* SetRideRequest.m in Sources */,
 				50ED43502196774700259CA6 /* QNChatMoonFeeTableViewCell.m in Sources */,
 				3E3EA9F421F06B72009B65DD /* LSMainNotificationManager.m in Sources */,
+				3E6C9B2A227EC91F0008D1A1 /* LSSayHiDetailAddCreditsCell.m in Sources */,
 				3E65CA351F94697E005963C9 /* GiftListViewController.m in Sources */,
 				FA19BFE221C79AE3008114C8 /* LSGetLoiDetailRequest.m in Sources */,
 				506BC3371F59027F001C2962 /* GetLeftCreditRequest.m in Sources */,
@@ -8354,6 +8461,7 @@
 				3E7F6DA41F8B56C50003BC69 /* MyBackpackViewController.m in Sources */,
 				3E8688251F7DDACD00E17CDA /* VerifyMobileNumberViewController.m in Sources */,
 				FAEB997521F56C7800A0E8D9 /* LSGetHangoutFriendsRequest.m in Sources */,
+				3E6C9B1B227E96680008D1A1 /* LSSayHiResponseNumCell.m in Sources */,
 				50D6577C1F428A0400FF49F6 /* LiveRoomTextField.m in Sources */,
 				576D9B1B2179AE960026A4A5 /* LSChatTimeTableViewCell.m in Sources */,
 				578C2A312146162E00B4F8B5 /* LSWKWebViewController.m in Sources */,
@@ -8383,6 +8491,7 @@
 				FA4C8FA11F7B8BD1001E9CBF /* AnchorPhotoViewController.m in Sources */,
 				57981FEC20996A7400F7FD91 /* HangOutViewController.m in Sources */,
 				25890A591F429A600067CC29 /* LSChatEmotionManager.m in Sources */,
+				5730F82D226FFBB900A38601 /* LSSayHiThemeListLayout.m in Sources */,
 				577BB97521AE6E75006EB09B /* LSGreetingVideoPlayView.m in Sources */,
 				506BC32F1F59027F001C2962 /* GetBackpackUnreadNumRequest.m in Sources */,
 				577154EC2134F7C4009CA2F8 /* LSChatViewController.m in Sources */,
@@ -8444,6 +8553,7 @@
 				FAA99830215F2F7D00B38A33 /* LSPremiumMembershipRequest.m in Sources */,
 				52F028D11F5E937F002F7FDC /* IntroduceViewController.m in Sources */,
 				3E62CA441F79FAA2009F79AA /* AddPhoneNumCell.m in Sources */,
+				573B5E1E227324C700832E96 /* LSSelectWordView.m in Sources */,
 				579F5E8D20F368B600AE0123 /* TotalUnreadNumObject.m in Sources */,
 				25F14B181F95B03A009453D9 /* LSEmotionCollectionViewLayout.m in Sources */,
 				2573A3F01FA96AB900501D98 /* LSStreamSpeedManager.m in Sources */,
@@ -8458,6 +8568,7 @@
 				5027D5B71EF9067200EE3B0E /* SelectCoverViewCell.m in Sources */,
 				FAEB996921F55F8000A0E8D9 /* LSFriendsInfoItemObject.m in Sources */,
 				3E5DCED1226D6957008C9A31 /* LSSayHiReadReplyCell.m in Sources */,
+				52DDF192227535FC00624EC1 /* LSSayHiRecommendView.m in Sources */,
 				FA5BC4E5215B1555000F58E0 /* LSValidSiteIdItemObject.m in Sources */,
 				576D9B182179AE960026A4A5 /* LSChatSelfMessageCell.m in Sources */,
 				25A34B261F540B6900A86378 /* LiveSendBarView.m in Sources */,
@@ -8562,7 +8673,6 @@
 				576D9B192179AE960026A4A5 /* LSChatSystemTipsTableViewCell.m in Sources */,
 				255D9DAA1F43E5C300B954DD /* ChatEmotionListItem.m in Sources */,
 				521E1E9521C796BC00651968 /* LSOutOfPoststampView.m in Sources */,
-				52D2532B1F67D49200C0C476 /* LiveChannelCollectionViewCell.m in Sources */,
 				52E70F3F215C701C00BB7E1C /* LSAppStorePayHandler.m in Sources */,
 				50D657721F4289E000FF49F6 /* LSChatMessageObject.m in Sources */,
 				509911551EDFF724003B6813 /* DiscoverListItemObject.m in Sources */,
@@ -8591,6 +8701,7 @@
 				576AD9AC2213F26800CDEDFF /* GSSortView.m in Sources */,
 				FAA9982D215F2F7D00B38A33 /* LSChangePasswordRequest.m in Sources */,
 				52964D3C21A5533D00C1C116 /* QNInviteListTableView.m in Sources */,
+				3EB4A12D2282AD6300AF1BEE /* LSSayHiDetailErrorCell.m in Sources */,
 				52E981CC215A04A6002B3376 /* LSUserSetUpGroupItemObject.m in Sources */,
 				FAA9982F215F2F7D00B38A33 /* LSGetIOSPayRequest.m in Sources */,
 				FAA99836215F2F7D00B38A33 /* LSGetMyProfileRequest.m in Sources */,
@@ -8651,11 +8762,12 @@
 				5085509D1F5D32D800BE4A9C /* LiveRoom.m in Sources */,
 				509911561EDFF724003B6813 /* FollowListItemObject.m in Sources */,
 				3E5C0C5A21A3DC940060E844 /* QNChatLargeEmotionLadyTableViewCell.m in Sources */,
+				52DDF19622753CB500624EC1 /* LSSayHiRecommendViewCell.m in Sources */,
 				5776AEAC20B2A7E70079ABEA /* HangoutGiftCellCollectionViewCell.m in Sources */,
-				52C917CD1F6B7A7E00C96398 /* LiveChannelAdView.m in Sources */,
 				25721DB81FB146D9007E77F6 /* LSUrlParmItem.m in Sources */,
 				FA06AEF72269AAD400AF47AB /* LSSayHiAnchorItemObject.m in Sources */,
 				50D6498F1EE4F03E00D71AAF /* SearchListObject.m in Sources */,
+				52DC16BA227060C000807112 /* LSSayHiLeadInfoView.m in Sources */,
 				507E1DBC219BFA840054E1CC /* Mp3Recorder.m in Sources */,
 				FA19BFF421C79B03008114C8 /* LSHttpLetterListItemObject.m in Sources */,
 				5777366F21D325E9005C3F53 /* LSPrivatePhotoCollectionViewCell.m in Sources */,
@@ -8667,7 +8779,6 @@
 				52C8B46F21F84690002B8599 /* LSHangoutListHeadView.m in Sources */,
 				5240E5F1215E1E2F00B43159 /* LSMotifyPersonalProfileManager.m in Sources */,
 				FA19BFF721C79B03008114C8 /* LSHttpLetterVideoItemObject.m in Sources */,
-				52D253261F67D2CA00C0C476 /* LiveChannelContentView.m in Sources */,
 				255974BD1F55910000B9D667 /* LiveRoomMsgManager.m in Sources */,
 				52E70F4A215C701C00BB7E1C /* LSPremiumMembershipTableViewCell.m in Sources */,
 				576999DB21C238B200BAA091 /* LSMailPrivatePlayView.m in Sources */,
@@ -8691,6 +8802,7 @@
 				2508F16D1F5E7A7800CA2143 /* DriveView.m in Sources */,
 				506BC3C91F590AC5001C2962 /* BackGiftItemObject.m in Sources */,
 				5240E5AC215E0BF600B43159 /* LSManProfileViewController.m in Sources */,
+				573B5E192273150B00832E96 /* LSSelectThemeView.m in Sources */,
 				FA2FFE2821352FE800116503 /* LSPrivateMessageManager.mm in Sources */,
 				506BC3341F59027F001C2962 /* GetGiftDetailRequest.m in Sources */,
 				573BB96020B5198400E4C2BA /* CeleBrationGiftLayout.m in Sources */,
@@ -8976,6 +9088,15 @@
 				3E5C0C6121A3DE9D0060E844 /* Base */,
 			);
 			name = QNChatEmotionListView.xib;
+			sourceTree = "<group>";
+		};
+		3E5D3B2022715010008F1451 /* LSHotViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E5D3B1F22715010008F1451 /* Base */,
+				3E5D3B2222715013008F1451 /* en */,
+			);
+			name = LSHotViewController.xib;
 			sourceTree = "<group>";
 		};
 		3E5DCEEF226E9DFA008C9A31 /* LSSayHiDetailViewController.xib */ = {
@@ -9298,6 +9419,15 @@
 			name = LSChangePasswordViewController.xib;
 			sourceTree = "<group>";
 		};
+		521428A72283BEC1002B67BC /* LSSayHiAllListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				521428A62283BEC1002B67BC /* Base */,
+				521428A92283BECA002B67BC /* en */,
+			);
+			name = LSSayHiAllListViewController.xib;
+			sourceTree = "<group>";
+		};
 		5240E5AE215E0C0000B43159 /* LSManProfileViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -9350,6 +9480,42 @@
 				52E70F51215C702B00BB7E1C /* en */,
 			);
 			name = LSAddCreditsViewController.xib;
+			sourceTree = "<group>";
+		};
+		52FF250E2282CD62006AB2B9 /* LSSayHiResponseListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52FF250D2282CD62006AB2B9 /* Base */,
+				52FF25102282CD6C006AB2B9 /* en */,
+			);
+			name = LSSayHiResponseListViewController.xib;
+			sourceTree = "<group>";
+		};
+		572F6B8622718E620006876F /* LSSendSayHiViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				572F6B8522718E620006876F /* Base */,
+				573434122273E98800B2A1D9 /* en */,
+			);
+			name = LSSendSayHiViewController.xib;
+			sourceTree = "<group>";
+		};
+		572F6B8C22718F350006876F /* LSSayHiThemeListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				572F6B8B22718F350006876F /* Base */,
+				572F6B8E22718F3D0006876F /* en */,
+			);
+			name = LSSayHiThemeListViewController.xib;
+			sourceTree = "<group>";
+		};
+		572FFA1C22759AC2009C22B8 /* LSSayHiDialogViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				572FFA1B22759AC2009C22B8 /* Base */,
+				573B58502277EFF7009B38C5 /* en */,
+			);
+			name = LSSayHiDialogViewController.xib;
 			sourceTree = "<group>";
 		};
 		57388BE621D37E030063D459 /* LSPrivatePhotoCollectionViewCell.xib */ = {

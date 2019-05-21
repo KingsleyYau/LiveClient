@@ -127,7 +127,9 @@ public class LiveDomainRequestOperator {
                     RequestJniAuthorization.GetValidSiteId(email, password, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onGetValidSiteId(isSuccess, errCode, errMsg, null);
+                    if(callback != null) {
+                        callback.onGetValidSiteId(isSuccess, errCode, errMsg, null);
+                    }
                 }
             }
         };
@@ -141,7 +143,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onGetValidSiteId(isSuccess, errCode, errMsg, siteIdList);
+                    if(callback != null) {
+                        callback.onGetValidSiteId(isSuccess, errCode, errMsg, siteIdList);
+                    }
                 }
 
 
@@ -172,7 +176,9 @@ public class LiveDomainRequestOperator {
                     RequestJniAuthorization.AddToken(token, appId, deviceId, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         };
@@ -186,7 +192,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
 
             }
@@ -212,7 +220,9 @@ public class LiveDomainRequestOperator {
                     RequestJniAuthorization.DestroyToken(callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         };
@@ -226,7 +236,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         });
@@ -269,7 +281,9 @@ public class LiveDomainRequestOperator {
                     RequestJniAuthorization.ChangePassword(passwordNew, passwordOld, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         };
@@ -283,7 +297,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         });
@@ -314,7 +330,9 @@ public class LiveDomainRequestOperator {
                     RequestJniAuthorization.DoLogin(token, memberId, deviceId, versionCode, model, manufacturer, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         };
@@ -328,7 +346,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         });
@@ -356,7 +376,9 @@ public class LiveDomainRequestOperator {
                     RequestJniOther.GetMyProfile( callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onGetMyProfile(isSuccess, errCode, errMsg, null);
+                    if(callback != null) {
+                        callback.onGetMyProfile(isSuccess, errCode, errMsg, null);
+                    }
                 }
             }
         };
@@ -371,7 +393,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onGetMyProfile(isSuccess, errno, errmsg, item);
+                    if(callback != null) {
+                        callback.onGetMyProfile(isSuccess, errno, errmsg, item);
+                    }
                 }
             }
         });
@@ -416,7 +440,9 @@ public class LiveDomainRequestOperator {
                     RequestJniOther.UpdateProfile(weight, height, language, ethnicity, religion, education, profession, income, children, smoke, drink, resume, interest, zodiac, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onUpdateMyProfile(isSuccess, errCode, errMsg, false);
+                    if(callback != null) {
+                        callback.onUpdateMyProfile(isSuccess, errCode, errMsg, false);
+                    }
                 }
             }
         };
@@ -431,7 +457,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onUpdateMyProfile(isSuccess, errno, errmsg, rsModified);
+                    if(callback != null) {
+                        callback.onUpdateMyProfile(isSuccess, errno, errmsg, rsModified);
+                    }
                 }
             }
         });
@@ -458,7 +486,9 @@ public class LiveDomainRequestOperator {
                     RequestJniOther.VersionCheck(currVer, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onOtherVersionCheck(isSuccess, errCode, errMsg, null);
+                    if(callback != null) {
+                        callback.onOtherVersionCheck(isSuccess, errCode, errMsg, null);
+                    }
                 }
             }
         };
@@ -472,7 +502,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onOtherVersionCheck(isSuccess, errno, errmsg, item);
+                    if(callback != null) {
+                        callback.onOtherVersionCheck(isSuccess, errno, errmsg, item);
+                    }
                 }
             }
         });
@@ -498,7 +530,9 @@ public class LiveDomainRequestOperator {
                     RequestJniOther.StartEditResume(callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         };
@@ -512,7 +546,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         });
@@ -535,7 +571,9 @@ public class LiveDomainRequestOperator {
                     RequestJniOther.PhoneInfo(manId, verCode, verName, action, siteId, density, width, height, lineNumber, simOptName, simOpt, simCountryIso, simState, phoneType, networkType, deviceId, callback);
                 } else {
                     // Domain认证不成功, 回调失败
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null){
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         };
@@ -549,7 +587,9 @@ public class LiveDomainRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onRequest(isSuccess, errCode, errMsg);
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
                 }
             }
         });

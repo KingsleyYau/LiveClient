@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flContentBody"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- 背景不随软键盘切换部分：视频播放view-->
+    <com.qpidnetwork.livemodule.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#414141"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/include_im_body"
+                layout="@layout/include_liveroom_im_hangout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:visibility="visible" />
+
+        </LinearLayout>
+    </com.qpidnetwork.livemodule.view.LiveRoomScrollView>
+
+    <!--最上层消息控制等-->
+    <FrameLayout
+        android:id="@+id/fl_imMsgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:id="@+id/ll_msglist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/fl_msglist"
+                layout="@layout/view_liveroom_msglist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginBottom="@dimen/msgListButtomMarginInHangoutRoom"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_chatters"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="23dp"
+            android:layout_marginBottom="55dp"
+            android:background="@android:color/transparent"
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_vedioControll"
+            android:layout_width="@dimen/live_hangout_bottom_opera_btn_size"
+            android:layout_height="@dimen/live_hangout_bottom_opera_btn_size"
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="13dp"
+            android:layout_marginBottom="58dp"
+            android:src="@drawable/ic_liveroom_hangout_vediocontroll"
+            android:visibility="visible" />
+
+        <include
+            layout="@layout/view_liveroom_sendmsg_hangout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/msgListButtomMarginInHangoutRoom"
+            android:layout_gravity="bottom"
+            android:visibility="visible" />
+        <!--最底部为表情选择器-->
+        <!--<com.qpidnetwork.anchor.liveshow.personal.chatemoji.EmojiTabScrollLayout-->
+        <!--xmlns:custom="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/etsl_emojiContainer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@android:color/white"-->
+        <!--android:visibility="gone"-->
+        <!--custom:columnNumbPerPage="5"-->
+        <!--custom:lineNumbPerPage="3" />-->
+        <!--<com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutVedioController-->
+            <!--android:id="@+id/hovc_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:visibility="visible" />-->
+
+    </FrameLayout>
+
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_celebGift"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
+        android:minHeight="600dp"
+        android:visibility="visible"
+        fresco:actualImageScaleType="fitCenter" />
+</com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout>

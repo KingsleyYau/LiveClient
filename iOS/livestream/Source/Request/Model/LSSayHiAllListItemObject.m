@@ -21,8 +21,11 @@
         self.cover = @"";
         self.avatar = @"";
         self.age = 0;
+        self.sendTime = 0;
+        self.content = @"";
         self.responseNum = 0;
         self.unreadNum = 0;
+        self.isFree = NO;
     }
     return self;
 }
@@ -35,8 +38,11 @@
         self.cover = [coder decodeObjectForKey:@"cover"];
         self.avatar = [coder decodeObjectForKey:@"avatar"];
         self.age = [coder decodeIntForKey:@"age"];
+        self.sendTime = [coder decodeIntegerForKey:@"sendTime"];
+        self.content = [coder decodeObjectForKey:@"content"];
         self.responseNum = [coder decodeIntForKey:@"responseNum"];
         self.unreadNum = [coder decodeIntForKey:@"unreadNum"];
+        self.isFree = [coder decodeBoolForKey:@"isFree"];
     }
     return self;
 }
@@ -48,9 +54,11 @@
     [coder encodeObject:self.cover forKey:@"cover"];
     [coder encodeObject:self.avatar forKey:@"avatar"];
     [coder encodeInt:self.age forKey:@"age"];
+    [coder encodeInteger:self.sendTime forKey:@"sendTime"];
+    [coder encodeObject:self.content forKey:@"content"];
     [coder encodeInt:self.responseNum forKey:@"responseNum"];
     [coder encodeInt:self.unreadNum forKey:@"unreadNum"];
-
+    [coder encodeBool:self.isFree forKey:@"isFree"];
 }
 
 @end

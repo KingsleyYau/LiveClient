@@ -57,14 +57,18 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/live_size_16dp">
 
-                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                <!--<com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView-->
+                    <!--android:id="@+id/my_profile_iv_userIcon"-->
+                    <!--android:layout_width="96dp"-->
+                    <!--android:layout_height="96dp"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@drawable/ic_user_icon"-->
+                    <!--app:civ_border_color="@color/white"-->
+                    <!--app:civ_border_width="@dimen/menu_photo_border" />-->
+                <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/my_profile_iv_userIcon"
                     android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_user_icon"
-                    app:civ_border_color="@color/white"
-                    app:civ_border_width="@dimen/menu_photo_border" />
+                    android:layout_height="96dp"/>
 
                 <LinearLayout
                     android:layout_width="0dp"

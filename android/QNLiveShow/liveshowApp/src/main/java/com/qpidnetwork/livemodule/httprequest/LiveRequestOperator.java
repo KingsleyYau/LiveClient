@@ -11,6 +11,10 @@ import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionCategory;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutGiftListItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutOnlineAnchorItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutRoomStatusItem;
 import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
 import com.qpidnetwork.livemodule.httprequest.item.HttpAuthorityItem;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
@@ -82,21 +86,22 @@ public class LiveRequestOperator {
                 //add by Jagger 2018-10-10
                 if(response.isSuccess){
                     LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
-                }
-                HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
-                switch (errType) {
-                    case HTTP_LCC_ERR_TOKEN_EXPIRE:
-                    case HTTP_LCC_ERR_NO_LOGIN: {
-                        //sesssion 过期 //add by Jagger 2018-10-10
-                        LoginManager.getInstance().register((IAuthorizationListener)response.data);
-                        //modify by hunter 2018.8.7 修改为session过期执行踢出逻辑
-                        LoginManager.getInstance().onModuleSessionOverTime();
+                }else{
+                    HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
+                    switch (errType) {
+                        case HTTP_LCC_ERR_TOKEN_EXPIRE:
+                        case HTTP_LCC_ERR_NO_LOGIN: {
+                            //sesssion 过期 //add by Jagger 2018-10-10
+                            LoginManager.getInstance().register((IAuthorizationListener)response.data);
+                            //modify by hunter 2018.8.7 修改为session过期执行踢出逻辑
+                            LoginManager.getInstance().onModuleSessionOverTime();
+                        }
+                        break;
+                        default: {
+                            LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
+                        }
+                        break;
                     }
-                    break;
-                    default: {
-//                            LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
-                    }
-                    break;
                 }
             }
 //            }
@@ -2666,6 +2671,479 @@ public class LiveRequestOperator {
                 } else {
                     // 没有匹配处理, 直接回调
                     callback.onMobilePayGoto(isSuccess, errCode, errMsg, redirtctUrl);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.2.发起多人互动邀请
+     * @param roomId            当前发起的直播间ID
+     * @param anchorId          主播ID
+     * @param recommendId       推荐ID（可无，无则表示不是因推荐导致观众发起邀请）
+     * @param callback
+     * @return
+     */
+    public long SendInvitationHangout(final String roomId, final String anchorId, final String recommendId, final boolean isCreateOnly, final OnSendInvitationHangoutCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.SendInvitationHangout(roomId, anchorId, recommendId, isCreateOnly, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onSendInvitationHangout(isSuccess, errCode, errMsg, "", "", 0);
+                }
+            }
+        };
+
+        return RequestJniHangout.SendInvitationHangout(roomId, anchorId, recommendId, isCreateOnly, new OnSendInvitationHangoutCallback() {
+            @Override
+            public void onSendInvitationHangout(boolean isSuccess, int errCode, String errMsg, String roomId, String inviteId, int expire) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onSendInvitationHangout(isSuccess, errCode, errMsg, roomId, inviteId, expire);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.3.取消多人互动邀请
+     * @param inviteId      邀请ID
+     * @param callback
+     * @return
+     */
+    public long CancelHangoutInvit(final String inviteId, final OnRequestCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.CancelHangoutInvit(inviteId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniHangout.CancelHangoutInvit(inviteId, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.4.获取多人互动邀请状态
+     * @param inviteId     邀请ID
+     * @param callback
+     * @return
+     */
+    public long GetHangoutInvitStatus(final String inviteId, final OnGetHangoutInvitStatusCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.GetHangoutInvitStatus(inviteId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetHangoutInvitStatus(isSuccess, errCode, errMsg, 0, "", 0);
+                }
+            }
+        };
+
+        return RequestJniHangout.GetHangoutInvitStatus(inviteId, new OnGetHangoutInvitStatusCallback() {
+            @Override
+            public void onGetHangoutInvitStatus(boolean isSuccess, int errCode, String errMsg, int status, String roomId, int expire) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetHangoutInvitStatus(isSuccess, errCode, errMsg, status, roomId, expire);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.5.同意主播敲门请求
+     * @param knockId       敲门ID
+     * @param callback
+     * @return
+     */
+    public long DealKnockRequest(final String knockId, final OnRequestCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.DealKnockRequest(knockId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniHangout.DealKnockRequest(knockId, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * 8.6.获取多人互动直播间可发送的礼物列表
+     * @param roomId       直播间ID
+     * @param callback
+     * @return
+     */
+    public long GetHangoutGiftList(final String roomId, final OnGetHangoutGiftListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.GetHangoutGiftList(roomId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetHangoutGiftList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniHangout.GetHangoutGiftList(roomId, new OnGetHangoutGiftListCallback() {
+            @Override
+            public void onGetHangoutGiftList(boolean isSuccess, int errCode, String errMsg, HangoutGiftListItem item) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetHangoutGiftList(isSuccess, errCode, errMsg, item);
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * 8.7.获取Hang-out在线主播列表接口
+     * @param callback
+     * @return
+     */
+    public long GetHangoutOnlineAnchor(final OnGetHangoutOnlineAnchorCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.GetHangoutOnlineAnchor(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetHangoutOnlineAnchor(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniHangout.GetHangoutOnlineAnchor(new OnGetHangoutOnlineAnchorCallback() {
+            @Override
+            public void onGetHangoutOnlineAnchor(boolean isSuccess, int errCode, String errMsg, HangoutOnlineAnchorItem[] list) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetHangoutOnlineAnchor(isSuccess, errCode, errMsg, list);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.8.获取指定主播的Hang-out好友列表
+     * @param anchorId   主播ID
+     * @param callback
+     * @return
+     */
+    public long GetHangoutFriends(final String anchorId, final OnGetHangoutFriendsCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.GetHangoutFriends(anchorId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetHangoutFriends(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniHangout.GetHangoutFriends(anchorId, new OnGetHangoutFriendsCallback() {
+            @Override
+            public void onGetHangoutFriends(boolean isSuccess, int errCode, String errMsg, HangoutAnchorInfoItem[] audienceList) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetHangoutFriends(isSuccess, errCode, errMsg, audienceList);
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * 8.9.自动邀请Hangout直播邀請展示條件
+     * @param anchorId   主播ID
+     * @param callback
+     * @return
+     */
+    public long AutoInvitationHangoutLiveDisplay(final String anchorId, final boolean isAuto, final OnRequestCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.AutoInvitationHangoutLiveDisplay(anchorId, isAuto, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniHangout.AutoInvitationHangoutLiveDisplay(anchorId, isAuto, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.10.自动邀请hangout点击记录
+     * @param anchorId   主播ID
+     * @param callback
+     * @return
+     */
+    public long AutoInvitationClickLog(final String anchorId, final boolean isAuto, final OnRequestCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.AutoInvitationClickLog(anchorId, isAuto, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniHangout.AutoInvitationClickLog(anchorId, isAuto, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 8.11.获取当前会员Hangout直播状态
+     * @param callback
+     * @return
+     */
+    public long GetHangoutStatus(final OnGetHangoutStatusCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniHangout.GetHangoutStatus(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetHangoutStatus(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniHangout.GetHangoutStatus(new OnGetHangoutStatusCallback() {
+            @Override
+            public void onGetHangoutStatus(boolean isSuccess, int errCode, String errMsg, HangoutRoomStatusItem[] list) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetHangoutStatus(isSuccess, errCode, errMsg, list);
                 }
             }
         });

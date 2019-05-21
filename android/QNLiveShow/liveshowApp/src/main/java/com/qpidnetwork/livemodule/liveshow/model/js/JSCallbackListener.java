@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.model.js;
 
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 
 /**
@@ -25,4 +26,10 @@ public interface JSCallbackListener {
      * @param isShow
      */
     void onEventShowNavigation(String isShow);
+
+    /**
+     * 显示主播好友头像
+     * @param item
+     */
+    void onShowHangoutAnchor(HangoutAnchorInfoItem item);
 }

@@ -71,12 +71,14 @@ static LiveGobalManager *gManager = nil;
 }
 
 - (void)addDelegate:(id<LiveGobalManagerDelegate>)delegate {
+    NSLog(@"LiveGobalManager::addDelegate( %@ )", delegate);
     @synchronized(self) {
         [self.delegates addObject:[NSValue valueWithNonretainedObject:delegate]];
     }
 }
 
 - (void)removeDelegate:(id<LiveGobalManagerDelegate>)delegate {
+    NSLog(@"LiveGobalManager::removeDelegate( %@ )", delegate);
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<LiveGobalManagerDelegate> item = (id<LiveGobalManagerDelegate>)value.nonretainedObjectValue;

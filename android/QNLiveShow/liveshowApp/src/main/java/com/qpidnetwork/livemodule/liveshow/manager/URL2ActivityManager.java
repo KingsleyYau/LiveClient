@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 
 import com.dou361.dialogui.DialogUIUtils;
@@ -11,15 +13,20 @@ import com.dou361.dialogui.listener.DialogUIListener;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutOnlineAnchorItem;
+import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
 import com.qpidnetwork.livemodule.liveshow.livechat.LiveChatMainActivity;
 import com.qpidnetwork.livemodule.liveshow.livechat.LiveChatTalkActivity;
+import com.qpidnetwork.livemodule.liveshow.liveroom.HangoutTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
+import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutDetailDialogFragment;
 import com.qpidnetwork.livemodule.liveshow.loi.AlphaBarWebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.message.ChatTextActivity;
 import com.qpidnetwork.livemodule.liveshow.message.MessageContactListActivity;
@@ -30,12 +37,14 @@ import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.tickets.MyTicketsActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
+import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
 import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -73,6 +82,8 @@ public class URL2ActivityManager {
     public static final String KEY_URL_MODULE_NAME_LOGIN = "login"; //add by Jagger 2018-9-26
     public static final String KEY_URL_MODULE_NAME_MY_PROFILE = "myprofile"; //add by Jagger 2018-9-28
     public static final String KEY_URL_MODULE_NAME_SEND_MAIL = "sendmail"; //写信
+    public static final String KEY_URL_MODULE_NAME_HANGOUT_DIALOG = "hangout_dialog";   //打开hangoutdialog
+    public static final String KEY_URL_MODULE_NAME_HANGOUT_TRANSITION = "hangout";   //打开hangout过渡页
 
     //URL中的KEYS
     public static final String KEY_URL_PARAM_KEY_LISTTYPE = "listtype";
@@ -247,6 +258,10 @@ public class URL2ActivityManager {
                     }
                     else if (moduleStr.equals(KEY_URL_MODULE_NAME_SEND_MAIL)) {
                         URL4SendMail(context, uri);
+                    }else if(moduleStr.equals(KEY_URL_MODULE_NAME_HANGOUT_DIALOG)) {
+                        URL4ShowHangoutInviteDialog(context, uri);
+                    }else if (moduleStr.equals(KEY_URL_MODULE_NAME_HANGOUT_TRANSITION)) {
+                        URL4HangoutTransition(context, uri);
                     }
                 }
             }else{
@@ -629,6 +644,25 @@ public class URL2ActivityManager {
         return url;
     }
 
+    /**
+     * 构建Hangout过渡页 URL
+     * @param anchorId
+     * @param anchorName
+     * @return
+     */
+    public static String createHangoutTransitionActivity(String anchorId, String anchorName){
+        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
+                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_HANGOUT_TRANSITION;
+
+        if(!TextUtils.isEmpty(anchorId)){
+            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
+        }
+        if(!TextUtils.isEmpty(anchorName)){
+            url += "&" + KEY_URL_PARAM_KEY_ANCHORNAME + "=" + anchorName;
+        }
+        return url;
+    }
+
 
     //---------------------- 生成对应界面的URL end ---------------------------
 
@@ -656,13 +690,27 @@ public class URL2ActivityManager {
      * @param uri
      * @return
      */
-    public int getMainListType(Uri uri){
+    public MainFragmentPagerAdapter4Top.TABS getMainListType(Uri uri){
         HashMap<String, String> params = parseParams(uri);
-        int listType = 0;
+        MainFragmentPagerAdapter4Top.TABS mainTab = MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER;
         if(params.containsKey(KEY_URL_PARAM_KEY_LISTTYPE)){
-            listType = Integer.valueOf(params.get(KEY_URL_PARAM_KEY_LISTTYPE)) - 1;
+            int listType = Integer.valueOf(params.get(KEY_URL_PARAM_KEY_LISTTYPE));
+            switch (listType){
+                case 1:{
+                    mainTab = MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER;
+                }break;
+                case 2:{
+                    mainTab = MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_FOLLOW;
+                }break;
+                case 3:{
+                    mainTab = MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_CALENDAR;
+                }break;
+                case 4:{
+                    mainTab = MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_HANGOUT;
+                }break;
+            }
         }
-        return listType;
+        return mainTab;
     }
 
     /**
@@ -682,7 +730,7 @@ public class URL2ActivityManager {
 //
 //        context.startActivity(intent);
 
-        RegisterActivity.launchRegisterActivity(context, url);
+        LoginNewActivity.launchRegisterActivity(context, url);
     }
 
     /**
@@ -1023,6 +1071,64 @@ public class URL2ActivityManager {
         MyProfileActivity.lanchAct(context);
     }
 
+    /**
+     * 打开hangout邀请dialog
+     * @param context
+     * @param uri
+     */
+    private void URL4ShowHangoutInviteDialog(final Context context, Uri uri){
+        String anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
+        String anchorName = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORNAME);
+        //点击，弹出start hangout 提示
+        if(context instanceof FragmentActivity) {
+            FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+            HangoutOnlineAnchorItem anchorInfoItem = new HangoutOnlineAnchorItem();
+            anchorInfoItem.anchorId = anchorId;
+            anchorInfoItem.nickName = anchorName;
+            HangOutDetailDialogFragment.showDialog(fragmentManager, anchorInfoItem, new HangOutDetailDialogFragment.OnDialogClickListener() {
+                @Override
+                public void onStartHangoutClick(final HangoutOnlineAnchorItem anchorItem) {
+//                    //生成被邀请的主播列表（这里是目标主播一人）
+//                    ArrayList<IMUserBaseInfoItem> anchorList = new ArrayList<>();
+//                    anchorList.add(new IMUserBaseInfoItem(anchorItem.anchorId, anchorItem.nickName, anchorItem.avatarImg));
+//                    //过渡页
+//                    Intent intent = HangoutTransitionActivity.getIntent(
+//                            context,
+//                            anchorList,
+//                            "",
+//                            anchorItem.coverImg,
+//                            "");
+//                    context.startActivity(intent);
+                    String url = URL2ActivityManager.createHangoutTransitionActivity(anchorItem.anchorId, anchorItem.nickName);
+                    new AppUrlHandler(context).urlHandle(url);
+                }
+            });
+        }
+    }
+
+    /**
+     * 打开多人互动过渡页
+     * @param context
+     * @param uri
+     */
+    private void URL4HangoutTransition(final Context context, Uri uri){
+        String anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
+        String anchorName = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORNAME);
+        if(!TextUtils.isEmpty(anchorId)){
+            //生成被邀请的主播列表（这里是目标主播一人）
+            ArrayList<IMUserBaseInfoItem> anchorList = new ArrayList<>();
+            anchorList.add(new IMUserBaseInfoItem(anchorId, anchorName, ""));
+            //过渡页
+            Intent intent = HangoutTransitionActivity.getIntent(
+                    context,
+                    anchorList,
+                    "",
+                    "",
+                    "");
+            context.startActivity(intent);
+        }
+    }
+
     //----------------------- 使用URL跳转 end -----------------------------
 
     /**
@@ -1094,7 +1200,8 @@ public class URL2ActivityManager {
                             || moduleName.equals(KEY_URL_MODULE_NAME_CHAT)
                             || moduleName.equals(KEY_URL_MODULE_NAME_NEW_BOOKING)
                             || moduleName.equals(KEY_URL_MODULE_NAME_LIVE_CHAT)
-                            || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)){
+                            || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_HANGOUT_DIALOG)){
                         isModuleConflict = false;
                     }else{
                         isModuleConflict = true;
@@ -1168,7 +1275,8 @@ public class URL2ActivityManager {
                     || moduleName.equals(KEY_URL_MODULE_NAME_MAIL_LIST)
                     || moduleName.equals(KEY_URL_MODULE_NAME_MY_PROFILE)
                     || moduleName.equals(KEY_URL_MODULE_NAME_MY_TICKETS)
-                    || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)))){
+                    || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)
+                    || moduleName.equals(KEY_URL_MODULE_NAME_HANGOUT_TRANSITION)))){
 
                     //且未登录
                     if(!doCheckIsLogined()){

@@ -9,7 +9,7 @@ import net.qdating.utils.Log;
 import static net.qdating.filter.LSImageShader.ledChar;
 
 /**
- * YUV渲染滤镜
+ * YUV输入滤镜
  */
 public class LSImageInputYuvFilter extends LSImageBufferFilter {
 	/**
@@ -193,6 +193,8 @@ public class LSImageInputYuvFilter extends LSImageBufferFilter {
 		}
 		
 		if( bufferY != null ) {
+			// 激活纹理单元GL_TEXTURE0
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		    // 绑定Y纹理
 		    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureIdY[0]);
             // 绑定Y采样数据Buffer, Y数据存在rgb字段

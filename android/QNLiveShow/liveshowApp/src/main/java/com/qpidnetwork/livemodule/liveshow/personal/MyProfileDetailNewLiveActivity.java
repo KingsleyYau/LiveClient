@@ -46,6 +46,7 @@ import com.qpidnetwork.livemodule.view.MaterialDialogSingleChoice;
 import com.qpidnetwork.livemodule.view.ProfileItemView;
 import com.qpidnetwork.livemodule.view.wrap.WrapBaseAdapter;
 import com.qpidnetwork.livemodule.view.wrap.WrapListView;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1056,7 +1057,7 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
             case REQUEST_FAIL: {
                 hideProgressDialog();
                 cancelToastImmediately();
-                Toast.makeText(mContext, obj.errMsg, Toast.LENGTH_LONG).show();
+                ToastUtil.showToast(mContext, obj.errMsg);
             }
             break;
             default:

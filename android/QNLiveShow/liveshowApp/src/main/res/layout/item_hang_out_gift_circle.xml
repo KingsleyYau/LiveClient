@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.CirclePinkHaloLayoutView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:background="@color/text_black">
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!--<View-->
+        <!--android:id="@+id/item_user_info_grid_circle_view"-->
+        <!--android:layout_width="90dp"-->
+        <!--android:layout_height="90dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@drawable/bg_hang_out_gift_circle_shape" />-->
+
+        <com.qpidnetwork.livemodule.view.CirclePinkHaloView
+            android:id="@+id/item_user_info_grid_circle_halo_view"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:visibility="invisible"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/item_hang_out_gift_iv_icon"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_hang_out_gift_circle_selector"
+            android:padding="@dimen/live_size_20dp"
+            android:src="@drawable/ic_default_gift"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/item_hang_out_gift_tv_credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:textColor="@color/live_ho_orange_credits"
+        android:textSize="@dimen/live_size_11sp"
+        tools:text="你好我您" />
+</com.qpidnetwork.livemodule.view.CirclePinkHaloLayoutView>
+
+    <!--
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:background="@color/text_black">
+
+    <ImageView
+        android:id="@+id/item_hang_out_gift_iv_icon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_hang_out_gift_circle_selector"
+        android:padding="@dimen/live_size_20dp"
+        android:src="@drawable/ic_default_gift"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/item_hang_out_gift_tv_credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:textColor="@color/live_ho_orange_credits"
+        android:textSize="@dimen/live_size_11sp"
+        tools:text="你好我您" />
+    </LinearLayout>
+    -->

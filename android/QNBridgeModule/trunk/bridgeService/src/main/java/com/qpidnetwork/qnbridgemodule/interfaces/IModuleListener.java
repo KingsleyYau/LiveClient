@@ -57,4 +57,13 @@ public interface IModuleListener {
      */
     public void onAppsFlyerEventNotify(String params);
 
+    /**
+     * 登陆回调
+     * @param isSuccess
+     * @param errno
+     * @param errmsg
+     * @param userId
+     */
+    public void onLogin(boolean isSuccess, String errno, String errmsg, String userId);
+
 }

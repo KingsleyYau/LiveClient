@@ -97,6 +97,7 @@
     // Do any additional setup after loading the view.
     NSLog(@"LSViewController::viewDidLoad( %@, %p )", NSStringFromClass([self class]), self);
     [self setNeedsStatusBarAppearanceUpdate];
+    [self setupLoadingActivityView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -105,7 +106,6 @@
         [UIView setAnimationsEnabled:YES];
         [self setupNavigationBar];
         [self setupContainView];
-        [self setupLoadingActivityView];
         
         self.navigationController.navigationBar.hidden = NO;
         self.navigationController.navigationBar.translucent = YES;

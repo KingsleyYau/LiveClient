@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_talents"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/talent_dialog_bg"
+    android:orientation="vertical">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fresco:actualImageScaleType="fitXY"
+        fresco:placeholderImage="@color/live_ho_detail_dialog_bg" />
+
+    <!-- 内容 (高度不写死会占满屏) -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/live_ho_detail_dialog_bg"
+        android:padding="@dimen/live_size_10dp">
+
+        <!-- 总标题 -->
+        <LinearLayout
+            android:id="@+id/ll_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/live_size_40dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_hang_out" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/live_size_10dp"
+                android:text="@string/Hand_out"
+                android:textColor="@color/live_ho_orange_deep"
+                android:textSize="@dimen/live_size_16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_title" />
+
+        <!-- 小标题 -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/hand_out_detail_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_line" />
+
+        <!-- 描述 -->
+        <TextView
+            android:id="@+id/tv_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="4"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+        <!-- 主播头 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/fl_friends"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_anchor"
+                android:layout_width="102dp"
+                android:layout_height="102dp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="@dimen/live_size_4dp"
+                android:layout_marginBottom="@dimen/live_size_4dp"
+                android:src="@drawable/ic_points_vertical" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:text="Name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp" />
+        </LinearLayout>
+
+        <!-- 好友头 -->
+        <FrameLayout
+            android:id="@+id/fl_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rectangle_radius4_adffffff"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <!-- loading -->
+            <LinearLayout
+                android:id="@+id/view_live_pop_window_hangout_detail_ll_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/live_hangout_anchor_list_wh"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ProgressBar
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_gravity="center_horizontal"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/live_loading_progress"
+                    android:indeterminateDuration="1000"
+                    android:scrollbarStyle="insideInset" />
+            </LinearLayout>
+
+            <!-- Retry -->
+            <LinearLayout
+                android:id="@+id/view_live_pop_window_hangout_detail_ll_errorRetry"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/live_hangout_anchor_list_wh"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/view_live_pop_window_hangout_detail_iv_errorRetry"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_hangout_load_error" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_16dp"
+                    android:text="@string/hangout_gift_retry"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/live_size_14sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- 按钮 -->
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_start"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/live_size_12dp"
+            android:layout_marginLeft="@dimen/live_size_40dp"
+            android:layout_marginRight="@dimen/live_size_40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            button:background_res="@drawable/btn_hangout_list_stroke_shape"
+            button:raisebutton_radius="@dimen/raise_button_radius"
+            button:title="@string/Start"
+            button:title_text_bold="true"
+            button:title_text_size="@dimen/live_size_16sp"
+            button:title_color="@color/white"
+            button:elevation="4dp"
+            button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc"
+            button:icon="@drawable/ic_hang_out"
+            button:icon_width="@dimen/live_size_30dp"
+            button:icon_height="@dimen/live_size_30dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

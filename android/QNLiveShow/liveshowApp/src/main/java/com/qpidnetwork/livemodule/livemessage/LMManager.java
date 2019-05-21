@@ -130,7 +130,7 @@ public class LMManager extends LMClientListener {
 	 */
 	public boolean releaseManager() {
 		boolean result = false;
-		result =  LMClient.ReleaseLMManager();
+		result =  LMClient.ReleaseLMManager(IMClient.GetIMClient());
 		return result;
 	}
 

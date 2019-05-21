@@ -188,7 +188,7 @@ public class GiftSendReqManager implements IMLiveRoomEventListener {
     }
 
     @Override
-    public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {}
+    public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId) {}
 
     @Override
     public void OnControlManPush(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType,

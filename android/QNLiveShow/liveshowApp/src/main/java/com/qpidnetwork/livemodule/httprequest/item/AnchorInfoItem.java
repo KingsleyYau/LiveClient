@@ -17,11 +17,13 @@ public class AnchorInfoItem {
 	 * @param anchorType		主播类型
 	 * @param isLive			是否正在公开直播
 	 * @param introduction		主播个人介绍
+	 * @param roomPhotoUrl		主播封面
 	 */
 	public AnchorInfoItem(String address,
 	 						int anchorType,
 	 						boolean isLive,
-	 						String introduction){
+	 						String introduction,
+						  	String roomPhotoUrl){
 		this.address = address;
 		if( anchorType < 0 || anchorType >= AnchorLevelType.values().length ) {
 			this.anchorType = AnchorLevelType.Unknown;
@@ -30,6 +32,7 @@ public class AnchorInfoItem {
 		}
 		this.isLive = isLive;
 		this.introduction = introduction;
+		this.roomPhotoUrl = roomPhotoUrl;
 
 	}
 	
@@ -37,6 +40,7 @@ public class AnchorInfoItem {
 	public AnchorLevelType anchorType;
 	public boolean isLive;
 	public String introduction;
+	public String roomPhotoUrl;
 
 
 	@Override
@@ -45,6 +49,7 @@ public class AnchorInfoItem {
 				+ " anchorType:"+anchorType
 				+ " isLive:"+isLive
 				+ " introduction:"+introduction
+				+ " roomPhotoUrl:"+roomPhotoUrl
 				+ "]";
 	}
 }

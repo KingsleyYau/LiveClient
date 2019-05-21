@@ -6,12 +6,6 @@
         <item>个人</item>
     </string-array>
 
-    <string-array name="topTabs">
-        <item>DISCOVER</item>
-        <item>FOLLOW</item>
-        <item>CALENDAR</item>
-    </string-array>
-
     <string-array name="mobilePopupItems">
         <item>Log in with Phone</item>
         <item>Sign up with Phone</item>

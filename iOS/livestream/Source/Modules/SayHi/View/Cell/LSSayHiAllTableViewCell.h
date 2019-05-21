@@ -15,11 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *anchorName;
 @property (weak, nonatomic) IBOutlet UILabel *unreadCount;
-@property (weak, nonatomic) IBOutlet UILabel *totalCount;
 @property (nonatomic, strong) LSImageViewLoader* imageViewLoader;
+@property (weak, nonatomic) IBOutlet UILabel *content;
+@property (weak, nonatomic) IBOutlet UILabel *dateTime;
+@property (weak, nonatomic) IBOutlet UILabel *freeIcon;
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;
 + (id)getUITableViewCell:(UITableView*)tableView;
+
+- (void)cellUpdateIsHasRead:(NSInteger)unreadNum;
 @end
 
 NS_ASSUME_NONNULL_END

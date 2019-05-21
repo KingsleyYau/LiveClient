@@ -10,7 +10,12 @@
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_utils_CrashHandlerJni_SetCrashLogDirectory
   (JNIEnv *env, jclass cls, jstring directory){
-	const char *cpDirectory = env->GetStringUTFChars(directory, 0);
-	CrashHandler::GetInstance()->SetCrashLogDirectory(cpDirectory);
-	env->ReleaseStringUTFChars(directory, cpDirectory);
+    string strDirectory("");
+    if (directory != NULL) {
+	    const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+	    strDirectory = cpDirectory;
+	    env->ReleaseStringUTFChars(directory, cpDirectory);
+	}
+	CrashHandler::GetInstance()->SetCrashLogDirectory(strDirectory);
+
 }

@@ -66,15 +66,15 @@ private:
 	AVCodecContext *mContext;
 
     AudioDecoderCallback* mpCallback;
-    
+    // 容器格式化
     AudioMuxer mAudioMuxer;
     
     // 状态锁
     KMutex mRuningMutex;
     bool mbRunning;
     
+    // 空闲队列
     EncodeDecodeBufferList mFreeBufferList;
-    
     // 等待解码队列
     EncodeDecodeBufferList mDecodeBufferList;
     

@@ -14,11 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 
 import com.qpidnetwork.livemodule.framework.livemsglist.interfaces.IListFunction;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -301,5 +301,20 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
             }
         }
         return item;
+    }
+
+    /**
+     * 2019/4/22 Hardy
+     * 停止定时器
+     */
+    public void onDestroy(){
+        if(mHoldingTask != null ){
+            mHoldingTask.cancel();
+            mHoldingTask = null;
+        }
+        if (mHoldingTimer != null) {
+            mHoldingTimer.cancel();
+            mHoldingTimer = null;
+        }
     }
 }

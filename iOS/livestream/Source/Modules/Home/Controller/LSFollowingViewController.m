@@ -20,6 +20,9 @@
 #import "LiveGobalManager.h"
 #import "QNChatViewController.h"
 #import "LSSendMailViewController.h"
+#import "LSSendSayHiViewController.h"
+#import "SetFavoriteRequest.h"
+#import "DialogTip.h"
 #define PageSize 10
 
 @interface LSFollowingViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate>
@@ -282,6 +285,7 @@
                             itemInfo.priv.isHasBookingAuth = item.priv.isHasBookingAuth;
                             itemInfo.priv.isHasOneOnOneAuth = item.priv.isHasOneOnOneAuth;
                             itemInfo.chatOnlineStatus = item.chatOnlineStatus;
+                            itemInfo.isFollow = item.isFollow;
                             [self.items addObject:itemInfo];
                         }
 
@@ -466,6 +470,33 @@
     vc.anchorId = item.userId;
     vc.anchorName = item.nickName;
     vc.photoUrl = item.photoUrl;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)tableView:(HotTableView *)tableView didFocusBtn:(NSInteger)index {
+    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+    SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
+    request.userId = item.userId;
+    request.isFav = !item.isFollow;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"LSFollowingViewController::didFocusBtn( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
+            if (success) {
+                item.isFollow = !item.isFollow;
+                [self.tableView reloadData];
+            } else {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
+            }
+        });
+    };
+    [self.sessionManager sendRequest:request];
+}
+
+- (void)tableView:(HotTableView *)tableView didSayHiBtn:(NSInteger)index {
+     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+    LSSendSayHiViewController * vc = [[LSSendSayHiViewController alloc]initWithNibName:nil bundle:nil];
+    vc.anchorId = item.userId;
+    vc.anchorName = item.nickName;
     [self.navigationController pushViewController:vc animated:YES];
 }
 @end

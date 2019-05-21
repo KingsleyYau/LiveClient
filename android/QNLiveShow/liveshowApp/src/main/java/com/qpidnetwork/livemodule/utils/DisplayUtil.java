@@ -90,6 +90,15 @@ public class DisplayUtil {
         return dm.heightPixels;
     }
 
+    /**
+     * 检测屏幕分辨率是否低于720，用于设备适配
+     * @param context
+     * @return
+     */
+    public static boolean checkWhetherDpiHigh720(Context context){
+        return (getScreenWidth(context) >= 720);
+    }
+
     /**判断屏幕下方是否存在虚拟按键
      * 参考https://gist.github.com/fengzi422/9ad341d838943eff2232
      * @param context

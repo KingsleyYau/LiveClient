@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragment;
@@ -25,6 +23,8 @@ import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.io.File;
 
@@ -281,7 +281,7 @@ public class VoiceRecordFragment extends BaseFragment {
 					}else {
 						//MIC被占用提示
 						if(getActivity() != null){
-							Toast.makeText(mContext, mContext.getResources().getString(R.string.live_chat_microphone_occupied), Toast.LENGTH_LONG).show();
+							ToastUtil.showToast(mContext, R.string.live_chat_microphone_occupied);
 						}
 					}
 

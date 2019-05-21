@@ -192,22 +192,12 @@ typedef enum : NSUInteger {
                                       placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
                                          finishHandler:^(UIImage *image){
                                          }];
-    } else {
-        WeakObject(self, weakSelf);
-        [[LSUserInfoManager manager] getUserInfo:self.letterItem.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
-            // 头像
-            weakSelf.letterItem.anchorAvatar = item.photoUrl;
-            [[LSImageViewLoader loader] loadImageFromCache:weakSelf.headImageView
-                                                   options:SDWebImageRefreshCached
-                                                  imageUrl:weakSelf.letterItem.anchorAvatar
-                                          placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
-                                             finishHandler:^(UIImage *image){
-                                             }];
-        }];
     }
     
     // 姓名
-    self.fromeNameLabel.text = self.letterItem.anchorNickName;
+    if (self.letterItem.anchorNickName.length > 0) {
+        self.fromeNameLabel.text = self.letterItem.anchorNickName;
+    }
     
     if (self.letterItem.letterSendTime > 0) {
         // 发信时间
@@ -399,7 +389,7 @@ typedef enum : NSUInteger {
     [self.creditsView removeFromSuperview];
     self.creditsView = nil;
     self.poststampView = [LSOutOfPoststampView initWithActionViewDelegate:self];
-    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"%0.1f", self.stamps]];
+    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"Send by Credits (%0.1f credits)", self.stamps]];
 }
 
 - (void)lsOutOfPoststampView:(LSOutOfPoststampView *)addView didSelectAddCredit:(UIButton *)creditBtn {
@@ -630,6 +620,18 @@ typedef enum : NSUInteger {
             NSLog(@"LSGreetingDetailViewController::LSGetLoiDetailRequest (请求意向信详情 success : %@, errnum : %d, errmsg : %@, letterId : %@, hasReplied : %d)", BOOL2SUCCESS(success), errnum, errmsg, item.letterId, item.hasReplied);
             [weakSelf hideAndResetLoading];
             if (success) {
+                if (!(weakSelf.letterItem.anchorNickName.length > 0)) {
+                    weakSelf.fromeNameLabel.text = item.anchorNickName;
+                }
+                if (!(weakSelf.letterItem.anchorAvatar.length > 0)) {
+                    [[LSImageViewLoader loader] loadImageFromCache:weakSelf.headImageView
+                                                           options:SDWebImageRefreshCached
+                                                          imageUrl:item.anchorAvatar
+                                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                     finishHandler:^(UIImage *image){
+                                                     }];
+                }
+                
                 [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg){
 
                 }];

@@ -1,0 +1,52 @@
+@charset "utf-8";
+.btn{color:#ffffff;background-color:#2a7af3;background-color:#3291f6;/*app 按钮颜色*/border-radius:4rem;display:inline-block;text-align:center;padding:.1rem .4rem;font-size:.28rem;}
+input[type="button"], input[type="submit"], input[type="reset"] ,button{ -webkit-appearance:none;} 
+
+#detials .detials_action{
+  font-size:0;
+  text-align: center;
+}
+
+
+/* latin */
+@font-face {
+  font-family: 'Nothing You Could Do';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nothing You Could Do'), local('NothingYouCouldDo'), url(../fonts/oY1B8fbBpaP5OX3DtrRYf_Q2BPB1SnfZb3OOnVs.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Allura';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Allura Regular'), local('Allura-Regular'), url(../fonts/9oRPNYsQpS4zjuA_hQgWDto.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Allura';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Allura Regular'), local('Allura-Regular'), url(../fonts/9oRPNYsQpS4zjuA_iwgW.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+html,body{width: 100%;height: 100%;background: transparent;}
+/*#detials{width: 100%;height: 100%; background: url(../images/bg2.jpg) no-repeat;background-size: cover;}*/
+html{font-size: 42px;}
+
+#detials .content{padding: 1.4rem;font-size: .54rem;font-family: "Times New Roman","Calibri";font-family: 'Nothing You Could Do', cursive;font-family: 'Allura', cursive;}
+
+#detials .content .mailto{color: #333;}
+#detials .content .mailto font{color: #f44336}
+
+
+#detials .content .mailfrom{color: #333;}
+#detials .content .mailfrom font{color:#f44336}
+
+
+#detials .content .text{margin: .4rem 0;line-height:1.6;}

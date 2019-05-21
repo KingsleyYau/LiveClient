@@ -56,6 +56,7 @@ public class TalentListFragment extends Fragment {
     public void setOnTitleEventListener(onTitleEventListener listener){
         mOnTitleEventListener = listener;
     }
+    private TalentManager.onTalentEventListener mTalentEventListener;
 
     /**
      * 这个界面的事件响应
@@ -158,7 +159,7 @@ public class TalentListFragment extends Fragment {
 
         tv_error_msg = (TextView) view.findViewById(R.id.tv_error_msg);
 
-        TalentManager.getInstance().registerOnTalentEventListener(new TalentManager.onTalentEventListener() {
+        mTalentEventListener = new TalentManager.onTalentEventListener() {
             @Override
             public void onGetTalentList(HttpRespObject httpRespObject) {
                 getTalentListSuccess = httpRespObject.isSuccess;
@@ -174,11 +175,18 @@ public class TalentListFragment extends Fragment {
             public void onConfirm(TalentInfoItem talent) {
 
             }
-        });
+        };
+        TalentManager.getInstance().registerOnTalentEventListener(mTalentEventListener);
         return view;
     }
 
-    private void refreshDataStatusView(boolean isLoading,boolean isErrRetry,boolean isEmpty){
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        TalentManager.getInstance().unregisterOnTalentEventListener(mTalentEventListener);
+    }
+
+    private void refreshDataStatusView(boolean isLoading, boolean isErrRetry, boolean isEmpty){
         Log.d(TAG,"refreshDataStatusView-isLoading:"+isLoading+" isErrRetry:"+isErrRetry+" isEmpty:"+isEmpty);
         ll_errorRetry.setVisibility(isErrRetry ? View.VISIBLE : View.GONE);
         ll_emptyData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);

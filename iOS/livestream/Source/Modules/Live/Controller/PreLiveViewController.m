@@ -781,7 +781,6 @@ typedef enum PreLiveStatus {
     self.isEnterRoom = YES;
     PublicViewController *vc = [[PublicViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
-    [[LiveGobalManager manager] removeDelegate:self];
     self.vc = vc;
     [self.navigationController popToRootViewControllerAnimated:NO];
     [self.navigationController pushViewController:vc animated:YES];

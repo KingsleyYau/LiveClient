@@ -15,23 +15,12 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- 独立版 -->
-    <!-- <application -->
-    <!-- android:name=".liveshow.LiveApplication" -->
-    <!-- android:allowBackup="true" -->
-    <!-- android:icon="@mipmap/ic_launcher" -->
-    <!-- android:label="@string/app_name" -->
-    <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
-    <!-- android:supportsRtl="true" -->
-    <!-- android:theme="@style/CustomTheme.App"> -->
-    <!-- 嵌入版 -->
-    <!-- android:allowBackup="false"编译不过,需要增加 tools:replace="android:allowBackup" -->
     <application
         android:allowBackup="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:replace="android:allowBackup">
-
+        <activity android:name=".liveshow.liveroom.HangoutEndActivity"></activity>
         <!-- 文件下载器进程 -->
         <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
         <service
@@ -53,23 +42,19 @@
         <activity
             android:name=".liveshow.home.MainFragmentActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-
-        <!-- 直播间 -->
-
+            android:screenOrientation="portrait" /> <!-- 直播间 -->
         <activity
             android:name=".liveshow.liveroom.LiveRoomTransitionActivity"
             android:screenOrientation="portrait" />
-
-        <!-- 节目 -->
+        <activity
+            android:name=".liveshow.liveroom.HangoutTransitionActivity"
+            android:screenOrientation="portrait" /> <!-- 节目 -->
         <activity
             android:name=".liveshow.liveroom.LiveProgramEndActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".liveshow.home.LiveProgramDetailActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- android:hardwareAccelerated="true" -->
+            android:screenOrientation="portrait" /> <!-- android:hardwareAccelerated="true" -->
         <!-- add by Jagger 视频有问题可加上试试 -->
         <activity
             android:name=".liveshow.WebViewActivity"
@@ -90,9 +75,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".liveshow.personal.tickets.MyTicketsActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- 私信 -->
+            android:screenOrientation="portrait" /> <!-- 私信 -->
         <activity
             android:name=".liveshow.message.MessageContactListActivity"
             android:screenOrientation="portrait" />
@@ -100,12 +83,11 @@
             android:name=".liveshow.message.ChatTextActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-
-        <!-- 软键盘弹出后的高度后面通过自定义EditText细调节 -->
+            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- 软键盘弹出后的高度后面通过自定义EditText细调节 -->
         <activity
             android:name=".liveshow.liveroom.FreePublicLiveRoomActivity"
             android:screenOrientation="portrait"
+            android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:windowSoftInputMode="adjustResize">
 
             <!-- <intent-filter> -->
@@ -116,6 +98,7 @@
         <activity
             android:name=".liveshow.liveroom.PayPublicLiveRoomActivity"
             android:screenOrientation="portrait"
+            android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:windowSoftInputMode="adjustResize">
 
             <!-- <intent-filter> -->
@@ -126,6 +109,7 @@
         <activity
             android:name=".liveshow.liveroom.ProgramPayPublicLiveRoomActivity"
             android:screenOrientation="portrait"
+            android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:windowSoftInputMode="adjustResize">
 
             <!-- <intent-filter> -->
@@ -136,6 +120,7 @@
         <activity
             android:name=".liveshow.liveroom.NormalPrivateLiveRoomActivity"
             android:screenOrientation="portrait"
+            android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:windowSoftInputMode="adjustResize">
 
             <!-- <intent-filter> -->
@@ -146,21 +131,27 @@
         <activity
             android:name=".liveshow.liveroom.AdvancePrivateLiveRoomActivity"
             android:screenOrientation="portrait"
+            android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- configChanges 配置发生变化的时候，Activity不会关闭并且重启 -->
+        <!-- configChanges:locale:区域发生变化——用户选择了一个文本需要显示的新语言-->
+        <!-- configChanges:screenSize|smallestScreenSize|screenLayout|orientation:切换成多屏模式-->
+        <activity
+            android:name=".liveshow.liveroom.HangOutLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:windowSoftInputMode="adjustResize">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
-        </activity>
-
-        <!-- 广告 -->
+        </activity> <!-- 广告 -->
         <!-- <activity -->
         <!-- android:name=".liveshow.ad.AD4QNActivity" -->
         <!-- android:screenOrientation="portrait" -->
         <!-- android:theme="@style/themeAD" /> -->
-
-
         <!-- 预约直播　 -->
         <activity
             android:name=".liveshow.personal.book.BookPrivateActivity"
@@ -179,13 +170,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".liveshow.personal.book.BookSuccessActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- 　引导　 -->
+            android:screenOrientation="portrait" /> <!-- 　引导　 -->
         <activity
             android:name=".liveshow.guide.GuideActivity"
             android:screenOrientation="portrait" />
-
         <!--
          android:launchMode="singleTop"
          android:process=":AnchorProfileWebView"
@@ -194,9 +182,7 @@
         <activity
             android:name=".liveshow.anchor.AnchorProfileActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-
-        <!-- 登录 -->
+            android:screenOrientation="portrait" /> <!-- 登录 -->
         <activity
             android:name=".liveshow.authorization.AutoLoginTransitionActivity"
             android:screenOrientation="portrait" />
@@ -208,6 +194,11 @@
             android:theme="@style/CustomTheme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".liveshow.authorization.LoginNewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
             android:name=".liveshow.authorization.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -215,9 +206,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".liveshow.authorization.LiveRegisterResetPasswordSuccessfulActivity"
-            android:screenOrientation="portrait" />
-
-        <!-- 个人中心 -->
+            android:screenOrientation="portrait" /> <!-- 个人中心 -->
         <activity
             android:name=".liveshow.personal.MyProfileActivity"
             android:screenOrientation="portrait" />
@@ -243,13 +232,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".liveshow.pay.LiveBuyStampActivity"
+            android:screenOrientation="portrait" /> <!-- LiveChat -->
+        <activity
+            android:name=".liveshow.livechat.LiveChatMainActivity"
             android:screenOrientation="portrait" />
-
-        <!-- LiveChat -->
-
-        <activity android:name=".liveshow.livechat.LiveChatMainActivity"
-            android:screenOrientation="portrait" />
-
         <activity
             android:name=".liveshow.livechat.LiveChatTalkActivity"
             android:launchMode="singleTop"

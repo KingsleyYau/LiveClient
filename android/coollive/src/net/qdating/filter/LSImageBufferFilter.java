@@ -4,6 +4,11 @@ import android.opengl.GLES20;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;
 
+/**
+ * 缓冲滤镜
+ * @author max
+ *
+ */
 public abstract class LSImageBufferFilter extends LSImageFilter {
 	/**
 	 * FBO纹理Id

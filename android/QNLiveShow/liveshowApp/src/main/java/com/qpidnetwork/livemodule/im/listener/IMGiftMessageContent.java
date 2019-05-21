@@ -1,7 +1,5 @@
 package com.qpidnetwork.livemodule.im.listener;
 
-import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-
 import java.io.Serializable;
 
 /**
@@ -29,6 +27,25 @@ public class IMGiftMessageContent implements Serializable{
         this.multi_click_start = multi_click_start;
         this.multi_click_end = multi_click_end;
         this.multi_click_id = multi_click_id;
+        this.isSecretly = false;
+    }
+
+    public IMGiftMessageContent(String giftId,
+                                String giftName,
+                                int giftNum,
+                                boolean multi_click,
+                                int multi_click_start,
+                                int multi_click_end,
+                                int multi_click_id,
+                                boolean isSecretly){
+        this.giftId = giftId;
+        this.giftName = giftName;
+        this.giftNum = giftNum;
+        this.multi_click = multi_click;
+        this.multi_click_start = multi_click_start;
+        this.multi_click_end = multi_click_end;
+        this.multi_click_id = multi_click_id;
+        this.isSecretly = isSecretly;
     }
 
     public String giftId;         //礼物Id
@@ -38,4 +55,6 @@ public class IMGiftMessageContent implements Serializable{
     public int multi_click_start;   //连击开始数
     public int multi_click_end;     //连接结束数
     public int multi_click_id;      //连击Id,用于区分是否同一个连击
+    // 2019/3/19 Hardy
+    public boolean isSecretly;      //是否私密发送
 }

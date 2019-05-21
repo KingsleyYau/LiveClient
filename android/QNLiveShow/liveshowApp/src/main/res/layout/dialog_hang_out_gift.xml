@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.HangoutGiftDialogLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!--android:background="@color/transparent_full"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <!--顶部 tab 切换-->
+        <com.qpidnetwork.livemodule.view.indicator.CommonTabLayout
+            android:id="@+id/dialog_ho_gift_tab"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@color/live_indicator_color_black"
+            android:paddingLeft="10dp"
+            app:tl_iconVisible="false"
+            app:tl_indicator_anim_enable="true"
+            app:tl_indicator_corner_radius="10dp"
+            app:tl_indicator_gravity="BOTTOM"
+            app:tl_indicator_height="3dp"
+            app:tl_indicator_width="60dp"
+            app:tl_tab_padding="10dp"
+            app:tl_tab_space_equal="false"
+            app:tl_textSelectColor="@color/white"
+            app:tl_textUnselectColor="@color/white" />
+
+        <!--中间礼物操作区域-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="285dp"
+            android:background="@color/live_ho_grey_blur_bg">
+
+            <!--高斯模糊背景-->
+            <!-- 毛玻璃 (作为背景 透的是 消息列表)-->
+            <com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView
+                android:id="@+id/dialog_ho_gift_iv_blur"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:blurRadius="6"
+                app:downsampleFactor="6"
+                app:overlayColor="@color/live_ho_grey_blur_bg_half" />
+
+            <LinearLayout
+                android:id="@+id/dialog_ho_gift_ll_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--主播头像操作-->
+                <include
+                    android:id="@+id/dialog_ho_gift_anchor_layout"
+                    layout="@layout/layout_hang_out_gift_anchor"
+                    android:visibility="visible" />
+
+                <!--庆祝礼物的提示-->
+                <TextView
+                    android:id="@+id/dialog_ho_gift_tv_celeb_tip"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/live_size_90dp"
+                    android:gravity="center"
+                    android:text="@string/hangout_gift_celeb_tip"
+                    android:textColor="@color/text_color_grey_light"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:visibility="gone" />
+
+                <!--礼物列表-->
+                <!--bar-->
+                <include
+                    android:id="@+id/dialog_ho_gift_list_bar"
+                    layout="@layout/layout_hang_out_gift_list_bar"
+                    android:visibility="visible" />
+
+                <!--gift store-->
+                <include
+                    android:id="@+id/dialog_ho_gift_list_giftStore"
+                    layout="@layout/layout_hang_out_gift_list_store"
+                    android:visibility="gone" />
+
+                <!--celeb-->
+                <include
+                    android:id="@+id/dialog_ho_gift_list_celeb"
+                    layout="@layout/layout_hang_out_gift_list_circle"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+            <!--loading-->
+            <LinearLayout
+                android:id="@+id/dialog_ho_gift_ll_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_gravity="center_horizontal"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/live_loading_progress"
+                    android:indeterminateDuration="1000"
+                    android:scrollbarStyle="insideInset" />
+            </LinearLayout>
+
+            <!--空数据-->
+            <LinearLayout
+                android:id="@+id/dialog_ho_gift_ll_emptyData"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_hangout_gift_empty" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/hangout_gift_empty"
+                    android:textColor="@color/text_color_grey_light"
+                    android:textSize="@dimen/live_size_14sp" />
+            </LinearLayout>
+
+            <!--错误重试-->
+            <LinearLayout
+                android:id="@+id/dialog_ho_gift_ll_errorRetry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_hangout_load_error" />
+
+                <TextView
+                    android:id="@+id/tv_errerReload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/hangout_gift_retry"
+                    android:textColor="@color/text_color_grey_light"
+                    android:textSize="@dimen/live_size_14sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!--底部操作按钮-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_size_50dp"
+            android:background="@color/live_text_color_black"
+            android:paddingLeft="@dimen/live_size_20dp"
+            android:paddingRight="@dimen/live_size_20dp">
+
+            <TextView
+                android:id="@+id/dialog_ho_gift_tv_credits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:drawableLeft="@drawable/ic_hangout_credits"
+                android:drawablePadding="@dimen/live_size_10dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                tools:text="2.56" />
+
+            <Button
+                android:id="@+id/dialog_ho_gift_btn_credits_add"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_hang_out_addcredits"
+                android:text="@string/hand_out_add_credits"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_12sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</com.qpidnetwork.livemodule.view.HangoutGiftDialogLayout>

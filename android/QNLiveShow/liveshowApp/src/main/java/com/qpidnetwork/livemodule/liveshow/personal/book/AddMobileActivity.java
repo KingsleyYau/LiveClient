@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
@@ -17,6 +16,7 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 /**
  * 新增号码
@@ -215,7 +215,7 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
                         intentError.putExtra(VerifyMobileActivity.KEY_IS_SUCCESS , false);
                         startActivityForResult(intentError, RESULT_VERIFY_MOBILE);
                     }else{
-                        Toast.makeText(mContext , String.valueOf(msg.obj) , Toast.LENGTH_LONG).show();
+                        ToastUtil.showToast(mContext, String.valueOf(msg.obj));
                     }
                     break;
             }

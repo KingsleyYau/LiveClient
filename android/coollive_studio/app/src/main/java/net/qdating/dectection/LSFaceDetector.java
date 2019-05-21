@@ -7,6 +7,11 @@ import android.os.Message;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;
 
+/**
+ * 人面识别器
+ * @author max
+ *
+ */
 public class LSFaceDetector {
     private class DetectorThread extends Thread {
         public volatile Handler handler;
@@ -20,9 +25,9 @@ public class LSFaceDetector {
         }
     }
 
-    private DetectorThread detectorThreads[] = new DetectorThread[2];
+    private DetectorThread detectorThreads[] = new DetectorThread[1];
     private int detectorThreadIndex;
-    private LSFaceDetectorJni detectors[] = new LSFaceDetectorJni[2];
+    private LSFaceDetectorJni detectors[] = new LSFaceDetectorJni[1];
 
     private ILSFaceDetectorStatusCallback callback = null;
 
@@ -47,7 +52,7 @@ public class LSFaceDetector {
             detectors[i].Create(new ILSFaceDetectorCallback() {
                 @Override
                 public void onDetectedFace(LSFaceDetectorJni detector, byte[] data, int size, int x, int y, int width, int height) {
-                    Log.i(LSConfig.TAG, String.format("LSFaceDetector::onDetectedFace( detector : 0x%x, size : %d, x : %d, y : %d, width : %d, height : %d )", detector.hashCode(), size, x, y, width, height));
+                    Log.d(LSConfig.TAG, String.format("LSFaceDetector::onDetectedFace( detector : 0x%x, size : %d, x : %d, y : %d, width : %d, height : %d )", detector.hashCode(), size, x, y, width, height));
                     if( callback != null ) {
                         callback.onDetectedFace(data, size, x, y, width, height);
                     }

@@ -40,6 +40,11 @@
 #import "LSMailViewController.h"
 #import "LSGreetingsViewController.h"
 #import "QNRiskControlManager.h"
+#import "LSSendSayHiViewController.h"
+#import "SetFavoriteRequest.h"
+#import "DialogTip.h"
+#import "LSSayHiListViewController.h"
+
 #define PageSize 50
 #define DefaultSize 16
 #define kFunctionViewHeight 88
@@ -86,9 +91,21 @@
     self.unreadManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadManager addDelegate:self];
 
-    self.hotHeadIconArray = @[ @"Discover_Message_Btn", @"Discover_Mail_Btn", @"Discover_Greetings_Btn", @"Discover_QpCredits_Btn" ];
-    self.headTitleArray = @[ @"Chat", @"Mail", @"Greetings", @"Add Credits" ];
-    self.topIconArray = @[ @"Home_Message_Btn", @"Home_Mail_Btn", @"Home_Greetings_Btn", @"Home_QpCredits_Btn" ];
+//    self.hotHeadIconArray = @[ @"Discover_Message_Btn", @"Discover_Mail_Btn", @"Discover_Greetings_Btn", @"Discover_QpCredits_Btn" ];
+//    self.headTitleArray = @[ @"Chat", @"Mail", @"Greetings", @"Add Credits" ];
+//    self.topIconArray = @[ @"Home_Message_Btn", @"Home_Mail_Btn", @"Home_Greetings_Btn", @"Home_QpCredits_Btn" ];
+    
+    if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+        self.hotHeadIconArray = @[@"Discover_Sayhi_Btn", @"Discover_Greetings_Btn", @"Discover_Mail_Btn", @"Discover_Message_Btn", @"Discover_QpCredits_Btn" ];
+        self.headTitleArray = @[ @"Say Hi", @"Greetings",@"Mail", @"Chat", @"Credits" ];
+        self.topIconArray = @[ @"Home_SayHi_Btn", @"Home_Greetings_Btn", @"Home_Mail_Btn",@"Home_Message_Btn", @"Home_QpCredits_Btn" ];
+    }else {
+        self.hotHeadIconArray = @[ @"Discover_Greetings_Btn", @"Discover_Mail_Btn", @"Discover_Message_Btn", @"Discover_QpCredits_Btn" ];
+        self.headTitleArray = @[ @"Greetings",@"Mail", @"Chat", @"Credits" ];
+        self.topIconArray = @[ @"Home_Greetings_Btn", @"Home_Mail_Btn",@"Home_Message_Btn", @"Home_QpCredits_Btn" ];
+    }
+    
+
 
     // 是否第一次登录
     self.isFirstLogin = NO;
@@ -442,24 +459,32 @@
 #pragma mark - HotHeadViewDelegate
 - (void)didSelectHeadViewItemWithIndex:(NSInteger)row {
     if (self.canDidClick) {
-        switch (row) {
+        NSInteger indexRow = 0;
+        if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+            indexRow = row;
+        }else{
+            indexRow = row + 1;
+        }
+        switch (indexRow) {
             case 0: {
+                LSSayHiListViewController *vc = [[LSSayHiListViewController alloc] initWithNibName:nil bundle:nil];
+                [self.navigationController pushViewController:vc animated:YES];
+            } break;
+            case 1: {
+                LSGreetingsViewController *vc = [[LSGreetingsViewController alloc] initWithNibName:nil bundle:nil];
+                [self.navigationController pushViewController:vc animated:YES];
+            } break;
+            case 2: {
+                LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
+                [self.navigationController pushViewController:vc animated:YES];
+            } break;
+            case 3: {
                 if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:self]) {
                     QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
                     [self.navigationController pushViewController:vc animated:YES];
                 }
             } break;
-            case 1: {
-                LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
-                [self.navigationController pushViewController:vc animated:YES];
-            } break;
-
-            case 2: {
-                LSGreetingsViewController *vc = [[LSGreetingsViewController alloc] initWithNibName:nil bundle:nil];
-                [self.navigationController pushViewController:vc animated:YES];
-            } break;
-
-            case 3: {
+            case 4: {
                 LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
                 [self.navigationController pushViewController:vc animated:YES];
             } break;
@@ -564,6 +589,33 @@
     vc.anchorId = item.userId;
     vc.anchorName = item.nickName;
     vc.photoUrl = item.photoUrl;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)tableView:(HotTableView *)tableView didFocusBtn:(NSInteger)index {
+    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+    SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
+    request.userId = item.userId;
+    request.isFav = !item.isFollow;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"LSHotViewController::didFocusBtn( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
+            if (success) {
+                item.isFollow = !item.isFollow;
+                [self.tableView reloadData];
+            } else {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
+            }
+        });
+    };
+    [self.sessionManager sendRequest:request];
+}
+
+- (void)tableView:(HotTableView *)tableView didSayHiBtn:(NSInteger)index {
+    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+    LSSendSayHiViewController * vc = [[LSSendSayHiViewController alloc]initWithNibName:nil bundle:nil];
+    vc.anchorId = item.userId;
+    vc.anchorName = item.nickName;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

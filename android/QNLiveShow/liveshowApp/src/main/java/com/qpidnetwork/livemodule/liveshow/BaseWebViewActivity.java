@@ -37,10 +37,11 @@ import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
@@ -62,6 +63,9 @@ import java.io.File;
  */
 
 public class BaseWebViewActivity extends BaseActionBarFragmentActivity implements IAuthorizationListener, JSCallbackListener {
+
+    public static final int HTTP_ERROR_CODE_UN_AUTH = 401;
+    public static final String HTTP_EMPTY_PAGE = "about:blank";
 
     private static final int LOGIN_CALLBACK = 10001;
 
@@ -458,6 +462,37 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
     }
 
     /**
+     * 2019/4/12 Hardy
+     * <p>
+     * 处理 http 错误
+     * https://blog.csdn.net/lsyz0021/article/details/56677132
+     * <p>
+     * 一般来说该错误消息表明您首先需要登录（输入有效的用户名和密码）。 如果你刚刚输入这些信息，立刻就看到一个 401 错误
+     * https://baike.baidu.com/item/401%E9%94%99%E8%AF%AF/3720974?fr=aladdin
+     * <p>
+     * 方法执行顺序：
+     * onReceivedHttpAuthRequest-host:demo.qpidnetwork.com realm:Web Site Test
+     * |
+     * onReceivedHttpError-errorResponse.mStatusCode:401
+     *
+     * @param httpCode
+     */
+    private void handlerHttpError(int httpCode) {
+        if (httpCode == HTTP_ERROR_CODE_UN_AUTH && !isErrorUnAuthLoad) {    // test:5179 的 401 验证问题
+            isErrorUnAuthLoad = true;
+
+            mWebView.loadUrl(HTTP_EMPTY_PAGE);                              // 空白页，避免出现默认的错误界面
+            onRetryClicked();                                               // 模拟重新加载页面
+        } else {
+            //Android 6.0以上
+            onLoadError();
+        }
+    }
+
+    private boolean isErrorUnAuthLoad;
+
+
+    /**
      * 利用接口和webview共用cookie，通过接口cookie过期自动重登陆实现session过期重登陆，刷新cookie
      */
     private void handleSessionTimeout() {
@@ -495,7 +530,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
                         && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)) {
                     LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
                     if (loginStatus != LoginManager.LoginStatus.Logined) {
-                        RegisterActivity.launchRegisterActivity(mContext);
+                        LoginNewActivity.launchRegisterActivity(mContext);
                     } else {
                         pb_loading.setVisibility(View.VISIBLE);
                         handleSessionTimeout();
@@ -533,6 +568,11 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
                 }
             }
         });
+    }
+
+    @Override
+    public void onShowHangoutAnchor(HangoutAnchorInfoItem item) {
+
     }
 
     /*************************** webview相关 ************************************/
@@ -678,8 +718,12 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
                     Uri pageUri = Uri.parse(mUrl);
                     if (tempUri.getScheme().equals(pageUri.getScheme())
                             && tempUri.getPath().equals(pageUri.getPath())) {
+
                         //Android 6.0以上
-                        onLoadError();
+//                        onLoadError();
+
+                        // 2019/4/12 Hardy
+                        handlerHttpError(errorResponse.getStatusCode());
                     }
                 }
             }

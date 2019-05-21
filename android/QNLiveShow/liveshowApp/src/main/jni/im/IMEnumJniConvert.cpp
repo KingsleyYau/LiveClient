@@ -310,7 +310,7 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;IDZI[II";
 		signature += "L";
 		signature += IM_REBATE_ITEM_CLASS;
-		signature += ";ZIZ[Ljava/lang/String;IDDILjava/lang/String;Ljava/lang/String;DIIZ";
+		signature += ";ZIZ[Ljava/lang/String;IDDILjava/lang/String;Ljava/lang/String;DIIZZ";
         signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 
@@ -362,7 +362,8 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
                                    item.popPrice,
                                    item.useCoupon,
                                    jliveShowType,
-								   item.isHasTalent
+								   item.isHasTalent,
+								   item.isHangoutPriv
             );
             env->DeleteLocalRef(juserId);
             env->DeleteLocalRef(jnickName);
@@ -972,7 +973,7 @@ jobjectArray getGiftNumArray(JNIEnv *env, const GiftNumList& list) {
         for (GiftNumList::const_iterator itr = list.begin(); itr != list.end(); itr++, i++) {
             jobject item = getIMGiftNumItem(env, (*itr));
             env->SetObjectArrayElement(jItemArray, i, item);
-            env->DeleteGlobalRef(item);
+            env->DeleteLocalRef(item);
         }
     }
     if (NULL != jItemCls) {
@@ -1021,7 +1022,7 @@ jobjectArray getRecvGiftArray(JNIEnv *env, const RecvGiftList& list) {
         for (RecvGiftList::const_iterator itr = list.begin(); itr != list.end(); itr++, i++) {
             jobject item = getIMRecvGiftItem(env, (*itr));
             env->SetObjectArrayElement(jItemArray, i, item);
-            env->DeleteGlobalRef(item);
+            env->DeleteLocalRef(item);
         }
     }
     if (NULL != jItemCls) {
@@ -1083,7 +1084,7 @@ jobjectArray getOtherAnchorItemArray(JNIEnv *env, const IMOtherAnchorItemList& l
         for (IMOtherAnchorItemList::const_iterator itr = list.begin(); itr != list.end(); itr++, i++) {
             jobject item = getOtherAnchorItem(env, (*itr));
             env->SetObjectArrayElement(jItemArray, i, item);
-            env->DeleteGlobalRef(item);
+            env->DeleteLocalRef(item);
         }
     }
     if (NULL != jItemCls) {
@@ -1558,6 +1559,47 @@ jobject getIMInviteErrItem(JNIEnv *env, const IMInviteErrItem& item) {
             if (NULL != jpriv) {
                  env->DeleteLocalRef(jpriv);
              }
+
+		}
+	}
+    if (NULL != jItemCls) {
+        env->DeleteLocalRef(jItemCls);
+    }
+
+	return jItem;
+}
+
+jobject getIMHangoutInviteItem(JNIEnv *env, const IMHangoutInviteItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_HANGOUT_IMHANGOUTINVITE_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string	signature = "(IZLjava/lang/String;";
+		        signature += "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
+		        signature += "ILjava/lang/String;";
+		        signature += ")V";
+
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		if (NULL != init) {
+			jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+			jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+			jstring jcover = env->NewStringUTF(item.cover.c_str());
+            jstring jInviteMessage = env->NewStringUTF(item.InviteMessage.c_str());
+            jstring javatarImg = env->NewStringUTF(item.avatarImg.c_str());
+
+			jItem = env->NewObject(jItemCls, init,
+								  item.logId,
+								  item.isAuto,
+								  janchorId,
+								  jnickName,
+								  jcover,
+								  jInviteMessage,
+								  item.weights,
+								  javatarImg);
+			env->DeleteLocalRef(janchorId);
+            env->DeleteLocalRef(jnickName);
+            env->DeleteLocalRef(jcover);
+            env->DeleteLocalRef(jInviteMessage);
+            env->DeleteLocalRef(javatarImg);
 
 		}
 	}

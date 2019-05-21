@@ -492,7 +492,10 @@ void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, 
         HandleGetVideo(data, url);
 
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetVideo(requestId, bFlag, errnum, errmsg, url);
-	}else if( url.compare(LC_GET_MAGICICON_CONFIG_PATH) == 0 ) {
+    }else if( url.compare(LC_UPLOADMANPHOTO_PATH) == 0 ) {
+        // 12.16.上传LiveChat相关附件
+       UploadManPhotoCallbackHandle(requestId, url, true, buf, size);
+    }else if( url.compare(LC_GET_MAGICICON_CONFIG_PATH) == 0 ) {
 		// 12.5.查询小高级表情配置
 		LSLCMagicIconConfig config;
         config.parsing(data);
@@ -714,7 +717,10 @@ void LSLiveChatRequestLiveChatController::onFail(long requestId, string url) {
 	} else if( url.compare(LC_GET_VIDEO_PATH) == 0 ) {
 		// 12.15.获取微视频文件URL
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetVideo(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, "");
-	}else if( url.compare(LC_GET_MAGICICON_CONFIG_PATH) == 0 ) {
+    }else if( url.compare(LC_UPLOADMANPHOTO_PATH) == 0 ) {
+        // 12.16.上传LiveChat相关附件
+        UploadManPhotoCallbackHandle(requestId, url, false, NULL, 0);
+    }else if( url.compare(LC_GET_MAGICICON_CONFIG_PATH) == 0 ) {
 		// 12.5.查询小高级表情配置
 		LSLCMagicIconConfig config;
 		mLSLiveChatRequestLiveChatControllerCallback->OnGetMagicIconConfig(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, config);
@@ -1219,6 +1225,7 @@ long LSLiveChatRequestLiveChatController::GetPhoto(
 {
 	HttpEntiy entiy;
 	char temp[32] = {0};
+    // entiy.SetGetMethod(true);
 
 	// delete file
 	string tempPath = GetTempFilePath(filePath);
@@ -1746,6 +1753,56 @@ long LSLiveChatRequestLiveChatController::GetVideo(
 			);
 
 	return StartRequest(url, entiy, this, WebSite);
+}
+
+// 12.16.上传LiveChat相关附件, file:照片二进制流， fileName：文件名便于查找哪个文件上传的(用于发送私密照前使用)
+long LSLiveChatRequestLiveChatController::UploadManPhoto(const string& file) {
+    HttpEntiy entiy;
+    
+    if ( file.length() > 0 ) {
+        entiy.AddFile(LC_UPLOADMANPHOTO_FILE, file);
+    }
+    
+    string url = LC_UPLOADMANPHOTO_PATH;
+    
+    FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::GetLeftCredit"
+                 "(url:%s, "
+                 "file:%s )",
+                 url.c_str(),
+                 file.c_str());
+    
+    return StartRequest(url, entiy, this);
+}
+
+void LSLiveChatRequestLiveChatController::UploadManPhotoCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size) {
+    int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
+    string errmsg = "";
+    bool bFlag = false;
+    string photoUrl = "";
+    string photomd5 = "";
+    
+    if (requestRet) {
+        // request success
+        Json::Value dataJson;
+        bFlag = HandleLSResult(buf, size, errnum, errmsg, &dataJson);
+        if (dataJson.isObject()) {
+            if (dataJson[LC_UPLOADMANPHOTO_URL].isString()) {
+                photoUrl = dataJson[LC_UPLOADMANPHOTO_URL].asString();
+            }
+            if (dataJson[LC_UPLOADMANPHOTO_MD5].isString()) {
+                photomd5 = dataJson[LC_UPLOADMANPHOTO_MD5].asString();
+            }
+        }
+    }
+    else {
+        // request fail
+        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+    }
+    
+    if( NULL != mLSLiveChatRequestLiveChatControllerCallback ) {
+        mLSLiveChatRequestLiveChatControllerCallback->OnUploadManPhoto(requestId, bFlag, errnum, errmsg, photoUrl, photomd5);
+    }
 }
 
 /**

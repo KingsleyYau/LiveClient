@@ -26,9 +26,6 @@
         
         cell.bgView.layer.cornerRadius = 5;
         cell.bgView.layer.masksToBounds = YES;
-        
-        LSShadowView * view = [[LSShadowView alloc]init];
-        [view showShadowAddView:cell.bgView];
     }
     return cell;
 }

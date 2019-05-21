@@ -27,7 +27,7 @@ public class PushManager {
     }
 
     public PushManager(Context context)  {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     /**

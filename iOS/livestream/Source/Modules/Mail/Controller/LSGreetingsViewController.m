@@ -30,7 +30,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *noDataNote;
 @property (weak, nonatomic) IBOutlet UIButton *noDataSearchBtn;
 
-@property (weak, nonatomic) IBOutlet UIButton *searchBtn;
+@property (weak, nonatomic) IBOutlet LSHighlightedButton *searchBtn;
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, assign) int page;
 

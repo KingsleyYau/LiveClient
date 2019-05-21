@@ -13,6 +13,8 @@ import java.nio.FloatBuffer;
 
 /**
  * 水印滤镜
+ * @author max
+ *
  */
 public class LSImageWaterMarkFilter extends LSImageInputFilter {
     // 水印纹理
@@ -25,6 +27,11 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 
 	public LSImageWaterMarkFilter() {
         super();
+
+		filterVertex = new float[LSImageVertex.filterVertex_180.length];
+		glWaterMarkVertexBuffer = ByteBuffer.allocateDirect(4 * filterVertex.length)
+				.order(ByteOrder.nativeOrder())
+				.asFloatBuffer();
 	}
 
 	public void updateBmpFrame(Bitmap bitmap) {
@@ -54,7 +61,7 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 				)
 		);
 
-		filterVertex = new float[LSImageVertex.filterVertex_180.length];
+		// 因为Bitmap加载到纹理是上下翻转
 		System.arraycopy(LSImageVertex.filterVertex_180, 0, filterVertex, 0, LSImageVertex.filterVertex_180.length);
 
 		// 右上
@@ -76,11 +83,9 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 		filterVertex[20] = -1f + 2f * (x + width);
 		filterVertex[21] = 1f - 2f * (y + height);
 
-		glWaterMarkVertexBuffer = ByteBuffer.allocateDirect(4 * filterVertex.length)
-				.order(ByteOrder.nativeOrder())
-				.asFloatBuffer();
+		glWaterMarkVertexBuffer.clear();
 		glWaterMarkVertexBuffer.put(filterVertex, 0, filterVertex.length);
-		glWaterMarkVertexBuffer.position(0);
+		glWaterMarkVertexBuffer.rewind();
 	}
 
 	@Override
@@ -107,12 +112,8 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 	protected int onDrawFrame(int textureId) {
         int newTextureId = super.onDrawFrame(textureId);
 
-		GLES20.glEnable(GLES20.GL_BLEND);
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-//		GLES20.glBlendFunc(GLES20.GL_SRC_COLOR, GLES20.GL_DST_ALPHA);
         // 绘制水印
 		drawWaterMark();
-		GLES20.glDisable(GLES20.GL_BLEND);
 
         return newTextureId;
 	}
@@ -123,7 +124,14 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 	}
 
 	private void drawWaterMark() {
+		// 激活绘制透明颜色混合
+		GLES20.glEnable(GLES20.GL_BLEND);
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+//		GLES20.glBlendFunc(GLES20.GL_SRC_COLOR, GLES20.GL_DST_ALPHA);
+
 		if( glWaterMarkTextureId != null ) {
+			// 激活纹理单元GL_TEXTURE0
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 			// 绑定外部纹理到纹理单元GL_TEXTURE0
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, glWaterMarkTextureId[0]);
 
@@ -152,5 +160,8 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 			GLES20.glDisableVertexAttribArray(getTextureCoordinate());
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
 		}
+
+		// 禁用绘制透明混合
+		GLES20.glDisable(GLES20.GL_BLEND);
 	}
 }

@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.framework.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Vibrator;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -24,27 +25,26 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.qpidnetwork.livemodule.R;
 
+
 public class MaterialTextField extends LinearLayout implements OnClickListener{
 
 	private float density = getContext().getResources().getDisplayMetrics().density;
 	
-	public int normal_color = getContext().getResources().getColor(R.color.black1);
-	public int focus_color = getContext().getResources().getColor(R.color.talent_violet);
-	
+	private int normal_color = getContext().getResources().getColor(R.color.thin_grey);
+	private int focus_color = getContext().getResources().getColor(R.color.green);
+	private int error_color = Color.RED;
+
 	private ThisTextWatcher mTextWatcher;
 	private OnEditorCallback mEditorEvent;
 	private OnFocuseChangedCallback mFocuseChangedCallback;
-	
 	
 	public MaterialTextField(Context context, AttributeSet attrs){
 		super(context, attrs);
 		createView(context);
 	}
-	
-	
+
 	public MaterialTextField(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 		createView(context);
 	}
 	
@@ -64,10 +64,8 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 		getDivider().setLayoutParams(dividerParams);
 		
 		getEditor().setOnFocusChangeListener(new OnFocusChangeListener(){
-
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				// TODO Auto-generated method stub
 				if (hasFocus){
 					FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDivider().getLayoutParams();
 					params.height = (int)(2.0f * density);
@@ -85,13 +83,11 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 			
 		});
 		
-		
 		getEditor().setOnEditorActionListener(new OnEditorActionListener(){
 
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
-				// TODO Auto-generated method stub
 				if (mEditorEvent != null) return mEditorEvent.onEditorAction(v, actionId, event);
 				return false;
 			}
@@ -102,35 +98,26 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
 				if (mTextWatcher != null) mTextWatcher.afterTextChanged(arg0);
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
 				if (mTextWatcher != null) mTextWatcher.beforeTextChanged(arg0, arg1, arg2, arg3);
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
 				if (mTextWatcher != null) mTextWatcher.onTextChanged(s, start, before, count);
 			}
-			
+
 		});
-		
-		
 	}
 
-	
-	
-	
 	public void setOnFocusChangedCallback(OnFocuseChangedCallback callback){
 		mFocuseChangedCallback = callback;
 	}
 	
-
 	public void setEditorEvent(OnEditorCallback callback){
 		mEditorEvent = callback;
 	}
@@ -200,6 +187,10 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 			getDivider().setBackgroundColor(normal_color);
 		}
 	}
+
+	public void setErrorColor(int color){
+		this.error_color = color;
+	}
 	
 	public void setPassword(){
 //		getEditor().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -216,12 +207,15 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 		getEditor().setInputType(InputType.TYPE_CLASS_PHONE);
 	}
 
+	public void setError(boolean vibrate){
+		setError(error_color, vibrate, true);
+	}
+
 	public void setError(int highlightColor, boolean vibrate){
 		setError(highlightColor, vibrate, true);
 	}
 	
 	public void setError(int highlightColor, boolean vibrate, boolean shouldFocusIfNotFocused){
-		
 		if(vibrate){
 			try{
 				Vibrator vibrator = (Vibrator)this.getContext().getSystemService(Context.VIBRATOR_SERVICE);  
@@ -239,7 +233,7 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 			getDivider().setLayoutParams(params);
 		}
 		getDivider().setBackgroundColor(highlightColor);
-		Animation shake = AnimationUtils.loadAnimation(this.getContext(), R.anim.live_shake_anim);
+		Animation shake = AnimationUtils.loadAnimation(this.getContext(), R.anim.shake_anim);
 		this.startAnimation(shake);
 	}
 	
@@ -248,7 +242,6 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 		public void onFocuseChanged(View v, boolean hasFocus);
 	}
 	
-
 	public interface OnEditorCallback{
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event);
 	}
@@ -259,13 +252,9 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 		public void onTextChanged(CharSequence s, int start, int before, int count);
 	}
 	
-	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		getEditor().requestFocus();
 	}
-	
 
-	
 }

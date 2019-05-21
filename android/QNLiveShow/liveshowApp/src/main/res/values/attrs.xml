@@ -111,13 +111,17 @@
 
     <declare-styleable name="RaisedButton">
         <attr name="icon"/>
+        <attr name="icon_width" format="dimension"/>
+        <attr name="icon_height" format="dimension"/>
         <attr name="title" />
         <attr name="title_color" format="color"/>
+        <attr name="title_text_size" format="dimension"/>
+        <attr name="title_text_bold" format="boolean"/>
         <attr name="background" />
+        <attr name="background_res" format="reference"/>
         <attr name="touch_feedback" format="reference"/>
         <attr name="elevation"/>
         <attr name="raisebutton_radius" format="dimension"/>
-        <attr name="title_text_size" format="dimension"/>
     </declare-styleable>
 
     <!-- ProgressButton -->

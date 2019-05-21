@@ -1938,6 +1938,7 @@ public:
      * @param content                       回复信件内容
      * @param imgList                       附件数组
      * @param comsumeType                   付费类型（LSLETTERCOMSUMETYPE_CREDIT：信用点，LSLETTERCOMSUMETYPE_STAMP：邮票）
+     * @param sayHiResponseId               SayHi的回复ID（可无，无则表示不是回复）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -1950,6 +1951,7 @@ public:
                            string content,
                            list<string> imgList,
                            LSLetterComsumeType comsumeType,
+                           string sayHiResponseId = "",
                            IRequestSendEmfCallback* callback = NULL
                            );
     
@@ -2020,7 +2022,7 @@ public:
                          );
     
     /**
-     * 14.1.获取主题、文本配置信息
+     * 14.1.获取发送SayHi的主题和文本信息
      *
      * @param pHttpRequestManager           http管理器
      * @param callback                      接口回调
@@ -2033,7 +2035,7 @@ public:
                          );
     
     /**
-     * 14.2.符合发送Say Hi的主播列表
+     * 14.2.获取可发Say Hi的主播列表
      *
      * @param pHttpRequestManager           http管理器
      * @param callback                      接口回调
@@ -2046,7 +2048,7 @@ public:
                           );
     
     /**
-     * 14.3.检测对某主播是否能发送sayHi
+     * 14.3.检测能否对指定主播发送SayHi
      *
      * @param pHttpRequestManager           http管理器
      * @param anchorId                      主播ID
@@ -2074,13 +2076,13 @@ public:
     long long SendSayHi(
                          HttpRequestManager *pHttpRequestManager,
                          const string& anchorId,
-                         int themeId,
-                         int textId,
+                         const string& themeId,
+                         const string& textId,
                          IRequestSendSayHiCallback* callback = NULL
                          );
     
     /**
-     * 14.5.All ‘Say Hi’列表
+     * 14.5.获取Say Hi的All列表
      *
      * @param pHttpRequestManager           http管理器
      * @param start                         起始，用于分页，表示从第几个元素开始获取
@@ -2097,7 +2099,7 @@ public:
                               );
     
     /**
-     * 14.6.Waiting for your reply列表
+     * 14.6.获取SayHi的Response列表
      *
      * @param pHttpRequestManager           http管理器
      * @param type                          排序（LSSAYHIDETAILTYPE_EARLIEST：Unread First，LSSAYHIDETAILTYPE_LATEST：Latest First）
@@ -2116,7 +2118,7 @@ public:
                                    );
     
     /**
-     * 14.7.SayHi详情
+     * 14.7.获取SayHi详情
      *
      * @param pHttpRequestManager           http管理器
      * @param type                          排序（LSSAYHIDETAILTYPE_EARLIEST：Earliest first，LSSAYHIDETAILTYPE_LATEST：Latest First）
@@ -2133,7 +2135,7 @@ public:
                            );
     
     /**
-     * 14.8.查看主播回复(扣费)
+     * 14.8.获取SayHi回复详情
      *
      * @param pHttpRequestManager           http管理器
      * @param sayHiId                       sayHi的ID

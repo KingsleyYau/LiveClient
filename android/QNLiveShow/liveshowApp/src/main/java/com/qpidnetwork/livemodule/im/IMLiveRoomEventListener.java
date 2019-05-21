@@ -71,7 +71,7 @@ public interface IMLiveRoomEventListener {
 	 * @param isAnchor
 	 * @param playUrls
 	 */
-    void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls);
+    void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId);
 
 	/**
 	 * 3.14.观众开始／结束视频互动接口

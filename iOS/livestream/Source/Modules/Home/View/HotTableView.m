@@ -93,25 +93,33 @@
 
     // 默认没有节目描述
     cell.scrollShowTitleHeight.constant = 0;
+    
+    //是否关注主播
+    UIImage * followImage = item.isFollow?[UIImage imageNamed:@"Home_HotAndFollow_Follow"]:[UIImage imageNamed:@"Home_HotAndFollow_UnFollow"];
+    [cell.focusBtn setImage:followImage forState:UIControlStateNormal];
+    
+    if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+        cell.sayhiBtn.hidden = NO;
+    }else {
+        cell.sayhiBtn.hidden = YES;
+    }
 
     if (item.onlineStatus == ONLINE_STATUS_LIVE) {
         // 恢复界面按钮状态
-        cell.roomType.hidden = YES;
         cell.onlineStatus.hidden = YES;
         cell.sendMailBtn.hidden = YES;
         cell.chatNowBtn.hidden = YES;
         cell.viewPublicFreeBtn.hidden = YES;
         cell.viewPublicFeeBtn.hidden = YES;
         cell.bookPrivateBtn.hidden = YES;
-        cell.liveStatus.hidden = YES;
+        cell.liveStatusView.hidden = YES;
         cell.vipPrivateBtn.hidden = YES;
-        cell.roomType.hidden = YES;
-        cell.showIcon.hidden = YES;
         cell.titleView.hidden = YES;
+        cell.anchorNameCenterX.constant = 0;
         if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM) {
             // 免费公开直播间
             cell.viewPublicFreeBtn.hidden = NO;
-            cell.liveStatus.hidden = NO;
+            cell.liveStatusView.hidden = NO;
             NSMutableArray *animationPublicRTArray = [NSMutableArray array];
             for (int i = 1; i <= 3; i++) {
                 NSString *imageName = [NSString stringWithFormat:@"Home_HotAndFollow_ImageView_Live%d", i];
@@ -127,7 +135,6 @@
             if (item.showInfo.showTitle.length > 0) {
                 cell.viewBtnTopDistance.constant = 50;
                 cell.titleView.hidden = NO;
-                cell.roomType.hidden = YES;
                 cell.scrollShowTitleHeight.constant = 40;
                 [cell setScrollLabelViewText:item.showInfo.showTitle];
             } else {
@@ -139,7 +146,7 @@
         } else if (item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
             // 付费公开直播间
             cell.viewPublicFeeBtn.hidden = NO;
-            cell.liveStatus.hidden = NO;
+            cell.liveStatusView.hidden = NO;
             NSMutableArray *animationVIPPublicRTArray = [NSMutableArray array];
             for (int i = 1; i <= 3; i++) {
                 NSString *imageName = [NSString stringWithFormat:@"Home_HotAndFollow_ImageView_Live%d", i];
@@ -155,7 +162,6 @@
             if (item.showInfo.showTitle.length > 0) {
                 cell.viewBtnTopDistance.constant = 50;
                 cell.titleView.hidden = NO;
-                cell.roomType.hidden = YES;
                 cell.scrollShowTitleHeight.constant = 40;
                 [cell setScrollLabelViewText:item.showInfo.showTitle];
             } else {
@@ -177,6 +183,7 @@
             // 是否有私密邀请的权限权限
             if (item.priv.isHasOneOnOneAuth) {
                 cell.onlineStatus.hidden = NO;
+                   cell.anchorNameCenterX.constant = -30;
                 cell.vipPrivateBtn.hidden = NO;
 
                 if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
@@ -198,7 +205,6 @@
         }
     } else {
         // 不在线,只能显示发送邮件的按钮
-        cell.roomType.hidden = YES;
         cell.onlineStatus.hidden = YES;
         cell.chatNowBtn.hidden = YES;
         cell.viewPublicFreeBtn.hidden = YES;
@@ -206,13 +212,14 @@
         cell.vipPrivateBtn.hidden = YES;
         cell.chatNowBtn.hidden = YES;
         cell.vipPrivateBtn.hidden = YES;
-        cell.liveStatus.hidden = YES;
+        cell.liveStatusView.hidden = YES;
         cell.sendMailBtn.hidden = NO;
         cell.titleView.hidden = YES;
+        cell.anchorNameCenterX.constant = 0;
     }
 
     // 头像
-    cell.imageViewHeader.image = nil;
+    //cell.imageViewHeader.image = nil;
     [cell.imageViewLoader stop];
     [cell.imageViewLoader loadHDListImageWithImageView:cell.imageViewHeader
                                          options:0
@@ -310,10 +317,23 @@
     }
 }
 
-
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewSendMailBtn:(UIButton *)sender {
     if ([self.tableViewDelegate respondsToSelector:@selector(tableView:diddidSendMailToAnchor:)]) {
         [self.tableViewDelegate tableView:self diddidSendMailToAnchor:cell.tag];
+    }
+}
+
+- (void)hotTableViewCell:(HotTableViewCell *)cell
+    didClickViewFocusBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didFocusBtn:)]) {
+        [self.tableViewDelegate tableView:self didFocusBtn:cell.tag];
+    }
+}
+
+- (void)hotTableViewCell:(HotTableViewCell *)cell
+    didClickViewSayHiBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didSayHiBtn:)]) {
+        [self.tableViewDelegate tableView:self didSayHiBtn:cell.tag];
     }
 }
 @end

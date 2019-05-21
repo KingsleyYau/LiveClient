@@ -27,7 +27,9 @@ public class LoginItem {
      * @param qnMainAdTitle QN主界面广告浮层的标题（可无）
      * @param qnMainAdId    QN主界面广告浮层的ID（可无，无则表示不弹广告）
      * @param gaUid         GA统计用户ID
-	 */
+     * @param isHangoutRisk 多人互动风控标识（true：有风控，false：无）
+	 * @param userPriv      用户权限相关
+     */
     public LoginItem(
             String userId,
             String token,
@@ -38,13 +40,15 @@ public class LoginItem {
             boolean isPushAd,
             ServerItem[] svrList,
             int userType,
-            String qnMainAdUrl,
-            String qnMainAdTitle,
-            String qnMainAdId,
+//            String qnMainAdUrl,
+//            String qnMainAdTitle,
+//            String qnMainAdId,
             String gaUid,
             String sessionId,
             boolean livechat,
-            int livechatInvite
+            int livechatInvite,
+            boolean isHangoutRisk,
+            UserPrivItem userPriv
             ) {
         this.userId = userId;
         this.token = token;
@@ -59,9 +63,9 @@ public class LoginItem {
 		} else {
 			this.userType = UserType.values()[userType];
 		}
-		this.qnMainAdUrl = qnMainAdUrl;
-        this.qnMainAdTitle = qnMainAdTitle;
-        this.qnMainAdId = qnMainAdId;
+//		this.qnMainAdUrl = qnMainAdUrl;
+//        this.qnMainAdTitle = qnMainAdTitle;
+//        this.qnMainAdId = qnMainAdId;
         this.gaUid = gaUid;
 
         this.sessionId = sessionId;
@@ -71,7 +75,9 @@ public class LoginItem {
         } else {
             this.livechatInvite = LivechatInviteRiskType.values()[livechatInvite];
         }
+        this.isHangoutRisk = isHangoutRisk;
 
+        this.userPriv = userPriv;
     }
 
     public String userId;
@@ -83,15 +89,21 @@ public class LoginItem {
     public boolean isPushAd;
     public ServerItem[] svrList;
     public UserType userType;
-    public String qnMainAdUrl;
-    public String qnMainAdTitle;
-    public String qnMainAdId;
+//    public String qnMainAdUrl;
+//    public String qnMainAdTitle;
+//    public String qnMainAdId;
     public String gaUid;
 
     //LiveChat相关
     public String  sessionId; //= "dj649q56iuc5k7u3nvqc05umpu";
     public boolean livechat;// = true;
     public LivechatInviteRiskType livechatInvite;// = LivechatInviteRiskType.UNLIMITED;
+
+    // Hangout相关
+    public boolean isHangoutRisk;
+
+    // 用户权限相关
+    public UserPrivItem userPriv;
 
     //本地默认初始化，解决代码移植问题
     public boolean photosend = false;

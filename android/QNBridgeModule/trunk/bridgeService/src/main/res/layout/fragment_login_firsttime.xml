@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 注:android:fitsSystemWindows="true"配合adjustResize 为了实现当弹出键盘时,能把整个界面向上弹能看到登录按钮 -->
+<com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="135dp"
+            android:src="@drawable/logo_40dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <!-- 占位 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:minHeight="10dp"
+            android:layout_weight="1" />
+
+        <!-- 帐号密码 -->
+        <com.qpidnetwork.qnbridgemodule.view.textView.circularEditText.CircularEditTextGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.qpidnetwork.qnbridgemodule.view.textView.circularEditText.CircularEditText
+                android:id="@+id/cdt_account"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:hint="@string/login_account"
+                app:line_default_color="@color/circle_edittext_normal_line"
+                app:text_color="@color/black"
+                app:text_size="16sp" />
+
+
+            <com.qpidnetwork.qnbridgemodule.view.textView.circularEditText.CircularEditText
+                android:id="@+id/cdt_pw"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:hint="@string/login_pw"
+                app:line_default_color="@color/circle_edittext_normal_line"
+                app:text_color="@color/black"
+                app:text_size="16sp" />
+
+
+            <com.qpidnetwork.qnbridgemodule.view.textView.circularEditText.CircularEditText
+                android:id="@+id/cdt_code"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:hint="@string/login_secure_code"
+                app:line_default_color="@color/circle_edittext_normal_line"
+                app:text_color="@color/black"
+                app:text_size="16sp" />
+
+        </com.qpidnetwork.qnbridgemodule.view.textView.circularEditText.CircularEditTextGroup>
+
+        <!-- 登录 -->
+        <Button
+            android:id="@+id/btn_login"
+            style="@style/btn_blue_solid_style"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="@dimen/btn_bottom_height_40dp"
+            android:text="@string/login" />
+
+    </LinearLayout>
+</com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout>

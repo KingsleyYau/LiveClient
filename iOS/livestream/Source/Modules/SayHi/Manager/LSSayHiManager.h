@@ -11,17 +11,21 @@
 
 @interface LSLastSayHiConfigItem : NSObject
 // 记录上一次发送SayHi主题Id及背景url
-@property (nonatomic, assign) int themeId;
+@property (nonatomic, copy) NSString *_Nullable themeId;
 @property (nonatomic, copy) NSString *_Nullable bigImage;
 // 记录上一次SayHi文本iId及文本内容
-@property (nonatomic, assign) int textId;
+@property (nonatomic, assign) NSString *_Nullable textId;
 @property (nonatomic, copy) NSString *_Nullable text;
 @end
 
 @interface LSSayHiManager : NSObject
 
-// 记录上一次操作SayHi配置
+/* 记录上一次操作SayHi配置(默认第一个配置) **/
 @property (nonatomic, strong) LSLastSayHiConfigItem * _Nullable item;
+/* 主题配置列表 **/
+@property (nonatomic, strong) NSMutableArray * _Nullable sayHiThemeList;
+/* 文本配置列表 **/
+@property (nonatomic, strong) NSMutableArray * _Nullable sayHiTextList;
 
 // 实例对象
 + (instancetype _Nullable)manager;
@@ -29,9 +33,9 @@
 /** 获取SayHi配置列表 */
 - (void)getSayHiConfig:(SayHiConfigFinishHandler _Nullable)finishHandler;
 
-/** 记录SayHi配置 */
-- (void)setLastSayHiConfigItem:(int)themeId bigImg:(NSString *_Nullable)bigImg textId:(int)textId text:(NSString *_Nullable)text;
+- (void)getFirstSayHiConfig;
 
+- (void)removeAllSayHiConfig;
 
 @end
 

@@ -72,6 +72,8 @@ public:
 //    virtual bool Login(bool success, string userId, string userName) = 0;
 //    // 上层http注销回调后通知管理器
 //    virtual bool Logout(bool success) = 0;
+    // Release私信管理器的client是否init里面的client。防止client被release，私信管理器release后又使用client
+    virtual bool CheckIMClientRelease(IImClient* client) = 0;
     // ---------- 私信列表操作 ----------
     // 获取本地私信联系人列表（同步返回）
     virtual LMUserList GetLocalPrivateMsgFriendList() = 0;

@@ -303,11 +303,11 @@ static LSFileCacheManager *gManager = nil;
 - (NSData *)imageCompressForSize:(UIImage *)sourceImage {
   
     //进行图像文件的大小
-    NSData *data = UIImageJPEGRepresentation(sourceImage, 1.0);
-    static NSInteger MaxImageSize = 5 * 1024 * 1024;
+    NSData *data = [NSData new];
+    NSInteger MaxImageSize = 5 * 1024 * 1024;
     CGFloat compress = 1.0;
-    for (int i = 10; i >= 0; i--) {
-        compress = 1.0 * i / 10;
+    for (CGFloat i = 8.5f; i >= 0; i--) {
+        compress = 1.0 * i / 10.0f;
         data = UIImageJPEGRepresentation(sourceImage, compress);
         if (data.length < MaxImageSize) {
             break;

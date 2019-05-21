@@ -3,7 +3,7 @@
  *
  *  Created on: 2019-4-18
  *      Author: Alex
- *        desc: 14.5.All ‘Say Hi’列表
+ *        desc: 14.5.获取Say Hi的All列表
  */
 
 #ifndef HttpGetAllSayHiListTask_H_

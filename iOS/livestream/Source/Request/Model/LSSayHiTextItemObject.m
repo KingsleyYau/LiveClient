@@ -15,7 +15,7 @@
 
 - (id)init {
     if( self = [super init] ) {
-        self.textId = 0;
+        self.textId = @"";
         self.text = @"";
     }
     return self;
@@ -23,7 +23,7 @@
 
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
-        self.textId = [coder decodeIntForKey:@"textId"];
+        self.textId = [coder decodeObjectForKey:@"textId"];
         self.text = [coder decodeObjectForKey:@"text"];
 
     }
@@ -31,7 +31,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeInt:self.textId forKey:@"textId"];
+    [coder encodeObject:self.textId forKey:@"textId"];
     [coder encodeObject:self.text forKey:@"text"];
 
 }

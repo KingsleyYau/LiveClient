@@ -31,6 +31,17 @@ public class PublisherManager implements ILSPublisherStatusCallback {
     private String mPublisherRecordH264FilePath = "";
     private String mPublisherRecordAACFilePath = "";
 
+    private ILSPublisherStatusListener listener;
+    public interface ILSPublisherStatusListener {
+        void onPushStreamConnect(LSPublisher var1);
+
+        void onPushStreamDisconnect(LSPublisher var1);
+    }
+
+    public void setILSPublisherStatusListener(ILSPublisherStatusListener listener){
+        this.listener = listener;
+    }
+
     public PublisherManager(Activity activity){
         mActivity = activity;
     }
@@ -44,7 +55,7 @@ public class PublisherManager implements ILSPublisherStatusCallback {
             mIsInited = true;
             mLSPublisher = new LSPublisher();
             int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
-            mLSPublisher.init(mActivity.getApplicationContext(), svPublisher, rotation, LSConfig.FillMode.FillModeAspectRatioFill, this, LSConfig.VideoConfigType.VideoConfigType240x320, 10, 10, 400 * 1000);
+            mLSPublisher.init(mActivity.getApplicationContext(), svPublisher, rotation, LSConfig.FillMode.FillModeAspectRatioFill, this, LSConfig.VideoConfigType.VideoConfigType240x240, 10, 10, 400 * 1000);
         }
     }
 
@@ -89,11 +100,33 @@ public class PublisherManager implements ILSPublisherStatusCallback {
     }
 
     /**
-     * 停止上传
+     * 3.切换摄像头
+     */
+    public void switchCamera(){
+        if(mIsInited){
+            mLSPublisher.rotateCamera();
+        }
+
+    }
+
+    /**
+     * 4.停止推流
      */
     public void stop(){
         if(mLSPublisher != null){
             mLSPublisher.stop();
+        }
+    }
+
+    /**
+     * 5.资源释放
+     */
+    public void release(){
+        mIsImDisconnected = true;
+        if(mLSPublisher != null){
+            mIsInited = false;
+            mLSPublisher.stop();
+            mLSPublisher.uninit();
         }
     }
 
@@ -122,7 +155,10 @@ public class PublisherManager implements ILSPublisherStatusCallback {
 
     @Override
     public void onConnect(LSPublisher lsPublisher) {
-
+        if(null != listener){
+            //用于界面提示
+            listener.onPushStreamConnect(lsPublisher);
+        }
     }
 
     /**
@@ -147,7 +183,16 @@ public class PublisherManager implements ILSPublisherStatusCallback {
                     }
                 }
             });
+            if(null != listener){
+                //用于界面提示
+                listener.onPushStreamDisconnect(lsPublisher);
+            }
         }
+    }
+
+    @Override
+    public void onVideoCaptureError(LSPublisher lsPublisher, int i) {
+
     }
 
     /**
@@ -156,6 +201,16 @@ public class PublisherManager implements ILSPublisherStatusCallback {
     public void onLogout(){
         mIsImDisconnected = true;
         stop();
+    }
+
+    /**
+     * 设置静音
+     * @param isMute
+     */
+    public void setPushStreamMute(boolean isMute){
+        if(mLSPublisher != null){
+            mLSPublisher.setMute(isMute);
+        }
     }
 
     /************************************** 拼装视频上传或下载增加token *************************************/

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?><!--注:blocksDescendants 解决RecyclerView初始化后自动滚动到第一个Item -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent_full"
+    android:orientation="vertical">
+
+    <!-- cardview为了搞个阴影 -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        app:cardCornerRadius="@dimen/live_size_6dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <!-- 为了封面图可以 以宽约束高 -->
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- 上半部分 -->
+            <!-- layout_constraintDimensionRatio “width：height”形式的比例宽高约束  -->
+            <RelativeLayout
+                android:id="@+id/rl_pic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/ll_bottom"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- 相片 -->
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/iv_anchor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    fresco:backgroundImage="@color/black4" />
+
+            </RelativeLayout>
+
+            <!-- 下半部分 -->
+            <LinearLayout
+                android:id="@+id/ll_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/live_size_6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <!-- 名 -->
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/live_size_2dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="name"
+                    android:textColor="#383838"
+                    android:textSize="@dimen/live_size_14sp"
+                    android:textStyle="bold" />
+
+                <!-- 年龄 -->
+                <TextView
+                    android:id="@+id/tv_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/live_size_2dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="-"
+                    android:textColor="@color/black_text_54"
+                    android:textSize="@dimen/live_size_12sp" />
+
+                <!-- ID -->
+                <TextView
+                    android:id="@+id/tv_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/live_size_2dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="ID:"
+                    android:textColor="@color/black_text_54"
+                    android:textSize="@dimen/live_size_12sp" />
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="90"
+        android:endColor="@color/live_ho_list_gradient_end_color"
+        android:startColor="@color/live_ho_list_gradient_start_color"
+        android:type="linear" />
+
+    <corners
+        android:bottomLeftRadius="@dimen/live_size_4dp"
+        android:bottomRightRadius="@dimen/live_size_4dp" />
+</shape>

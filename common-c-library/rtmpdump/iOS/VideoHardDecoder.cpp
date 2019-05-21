@@ -119,7 +119,7 @@ void VideoHardDecoder::ResetStream() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::ResetStream( this : %p )", this);
 }
     
-void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
@@ -129,13 +129,15 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
                  "pps : %p, "
                  "pps_size : %d, "
                  "naluHeaderSize : %d "
+                 "timestamp : %u "
                  ")",
                  this,
                  sps,
                  sps_size,
                  pps,
                  pps_size,
-                 naluHeaderSize
+                 naluHeaderSize,
+                 timestamp
                  );
     
     DestroyContext();

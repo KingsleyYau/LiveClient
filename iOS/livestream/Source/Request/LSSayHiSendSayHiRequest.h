@@ -16,10 +16,10 @@
 /**
  * themeId                         主题ID
  */
-@property (nonatomic, assign) int themeId;
+@property (nonatomic, copy) NSString* _Nullable themeId;
 /**
  * textId                         文本ID
  */
-@property (nonatomic, assign) int textId;
+@property (nonatomic, copy) NSString* _Nullable textId;
 @property (nonatomic, strong) SendSayHiFinishHandler _Nullable finishHandler;
 @end

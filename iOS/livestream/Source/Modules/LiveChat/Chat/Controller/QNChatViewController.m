@@ -1165,7 +1165,7 @@ typedef enum AlertPayType {
     LSFileCacheManager *fileCacheManager = [LSFileCacheManager manager];
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     UIImage *fixOrientationImage = [image fixOrientation];
-    fixOrientationImage = [fixOrientationImage imageCompressForSize:1280];
+    fixOrientationImage = [fixOrientationImage imageCropForSize:1280];
 
     //    NSString *path = [fileCacheManager imageUploadCachePath:fixOrientationImage fileName:[NSString stringWithFormat:@"CHAT%ld", time(NULL) * 1000]];
     NSString *path = [fileCacheManager imageUploadSCompressSizeCachePath:fixOrientationImage fileName:[NSString stringWithFormat:@"CHAT%ld", time(NULL) * 1000]];

@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import java.util.Random;
 
 /**
- * 颜色闪烁滤镜
+ * 滤镜
  * @author max
  *
  */

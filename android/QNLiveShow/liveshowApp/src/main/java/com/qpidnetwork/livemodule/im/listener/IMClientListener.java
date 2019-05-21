@@ -78,6 +78,10 @@ public abstract class IMClientListener {
 		LCC_ERR_REPEAT_INVITEING_TALENT, 	// 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/(10052)
 		LCC_ERR_RECV_REGULAR_CLOSE_ROOM,    // 用户接收正常关闭直播间(10088)
 		LCC_ERR_PRIVTE_INVITE_AUTHORITY,    // 主播无立即私密邀请权限(17002)
+
+		LCC_ERR_NO_CREDIT_CLOSE_LIVE,       // 余额不足(10190,用于3.3.接收直播间关闭通知 接口)
+		LCC_ERR_NO_CREDIT_DOUBLE_VIDEO,            // 私密直播间开始双向视频时，信用点不足(10091 用于3.14.观众开始/结束视频互动 接口)
+		LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO,   // Hangout直播间开始双向视频时，信用点不足(10146 用于10.11.多人互动观众开始/结束视频互动 接口)
 	}
 
 	//邀请答复类型
@@ -556,22 +560,22 @@ public abstract class IMClientListener {
 	 */
 	public abstract void OnRecvLiveStart(String roomId, String anchorId, String nickName, String avatarImg, int leftSeconds, String[] playUrls);
 	
-//	/**
-//	 * 3.12.接收观众/主播切换视频流通知接口
-//	 * @param roomId				房间ID
-//	 * @param isAnchor				是否是主播推流（1:是 0:否）
-//	 * @param playUrls				播放url
-//	 * @param userId				主播/观众ID（可无，仅在多人互动直播间才存在）
-//	 */
-//	public abstract void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId);
-
 	/**
 	 * 3.12.接收观众/主播切换视频流通知接口
 	 * @param roomId				房间ID
 	 * @param isAnchor				是否是主播推流（1:是 0:否）
 	 * @param playUrls				播放url
+	 * @param userId				主播/观众ID（可无，仅在多人互动直播间才存在）
 	 */
-	public abstract void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls);
+	public abstract void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId);
+
+//	/**
+//	 * 3.12.接收观众/主播切换视频流通知接口
+//	 * @param roomId				房间ID
+//	 * @param isAnchor				是否是主播推流（1:是 0:否）
+//	 * @param playUrls				播放url
+//	 */
+//	public abstract void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls);
 	
 	/**
 	 * 4.2.观众端/主播端向直播间发送文本消息
@@ -782,6 +786,23 @@ public abstract class IMClientListener {
 	 * @param item
 	 */
 	public abstract void OnRecvAnchorCountDownEnterHangoutRoomNotice(IMHangoutCountDownItem item);
+
+	/**
+	 * 10.15.接收主播Hang-out邀请通知
+	 * @param item
+	 */
+	public abstract void OnRecvHandoutInviteNotice(IMHangoutInviteItem item);
+
+	/**
+	 * 10.16.接收主播Hang-out男士信用点不足两个周期
+	 * @param roomId		直播间ID
+	 * @param errType		错误码
+	 * @param errMsg		错误描述
+	 */
+	public abstract void OnRecvHangoutCreditRunningOutNotice(String roomId, LCC_ERR_TYPE errType, String errMsg);
+	public void OnRecvHangoutCreditRunningOutNotice(String roomId, int errType, String errMsg) {
+		OnRecvHangoutCreditRunningOutNotice(roomId, intToErrType(errType), errMsg);
+	}
 
 	/**
 	 * 11.1.节目开播通知

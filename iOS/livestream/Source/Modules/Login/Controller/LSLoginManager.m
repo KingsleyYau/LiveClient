@@ -20,6 +20,7 @@
 #import "LSLiveChatManagerOC.h"
 #import "LSFileCacheManager.h"
 #import "LSPhoneInfoRequest.h"
+#import "LSSayHiManager.h"
 #define PHONE_INFO_FILE @"LSPhoneInfo.plist"
 
 static LSLoginManager *loginManager = nil;
@@ -299,6 +300,9 @@ static LSLoginManager *loginManager = nil;
                          self.loginBlock(success, ErrorType_Success, errmsg, self.manId);
                     }
                     
+                    // 获取SayHi初始化配置
+                    [[LSSayHiManager manager] getFirstSayHiConfig];
+                    
                } else {
                     _status = NONE;
                     
@@ -353,8 +357,12 @@ static LSLoginManager *loginManager = nil;
         // 标记为已经注销
         _status = NONE;
          
+         // 移除SayHi配置
+         [[LSSayHiManager manager] removeAllSayHiConfig];
+         
          self.messageManager = nil;
-
+         
+         
         for (NSValue *value in self.delegates) {
             id<LoginManagerDelegate> delegate = value.nonretainedObjectValue;
             if ([delegate respondsToSelector:@selector(manager:onLogout:msg:)]) {
@@ -407,7 +415,7 @@ static LSLoginManager *loginManager = nil;
 
                             // 标记可以自动重登陆
                             self.isAutoLogin = YES;
-
+                             
                         } else {
                             if (errnum == HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE) {
                                 // 账号已经在其他设备登录
@@ -548,4 +556,6 @@ static LSLoginManager *loginManager = nil;
      [applist setObject:manId forKey:@"manId"];
      [applist writeToFile:path atomically:YES];
 }
+
+
 @end

@@ -411,7 +411,8 @@ typedef enum : NSUInteger {
     [self.creditsView removeFromSuperview];
     self.creditsView = nil;
     self.poststampView = [LSOutOfPoststampView initWithActionViewDelegate:self];
-    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"%0.1f", self.credit]];
+    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"Send by Credits (%0.1f credits)", self.credit]];
+    
 }
 
 - (void)lsOutOfPoststampView:(LSOutOfPoststampView *)addView didSelectAddCredit:(UIButton *)creditBtn {

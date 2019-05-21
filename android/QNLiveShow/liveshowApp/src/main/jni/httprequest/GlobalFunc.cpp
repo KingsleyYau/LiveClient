@@ -133,10 +133,29 @@ void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
  	InitClassHelper(env, SERVER_ITEM_CLASS, &jServerItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(SERVER_ITEM_CLASS, jServerItem));
 
-	 jobject jLSValidSiteIdItem;
-	 InitClassHelper(env, LSVALIDSITEID_ITEM_CLASS, &jLSValidSiteIdItem);
-	 gJavaItemMap.insert(JavaItemMap::value_type(LSVALIDSITEID_ITEM_CLASS, jLSValidSiteIdItem));
+	jobject jLSValidSiteIdItem;
+	InitClassHelper(env, LSVALIDSITEID_ITEM_CLASS, &jLSValidSiteIdItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LSVALIDSITEID_ITEM_CLASS, jLSValidSiteIdItem));
 
+	jobject jUserSendMailPrivItem;
+	InitClassHelper(env, USERSENDMAILPRIV_ITEM_CLASS, &jUserSendMailPrivItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(USERSENDMAILPRIV_ITEM_CLASS, jUserSendMailPrivItem));
+
+	jobject jMailPrivItem;
+	InitClassHelper(env, MAILPRIV_ITEM_CLASS, &jMailPrivItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(MAILPRIV_ITEM_CLASS, jMailPrivItem));
+
+	jobject jLiveChatPrivItem;
+	InitClassHelper(env, LIVECHATPRIV_ITEM_CLASS, &jLiveChatPrivItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHATPRIV_ITEM_CLASS, jLiveChatPrivItem));
+
+	jobject jHangoutPrivItem;
+	InitClassHelper(env, HANGOUTPRIV_ITEM_CLASS, &jHangoutPrivItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(HANGOUTPRIV_ITEM_CLASS, jHangoutPrivItem));
+
+	jobject jUserPrivItem;
+	InitClassHelper(env, USERPRIV_ITEM_CLASS, &jUserPrivItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(USERPRIV_ITEM_CLASS, jUserPrivItem));
 
  	/* 3.直播间模块  */
  	jobject jHotListItem;
@@ -268,6 +287,14 @@ void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
 	 jobject jHangoutGiftListItem;
 	 InitClassHelper(env, HANGOUT_HANGOUGIFTLIST_ITEM_CLASS, &jHangoutGiftListItem);
 	 gJavaItemMap.insert(JavaItemMap::value_type(HANGOUT_HANGOUGIFTLIST_ITEM_CLASS, jHangoutGiftListItem));
+
+	 jobject jHangoutOnlineAnchorItem;
+	 InitClassHelper(env, HANGOUT_HANGOUTONLINEANCHOR_ITEM_CLASS, &jHangoutOnlineAnchorItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(HANGOUT_HANGOUTONLINEANCHOR_ITEM_CLASS, jHangoutOnlineAnchorItem));
+
+	 jobject jHangoutRoomStatusItem;
+	 InitClassHelper(env, HANGOUT_HANGOUTROOMSTATUS_ITEM_CLASS, &jHangoutRoomStatusItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(HANGOUT_HANGOUTROOMSTATUS_ITEM_CLASS, jHangoutRoomStatusItem));
 
 
 	 /* 9.节目 */

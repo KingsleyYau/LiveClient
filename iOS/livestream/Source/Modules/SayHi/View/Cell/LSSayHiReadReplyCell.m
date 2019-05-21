@@ -14,15 +14,18 @@
     return @"LSSayHiReadReplyCell";
 }
 
-+ (NSInteger)cellHeight:(NSString *)str isUnfold:(BOOL)unfold {
-    CGFloat h = 0;
-    if (unfold) {
-        h = 445;
++ (NSInteger)cellHeight:(LSSayHiDetailResponseListItemObject *)obj {
+    CGFloat contentH = 0;
+    CGFloat topH = 50;
+    CGFloat bottomH = 50;
+    CGFloat imageH = obj.hasImg?200:0;
+    CGFloat btnH = 40;
+    CGFloat spacing =obj.hasImg?30:10;
+    if (obj.imageH > 0) {
+        imageH = obj.imageH;
     }
-    else{
-        h =  130;
-    }
-    return h;
+    contentH = obj.contentH + imageH + topH + bottomH + btnH + spacing;
+    return contentH;
 }
 
 + (id)getUITableViewCell:(UITableView*)tableView {
@@ -31,11 +34,22 @@
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"LSSayHiReadReplyCell" owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         
-        cell.bgView.layer.cornerRadius = 5;
-        cell.bgView.layer.masksToBounds = YES;
+        cell.replyBtn.layer.cornerRadius = cell.replyBtn.tx_height/2;
+        cell.replyBtn.layer.masksToBounds =YES;
         
-        LSShadowView * view = [[LSShadowView alloc]init];
-        [view showShadowAddView:cell.bgView];
+        cell.replyMiniBtn.layer.cornerRadius = cell.replyMiniBtn.tx_height/2;
+        cell.replyMiniBtn.layer.masksToBounds =YES;
+        
+        cell.freeIcon.layer.cornerRadius = 4;
+        cell.freeIcon.layer.masksToBounds = YES;
+        
+        LSShadowView * btnView = [[LSShadowView alloc]init];
+        [btnView showShadowAddView:cell.replyBtn];
+        
+        LSShadowView * miniBtnView = [[LSShadowView alloc]init];
+        [miniBtnView showShadowAddView:cell.replyMiniBtn];
+        
+        cell.imageLoader =  [LSImageViewLoader loader];
     }
     return cell;
 }
@@ -45,9 +59,9 @@
     // Initialization code
 }
 
-- (IBAction)arrowBtnDid:(UIButton *)sender {
-    if ([self.cellDelegate respondsToSelector:@selector(sayHiReadReplyCellArrowBtnDid)]) {
-        [self.cellDelegate sayHiReadReplyCellArrowBtnDid];
+- (IBAction)replyBtnDid:(id)sender {
+    if ([self.cellDelegate respondsToSelector:@selector(sayHiReadReplyCellReplyBtnDid)]) {
+        [self.cellDelegate sayHiReadReplyCellReplyBtnDid];
     }
 }
 

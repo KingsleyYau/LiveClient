@@ -1,14 +1,13 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.talent;
 
+import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetTalentInviteStatusCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetTalentListCallback;
@@ -16,12 +15,9 @@ import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.TalentInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.TalentInviteItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
-import com.qpidnetwork.livemodule.im.listener.IMGiftMessageContent;
-import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
-import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
-import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +30,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 import static com.qpidnetwork.livemodule.im.IMManager.imReconnecting;
-import static com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_CREDIT;
 
 /**
  * 才艺管理工具
@@ -45,7 +40,8 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
 
     private final String TAG = "Jagger";// TalentManager.class.getSimpleName();
     private static TalentManager gTalentManager;
-    private AppCompatActivity mActivity;
+    private FragmentManager mFragmentManager;
+    private Context mContext;
 //    private TalentsPopupWindow mTalentsPopupWindow;
 //    private TalentConfirmDialog talentConfirmDialog;
 //    private onRequestConfirmListener mOnRequestConfirmListener;
@@ -109,8 +105,8 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
         return gTalentManager;
     }
 
-    private TalentManager(AppCompatActivity activity , IMRoomInItem room){
-        mActivity = activity;
+    private TalentManager(Context context , IMRoomInItem room){
+        mContext = context;
         mRoomId = room.roomId;
         mAnchorAvatarURL = room.photoUrl;
         mAnchorNickName = room.nickName;
@@ -138,14 +134,15 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
 //        if(null != mActivity){
 //            mActivity.clear();
 //        }
-//        mActivity= null;
-//        mRequestingTalent = null;
-        mTempTalentInviteId = null;
-        httpRespObjectTalentList = null;
-        mOnTalentEventListenerList.clear();
         if(mDisposable != null && !mDisposable.isDisposed()){
             mDisposable.dispose();
         }
+        mOnTalentEventListenerList.clear();
+        mContext = null;
+        mFragmentManager = null;
+//        mRequestingTalent = null;
+        mTempTalentInviteId = null;
+        httpRespObjectTalentList = null;
         gTalentManager = null;
     }
 
@@ -211,8 +208,8 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
                             Log.d(TAG,"getTalentList-onGetTalentList-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg);
 
                             //处理特殊错误码
-                            if(!isSuccess && errCode == HttpLccErrType.HTTP_LCC_ERR_CONNECTFAIL.ordinal()){
-                                errMsg = mActivity.getString(R.string.live_talent_list_error_tips);
+                            if(!isSuccess && errCode == HttpLccErrType.HTTP_LCC_ERR_CONNECTFAIL.ordinal() && mContext != null){
+                                errMsg = mContext.getString(R.string.live_talent_list_error_tips);
                             }
 
                             HttpRespObject httpRespObject = new HttpRespObject(isSuccess , errCode , errMsg , talentList);
@@ -254,7 +251,7 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
      * 显示才艺列表
      * @param anchorView
      */
-    public void showTalentsList(View anchorView){
+    public void showTalentsList(FragmentActivity fragmentActivity, View anchorView){
         Log.d(TAG,"showTalentsList");
         this.anchorView = anchorView;
 //        mTalentsPopupWindow.setData(mDatas);
@@ -263,8 +260,8 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
 //        mTalentsPopupWindow.refreshDataStatusView(false,!getTalentListSuccess,null != mDatas && mDatas.length < 1 && getTalentListSuccess);
 //        mTalentsPopupWindow.showAtLocation(anchorView, Gravity.BOTTOM,0,DisplayUtil.getNavigationBarHeight(mActivity));
 
-        FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-        TalentDialogFragment.showDialog(fragmentManager , mRoomId , mAnchorAvatarURL, mAnchorNickName);
+        mFragmentManager = fragmentActivity.getSupportFragmentManager();
+        TalentDialogFragment.showDialog(mFragmentManager , mRoomId , mAnchorAvatarURL, mAnchorNickName);
         TalentDialogFragment.setOnDialogEventListener(this);
     }
 
@@ -300,79 +297,79 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
      */
     public void onTalentSent(final boolean result , final String errMsg, final IMClientListener.LCC_ERR_TYPE errType , final String talentInviteId , final String talentId){
         Log.d(TAG,"onTalentSent-result:"+result+" errMsg:"+errMsg);
-        if(null != mActivity && null != mActivity){
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String msg = null;
+//        if(null != mActivity && null != mActivity){
+//            mActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    String msg = null;
                     if(result){
                         //本地记下邀请ID
 //                        lastTalentNotResponedReqTime = System.currentTimeMillis();
 //                        startOverTimeTimer();
                         mTempTalentInviteId = talentInviteId;
 
-                        //聊天控件插入成功提示
-                        String talentName = "";
-                        TalentInfoItem item = getTalentInfoItemById(talentId);
-                        if(item != null){
-                            talentName = item.talentName;
-                        }
-                        msg = mActivity.getString(R.string.live_talent_request_success , talentName);
-                        if(mActivity instanceof BaseCommonLiveRoomActivity){
-                            IMMessageItem msgItem = new IMMessageItem(((BaseCommonLiveRoomActivity) mActivity).mIMRoomInItem.roomId,
-                                    ((BaseCommonLiveRoomActivity) mActivity).mIMManager.mMsgIdIndex.getAndIncrement(),
-                                    "",
-                                    IMMessageItem.MessageType.SysNotice,
-                                    new IMSysNoticeMessageContent(msg,"", IMSysNoticeMessageContent.SysNoticeType.Normal));
-                            ((BaseCommonLiveRoomActivity) mActivity).sendMessageUpdateEvent(msgItem);
-                        }else{
-                            Toast.makeText(mActivity , msg ,Toast.LENGTH_LONG).show();
-                        }
+//                        //聊天控件插入成功提示
+//                        String talentName = "";
+//                        TalentInfoItem item = getTalentInfoItemById(talentId);
+//                        if(item != null){
+//                            talentName = item.talentName;
+//                        }
+//                        msg = mActivity.getString(R.string.live_talent_request_success , talentName);
+//                        if(mActivity instanceof BaseCommonLiveRoomActivity){
+//                            IMMessageItem msgItem = new IMMessageItem(((BaseCommonLiveRoomActivity) mActivity).mIMRoomInItem.roomId,
+//                                    ((BaseCommonLiveRoomActivity) mActivity).mIMManager.mMsgIdIndex.getAndIncrement(),
+//                                    "",
+//                                    IMMessageItem.MessageType.SysNotice,
+//                                    new IMSysNoticeMessageContent(msg,"", IMSysNoticeMessageContent.SysNoticeType.Normal));
+//                            ((BaseCommonLiveRoomActivity) mActivity).sendMessageUpdateEvent(msgItem);
+//                        }else{
+//                        ToastUtil.showToast(mActivity, msg);
+//                        }
                     }else{
                         //返回失败提示
                         Log.d(TAG,"onTalentSent-imReconnecting:"+imReconnecting);
-//                        mRequestingTalent = null;
-//                        mTempTalentInviteId = "";
-                        if(LCC_ERR_NO_CREDIT == errType){
-                            //信用点不足
-                            if(mActivity instanceof BaseCommonLiveRoomActivity){
-                                ((BaseCommonLiveRoomActivity) mActivity).
-                                showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
-                            }else{
-                                Toast.makeText(mActivity , errMsg ,Toast.LENGTH_LONG).show();
-                            }
-                        }else{
-                            //房间错误
-//                            if(LCC_ERR_ROOM_CLOSE == errType || LCC_ERR_NOT_FOUND_ROOM == errType){
-//                                msg = mActivity.getString(R.string.live_talent_request_failed_room_closing);
+////                        mRequestingTalent = null;
+////                        mTempTalentInviteId = "";
+//                        if(LCC_ERR_NO_CREDIT == errType){
+//                            //信用点不足
+//                            if(mActivity instanceof BaseCommonLiveRoomActivity){
+//                                ((BaseCommonLiveRoomActivity) mActivity).
+//                                        showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
 //                            }else{
-//                                msg = mActivity.getString(R.string.live_talent_request_failed);
+//                        ToastUtil.showToast(mActivity, errMsg);
 //                            }
-
-                            //其它错误使用服务器返回信息
-                            if(mActivity instanceof BaseFragmentActivity){
-                                ((BaseFragmentActivity) mActivity).
-                                        showToast(errMsg);
-                            }else{
-                                Toast.makeText(mActivity , errMsg ,Toast.LENGTH_LONG).show();
-                            }
-                        }
+//                        }else{
+//                            //房间错误
+////                            if(LCC_ERR_ROOM_CLOSE == errType || LCC_ERR_NOT_FOUND_ROOM == errType){
+////                                msg = mActivity.getString(R.string.live_talent_request_failed_room_closing);
+////                            }else{
+////                                msg = mActivity.getString(R.string.live_talent_request_failed);
+////                            }
+//
+//                            //其它错误使用服务器返回信息
+//                            if(mActivity instanceof BaseFragmentActivity){
+//                                ((BaseFragmentActivity) mActivity).
+//                                        showToast(errMsg);
+//                            }else{
+//                        ToastUtil.showToast(mActivity, errMsg);
+//                            }
+//                        }
                     }
-                }
-            });
-        }
+//                }
+//            });
+//        }
     }
 
     /**
      * 才艺请求被主播处理回调,会弹出相应提示
      */
-    public void onTalentProcessed(final String talentId , final String talentName ,
+    public boolean onTalentProcessed(final String talentId , final String talentName ,
                                   final double credit,
                                   final IMClientListener.TalentInviteStatus status,
                                   final String giftId, final String giftName, final int giftNum ,
                                   final String talentInviteId){
         Log.d(TAG,"onTalentProcessed-talentId:"+talentId+" talentName:"+talentName +" status:"+status);
-        if(null != mActivity ){
+//        if(null != mActivity ){
             TalentInviteItem inviteItem = new TalentInviteItem(
                     talentInviteId,
                     talentId,
@@ -383,8 +380,8 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
                     giftName,
                     giftNum
                     );
-            doShowTalentMsg(inviteItem);
-        }
+            return doShowTalentMsg(inviteItem);
+//        }
     }
 
     /**
@@ -416,40 +413,45 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
     /**
      * 界面显示才艺处理结果
      */
-    private void doShowTalentMsg(TalentInviteItem inviteItem){
-        if(mActivity instanceof BaseCommonLiveRoomActivity && inviteItem.talentInviteId.equals(mTempTalentInviteId)) {
-            String msg = null;
-            IMRoomInItem currIMRoomInItem = ((BaseCommonLiveRoomActivity) mActivity).mIMRoomInItem;
-            String nickName = currIMRoomInItem.nickName;
-            if(inviteItem.inviteStatus == TalentInviteItem.TalentInviteStatus.Accept){
-                msg = mActivity.getString(R.string.live_talent_accepted , nickName ,inviteItem.name);
+    private boolean doShowTalentMsg(TalentInviteItem inviteItem){
+//        if(mActivity instanceof BaseCommonLiveRoomActivity && inviteItem.talentInviteId.equals(mTempTalentInviteId)) {
+//            String msg = null;
+//            IMRoomInItem currIMRoomInItem = ((BaseCommonLiveRoomActivity) mActivity).mIMRoomInItem;
+//            String nickName = currIMRoomInItem.nickName;
+//            if(inviteItem.inviteStatus == TalentInviteItem.TalentInviteStatus.Accept){
+//                msg = mActivity.getString(R.string.live_talent_accepted , nickName ,inviteItem.name);
+//
+//                //add by Jagger 2018-5-31 需求增加同时播放大礼物
+//                IMMessageItem msgGiftItem = new IMMessageItem(currIMRoomInItem.roomId,
+//                        ((BaseCommonLiveRoomActivity) mActivity).mIMManager.mMsgIdIndex.getAndIncrement(),
+//                        "",
+//                        "",
+//                        "",
+//                        0,
+//                        IMMessageItem.MessageType.Gift,
+//                        null,
+//                        new IMGiftMessageContent(inviteItem.giftId , "" , inviteItem.giftNum , false , -1 , -1, -1 )
+//                );
+//                ((BaseCommonLiveRoomActivity) mActivity).sendMessageShowGiftEvent(msgGiftItem);
+//            }else if(inviteItem.inviteStatus == TalentInviteItem.TalentInviteStatus.Denied){
+//                msg = mActivity.getString(R.string.live_talent_declined , nickName ,inviteItem.name);
+//            }
+//            if(!TextUtils.isEmpty(msg)){
+//                IMMessageItem msgItem = new IMMessageItem(currIMRoomInItem.roomId,
+//                        ((BaseCommonLiveRoomActivity) mActivity).mIMManager.mMsgIdIndex.getAndIncrement(),
+//                        "",
+//                        IMMessageItem.MessageType.SysNotice,
+//                        new IMSysNoticeMessageContent(msg,"", IMSysNoticeMessageContent.SysNoticeType.Normal));
+//                ((BaseCommonLiveRoomActivity) mActivity).sendMessageUpdateEvent(msgItem);
+//            }
+//        }
 
-                //add by Jagger 2018-5-31 需求增加同时播放大礼物
-                IMMessageItem msgGiftItem = new IMMessageItem(currIMRoomInItem.roomId,
-                        ((BaseCommonLiveRoomActivity) mActivity).mIMManager.mMsgIdIndex.getAndIncrement(),
-                        "",
-                        "",
-                        "",
-                        0,
-                        IMMessageItem.MessageType.Gift,
-                        null,
-                        new IMGiftMessageContent(inviteItem.giftId , "" , inviteItem.giftNum , false , -1 , -1, -1 )
-                );
-                ((BaseCommonLiveRoomActivity) mActivity).sendMessageShowGiftEvent(msgGiftItem);
-            }else if(inviteItem.inviteStatus == TalentInviteItem.TalentInviteStatus.Denied){
-                msg = mActivity.getString(R.string.live_talent_declined , nickName ,inviteItem.name);
-            }
-            if(!TextUtils.isEmpty(msg)){
-                IMMessageItem msgItem = new IMMessageItem(currIMRoomInItem.roomId,
-                        ((BaseCommonLiveRoomActivity) mActivity).mIMManager.mMsgIdIndex.getAndIncrement(),
-                        "",
-                        IMMessageItem.MessageType.SysNotice,
-                        new IMSysNoticeMessageContent(msg,"", IMSysNoticeMessageContent.SysNoticeType.Normal));
-                ((BaseCommonLiveRoomActivity) mActivity).sendMessageUpdateEvent(msgItem);
-            }
+        boolean canShow = false;
+        if(inviteItem.talentInviteId.equals(mTempTalentInviteId)){
+            canShow = true;
         }
-
         doCleanTempTalent();
+        return canShow;
     }
 
     /**
@@ -462,14 +464,14 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
 
     @Override
     public void onRequestClicked(TalentInfoItem talent) {
-        if(mActivity instanceof BaseCommonLiveRoomActivity){
-            double currCredits = ((BaseCommonLiveRoomActivity)mActivity).mLiveRoomCreditRebateManager.getCredit();
-            if(currCredits<talent.talentCredit){
-                ((BaseCommonLiveRoomActivity) mActivity).
-                showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
-                return;
-            }
-        }
+//        if(mActivity instanceof BaseCommonLiveRoomActivity){
+//            double currCredits = ((BaseCommonLiveRoomActivity)mActivity).mLiveRoomCreditRebateManager.getCredit();
+//            if(currCredits<talent.talentCredit){
+//                ((BaseCommonLiveRoomActivity) mActivity).
+//                showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
+//                return;
+//            }
+//        }
 //        long timeDelay = System.currentTimeMillis() - lastTalentNotResponedReqTime;
 //        Log.d(TAG,"onRequestClicked-talent.talentId:"+talent.talentId+" timeDelay:"+ timeDelay
 //                +" lastTalentNotResponedReqTime:"+lastTalentNotResponedReqTime);
@@ -485,9 +487,7 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
 //                    ((BaseCommonLiveRoomActivity)mActivity).showThreeSecondTips(
 //                            mActivity.getResources().getString(R.string.live_talent_request_wait),Gravity.CENTER);
 //                }else{
-//                    Toast.makeText(mActivity,
-//                            mActivity.getResources().getString(R.string.live_talent_request_wait) ,
-//                            Toast.LENGTH_LONG).show();
+//        ToastUtil.showToast(mActivity, R.string.live_talent_request_wait);
 //                }
 //            }
 //        }
@@ -544,8 +544,11 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
 //        mRequestingTalent = talent;
 
         //关闭弹出框
-        FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-        TalentDialogFragment.dismissDialog(fragmentManager);
+//        FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+        if(mFragmentManager != null){
+            TalentDialogFragment.dismissDialog(mFragmentManager);
+            mFragmentManager = null;
+        }
     }
 
     /**
@@ -553,7 +556,7 @@ public class TalentManager implements TalentDialogFragment.onDialogEventListener
      * @param talentId
      * @return
      */
-    private TalentInfoItem getTalentInfoItemById(String talentId){
+    public TalentInfoItem getTalentInfoItemById(String talentId){
         TalentInfoItem talentInfoItem = null;
         TalentInfoItem[] talentList = (TalentInfoItem[])httpRespObjectTalentList.data;
         for (TalentInfoItem item: talentList) {

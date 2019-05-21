@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.liveshow.bubble.HangoutMsgPopView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/live_size_10dp"
+    android:paddingBottom="@dimen/live_size_10dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/view_hang_out_msg_pop_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_80dp"
+        android:layout_gravity="center_horizontal"
+        android:overScrollMode="never" />
+
+</com.qpidnetwork.livemodule.liveshow.bubble.HangoutMsgPopView>

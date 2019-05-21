@@ -25,13 +25,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dou361.dialogui.DialogUIUtils;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.TalentInfoItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView;
 import com.qpidnetwork.qnbridgemodule.view.bottomSheetDialog.CustomBottomSheetDialog;
 import com.qpidnetwork.qnbridgemodule.view.viewPage.NoScrollViewPager;
@@ -71,6 +71,7 @@ public class TalentDialogFragment extends DialogFragment implements TalentListFr
     private TalentListFragment mTalentListFragment;
     private TalentDetailFragment mTalentDetailFragment;
     private Disposable mDisposable;
+    private TalentManager.onTalentEventListener mTalentEventListener;
 
     //控件
     private NoScrollViewPager mViewPagerContent;
@@ -204,7 +205,7 @@ public class TalentDialogFragment extends DialogFragment implements TalentListFr
                         mOnDialogEventListener.onRequestClicked(mTalentInfoItemRequest);
                     }else {
                         //提示要选中一个才艺
-                        Toast.makeText(getContext() , getString(R.string.live_talent_no_select) , Toast.LENGTH_LONG).show();
+                        ToastUtil.showToast(getContext(), R.string.live_talent_no_select);
                     }
                 }
             }
@@ -231,7 +232,7 @@ public class TalentDialogFragment extends DialogFragment implements TalentListFr
         tv_talentCredits.setMovementMethod(LinkMovementMethod.getInstance());//开始响应点击事件
 
         //根据数据决定下半部分是否显示
-        TalentManager.getInstance().registerOnTalentEventListener(new TalentManager.onTalentEventListener() {
+        mTalentEventListener = new TalentManager.onTalentEventListener() {
             @Override
             public void onGetTalentList(HttpRespObject httpRespObject) {
                 if(!httpRespObject.isSuccess || httpRespObject.data == null || ((TalentInfoItem[])httpRespObject.data).length == 0){
@@ -245,7 +246,8 @@ public class TalentDialogFragment extends DialogFragment implements TalentListFr
             public void onConfirm(TalentInfoItem talent) {
 
             }
-        });
+        };
+        TalentManager.getInstance().registerOnTalentEventListener(mTalentEventListener);
         return view;
     }
 
@@ -256,6 +258,8 @@ public class TalentDialogFragment extends DialogFragment implements TalentListFr
         if(mDisposable!=null&&!mDisposable.isDisposed()){
             mDisposable.dispose();
         }
+
+        TalentManager.getInstance().unregisterOnTalentEventListener(mTalentEventListener);
     }
 
     /**

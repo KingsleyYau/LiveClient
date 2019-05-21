@@ -194,7 +194,8 @@ public:
     bool Relogin() override;
     // 获取原始socket
     int GetSocket() override;
-    // 根据错误码判断是否时余额不足
+    //
+    
    bool IsNoMoneyWithErrCode(const string& errCode) override;
     
 	// ---------- 会话操作 ----------

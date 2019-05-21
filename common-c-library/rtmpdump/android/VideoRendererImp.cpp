@@ -70,12 +70,11 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 //			videoFrame->mTimestamp
 //			);
 
-    // 播放视频
 	JNIEnv* env;
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
-	// 回调图像
+	// 回调视频
 	if( mJniRenderer) {
 		if( mJniRendererMethodID ) {
 			// 创建新Buffer

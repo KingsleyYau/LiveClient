@@ -8,7 +8,7 @@ import net.qdating.utils.Log;
 import java.util.ArrayList;
 
 /**
- * 滤镜组合
+ * 滤镜组合器
  * @author max
  *
  */

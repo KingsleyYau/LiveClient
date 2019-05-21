@@ -1,0 +1,28 @@
+
+/* Class = "UILabel"; text = "Can not Say Hi to {%@}"; ObjectID = "AKz-xJ-eQ5"; */
+"AKz-xJ-eQ5.text" = "Can not send Say Hi to %@";
+
+/* Class = "UIButton"; normalTitle = "  Chat with Her Now"; ObjectID = "IA7-Gf-bk5"; */
+"IA7-Gf-bk5.normalTitle" = "  Chat with Her Now";
+
+/* Class = "UIButton"; normalTitle = "  Start One-on-One"; ObjectID = "OrZ-g5-Mq1"; */
+"OrZ-g5-Mq1.normalTitle" = "  Start One-on-One";
+
+/* Class = "UIButton"; normalTitle = "Done"; ObjectID = "Oxf-Mc-14J"; */
+"Oxf-Mc-14J.normalTitle" = "Done";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "PUB-Vu-YlY"; */
+"PUB-Vu-YlY.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "  Follow Her and Say Hi Next Time."; ObjectID = "WAq-eF-xep"; */
+"WAq-eF-xep.normalTitle" = "  Follow Her and Say Hi Next Time.";
+
+/* Class = "UIButton"; normalTitle = "  Send a Mail to Her"; ObjectID = "Wsu-NO-saU"; */
+"Wsu-NO-saU.normalTitle" = "  Send a Mail to Her";
+
+/* Class = "UIButton"; normalTitle = "  View this Say Hi"; ObjectID = "c9E-7c-e2t"; */
+"c9E-7c-e2t.normalTitle" = "  View this Say Hi";
+
+"VIEW_RESPONSRS" = "View Say Hi Responses";
+
+"MY_SAY_HI" = "View My Say Hi";

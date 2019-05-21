@@ -31,9 +31,15 @@ LSLCPhotoManager::LSLCPhotoManager()
 
 LSLCPhotoManager::~LSLCPhotoManager()
 {
-	IAutoLock::ReleaseAutoLock(m_sendingMapLock);
+    IAutoLock::ReleaseAutoLock(m_sendingMapLock);
 
 	ClearAllDownload();
+//    // 清除所有相关的东西
+//    ClearAllRequestItems();
+//    ClearAllSendingItems();
+//    ClearPhotoMap();
+//    ClearBindMap();
+    
 }
 
 // 初始化

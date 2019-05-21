@@ -60,6 +60,9 @@
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didSendSayhi:(NSString *)anchorId anchorName:(NSString *)anchorName;
 #pragma mark - sayhi详情
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenSayHiDetail:(NSString *)sayhiId;
+
+#pragma mark - 意向信详情
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenGreetingMailDetail:(NSString *)loiId;
 @end
 
 /**
@@ -190,4 +193,30 @@
  @return URL
  */
 - (NSURL *)createLiveChatByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName;
+
+/**
+ 生成SayHi列表URL
+
+ @param type 列表类型
+ @return URL
+ */
+- (NSURL *)createOpenSayHiList:(LiveUrlSayHiListType)type;
+
+/**
+ 生成编辑SayHi界面URL
+
+ @param anchorId 主播ID
+ @param anchorName 主播名称
+ @return URL
+ */
+- (NSURL *)createSendSayhiByAnchorId:(NSString *)anchorId anchorName:(NSString *)anchorName;
+
+/**
+ 生成SayHi详情URL
+
+ @param sayhiId SayHiId
+ @return URL
+ */
+- (NSURL *)createSayHiDetailBySayhiId:(NSString *)sayhiId;
+
 @end

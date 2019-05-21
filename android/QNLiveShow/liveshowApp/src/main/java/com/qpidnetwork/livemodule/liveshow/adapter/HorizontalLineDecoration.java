@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.adapter;
 
 import android.graphics.Rect;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -12,7 +13,7 @@ import android.view.View;
  */
 public class HorizontalLineDecoration extends RecyclerView.ItemDecoration {
 
-    private int mHorizontalSpacing = 0;
+    private int mHorizontalSpacing;
 
     public HorizontalLineDecoration(int horizontalSpacing) {
         mHorizontalSpacing = horizontalSpacing;
@@ -23,15 +24,25 @@ public class HorizontalLineDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         int position = parent.getChildAdapterPosition(view);
-        int totalCount = parent.getLayoutManager().getItemCount();
 
-        outRect.left = mHorizontalSpacing;
-        if (position == totalCount - 1) {
-            outRect.right = mHorizontalSpacing;
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) parent.getLayoutManager();
+        if (linearLayoutManager.getReverseLayout()) {
+            // 反向滚动，向右滑动
+            outRect.left = mHorizontalSpacing;
+            if (position == 0) {
+                outRect.right = mHorizontalSpacing;
+            }
+        } else {
+            // 一般，向左滑动
+            int totalCount = linearLayoutManager.getItemCount();
+            outRect.left = mHorizontalSpacing;
+            if (position == totalCount - 1) {
+                outRect.right = mHorizontalSpacing;
+            }
         }
     }
 
-    public void setLineDecoration(int horizontalSpacing){
+    public void setLineDecoration(int horizontalSpacing) {
         mHorizontalSpacing = horizontalSpacing;
     }
 }

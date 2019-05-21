@@ -6,6 +6,8 @@ import android.util.JsonReader;
 import android.webkit.JavascriptInterface;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.qnbridgemodule.util.Log;
@@ -107,6 +109,20 @@ public class CallbackAppGAEventJSObj extends Object {
         }
     }
 
+    @JavascriptInterface
+    public void callbackAppShowHangoutAnchor(String anchorInfo){
+        Log.d(TAG,":callbackAppShowHangoutAnchor anchorInfo: " + anchorInfo);
+        if(mListener != null){
+            HangoutAnchorInfoItem item = new HangoutAnchorInfoItem();
+            try{
+                item = parseAnchorInfoItem(anchorInfo);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            mListener.onShowHangoutAnchor(item);
+        }
+    }
+
     /****************************** JS带回没点参数解析 **********************************************/
 
     private static final String JSON_PARAM_KEY_ORDER_TYPE = "order_type";
@@ -138,6 +154,46 @@ public class CallbackAppGAEventJSObj extends Object {
         }
         jsReader.endObject();
         return params;
+    }
+
+    /************************************  JS 主播信息解析  ******************************************/
+    private static final String JSON_PARAM_KEY_ANCHOR_ID = "anchor_id";
+    private static final String JSON_PARAM_KEY_NICKNAME = "nickname";
+    private static final String JSON_PARAM_KEY_PHOTOURL = "photourl";
+    private static final String JSON_PARAM_KEY_ONLINE_STATUS = "online_status";
+    private static final String JSON_PARAM_KEY_COUNTRY = "country";
+    private static final String JSON_PARAM_KEY_AGE = "age";
+    /**
+     * 解析没钱js回调所带的买点参数
+     * @param jsonParams
+     * @return
+     */
+    private HangoutAnchorInfoItem parseAnchorInfoItem(String jsonParams)throws IOException {
+        HangoutAnchorInfoItem item = new HangoutAnchorInfoItem();
+        //创建JsonReader对象
+        JsonReader jsReader = new JsonReader(new StringReader(jsonParams));
+        jsReader.beginObject();
+        while(jsReader.hasNext()){
+            String tagName = jsReader.nextName();
+            if (tagName.equals(JSON_PARAM_KEY_ANCHOR_ID)) {
+                item.anchorId = jsReader.nextString();
+            }else if (tagName.equals(JSON_PARAM_KEY_NICKNAME)) {
+                item.nickName = jsReader.nextString();
+            }else if (tagName.equals(JSON_PARAM_KEY_PHOTOURL)) {
+                item.photoUrl = jsReader.nextString();
+            }else if (tagName.equals(JSON_PARAM_KEY_ONLINE_STATUS)) {
+                item.onlineStatus = jsReader.nextInt() == 1 ? AnchorOnlineStatus.Online :AnchorOnlineStatus.Offline ;
+            }else if (tagName.equals(JSON_PARAM_KEY_COUNTRY)) {
+                item.country = jsReader.nextString();
+            }else if (tagName.equals(JSON_PARAM_KEY_AGE)) {
+                item.age = jsReader.nextInt();
+            }else {
+                //跳过当前值
+                jsReader.skipValue();
+            }
+        }
+        jsReader.endObject();
+        return item;
     }
 
 }

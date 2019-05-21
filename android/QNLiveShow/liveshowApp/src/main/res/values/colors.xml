@@ -6,6 +6,7 @@
     <color name="blue_color">#0099FF</color>
     <color name="text_color_dark">#333333</color>
     <color name="text_color_grey">#666666</color>
+    <color name="common_normal_orange">#FF7100</color>
     
     <color name="online_normal_green">#8EDB2B</color>
     <color name="online_green_chat_live">#1BCD05</color>
@@ -114,6 +115,9 @@
     <!--<color name="dicover_top_tab_small_bg">#EAFFFFFF</color>-->
     <color name="dicover_top_tab_small_bg">#F3F5E0</color>
 
+    <!-- 登录Login -->
+    <color name="login_hint_txt">#7D7D7D</color>
+
     <!-- 主界面 -->
     <color name="live_main_top_menu_burring_bg">#ebffffff</color>
     <color name="live_main_top_menu_item_pressed">#EEF3F9</color>
@@ -141,4 +145,31 @@
     <!--个人兴趣-->
     <color name="interest_label_select">#08BBFF</color>
     <color name="interest_label_select_no">#F0F0F0</color>
+
+    <!-- hangout -->
+    <color name="live_text_color_black">#383838</color>
+    <color name="live_indicator_color_black">#141414</color>
+
+    <color name="live_ho_orange_normal">#FFB208</color>
+    <color name="live_ho_orange_light">#ff8500</color>
+    <color name="live_ho_orange_deep">#ff5756</color>
+    <color name="live_ho_orange_credits">#FF6D00</color>
+
+    <color name="live_ho_green_deep">#20AE31</color>
+    <color name="live_ho_green_light">#6ACC76</color>
+    <color name="live_ho_green_anchor">#55C02A</color>
+
+    <color name="live_ho_detail_dialog_bg">#55000000</color>
+
+    <color name="live_ho_grey_gift_stroke">#555555</color>
+    <color name="live_ho_grey_blur_bg">#252525</color>
+    <color name="live_ho_grey_blur_bg_half">#80252525</color>
+
+    <color name="live_ho_white_at_name_bg">#EDFFFFFF</color>
+
+    <color name="live_ho_list_gradient_end_color">#00252525</color>
+    <color name="live_ho_list_gradient_start_color">#B3252525</color>
+
+    <color name="common_list_divider_grey">#ECEDF1</color>
+
 </resources>

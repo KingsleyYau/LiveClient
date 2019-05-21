@@ -15,7 +15,7 @@
  * bigImg          大图
  */
 @interface LSSayHiThemeItemObject : NSObject
-@property (nonatomic, assign) int themeId;
+@property (nonatomic, assign) NSString *themeId;
 @property (nonatomic, copy) NSString *themeName;
 @property (nonatomic, copy) NSString *smallImg;
 @property (nonatomic, copy) NSString *bigImg;

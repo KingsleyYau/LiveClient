@@ -5,7 +5,7 @@ import net.qdating.LSConfig;
 import net.qdating.player.ILSVideoRendererJni;
 
 /**
- * 音视频播放器JNI
+ * 推流器JNI
  * @author max
  *
  */

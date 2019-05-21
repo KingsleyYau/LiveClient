@@ -39,6 +39,11 @@ public:
             if (root[LIVEROOM_GETSAYHIANCHORLIST_LIST_ONLINESTATUS].isNumeric()) {
                 onlineStatus = GetIntToOnLineStatus(root[LIVEROOM_GETSAYHIANCHORLIST_LIST_ONLINESTATUS].asInt());
             }
+            
+            /* roomType */
+            if( root[LIVEROOM_GETSAYHIANCHORLIST_LIST_ROOMTYPE].isNumeric() ) {
+                roomType = GetIntToHttpRoomType(root[LIVEROOM_GETSAYHIANCHORLIST_LIST_ROOMTYPE].asInt());
+            }
 
         }
         result = true;
@@ -50,6 +55,7 @@ public:
         nickName = "";
         coverImg = "";
         onlineStatus = ONLINE_STATUS_LIVE;
+        roomType = HTTPROOMTYPE_NOLIVEROOM;
     }
     
     virtual ~HttpSayHiAnchorItem() {
@@ -62,11 +68,13 @@ public:
      * nickName         主播昵称
      * coverImg         主播封面
      * onlineStatus     在线状态（1：在线，0：不在线）
+     * roomType         直播间类型
      */
     string anchorId;
     string nickName;
     string coverImg;
     OnLineStatus onlineStatus;
+    HttpRoomType roomType;
 };
 
 typedef list<HttpSayHiAnchorItem> HttpSayHiAnchorList;

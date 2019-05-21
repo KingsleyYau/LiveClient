@@ -5,6 +5,12 @@ import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
+import com.qpidnetwork.livemodule.im.listener.IMDealInviteItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutCountDownItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutInviteItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutMsgItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutRecommendItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteErrItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteReplyItem;
@@ -13,6 +19,10 @@ import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMProgramInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvEnterRoomItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvHangoutGiftItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvKnockRequestItem;
+import com.qpidnetwork.livemodule.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
@@ -25,7 +35,8 @@ import java.util.Iterator;
  * @since 2017-6-1
  */
 public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLiveRoomEventListener,
-										IMOtherEventListener,IMLoginStatusListener, IMShowEventListener{
+										IMOtherEventListener,IMLoginStatusListener, IMShowEventListener,
+										IMHangoutEventListener{
 	
 	private static final String TAG = IMEventListenerManager.class.getName();
 	
@@ -43,11 +54,17 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	 * 其他事件Listener列表
 	 */
 	private ArrayList<IMOtherEventListener> mIMOtherListener;
+
+	/**
+	 * hangout事件Listener列表
+	 */
+	private ArrayList<IMHangoutEventListener> mIMHangoutEventListener;
 	
 	public IMEventListenerManager(){
 		mIMInviteLaunchListeners = new ArrayList<IMInviteLaunchEventListener>();
 		mIMLiveRoomListeners = new ArrayList<IMLiveRoomEventListener>();
 		mIMOtherListener = new ArrayList<IMOtherEventListener>();
+		mIMHangoutEventListener = new ArrayList<IMHangoutEventListener>();
 	}
 	
 	/**
@@ -203,6 +220,58 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 
 		if (!result) {
 			Log.e(TAG, String.format("%s::%s() fail, listener:%s", TAG, "unregisterIMOtherEventListener", listener.getClass().getSimpleName()));
+		}
+		return result;
+	}
+
+	/**
+	 * 注册hangout事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean registerIMHangoutEventListener(IMHangoutEventListener listener){
+		boolean result = false;
+		synchronized(mIMHangoutEventListener)
+		{
+			if (null != listener) {
+				boolean isExist = false;
+
+				for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+					IMHangoutEventListener theListener = iter.next();
+					if (theListener == listener) {
+						isExist = true;
+						break;
+					}
+				}
+
+				if (!isExist) {
+					result = mIMHangoutEventListener.add(listener);
+				}
+				else {
+					Log.d(TAG, String.format("%s::%s() fail, listener:%s is exist", TAG, "registerIMHangoutEventListener", listener.getClass().getSimpleName()));
+				}
+			}
+			else {
+				Log.e(TAG, String.format("%s::%s() fail, listener is null", TAG, "registerIMHangoutEventListener"));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 注销hangout事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean unregisterIMHangoutEventListener(IMHangoutEventListener listener) {
+		boolean result = false;
+		synchronized(mIMHangoutEventListener)
+		{
+			result = mIMHangoutEventListener.remove(listener);
+		}
+
+		if (!result) {
+			Log.e(TAG, String.format("%s::%s() fail, listener:%s", TAG, "unregisterIMHangoutEventListener", listener.getClass().getSimpleName()));
 		}
 		return result;
 	}
@@ -391,11 +460,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {
+	public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls, String userId) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvChangeVideoUrl(roomId, isAnchor, playUrls);
+				listener.OnRecvChangeVideoUrl(roomId, isAnchor, playUrls, userId);
 			}
 		}
 	}
@@ -731,6 +800,167 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 			for (Iterator<IMShowEventListener> iter = mIMShowEventListeners.iterator(); iter.hasNext(); ) {
 				IMShowEventListener listener = iter.next();
 				listener.OnRecvRetTicketNotice(showinfo, leftCredit);
+			}
+		}
+	}
+
+	/************************************ 多人互动相关  *******************************************/
+	@Override
+	public void OnRecvRecommendHangoutNotice(IMHangoutRecommendItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvRecommendHangoutNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvDealInvitationHangoutNotice(IMDealInviteItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvDealInvitationHangoutNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnEnterHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMHangoutRoomItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnEnterHangoutRoom(reqId, success, errType, errMsg, item);
+			}
+		}
+	}
+
+	@Override
+	public void OnLeaveHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnLeaveHangoutRoom(reqId, success, errType, errMsg);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvEnterHangoutRoomNotice(IMRecvEnterRoomItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvEnterHangoutRoomNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvLeaveHangoutRoomNotice(IMRecvLeaveRoomItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvLeaveHangoutRoomNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnSendHangoutGift(boolean success, LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem, double credit) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnSendHangoutGift(success, errType, errMsg, msgItem, credit);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvHangoutGiftNotice(IMMessageItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvHangoutGiftNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvKnockRequestNotice(IMRecvKnockRequestItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvKnockRequestNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvLackCreditHangoutNotice(IMRecvLeaveRoomItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvLackCreditHangoutNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnControlManPushHangout(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] manPushUrl) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnControlManPushHangout(reqId, success, errType, errMsg, manPushUrl);
+			}
+		}
+	}
+
+	@Override
+	public void OnSendHangoutRoomMsg(boolean success, LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnSendHangoutRoomMsg(success, errType, errMsg, msgItem);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvHangoutRoomMsg(IMMessageItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvHangoutRoomMsg(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvAnchorCountDownEnterHangoutRoomNotice(IMHangoutCountDownItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvAnchorCountDownEnterHangoutRoomNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvHandoutInviteNotice(IMHangoutInviteItem item) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvHandoutInviteNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvHangoutCreditRunningOutNotice(String roomId, LCC_ERR_TYPE errType, String errMsg) {
+		synchronized(mIMHangoutEventListener){
+			for (Iterator<IMHangoutEventListener> iter = mIMHangoutEventListener.iterator(); iter.hasNext(); ) {
+				IMHangoutEventListener listener = iter.next();
+				listener.OnRecvHangoutCreditRunningOutNotice(roomId, errType, errMsg);
 			}
 		}
 	}

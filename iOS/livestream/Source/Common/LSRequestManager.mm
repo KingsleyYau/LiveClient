@@ -141,7 +141,10 @@ static const int HTTPErrorTypeArray[] = {
     HTTP_LCC_ERR_SAYHI_MAN_LIMIT_NUM_DAY,               // 男士每日数量限制(17406)(调用14.4.发送SayHi接口)
     HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_REPLY,    // 男士总数量限制-有主播回复(17407)(调用14.4.发送SayHi接口)
     HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_UNREPLY,  // 男士总数量限制-无主播回复(17408)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_NO_EXIST,                        // sayHi不存在（17409）（调用14.8.获取SayHi回复详情）
+    HTTP_LCC_ERR_SAYHI_RESPONSE_NO_EXIST,               // sayHi回复不存在（17410）（调用14.8.获取SayHi回复详情）
     
+    HTTP_LCC_ERR_SAYHI_READ_NO_CREDIT,                  // sayHi购买阅读信用点或邮票不足（17411）（调用14.8.获取SayHi回复详情）
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE,                       // 强制更新，这里时本地返回的，仅用于ios
     HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE,                 // 其他设备登录，这里时本地返回的，仅用于ios
@@ -359,6 +362,7 @@ public:
         LSHangoutPrivItemObject* hangoutPriv = [[LSHangoutPrivItemObject alloc] init];
         hangoutPriv.isHangoutPriv = item.userPriv.hangoutPriv.isHangoutPriv;
         userPriv.hangoutPriv = hangoutPriv;
+        userPriv.isSayHiPriv = item.userPriv.isSayHiPriv;
         obj.userPriv = userPriv;
 //        LSMailPrivItemObject * mailPriv = [[LSMailPrivItemObject alloc] init];
 //        mailPriv.userSendMailPriv = item.mailPriv.userSendMailPriv;
@@ -372,7 +376,6 @@ public:
 //        mailPriv.userSendMailImgPriv = userSendMailImgPriv;
 //        obj.mailPriv = mailPriv;
         
-        obj.userPriv.isSayHiPriv = item.userPriv.isSayHiPriv;
         
         LSRequestManager *manager = [LSRequestManager manager];
         @synchronized(manager.delegateDictionary) {
@@ -1018,6 +1021,7 @@ public:
             
             item.priv = priv;
             item.chatOnlineStatus = (*iter)->chatOnlineStatus;
+            item.isFollow = (*iter)->isFollow;
             
             [array addObject:item];
             //            NSLog(@"LSRequestManager::OnGetAnchorList( task : %p, userId : %@, nickName : %@, onlineStatus : %d, roomType : %d )", task, item.userId, item.nickName, item.onlineStatus, item.roomType);
@@ -1104,6 +1108,7 @@ public:
             priv.isHasBookingAuth = (*iter)->priv.bookingPriLiveAuth;
             item.priv = priv;
             item.chatOnlineStatus = (*iter)->chatOnlineStatus;
+            item.isFollow = (*iter)->isFollow;
             
             [array addObject:item];
             //            NSLog(@"LSRequestManager::OnGetFollowList( task : %p, userId : %@, nickName : %@, onlineStatus : %d, roomType : %d )", task, item.userId, item.nickName, item.onlineStatus, item.roomType);
@@ -2807,6 +2812,7 @@ public:
         obj.privateMessageUnreadNum = item.privateMessageUnreadNum;
         obj.bookingUnreadNum = item.bookingUnreadNum;
         obj.backpackUnreadNum = item.backpackUnreadNum;
+        obj.sayHiResponseUnreadNum = item.sayHiResponseUnreadNum;
         
         GetTotalNoreadNumFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -4430,6 +4436,7 @@ RequestSendEmfCallbackImp gRequestSendEmfCallbackImp;
              content:(NSString*)content
              imgList:(NSArray<NSString *>*)imgList
          comsumeType:(LSLetterComsumeType)comsumeType
+     sayHiResponseId:(NSString*)sayHiResponseId
        finishHandler:(SendEmfFinishHandler )finishHandler {
     string stranchorId = "";
     if (anchorId != nil) {
@@ -4454,8 +4461,13 @@ RequestSendEmfCallbackImp gRequestSendEmfCallbackImp;
             list.push_back(pStr);
         }
     }
+    
+    string strSayHiResponseId = "";
+    if (sayHiResponseId != nil) {
+        strSayHiResponseId = [sayHiResponseId UTF8String];
+    }
 
-    NSInteger request = (NSInteger)mHttpRequestController.SendEmf(&mHttpRequestManager, stranchorId, strloiId, stremfId, strcontent, list, comsumeType, &gRequestSendEmfCallbackImp);
+    NSInteger request = (NSInteger)mHttpRequestController.SendEmf(&mHttpRequestManager, stranchorId, strloiId, stremfId, strcontent, list, comsumeType, strSayHiResponseId, &gRequestSendEmfCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
@@ -4648,7 +4660,7 @@ public:
         NSMutableArray* themeList = [NSMutableArray array];
         for(HttpThemeList::const_iterator iter = item.themeList.begin(); iter != item.themeList.end(); iter++) {
             LSSayHiThemeItemObject* themeItem = [[LSSayHiThemeItemObject alloc] init];
-            themeItem.themeId = (*iter).themeId;
+            themeItem.themeId = [NSString stringWithUTF8String:(*iter).themeId.c_str()];
             themeItem.themeName = [NSString stringWithUTF8String:(*iter).themeName.c_str()];
             themeItem.smallImg = [NSString stringWithUTF8String:(*iter).smallImg.c_str()];
             themeItem.bigImg = [NSString stringWithUTF8String:(*iter).bigImg.c_str()];
@@ -4659,7 +4671,7 @@ public:
         NSMutableArray* textList = [NSMutableArray array];
         for(HttpTextList::const_iterator iter2 = item.textList.begin(); iter2 != item.textList.end(); iter2++) {
             LSSayHiTextItemObject* textItem = [[LSSayHiTextItemObject alloc] init];
-            textItem.textId = (*iter2).textId;
+            textItem.textId = [NSString stringWithUTF8String:(*iter2).textId.c_str()];
             textItem.text = [NSString stringWithUTF8String:(*iter2).text.c_str()];
             [textList addObject:textItem];
         }
@@ -4706,6 +4718,7 @@ public:
             anchorItem.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
             anchorItem.coverImg = [NSString stringWithUTF8String:(*iter).coverImg.c_str()];
             anchorItem.onlineStatus = (*iter).onlineStatus;
+            anchorItem.roomType = (*iter).roomType;
             [arrayList addObject:anchorItem];
         }
         
@@ -4784,7 +4797,7 @@ class RequestSendSayHiCallbackImp : public IRequestSendSayHiCallback {
 public:
     RequestSendSayHiCallbackImp(){};
     ~RequestSendSayHiCallbackImp(){};
-    void OnSendSayHi(HttpSendSayHiTask* task, bool success, int errnum, const string& errmsg, const string& sayHiId, const string& sayHiOrLoiId) {
+    void OnSendSayHi(HttpSendSayHiTask* task, bool success, int errnum, const string& errmsg, const string& sayHiId, const string& sayHiOrLoiId, bool isFollow, OnLineStatus onlineStatus) {
         NSLog(@"LSRequestManager::OnSendSayHi( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         SendSayHiFinishHandler handler = nil;
@@ -4805,7 +4818,7 @@ public:
         }
         
         if (handler) {
-            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], strSayHiId, strLoiId);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], strSayHiId, strLoiId, isFollow, onlineStatus);
         }
     }
 };
@@ -4813,8 +4826,8 @@ public:
 RequestSendSayHiCallbackImp gRequestSendSayHiCallbackImp;
 
 - (NSInteger)sendSayHi:(NSString*)anchorId
-               themeId:(int)themeId
-                textId:(int)textId
+               themeId:(NSString*)themeId
+                textId:(NSString*)textId
          finishHandler:(SendSayHiFinishHandler)finishHandler {
     NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
     
@@ -4823,10 +4836,20 @@ RequestSendSayHiCallbackImp gRequestSendSayHiCallbackImp;
         strAnchorId = [anchorId UTF8String];
     }
     
+    string strThemeId = "";
+    if (themeId != nil) {
+        strThemeId = [themeId UTF8String];
+    }
+    
+    string strTextId = "";
+    if (textId != nil) {
+        strTextId = [textId UTF8String];
+    }
+    
     request = (NSInteger)mHttpRequestController.SendSayHi(&mHttpRequestManager,
                                                           strAnchorId,
-                                                          themeId,
-                                                          textId,
+                                                          strThemeId,
+                                                          strTextId,
                                                           &gRequestSendSayHiCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
@@ -4854,8 +4877,11 @@ public:
             allItem.cover = [NSString stringWithUTF8String:(*iter).cover.c_str()];
             allItem.avatar = [NSString stringWithUTF8String:(*iter).avatar.c_str()];
             allItem.age = (*iter).age;
+            allItem.sendTime = (*iter).sendTime;
+            allItem.content = [NSString stringWithUTF8String:(*iter).content.c_str()];
             allItem.responseNum = (*iter).responseNum;
             allItem.unreadNum = (*iter).unreadNum;
+            allItem.isFree = (*iter).isFree;
             [arrayList addObject:allItem];
         }
         obj.list = arrayList;
@@ -4980,6 +5006,7 @@ public:
             LSSayHiDetailResponseListItemObject* responseItem = [[LSSayHiDetailResponseListItemObject alloc] init];
             responseItem.responseId = [NSString stringWithUTF8String:(*iter).responseId.c_str()];
             responseItem.responseTime = (*iter).responseTime;
+            responseItem.simpleContent = [NSString stringWithUTF8String:(*iter).simpleContent.c_str()];
             responseItem.content = [NSString stringWithUTF8String:(*iter).content.c_str()];
             responseItem.isFree = (*iter).isFree;
             responseItem.hasRead = (*iter).hasRead;

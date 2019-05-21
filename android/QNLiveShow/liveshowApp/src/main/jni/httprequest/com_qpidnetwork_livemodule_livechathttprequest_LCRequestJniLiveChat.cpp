@@ -21,7 +21,7 @@ public:
 	virtual void OnQueryChatRecord(long requestId, bool success, int dbTime, const list<LSLCRecord>& recordList, const string& errnum, const string& errmsg, const string& inviteId) override;
 	virtual void OnQueryChatRecordMutiple(long requestId, bool success, int dbTime, const list<LSLCRecordMutiple>& recordMutiList, const string& errnum, const string& errmsg) override;
 	virtual void OnSendPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const LSLCLCSendPhotoItem& item) override;
-	virtual void OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg) override;
+	virtual void OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId) override;
 	virtual void OnGetPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath) override;
 	virtual void OnUploadVoice(long requestId, bool success, const string& errnum, const string& errmsg, const string& voiceId) override;
 	virtual void OnPlayVoice(long requestId, bool success, const string& errnum, const string& errmsg, const string& filePath) override;
@@ -146,7 +146,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 
 	const char *cpWomanId = env->GetStringUTFChars(womanId, 0);
 
-	requestId = gLSLiveChatRequestLiveChatController.CheckCoupon(cpWomanId, serviceType);
+	requestId = gLSLiveChatRequestLiveChatController.CheckCoupon(cpWomanId, (LSLiveChatRequestLiveChatController::ServiceType)serviceType);
 	jobject obj = env->NewGlobalRef(callback);
 	gCallbackMap.Insert(requestId, obj);
 
@@ -213,7 +213,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 
 	const char *cpWomanId = env->GetStringUTFChars(womanId, 0);
 
-	requestId = gLSLiveChatRequestLiveChatController.UseCoupon(cpWomanId, serviceType);
+	requestId = gLSLiveChatRequestLiveChatController.UseCoupon(cpWomanId, (LSLiveChatRequestLiveChatController::ServiceType)serviceType);
 	jobject obj = env->NewGlobalRef(callback);
 	gCallbackMap.Insert(requestId, obj);
 
@@ -679,7 +679,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 	strFilePath = cpTemp;
 	env->ReleaseStringUTFChars(filePath, cpTemp);
 
-	requestId = gLSLiveChatRequestLiveChatController.SendPhoto(strTargetId, strInviteId, strUserId, strSid, SMT_FROMPHOTOFILE, "", strFilePath);
+	requestId = gLSLiveChatRequestLiveChatController.SendPhoto(strTargetId, strInviteId, strUserId, strSid, strFilePath);
 	if (requestId != -1) {
 		jobject obj = env->NewGlobalRef(callback);
 		gCallbackMap.Insert(requestId, obj);
@@ -820,7 +820,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 	return requestId;
 }
 
-void RequestLiveChatControllerCallback::OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg)
+void RequestLiveChatControllerCallback::OnPhotoFee(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId)
 {
 	JNIEnv* env = NULL;
 	bool isAttachThread = false;
@@ -2068,7 +2068,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 
 	string functionIds = "";
 	jsize len = env->GetArrayLength(functionArray);
-	jint *functions = env->GetIntArrayElements(functionArray, false);
+	jint *functions = env->GetIntArrayElements(functionArray, JNI_FALSE);
 	for(int i = 0; i < len; i++) {
 		char buffer[32] = {0};
 		if(i < len-1){

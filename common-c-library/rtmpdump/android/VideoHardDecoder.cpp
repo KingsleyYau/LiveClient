@@ -85,7 +85,7 @@ VideoHardDecoder::VideoHardDecoder(jobject jniDecoder)
 				);
 		mJniDecoderGetDecodeVideoMethodID = jMethodID;
 
-		signure = "([BI[BII)Z";
+		signure = "([BI[BIII)Z";
 		jMethodID = env->GetMethodID(
 				jniDecoderCls,
 				"decodeVideoKeyFrame",
@@ -114,7 +114,10 @@ VideoHardDecoder::VideoHardDecoder(jobject jniDecoder)
 		InitClassHelper(env, LS_DECODE_VIDEO_ITEM_CLASS, &jVideoFrameItem);
 		jclass jniVideoFrameCls = env->GetObjectClass(jVideoFrameItem);
 		env->DeleteGlobalRef(jVideoFrameItem);
+
+		// 获取解码帧字段
 		mJniVideoFrameTimestampMethodID = env->GetFieldID(jniVideoFrameCls, "timestamp", "I");
+		mJniVideoFrameErrorMethodID = env->GetFieldID(jniVideoFrameCls, "bError", "Z");
 	}
 
 	if( bFlag ) {
@@ -140,6 +143,21 @@ VideoHardDecoder::~VideoHardDecoder() {
 	if( mJniDecoder ) {
 		env->DeleteGlobalRef(mJniDecoder);
 		mJniDecoder = NULL;
+	}
+
+	if( spsByteArray ) {
+		env->DeleteGlobalRef(spsByteArray);
+		spsByteArray = NULL;
+	}
+
+	if( ppsByteArray ) {
+		env->DeleteGlobalRef(ppsByteArray);
+		ppsByteArray = NULL;
+	}
+
+	if( dataByteArray != NULL ) {
+		env->DeleteGlobalRef(dataByteArray);
+		dataByteArray = NULL;
 	}
 
 	if( bFlag ) {
@@ -229,6 +247,15 @@ void VideoHardDecoder::Pause() {
 	if( bAttatch ) {
 		ReleaseEnv(isAttachThread);
 	}
+
+	FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoHardDecoder::Pause( "
+                "this : %p, "
+				"[Success] "
+                ")",
+                this
+                );
 }
 
 bool VideoHardDecoder::Start() {
@@ -343,29 +370,48 @@ void VideoHardDecoder::Init() {
     mpDecodeVideoRunnable = new DecodeVideoHardRunnable(this);
 }
 
-void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
 	FileLog("rtmpdump",
 			"VideoHardDecoder::DecodeVideoKeyFrame( "
 			"this : %p, "
 			"sps_size : %d, "
 			"pps_size : %d, "
-			"naluHeaderSize : %d "
+			"naluHeaderSize : %d, "
+			"timestamp : %u "
 			")",
 			this,
 			sps_size,
 			pps_size,
-			naluHeaderSize
+			naluHeaderSize,
+			timestamp
 			);
 
 	bool bChange = true;
 
-//	if( mSpSize != sps_size || memcmp(mpSps, sps, sps_size) != 0 ) {
-//		bChange = true;
-//	} else if( mPpsSize != pps_size || memcmp(mpPps, pps, pps_size) != 0 ) {
-//		bChange = true;
-//	}
+	if( mSpSize != sps_size || memcmp(mpSps, sps, sps_size) != 0 ) {
+		bChange = true;
+	} else if( mPpsSize != pps_size || memcmp(mpPps, pps, pps_size) != 0 ) {
+		bChange = true;
+	}
 
 	if( bChange ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "VideoHardDecoder::DecodeVideoKeyFrame( "
+					 "this : %p, "
+                     "[Change Video Info], "
+					 "sps_size : %d, "
+					 "pps_size : %d, "
+					 "naluHeaderSize : %d, "
+					 "timestamp : %u "
+                     ")",
+					 this,
+					 sps_size,
+					 pps_size,
+					 naluHeaderSize,
+					 timestamp
+                     );
+
 		// 重新设置解码器变量
 		mSpSize = sps_size;
 		if( mpSps ) {
@@ -429,7 +475,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 		}
 
 		if( mJniDecoder && mJniDecoderDecodeKeyMethodID ) {
-			env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNaluHeaderSize);
+			env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNaluHeaderSize, timestamp);
 		}
 
 		if( bFlag ) {
@@ -439,10 +485,12 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 }
 
 void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
-	FileLog("rtmpdump",
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_STAT,
 			"VideoHardDecoder::DecodeVideoFrame( "
 			"size : %d, "
-			"timestamp : %d "
+			"timestamp : %u "
 			")",
 			size,
 			timestamp
@@ -619,6 +667,7 @@ void VideoHardDecoder::DecodeVideoHandle() {
 				jobject jVideoFrame = env->CallObjectMethod(mJniDecoder, mJniDecoderGetDecodeVideoMethodID);
 				if( jVideoFrame ) {
 					int timestamp = env->GetIntField(jVideoFrame, mJniVideoFrameTimestampMethodID);
+					bool bError = env->GetBooleanField(jVideoFrame, mJniVideoFrameErrorMethodID);
 
 					FileLevelLog(
 							"rtmpdump",
@@ -627,18 +676,24 @@ void VideoHardDecoder::DecodeVideoHandle() {
 							"this : %p, "
 							"[Get decode frame], "
 							"jVideoFrame : %p, "
+							"bError : %d, "
 							"timestamp : %d "
 							")",
 							this,
 							jVideoFrame,
+							bError,
 							timestamp
 							);
 
 					if( mpCallback ) {
-						// 增加JNI引用
-						jobject jNewVideoFrame = env->NewGlobalRef(jVideoFrame);
-						// 回调解码成功
-						mpCallback->OnDecodeVideoFrame(this, jNewVideoFrame, timestamp);
+						if( !bError ) {
+							// 增加JNI引用
+							jobject jNewVideoFrame = env->NewGlobalRef(jVideoFrame);
+							// 回调解码成功
+							mpCallback->OnDecodeVideoFrame(this, jNewVideoFrame, timestamp);
+						} else {
+							mpCallback->OnDecodeVideoError(this);
+						}
 					}
 
 					env->DeleteLocalRef(jVideoFrame);

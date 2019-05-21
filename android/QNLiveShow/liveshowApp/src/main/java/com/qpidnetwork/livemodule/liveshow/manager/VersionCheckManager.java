@@ -44,13 +44,18 @@ public class VersionCheckManager {
 
 	//单例
 	private static VersionCheckManager instance = null;
-	public static synchronized VersionCheckManager getInstance(Context context) {
-	   if (instance == null)
-	          instance = new VersionCheckManager(context);
-	          return instance;
+
+	public static synchronized VersionCheckManager newInstance(Context context){
+		if (instance == null)
+			instance = new VersionCheckManager(context);
+		return instance;
+	}
+
+	public static synchronized VersionCheckManager getInstance() {
+		return instance;
 	}
 	private VersionCheckManager(Context context){
-		mContext =  context;
+		mContext =  context.getApplicationContext();
 	}
 
 	/**
