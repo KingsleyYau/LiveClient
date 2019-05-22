@@ -73,7 +73,13 @@ public class DisplayUtil {
      */
     public static int getScreenWidth(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        // 2019/5/21 Hardy 参考直播的 DisplayUtil
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(dm);
+        }else{
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        }
         return dm.widthPixels;
     }
 
@@ -85,7 +91,13 @@ public class DisplayUtil {
      */
     public static int getScreenHeight(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        // 2019/5/21 Hardy 参考直播的 DisplayUtil
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(dm);
+        }else{
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        }
         return dm.heightPixels;
     }
 

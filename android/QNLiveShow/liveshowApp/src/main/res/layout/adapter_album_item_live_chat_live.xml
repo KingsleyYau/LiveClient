@@ -1,0 +1,88 @@
+<com.qpidnetwork.livemodule.liveshow.livechat.album.LiveChatAlbumItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivAlbum"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/touch_region"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/touch_feedback_holo_light" />
+
+    <LinearLayout
+        android:id="@+id/adapter_album_item_live_chat_ll_opera_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/live_size_10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!--这里嵌套这一层，不用 ImageButton 直接设置 src 和 background，是为了不抢占根布局 LiveChatAlbumItemView 的点击事件-->
+            <FrameLayout
+                android:id="@+id/adapter_album_item_live_chat_tv_view"
+                android:layout_width="@dimen/live_size_50dp"
+                android:layout_height="@dimen/live_size_50dp"
+                android:background="@drawable/circle_blue_bg">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_image_view" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/live_size_6dp"
+                android:text="@string/view_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/adapter_album_item_live_chat_tv_send"
+                android:layout_width="@dimen/live_size_50dp"
+                android:layout_height="@dimen/live_size_50dp"
+                android:background="@drawable/circle_blue_bg">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_image_send" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/live_size_6dp"
+                android:text="@string/txt_send_msg"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</com.qpidnetwork.livemodule.liveshow.livechat.album.LiveChatAlbumItemView>

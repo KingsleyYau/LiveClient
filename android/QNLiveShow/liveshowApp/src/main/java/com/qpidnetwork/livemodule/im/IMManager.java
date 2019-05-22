@@ -8,9 +8,12 @@ import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnGetHangoutInvitStatusCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetUserInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.HangoutInviteStatus;
+import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
@@ -46,6 +49,7 @@ import com.qpidnetwork.livemodule.livemessage.LMManager;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.HangoutInvitationManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
@@ -1312,7 +1316,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 			PushManager pushManager = PushManager.getInstance();
 			if(pushManager != null) {
 				pushManager.ShowNotification(NotificationTypeEnum.ANCHORINVITE_NOTIFICATION,
-						mContext.getResources().getString(R.string.app_name),
+						String.format(mContext.getResources().getString(R.string.notification_anchor_inite_tips_title), anchorName),
 						String.format(mContext.getResources().getString(R.string.notification_anchor_inite_tips), anchorName),
 						url, true);
 			}
@@ -1450,6 +1454,14 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	/**
+	 * 更新hangout直播间hangout中状态信息
+	 * @param roomId
+	 */
+	public void updateHangoutLivingRoomId(String roomId){
+		this.mRoomId = roomId;
+	}
+
+	/**
 	 * 退出直播间并清除房间id
 	 * @param roomId
 	 * @return
@@ -1577,6 +1589,25 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		return msgItem;
 	}
 
+	/**
+	 * 检测邀请状态
+	 * @param inviteId
+	 */
+	public void checkInviteStatus(final String inviteId, final IMUserBaseInfoItem userBaseInfoItem, final OnGetHangoutInvitStatusCallback callback){
+		LiveRequestOperator.getInstance().GetHangoutInvitStatus(inviteId, new OnGetHangoutInvitStatusCallback() {
+			@Override
+			public void onGetHangoutInvitStatus(boolean isSuccess, int errCode, String errMsg, int status, String roomId, int expire) {
+				HangoutInviteStatus inviteStatus = IntToEnumUtils.intToHangoutInviteStatus(status);
+				if(isSuccess && inviteStatus == HangoutInviteStatus.Accept){
+					//更新直播间主播信息
+					IMDealInviteItem item = new IMDealInviteItem(inviteId, roomId, userBaseInfoItem.userId, userBaseInfoItem.nickName, userBaseInfoItem.photoUrl, IMDealInviteItem.IMAnchorReplyInviteType.Agree.ordinal());
+					addOrUpdateHangoutRoomInfo(item);
+				}
+				callback.onGetHangoutInvitStatus(isSuccess, errCode, errMsg, status, roomId, expire);
+			}
+		});
+	}
+
 	@Override
 	public void OnEnterHangoutRoom(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMHangoutRoomItem item) {
 		//缓存直播间信息
@@ -1592,8 +1623,6 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 					}
 				}
 			}
-			//清除主播信息，解决互斥
-			mRoomId = item.roomId;
 			addToRunningRoomList(item.roomId, item);
 		}
 

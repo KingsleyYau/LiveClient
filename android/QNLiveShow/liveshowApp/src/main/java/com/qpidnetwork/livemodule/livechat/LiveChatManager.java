@@ -52,13 +52,20 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserCamStatus;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserStatus;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJni;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoModeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoSizeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.ServiceType;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.ToFlagType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.VideoPhotoType;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.VideoToFlagType;
 import com.qpidnetwork.livemodule.livechathttprequest.OnCheckCouponCallCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetMagicIconConfigCallback;
+import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetPhotoCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetThemeDetailCallback;
+import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetVideoCallback;
+import com.qpidnetwork.livemodule.livechathttprequest.OnLCPhotoFeeCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCPlayVoiceCallback;
+import com.qpidnetwork.livemodule.livechathttprequest.OnLCRequestFileCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCUploadVoiceCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCUseCouponCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnQueryChatRecordCallback;
@@ -66,6 +73,7 @@ import com.qpidnetwork.livemodule.livechathttprequest.OnQueryChatRecordMutipleCa
 import com.qpidnetwork.livemodule.livechathttprequest.item.Coupon;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Coupon.CouponStatus;
 import com.qpidnetwork.livemodule.livechathttprequest.item.LCRequestEnum.LivechatInviteRiskType;
+import com.qpidnetwork.livemodule.livechathttprequest.item.LCSendPhotoItem;
 import com.qpidnetwork.livemodule.livechathttprequest.item.MagicIconConfig;
 import com.qpidnetwork.livemodule.livechathttprequest.item.OtherEmotionConfigItem;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Record;
@@ -778,7 +786,7 @@ public class LiveChatManager
 
 			Log.d("livechat", "ResetParam() clear photo begin");
 			// 停止所有图片请求
-			mPhotoMgr.clearAllRequestItems();
+			mPhotoMgr.release();
 	//		ArrayList<Long> photoRequestIds = mPhotoMgr.clearAllRequestItems();
 	//		if (null != photoRequestIds) {
 	//			for (Iterator<Long> iter = photoRequestIds.iterator(); iter.hasNext(); ) {
@@ -786,8 +794,6 @@ public class LiveChatManager
 	//				LCLCRequestJni.StopRequest(requestId);
 	//			}
 	//		}
-			Log.d("livechat", "ResetParam() clear photo clearAllSendingItems");
-			mPhotoMgr.clearAllSendingItems();
 
 			Log.d("livechat", "ResetParam() clear voice begin");
 			// 停止所有语音请求
@@ -2258,15 +2264,12 @@ public class LiveChatManager
 		// 生成PhotoItem
 		LCPhotoItem photoItem = new LCPhotoItem();
 		photoItem.init(
-				""
-				, ""
-				, ""
-				, ""
-				, ""
-				, photoPath
+				mPhotoMgr
+				,""
 				, ""
 				, ""
 				, true);
+		photoItem.mClearSrcPhotoInfo = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", photoPath);
 		// 把PhotoItem添加到MessageItem
 		item.setPhotoItem(photoItem);
 		// 添加到历史记录
@@ -2296,64 +2299,58 @@ public class LiveChatManager
 	}
 
 	/**
-	 * 发送图片处理
-	 * @param item
+	 * 发送图片处理vi
+	 * @param msgItem
 	 * @return
 	 */
-	private void SendPhotoProc(LCMessageItem item)
+	private void SendPhotoProc(final LCMessageItem msgItem)
 	{
-//		if(item.getPhotoItem() != null && !TextUtils.isEmpty(item.getPhotoItem().photoId)){
-//			//此种情况为上传私密照成功（即扣费成功），但由于断网导致发送失败，重发特殊处理
-//			sendPhotoInternal(item);
-//			return;
-//		}
-//
-//		LCUserItem userItem = item.getUserItem();
-//		final LCPhotoItem photoItem = item.getPhotoItem();
-		// 请求上传文件
-//		long requestId = LCRequestJniLiveChat.SendPhoto(userItem.userId, userItem.inviteId, mUserId, mSid, photoItem.srcFilePath, new OnLCSendPhotoCallback() {
-//			@Override
-//			public void OnLCSendPhoto(long requestId, boolean isSuccess, String errno, String errmsg,
-//					LCSendPhotoItem item)
-//			{
-//				LCMessageItem msgItem = mPhotoMgr.getAndRemoveRequestItem(requestId);
-//				if (null == msgItem) {
-//					Log.e("livechat", String.format("%s::%s() OnLCSendPhoto() get request item fail, requestId:%d", "LiveChatManager", "SendPhoto", requestId));
-//					return;
-//				}
-//
-//				if (isSuccess) {
-//					LCPhotoItem photoItem = msgItem.getPhotoItem();
-//					photoItem.photoId = item.photoId;
-//					photoItem.sendId = item.sendId;
-//
-//					// 把源文件copy到LiveChat目录下
-//					mPhotoMgr.copyPhotoFileToDir(photoItem, photoItem.srcFilePath);
-//
-//					sendPhotoInternal(msgItem);
-//				}
-//				else {
-//					// 上传文件不成功
-//					msgItem.statusType = StatusType.Fail;
-//					mCallbackHandler.OnSendPhoto(LiveChatErrType.Fail, errno, errmsg, msgItem);
-//					if(!TextUtils.isEmpty(errno) && errno.equals("ERROR00003")){
-//						if (null != msgItem && null != msgItem.getUserItem()) {
-//							BuildAndInsertWarningWithErrType(msgItem.getUserItem(), LiveChatErrType.NoMoney);
-//						}
-//					}
-//				}
-//			}
-//		});
-//
-//		if (LCRequestJni.InvalidRequestId != requestId) {
-//			if (!mPhotoMgr.addRequestItem(requestId, item)) {
-//				Log.e("livechat", String.format("%s::%s() add request item fail, requestId:%d", "LiveChatManager", "SendPhoto", requestId));
-//			}
-//		}
-//		else {
-//			item.statusType = StatusType.Fail;
-//			mCallbackHandler.OnSendPhoto(LiveChatErrType.Fail, "", "", item);
-//		}
+		if(msgItem.getPhotoItem() != null && !TextUtils.isEmpty(msgItem.getPhotoItem().photoId)){
+			//此种情况为上传私密照成功（即扣费成功），但由于断网导致发送失败，重发特殊处理
+			sendPhotoInternal(msgItem);
+			return;
+		}
+
+		LCPhotoMessagePreSendTask task = new LCPhotoMessagePreSendTask();
+		task.init(msgItem, mUserId, mSid);
+		task.setOnLCPhotoMessagePreSendCallback(new LCPhotoMessagePreSendTask.OnLCPhotoMessagePreSendCallback() {
+			@Override
+			public void onLCPhotoMessagePreSendCallback(LCPhotoMessagePreSendTask task, boolean isSuccess, String errno, String errmsg, LCSendPhotoItem item, String filePath) {
+				//从任务队列删除
+				mPhotoMgr.getAndRemovePhotoPreSengdingtMap(task);
+				if (isSuccess) {
+					LCPhotoItem photoItem = msgItem.getPhotoItem();
+					photoItem.photoId = item.photoId;
+					photoItem.sendId = item.sendId;
+
+					Log.i(TAG, "onLCPhotoMessagePreSendCallback task: " + task + " photoId: " + item.photoId + " sendId: " + item.sendId + " filePath: " + filePath);
+
+					// 把源文件copy到LiveChat目录下
+					mPhotoMgr.copyPhotoFileToDir(photoItem, filePath);
+
+					sendPhotoInternal(msgItem);
+				}
+				else {
+					Log.i(TAG, "onLCPhotoMessagePreSendCallback failed errNo: " + errno);
+					// 上传文件不成功
+					msgItem.statusType = StatusType.Fail;
+					mCallbackHandler.OnSendPhoto(LiveChatErrType.Fail, errno, errmsg, msgItem);
+					if(isNoCredits(errno)){
+						if (null != msgItem && null != msgItem.getUserItem()) {
+							BuildAndInsertWarningWithErrType(msgItem.getUserItem(), LiveChatErrType.NoMoney);
+						}
+					}
+				}
+			}
+		});
+		boolean result = task.start();
+
+		if (result) {
+			mPhotoMgr.addToPhotoPreSendingMap(task, msgItem);
+		} else {
+			msgItem.statusType = StatusType.Fail;
+			mCallbackHandler.OnSendPhoto(LiveChatErrType.Fail, "", "", msgItem);
+		}
 	}
 
 	/**
@@ -2379,79 +2376,75 @@ public class LiveChatManager
 		}
 	}
 
+
 	/**
 	 * 购买图片（包括付费购买图片(php)）
 	 * @param item
 	 * @return
 	 */
-	public boolean PhotoFee(LCMessageItem item)
+	public boolean PhotoFee(final LCMessageItem item)
 	{
-//		// 判断参数是否有效
-//		if (item.msgType != MessageType.Photo
-//			|| item.fromId.isEmpty()
-//			|| item.inviteId.isEmpty()
-//			|| item.getPhotoItem().photoId.isEmpty()) //item.statusType != StatusType.Finish
-//		{
-//			Log.e("livechat", String.format("%s::%s() param error, msgType:%s, fromId:%s, inviteId%s, photoId:%s, statusType:%s", "LiveChatManager", "PhotoFee"
-//					, item.msgType.name(), item.fromId, item.inviteId, item.getPhotoItem().photoId, item.statusType.name()));
-//			return false;
-//		}
-//
-//		// 请求付费获取图片
-//		long requestId = LCRequestJniLiveChat.PhotoFee(
-//				item.fromId
-//				, item.inviteId
-//				, mUserId
-//				, mSid, item.getPhotoItem().photoId
-//				, new OnLCPhotoFeeCallback() {
-//			@Override
-//			public void OnLCPhotoFee(long requestId, boolean isSuccess, String errno,
-//					String errmsg) {
-//				// TODO Auto-generated method stub
-//				LCMessageItem item = mPhotoMgr.getAndRemoveRequestItem(requestId);
-//				LCPhotoItem photoItem = item.getPhotoItem();
-//				if (null == item || null == photoItem) {
-//					Log.e("livechat", String.format("%s::%s() OnLCPhotoFee() get request item fail, requestId:%d", "LiveChatManager", "PhotoFee", requestId));
-//					return;
-//				}
-//
-////				item.statusType = isSuccess ? StatusType.Finish : StatusType.Fail;
-//				photoItem.charge = isSuccess;
-//				photoItem.statusType = LCPhotoItem.StatusType.Finish;
-//
-//				if (isSuccess) {
-//					// 通知LiveChat服务器已经购买图片
-//					LiveChatClient.ShowPhoto(
-//						item.getUserItem().userId
-//						, item.getUserItem().inviteId
-//						, item.getPhotoItem().photoId
-//						, item.getPhotoItem().sendId
-//						, item.getPhotoItem().charge
-//						, item.getPhotoItem().photoDesc
-//						, item.msgId);
-//
-//					// 清除未付费图片
-////					mPhotoMgr.removeFuzzyPhotoFile(photoItem);
-//				}
-//				mCallbackHandler.OnPhotoFee(isSuccess, errno, errmsg, item);
-//			}
-//		});
+		// 判断参数是否有效
+		if (item.msgType != MessageType.Photo
+			|| item.fromId.isEmpty()
+			|| item.inviteId.isEmpty()
+			|| item.getPhotoItem().photoId.isEmpty()) //item.statusType != StatusType.Finish
+		{
+			Log.e("livechat", String.format("%s::%s() param error, msgType:%s, fromId:%s, inviteId%s, photoId:%s, statusType:%s", "LiveChatManager", "PhotoFee"
+					, item.msgType.name(), item.fromId, item.inviteId, item.getPhotoItem().photoId, item.statusType.name()));
+			return false;
+		}
+
+		// 请求付费获取图片
+		long requestId = LCRequestJniLiveChat.PhotoFee(
+				item.fromId
+				, item.inviteId
+				, mUserId
+				, mSid, item.getPhotoItem().photoId
+				, new OnLCPhotoFeeCallback() {
+			@Override
+			public void OnLCPhotoFee(long requestId, boolean isSuccess, String errno,
+					String errmsg) {
+				// TODO Auto-generated method stub
+				LCPhotoItem photoItem = item.getPhotoItem();
+				if (null == item || null == photoItem) {
+					Log.e("livechat", String.format("%s::%s() OnLCPhotoFee() get request item fail, requestId:%d", "LiveChatManager", "PhotoFee", requestId));
+					return;
+				}
+
+//				item.statusType = isSuccess ? StatusType.Finish : StatusType.Fail;
+				photoItem.charge = isSuccess;
+
+				if (isSuccess) {
+					// 通知LiveChat服务器已经购买图片
+					LiveChatClient.ShowPhoto(
+						item.getUserItem().userId
+						, item.getUserItem().inviteId
+						, item.getPhotoItem().photoId
+						, item.getPhotoItem().sendId
+						, item.getPhotoItem().charge
+						, item.getPhotoItem().photoDesc
+						, item.msgId);
+
+					// 清除未付费图片
+//					mPhotoMgr.removeFuzzyPhotoFile(photoItem);
+				}
+				mCallbackHandler.OnPhotoFee(isSuccess, errno, errmsg, item);
+			}
+		});
 
 		boolean result = false;
-//		if (requestId != LCRequestJni.InvalidRequestId) {
-////			item.statusType = StatusType.Processing;
-//			LCPhotoItem photoItem = item.getPhotoItem();
-//			photoItem.statusType = LCPhotoItem.StatusType.PhotoFee;
-//
-//			result = mPhotoMgr.addRequestItem(requestId, item);
-//			if (!result) {
-//				Log.e("livechat", String.format("%s::%s() requestId:%d addRequestItem fail", "LiveChatManager", "PhotoFee", requestId));
-//			}
-//		}
-//		else {
-////			item.statusType = StatusType.Fail;
-//			mCallbackHandler.OnPhotoFee(false, "request fail", "", item);
-//		}
+		if (requestId != LCRequestJni.InvalidRequestId) {
+//			item.statusType = StatusType.Processing;
+			LCPhotoItem photoItem = item.getPhotoItem();
+			if (!result) {
+				Log.e("livechat", String.format("%s::%s() requestId:%d addRequestItem fail", "LiveChatManager", "PhotoFee", requestId));
+			}
+		}
+		else {
+//			item.statusType = StatusType.Fail;
+			mCallbackHandler.OnPhotoFee(false, "request fail", "", item);
+		}
 
 		return result;
 	}
@@ -2485,106 +2478,58 @@ public class LiveChatManager
 	 * @param sizeType	下载的照片尺寸
 	 * @return
 	 */
-	private boolean GetPhoto(LCMessageItem item, final PhotoSizeType sizeType)
+	private boolean GetPhoto(final LCMessageItem item, final PhotoSizeType sizeType)
 	{
-//		if (item.msgType != MessageType.Photo
-//			|| item.fromId.isEmpty()
-//			|| item.getPhotoItem().photoId.isEmpty())
-//		{
-//			Log.e("livechat", String.format("%s::%s() param error, msgType:%s, fromId:%s, photoId:%s, statusType:%s", "LiveChatManager", "GetPhoto"
-//					, item.msgType.name(), item.fromId, item.getPhotoItem().photoId, item.statusType.name()));
-//			return false;
-//		}
-//
-//		if (LCRequestJni.InvalidRequestId != mPhotoMgr.getRequestIdWithItem(item)) //item.statusType == StatusType.Processing
-//		{
-//			// 正在下载
-//			return true;
-//		}
-//
-//		// 请求下载图片
-//		final PhotoModeType modeType;
-//		ToFlagType toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
-//		if (item.sendType == SendType.Send) {
-//			// 男士发送（直接获取清晰图片）
-//			modeType = PhotoModeType.Clear;
-//			toFlagType = ToFlagType.ManGetSelf;
-//		}
-//		else  {
-//			// 女士发送（判断是否已购买）
-//			modeType = (item.getPhotoItem().charge ? PhotoModeType.Clear : PhotoModeType.Fuzzy);
-//			toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
-//		}
-//		long requestId = LCRequestJniLiveChat.GetPhoto(
-//				toFlagType
-//				, item.getUserItem().userId
-//				, mUserId
-//				, mSid
-//				, item.getPhotoItem().photoId
-//				, sizeType, modeType
-//				, mPhotoMgr.getTempPhotoPath(item, modeType, sizeType)
-//				, new OnLCGetPhotoCallback() {
-//
-//			@Override
-//			public void OnLCGetPhoto(long requestId, boolean isSuccess, String errno,
-//					String errmsg, String filePath) {
-//				// TODO Auto-generated method stub
-//				LCMessageItem item = mPhotoMgr.getAndRemoveRequestItem(requestId);
-//				if (null == item) {
-//					Log.e("livechat", String.format("%s::%s() OnLCGetPhoto() get request item fail, requestId:%d", "LiveChatManager", "GetPhoto", requestId));
-//					return;
-//				}
-//
-//				if (isSuccess) {
-//					String tempPath = mPhotoMgr.getTempPhotoPath(item, modeType, sizeType);
-//					mPhotoMgr.tempToPhoto(item, tempPath, modeType, sizeType);
-//
-//					item.getPhotoItem().statusType = LCPhotoItem.StatusType.Finish;
-////					item.statusType = StatusType.Finish;
-//					mCallbackHandler.OnGetPhoto(LiveChatErrType.Success, "", "", item);
-//				}
-//				else {
-//					// 获取图片失败
-//					item.getPhotoItem().statusType = LCPhotoItem.StatusType.Finish;
-////					item.statusType = StatusType.Fail;
-//					mCallbackHandler.OnGetPhoto(LiveChatErrType.Fail, errno, errmsg, item);
-//				}
-//			}
-//		});
-//
-		boolean result = false;
-//		if (requestId != LCRequestJni.InvalidRequestId) {
-////			item.statusType = StatusType.Processing;
-//			LCPhotoItem photoItem = item.getPhotoItem();
-//			photoItem.SetStatusType(modeType, sizeType);
-//
-//			result = mPhotoMgr.addRequestItem(requestId, item);
-//			if (!result) {
-//				Log.e("livechat", String.format("%s::%s() requestId:%d addRequestItem fail", "LiveChatManager", "GetPhoto", requestId));
-//			}
-//		}
-
-		return result;
-	}
-
-	/**
-	 * 获取图片发送/下载进度
-	 * @param item	消息item
-	 * @return
-	 */
-	public int GetPhotoProcessRate(LCMessageItem item) {
-		int percent = 0;
-		long requestId = mPhotoMgr.getRequestIdWithItem(item);
-		if (requestId != LCRequestJni.InvalidRequestId) {
-			int total = LCRequestJni.GetDownloadContentLength(requestId);
-			int recv = LCRequestJni.GetRecvLength(requestId);
-
-			if (total > 0) {
-				recv = recv * 100;
-				percent = recv / total;
-			}
+		if (item.msgType != MessageType.Photo
+			|| item.fromId.isEmpty()
+			|| item.getPhotoItem().photoId.isEmpty())
+		{
+			Log.e("livechat", String.format("%s::%s() param error, msgType:%s, fromId:%s, photoId:%s, statusType:%s", "LiveChatManager", "GetPhoto"
+					, item.msgType.name(), item.fromId, item.getPhotoItem().photoId, item.statusType.name()));
+			return false;
 		}
-		return percent;
+
+		// 请求下载图片
+		final PhotoModeType modeType;
+		ToFlagType toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
+		if (item.sendType == SendType.Send) {
+			// 男士发送（直接获取清晰图片）
+			modeType = PhotoModeType.Clear;
+			toFlagType = ToFlagType.ManGetSelf;
+		}
+		else  {
+			// 女士发送（判断是否已购买）
+			modeType = (item.getPhotoItem().charge ? PhotoModeType.Clear : PhotoModeType.Fuzzy);
+			toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
+		}
+		boolean result = mPhotoMgr.getPrivatePhoto(toFlagType
+					, item.getUserItem().userId
+					, mUserId
+					, mSid
+					, item.getPhotoItem().photoId
+					, sizeType
+					, modeType
+					, new OnLCGetPhotoCallback() {
+
+						@Override
+						public void OnLCGetPhoto(long requestId, boolean isSuccess, String errno,
+												 String errmsg, String filePath) {
+							// TODO Auto-generated method stub
+							LCPhotoInfoItem.StatusType statusType = LCPhotoInfoItem.StatusType.Default;
+							if (isSuccess) {
+								statusType = LCPhotoInfoItem.StatusType.Success;
+							} else {
+								// 获取图片失败
+								statusType = LCPhotoInfoItem.StatusType.Failed;
+							}
+							item.getPhotoItem().setPhotInfoItem(modeType, sizeType, statusType, errno, errmsg, filePath);
+							mCallbackHandler.OnGetPhoto(isSuccess, errno, errmsg, item);
+						}
+					});
+		if(result){
+			item.getPhotoItem().setPhotInfoItem(modeType, sizeType, LCPhotoInfoItem.StatusType.Downloading, "", "", "");
+		}
+		return result;
 	}
 
 	// ---------------- 语音操作函数(Voice) ----------------
@@ -2991,80 +2936,80 @@ public class LiveChatManager
 	private boolean GetVideoPhoto(final String userId, final String videoId, final String inviteId, final VideoPhotoType type)
 	{
 		boolean result = false;
-//
-//		// 判断是否已经在下载
-//		if (mVideoMgr.isVideoPhotoRequest(videoId)) {
-//			result = true;
-//		}
-//		else {
-//			// 还没请求下载，现在下载
-//			String filePath = mVideoMgr.getVideoPhotoTempPath(userId, videoId, inviteId, type);
-//			long requestId = LCRequestJniLiveChat.GetVideoPhoto(mSid, mUserId, userId, videoId, type, filePath, new OnLCRequestFileCallback() {
-//
-//				@Override
-//				public void OnLCRequestFile(long requestId, boolean isSuccess, String errno,
-//						String errmsg, String filePath)
-//				{
-//					boolean result = false;
-//					ArrayList<LCMessageItem> videoMsgList = null;
-//					String desPath = "";
-//
-//					// 下载成功
-//					if (isSuccess) {
-//						// 把临时文件复制到正式文件目录
-//						desPath = mVideoMgr.getVideoPhotoPath(userId, videoId, inviteId, type);
-//						result = mVideoMgr.tempFileToDesFile(filePath, desPath);
-//					}
-//
-//					// 更新视频消息
-//					LCUserItem userItem = mUserMgr.getUserItem(userId);
-//					if (null != userItem) {
-//						videoMsgList = mVideoMgr.getMessageItem(videoId, userItem.getMsgList());
-//						for (LCMessageItem item : videoMsgList) {
-//							// 更新视频图片路径
-//							if (result) {
-//								item.getVideoItem().updatePhotoPathWithType(desPath, type);
-//							}
-//							// 重置下载标志
-//							item.getVideoItem().updatePhotoDownloadSign(type, false);
-//						}
-//					}
-//
-//					// 从正在下载列表中移除
-//					mVideoMgr.getAndRemoveRequestVideoPhoto(requestId);
-//
-//					// callback
-//					LiveChatErrType errType = result ? LiveChatErrType.Success : LiveChatErrType.Fail;
-//					mCallbackHandler.OnGetVideoPhoto(errType
-//													, errno
-//													, errmsg
-//													, userId
-//													, inviteId
-//													, videoId
-//													, type
-//													, desPath
-//													, videoMsgList);
-//				}
-//			});
-//
-//			// 添加到requestId对照表
-//			if (requestId != LCRequestJni.InvalidRequestId)
-//			{
-//				result = true;
-//
-//				// 设置视频相关的所有聊天消息下载标志位为true
-//				LCUserItem userItem = mUserMgr.getUserItem(userId);
-//				if (null != userItem) {
-//					ArrayList<LCMessageItem> videoMsgList = mVideoMgr.getMessageItem(videoId, userItem.getMsgList());
-//					for (LCMessageItem item : videoMsgList) {
-//						item.getVideoItem().updatePhotoDownloadSign(type, true);
-//					}
-//				}
-//
-//				// 添加到对照表
-//				mVideoMgr.addRequestVideoPhoto(requestId, videoId);
-//			}
-//		}
+
+		// 判断是否已经在下载
+		if (mVideoMgr.isVideoPhotoRequest(videoId)) {
+			result = true;
+		}
+		else {
+			// 还没请求下载，现在下载
+			String filePath = mVideoMgr.getVideoPhotoTempPath(userId, videoId, inviteId, type);
+			long requestId = LCRequestJniLiveChat.GetVideoPhoto(mSid, mUserId, userId, videoId, type, filePath, new OnLCRequestFileCallback() {
+
+				@Override
+				public void OnLCRequestFile(long requestId, boolean isSuccess, String errno,
+						String errmsg, String filePath)
+				{
+					boolean result = false;
+					ArrayList<LCMessageItem> videoMsgList = null;
+					String desPath = "";
+
+					// 下载成功
+					if (isSuccess) {
+						// 把临时文件复制到正式文件目录
+						desPath = mVideoMgr.getVideoPhotoPath(userId, videoId, inviteId, type);
+						result = mVideoMgr.tempFileToDesFile(filePath, desPath);
+					}
+
+					// 更新视频消息
+					LCUserItem userItem = mUserMgr.getUserItem(userId);
+					if (null != userItem) {
+						videoMsgList = mVideoMgr.getMessageItem(videoId, userItem.getMsgList());
+						for (LCMessageItem item : videoMsgList) {
+							// 更新视频图片路径
+							if (result) {
+								item.getVideoItem().updatePhotoPathWithType(desPath, type);
+							}
+							// 重置下载标志
+							item.getVideoItem().updatePhotoDownloadSign(type, false);
+						}
+					}
+
+					// 从正在下载列表中移除
+					mVideoMgr.getAndRemoveRequestVideoPhoto(requestId);
+
+					// callback
+					LiveChatErrType errType = result ? LiveChatErrType.Success : LiveChatErrType.Fail;
+					mCallbackHandler.OnGetVideoPhoto(errType
+													, errno
+													, errmsg
+													, userId
+													, inviteId
+													, videoId
+													, type
+													, desPath
+													, videoMsgList);
+				}
+			});
+
+			// 添加到requestId对照表
+			if (requestId != LCRequestJni.InvalidRequestId)
+			{
+				result = true;
+
+				// 设置视频相关的所有聊天消息下载标志位为true
+				LCUserItem userItem = mUserMgr.getUserItem(userId);
+				if (null != userItem) {
+					ArrayList<LCMessageItem> videoMsgList = mVideoMgr.getMessageItem(videoId, userItem.getMsgList());
+					for (LCMessageItem item : videoMsgList) {
+						item.getVideoItem().updatePhotoDownloadSign(type, true);
+					}
+				}
+
+				// 添加到对照表
+				mVideoMgr.addRequestVideoPhoto(requestId, videoId);
+			}
+		}
 
 		return result;
 	}
@@ -3077,65 +3022,66 @@ public class LiveChatManager
 	public boolean VideoFee(final LCMessageItem item)
 	{
 		boolean result = false;
-//		if (null != item
-//			&& null != item.getUserItem()
-//			&& item.msgType == MessageType.Video
-//			&& null != item.getVideoItem())
-//		{
-//			final LCUserItem userItem = item.getUserItem();
-//			final LCVideoItem videoItem = item.getVideoItem();
-//
-//			if (videoItem.isVideoFeeding) {
-//				// 已在下载
-//				result = true;
-//			}
-//			else {
-//				long requestId = LCRequestJniLiveChat.GetVideo(
-//										mSid
-//										, mUserId
-//										, userItem.userId
-//										, videoItem.videoId
-//										, item.inviteId
-//										, VideoToFlagType.Man
-//										, videoItem.sendId
-//										, new OnLCGetVideoCallback() {
-//
-//					@Override
-//					public void OnLCGetVideo(long requestId, boolean isSuccess, String errno,
-//							String errmsg, String url) {
-//						// TODO Auto-generated method stub
-//						videoItem.isVideoFeeding = false;
-//						if (isSuccess) {
-//							videoItem.charget = true;
-//							videoItem.videoUrl = url;
-//
-//							// 通知LiveChat服务器已经购买视频
-//							LiveChatClient.PlayVideo(
-//									userItem.userId
-//									, item.inviteId
-//									, videoItem.videoId
-//									, videoItem.sendId
-//									, videoItem.charget
-//									, videoItem.videoDesc
-//									, item.msgId);
-//						}
-//
-//						// callback
-//						if(!TextUtils.isEmpty(errno) && (errno.equals("ERROR00003"))){
-//							//no money failed
-//							BuildAndInsertWarningWithErrType(userItem, LiveChatErrType.NoMoney);
-//						}
-//						mCallbackHandler.OnVideoFee(isSuccess, errno, errmsg, item);
-//					}
-//				});
-//
-//				if (LCRequestJni.InvalidRequestId != requestId)
-//				{
-//					videoItem.isVideoFeeding = true;
-//					result = true;
-//				}
-//			}
-//		}
+		if (null != item
+			&& null != item.getUserItem()
+			&& item.msgType == MessageType.Video
+			&& null != item.getVideoItem())
+		{
+			final LCUserItem userItem = item.getUserItem();
+			final LCVideoItem videoItem = item.getVideoItem();
+
+			if (videoItem.isVideoFeeding) {
+				// 已在下载
+				result = true;
+			}
+			else {
+				long requestId = LCRequestJniLiveChat.GetVideo(
+										mSid
+										, mUserId
+										, userItem.userId
+										, videoItem.videoId
+										, item.inviteId
+										, VideoToFlagType.Man
+										, videoItem.sendId
+										, new OnLCGetVideoCallback() {
+
+					@Override
+					public void OnLCGetVideo(long requestId, boolean isSuccess, String errno,
+							String errmsg, String url) {
+						// TODO Auto-generated method stub
+						videoItem.isVideoFeeding = false;
+						if (isSuccess) {
+							// 通知LiveChat服务器已经购买视频
+							if(!videoItem.charget) {
+								LiveChatClient.PlayVideo(
+										userItem.userId
+										, item.inviteId
+										, videoItem.videoId
+										, videoItem.sendId
+										, videoItem.charget
+										, videoItem.videoDesc
+										, item.msgId);
+							}
+							videoItem.charget = true;
+							videoItem.videoUrl = url;
+						}
+
+						// callback
+						if(isNoCredits(errno)){
+							//no money failed
+							BuildAndInsertWarningWithErrType(userItem, LiveChatErrType.NoMoney);
+						}
+						mCallbackHandler.OnVideoFee(isSuccess, errno, errmsg, item);
+					}
+				});
+
+				if (LCRequestJni.InvalidRequestId != requestId)
+				{
+					videoItem.isVideoFeeding = true;
+					result = true;
+				}
+			}
+		}
 		return result;
 	}
 
@@ -3194,6 +3140,7 @@ public class LiveChatManager
 	{
 		boolean result = false;
 
+		Log.logD(TAG, "GetVideo userId: " + userId + " videoId: " + videoId + " videoId: " + videoId + " videoUrl: " + videoUrl);
 		// 判断是否已在下载
 		if (mVideoMgr.isVideoDownload(videoId)) {
 			result = true;
@@ -3201,6 +3148,7 @@ public class LiveChatManager
 		else {
 			// 还没请求下载，现在下载
 			final String tempPath = mVideoMgr.getVideoTempPath(userId, videoId, inviteId);
+			Log.logD(TAG,"GetVideo StartDownload url: " + videoUrl);
 			LiveChatFileDownloader fileDownloader = new LiveChatFileDownloader(mContext);
 			fileDownloader.StartDownload(videoUrl, tempPath, new LiveChatFileDownloader.LiveChatFileDownloaderCallback() {
 
@@ -3208,6 +3156,7 @@ public class LiveChatManager
 				public void onUpdate(LiveChatFileDownloader loader, int progress) {
 					// TODO Auto-generated method stub
 					// 获取所有与该视频相关的所有聊天消息
+					Log.logD(TAG,"GetVideo onUpdate videoId: " + videoId);
 					LCUserItem userItem = mUserMgr.getUserItem(userId);
 					if (null != userItem) {
 						ArrayList<LCMessageItem> videoMsgList = mVideoMgr.getMessageItem(videoId, userItem.getMsgList());
@@ -3225,7 +3174,7 @@ public class LiveChatManager
 					// 把临时文件复制到正式文件目录
 					String videoPath = mVideoMgr.getVideoPath(userId, videoId, inviteId);
 					result = mVideoMgr.tempFileToDesFile(tempPath, videoPath);
-
+					Log.logD(TAG,"GetVideo onSuccess videoId: " + videoId);
 					ArrayList<LCMessageItem> videoMsgList = null;
 					if (result) {
 						// 获取所有与该视频相关的所有聊天消息
@@ -3260,6 +3209,7 @@ public class LiveChatManager
 					// TODO Auto-generated method stub
 					ArrayList<LCMessageItem> videoMsgList = null;
 					// 获取所有与该视频相关的聊天消息
+					Log.logD(TAG,"GetVideo onFail videoId: " + videoId);
 					LCUserItem userItem = mUserMgr.getUserItem(userId);
 					if (null != userItem) {
 						videoMsgList = mVideoMgr.getMessageItem(videoId, userItem.getMsgList());
@@ -3811,7 +3761,7 @@ public class LiveChatManager
 						else {
 							item.statusType = StatusType.Fail;
 							mCallbackHandler.OnSendVoice(LiveChatErrType.Fail, errno, errmsg, item);
-							if(!TextUtils.isEmpty(errno) && errno.equals("ERROR00003")){
+							if(isNoCredits(errno)){
 								if (null != item && null != item.getUserItem()) {
 									BuildAndInsertWarningWithErrType(item.getUserItem(), LiveChatErrType.NoMoney);
 								}
@@ -4832,52 +4782,49 @@ public class LiveChatManager
 			, String photoDesc
 			, int ticket)
 	{
-//		// 返回票根给服务器
-//		LiveChatClient.UploadTicket(fromId, ticket);
-//
-//		//邀请风控处理
-//		if(IsRecvMessageLimited(fromId)){
-//			return;
-//		}
-//
-//		// 添加用户到列表中（若列表中用户不存在）
-//		LCUserItem userItem = mUserMgr.getUserItem(fromId);
-//		if (null == userItem) {
-//			Log.e("livechat", String.format("%s::%s() getUserItem fail, fromId:%s", "LiveChatManager", "OnRecvPhoto", fromId));
-//			return;
-//		}
-//		userItem.inviteId = inviteId;
-//		userItem.userName = fromName;
-////		userItem.statusType = UserStatusType.USTATUS_ONLINE;
-//		SetUserOnlineStatus(userItem, UserStatusType.USTATUS_ONLINE);
-//
-//		// 生成MessageItem
-//		LCMessageItem item = new LCMessageItem();
-//		item.init(mMsgIdIndex.getAndIncrement()
-//				, SendType.Recv
-//				, fromId
-//				, toId
-//				, userItem.inviteId
-//				, StatusType.Finish);
-//		// 生成PhotoItem
-//		LCPhotoItem photoItem = new LCPhotoItem();
-//		photoItem.init(photoId
-//				, sendId
-//				, photoDesc
-//				, mPhotoMgr.getPhotoPath(photoId, PhotoModeType.Fuzzy, PhotoSizeType.Large)
-//				, mPhotoMgr.getPhotoPath(photoId, PhotoModeType.Fuzzy, PhotoSizeType.Middle)
-//				, mPhotoMgr.getPhotoPath(photoId, PhotoModeType.Clear, PhotoSizeType.Original)
-//				, mPhotoMgr.getPhotoPath(photoId, PhotoModeType.Clear, PhotoSizeType.Large)
-//				, mPhotoMgr.getPhotoPath(photoId, PhotoModeType.Clear, PhotoSizeType.Middle)
-//				, charget);
-//		// 把PhotoItem添加到MessageItem
-//		item.setPhotoItem(photoItem);
-//
-//		// 添加到用户聊天记录中
-//		userItem.insertSortMsgList(item);
-//
-//		// callback
-//		mCallbackHandler.OnRecvPhoto(item);
+		// 返回票根给服务器
+		LiveChatClient.UploadTicket(fromId, ticket);
+
+		//邀请风控处理
+		if(IsRecvMessageLimited(fromId)){
+			return;
+		}
+
+		// 添加用户到列表中（若列表中用户不存在）
+		LCUserItem userItem = mUserMgr.getUserItem(fromId);
+		if (null == userItem) {
+			Log.e("livechat", String.format("%s::%s() getUserItem fail, fromId:%s", "LiveChatManager", "OnRecvPhoto", fromId));
+			return;
+		}
+		userItem.inviteId = inviteId;
+		userItem.userName = fromName;
+//		userItem.statusType = UserStatusType.USTATUS_ONLINE;
+		SetUserOnlineStatus(userItem, UserStatusType.USTATUS_ONLINE);
+
+		// 生成MessageItem
+		LCMessageItem item = new LCMessageItem();
+		item.init(mMsgIdIndex.getAndIncrement()
+				, SendType.Recv
+				, fromId
+				, toId
+				, userItem.inviteId
+				, StatusType.Finish);
+		// 生成PhotoItem
+		LCPhotoItem photoItem = new LCPhotoItem();
+		photoItem.init(
+				mPhotoMgr,
+				photoId
+				, sendId
+				, photoDesc
+				, charget);
+		// 把PhotoItem添加到MessageItem
+		item.setPhotoItem(photoItem);
+
+		// 添加到用户聊天记录中
+		userItem.insertSortMsgList(item);
+
+		// callback
+		mCallbackHandler.OnRecvPhoto(item);
 	}
 	
 	/**
@@ -4904,55 +4851,55 @@ public class LiveChatManager
 			, String videoDesc
 			, int ticket)
 	{
-//		// 返回票根给服务器
-//		LiveChatClient.UploadTicket(fromId, ticket);
-//
-//		//邀请风控处理
-//		if(IsRecvMessageLimited(fromId)){
-//			return;
-//		}
-//
-//		// 不允许接收视频消息
-//		if (!mIsRecvVideoMsg) {
-//			return;
-//		}
-//
-//		// 添加用户到列表中（若列表中用户不存在）
-//		LCUserItem userItem = mUserMgr.getUserItem(fromId);
-//		if (null == userItem) {
-//			Log.e("livechat", String.format("%s::%s() getUserItem fail, fromId:%s", "LiveChatManager", "OnRecvVideo", fromId));
-//			return;
-//		}
-//		userItem.inviteId = inviteId;
-//		userItem.userName = fromName;
-//		SetUserOnlineStatus(userItem, UserStatusType.USTATUS_ONLINE);
-//
-//		// 生成MessageItem
-//		LCMessageItem item = new LCMessageItem();
-//		item.init(mMsgIdIndex.getAndIncrement()
-//				, SendType.Recv
-//				, fromId
-//				, toId
-//				, userItem.inviteId
-//				, StatusType.Finish);
-//		// 生成VideoItem
-//		LCVideoItem videoItem = new LCVideoItem();
-//		videoItem.init(videoId
-//				, sendId
-//				, videoDesc
-//				, ""
-//				, ""
-//				, ""
-//				, ""
-//				, charget);
-//		// 把PhotoItem添加到MessageItem
-//		item.setVideoItem(videoItem);
-//
-//		// 添加到用户聊天记录中
-//		userItem.insertSortMsgList(item);
-//
-//		// callback
-//		mCallbackHandler.OnRecvVideo(item);
+		// 返回票根给服务器
+		LiveChatClient.UploadTicket(fromId, ticket);
+
+		//邀请风控处理
+		if(IsRecvMessageLimited(fromId)){
+			return;
+		}
+
+		// 不允许接收视频消息
+		if (!mIsRecvVideoMsg) {
+			return;
+		}
+
+		// 添加用户到列表中（若列表中用户不存在）
+		LCUserItem userItem = mUserMgr.getUserItem(fromId);
+		if (null == userItem) {
+			Log.e("livechat", String.format("%s::%s() getUserItem fail, fromId:%s", "LiveChatManager", "OnRecvVideo", fromId));
+			return;
+		}
+		userItem.inviteId = inviteId;
+		userItem.userName = fromName;
+		SetUserOnlineStatus(userItem, UserStatusType.USTATUS_ONLINE);
+
+		// 生成MessageItem
+		LCMessageItem item = new LCMessageItem();
+		item.init(mMsgIdIndex.getAndIncrement()
+				, SendType.Recv
+				, fromId
+				, toId
+				, userItem.inviteId
+				, StatusType.Finish);
+		// 生成VideoItem
+		LCVideoItem videoItem = new LCVideoItem();
+		videoItem.init(videoId
+				, sendId
+				, videoDesc
+				, ""
+				, ""
+				, ""
+				, ""
+				, charget);
+		// 把PhotoItem添加到MessageItem
+		item.setVideoItem(videoItem);
+
+		// 添加到用户聊天记录中
+		userItem.insertSortMsgList(item);
+
+		// callback
+		mCallbackHandler.OnRecvVideo(item);
 	}
 	
 	// --------------- 高级表情下载回调 ---------------
@@ -5896,5 +5843,23 @@ public class LiveChatManager
 	private void stopChatStatusUpdate(){
 		mHandler.removeCallbacks(chatStatusUpdate);
 	}
+	/********************************  livechat 状态定期更新 end*************************************************/
 
+	/********************************  livechat 提供外部方法 start *************************************************/
+
+	/**
+	 * 是否信用点不足
+	 * @param errno
+	 * @return true:信用点不足
+	 */
+	public boolean isNoCredits(String errno){
+		if (!TextUtils.isEmpty(errno) && (errno.equals("ERROR00003") || errno.equals("17302"))) {
+			//no money failed
+			return true;
+		}
+
+		return false;
+	}
+
+	/********************************  livechat 提供外部方法 end *************************************************/
 }

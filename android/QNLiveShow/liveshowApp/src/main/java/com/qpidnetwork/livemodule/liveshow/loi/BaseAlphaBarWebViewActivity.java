@@ -351,13 +351,13 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && mIsPageLoadFinish && !isLoadError) {
-//            if( mWebView.canGoBack() ) {
-//                mWebView.goBack();
-//            } else {
+            if( owv_content.canGoBack() ) {
+                owv_content.goBack();
+            } else {
                 //交给页面处理
-                onBackKeyDown();
-//                finish();
-//            }
+                //onBackKeyDown();
+                finish();
+            }
             return false;
         }
         return super.onKeyDown(keyCode, event);

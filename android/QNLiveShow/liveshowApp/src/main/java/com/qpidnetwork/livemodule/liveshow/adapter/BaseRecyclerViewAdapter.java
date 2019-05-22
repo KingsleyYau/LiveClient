@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

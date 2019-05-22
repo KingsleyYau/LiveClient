@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 
 import android.annotation.SuppressLint;
+import android.content.ComponentCallbacks2;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.canadapter.CanOnItemListener;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
@@ -85,7 +87,7 @@ import io.reactivex.functions.Consumer;
  */
 
 public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity implements HangOutVedioWindow.OnAddInviteClickListener,
-        HangOutVedioWindow.VedioClickListener, HangOutVedioWindow.VedioDisconnectListener {
+        HangOutVedioWindow.VedioClickListener, HangOutVedioWindow.VedioDisconnectListener, HangOutVedioWindowManager.InviteEventListener {
 
     private String TAG;
     private final int MAIN_ANCHOR_INDEX = 1; //主主播位置
@@ -201,7 +203,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
             if(!vedioWindowManager.checkIsOnLine(loginItem.userId)){
                 //如果男士没坐在位置上,才初始化，以免重复初始化。
                 vedioWindowManager.switchInvitedStatus(loginItem.userId,loginItem.photoUrl,
-                        loginItem.nickName, null);
+                        loginItem.nickName, null, null);
 
                 //男士自己就展示切换摄像头按钮
 //                vedioWindowManager.setCameraCanSwitch(loginItem.userId, true);
@@ -229,7 +231,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                         Log.d(TAG, "initHangOutVeidoStatus 主播已经进入直播间" );
                         //主播已经进入直播间
                         cellIndex = vedioWindowManager.switchInvitedStatus(imOtherAnchorItem.anchorId,imOtherAnchorItem.photoUrl,
-                                imOtherAnchorItem.nickName,imOtherAnchorItem.videoUrl);
+                                imOtherAnchorItem.nickName, imOtherAnchorItem, imOtherAnchorItem.videoUrl);
                         //加入@列表
                         doAddToTargetList(cellIndex, imOtherAnchorItem);
                     }else if(imOtherAnchorItem.anchorStatus == IMHangoutAnchorItem.IMAnchorStatus.Invitation){
@@ -237,13 +239,13 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                         //男士邀请中
                         cellIndex = vedioWindowManager.switchAnchorComingStatus(imOtherAnchorItem.anchorId,imOtherAnchorItem.photoUrl,
                                 imOtherAnchorItem.nickName,
-                                HangOutVedioWindow.AnchorComingType.Man_Inviting,0);
+                                HangOutVedioWindow.AnchorComingType.Man_Inviting,0, imOtherAnchorItem);
                     }else if(imOtherAnchorItem.anchorStatus == IMHangoutAnchorItem.IMAnchorStatus.InviteConfirm){
                         Log.d(TAG, "initHangOutVeidoStatus 女士已经接受男士邀请:" + imOtherAnchorItem.anchorStatus.name());
                         //或女士已经接受男士邀请
                         cellIndex = vedioWindowManager.switchAnchorComingStatus(imOtherAnchorItem.anchorId,imOtherAnchorItem.photoUrl,
                                 imOtherAnchorItem.nickName,
-                                HangOutVedioWindow.AnchorComingType.Anchor_Invite_Confirm,0);
+                                HangOutVedioWindow.AnchorComingType.Anchor_Invite_Confirm,0, imOtherAnchorItem);
                         //加入@列表
                         doAddToTargetList(cellIndex, imOtherAnchorItem);
                     }else if(imOtherAnchorItem.anchorStatus == IMHangoutAnchorItem.IMAnchorStatus.KnockConfirm){
@@ -251,7 +253,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                         //女士敲门男士已经确认
                         cellIndex = vedioWindowManager.switchAnchorComingStatus(imOtherAnchorItem.anchorId,imOtherAnchorItem.photoUrl,
                                 imOtherAnchorItem.nickName,
-                                HangOutVedioWindow.AnchorComingType.Man_Accepted_Anchor_Knock,0);
+                                HangOutVedioWindow.AnchorComingType.Man_Accepted_Anchor_Knock,0, imOtherAnchorItem);
                         //加入@列表
                         doAddToTargetList(cellIndex, imOtherAnchorItem);
                     }else if(imOtherAnchorItem.anchorStatus == IMHangoutAnchorItem.IMAnchorStatus.ReciprocalEnter){
@@ -260,14 +262,15 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                         cellIndex = vedioWindowManager.switchAnchorComingStatus(imOtherAnchorItem.anchorId,imOtherAnchorItem.photoUrl,
                                 imOtherAnchorItem.nickName,
                                 HangOutVedioWindow.AnchorComingType.Anchor_Coming_After_Expires,
-                                imOtherAnchorItem.leftSeconds);
+                                imOtherAnchorItem.leftSeconds,
+                                imOtherAnchorItem);
                     }
                 }
             }
 
             //邀请 从私密邀请的主播
             if(mExtraAnchorInfo != null){
-                vedioWindowManager.sendInvitation(mIMHangoutRoomInItem.roomId, mExtraAnchorInfo.anchorId, mExtraAnchorInfo.photoUrl, mExtraAnchorInfo.nickName, 0, null);
+                vedioWindowManager.sendInvitation(mIMHangoutRoomInItem.roomId, mExtraAnchorInfo.anchorId, mExtraAnchorInfo.photoUrl, mExtraAnchorInfo.nickName, null, 0);
                 mExtraAnchorInfo = null;
             }
 
@@ -458,6 +461,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
         vedioWindowManager = new HangOutVedioWindowManager.Builder()
                 .setImHangOutRoomItem(mIMHangoutRoomInItem)
                 .setLoginItem(loginItem)
+                .setInviteEventListener(this)
                 .setmActivity(this)
                 .build();
         vedioWindowManager.add(1,R.id.view_vedioWindow1);
@@ -686,6 +690,35 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
         }
     }
 
+    //===================== 2019/04/26 Hardy 低内存时，清理 Fresco 占用的图片内存缓存，优化播放礼物动画或者加载其他图片时可能导致的 OOM ===============================
+    // https://blog.csdn.net/u014614038/article/details/79737712
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+
+        // 大于当前的阀值
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) { // 60
+            clearFrescoMemoryCache();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+
+        clearFrescoMemoryCache();
+    }
+
+    private void clearFrescoMemoryCache(){
+        try {
+            ImagePipelineFactory.getInstance().getImagePipeline().clearMemoryCaches();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //===================== 2019/04/26 Hardy 低内存时，清理 Fresco 占用的图片内存缓存，优化播放礼物动画或者加载其他图片时可能导致的 OOM ===============================
+
     /**
      * 启动消息动画
      * @param toUids
@@ -841,32 +874,24 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
         }
     }
 
-    /**
-     * 发送邀请请求回调
-     * @param isSuccess
-     * @param errorType
-     * @param errMsg
-     * @param userBaseInfoItem
-     * @param roomId
-     */
     @Override
-    public void onInvitationResponse(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId){
+    public void onClickInviteResponse(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errorMsg, String roomId) {
         if(!isSuccess){
             //信用点不足
             if(errorType == HangoutInvitationManager.HangoutInvationErrorType.NoCredit){
                 showCreditNoEnoughDialog(R.string.hangout_no_credits_send_invitation_tip);
             }
             else if (errorType == HangoutInvitationManager.HangoutInvationErrorType.ConnectFail) {
-                ToastUtil.showToast(mContext, errMsg);
+                ToastUtil.showToast(mContext, errorMsg);
             }
             else if (errorType == HangoutInvitationManager.HangoutInvationErrorType.InviteDeny) {
                 // 2019/4/1 Hardy  系统提示：邀请被拒绝或主播180s后未响应 {主播昵称} is not responding. Please try again later.
-                IMSysNoticeMessageContent msgContent = new IMSysNoticeMessageContent(errMsg, "", IMSysNoticeMessageContent.SysNoticeType.Normal);
+                IMSysNoticeMessageContent msgContent = new IMSysNoticeMessageContent(errorMsg, "", IMSysNoticeMessageContent.SysNoticeType.Normal);
                 IMMessageItem msgItem = new IMMessageItem(roomId, mIMManager.mMsgIdIndex.getAndIncrement(),"",
                         IMMessageItem.MessageType.SysNotice,msgContent);
                 sendMessageUpdateEvent(msgItem);
             }else{
-                ToastUtil.showToast(mContext, errMsg);
+                ToastUtil.showToast(mContext, errorMsg);
             }
         }
     }
@@ -878,8 +903,11 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
      * @param errMsg
      */
     @Override
-    public void onInvitationCancel(boolean isSuccess, int httpErrCode, String errMsg) {
-        if(!isSuccess && !TextUtils.isEmpty(errMsg)){
+    public void onInvitationCancel(boolean isSuccess, int httpErrCode, String errMsg, String anchorId) {
+        if(isSuccess ){
+            //还原窗口
+            vedioWindowManager.switchWait2InviteStatus(anchorId);
+        }else {
             ToastUtil.showToast(mContext, errMsg);
         }
     }
@@ -897,15 +925,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                 public void onInviteClick(HangoutAnchorInfoItem item) {
                     //点击邀请处理
                     Log.d(TAG,"showInviteFriendsDialog onInviteClick item anchorId: " + item.anchorId);
-                    //如果邀请失败
-                    vedioWindowManager.sendInvitation(mIMHangoutRoomInItem.roomId, item.anchorId, item.photoUrl, item.nickName, cellIndex, new HangOutVedioWindowManager.InviteEventListener() {
-                        @Override
-                        public void onClickInvite(boolean isSuccess, int httpErrorCode, String errorMsg) {
-                            if(!isSuccess){
-                                ToastUtil.showToast(mContext, errorMsg);
-                            }
-                        }
-                    });
+                    vedioWindowManager.sendInvitation(mIMHangoutRoomInItem.roomId, item.anchorId, item.photoUrl, item.nickName, null, cellIndex);
                 }
             });
         }
@@ -949,7 +969,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                 if(null != imUserBaseInfoItem && null != vedioWindowManager ){// && !vedioWindowManager.checkIsOnLine(item.anchorId)){
                     Log.d(TAG,"OnRecvAnchorCountDownEnterRoomNotice-更新倒计时状态");
                     vedioWindowManager.switchAnchorComingStatus(item.anchorId,imUserBaseInfoItem.photoUrl,
-                            imUserBaseInfoItem.nickName,HangOutVedioWindow.AnchorComingType.Anchor_Coming_After_Expires,item.leftSecond);
+                            imUserBaseInfoItem.nickName,HangOutVedioWindow.AnchorComingType.Anchor_Coming_After_Expires,item.leftSecond, null);
                 }
             }
         });
@@ -962,14 +982,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
      * @param friendPhotoUrl
      */
     private void onAnchorRecommand(String friendId, String friendNickName, String friendPhotoUrl){
-        vedioWindowManager.sendInvitation(mIMHangoutRoomInItem.roomId, friendId, friendPhotoUrl, friendNickName, 0, new HangOutVedioWindowManager.InviteEventListener() {
-            @Override
-            public void onClickInvite(boolean isSuccess, int httpErrorCode, String errorMsg) {
-                if(!isSuccess){
-                    ToastUtil.showToast(mContext, errorMsg);
-                }
-            }
-        });
+        vedioWindowManager.sendInvitation(mIMHangoutRoomInItem.roomId, friendId, friendPhotoUrl, friendNickName, null, 0);
     }
 
     /**
@@ -984,8 +997,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
                 if(!isSuccess){
                     if(IntToEnumUtils.intToHttpErrorType(httpErrorCode) == HttpLccErrType.HTTP_LCC_ERR_NO_CREDIT){
                         //点数不足，充值
-//                        showNoCreditsTipDialog();
-                        showCreditNoEnoughDialog(R.string.hangout_gift_send_no_credits_tip);
+                        showCreditNoEnoughDialog(R.string.hangout_open_door_no_credits_tip);
                     }else{
                         //请求返回失败，弹出提示
                         ToastUtil.showToast(mContext, errorMsg);
@@ -1583,7 +1595,7 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
             @Override
             public void run() {
             if(null != item && null != vedioWindowManager){
-                int cellIndex = vedioWindowManager.switchInvitedStatus(item.userId,item.photoUrl,item.nickName,item.pullUrl);
+                int cellIndex = vedioWindowManager.switchInvitedStatus(item.userId,item.photoUrl,item.nickName, null , item.pullUrl);
                 if(null != item.bugForList && item.bugForList.length>0){
                     vedioWindowManager.initRecvBarGiftData(item);
                 }

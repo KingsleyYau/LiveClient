@@ -50,7 +50,7 @@ public class HangoutInviteFriendsAdapter extends RecyclerView.Adapter<RecyclerVi
 
         final HangoutAnchorInfoItem item = mList.get(position);
 
-        FrescoLoadUtil.loadUrl(mContext, viewHolder.imgAnchorAvatar, item.photoUrl, mContext.getResources().getDimensionPixelSize(R.dimen.live_size_60dp), R.drawable.ic_default_photo_woman, true );
+        FrescoLoadUtil.loadUrl(viewHolder.imgAnchorAvatar, item.photoUrl, mContext.getResources().getDimensionPixelSize(R.dimen.live_size_60dp));
 
         viewHolder.tvAnchorNickname.setText(item.nickName);
         viewHolder.tvDes.setText(mContext.getString(R.string.hangout_dialog_des , item.age , item.country) );
@@ -96,6 +96,7 @@ public class HangoutInviteFriendsAdapter extends RecyclerView.Adapter<RecyclerVi
             tvDes = (TextView)itemView.findViewById(R.id.tv_desc);
             btnInvite = (TextView)itemView.findViewById(R.id.btnInvite);
             ivOnline = (View)itemView.findViewById(R.id.ivOnline);
+            FrescoLoadUtil.setHierarchy(itemView.getContext(), imgAnchorAvatar, R.drawable.ic_default_photo_woman, true);
         }
     }
 }

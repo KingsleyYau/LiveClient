@@ -75,18 +75,28 @@ public class DisplayUtil {
      */
     public static int getScreenWidth(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(dm);
+        }else{
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        }
         return dm.widthPixels;
     }
 
     /**
      * 获取屏幕高度
+     * 实际显示区域指定包含系统装饰的内容的显示部分 ： getRealSize（Point），getRealMetrics（DisplayMetrics）。
+     * 应用程序显示区域指定可能包含应用程序窗口的显示部分，不包括系统装饰。 应用程序显示区域可以小于实际显示区域，因为系统减去诸如状态栏之类的装饰元素所需的空间。 使用以下方法查询应用程序显示区域：getSize（Point），getRectSize（Rect）和getMetrics（DisplayMetrics）。
      * @param context
      * @return
      */
     public static int getScreenHeight(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(dm);
+        }else{
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        }
         return dm.heightPixels;
     }
 

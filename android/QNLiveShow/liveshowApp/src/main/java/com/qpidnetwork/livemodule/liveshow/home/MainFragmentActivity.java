@@ -312,6 +312,19 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     }
 
     /**
+     * 粗略地监听到 是否有对话框被显示
+     * @param hasFocus
+     */
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        //改变锁状态(hasFocus == true)即代表当前没对话框显示, 可以显示下一个新的对话框
+        if(hasFocus){
+            hasItemClicked = false;
+        }
+    }
+
+    /**
      * 更新信用点余额
      */
     public void updateCredit() {
@@ -531,8 +544,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         //左则菜单－－ 个人资料
         mLLHeaderRoot = (LinearLayout) findViewById(R.id.ll_header_root);
         mLLHeaderRoot.setLayerType(View.LAYER_TYPE_SOFTWARE, null); //头像网络慢有时为黑:https://blog.csdn.net/huyawenz/article/details/78863636
-        //留出状态栏高度
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //留出状态栏高度 （4.4+）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             ((LinearLayout.LayoutParams) mLLHeaderRoot.getLayoutParams()).topMargin += DisplayUtil.getStatusBarHeight(mContext);
         }
         mLLHeaderRoot.setOnClickListener(new View.OnClickListener() {

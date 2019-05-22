@@ -412,7 +412,8 @@
     <string name="live_inter_video_failed_close">Could not terminate 2-way video chat.Please try again later.</string>
 
     <!--Notification-->
-    <string name="notification_anchor_inite_tips">%1$s is inviting you to start a One-on-One.Start now! </string>
+    <string name="notification_anchor_inite_tips_title">One-on-One with %1$s</string>
+    <string name="notification_anchor_inite_tips">%1$s is inviting you to start One-on-One broadcast.Click to start now! </string>
     <string name="notification_scheduled_invite_expired_tip">One-on-One broadcast with %1$s will be started soon. Click to start now!</string>
     <string name="notification_program_show_tips">%1$s\'s show is ready to start. Tap to have a seat now. </string>
 
@@ -525,7 +526,7 @@
     <string name="my_profile_playing_cards_chess">Playing cards/chess</string>
     <string name="my_profile_Music_play_instruments">Music/play instruments</string>
 
-    <string name="myprofile_sure_clean_cache">Are you sure you wish to clean the app cache?</string>
+    <string name="myprofile_sure_clean_cache">Clearing the cache may require you to login again. Do you wish to logout and clear the cached data now?</string>
 
     <!-- liveChat -->
     <string name="Chat">Chat</string>
@@ -548,7 +549,7 @@
     <string name="live_chat_voice_record_cancel">Release to cancel</string>
     <string name="live_chat_price_info">Live chat billed at 0.5 credit per 5mins. Billing begins after your first message is sent.</string>
     <string name="live_chat_try_tips">send your first message to start free chat now.</string>
-    <string name="live_chat_lady_illeage_message">Your message may contain prohibited information which has violated our Terms of Use. Your message will not be delivered.</string>
+    <string name="live_chat_lady_illeage_message">Your message may contain prohibited information. Your message will not be delivered.</string>
     <string name="live_chat_kickoff_by_sever_update">You have been disconnected due to the server is now under maintenance.</string>
     <string name="live_chat_end_chat">End Chat</string>
 
@@ -625,6 +626,7 @@
     <string name="hangout_open_door_error_already_open">Door already open.</string>
     <string name="hangout_open_door_error_full">Your broadcast room is full.Please try again later.</string>
     <string name="hangout_pust_no_credit_tips">You have insufficient credits to start 2-way video.</string>
+    <string name="hangout_open_door_no_credits_tip">You have insufficient credits to open door.</string>
 
     <!--hangout transition-->
     <string name="hangout_transition_inviting">Inviting %s to join Hang-out.</string>
@@ -666,5 +668,24 @@
     <string name="livemsg_temp_private_recommend"><![CDATA[
         <font color=\"#FF6D00\">You invited </font><font color=\"#FF6D00\">%1$s</font><font color=\"#FF6D00\"> to hang out with </font><font color=\"#FF6D00\">%2$s</xliff:g></font>
     ]]></string>
+
+    <!--LiveChat-->
+    <string name="x_credits_will_be_charged_for_each_photo_sent">1.5 credits for each photo sent.</string>
+    <string name="credits_per_photo_15">1.5 credits per photo</string>
+    <string name="credits_per_video_25">2.5 credits per video</string>
+    <string name="livechat_can_not_send_photo_before_the_conversation_has_started">Can not send photos before the conversation is started.</string>
+    <string name="view_text">View</string>
+    <string name="livechat_private_photo">Private Photo</string>
+    <string name="livechat_private_video">Private Video</string>
+    <string name="View_Photo">View Photo</string>
+    <string name="livechat_photo_name">This is %1$s’s private photo.</string>
+    <string name="livechat_video_name">This is %1$s’s private video.</string>
+
+
+    <!--聊天历史视频-->
+    <string name="live_chat_recent_watched_title">Recent Watched</string>
+    <string name="recent_watched_empty_tips">No recent watched video in the last 3 days.</string>
+
+
 </resources>
 

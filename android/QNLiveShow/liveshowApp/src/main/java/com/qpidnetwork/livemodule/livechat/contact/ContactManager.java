@@ -44,7 +44,7 @@ import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.RequestBaseResponse;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationTypeEnum;
 import com.qpidnetwork.qnbridgemodule.util.Log;
@@ -119,12 +119,9 @@ public class ContactManager implements IAuthorizationListener,
                         RequestBaseResponse obj = (RequestBaseResponse) msg.obj;
                         LCMessageItem item = (LCMessageItem) obj.body;
                         String tips = "";
-                        if (item.msgType != MessageType.Text) {
-                            if (item.getUserItem() != null) {
-                                tips = item.getUserItem().userName + ": "
-                                        + LiveChatMessageHelper.generateMsgHint(mContext, item);
-                            }
-                        } else {
+
+                        if (item.msgType == MessageType.Text) {
+                            //普通文本
                             String msgTemp = (item.getTextItem().message != null) ? item
                                     .getTextItem().message : "";
                             msgTemp = msgTemp.replaceAll("\\[\\w*:[0-9]*\\]",
@@ -132,7 +129,14 @@ public class ContactManager implements IAuthorizationListener,
                             if (item.getUserItem() != null) {
                                 tips = item.getUserItem().userName + ": " + msgTemp;
                             }
+                        }else{
+                            //其它
+                            if (item.getUserItem() != null) {
+                                tips = item.getUserItem().userName + ": "
+                                        + LiveChatMessageHelper.generateMsgHint(mContext, item);
+                            }
                         }
+
                         if(!TextUtils.isEmpty(tips) && item != null){
                             String url = URL2ActivityManager.createLiveChatActivityUrl(item.getUserItem().userId, item.getUserItem().userName, "");
                             PushManager.getInstance().ShowNotification(NotificationTypeEnum.LIVE_LIVECHAT_NOTIFICATION,
@@ -509,7 +513,7 @@ public class ContactManager implements IAuthorizationListener,
     }
 
     /**
-     * 更新联系人hint信息
+     * 更新联系人列表hint信息
      *
      * @param userId
      */
@@ -528,6 +532,14 @@ public class ContactManager implements IAuthorizationListener,
                                 || item.msgType == MessageType.MagicIcon) {
                             /* 通过最后一条正常通讯消息生成提示，否则界面使用默认最后更新时间提示 */
                             contactBean.msgHint = LiveChatMessageHelper.generateMsgHint(mContext, item);
+
+                            //再对图片,视频特殊处理(添加图标)
+                            if(item.msgType == MessageType.Photo){
+                                contactBean.msgHint = "[s:c2] " + contactBean.msgHint;
+                            }else if(item.msgType == MessageType.Video){
+                                contactBean.msgHint = "[s:c1] " + contactBean.msgHint;
+                            }
+
                             if(item.createTime > contactBean.lasttime) {
                                 contactBean.lasttime = item.createTime;
                             }
@@ -1270,7 +1282,7 @@ public class ContactManager implements IAuthorizationListener,
     }
 
     @Override
-    public void OnGetPhoto(LiveChatErrType errType, String errno,
+    public void OnGetPhoto(boolean isSuccess, String errno,
                            String errmsg, LCMessageItem item) {
 
     }

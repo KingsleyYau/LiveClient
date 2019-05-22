@@ -6,7 +6,7 @@ import android.os.Message;
 import com.qpidnetwork.livemodule.livechat.contact.ContactBean;
 import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
 import com.qpidnetwork.livemodule.livechat.contact.OnLCContactUpdateCallback;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.List;

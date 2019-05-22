@@ -173,4 +173,17 @@
         <item name="behavior_peekHeight">@dimen/live_hangout_detail_dialog_height</item>
     </style>
 
+    <!-- 用于LiveChat工具栏弹出 -->
+    <style name="chat_box_tool_dialog_live" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/animation_bottom_in_out</item>
+    </style>
+    <style name="animation_bottom_in_out" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_bottom_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_bottom_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_bottom_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_bottom_out</item>
+    </style>
 </resources>

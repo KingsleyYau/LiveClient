@@ -123,7 +123,8 @@ static const int LiveRoomTypeArray[] = {
 	    HTTPROOMTYPE_FREEPUBLICLIVEROOM,          // 免费公开直播间
 	    HTTPROOMTYPE_COMMONPRIVATELIVEROOM,       // 普通私密直播间
 	    HTTPROOMTYPE_CHARGEPUBLICLIVEROOM,        // 付费公开直播间
-	    HTTPROOMTYPE_LUXURYPRIVATELIVEROOM        // 豪华私密直播间
+	    HTTPROOMTYPE_LUXURYPRIVATELIVEROOM,       // 豪华私密直播间
+	    HTTPROOMTYPE_HANGOUTLIVEROOM              // Hangout直播间
 };
 
 // 底层状态转换JAVA坐标

@@ -119,7 +119,7 @@ public class VoicePlayerManager {
 		if(v != null){
 			TextView text =(TextView) v.findViewById(R.id.chat_sound_time);
 			
-			Drawable drawable= mContext.getResources().getDrawable(R.drawable.ic_play_circle_outline_white_24dp);
+			Drawable drawable= mContext.getResources().getDrawable(R.drawable.ic_play_circle_outline_black_24dp);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			text.setCompoundDrawables(drawable,null,null,null);
 		}
@@ -133,7 +133,7 @@ public class VoicePlayerManager {
 		isPlaying = true;
 		if(v != null){
 			TextView text =(TextView) v.findViewById(R.id.chat_sound_time);
-			Drawable drawable= mContext.getResources().getDrawable(R.drawable.ic_pause_circle_outline_white_24dp);
+			Drawable drawable= mContext.getResources().getDrawable(R.drawable.ic_pause_circle_outline_black_24dp);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			text.setCompoundDrawables(drawable,null,null,null);
 			

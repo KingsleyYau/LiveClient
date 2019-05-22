@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/cameraViewHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_color">
+
+        <com.qpidnetwork.qnbridgemodule.view.camera.CameraView
+            android:id="@+id/cameraView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/touch_feedback_circle_grey_white_border"
+            android:src="@drawable/ic_send_white_up_36dp" />
+
+        <ImageButton
+            android:id="@+id/expandCameraButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="24dp"
+            android:background="@drawable/touch_feedback_holo_light_circle"
+            android:src="@drawable/ic_launch_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/swapCameraButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="24dp"
+            android:background="@drawable/touch_feedback_holo_dark_circle"
+            android:src="@drawable/ic_camera_rear_white_24dp" />
+
+        <!--2018/12/14 Hardy-->
+        <ImageButton
+            android:id="@+id/cancelSendImageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/live_size_48dp"
+            android:layout_marginTop="@dimen/live_size_24dp"
+            android:layout_marginRight="@dimen/live_size_24dp"
+            android:layout_marginBottom="@dimen/live_size_24dp"
+            android:background="@drawable/touch_feedback_holo_light_circle"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:src="@drawable/ic_livechat_camera_back" />
+
+        <ImageButton
+            android:id="@+id/ensureSendImageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/live_size_24dp"
+            android:layout_marginTop="@dimen/live_size_24dp"
+            android:layout_marginRight="@dimen/live_size_48dp"
+            android:layout_marginBottom="@dimen/live_size_24dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:background="@drawable/touch_feedback_holo_dark_circle"
+            android:src="@drawable/ic_livechat_camera_send" />
+
+        <!--2018/12/14 Hardy-->
+
+
+        <TextView
+            android:id="@+id/tvPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/x_credits_will_be_charged_for_each_photo_sent"
+            android:textColor="@color/white"
+            android:paddingTop="@dimen/live_size_6dp"
+            android:paddingBottom="@dimen/live_size_6dp"
+            android:textSize="14sp"
+            android:background="#BD010101"
+            android:textStyle="bold" />
+
+        <com.qpidnetwork.livemodule.view.MaterialProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:matProg_barColor="@color/blue_color"
+            app:matProg_progressIndeterminate="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

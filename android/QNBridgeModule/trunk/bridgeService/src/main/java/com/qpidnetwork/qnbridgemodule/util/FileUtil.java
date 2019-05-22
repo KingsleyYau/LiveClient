@@ -2,6 +2,7 @@ package com.qpidnetwork.qnbridgemodule.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -112,4 +113,18 @@ public class FileUtil {
 
     }
 
+    public static boolean isFileExists(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return false;
+        }
+        return new File(filePath).exists();
+    }
+
+    public static String getFileName(String path){
+        if (TextUtils.isEmpty(path)) {
+            return path;
+        }
+
+        return new File(path).getName();
+    }
 }

@@ -55,13 +55,13 @@ public class LCVideoItem implements Serializable{
 	 */
 	public boolean isVideoFeeding;
 	/**
-	 * 是否正在下载小图
+	 * video小图下载状态
 	 */
-	public boolean isThumbPhotoDownloading;
+	public VideoPhotoDownloadStatus mThumbPhotoDownloadStatus = VideoPhotoDownloadStatus.Default;
 	/**
-	 * 是否正在下载大图
+	 * video大图下载状态
 	 */
-	public boolean isBigPhotoDownloading;
+	public VideoPhotoDownloadStatus mBigPhotoDownloadStatus = VideoPhotoDownloadStatus.Default;
 	/**
 	 * 是否正在下载视频
 	 */
@@ -70,6 +70,16 @@ public class LCVideoItem implements Serializable{
 	 * 视频文件下载进度（0-100）
 	 */
 	public int videoDownloadProgress;
+
+	/**
+	 * videoType当前状态
+	 */
+	public enum VideoPhotoDownloadStatus{
+		Default,
+		Downloading,
+		Failed,
+		Success
+	}
 	
 	
 	public LCVideoItem() {
@@ -82,8 +92,8 @@ public class LCVideoItem implements Serializable{
 		charget = false;
 		videoUrl = "";
 		isVideoFeeding = false;
-		isThumbPhotoDownloading = false;
-		isBigPhotoDownloading = false;
+		mThumbPhotoDownloadStatus = VideoPhotoDownloadStatus.Default;
+		mBigPhotoDownloadStatus = VideoPhotoDownloadStatus.Default;
 		isVideoDownloading = false;
 		videoDownloadProgress = 0;
 	}
@@ -135,12 +145,28 @@ public class LCVideoItem implements Serializable{
 	{
 		switch (type)
 		{
-		case Big: {
-			this.isBigPhotoDownloading = isDownloading;
-		}break;
-		case Default: {
-			this.isThumbPhotoDownloading = isDownloading;
-		}break;
+			case Big: {
+				if(isDownloading){
+					mBigPhotoDownloadStatus = VideoPhotoDownloadStatus.Downloading;
+				}else{
+					if(!TextUtils.isEmpty(bigPhotoFilePath)){
+						mBigPhotoDownloadStatus = VideoPhotoDownloadStatus.Success;
+					}else{
+						mBigPhotoDownloadStatus = VideoPhotoDownloadStatus.Failed;
+					}
+				}
+			}break;
+			case Default: {
+				if(isDownloading){
+					mThumbPhotoDownloadStatus = VideoPhotoDownloadStatus.Downloading;
+				}else{
+					if(!TextUtils.isEmpty(thumbPhotoFilePath)){
+						mThumbPhotoDownloadStatus = VideoPhotoDownloadStatus.Success;
+					}else{
+						mThumbPhotoDownloadStatus = VideoPhotoDownloadStatus.Failed;
+					}
+				}
+			}break;
 		}
 	}
 	

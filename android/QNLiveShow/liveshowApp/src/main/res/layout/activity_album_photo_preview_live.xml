@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/buttonCancel"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="@dimen/live_size_10dp"
+        android:layout_marginTop="@dimen/live_size_10dp"
+        android:background="@drawable/touch_feedback_holo_dark_circle"
+        android:gravity="center_vertical|center_horizontal"
+        android:src="@drawable/ic_arrow_back_white_24dp" />
+
+    <com.qpidnetwork.qnbridgemodule.view.ViewPagerFixed
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/btnSend"
+        android:layout_width="@dimen/live_size_60dp"
+        android:layout_height="@dimen/live_size_60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/live_size_24dp"
+        android:background="@drawable/circle_blue_bg"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/txt_send_msg"
+        android:textColor="@color/white" />
+</LinearLayout>

@@ -29,6 +29,7 @@ import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutOnlineAnchorItem;
 import com.qpidnetwork.livemodule.liveshow.adapter.BaseRecyclerViewAdapter;
 import com.qpidnetwork.livemodule.liveshow.adapter.BaseViewHolder;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.qnbridgemodule.util.DisplayUtil;
 
@@ -183,21 +184,8 @@ public class HangOutAdapter extends BaseRecyclerViewAdapter<HangoutOnlineAnchorI
                  2、https://www.fresco-cn.org/docs/using-drawees-code.html
                      对于同一个View，请不要多次调用setHierarchy，即使这个 View 是可回收的。创建 DraweeHierarchy 的较为耗时的一个过程，应该多次利用。
              */
-            //对齐方式(左上角对齐)
-            PointF focusPoint = new PointF();
-            focusPoint.x = 0f;
-            focusPoint.y = 0f;
 
-            //占位图，拉伸方式
-            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-            GenericDraweeHierarchy hierarchy = builder
-                    .setFadeDuration(300)
-                    .setPlaceholderImage(R.drawable.bg_hotlist_item)    //占位图
-                    .setPlaceholderImageScaleType(ScalingUtils.ScaleType.FIT_XY)    //占位图拉伸
-                    .setActualImageFocusPoint(focusPoint)
-                    .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)     //图片拉伸（配合上面的focusPoint）
-                    .build();
-            imgRoomBg.setHierarchy(hierarchy);
+            FrescoLoadUtil.setHierarchy(mContext, imgRoomBg, R.drawable.bg_hotlist_item, false);
         }
 
         @Override
@@ -215,34 +203,8 @@ public class HangOutAdapter extends BaseRecyclerViewAdapter<HangoutOnlineAnchorI
             //封面图
             //封面图大小，因此时取不出控件大小, 暂时以屏幕宽为准
             int bgSize = (int)(DisplayUtil.getScreenWidth(mContext)*0.8);//屏幕宽 80% 尽量节省内存
+            FrescoLoadUtil.loadUrl(imgRoomBg, data.coverImg, bgSize);
 
-//            //对齐方式(左上角对齐)
-//            PointF focusPoint = new PointF();
-//            focusPoint.x = 0f;
-//            focusPoint.y = 0f;
-//
-//            //占位图，拉伸方式
-//            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-//            GenericDraweeHierarchy hierarchy = builder
-//                    .setFadeDuration(300)
-//                    .setPlaceholderImage(R.drawable.bg_hotlist_item)    //占位图
-//                    .setPlaceholderImageScaleType(ScalingUtils.ScaleType.FIT_XY)    //占位图拉伸
-//                    .setActualImageFocusPoint(focusPoint)
-//                    .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)     //图片拉伸（配合上面的focusPoint）
-//                    .build();
-//            imgRoomBg.setHierarchy(hierarchy);
-
-            //压缩、裁剪图片
-            Uri imageUri = Uri.parse(data.coverImg);
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
-                    .setResizeOptions(new ResizeOptions(bgSize,bgSize))
-                    .build();
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setImageRequest(request)
-                    .setOldController(imgRoomBg.getController())
-                    .setControllerListener(new BaseControllerListener<ImageInfo>())
-                    .build();
-            imgRoomBg.setController(controller);
 
             //好友列表
 //            if(!isGetFriends){

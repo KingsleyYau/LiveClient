@@ -117,13 +117,18 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
                         if(respObject.isSuccess){
                             //检测状态返回成功
                             InvitationItem item = (InvitationItem)respObject.data;
-                            onCheckInviteStatus(item);
+                            if(item != null && mInvitationItem != null && mInvitationItem.inviteId.equals(item.inviteId)) {
+                                onCheckInviteStatus(item);
+                            }
                         }
                     }break;
-                    case EVENT_CANCEL_INVITATION_CALLBACK:
-                        HttpRespObject respObject = (HttpRespObject)msg.obj;
-                        onCancelInvitation(respObject);
-                        break;
+                    case EVENT_CANCEL_INVITATION_CALLBACK: {
+                        HttpRespObject respObject = (HttpRespObject) msg.obj;
+                        String invitationId = (String) respObject.data;
+                        if ( !TextUtils.isEmpty(invitationId) && mInvitationItem != null && mInvitationItem.inviteId.equals(invitationId)) {
+                            onCancelInvitation(respObject);
+                        }
+                    }break;
                 }
             }
         };
@@ -132,6 +137,16 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     public static HangoutInvitationManager createInvitationClient(Context context){
         HangoutInvitationManager manager = new HangoutInvitationManager(context);
         return manager;
+    }
+
+    /***
+     * 启动处理一个邀请中的邀请任务
+     * @param anchorInfo
+     * @return
+     */
+    public void startInvitationByInvitationStatus(IMUserBaseInfoItem anchorInfo, String invitationId){
+        mAnchorInfo = anchorInfo;
+        mInvitationItem = new InvitationItem("", invitationId, 0, HangoutInviteStatus.Penging);
     }
 
     /**
@@ -144,7 +159,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     public void startInvitationSession(final IMUserBaseInfoItem anchorInfo, String roomId, String recommandId, boolean createOnly){
         if(anchorInfo != null) {
             mAnchorInfo = anchorInfo;
-            Log.i(TAG, "startInvitationSession userId: " + anchorInfo.userId + "  nickname: " + anchorInfo.nickName + " roomId: " + roomId + "  recommandId: " + recommandId + " createOnly: " + createOnly);
+            Log.i(TAG, "startInvitationSession userId: " + anchorInfo.userId + "  nickname: " + anchorInfo.nickName + "  photoUrl: " + anchorInfo.photoUrl + " roomId: " + roomId + "  recommandId: " + recommandId + " createOnly: " + createOnly);
             if(checkPhoneSystem()) {
                 clearLocalData();
                 Log.i(TAG, "SendInvitationHangout userId: " + anchorInfo.userId);
@@ -182,7 +197,8 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
         if(mAnchorInfo != null){
             Log.i(TAG, "release userId: " + mAnchorInfo.userId);
         }
-
+        //重置回调，防止release由于http请求导致继续回调
+        mOnHangoutInvitationEventListener = null;
         unregisterIMListener();
         clearLocalData();
     }
@@ -233,7 +249,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
      */
     private void checkInviteStatus(final String inviteId){
         Log.i(TAG, "checkInviteStatus userId: " + mAnchorInfo.userId + " inviteId: " + inviteId);
-        LiveRequestOperator.getInstance().GetHangoutInvitStatus(inviteId, new OnGetHangoutInvitStatusCallback() {
+        mIMManager.checkInviteStatus(inviteId, mAnchorInfo, new OnGetHangoutInvitStatusCallback() {
             @Override
             public void onGetHangoutInvitStatus(boolean isSuccess, int errCode, String errMsg, int status, String roomId, int expire) {
                 Message msg = Message.obtain();
@@ -367,7 +383,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     private void onCancelInvitation(HttpRespObject httpRespObject){
         Log.i(TAG, "onCheckInviteStatus inviteStatus: " + httpRespObject.isSuccess + ",errMsg:" + httpRespObject.errMsg);
         if(mOnHangoutInvitationEventListener != null){
-            mOnHangoutInvitationEventListener.onHangoutCancel(httpRespObject.isSuccess, httpRespObject.errCode, httpRespObject.errMsg);
+            mOnHangoutInvitationEventListener.onHangoutCancel(httpRespObject.isSuccess, httpRespObject.errCode, httpRespObject.errMsg, mAnchorInfo);
         }
     }
 
@@ -406,12 +422,12 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     /**
      *  取消hangout邀请
      */
-    private void cancelHangoutInvitation(String invitationId){
+    private void cancelHangoutInvitation(final String invitationId){
         Log.i(TAG, "cancelHangoutInvitation invitationId: " + invitationId);
         LiveRequestOperator.getInstance().CancelHangoutInvit(invitationId, new OnRequestCallback() {
             @Override
             public void onRequest(boolean isSuccess, int errCode, String errMsg) {
-                HttpRespObject httpRespObject = new HttpRespObject(isSuccess, errCode, errMsg, null);
+                HttpRespObject httpRespObject = new HttpRespObject(isSuccess, errCode, errMsg, invitationId);
                 Message msg = Message.obtain();
                 msg.what = EVENT_CANCEL_INVITATION_CALLBACK;
                 msg.obj = httpRespObject;
@@ -590,7 +606,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     public interface OnHangoutInvitationEventListener{
         void onHangoutInvitationStart(IMUserBaseInfoItem userBaseInfoItem);
         void onHangoutInvitationFinish(boolean isSuccess, HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId);
-        void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg);
+        void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg, IMUserBaseInfoItem userBaseInfoItem);
     }
 
     public enum HangoutInvationErrorType{

@@ -13,8 +13,11 @@ import android.view.Gravity;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.view.BadgeHelper;
+import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.SoftReference;
@@ -50,9 +53,11 @@ public class LiveChatMainActivity extends BaseActionBarFragmentActivity implemen
     }
 
     public static void startAct(Context context, int position) {
-        Intent intent = new Intent(context, LiveChatMainActivity.class);
-        intent.putExtra(DEFAULT_SELECT_PAGE_INDEX, position);
-        context.startActivity(intent);
+        if(checkHasChatPermission(context)){
+            Intent intent = new Intent(context, LiveChatMainActivity.class);
+            intent.putExtra(DEFAULT_SELECT_PAGE_INDEX, position);
+            context.startActivity(intent);
+        }
     }
 
     @Override
@@ -122,6 +127,28 @@ public class LiveChatMainActivity extends BaseActionBarFragmentActivity implemen
     protected void onResume() {
         super.onResume();
         Log.i("info", "--------- LiveChatMainActivity ------------ onResume");
+    }
+
+    /**
+     * 检查liveChat权限
+     */
+    private static boolean checkHasChatPermission(Context context){
+        boolean isHasPermission = true;
+        LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+        if (loginItem != null && loginItem.premit && !loginItem.livechat) {
+            /* 账号未被冻结且livechat未被风控，可直接进入聊天界面 */
+            isHasPermission = true;
+        }else {
+            MaterialDialogAlert dialog = new MaterialDialogAlert(context);
+            dialog.setMessageCenter(context
+                    .getString(R.string.live_chat_common_risk_control_notify));
+            dialog.addButton(dialog.createButton(
+                    context.getString(R.string.common_btn_ok), null));
+            dialog.show();
+
+            isHasPermission = false;
+        }
+        return isHasPermission;
     }
 
     /**

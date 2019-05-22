@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.util.FileSizeUtil;
 
@@ -113,6 +114,7 @@ public class LiveCleanCacheManager {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 cleanCacheSize();
+                LoginManager.getInstance().LogoutAndClean(true);
             }
         });
         builder.setNegativeButton(mContext.getString(R.string.common_btn_cancel), null);

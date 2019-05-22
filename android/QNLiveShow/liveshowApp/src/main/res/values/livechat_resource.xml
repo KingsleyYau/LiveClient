@@ -33,6 +33,7 @@
     <string name="common_send_email">Send mail</string>
     <string name="livechat_end_chat">End chat</string>
     <string name="send_error_not_enough_money">Insufficient credits.</string>
+    <string name="livechat_recent_menu">Recent Watched</string>
     <string name="livechat_end_chat_menu">End chat</string>
     <string name="livechat_cancel_invitation_menu">Cancel invitation</string>
     <string name="livechat_cancel_invite_cannnot_in_chat">You can\'t cancel the invitation when you are in chat.</string>
@@ -47,7 +48,7 @@
     <string name="livechat_emotion_preview_price">%s credits</string>
     <string name="live_chat_microphone_occupied">Your microphone has been occupied. Please try again later.</string>
 
-    <string-array name="livechat_msg_in_type">
+    <string-array name="live_livechat_msg_in_type">
         <item name="received_system_message">You have a system messge</item>
         <item name="send_a_photo">You sent a photo</item>
         <item name="send_a_premium_sticker">You sent a premium sticker</item>

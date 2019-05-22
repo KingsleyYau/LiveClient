@@ -10,12 +10,15 @@ import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.listener.IMGiftNumItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutAnchorItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMRecvBuyforGiftItem;
 import com.qpidnetwork.livemodule.im.listener.IMRecvEnterRoomItem;
+import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.HangOutLiveRoomActivity;
+import com.qpidnetwork.livemodule.liveshow.liveroom.HangoutInvitationManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.obj.HangOutBarGiftListItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.obj.HangoutVedioWindowObj;
@@ -42,7 +45,7 @@ import io.reactivex.functions.Consumer;
  * <p>
  * Created by Harry on 2018/5/28.
  */
-public class HangOutVedioWindowManager {
+public class HangOutVedioWindowManager implements HangOutVedioWindow.OnInviteEventListener {
 
     private final String TAG = HangOutVedioWindowManager.class.getSimpleName();
     private final int MAN_CELL_INDEX = 4;   //男士位置
@@ -54,9 +57,11 @@ public class HangOutVedioWindowManager {
     private HangOutLiveRoomActivity mActivity;
     private IMHangoutRoomItem mIMHangOutRoomItem;
     private LoginItem loginItem;
+    private InviteEventListener mInviteEventListener;
 
     //RxJava 管理订阅事件disposable
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
 
     //----------------- 接口定义 start -----------------
     /**
@@ -70,7 +75,7 @@ public class HangOutVedioWindowManager {
      * 邀请事件监听器
      */
     public interface InviteEventListener{
-        void onClickInvite(boolean isSuccess, int httpErrorCode, String errorMsg);
+        void onClickInviteResponse(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errorMsg, String roomId);
     }
     //----------------- 接口定义 end -----------------
 
@@ -82,6 +87,7 @@ public class HangOutVedioWindowManager {
         private HangOutLiveRoomActivity activity = null;
         private IMHangoutRoomItem imHangOutRoomItem;
         private LoginItem loginItem;
+        private InviteEventListener inviteEventListener;
 
         public Builder setmActivity(HangOutLiveRoomActivity hangOutLiveRoomActivity) {
             this.activity = hangOutLiveRoomActivity;
@@ -95,6 +101,11 @@ public class HangOutVedioWindowManager {
 
         public Builder setLoginItem(LoginItem loginItem) {
             this.loginItem = loginItem;
+            return this;
+        }
+
+        public Builder setInviteEventListener(InviteEventListener inviteEventListener){
+            this.inviteEventListener = inviteEventListener;
             return this;
         }
 
@@ -115,6 +126,7 @@ public class HangOutVedioWindowManager {
         this.mIMHangOutRoomItem = builder.imHangOutRoomItem;
         this.vedioWindowWidth = DisplayUtil.getScreenWidth(this.mActivity)/2;
         this.loginItem = builder.loginItem;
+        this.mInviteEventListener = builder.inviteEventListener;
         Log.d(TAG,"HangOutVedioWindowManager-mIMHangOutRoomItem:"+mIMHangOutRoomItem+" vedioWindowWidth:"+vedioWindowWidth);
     }
 
@@ -132,6 +144,7 @@ public class HangOutVedioWindowManager {
         vedioWindow.setIndex(index);
         vedioWindow.setOnAddInviteClickListener(mActivity);
         vedioWindow.setVedioClickListener(mActivity);
+        vedioWindow.setOnInviteEventListener(this);
         vedioWindow.initGiftManager(mActivity);
         vedioWindow.showWaitToInviteView();
         vedioWindowMap.put(index,vedioWindow);
@@ -192,7 +205,7 @@ public class HangOutVedioWindowManager {
         if(null != userIdIndexMap && userIdIndexMap.containsKey(userId)){
             HangOutVedioWindow hangOutVedioWindow;
             synchronized (userIdIndexMap){
-                int index = userIdIndexMap.remove(userId);;
+                int index = userIdIndexMap.remove(userId);
                 hangOutVedioWindow = vedioWindowMap.get(index);
                 hangOutVedioWindow.setVedioDisconnectListener(null);
                 hangOutVedioWindow.showWaitToInviteView();
@@ -201,31 +214,35 @@ public class HangOutVedioWindowManager {
     }
 
     /**
-     * 主播直播间进入状态
+     * 修改主播直播间进入状态统一入口
+     * (所有改变窗口状态都要通过此入口， 因为要将窗口状态和userIdIndexMap用户名单进行匹配)
      * @param userId
      * @param photoUrl
      * @param nickName
      * @param type
      * @param expires
+     * @param imHangoutAnchorItem 主播信息（可无）
      * @return 相应位置 0则为没有空位置
      */
     public int switchAnchorComingStatus(String userId, String photoUrl, String nickName,
-                                          HangOutVedioWindow.AnchorComingType type, int expires){
-        return switchAnchorComingStatus(userId, photoUrl, nickName, -1, type, expires);
+                                          HangOutVedioWindow.AnchorComingType type, int expires, IMHangoutAnchorItem imHangoutAnchorItem){
+        return switchAnchorComingStatus(userId, photoUrl, nickName, -1, type, expires, imHangoutAnchorItem);
     }
 
     /**
-     * 主播直播间进入状态
+     * 修改主播直播间进入状态统一入口
+     * (所有改变窗口状态都要通过此入口， 因为要将窗口状态和userIdIndexMap用户名单进行匹配)
      * @param userId
      * @param photoUrl
      * @param nickName
      * @param windowIndex 格子位置
      * @param type
      * @param expires
+     * @param imHangoutAnchorItem 主播信息（可无）
      * @return 相应位置 0则为没有空位置
      */
     public int switchAnchorComingStatus(String userId, String photoUrl, String nickName,int windowIndex,
-                                         HangOutVedioWindow.AnchorComingType type, int expires){
+                                         HangOutVedioWindow.AnchorComingType type, int expires, IMHangoutAnchorItem imHangoutAnchorItem){
         int cellIndex = 0;
         if(null == userIdIndexMap){
             return cellIndex;
@@ -247,7 +264,7 @@ public class HangOutVedioWindowManager {
             LoginItem loginItem = LoginManager.getInstance().getLoginItem();
             outVedioWindow.showAnchorComingView(mActivity,
                     new HangoutVedioWindowObj(userId, photoUrl, nickName,
-                            null != loginItem && userId.equals(loginItem.userId)),
+                            null != loginItem && userId.equals(loginItem.userId),imHangoutAnchorItem),
 //                            null !=mIMHangOutRoomItem && mIMHangOutRoomItem.manId.equals(userId)),
                     type,expires);
         }
@@ -297,10 +314,11 @@ public class HangOutVedioWindowManager {
      * @param userId
      * @param photoUrl
      * @param nickName
+     * @param imHangoutAnchorItem 主播信息（可无）
      * @param windowIndex 指定位置（0代表不指定）
      * @return 是否发送邀结果
      */
-    public void sendInvitation(String roomId, String userId, String photoUrl, String nickName, int windowIndex, InviteEventListener listener){
+    public void sendInvitation(String roomId, String userId, String photoUrl, String nickName, IMHangoutAnchorItem imHangoutAnchorItem, int windowIndex){
         if(null == userIdIndexMap){
             return ;
         }
@@ -318,22 +336,22 @@ public class HangOutVedioWindowManager {
 
         if(outVedioWindow == null){
             //满员
-            if(listener != null){
-                listener.onClickInvite(false, 1, mActivity.getString(R.string.hangout_open_door_error_full));
+            if(mInviteEventListener != null){
+                mInviteEventListener.onClickInviteResponse(false, HangoutInvitationManager.HangoutInvationErrorType.NormalError, mActivity.getString(R.string.hangout_open_door_error_full), roomId);
             }
         }else{
             //非满员
             switch (getVedioWindowStatus(outVedioWindow.index)){
                 case Inviting:
                     //邀请中
-                    if(listener != null){
-                        listener.onClickInvite(false, 1, mActivity.getString(R.string.hangout_sent_invitation_fail_tip1));
+                    if(mInviteEventListener != null){
+                        mInviteEventListener.onClickInviteResponse(false, HangoutInvitationManager.HangoutInvationErrorType.NormalError, mActivity.getString(R.string.hangout_sent_invitation_fail_tip1), roomId);
                     }
                     break;
                 case VideoStreaming:
                     //已在直播中
-                    if(listener != null){
-                        listener.onClickInvite(false, 1, mActivity.getString(R.string.hangout_sent_invitation_fail_tip2));
+                    if(mInviteEventListener != null){
+                        mInviteEventListener.onClickInviteResponse(false, HangoutInvitationManager.HangoutInvationErrorType.NormalError, mActivity.getString(R.string.hangout_sent_invitation_fail_tip2), roomId);
                     }
                     break;
                 case OpeningDoor:
@@ -344,28 +362,39 @@ public class HangOutVedioWindowManager {
                     //发送确认请求
                     outVedioWindow.sendInvitation(
                             new HangoutVedioWindowObj(userId, photoUrl, nickName,
-                                    null != loginItem && userId.equals(loginItem.userId)),
+                                    null != loginItem && userId.equals(loginItem.userId),imHangoutAnchorItem),
                             roomId);
                     break;
             }
         }
+    }
 
-//        if(null != outVedioWindow){
-//            LoginItem loginItem = LoginManager.getInstance().getLoginItem();
-//            if(!outVedioWindow.sendInvitation(
-//                    new HangoutVedioWindowObj(userId, photoUrl, nickName,
-//                            null != loginItem && userId.equals(loginItem.userId)),
-//                    roomId)){
-//                //邀请失败原因
-//                if(outVedioWindow.getWindowStatus() == HangOutVedioWindow.VedioWindowStatus.Inviting){
-//                    result = SendInvitationResult.Error4Inviting;
-//                }else if(outVedioWindow.getWindowStatus() == HangOutVedioWindow.VedioWindowStatus.VideoStreaming){
-//                    result = SendInvitationResult.Error4Entered;
-//                }
-//            }else {
-//                result = SendInvitationResult.Success;
-//            }
-//        }
+    @Override
+    public void onInvitationStart(IMUserBaseInfoItem userBaseInfoItem) {
+        switchAnchorComingStatus(userBaseInfoItem.userId, userBaseInfoItem.photoUrl,
+                userBaseInfoItem.nickName,
+                HangOutVedioWindow.AnchorComingType.Man_Inviting,0, null);
+    }
+
+    /**
+     * 邀请服务器返回结果
+     * @param isSuccess
+     * @param errorType
+     * @param errMsg
+     * @param userBaseInfoItem
+     * @param roomId
+     */
+    @Override
+    public void onInvitationResponse(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId) {
+        if(!isSuccess){
+            //失败，主播不接受等，还原窗口
+            switchWait2InviteStatus(userBaseInfoItem.userId);
+        }
+
+        //通知外部服务器错误信息
+        if(mInviteEventListener != null){
+            mInviteEventListener.onClickInviteResponse(isSuccess, errorType, errMsg, roomId);
+        }
     }
 
     /**
@@ -418,7 +447,7 @@ public class HangOutVedioWindowManager {
                     //当座位上没人时
                     //更新界面状态
                     switchAnchorComingStatus(anchorId, anchorPhotoUrl, anchorNickName,
-                            HangOutVedioWindow.AnchorComingType.Man_Accepted_Anchor_Knock,0);
+                            HangOutVedioWindow.AnchorComingType.Man_Accepted_Anchor_Knock,0, null);
 
                     //发送确认请求
                     sendDealKnock(knockId, anchorId, new Consumer<HttpRespObject>() {
@@ -583,9 +612,10 @@ public class HangOutVedioWindowManager {
 
     /**
      * 初始化hangout直播间状态
+     * @param imHangoutAnchorItem 主播信息（可无）
      * @return 对应格子位置
      */
-    public int switchInvitedStatus(String userId, String photoUrl, String nickName, String[] vedioUrl){
+    public int switchInvitedStatus(String userId, String photoUrl, String nickName, IMHangoutAnchorItem imHangoutAnchorItem, String[] vedioUrl){
         Log.d(TAG,"switchInvitedStatus-userId:"+userId+" photoUrl:"+photoUrl+" nickName:"+nickName);
         int cellIndex = 0;
         //1.判断男士是否有推流，男士对应第1个cell
@@ -602,7 +632,7 @@ public class HangOutVedioWindowManager {
         }
         if(null != outVedioWindow){
             HangoutVedioWindowObj obj = new HangoutVedioWindowObj(userId,
-                    photoUrl, nickName, null != loginItem && userId.equals(loginItem.userId));
+                    photoUrl, nickName, null != loginItem && userId.equals(loginItem.userId), imHangoutAnchorItem);
 //                    mIMHangOutRoomItem.manId.equals(userId));
             //当且仅当主播进入直播间，才算在线
             obj.isOnLine = true;

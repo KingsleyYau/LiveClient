@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".liveshow.livechat.LiveChatPhotoPreviewFragment">
+
+    <!--原图-->
+    <com.qpidnetwork.livemodule.liveshow.livechat.album.ZoomableDraweeView
+        android:id="@+id/fg_live_chat_photo_preview_image_source"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!--模糊图-->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/fg_live_chat_photo_preview_image_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!--loading-->
+    <ProgressBar
+        android:id="@+id/fg_live_chat_photo_preview_pb_loading"
+        android:layout_width="@dimen/live_size_40dp"
+        android:layout_height="@dimen/live_size_40dp"
+        android:layout_gravity="center"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDrawable="@drawable/live_loading_progress"
+        android:indeterminateDuration="1000"
+        android:scrollbarStyle="insideInset"
+        android:visibility="gone" />
+
+    <!--一般错误-->
+    <TextView
+        android:id="@+id/fg_live_chat_photo_preview_tv_error_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/live_size_40dp"
+        android:layout_marginRight="@dimen/live_size_40dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_16sp"
+        android:visibility="gone"
+        tools:text="nakljhsjklahskjahskjahskjashkjashkjashkahksjakshk" />
+
+    <!--网络错误-->
+    <LinearLayout
+        android:id="@+id/fg_live_chat_photo_preview_ll_error_net"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/live_size_40dp"
+        android:layout_marginRight="@dimen/live_size_40dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/live_size_10dp"
+        android:paddingBottom="@dimen/live_size_10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fg_live_chat_photo_preview_tv_error_net"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_16sp"
+            tools:text="nakljhsjklahskjahskjahskjashkjashkjashkahksjakshk" />
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/fg_live_chat_photo_preview_btn_error_net_retry"
+            android:layout_width="@dimen/live_size_200dp"
+            android:layout_height="@dimen/normal_button_height_44dp"
+            android:layout_marginTop="@dimen/live_size_40dp"
+            app:background_res="@drawable/btn_live_chat_blue_gradient_shape"
+            app:elevation="4dp"
+            app:icon="@drawable/ic_live_chat_tap_to_retry"
+            app:icon_height="21dp"
+            app:icon_width="21dp"
+            app:raisebutton_radius="@dimen/raise_button_radius"
+            app:title="@string/live_common_btn_retry"
+            app:title_color="@color/white"
+            app:title_text_size="@dimen/live_size_16sp"
+            app:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+    </LinearLayout>
+
+    <!--未付费-->
+    <LinearLayout
+        android:id="@+id/fg_live_chat_photo_preview_ll_un_buy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/live_size_40dp"
+        android:layout_marginRight="@dimen/live_size_40dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/live_size_10dp"
+        android:paddingBottom="@dimen/live_size_10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/ic_livechat_photo_lock_big" />
+
+        <TextView
+            android:id="@+id/fg_live_chat_photo_preview_tv_un_buy_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_18sp"
+            android:textStyle="bold"
+            tools:text="@string/livechat_photo_name" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/credits_per_photo_15"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_12sp" />
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/fg_live_chat_photo_preview_btn_un_buy"
+            android:layout_width="@dimen/live_size_200dp"
+            android:layout_height="@dimen/normal_button_height_44dp"
+            android:layout_marginTop="18dp"
+            app:background_res="@drawable/btn_live_chat_blue_gradient_shape"
+            app:elevation="4dp"
+            app:raisebutton_radius="@dimen/raise_button_radius"
+            app:title="@string/View_Photo"
+            app:title_color="@color/white"
+            app:title_text_size="@dimen/live_size_16sp"
+            app:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+    </LinearLayout>
+
+    <!--底部照片描述-->
+    <TextView
+        android:id="@+id/fg_live_chat_photo_preview_tv_photo_desc"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_140dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_live_chat_desc_tip_gradient"
+        android:gravity="center_vertical|bottom"
+        android:paddingLeft="@dimen/live_size_20dp"
+        android:paddingRight="@dimen/live_size_20dp"
+        android:paddingBottom="@dimen/live_size_12dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_14sp"
+        android:visibility="gone"
+        tools:text="I say to the House as I said to Ministers who have joined this government." />
+
+</FrameLayout>

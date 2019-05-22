@@ -24,6 +24,9 @@ public class RefreshRecyclerView extends LinearLayout implements OnRefreshListen
 	// View objects
 	private FrameLayout frameLayoutRoot;
 	private SwipeRefreshLayout swipeRefreshLayout;
+
+
+
 	private HeaderAndFooterRecyclerViewEx recyclerView;
 
 	// local objects
@@ -223,6 +226,10 @@ public class RefreshRecyclerView extends LinearLayout implements OnRefreshListen
 
 	public HeaderAndFooterRecyclerView getRecyclerView() {
 		return recyclerView;
+	}
+
+	public SwipeRefreshLayout getSwipeRefreshLayout() {
+		return swipeRefreshLayout;
 	}
 
 	public FrameLayout getRootView() {

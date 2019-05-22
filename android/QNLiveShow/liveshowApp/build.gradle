@@ -6,7 +6,7 @@ android {
 //    buildToolsVersion '27.0.3'
     defaultConfig {
 //        applicationId "com.qpidnetwork.livemodule"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0a"

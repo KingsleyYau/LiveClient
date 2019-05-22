@@ -400,10 +400,6 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity
         }
         //才艺点播
         initTalentManager();
-
-        //邀请管理器
-        mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(this);
-        mHangoutInvitationManager.setClientEventListener(this);
     }
 
     private void initViews() {
@@ -1809,9 +1805,11 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity
 //        ll_rebate.measure(0,0);
 //        int mH = ll_rebate.getMeasuredHeight();
         ll_entranceCar = (LinearLayout) findViewById(R.id.ll_entranceCar);
-        carManager.init(this, ll_entranceCar,
-                roomThemeManager.getRoomCarViewTxtColor(mIMRoomInItem.roomType),
-                roomThemeManager.getRoomCarViewBgDrawableResId(mIMRoomInItem.roomType));
+        if(mIMRoomInItem != null) {
+            carManager.init(this, ll_entranceCar,
+                    roomThemeManager.getRoomCarViewTxtColor(mIMRoomInItem.roomType),
+                    roomThemeManager.getRoomCarViewBgDrawableResId(mIMRoomInItem.roomType));
+        }
     }
 
     private void initRebateView() {
@@ -3370,7 +3368,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity
     private void startHangoutInvitation(final HangoutOnlineAnchorItem anchorItem){
         if(mHangoutInviteMap.size() == 0) {
             mHangoutInviteMap.put(anchorItem.anchorId, anchorItem);
-            mHangoutInvitationManager.startInvitationSession(new IMUserBaseInfoItem(anchorItem.anchorId, anchorItem.nickName, anchorItem.coverImg), mIMRoomInItem.roomId, "", true);
+            startInvitationInternal(new IMUserBaseInfoItem(anchorItem.anchorId, anchorItem.nickName, anchorItem.coverImg), mIMRoomInItem.roomId, "", true);
         }
     }
 
@@ -3381,8 +3379,26 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity
     private void startHangoutInvitation(final IMHangoutRecommendItem recommendItem){
         if(mHangoutInviteMap.size() == 0){
             mHangoutInviteMap.put(recommendItem.anchorId, recommendItem);
-            mHangoutInvitationManager.startInvitationSession(new IMUserBaseInfoItem(recommendItem.anchorId, recommendItem.nickName, recommendItem.photoUrl), mIMRoomInItem.roomId, recommendItem.recommendId, true);
+            startInvitationInternal(new IMUserBaseInfoItem(recommendItem.anchorId, recommendItem.nickName, recommendItem.photoUrl), mIMRoomInItem.roomId, recommendItem.recommendId, true);
         }
+    }
+
+    /**
+     * 内部发起邀请
+     * @param anchorInfo
+     * @param roomId
+     * @param recommandId
+     * @param createOnly
+     */
+    private void startInvitationInternal(IMUserBaseInfoItem anchorInfo, String roomId, String recommandId, boolean createOnly){
+        if(mHangoutInvitationManager != null){
+            //清除旧的
+            mHangoutInvitationManager.release();
+        }
+        //互斥关系创建新的邀请client
+        mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(this);
+        mHangoutInvitationManager.setClientEventListener(this);
+        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly);
     }
 
     /**
@@ -3509,7 +3525,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity
     }
 
     @Override
-    public void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg) {
+    public void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg, IMUserBaseInfoItem userBaseInfoItem) {
 
     }
 }

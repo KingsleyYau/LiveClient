@@ -17,4 +17,7 @@ public class HttpRespObject {
     public int errCode;
     public String errMsg;
     public Object data;
+
+    // 2019/5/8 Hardy
+    public String errno;
 }

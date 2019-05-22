@@ -80,7 +80,14 @@ public class AdvancePngGiftManager {
                 .setControllerListener(controllerListener)
                 .build();
         sdv_pngAnim.setVisibility(View.VISIBLE);
-        sdv_pngAnim.setController(controller);
+//            sdv_pngAnim.setController(controller);
+
+        // 2019/4/26 Hardy OOM
+        try {
+            sdv_pngAnim.setController(controller);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private int currPlayedCount = 0;

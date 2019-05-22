@@ -1190,19 +1190,19 @@ public class LiveChatManagerCallbackHandler implements LiveChatManagerOtherListe
 	
 	/**
 	 * 获取/购买图片（包括付费购买图片(php)、获取对方私密照片(php)、显示图片(livechat)）回调
-	 * @param errType	处理结果错误代码
+	 * @param isSuccess	是否成功
 	 * @param errno		购买/下载请求失败的错误代码
 	 * @param errmsg	处理结果描述
 	 * @param item		消息item
 	 * @return
 	 */
-	public void OnGetPhoto(LiveChatErrType errType, String errno, String errmsg, LCMessageItem item)
+	public void OnGetPhoto(boolean isSuccess, String errno, String errmsg, LCMessageItem item)
 	{
 		synchronized(mPhotoListeners) 
 		{
 			for (Iterator<LiveChatManagerPhotoListener> iter = mPhotoListeners.iterator(); iter.hasNext(); ) {
 				LiveChatManagerPhotoListener listener = iter.next();
-				listener.OnGetPhoto(errType, errno, errmsg, item);
+				listener.OnGetPhoto(isSuccess, errno, errmsg, item);
 			}
 		}
 	}

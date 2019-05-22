@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tiny_grey_solid"
+    android:fitsSystemWindows="true">
+
+    <GridView
+        android:id="@+id/gvAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:listSelector="@color/transparent"
+        android:numColumns="3" />
+    <!--android:horizontalSpacing="1dp"-->
+    <!--android:verticalSpacing="1dp" -->
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/ivClose"-->
+        <!--android:layout_width="48dp"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:background="@drawable/touch_feedback_circle_grey"-->
+        <!--android:src="@drawable/ic_close_white_24dp" />-->
+
+    <TextView
+        android:id="@+id/tvPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/thin_grey_chat_credit_tip"
+        android:gravity="center"
+        android:paddingTop="@dimen/live_size_6dp"
+        android:paddingBottom="@dimen/live_size_6dp"
+        android:text="@string/x_credits_will_be_charged_for_each_photo_sent"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+    <!--android:padding="16dp"-->
+    <!--android:background="@color/thin_grey"-->
+
+</RelativeLayout>

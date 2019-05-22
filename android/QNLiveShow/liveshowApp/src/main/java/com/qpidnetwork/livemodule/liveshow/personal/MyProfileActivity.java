@@ -104,7 +104,7 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
     private void initView() {
         LoginManager.getInstance().register(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             LinearLayout rlImageHeader = (LinearLayout) findViewById(R.id.my_profile_titleBar_ll);
             ((LinearLayout.LayoutParams) rlImageHeader.getLayoutParams()).topMargin += DisplayUtil.getStatusBarHeight(mContext);
         }

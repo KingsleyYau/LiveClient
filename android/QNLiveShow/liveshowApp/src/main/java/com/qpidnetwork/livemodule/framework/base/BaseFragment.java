@@ -3,22 +3,16 @@ package com.qpidnetwork.livemodule.framework.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
+import android.view.View;
 
 import com.qpidnetwork.qnbridgemodule.util.AppFrontBackHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
-import com.qpidnetwork.qnbridgemodule.util.SystemUtils;
-
-import android.view.View;
 
 import java.lang.ref.WeakReference;
 
@@ -36,7 +30,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
         super.onAttach(activity);
         mContext = activity;
     }
@@ -57,8 +50,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if(mContext != null && !isNeedOnResume && isVisibleToUser){
-            onReVisible();
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(mContext != null && !isNeedOnResume){
+            if (isVisibleToUser) {
+                onReVisible();
+            }else {
+                onReUnVisible();
+            }
         }
     }
 
@@ -93,6 +92,15 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         AppFrontBackHelper.getInstance().unRegister(this);
     }
 
+    /*用于Fragment页统计*/
+    public void onFragmentSelected(int arg0){
+
+    }
+
+    public void onFragmentPause(int arg0){
+
+    }
+
     /**
      * Fragment重新可见时调用
      * 1.Fragment只有重新创建时才调用onResume
@@ -107,6 +115,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @add by Jagger 2018-7-13
      */
     protected void onReVisible(){
+
+    }
+
+    /**
+     * 2019/4/30 Hardy
+     * 不可见状态
+     */
+    protected void onReUnVisible(){
 
     }
 

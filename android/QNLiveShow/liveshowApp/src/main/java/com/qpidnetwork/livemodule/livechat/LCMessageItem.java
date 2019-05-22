@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.livechat;
 
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClient.InviteStatusType;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Record;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Record.ToFlag;
 import com.qpidnetwork.qnbridgemodule.util.Log;
@@ -346,24 +347,20 @@ public class LCMessageItem implements Serializable{
 			}
 		}break;
 		case Photo: {
-//			if (null != record.photoId)
-//			{
-//				LCPhotoItem photoItem = new LCPhotoItem();
-//				// 男士端发送的为已付费
-//				boolean photoCharge = (this.sendType == SendType.Send ? true : record.photoCharge);
-//				photoItem.init(
-//						record.photoId
-//						, ""
-//						, record.photoDesc
-//						, photoMgr.getPhotoPath(record.photoId, PhotoModeType.Fuzzy, PhotoSizeType.Large)
-//						, photoMgr.getPhotoPath(record.photoId, PhotoModeType.Fuzzy, PhotoSizeType.Middle)
-//						, photoMgr.getPhotoPath(record.photoId, PhotoModeType.Clear, PhotoSizeType.Original)
-//						, photoMgr.getPhotoPath(record.photoId, PhotoModeType.Clear, PhotoSizeType.Large)
-//						, photoMgr.getPhotoPath(record.photoId, PhotoModeType.Clear, PhotoSizeType.Middle)
-//						, photoCharge);
-//				setPhotoItem(photoItem);
-//				result = true;
-//			}
+			if (null != record.photoId)
+			{
+				LCPhotoItem photoItem = new LCPhotoItem();
+				// 男士端发送的为已付费
+				boolean photoCharge = (this.sendType == SendType.Send ? true : record.photoCharge);
+				photoItem.init(
+						photoMgr
+						, record.photoId
+						, ""
+						, record.photoDesc
+						, photoCharge);
+				setPhotoItem(photoItem);
+				result = true;
+			}
 		}break;
 		case Voice: {
 			if (null != record.voiceId)
@@ -379,21 +376,21 @@ public class LCMessageItem implements Serializable{
 			}
 		}break;
 		case Video: {
-//			if (null != record.videoId)
-//			{
-//				LCVideoItem videoItem = new LCVideoItem();
-//				videoItem.init(
-//						record.videoId
-//						, record.videoSendId
-//						, record.videoDesc
-//						, videoMgr.getVideoPhotoPath(userId, record.videoId, inviteId, VideoPhotoType.Big)
-//						, videoMgr.getVideoPhotoPath(userId, record.videoId, inviteId, VideoPhotoType.Default)
-//						, ""
-//						, videoMgr.getVideoPath(userId, record.videoId, inviteId)
-//						, record.videoCharge);
-//				setVideoItem(videoItem);
-//				result = true;
-//			}
+			if (null != record.videoId)
+			{
+				LCVideoItem videoItem = new LCVideoItem();
+				videoItem.init(
+						record.videoId
+						, record.videoSendId
+						, record.videoDesc
+						, videoMgr.getVideoPhotoPath(userId, record.videoId, inviteId, LCRequestJniLiveChat.VideoPhotoType.Big)
+						, videoMgr.getVideoPhotoPath(userId, record.videoId, inviteId, LCRequestJniLiveChat.VideoPhotoType.Default)
+						, ""
+						, videoMgr.getVideoPath(userId, record.videoId, inviteId)
+						, record.videoCharge);
+				setVideoItem(videoItem);
+				result = true;
+			}
 		}break;
 		default: {
 			Log.e("livechat", String.format("%s::%s() unknow message type", "LCMessageItem", "InitWithRecord"));

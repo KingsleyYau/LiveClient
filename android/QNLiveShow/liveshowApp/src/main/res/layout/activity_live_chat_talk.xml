@@ -60,39 +60,21 @@
             android:layout_height="36dp"
             android:background="@drawable/touch_feedback_holo_light_circle"
             android:src="@drawable/ic_live_chat_send_grey"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_emoji"
-            android:layout_width="@dimen/live_size_30dp"
-            android:layout_height="@dimen/live_size_30dp"
-            android:layout_marginBottom="@dimen/live_size_2dp"
-            android:background="@drawable/ic_tag_faces_grey600_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_voice"
-            android:layout_width="@dimen/live_size_30dp"
-            android:layout_height="@dimen/live_size_30dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="@dimen/live_size_2dp"
-            android:background="@drawable/ic_live_mic_grey"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/img_emoji"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.qpidnetwork.livemodule.view.CustomEditText
             android:id="@+id/edt_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="9dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginBottom="2dp"
             android:background="@drawable/rectangle_radius8_connor_solid_white_stoke_transparent"
+            android:hint="@string/type_message_here"
+            android:textColorHint="@color/black3"
             android:imeOptions="actionSend"
             android:maxLength="@integer/message_edit_max_length"
             android:maxLines="3"
@@ -100,12 +82,55 @@
             android:padding="@dimen/live_size_4dp"
             android:text=""
             android:textSize="@dimen/live_size_16sp"
-            android:hint="@string/type_message_here"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toRightOf="@+id/img_voice"
-            app:layout_constraintRight_toLeftOf="@id/btn_send"
+            app:layout_constraintEnd_toStartOf="@+id/btn_send"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_emoji"
+            android:layout_width="@dimen/live_chat_ic_size"
+            android:layout_height="@dimen/live_chat_ic_size"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_tag_faces_grey600_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_msg" />
+
+        <ImageView
+            android:id="@+id/img_photo"
+            android:layout_width="@dimen/live_chat_ic_size"
+            android:layout_height="@dimen/live_chat_ic_size"
+            android:layout_marginStart="34dp"
+            android:layout_marginLeft="34dp"
+            android:background="@drawable/ic_tag_photo_grey600_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_emoji"
+            app:layout_constraintStart_toEndOf="@+id/img_emoji"
+            button:layout_constraintLeft_toRightOf="@+id/img_emoji" />
+
+        <ImageView
+            android:id="@+id/img_camera"
+            android:layout_width="@dimen/live_chat_ic_size"
+            android:layout_height="@dimen/live_chat_ic_size"
+            android:layout_marginStart="34dp"
+            android:layout_marginLeft="34dp"
+            android:background="@drawable/ic_tag_camera_grey600_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_photo"
+            app:layout_constraintStart_toEndOf="@+id/img_photo"
+            button:layout_constraintLeft_toRightOf="@+id/img_photo" />
+
+        <ImageView
+            android:id="@+id/img_voice"
+            android:layout_width="@dimen/live_chat_ic_size"
+            android:layout_height="@dimen/live_chat_ic_size"
+            android:layout_marginStart="34dp"
+            android:layout_marginLeft="34dp"
+            android:background="@drawable/ic_tag_mic_grey600_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_camera"
+            app:layout_constraintStart_toEndOf="@+id/img_camera" />
+
+
     </android.support.constraint.ConstraintLayout>
 
     <!-- 信息列表 -->

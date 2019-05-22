@@ -136,6 +136,27 @@ public class FrescoLoadUtil {
         }
     }
 
+    /**
+     * 下载图片时按大小压缩，减小内存使用;
+     * @param imageView
+     * @param url
+     * @param size  图像大小(压缩、裁剪图片)
+     */
+    public static void loadUrl(SimpleDraweeView imageView, String url, int size) {
+        //下载
+        Uri imageUri = Uri.parse(url);
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
+                .setResizeOptions(new ResizeOptions(size, size))
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(imageView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>())
+                .build();
+        imageView.setController(controller);
+
+    }
+
     //------------------------ 加载网络 end -----------------------
 
     //------------------------ 加载本地 start -----------------------
@@ -209,5 +230,162 @@ public class FrescoLoadUtil {
         }
     }
 
+    /**
+     * 加载本地图片
+     * @param imageView
+     * @param imageResId
+     */
+    public static void loadRes(SimpleDraweeView imageView, @DrawableRes int imageResId) {
+        //加载
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(imageResId))
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setOldController(imageView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>())
+                .build();
+        imageView.setController(controller);
+    }
+
+    /**
+     * 加载本地SD卡图片
+     * @param imageView
+     * @param path 本地路径 如:/sdcard/pics/logo.jpg
+     */
+    public static void loadFile(SimpleDraweeView imageView, String path){
+        loadFile(imageView, path, 0, 0);
+    }
+
+    /**
+     * 加载本地SD卡图片; 压缩图片;
+     * @param imageView
+     * @param path 本地路径 如:/sdcard/pics/logo.jpg
+     * @param reSizeWidth  压缩宽度
+     * @param reSizeHeight 压缩高度
+     */
+    public static void loadFile(SimpleDraweeView imageView, String path, int reSizeWidth, int reSizeHeight) {
+        //加载
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_FILE_SCHEME)
+                .path(path)
+                .build();
+        ImageRequest request;
+        if(reSizeWidth > 0 && reSizeHeight > 0){
+            //压缩
+            request = ImageRequestBuilder
+                    .newBuilderWithSource(uri)
+                    .setResizeOptions(new ResizeOptions(reSizeWidth, reSizeHeight))
+                    .build();
+        }else{
+            //不压缩
+            request = ImageRequestBuilder
+                    .newBuilderWithSource(uri)
+                    .build();
+        }
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(imageView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>())
+                .build();
+        imageView.setController(controller);
+    }
+
     //------------------------ 加载本地 end -----------------------
+
+
+    //------------------------ 图片拉伸方式 start ------------------------
+
+    /**
+     * 左上角对齐; 以长边比例裁剪; 可圆边;
+     * (应用场景：由于重复创建Hierarchy会比较耗内存，例如在RecyclerView中, 所以当ViewHolder创建时，即可使用此方法为SimpleDraweeView创建一个Hierarchy,
+     * 在onBindViewHolder时，set入数据即可)
+     * @param context
+     * @param imageView
+     * @param placeholderResId 占位图ID
+     * @param isCircle 是否圆型
+     */
+    public static void setHierarchy(Context context, SimpleDraweeView imageView, @DrawableRes int placeholderResId, boolean isCircle) {
+        setHierarchy(context, imageView, placeholderResId, isCircle , 0, 0, 0, 0);
+    }
+
+    /**
+     * 左上角对齐; 以长边比例裁剪; 可边框; 可圆边;
+     * (应用场景：由于重复创建Hierarchy会比较耗内存，例如在RecyclerView中, 所以当ViewHolder创建时，即可使用此方法为SimpleDraweeView创建一个Hierarchy,
+     * 在onBindViewHolder时，set入数据即可)
+     * @param context
+     * @param imageView
+     * @param placeholderResId 占位图ID
+     * @param isCircle 是否圆型
+     */
+    public static void setHierarchy(Context context, SimpleDraweeView imageView, @DrawableRes int placeholderResId, boolean isCircle, float border, @ColorInt int color) {
+        setHierarchy(context, imageView, placeholderResId, isCircle , border, color, 0, 0, 0, 0);
+    }
+
+    /**
+     * 左上角对齐; 以长边比例裁剪; 可圆边圆角;
+     * (应用场景：由于重复创建Hierarchy会比较耗内存，例如在RecyclerView中, 所以当ViewHolder创建时，即可使用此方法为SimpleDraweeView创建一个Hierarchy,
+     * 在onBindViewHolder时，set入数据即可)
+     * @param context
+     * @param imageView
+     * @param placeholderResId 占位图ID
+     * @param isCircle 是否圆型
+     * @param topLeftRadius 圆角弧度（非圆型时生效）
+     * @param topRightRadius 圆角弧度（非圆型时生效）
+     * @param bottomRightRadius 圆角弧度（非圆型时生效）
+     * @param bottomLeftRadius 圆角弧度（非圆型时生效）
+     */
+    public static void setHierarchy(Context context, SimpleDraweeView imageView, @DrawableRes int placeholderResId, boolean isCircle, float topLeftRadius, float topRightRadius, float bottomLeftRadius, float bottomRightRadius) {
+        setHierarchy(context, imageView, placeholderResId, isCircle , 0, -1, topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius);
+    }
+
+    /**
+     * 左上角对齐; 以长边比例裁剪; 可边框; 可圆边圆角;
+     * (应用场景：由于重复创建Hierarchy会比较耗内存，例如在RecyclerView中, 所以当ViewHolder创建时，即可使用此方法为SimpleDraweeView创建一个Hierarchy,
+     * 在onBindViewHolder时，set入数据即可)
+     * @param context
+     * @param imageView
+     * @param placeholderResId 占位图ID
+     * @param isCircle 是否圆型
+     * @param topLeftRadius 圆角弧度（非圆型时生效）
+     * @param topRightRadius 圆角弧度（非圆型时生效）
+     * @param bottomRightRadius 圆角弧度（非圆型时生效）
+     * @param bottomLeftRadius 圆角弧度（非圆型时生效）
+     */
+    public static void setHierarchy(Context context, SimpleDraweeView imageView, @DrawableRes int placeholderResId, boolean isCircle, float border, @ColorInt int color, float topLeftRadius, float topRightRadius, float bottomLeftRadius, float bottomRightRadius) {
+        //对齐方式(左上角对齐)
+        PointF focusPoint = new PointF();
+        focusPoint.x = 0f;
+        focusPoint.y = 0f;
+
+        //占位图，拉伸方式
+        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                .setFadeDuration(300)
+                .setPlaceholderImage(placeholderResId)    //占位图
+                .setPlaceholderImageScaleType(ScalingUtils.ScaleType.FIT_XY)    //占位图拉伸
+                .setActualImageFocusPoint(focusPoint)
+                .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)     //图片拉伸（配合上面的focusPoint）
+                .build();
+        imageView.setHierarchy(hierarchy);
+
+        if(isCircle){
+            //圆
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(0);
+            roundingParams.setRoundAsCircle(true);
+            if(border > 0 && color != 0){
+                roundingParams.setBorder(color, border);
+            }
+            imageView.getHierarchy().setRoundingParams(roundingParams);
+        }else {
+            //圆角
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(0);
+            roundingParams.setCornersRadii(topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius);
+            imageView.getHierarchy().setRoundingParams(roundingParams);
+        }
+    }
+
+    //------------------------ 图片拉伸方式 end ------------------------
 }

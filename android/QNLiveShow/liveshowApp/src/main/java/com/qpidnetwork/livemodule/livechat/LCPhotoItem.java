@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.livechat;
 
+import android.text.TextUtils;
+
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoModeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoSizeType;
 
@@ -26,161 +28,145 @@ public class LCPhotoItem implements Serializable{
 	 * 发送ID（仅发送）
 	 */
 	public String sendId;
-	/**
-	 * 用于显示不清晰图的路径
-	 */
-	public String showFuzzyFilePath;
-	/**
-	 * 拇指不清晰图路径
-	 */
-	public String thumbFuzzyFilePath;
-	/**
-	 * 原图路径
-	 */
-	public String srcFilePath;
-	/**
-	 * 用于显示的原图路径
-	 */
-	public String showSrcFilePath;
-	/**
-	 * 拇指原图路径
-	 */
-	public String thumbSrcFilePath;
+
 	/**
 	 * 是否已付费
 	 */
 	public boolean charge;
+
 	/**
-	 * 处理状态定义
+	 * 模糊小图
 	 */
-	enum StatusType {
-		/**
-		 * 已完成
-		 */
-		Finish,
-		/**
-		 * 正在付费
-		 */
-		PhotoFee,
-		/**
-		 * 正在下载模糊拇指图
-		 */
-		DownloadThumbFuzzyPhoto,
-		/**
-		 * 正在下载模糊显示图
-		 */
-		DownloadShowFuzzyPhoto,
-		/**
-		 * 正在下载清晰拇指图
-		 */
-		DownloadThumbSrcPhoto,
-		/**
-		 * 正在下载清晰显示图
-		 */
-		DownloadShowSrcPhoto,
-		/**
-		 * 正在下载原图
-		 */
-		DownloadSrcPhoto,
-	}
-	StatusType statusType;
-	
+	public LCPhotoInfoItem mFuzzySmallPhotoInfo;
+
+	/**
+	 * 模糊中图
+	 */
+	public LCPhotoInfoItem mFuzzyMiddlePhotoInfo;
+
+	/**
+	 * 模糊大图
+	 */
+	public LCPhotoInfoItem mFuzzyLargePhotoInfo;
+
+	/**
+	 * 模糊原始图
+	 */
+	public LCPhotoInfoItem mFuzzySrcPhotoInfo;
+
+	/**
+	 * 清晰小图
+	 */
+	public LCPhotoInfoItem mClearSmallPhotoInfo;
+
+	/**
+	 * 清晰中图
+	 */
+	public LCPhotoInfoItem mClearMiddlePhotoInfo;
+
+	/**
+	 * 清晰大图
+	 */
+	public LCPhotoInfoItem mClearLargePhotoInfo;
+
+	/**
+	 * 清晰原始图
+	 */
+	public LCPhotoInfoItem mClearSrcPhotoInfo;
+
 	
 	public LCPhotoItem() {
 		photoId = "";
 		sendId = "";
 		photoDesc = "";
-		showFuzzyFilePath = "";
-		thumbFuzzyFilePath = "";
-		srcFilePath = "";
-		showSrcFilePath = "";
-		thumbSrcFilePath = "";
 		charge = false;
-		statusType = StatusType.Finish;
 	}
 	
 	public void init(
-			String photoId
+			LCPhotoManager photoManager
+			,String photoId
 			, String sendId
 			, String photoDesc
-			, String showFuzzyFilePath
-			, String thumbFuzzyFilePath
-			, String srcFilePath
-			, String showSrcFilePath
-			, String thumbSrcFilePath
 			, boolean charge) 
 	{
 		this.photoId = photoId;
 		this.sendId = sendId;
 		this.photoDesc = photoDesc;
 		this.charge = charge;
-		
-		if (!showFuzzyFilePath.isEmpty()) {
-			File file = new File(showFuzzyFilePath);
-			if (file.exists()) {
-				this.showFuzzyFilePath = showFuzzyFilePath;
-			}
-		}
-		
-		if (!thumbFuzzyFilePath.isEmpty()) {
-			File file = new File(thumbFuzzyFilePath);
-			if (file.exists()) {
-				this.thumbFuzzyFilePath = thumbFuzzyFilePath;
-			}
-		}
-		
-		if (!srcFilePath.isEmpty()) {
-			File file = new File(srcFilePath);
-			if (file.exists()) {
-				this.srcFilePath = srcFilePath;
-			}
-		}
-		
-		if (!showSrcFilePath.isEmpty()) {
-			File file = new File(showSrcFilePath);
-			if (file.exists()) {
-				this.showSrcFilePath = showSrcFilePath;
-			}
-		}
-		
-		if (!thumbSrcFilePath.isEmpty()) {
-			File file = new File(thumbSrcFilePath);
-			if (file.exists()) {
-				this.thumbSrcFilePath = thumbSrcFilePath;
-			}
-		}
+
+		//处理本地已存在，直接赋值
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Original);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Large);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Middle);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Small);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Original);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Large);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Middle);
+		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Small);
 	}
-	
+
 	/**
-	 * 设置处理状态
-	 * @param modeType	图片类型
-	 * @param sizeType	图片尺寸
+	 * 初始化private photo状态，如果本地已存在，直接赋值
+	 * @param photoManager
+	 * @param photoId
 	 */
-	public void SetStatusType(PhotoModeType modeType, PhotoSizeType sizeType)
-	{
-		if (modeType == PhotoModeType.Clear) {
-			if (sizeType == PhotoSizeType.Large
-				|| sizeType == PhotoSizeType.Middle) 
-			{
-				statusType = StatusType.DownloadShowSrcPhoto;
-			}
-			else if (sizeType == PhotoSizeType.Original) 
-			{
-				statusType = StatusType.DownloadSrcPhoto;
-			}
-			else {
-				statusType = StatusType.DownloadThumbSrcPhoto;
-			}
-		}
-		else if (modeType == PhotoModeType.Fuzzy) {
-			if (sizeType == PhotoSizeType.Large
-				|| sizeType == PhotoSizeType.Middle) 
-			{
-				statusType = StatusType.DownloadShowFuzzyPhoto;
-			}
-			else {
-				statusType = StatusType.DownloadThumbFuzzyPhoto;
+	private void initPhotoInfos(LCPhotoManager photoManager, String photoId, PhotoModeType modeType, PhotoSizeType sizeType){
+		String localPath = photoManager.getPhotoPath(photoId, modeType, sizeType);
+		if(!TextUtils.isEmpty(localPath)){
+			File file = new File(localPath);
+			if(file.exists()){
+				setPhotInfoItem(modeType, sizeType, LCPhotoInfoItem.StatusType.Success, "", "", localPath);
 			}
 		}
 	}
+
+	/**
+	 * 更新photo下载状态
+	 * @param modeType
+	 * @param sizeType
+	 * @param statusType
+	 * @param errno
+	 * @param errmsg
+	 * @param photoPath
+	 */
+	public void setPhotInfoItem(PhotoModeType modeType,
+								PhotoSizeType sizeType,
+								LCPhotoInfoItem.StatusType statusType,
+								String errno,
+								String errmsg,
+								String photoPath){
+		LCPhotoInfoItem photoInfoItem = new LCPhotoInfoItem(statusType, errno, errmsg, photoPath);
+		if(modeType == PhotoModeType.Fuzzy){
+			switch (sizeType){
+				case Original:{
+					mFuzzySrcPhotoInfo = photoInfoItem;
+				}break;
+				case Large:{
+					mFuzzyLargePhotoInfo = photoInfoItem;
+				}break;
+				case Middle:{
+					mFuzzyMiddlePhotoInfo = photoInfoItem;
+				}break;
+				case Small:{
+					mFuzzySmallPhotoInfo = photoInfoItem;
+				}break;
+			}
+		}else{
+			switch (sizeType){
+				case Original:{
+					mClearSrcPhotoInfo = photoInfoItem;
+				}break;
+				case Large:{
+					mClearLargePhotoInfo = photoInfoItem;
+				}break;
+				case Middle:{
+					mClearMiddlePhotoInfo = photoInfoItem;
+				}break;
+				case Small:{
+					mClearSmallPhotoInfo = photoInfoItem;
+				}break;
+			}
+		}
+	}
+
 }

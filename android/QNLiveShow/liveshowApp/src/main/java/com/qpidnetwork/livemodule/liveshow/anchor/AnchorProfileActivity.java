@@ -173,7 +173,18 @@ public class AnchorProfileActivity extends BaseWebViewActivity implements OnLCCo
     protected void onWebPageLoadFinish() {
         super.onWebPageLoadFinish();
 
-        updateUnreadCount();
+        /*
+            2019/5/22 Hardy
+            https://www.qoogifts.com.cn/zentaopms2/www/index.php?m=bug&f=view&bugID=18564
+            这里加入延时，是为了解决进来页面时，已有未读消息，但可能由于 webView 还没渲染完成，导致调用
+            js 方法不生效，即小红点无显示的问题。
+         */
+        mWebView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateUnreadCount();
+            }
+        },800);
 
         // 防止多次注册
         if (!isRegistContactUpdate) {

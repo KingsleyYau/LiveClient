@@ -198,8 +198,7 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
      */
     public interface OnAddInviteClickListener{
         void onAddInviteClick(int index);
-        void onInvitationResponse(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId);
-        void onInvitationCancel(boolean isSuccess, int httpErrCode, String errMsg);
+        void onInvitationCancel(boolean isSuccess, int httpErrCode, String errMsg, String anchorId);
     }
 
     /**
@@ -210,6 +209,14 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
         void onVedioWindowClick(int index, HangoutVedioWindowObj obj, boolean isStreaming);
         void onOpenVideoClicked();
         void onCloseVideoClicked();
+    }
+
+    /**
+     * 邀请事件监听器
+     */
+    public interface OnInviteEventListener{
+        void onInvitationStart(IMUserBaseInfoItem userBaseInfoItem);
+        void onInvitationResponse(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId);
     }
 
     //------------------ 接口定义 end ------------------
@@ -230,7 +237,6 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
     }
 
     private OnAddInviteClickListener onAddInviteClickListener;
-
     public void setOnAddInviteClickListener(OnAddInviteClickListener onAddInviteClickListener){
         this.onAddInviteClickListener = onAddInviteClickListener;
     }
@@ -240,6 +246,12 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
     public void setVedioClickListener(VedioClickListener vedioClickListener){
         this.vedioClickListener = vedioClickListener;
     }
+
+    private OnInviteEventListener OnInviteEventListener;
+    public void setOnInviteEventListener(HangOutVedioWindow.OnInviteEventListener onInviteEventListener) {
+        OnInviteEventListener = onInviteEventListener;
+    }
+
 
     /**
      * 设置索引
@@ -530,10 +542,6 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
         //默认都显示添加邀请界面
         fl_blank.setVisibility(View.VISIBLE);
         hasInitedView = true;
-
-        //邀请
-        mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(context);
-        mHangoutInvitationManager.setClientEventListener(this);
     }
 
     private static final int EVENT_ANCHOR_COMING_COUNT_DOWN = 0521;
@@ -683,6 +691,7 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
 
     /**
      * 切换主播正在进入hangout直播间的状态
+     * (单元格不得自己改变窗口状态，要通过HangOutVedioWindowManager更新)
      * @param activity
      * @param hangoutVedioWindowObj
      * @param type
@@ -1079,7 +1088,9 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
             handler.removeCallbacks(null);
             handler = null;
         }
-        mHangoutInvitationManager.release();
+        if(mHangoutInvitationManager != null) {
+            mHangoutInvitationManager.release();
+        }
 
         if (mDisposableCountdown != null && !mDisposableCountdown.isDisposed()) {
             mDisposableCountdown.dispose();
@@ -1266,43 +1277,52 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
         // 2019/4/1 Hardy 补全信息，回调外层时，需要用到 nickName
         imUserBaseInfoItem.nickName = hangoutVedioWindowObj.nickName;
         imUserBaseInfoItem.photoUrl = hangoutVedioWindowObj.photoUrl;
-
-        mHangoutInvitationManager.startInvitationSession(imUserBaseInfoItem, roomId, "", false);
+        startInvitationInternal(imUserBaseInfoItem, roomId, "", false);
         return true;
+    }
+
+    private void startInvitationInternal(IMUserBaseInfoItem anchorInfo, String roomId, String recommandId, boolean createOnly){
+        if(mHangoutInvitationManager != null){
+            //清除旧的
+            mHangoutInvitationManager.release();
+        }
+        //互斥关系创建新的邀请client
+        mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(getContext());
+        mHangoutInvitationManager.setClientEventListener(this);
+        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly);
     }
 
 
     @Override
     public void onHangoutInvitationStart(IMUserBaseInfoItem userBaseInfoItem) {
-        //改变窗口状态
-        showAnchorComingView(mActivity,
-            new HangoutVedioWindowObj(userBaseInfoItem.userId, userBaseInfoItem.photoUrl, userBaseInfoItem.nickName,
-                    false),
-                HangOutVedioWindow.AnchorComingType.Man_Inviting,
-                0);
+
+        if(OnInviteEventListener != null){
+            OnInviteEventListener.onInvitationStart(userBaseInfoItem);
+        }
     }
 
     @Override
     public void onHangoutInvitationFinish(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId) {
-        if(!isSuccess){
-            //失败，主播不接受等，还原窗口
-            showWaitToInviteView();
-        }
 
-        if(onAddInviteClickListener != null){
-            onAddInviteClickListener.onInvitationResponse(isSuccess, errorType, errMsg, userBaseInfoItem, roomId);
+        if(OnInviteEventListener != null){
+            OnInviteEventListener.onInvitationResponse(isSuccess, errorType, errMsg, userBaseInfoItem, roomId);
         }
     }
 
     @Override
-    public void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg) {
-        if(isSuccess){
-            //还原窗口
-            showWaitToInviteView();
-        }
+    public void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg, IMUserBaseInfoItem userBaseInfoItem) {
 
         if(onAddInviteClickListener != null){
-            onAddInviteClickListener.onInvitationCancel(isSuccess, httpErrCode, errMsg);
+            String anchorId = "";
+            if(userBaseInfoItem != null){
+                anchorId = userBaseInfoItem.userId;
+            }else{
+                if(obj != null && obj.imHangoutAnchorItem != null){
+                    anchorId = obj.imHangoutAnchorItem.anchorId;
+                }
+            }
+
+            onAddInviteClickListener.onInvitationCancel(isSuccess, httpErrCode, errMsg, anchorId);
         }
     }
 
@@ -1310,7 +1330,17 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
      * 点击取消邀请
      */
     private void onCancelInvitationClicked(){
-        mHangoutInvitationManager.stopInvite();
+        if(mHangoutInvitationManager != null) {
+            mHangoutInvitationManager.stopInvite();
+        }else{
+            //解决邀请中杀掉App,重新进入后，更新状态为邀请中时，缺少取消邀请相关业务问题
+            if(obj != null && obj.imHangoutAnchorItem != null && !TextUtils.isEmpty(obj.imHangoutAnchorItem.inviteId)){
+                mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(getContext());
+                mHangoutInvitationManager.setClientEventListener(this);
+                mHangoutInvitationManager.startInvitationByInvitationStatus(new IMUserBaseInfoItem(obj.imHangoutAnchorItem.anchorId, obj.imHangoutAnchorItem.nickName, obj.imHangoutAnchorItem.photoUrl), obj.imHangoutAnchorItem.inviteId);
+                mHangoutInvitationManager.stopInvite();
+            }
+        }
     }
 
     //---------------------- 邀请 end ---------------------

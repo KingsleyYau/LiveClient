@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.view.KeyEvent;
 
 import com.qpidnetwork.livemodule.httprequest.OnMobilePayGotoCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniPayment;
@@ -70,6 +71,23 @@ public class LiveBuyCreditActivity extends BaseWebViewActivity {
             if(bundle.containsKey(KEY_NUMBER_ID)){
                 mNumberId = bundle.getString(KEY_NUMBER_ID);
             }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (mWebView != null && mWebView.canGoBack()) {
+            backToFirstPage();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    public void backToFirstPage(){
+        if(mWebView.canGoBackOrForward(1 - mWebView.copyBackForwardList().getSize())){
+            mWebView.goBackOrForward(1 - mWebView.copyBackForwardList().getSize());
         }
     }
 

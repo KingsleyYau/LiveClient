@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".liveshow.livechat.LiveChatRecentWatchActivity">
+
+
+    <com.qpidnetwork.livemodule.view.RefreshRecyclerView
+        android:id="@+id/live_chat_recent_watch_list"
+        android:background="@color/thin_grey"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <com.qpidnetwork.livemodule.view.ErrorView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <com.qpidnetwork.livemodule.liveshow.livechat.RecentWatchEmptyView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+
+</android.support.constraint.ConstraintLayout>

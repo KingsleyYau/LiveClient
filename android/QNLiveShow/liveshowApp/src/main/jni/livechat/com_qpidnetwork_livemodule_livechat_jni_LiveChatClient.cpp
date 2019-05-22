@@ -2695,8 +2695,10 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChat
 	FileLog("LiveChatClient", "Init() ILSLiveChatClient::ReleaseClient(g_liveChatClient) g_liveChatClient:%p", g_liveChatClient);
 
 	// 释放旧的LiveChatClient
-	ILSLiveChatClient::ReleaseClient(g_liveChatClient);
-	g_liveChatClient = NULL;
+	if ( NULL != g_liveChatClient) {
+	    ILSLiveChatClient::ReleaseClient(g_liveChatClient);
+	    g_liveChatClient = NULL;
+	}
 
 	FileLog("LiveChatClient", "Init() env->DeleteGlobalRef(gListener) gListener:%p", gListener);
 

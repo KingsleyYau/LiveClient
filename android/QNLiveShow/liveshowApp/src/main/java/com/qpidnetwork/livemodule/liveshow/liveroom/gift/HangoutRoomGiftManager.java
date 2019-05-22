@@ -12,7 +12,7 @@ import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutGiftListItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;

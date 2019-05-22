@@ -39,6 +39,7 @@
                 android:id="@+id/btnError"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:scaleType="fitXY"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="0dp"
                 android:background="@drawable/touch_feedback_holo_light_round_rectangle"

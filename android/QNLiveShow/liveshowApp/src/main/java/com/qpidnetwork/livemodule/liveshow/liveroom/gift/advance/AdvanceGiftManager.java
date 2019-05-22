@@ -120,7 +120,14 @@ public class AdvanceGiftManager {
                 .setControllerListener(controllerListener)
                 .build();
         mSimpleDraweeView.setVisibility(View.VISIBLE);
-        mSimpleDraweeView.setController(controller);
+//        mSimpleDraweeView.setController(controller);
+
+        // 2019/4/26 Hardy OOM
+        try {
+            mSimpleDraweeView.setController(controller);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
 

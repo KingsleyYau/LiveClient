@@ -25,6 +25,7 @@ import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.liveshow.adapter.BaseRecyclerViewAdapter;
 import com.qpidnetwork.livemodule.liveshow.adapter.BaseViewHolder;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 
 /**
  * HangOut详情弹框内，每个item里的Friends横向头像
@@ -90,46 +91,17 @@ public class HangOutDetailFriendsAdapter extends BaseRecyclerViewAdapter<Hangout
 
             mOnlineView = f(R.id.item_live_hang_out_details_friends_online);
             mTvName = f(R.id.item_live_hang_out_details_friends_tv_name);
+
+            float radio = mContext.getResources().getDimensionPixelSize(R.dimen.live_size_4dp);
+            FrescoLoadUtil.setHierarchy(itemView.getContext(), imgFriend, R.drawable.ic_default_photo_woman_rect, false, radio, radio, radio, radio);
         }
 
         @Override
         public void setData(final HangoutAnchorInfoItem data, int position) {
 //            imgFriend.setImageURI(data.photoUrl);
             //压缩、裁剪图片
-            int bgSize = mContext.getResources().getDimensionPixelSize(R.dimen.live_size_60dp);  //DisplayUtil.getScreenWidth(mContext);
-
-            //对齐方式(左上角对齐)
-            PointF focusPoint = new PointF();
-            focusPoint.x = 0f;
-            focusPoint.y = 0f;
-
-            //占位图，拉伸方式
-            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
-            GenericDraweeHierarchy hierarchy = builder
-                    .setFadeDuration(300)
-                    .setPlaceholderImage(R.drawable.ic_default_photo_woman_rect)    //占位图
-                    .setPlaceholderImageScaleType(ScalingUtils.ScaleType.FIT_XY)    //占位图拉伸
-                    .setActualImageFocusPoint(focusPoint)
-                    .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)     //图片拉伸（配合上面的focusPoint）
-                    .build();
-            imgFriend.setHierarchy(hierarchy);
-
-            //下载
-            Uri imageUri = Uri.parse(data.photoUrl);
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
-                    .setResizeOptions(new ResizeOptions(bgSize, bgSize))
-                    .build();
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setImageRequest(request)
-                    .setOldController(imgFriend.getController())
-                    .setControllerListener(new BaseControllerListener<ImageInfo>())
-                    .build();
-            imgFriend.setController(controller);
-
-            //圆角
-            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
-            roundingParams.setCornersRadius(mContext.getResources().getDimensionPixelSize(R.dimen.live_size_4dp));
-            imgFriend.getHierarchy().setRoundingParams(roundingParams);
+            int bgSize = mContext.getResources().getDimensionPixelSize(R.dimen.live_size_60dp);
+            FrescoLoadUtil.loadUrl(imgFriend, data.photoUrl, bgSize);
 
             btnFriend.setOnClickListener(new View.OnClickListener() {
                 @Override

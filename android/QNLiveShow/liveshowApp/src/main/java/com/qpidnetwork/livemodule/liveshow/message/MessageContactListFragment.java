@@ -13,6 +13,7 @@ import com.qpidnetwork.livemodule.livemessage.item.LMPrivateMsgContactItem;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;

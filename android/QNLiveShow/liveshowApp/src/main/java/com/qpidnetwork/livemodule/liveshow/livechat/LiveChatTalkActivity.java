@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
@@ -32,7 +33,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
@@ -51,7 +51,9 @@ import com.qpidnetwork.livemodule.livechat.LiveChatManagerEmotionListener;
 import com.qpidnetwork.livemodule.livechat.LiveChatManagerMagicIconListener;
 import com.qpidnetwork.livemodule.livechat.LiveChatManagerMessageListener;
 import com.qpidnetwork.livemodule.livechat.LiveChatManagerOtherListener;
+import com.qpidnetwork.livemodule.livechat.LiveChatManagerPhotoListener;
 import com.qpidnetwork.livemodule.livechat.LiveChatManagerTryTicketListener;
+import com.qpidnetwork.livemodule.livechat.LiveChatManagerVideoListener;
 import com.qpidnetwork.livemodule.livechat.LiveChatManagerVoiceListener;
 import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClient;
@@ -59,6 +61,7 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatSessionInfoItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatTalkUserListItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserCamStatus;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Coupon;
 import com.qpidnetwork.livemodule.livechathttprequest.item.MagicIconConfig;
 import com.qpidnetwork.livemodule.livechathttprequest.item.OtherEmotionConfigItem;
@@ -66,22 +69,29 @@ import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.livechat.album.AlbumPhotoPreviewActivity;
+import com.qpidnetwork.livemodule.liveshow.livechat.album.PictureSelectActivity;
+import com.qpidnetwork.livemodule.liveshow.livechat.album.PictureSelectFragment;
+import com.qpidnetwork.livemodule.liveshow.livechat.camera.CameraViewFragment;
 import com.qpidnetwork.livemodule.liveshow.livechat.normalexp.NormalExprssionFragment;
 import com.qpidnetwork.livemodule.liveshow.livechat.voice.VoicePlayerManager;
 import com.qpidnetwork.livemodule.liveshow.livechat.voice.VoiceRecordFragment;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.view.CustomEditText;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 import com.qpidnetwork.livemodule.view.RefreshRecyclerView;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationTypeEnum;
+import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionManager;
 import com.qpidnetwork.qnbridgemodule.util.BroadcastManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.KeyBoardManager;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,8 +104,9 @@ import java.util.List;
 public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implements
         RefreshRecyclerView.OnPullRefreshListener, SoftKeyboardSizeWatchLayout.OnResizeListener,
         LiveChatManagerMessageListener, LiveChatManagerEmotionListener,
-        LiveChatManagerTryTicketListener,LiveChatManagerMagicIconListener,
-        LiveChatManagerVoiceListener, LiveChatManagerOtherListener {
+        LiveChatManagerTryTicketListener, LiveChatManagerMagicIconListener,
+        LiveChatManagerVoiceListener, LiveChatManagerOtherListener,
+        LiveChatManagerPhotoListener, LiveChatManagerVideoListener {
     //启动参数
     private static final String CHAT_TARGET_ID = "targetId";
     private static final String CHAT_TARGET_NAME = "targetName";
@@ -124,9 +135,13 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     private static final int REQUEST_ADD_FAVOUR_FAIL = 11;
     private static final int GET_TARGET_STATUS_CALLBACK = 15;
     private static final int GET_MAGIC_ICON_SUCCESS = 16;
+    private static final int GET_PHOTO_CALLBACK = 17;
+    private static final int PHOTO_FEE_CALLBACK = 18;
+    private static final int GET_VIDEO_PHOTO_CALLBACK = 19;
+    private static final int VIDEO_FEE_CALLBACK = 20;
 
     //输入框旁边的，表情/键盘切换按钮 的状态
-    private enum InputChangeBtnStaus{
+    private enum InputChangeBtnStaus {
         EMOJI,      //表情
         KEYBOARD    //键盘
     }
@@ -141,7 +156,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 列表滚动的位置
      */
-    private enum ListScrollPosition{
+    private enum ListScrollPosition {
         TOP,
         MIDDLE,
         BOTTOM
@@ -160,14 +175,18 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     private SoftKeyboardSizeWatchLayout sl_root;
     private RefreshRecyclerView mRecyclerViewMsg;
     private LinearLayoutManager mLinearLayoutManager;
-    private FrameLayout mFrameLayoutInputArea , mFrameLayoutFunctions;
-    private ImageView mImageViewEmoji, mImageViewVoice;
+    private FrameLayout mFrameLayoutInputArea, mFrameLayoutFunctions;
+    private ImageView mImageViewEmoji, mImageViewPhoto, mImageViewCamera, mImageViewVoice;
     private CustomEditText mEditText;
     private LinearLayout listLoadingHeader;
     private ImageButton mBtnSend;
     private PopupMenu mTitlePopupMenu;
     private NormalExprssionFragment mNormalExprssionFragment;
     private VoiceRecordFragment mVoiceRecordFragment;
+
+    // 2019/5/6 Hardy
+    private CameraViewFragment cameraViewFragment;
+    private PictureSelectFragment pictureSelectFragment;
 
     //变量
     private int mKeyBoardHeight = 0;    //键盘高度
@@ -205,7 +224,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         public String errMsg;
         public Object body;
 
-        public LiveChatCallBackItem(int errType, String errNo, String errMsg, Object body){
+        public LiveChatCallBackItem(int errType, String errNo, String errMsg, Object body) {
             this.errType = errType;
             this.errNo = errNo;
             this.errMsg = errMsg;
@@ -215,6 +234,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     /**
      * 启动
+     *
      * @param context
      * @param targetId
      * @param targetName
@@ -227,15 +247,15 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             LoginItem loginItem = LoginManager.getInstance().getLoginItem();
             if (loginItem != null && loginItem.premit && !loginItem.livechat) {
 //                /* 账号未被冻结且livechat未被风控，可直接进入聊天界面 */
-                if(!LiveChatManager.getInstance().isInCamshareService(targetId)){
+                if (!LiveChatManager.getInstance().isInCamshareService(targetId)) {
                     intent.setClass(context, LiveChatTalkActivity.class);
                     intent.putExtra(CHAT_TARGET_ID, targetId);
                     intent.putExtra(CHAT_TARGET_NAME, targetName);
                     intent.putExtra(CHAT_TARGET_PHOTO_URL, photoUrl);
                     context.startActivity(intent);
-                }else{
+                } else {
 //                    //Camshare中，提示切换
-                    if(context instanceof Activity){
+                    if (context instanceof Activity) {
 //                        DialogUIUtils.showAlert(
 //                                (Activity) context,
 //                                "",
@@ -273,7 +293,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
                 }
             } else {
 //                /* 账号被冻结或者livechat被风控则不可聊天,弹框提示 */
-                if(context instanceof Activity){
+                if (context instanceof Activity) {
 //                    DialogUIUtils.showAlert(
 //                            (Activity) context,
 //                            "",
@@ -311,7 +331,6 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         setCustomContentView(R.layout.activity_live_chat_talk);
 
         //初始化私信管理器并绑定事件监听器
-        //TODO
         mLiveChatManager = LiveChatManager.getInstance();
         mContactManager = ContactManager.getInstance();
         mVoicePlayerManager = VoicePlayerManager.getInstance(mContext);
@@ -337,24 +356,23 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         //        msgList.onDestroy();
 
 //        unregisterReceiver(mBroadcastReceiver);
-        BroadcastManager.unregisterReceiver(mContext,mBroadcastReceiver);
+        BroadcastManager.unregisterReceiver(mContext, mBroadcastReceiver);
 
 //        mLiveChatManager.UnregisterEmotionListener(this);
         mLiveChatManager.UnregisterMessageListener(this);
         mLiveChatManager.UnregisterOtherListener(this);
-//        mLiveChatManager.UnregisterPhotoListener(this);
+        mLiveChatManager.UnregisterPhotoListener(this);
         mLiveChatManager.UnregisterTryTicketListener(this);
         mLiveChatManager.UnregisterVoiceListener(this);
-//        mLiveChatManager.UnregisterVideoListener(this);
+        mLiveChatManager.UnregisterVideoListener(this);
         mLiveChatManager.UnregisterMagicIconListener(this);
 //        mLiveChatManager.UnregisterThemeListener(this);
 
         //解绑监听器，防止泄漏
-        if(sl_root != null){
+        if (sl_root != null) {
             sl_root.removeOnResizeListener(this);
         }
 
@@ -374,7 +392,8 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         mLiveChatManager.RegisterVoiceListener(this);
         mLiveChatManager.RegisterOtherListener(this);
         mLiveChatManager.RegisterMagicIconListener(this);
-
+        mLiveChatManager.RegisterPhotoListener(this);
+        mLiveChatManager.RegisterVideoListener(this);
     }
 
     private void initReceive() {
@@ -382,12 +401,11 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                // TODO Auto-generated method stub
                 String action = intent.getAction();
                 if (action.equals(SEND_EMTOTION_ACTION)) {
 //                    String emotionId = intent.getExtras().getString(EMOTION_ID);
 //                    sendEmotionItem(emotionId);
-                }else if(action.equals(SEND_MAGICICON_ACTION)){
+                } else if (action.equals(SEND_MAGICICON_ACTION)) {
                     String magicIconId = intent.getExtras().getString(MAGICICON_ID);
                     sendMagicIcon(magicIconId);
                 }
@@ -398,13 +416,13 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         filter.addAction(SEND_EMTOTION_ACTION);
         filter.addAction(SEND_MAGICICON_ACTION);
 //        registerReceiver(mBroadcastReceiver, filter);
-        BroadcastManager.registerReceiver(mContext,mBroadcastReceiver, filter);
+        BroadcastManager.registerReceiver(mContext, mBroadcastReceiver, filter);
     }
 
     @Override
     protected void onTitleClicked() {
         super.onTitleClicked();
-        if(mIsTitleClicked2Profile && !TextUtils.isEmpty(targetId)){
+        if (mIsTitleClicked2Profile && !TextUtils.isEmpty(targetId)) {
             AnchorProfileActivity.launchAnchorInfoActivty(this, getResources().getString(R.string.live_webview_anchor_profile_title),
                     targetId, false, AnchorProfileActivity.TagType.Album);
         }
@@ -415,10 +433,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
      */
     @SuppressLint("ClickableViewAccessibility")
     private void initViews() {
-
-        setTitleBodyGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-
-        mAdapter = new LiveChatTalkAdapter(mContext , mDataList);
+        mAdapter = new LiveChatTalkAdapter(mContext, mDataList);
         mAdapter.setOnItemClickListener(new LiveChatTalkAdapter.OnItemClickListener() {
             @Override
             public void onResendClick(LiveMessageItem messageItem) {
@@ -439,11 +454,22 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
             @Override
             public void onVoiceItemClick(View v, LCMessageItem lcMessageItem) {
-                if(mVoicePlayerManager.startPlayVoice(v, lcMessageItem.msgId,
-                        lcMessageItem.getVoiceItem().filePath)){
+                if (mVoicePlayerManager.startPlayVoice(v, lcMessageItem.msgId,
+                        lcMessageItem.getVoiceItem().filePath)) {
                     lcMessageItem.getVoiceItem().setRead(mContext, true);
                 }
             }
+
+            @Override
+            public void onPhotoClick(LCMessageItem lcMessageItem) {
+                doOpenPhotoAndVideoDetail(lcMessageItem);
+            }
+
+            @Override
+            public void onVideoClick(LCMessageItem lcMessageItem) {
+                doOpenPhotoAndVideoDetail(lcMessageItem);
+            }
+
 
 //            @Override
 //            public void onResend(LCMessageItem lcMessageItem) {
@@ -451,11 +477,11 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 //            }
         });
 
-        sl_root = (SoftKeyboardSizeWatchLayout)findViewById(R.id.sl_root);
+        sl_root = (SoftKeyboardSizeWatchLayout) findViewById(R.id.sl_root);
         sl_root.addOnResizeListener(this);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewMsg = (RefreshRecyclerView)findViewById(R.id.rcv_chat_msg);
+        mRecyclerViewMsg = (RefreshRecyclerView) findViewById(R.id.rcv_chat_msg);
         mRecyclerViewMsg.setCanPullUp(false);   // 关闭上拉更多
         mRecyclerViewMsg.setCanPullDown(false); //关闭下拉刷新
         mRecyclerViewMsg.setOnPullRefreshListener(this);
@@ -464,7 +490,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         mRecyclerViewMsg.setRScrollLister(new RefreshRecyclerView.RScrollLister() {
             @Override
             public void onScrollToTop() {
-                if(mCanPullDownLoadMore) {
+                if (mCanPullDownLoadMore) {
                     //本地根据第一条消息检测是否可以loadmore
 //                    if(checkWhetherCanLoadMore()) {
 //                        listLoadingHeader.setVisibility(View.VISIBLE);
@@ -514,10 +540,10 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         mEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.i("jagger","onTouch-------> : "+motionEvent.getAction());
+                Log.i("jagger", "onTouch-------> : " + motionEvent.getAction());
                 //使用自己的方法弹出键盘
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.i("jagger","onTouch------->ACTION_DOWN : "+motionEvent.getAction());
+                    Log.i("jagger", "onTouch------->ACTION_DOWN : " + motionEvent.getAction());
                     showKeyBoard();
                 }
 
@@ -539,10 +565,10 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             @Override
             public void afterTextChanged(Editable editable) {
                 //改变发送按钮状态
-                if(editable.toString().length() > 0){
+                if (editable.toString().length() > 0) {
 //                    mBtnSend.setButtonBackground(getResources().getColor(R.color.theme_sky_blue));
                     mBtnSend.setEnabled(true);
-                }else{
+                } else {
 //                    mBtnSend.setButtonBackground(getResources().getColor(R.color.black3));
                     mBtnSend.setEnabled(false);
                 }
@@ -554,11 +580,12 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
                 boolean isCatch = false;
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEND:
-                    case EditorInfo.IME_ACTION_UNSPECIFIED:{
+                    case EditorInfo.IME_ACTION_UNSPECIFIED: {
                         sendTextMsg(mEditText.getText().toString());
                         mEditText.setText("");
                         isCatch = true;
-                    }break;
+                    }
+                    break;
 
                     default:
                         break;
@@ -568,8 +595,8 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             }
         });
 
-        mFrameLayoutInputArea = (FrameLayout)findViewById(R.id.fl_inputArea);
-        mFrameLayoutFunctions = (FrameLayout)findViewById(R.id.fl_functions);
+        mFrameLayoutInputArea = (FrameLayout) findViewById(R.id.fl_inputArea);
+        mFrameLayoutFunctions = (FrameLayout) findViewById(R.id.fl_functions);
 
         mImageViewEmoji = (ImageView) findViewById(R.id.img_emoji);
         mImageViewEmoji.setOnClickListener(new View.OnClickListener() {
@@ -577,6 +604,24 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             public void onClick(View view) {
 //                doOnShowKeyboardClicked();
                 showEmojiBoard();
+            }
+        });
+
+        mImageViewPhoto = (ImageView) findViewById(R.id.img_photo);
+        mImageViewPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                doOnShowKeyboardClicked();
+                showPhotoBoard();
+            }
+        });
+
+        mImageViewCamera = (ImageView) findViewById(R.id.img_camera);
+        mImageViewCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                doOnShowKeyboardClicked();
+                showCameraBoard();
             }
         });
 
@@ -640,13 +685,6 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
             /* 初始化未读条数 */
             unreadCount = mContactManager.getAllUnreadCount();
-            //TODO
-//                if (unreadCount > 0) {
-//                    tvUnread.setText("" + unreadCount);
-//                    tvUnread.setVisibility(View.VISIBLE);
-//                } else {
-//                    tvUnread.setVisibility(View.GONE);
-//                }
 
             /* 是否在聊天列表（即有消息来往） */
             chatTarget = mLiveChatManager.GetUserWithId(targetId);
@@ -697,8 +735,10 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 初始化Title
      */
-    private void initTitle(){
+    private void initTitle() {
         //title处理
+//        setTitleBodyGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        
         if (!TextUtils.isEmpty(targetName)) {
             setTitle(targetName, R.color.theme_default_black);
         } else {
@@ -713,16 +753,18 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         });
 
         //取个人信息
-        if(TextUtils.isEmpty(targetUrl)){
+        if (TextUtils.isEmpty(targetUrl)) {
             doGetUserInfo();
         }
     }
 
     /**
      * title右则弹出菜单
+     *
      * @param view
      */
-    private void showTitleMoreMenu(View view){
+    @SuppressLint("RestrictedApi")
+    private void showTitleMoreMenu(View view) {
         // 这里的view代表popupMenu需要依附的view
         mTitlePopupMenu = new PopupMenu(this, view);
         // 获取布局文件
@@ -731,20 +773,20 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         LCUserItem userItem = LiveChatManager.getInstance().GetUserWithId(targetId);
         //重置状态
         endTalkMenuStatus = EndTalkMenuStatus.END_CHAT;
-        Log.i("Jagger" , "showTitleMoreMenu userItem:" + (userItem == null));
-        if(userItem != null){
-            Log.i("Jagger" , "showTitleMoreMenu isInSession:" + userItem.isInSession() );
-            if(userItem.isInSession()){
+        Log.i("Jagger", "showTitleMoreMenu userItem:" + (userItem == null));
+        if (userItem != null) {
+            Log.i("Jagger", "showTitleMoreMenu isInSession:" + userItem.isInSession());
+            if (userItem.isInSession()) {
                 endTalkMenuStatus = EndTalkMenuStatus.END_CHAT;
 
                 mTitlePopupMenu.getMenu().clear();
                 mTitlePopupMenu.inflate(R.menu.live_chat_title_menu_inchat);
-            }else if(userItem.isInManInvite()){
+            } else if (userItem.isInManInvite()) {
                 endTalkMenuStatus = EndTalkMenuStatus.MAN_INVITE;
 
                 mTitlePopupMenu.getMenu().clear();
                 mTitlePopupMenu.inflate(R.menu.live_chat_title_menu);
-            }else if(userItem.isInLadyInvite()){
+            } else if (userItem.isInLadyInvite()) {
                 endTalkMenuStatus = EndTalkMenuStatus.LADY_INVITE;
 
                 mTitlePopupMenu.getMenu().clear();
@@ -757,23 +799,37 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 // 控件每一个item的点击事件
-                if(item.getItemId() == R.id.chat_menu_end_chat || item.getItemId() == R.id.chat_menu_cancel_invitation){
+                if (item.getItemId() == R.id.chat_menu_end_chat || item.getItemId() == R.id.chat_menu_cancel_invitation) {
                     doEndChat();
+                } else if (item.getItemId() == R.id.chat_menu_recent) {
+                    onRecentClicked();
                 }
                 return true;
             }
         });
 
+        //使用反射，强制显示菜单图标
+        //https://blog.csdn.net/u012522829/article/details/51673476
+        try {
+            Field field = mTitlePopupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(mTitlePopupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
         mTitlePopupMenu.show();
     }
 
     /**
-     *　初始化表情列表
+     * 　初始化表情列表
      */
-    private void initEmojiView(){
-        //TODO
+    private void initEmojiView() {
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(mNormalExprssionFragment == null){
+        if (mNormalExprssionFragment == null) {
             mNormalExprssionFragment = new NormalExprssionFragment();
         }
         transaction.replace(R.id.fl_functions, mNormalExprssionFragment);
@@ -782,12 +838,11 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     }
 
     /**
-     *　初始语音
+     * 　初始化语音
      */
-    private void initVoiceView(){
-        //TODO
+    private void initVoiceView() {
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(mVoiceRecordFragment == null){
+        if (mVoiceRecordFragment == null) {
             mVoiceRecordFragment = new VoiceRecordFragment();
         }
         transaction.replace(R.id.fl_functions, mVoiceRecordFragment);
@@ -796,26 +851,53 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     }
 
     /**
+     * 　初始化图片选择器
+     */
+    private void initPhotoView() {
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (pictureSelectFragment == null) {
+            pictureSelectFragment = new PictureSelectFragment();
+        }
+        transaction.replace(R.id.fl_functions, pictureSelectFragment);
+        transaction.commitAllowingStateLoss();
+        mFrameLayoutFunctions.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * 　初始化相机
+     */
+    private void initCameraView() {
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (cameraViewFragment == null) {
+            cameraViewFragment = new CameraViewFragment();
+        }
+        transaction.replace(R.id.fl_functions, cameraViewFragment);
+        transaction.commitAllowingStateLoss();
+        mFrameLayoutFunctions.setVisibility(View.INVISIBLE);
+    }
+
+    /**
      * 输入框旁边的，表情/键盘切换按钮的点击事件
      */
-    private void doOnShowKeyboardClicked(){
-        if(mInputChangeBtnStaus == InputChangeBtnStaus.EMOJI ){
+    private void doOnShowKeyboardClicked() {
+        if (mInputChangeBtnStaus == InputChangeBtnStaus.EMOJI) {
             showEmojiBoard();
-        }else if(mInputChangeBtnStaus == InputChangeBtnStaus.KEYBOARD){
+        } else if (mInputChangeBtnStaus == InputChangeBtnStaus.KEYBOARD) {
             showKeyBoard();
         }
     }
 
     /**
      * 更改输入法、表情按钮状态
+     *
      * @param inputChangeBtnStaus
      */
-    private void doChangeBtnStatus(InputChangeBtnStaus inputChangeBtnStaus){
+    private void doChangeBtnStatus(InputChangeBtnStaus inputChangeBtnStaus) {
         //更改图标
-        if(inputChangeBtnStaus == InputChangeBtnStaus.EMOJI){
+        if (inputChangeBtnStaus == InputChangeBtnStaus.EMOJI) {
             mImageViewEmoji.setBackgroundResource(R.drawable.live_msg_keyboard_emoji);
             mInputChangeBtnStaus = InputChangeBtnStaus.EMOJI;
-        }else {
+        } else {
             mImageViewEmoji.setBackgroundResource(R.drawable.live_msg_keyboard_sys);
             mInputChangeBtnStaus = InputChangeBtnStaus.KEYBOARD;
         }
@@ -824,7 +906,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 消息列表滚动到底部
      */
-    private void doScrollToBottom(){
+    private void doScrollToBottom() {
         doScrollToPosition(mAdapter.getItemCount());
         //更新列表位置状态
         mListScrollPosition = ListScrollPosition.BOTTOM;
@@ -833,7 +915,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 消息列表滚动到某个位置
      */
-    private void doScrollToPosition(int itemIndex){
+    private void doScrollToPosition(int itemIndex) {
         mRecyclerViewMsg.getRecyclerView().scrollToPosition(itemIndex);
         //更新列表位置状态
         mListScrollPosition = ListScrollPosition.MIDDLE;
@@ -842,52 +924,53 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     /**
      * 判断当前recycle是否停留在底部
+     *
      * @return
      */
     public boolean isRecycleViewBottom() {
 //        Log.i("Jagger" , "isRecycleViewBottom:" + mListScrollPosition.name());
 
-        boolean result=false;
-        if(mListScrollPosition == ListScrollPosition.BOTTOM){
+        boolean result = false;
+        if (mListScrollPosition == ListScrollPosition.BOTTOM) {
             result = true;
         }
-        return  result;
+        return result;
     }
 
     /**
      * 显示输入区
      */
-    private void showInputArea(){
+    private void showInputArea() {
         int inputAreaHeight = 0;
-        if(mInputAreaStatus == InputAreaStatus.KEYBOARD){
+        if (mInputAreaStatus == InputAreaStatus.KEYBOARD) {
             //输入区, 使用键盘高度真实
             inputAreaHeight = mKeyBoardHeight;
-        }else{
+        } else {
             //因为黑霉手机有物理键盘,当虚拟键盘很小时,mKeyBoardHeight只有100+PX,表情区会显示不全,使用最小高度.
-            inputAreaHeight = mKeyBoardHeight < getResources().getDimensionPixelSize(R.dimen.min_keyboard_height)?getResources().getDimensionPixelSize(R.dimen.min_keyboard_height):mKeyBoardHeight;
+            inputAreaHeight = mKeyBoardHeight < getResources().getDimensionPixelSize(R.dimen.min_keyboard_height) ? getResources().getDimensionPixelSize(R.dimen.min_keyboard_height) : mKeyBoardHeight;
         }
 
         //
         ViewGroup.LayoutParams layoutParams = mFrameLayoutInputArea.getLayoutParams();
-        if(layoutParams.height < 1){
+        if (layoutParams.height < 1) {
             layoutParams.height = inputAreaHeight;
             mFrameLayoutInputArea.setLayoutParams(layoutParams);
-            mFrameLayoutInputArea.invalidate();
+//            mFrameLayoutInputArea.invalidate();
         }
 
         //更改界面InputMode, 已弹出输入区,则可以用ADJUST_PAN,当弹出输入法时不会跳动
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     /**
      * 隐藏输入区
      */
-    private void hideInputArea(boolean isHideKeyBoard){
+    private void hideInputArea(boolean isHideKeyBoard) {
         if (mInputAreaStatus == InputAreaStatus.HIDE) {
-              return;
+            return;
         }
 
-        Log.i("Jagger" ,"hideInputArea---: "+ mInputAreaStatus);
+        Log.i("Jagger", "hideInputArea---: " + mInputAreaStatus);
         if (isHideKeyBoard) {
             hideKeyBoard();
         }
@@ -897,18 +980,18 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 //        postUiRunnableDelayed(new Runnable() {
 //            @Override
 //            public void run() {
-                //
-                ViewGroup.LayoutParams layoutParams = mFrameLayoutInputArea.getLayoutParams();
-                if(layoutParams.height > 0){
-                    layoutParams.height = 0;
-                    mFrameLayoutInputArea.setLayoutParams(layoutParams);
-                }
+        //
+        ViewGroup.LayoutParams layoutParams = mFrameLayoutInputArea.getLayoutParams();
+        if (layoutParams.height > 0) {
+            layoutParams.height = 0;
+            mFrameLayoutInputArea.setLayoutParams(layoutParams);
+        }
 
-                //更改图标
+        //更改图标
 //                doChangeBtnStatus(InputChangeBtnStaus.FUNCTIONS);
 
-                //更改界面InputMode, 隐藏输入区,则可以用ADJUST_RESIZE,使系统自动适配输入法弹出时窗口缩放
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        //更改界面InputMode, 隐藏输入区,则可以用ADJUST_RESIZE,使系统自动适配输入法弹出时窗口缩放
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 //            }
 //        } , 50);
     }
@@ -916,13 +999,13 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 显示输入法
      */
-    private void showKeyBoard(){
-        if(mInputAreaStatus == InputAreaStatus.KEYBOARD) return;
-        Log.i("Jagger" ,"showKeyBoard" );
+    private void showKeyBoard() {
+        if (mInputAreaStatus == InputAreaStatus.KEYBOARD) return;
+        Log.i("Jagger", "showKeyBoard");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
-        if(mInputAreaStatus != InputAreaStatus.FUNCTIONS){
+        if (mInputAreaStatus != InputAreaStatus.FUNCTIONS) {
             hideInputArea(false);
             hideFunctionsBoard();
         }
@@ -933,13 +1016,13 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 隐藏输入法
      */
-    private void hideKeyBoard(){
-        if(mInputAreaStatus == InputAreaStatus.KEYBOARD){
-            Log.i("Jagger" ,"hideKeyBoard" );
+    private void hideKeyBoard() {
+        if (mInputAreaStatus == InputAreaStatus.KEYBOARD) {
+            Log.i("Jagger", "hideKeyBoard");
 
             //与其它控件显示关系的约束，最好不要乱改
             // ***start***
-            hideSoftInput(mEditText , true);
+            hideSoftInput(mEditText, true);
             // ***end***
         }
     }
@@ -947,8 +1030,8 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 显示表情选择器
      */
-    private void showEmojiBoard(){
-        Log.i("Jagger" ,"showEmojiBoard" );
+    private void showEmojiBoard() {
+        Log.i("Jagger", "showEmojiBoard");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
@@ -970,12 +1053,68 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 显示录音器
      */
-    private void showVoiceBoard(){
-        Log.i("Jagger" ,"showVoiceBoard" );
+    private void showVoiceBoard() {
+        Log.i("Jagger", "showVoiceBoard");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
         initVoiceView();
+        //显示功能区
+        showFunctionsBoard();
+        //回调
+        onEmojiBoardShow();
+        // ***end***
+    }
+
+    /**
+     * 显示图片选择器
+     */
+    private void showPhotoBoard() {
+        Log.i("Jagger", "showPhotoBoard");
+
+        //与其它控件显示关系的约束，最好不要乱改
+        // ***start***
+        initPhotoView();
+        //显示功能区
+        showFunctionsBoard();
+        //回调
+        onPhotoBoardShow();
+        // ***end***
+    }
+
+    /**
+     * 显示相机
+     */
+    private void showCameraBoard() {
+        Log.i("Jagger", "showCameraBoard");
+
+        //先进行权限检测
+        PermissionManager permissionManager = new PermissionManager(mContext, new PermissionManager.PermissionCallback() {
+            @Override
+            public void onSuccessful() {
+                //与其它控件显示关系的约束，最好不要乱改
+                // ***start***
+                initCameraView();
+                //显示功能区
+                showFunctionsBoard();
+                //回调
+                onCameraBoardShow();
+                // ***end***
+            }
+
+            @Override
+            public void onFailure() {
+            }
+        });
+
+        permissionManager.requestPhoto();
+    }
+
+    /**
+     * 显示功能区
+     */
+    private void showFunctionsBoard() {
+        Log.i("Jagger", "showFunctionsBoard");
         //隐藏键盘
         hideKeyBoard();
         //更改图标
@@ -985,38 +1124,136 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         showInputArea();
         //显示
         mFrameLayoutFunctions.setVisibility(View.VISIBLE);
-        //回调
-        onEmojiBoardShow();
-        // ***end***
     }
 
     /**
      * 隐藏功能区
      */
-    private void hideFunctionsBoard(){
-        Log.i("Jagger" ,"hideFunctionsBoard" );
+    private void hideFunctionsBoard() {
+        Log.i("Jagger", "hideFunctionsBoard");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
         mFrameLayoutFunctions.setVisibility(View.INVISIBLE);
         //回调
         onEmojiBoardHide();
+        onPhotoBoardHide();
+        onCameraBoardHide();
         // ***end***
     }
 
+
+    //========================= 2019/5/6    Hardy   选择图片 start==============================================
+
+    public static final int CHAT_SELECT_PHOTO = 1001;
+    public static final int CHAT_SELECT_PHOTO_VIEW_BIG = 1003;
+    public static final int RESULT_LOAD_IMAGE_CAPTURE = 1002;
+
+    private String takePhotoTempPath = "";
+
+    /**
+     * 设置默认拍照路径
+     *
+     * @param filePath
+     */
+    public void setTempPicturePath(String filePath) {
+        takePhotoTempPath = filePath;
+    }
+
+    /**
+     * 发送privatePhoto，无需二次确认
+     *
+     * @param photoPath 图片本地地址
+     */
+    public void sendPrivatePhotoNoTips(String photoPath) {
+//        Log.i("Jagger", "sendPrivatePhoto photoPath: " + photoPath);
+
+        if (!chatTarget.isInSession()) {
+            /* 发送图片必须建立会话才能发送 */
+            MaterialDialogAlert dialog = new MaterialDialogAlert(this);
+            dialog.setMessage(getString(R.string.livechat_can_not_send_photo_before_the_conversation_has_started));
+            dialog.addButton(dialog.createButton(
+                    getString(R.string.common_btn_ok), null));
+            dialog.show();
+            return;
+        }
+
+        // TODO: 2019/5/6 发送消息
+        //发送消息
+        LCMessageItem item = mLiveChatManager.SendPhoto(chatTarget.userId, photoPath);
+        appendMsg(item);
+        if (item != null) {
+//            ContactManager.getInstance().addOrUpdateContactBySendMsg(item);
+            mContactManager.updateOrAddContactBySendMessage(item.getUserItem().userId, item.getUserItem().userName, photoPath);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CHAT_SELECT_PHOTO: {
+                    String photoPath = data.getExtras().getString(PictureSelectActivity.SELECT_PICTURE_PATH);
+                    // 2018/12/17 Hardy
+                    sendPrivatePhotoNoTips(photoPath);
+                }
+                break;
+
+                // 2018/12/17 Hardy
+                case CHAT_SELECT_PHOTO_VIEW_BIG: {
+                    String photoPath = data.getStringExtra(AlbumPhotoPreviewActivity.LOCAL_FILE_PATH);
+                    sendPrivatePhotoNoTips(photoPath);
+
+                    if (pictureSelectFragment != null) {
+                        pictureSelectFragment.hideCurItemOperaBtn();
+                    }
+                }
+                break;
+
+                case RESULT_LOAD_IMAGE_CAPTURE:
+                    if ((takePhotoTempPath != null) && (!takePhotoTempPath.equals(""))) {
+                        // 修复在三星 S7 上拍照后旋转的问题	https://www.qoogifts.com.cn/zentaopms2/www/index.php?m=bug&f=view&bugID=15693
+                        ImageUtil.adjustImageDegree(takePhotoTempPath);
+
+                        // 刷新保存相册
+                        ImageUtil.SaveImageToGallery(this, takePhotoTempPath);
+//
+                        // 增加附件
+                        sendPrivatePhotoNoTips(takePhotoTempPath);
+                    }
+                    takePhotoTempPath = "";
+                    break;
+
+                case PermissionManager.REQUEST_CODE_SYSSETTING: {
+
+                }
+                break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    //========================= 2019/5/6    Hardy   选择图片 end==============================================
+
+
     /**
      * 键盘弹出响应
+     *
      * @param height
      */
     @Override
     public void OnSoftPop(int height) {
-        Log.i("Jagger" , "OnSoftPop----mInputAreaStatus:" + height+"----> "+mInputAreaStatus);
+        Log.i("Jagger", "OnSoftPop----mInputAreaStatus:" + height + "----> " + mInputAreaStatus);
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
-        if(mKeyBoardHeight != height){
+        if (mKeyBoardHeight != height) {
             mKeyBoardHeight = height;
-            KeyBoardManager.saveKeyboardHeight(mContext , height);
+            KeyBoardManager.saveKeyboardHeight(mContext, height);
         }
 
         /*
@@ -1029,7 +1266,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             第二次 OnSoftPop，hideInputArea() 方法里检测 mInputAreaStatus == InputAreaStatus.KEYBOARD ? 若是，则调用 hideSoftInput(mEditText , true);
             故导致软键盘弹出后会被马上隐藏。
          */
-        if (mInputAreaStatus == InputAreaStatus.KEYBOARD){
+        if (mInputAreaStatus == InputAreaStatus.KEYBOARD) {
             return;
         }
 
@@ -1047,12 +1284,12 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
      */
     @Override
     public void OnSoftClose() {
-        Log.i("Jagger" , "OnSoftClose----mInputAreaStatus: "+mInputAreaStatus);
+        Log.i("Jagger", "OnSoftClose----mInputAreaStatus: " + mInputAreaStatus);
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
         doScrollToBottom();
-        if(mInputAreaStatus == InputAreaStatus.KEYBOARD){
+        if (mInputAreaStatus == InputAreaStatus.KEYBOARD) {
             hideInputArea(true);
         }
         // ***end***
@@ -1061,8 +1298,8 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 表情选择器弹出响应
      */
-    private void onEmojiBoardShow(){
-        Log.i("Jagger" , "onEmojiBoardShow");
+    private void onEmojiBoardShow() {
+        Log.i("Jagger", "onEmojiBoardShow");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
@@ -1073,7 +1310,45 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 表情选择器收起响应
      */
-    private void onEmojiBoardHide(){
+    private void onEmojiBoardHide() {
+
+    }
+
+    /**
+     * 图片选择器弹出响应
+     */
+    private void onPhotoBoardShow() {
+        Log.i("Jagger", "onPhotoBoardShow");
+
+        //与其它控件显示关系的约束，最好不要乱改
+        // ***start***
+        doScrollToBottom();
+        // ***end***
+    }
+
+    /**
+     * 图片选择器收起响应
+     */
+    private void onPhotoBoardHide() {
+
+    }
+
+    /**
+     * 相机弹出响应
+     */
+    private void onCameraBoardShow() {
+        Log.i("Jagger", "onCameraBoardShow");
+
+        //与其它控件显示关系的约束，最好不要乱改
+        // ***start***
+        doScrollToBottom();
+        // ***end***
+    }
+
+    /**
+     * 相机收起响应
+     */
+    private void onCameraBoardHide() {
 
     }
 
@@ -1096,6 +1371,14 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 //        mCanPullDownLoadMore = enable;
 //    }
 
+    /**
+     * 点击聊天历史
+     */
+    private void onRecentClicked() {
+        //TODO
+        LiveChatRecentWatchActivity.launch(this,targetId);
+    }
+
     /**********************************************  emji小表情选中 start ***********************************************/
 
     /**
@@ -1106,7 +1389,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     @SuppressWarnings("deprecation")
     public void selectEmotion(int val) {
 
-        if(MAX_EDITTEXT_LENGTH - mEditText.getText().toString().length() < 8){
+        if (MAX_EDITTEXT_LENGTH - mEditText.getText().toString().length() < 8) {
             //小表情占用字符串长度最大为8，字符串长度不够，拦截输入
             return;
         }
@@ -1140,7 +1423,6 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     @SuppressWarnings("unchecked")
     @Override
     protected void handleUiMessage(Message msg) {
-        // TODO Auto-generated method stub
         super.handleUiMessage(msg);
         switch (msg.what) {
             case RECEIVE_CHAT_MESSAGE:
@@ -1158,7 +1440,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
                 /* 底层判断无试聊券，无钱发送邀请失败处理 */
                 LiveChatClientListener.LiveChatErrType errType = LiveChatClientListener.LiveChatErrType.values()[msg.arg1];
                 List<LCMessageItem> msgCallbackList = (List<LCMessageItem>) msg.obj;
-                if ((errType == LiveChatClientListener.LiveChatErrType.NoMoney)&&(containSelf(msgCallbackList, targetId))) {
+                if ((errType == LiveChatClientListener.LiveChatErrType.NoMoney) && (containSelf(msgCallbackList, targetId))) {
                     /* 无信用点提示充值 */
                     showCreditNoEnoughDialog(R.string.live_programme_get_ticket_not_enough_money_tips);
                 }
@@ -1173,12 +1455,12 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
                 LCMessageItem itemCallBack = (LCMessageItem) callBack.body;
                 itemCallBack.setLiveChatErrType(LiveChatClientListener.LiveChatErrType.values()[callBack.errType]);
-                Log.i("Jagger" , "SEND_MESSAGE_CALLBACK callBack.errType:" + LiveChatClientListener.LiveChatErrType.values()[callBack.errType].name());
+                Log.i("Jagger", "SEND_MESSAGE_CALLBACK callBack.errType:" + LiveChatClientListener.LiveChatErrType.values()[callBack.errType].name());
                 doUpdateSendMessageCallback(itemCallBack);
                 break;
             case GET_HISTORY_MESSAGE_UPDATE:
                 List<LCMessageItem> tempMsgList = chatTarget.getCurrentSessionMsgList();
-                Log.i("Jagger" , "GET_HISTORY_MESSAGE_UPDATE:" + tempMsgList.size());
+                Log.i("Jagger", "GET_HISTORY_MESSAGE_UPDATE:" + tempMsgList.size());
                 showMsgBeans(tempMsgList, true);
                 break;
             case CHECK_COUPON_UPDATE:
@@ -1190,29 +1472,41 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
                 break;
             case REQUEST_ADD_FAVOUR_SUCCESS: {
                 showToastDone("Added!");
-                }
-                break;
+            }
+            break;
             case REQUEST_ADD_FAVOUR_FAIL: {
                 // 收藏失败
                 LiveChatCallBackItem obj = (LiveChatCallBackItem) msg.obj;
                 ToastUtil.showToast(this, obj.errMsg);
-                }
-                break;
+            }
+            break;
             case TARGET_PHOTO_UPDATE:
                 //更新广播信息 和 头像
                 LiveChatCallBackItem obj = (LiveChatCallBackItem) msg.obj;
-                UserInfoItem userInfoItem = (UserInfoItem)obj.body;
+                UserInfoItem userInfoItem = (UserInfoItem) obj.body;
                 targetUrl = userInfoItem.photoUrl;
                 setTitleImage(userInfoItem.photoUrl, TITLE_IMAGE_IS_CIRCLE, R.drawable.ic_default_photo_woman);
                 break;
             case GET_TARGET_STATUS_CALLBACK:
                 // 态改变界面更新
                 LCUserItem userItem = (LCUserItem) msg.obj;
-                if((userItem != null) && (userItem.statusType != LiveChatClient.UserStatusType.USTATUS_ONLINE)){
+                if ((userItem != null) && (userItem.statusType != LiveChatClient.UserStatusType.USTATUS_ONLINE)) {
                     showOffLineDialog();
                 }
                 break;
             case GET_MAGIC_ICON_SUCCESS:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case GET_PHOTO_CALLBACK:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case PHOTO_FEE_CALLBACK:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case GET_VIDEO_PHOTO_CALLBACK:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case VIDEO_FEE_CALLBACK:
                 mAdapter.notifyDataSetChanged();
                 break;
         }
@@ -1221,9 +1515,10 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 发送消息回调处理
      * TODO:测试是否会有边刷新,边滑动会死.因为同时操作mDataList
+     *
      * @param lcMessageItemsCallBack
      */
-    private void doUpdateSendMessageCallback(List<LCMessageItem> lcMessageItemsCallBack){
+    private void doUpdateSendMessageCallback(List<LCMessageItem> lcMessageItemsCallBack) {
         for (LCMessageItem msgItemCallBack : lcMessageItemsCallBack) {
             doUpdateSendMessageCallback(msgItemCallBack);
         }
@@ -1232,13 +1527,14 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 发送消息回调处理
      * TODO:测试是否会有边刷新,边滑动会死.因为同时操作mDataList
+     *
      * @param msgItemCallBack
      */
-    private void doUpdateSendMessageCallback(LCMessageItem msgItemCallBack){
+    private void doUpdateSendMessageCallback(LCMessageItem msgItemCallBack) {
 
-        for(int i = 0 ; i < mDataList.size(); i++){
+        for (int i = 0; i < mDataList.size(); i++) {
             if (msgItemCallBack != null && (msgItemCallBack.sendType == LCMessageItem.SendType.Send)) {
-                if(mDataList.get(i).msgId == msgItemCallBack.msgId){
+                if (mDataList.get(i).msgId == msgItemCallBack.msgId) {
                     mDataList.get(i).setLiveChatErrType(msgItemCallBack.getLiveChatErrType());
                     mDataList.get(i).statusType = msgItemCallBack.statusType;
                     mAdapter.notifyItemChanged(i);
@@ -1249,15 +1545,15 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     /**
      * 发送
+     *
      * @param message
      */
-    private void sendTextMsg(String message){
+    private void sendTextMsg(String message) {
         //纯空格，按钮可点击，但不发送，且清空已键入空格
-        if(TextUtils.isEmpty(message.replaceAll(" ","").replaceAll("\r" , "").replaceAll("\n",""))){
+        if (TextUtils.isEmpty(message.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", ""))) {
             return;
         }
 
-        //TODO
         LCMessageItem item = mLiveChatManager.SendMessage(chatTarget.userId, message, LiveChatClient.InviteStatusType.INVITE_TYPE_CHAT);
 
         //GA统计
@@ -1277,7 +1573,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
      * 发送语音
      */
     public void sendVoiceItem(String savePath, long recordTime) {
-        Log.i("Jagger" , "LiveChatTalkActivity sendVoiceItem recordTime:" + recordTime);
+        Log.i("Jagger", "LiveChatTalkActivity sendVoiceItem recordTime:" + recordTime);
 
         if (!hasLadyInvited()) {
             // 判断是否有女士发来消息，否则不让发语音
@@ -1304,7 +1600,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
             return;
         }
 
-        if(recordTime < 1){
+        if (recordTime < 1) {
             //录音时长小于1秒，提示不发送
             ToastUtil.showToast(this, R.string.livechat_record_voice_too_short);
             return;
@@ -1326,6 +1622,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     /**
      * 发送小高级表情
+     *
      * @param magicIconId
      */
     public void sendMagicIcon(String magicIconId) {
@@ -1355,16 +1652,17 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     /**
      * 点击发送出错按钮，弹出提示
+     *
      * @param messageItem
      */
-    private void showErrorSendNotify(final LiveMessageItem messageItem){
+    private void showErrorSendNotify(final LiveMessageItem messageItem) {
         //TODO
     }
 
     /**
      * 加载更多
      */
-    private void loadMorePrivateMessage(){
+    private void loadMorePrivateMessage() {
         //TODO
 //        mLMManager.GetMorePrivateMsgWithUserId(mUserId);
     }
@@ -1372,33 +1670,34 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 点击重发
      */
-    private void onErrorClicked(final LCMessageItem item){
+    private void onErrorClicked(final LCMessageItem item) {
         LiveChatClientListener.LiveChatErrType errType = item.getLiveChatErrType();
-        Log.i("Jagger" , "LiveChatTalkActivity onErrorClicked:" + errType.name());
+        Log.i("Jagger", "LiveChatTalkActivity onErrorClicked:" + errType.name());
 
         if (errType == LiveChatClientListener.LiveChatErrType.SideOffile
                 || errType == LiveChatClientListener.LiveChatErrType.UnbindInterpreter
                 || errType == LiveChatClientListener.LiveChatErrType.BlockUser) {
             showOffLineDialog();
-        }else if (errType == LiveChatClientListener.LiveChatErrType.NoMoney) {
+        } else if (errType == LiveChatClientListener.LiveChatErrType.NoMoney) {
             showNoMoney(item);
-        }else if (errType == LiveChatClientListener.LiveChatErrType.InvalidUser
+        } else if (errType == LiveChatClientListener.LiveChatErrType.InvalidUser
                 || errType == LiveChatClientListener.LiveChatErrType.InvalidPassword
                 || errType == LiveChatClientListener.LiveChatErrType.CheckVerFail
                 || errType == LiveChatClientListener.LiveChatErrType.LoginFail
                 || errType == LiveChatClientListener.LiveChatErrType.CanNotSetOffline) {
             doReLogin();
-        }else{
+        } else {
             showResendDialog(item);
         }
     }
 
     /**
      * 重发
+     *
      * @param item
      */
-    private void resendMsgItem(LCMessageItem item){
-        if(item != null){
+    private void resendMsgItem(LCMessageItem item) {
+        if (item != null) {
             //TODO
 //            if (mPositionMap.containsKey(item.msgId)) {
 //                int position = mPositionMap.get(item.msgId);
@@ -1437,7 +1736,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 //            addRow(newItem);
 //            scrollToBottom(true);
 
-            if(mDataList.contains(item)){
+            if (mDataList.contains(item)) {
                 mDataList.remove(item);
                 mLiveChatManager.RemoveHistoryMessage(item);
             }
@@ -1454,7 +1753,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
                     break;
                 case Photo:
                     newItem = mLiveChatManager.SendPhoto(item.toId,
-                            item.getPhotoItem().srcFilePath);
+                            item.getPhotoItem().mClearSrcPhotoInfo.photoPath);
                     break;
                 case Voice:
                     newItem = mLiveChatManager.SendVoice(item.toId,
@@ -1508,15 +1807,15 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 判断是否需要显示会话暂停提示
      */
-    private boolean isChatPause(){
+    private boolean isChatPause() {
         boolean isPause = true;
-        if(chatTarget.isPaused()){
+        if (chatTarget.isPaused()) {
             LCMessageItem msg = chatTarget.getTheSendLastMessage();
             //找到自己发出的消息 并 消息没发送失败 并 消息时间超过10分钟
-            if(msg != null && msg.statusType != LCMessageItem.StatusType.Fail && (LCMessageItem.GetCreateTime() - msg.createTime < 5 * 60)){
+            if (msg != null && msg.statusType != LCMessageItem.StatusType.Fail && (LCMessageItem.GetCreateTime() - msg.createTime < 5 * 60)) {
                 isPause = false;
             }
-        }else{
+        } else {
             isPause = false;
         }
 
@@ -1552,17 +1851,18 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     /**
      * 是否包括当前用户
+     *
      * @param msgList
      * @param id
      * @return
      */
-    private boolean containSelf(List<LCMessageItem> msgList, String id){
+    private boolean containSelf(List<LCMessageItem> msgList, String id) {
         boolean containSelf = false;
-        if((msgList != null) && (msgList.size() > 0)){
-            for(LCMessageItem item : msgList){
-                if((item != null)&&(item.getUserItem() != null)){
+        if ((msgList != null) && (msgList.size() > 0)) {
+            for (LCMessageItem item : msgList) {
+                if ((item != null) && (item.getUserItem() != null)) {
                     String usrId = item.getUserItem().userId;
-                    if(usrId.equals(id)){
+                    if (usrId.equals(id)) {
                         containSelf = true;
                         break;
                     }
@@ -1639,12 +1939,54 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         sendUiMessage(msg);
     }
 
+    /**
+     * 下载图片成功回调
+     */
+    private void onGetPhotoCallback() {
+        Message msg = Message.obtain();
+        msg.what = GET_PHOTO_CALLBACK;
+        sendUiMessage(msg);
+    }
+
+    /**
+     * 购买图片回调
+     */
+    private void onPhotoFeeCallback() {
+        Message msg = Message.obtain();
+        msg.what = PHOTO_FEE_CALLBACK;
+        sendUiMessage(msg);
+    }
+
+    /**
+     * 购买视频回调
+     */
+    private void onVideoFeeCallback() {
+        Message msg = Message.obtain();
+        msg.what = VIDEO_FEE_CALLBACK;
+        sendUiMessage(msg);
+    }
+
+    /**
+     * 取Video照片回调
+     */
+    private void onGetVideoPhotoCallback() {
+        Message msg = Message.obtain();
+        msg.what = GET_VIDEO_PHOTO_CALLBACK;
+        sendUiMessage(msg);
+    }
+
     public void appendMsg(LCMessageItem msgBean) {
         // 更新视图
         if (msgBean != null) {
             mDataList.add(msgBean);
             mAdapter.notifyDataSetChanged();
-            doScrollToBottom();
+            //延迟一点，等item生成了再滚，否则滚不到最底
+            mRecyclerViewMsg.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doScrollToBottom();
+                }
+            }, 500);
         } else {
 //            DialogUIUtils.showAlert(mContext, "",
 //                    getString(R.string.live_chat_kickoff_by_sever_update),
@@ -1704,8 +2046,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
      * @param smooth
      */
     private void showMsgBeans(List<LCMessageItem> msgBeans, boolean smooth) {
-        synchronized (msgBeans)
-        {
+        synchronized (msgBeans) {
 //            msgList.replaceAllRow(msgBeans);
             mDataList.clear();
             mDataList.addAll(msgBeans);
@@ -1718,7 +2059,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 发送消息失败（男士余额不足），点击重发按钮提示
      */
-    private void showNoMoney(final LCMessageItem item){
+    private void showNoMoney(final LCMessageItem item) {
         MaterialDialogAlert dialog = new MaterialDialogAlert(mContext);
         dialog.setMessage(mContext
                 .getString(R.string.send_error_not_enough_money));
@@ -1748,7 +2089,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 主播离线对话框
      */
-    private void showOffLineDialog(){
+    private void showOffLineDialog() {
         MaterialDialogAlert dialog = new MaterialDialogAlert(this);
         dialog.setMessage(mContext.getString(R.string.send_error_lady_offline));
         dialog.addButton(dialog.createButton("ok", null));
@@ -1758,7 +2099,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 重发对话框
      */
-    private void showResendDialog(final LCMessageItem item){
+    private void showResendDialog(final LCMessageItem item) {
 //        DialogUIUtils.showAlert(mContext, "",
 //                getString(R.string.send_error_text_normal),
 //                getString(R.string.common_btn_retry),
@@ -1817,7 +2158,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 取消邀请/结束会话
      */
-    private void doEndChat(){
+    private void doEndChat() {
         LCUserItem userItem = mLiveChatManager.GetUserWithId(targetId);
         //如果是男士邀请
         if (endTalkMenuStatus == EndTalkMenuStatus.MAN_INVITE) {
@@ -1846,20 +2187,20 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     /**
      * 由于未登录成功等原因，底层认为异常返回空，跳去登陆处理,首先注销php登陆
      */
-    private void doReLogin(){
+    private void doReLogin() {
         LoginManager.getInstance().logout(true);
         String liveChatUrl = URL2ActivityManager.createLiveChatActivityUrl(targetName, targetId, targetUrl);
-        URL2ActivityManager.getInstance().URL2Activity(mContext , liveChatUrl);
+        URL2ActivityManager.getInstance().URL2Activity(mContext, liveChatUrl);
     }
 
     /**
      * 取主播信息
      */
-    private void doGetUserInfo(){
+    private void doGetUserInfo() {
         LiveRequestOperator.getInstance().GetUserInfo(targetId, new OnGetUserInfoCallback() {
             @Override
             public void onGetUserInfo(boolean isSuccess, int errCode, String errMsg, UserInfoItem userItem) {
-                if(isSuccess && userItem != null){
+                if (isSuccess && userItem != null) {
                     LiveChatCallBackItem liveChatCallBackItem = new LiveChatCallBackItem(errCode, String.valueOf(errCode), errMsg, userItem);
 
                     Message msg = Message.obtain();
@@ -1872,9 +2213,37 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
         });
     }
 
-    /**********************************************  liveChatManager相关业务 end  ***********************************************/
+    /**
+     * 打开相片、视频详细
+     *
+     * @param lcMessageItem
+     */
+    private void doOpenPhotoAndVideoDetail(LCMessageItem lcMessageItem) {
+        PrivatePhotoPriviewBean privatePhotoPriviewBean = new PrivatePhotoPriviewBean();
+        int position = 0;
 
-    /**********************************************  liveChatManager相关listener回调 start  ***********************************************/
+        for (LCMessageItem item : mDataList) {
+            if (item.msgType == LCMessageItem.MessageType.Photo || item.msgType == LCMessageItem.MessageType.Video) {
+
+                PrivatePhotoPriviewBean.IdBean idBean = new PrivatePhotoPriviewBean.IdBean(targetId, item.msgId);    // fromId 发送者 userId
+
+                privatePhotoPriviewBean.msgList.add(idBean);
+
+                if (item.msgId == lcMessageItem.msgId) {
+                    privatePhotoPriviewBean.currPosition = position;
+                    privatePhotoPriviewBean.anchorId = targetId;
+                }
+
+                position++;
+            }
+        }
+
+        LiveChatPhotoAndVideoPreviewActivity.startAct(mContext, privatePhotoPriviewBean);
+    }
+
+    /**********************************************  liveChatManager 相关业务 end  ***********************************************/
+
+    /**********************************************  liveChatManager 相关listener回调 start  ***********************************************/
 
     @Override
     public void OnGetEmotionConfig(boolean success, String errno, String errmsg, OtherEmotionConfigItem item) {
@@ -1883,7 +2252,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnSendEmotion(LiveChatClientListener.LiveChatErrType errType, String errmsg, LCMessageItem item) {
-        if(item != null){
+        if (item != null) {
 //            LCUserItem userItem = item.getUserItem();
 //            if(userItem != null &&
 //                    userItem.userId != null
@@ -1924,11 +2293,11 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnSendMagicIcon(LiveChatClientListener.LiveChatErrType errType, String errmsg, LCMessageItem item) {
-        if(item != null){
+        if (item != null) {
             LCUserItem userItem = item.getUserItem();
-            if(userItem != null &&
+            if (userItem != null &&
                     userItem.userId != null
-                    && userItem.userId.equals(targetId)){
+                    && userItem.userId.equals(targetId)) {
                 LiveChatCallBackItem callBack = new LiveChatCallBackItem(
                         errType.ordinal(), null, errmsg, item);
                 onSendMessageUpdate(callBack);
@@ -1945,8 +2314,8 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnGetMagicIconSrcImage(boolean success, LCMagicIconItem magicIconItem) {
-        Log.i("Jagger" , "OnGetMagicIconSrcImage:" + success);
-        if(success){
+        Log.i("Jagger", "OnGetMagicIconSrcImage:" + success);
+        if (success) {
             Message msg = Message.obtain();
             msg.what = GET_MAGIC_ICON_SUCCESS;
             sendUiMessage(msg);
@@ -1955,8 +2324,8 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnGetMagicIconThumbImage(boolean success, LCMagicIconItem magicIconItem) {
-        Log.i("Jagger" , "OnGetMagicIconThumbImage:" + success);
-        if(success){
+        Log.i("Jagger", "OnGetMagicIconThumbImage:" + success);
+        if (success) {
             Message msg = Message.obtain();
             msg.what = GET_MAGIC_ICON_SUCCESS;
             sendUiMessage(msg);
@@ -1965,12 +2334,12 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnSendMessage(LiveChatClientListener.LiveChatErrType errType, String errmsg, LCMessageItem item) {
-        Log.i("Jagger" , "OnSendMessage:" + errType.name());
-        if(item != null){
+        Log.i("Jagger", "OnSendMessage:" + errType.name());
+        if (item != null) {
             LCUserItem userItem = item.getUserItem();
-            if(userItem != null &&
+            if (userItem != null &&
                     userItem.userId != null
-                    && userItem.userId.equals(targetId)){
+                    && userItem.userId.equals(targetId)) {
                 LiveChatCallBackItem callBack = new LiveChatCallBackItem(
                         errType.ordinal(), null, errmsg, item);
                 onSendMessageUpdate(callBack);
@@ -2011,7 +2380,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     @Override
     public void OnSendMessageListFail(LiveChatClientListener.LiveChatErrType errType, ArrayList<LCMessageItem> msgList) {
         /* 底层检测是否有试聊券，是否有钱聊天，如果没有直接此处返回错误 */
-        Log.i("Jagger" , "OnSendMessageListFail:" + errType.name());
+        Log.i("Jagger", "OnSendMessageListFail:" + errType.name());
         onReceiveMsgList(errType, msgList);
     }
 
@@ -2033,7 +2402,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     @Override
     public void OnGetHistoryMessage(boolean success, String errno, String errmsg, LCUserItem userItem) {
         /* 拿历史消息返回，需更新消息列表 */
-        Log.i("Jagger" , "OnGetHistoryMessage success:" + success + ",userItem:" + userItem.userId);
+        Log.i("Jagger", "OnGetHistoryMessage success:" + success + ",userItem:" + userItem.userId);
         if (success && userItem != null) {
             onGetHistoryMessageCallback(userItem);
         }
@@ -2041,7 +2410,7 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnGetUsersHistoryMessage(boolean success, String errno, String errmsg, LCUserItem[] userItems) {
-        Log.i("Jagger" , "OnGetUsersHistoryMessage success:" + success);
+        Log.i("Jagger", "OnGetUsersHistoryMessage success:" + success);
         if (success && userItems != null) {
             for (LCUserItem userItem : userItems) {
                 onGetHistoryMessageCallback(userItem);
@@ -2056,9 +2425,9 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnGetUserStatus(LiveChatClientListener.LiveChatErrType errType, String errmsg, LCUserItem[] userList) {
-        if(errType == LiveChatClientListener.LiveChatErrType.Success && userList != null && !onlineChecked){
-            for(LCUserItem item : userList){
-                if(item.userId.equals(targetId)){
+        if (errType == LiveChatClientListener.LiveChatErrType.Success && userList != null && !onlineChecked) {
+            for (LCUserItem item : userList) {
+                if (item.userId.equals(targetId)) {
                     onlineChecked = true;
                     Message msg = Message.obtain();
                     msg.what = GET_TARGET_STATUS_CALLBACK;
@@ -2166,13 +2535,13 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
     public void OnEndTalk(LiveChatClientListener.LiveChatErrType errType, String errmsg, LCUserItem userItem) {
         if ((userItem != null) && (userItem.userId != null)
                 && (userItem.userId.equals(targetId))) {
-            if(errType == LiveChatClientListener.LiveChatErrType.ConnectFail){
+            if (errType == LiveChatClientListener.LiveChatErrType.ConnectFail) {
                 //网络异常不退出，生成系统提示
 //				LiveChatManager.getInstance().BuildAndInsertSystemMsg(targetId, errmsg);
                 //edit by Jagger 2018-5-2
                 //按<节目功能点_20180417>新需求, 结束会话遇网络错误用Toast显示
                 ToastUtil.showToast(mContext, errmsg);
-            }else {
+            } else {
                 Message msg = Message.obtain();
                 msg.what = END_CHAT;
                 sendUiMessage(msg);
@@ -2187,17 +2556,17 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnSendVoice(LiveChatClientListener.LiveChatErrType errType, String errno, String errmsg, LCMessageItem item) {
-        Log.i("Jagger", "OnSendVoice errno:" + errno + ",errmsg:" + errmsg );
-        if(item != null){
-			LCUserItem userItem = item.getUserItem();
-			if(userItem != null &&
-					userItem.userId != null
-					&& userItem.userId.equals(targetId)){
-				LiveChatCallBackItem callBack = new LiveChatCallBackItem(
-						errType.ordinal(), errno, errmsg, item);
-				onSendMessageUpdate(callBack);
-			}
-		}
+        Log.i("Jagger", "OnSendVoice errno:" + errno + ",errmsg:" + errmsg);
+        if (item != null) {
+            LCUserItem userItem = item.getUserItem();
+            if (userItem != null &&
+                    userItem.userId != null
+                    && userItem.userId.equals(targetId)) {
+                LiveChatCallBackItem callBack = new LiveChatCallBackItem(
+                        errType.ordinal(), errno, errmsg, item);
+                onSendMessageUpdate(callBack);
+            }
+        }
     }
 
     @Override
@@ -2207,6 +2576,72 @@ public class LiveChatTalkActivity extends BaseActionBarFragmentActivity implemen
 
     @Override
     public void OnRecvVoice(LCMessageItem item) {
+        if (item.fromId.equals(chatTarget.userId)) {
+            onReceiveMsgUpdate(item);
+        }
+    }
+
+    @Override
+    public void OnSendPhoto(LiveChatClientListener.LiveChatErrType errType, String errno, String errmsg, LCMessageItem item) {
+        if (item != null) {
+            LCUserItem userItem = item.getUserItem();
+            if (userItem != null &&
+                    userItem.userId != null
+                    && userItem.userId.equals(targetId)) {
+                LiveChatCallBackItem callBack = new LiveChatCallBackItem(
+                        errType.ordinal(), errno, errmsg, item);
+                onSendMessageUpdate(callBack);
+            }
+        }
+    }
+
+    @Override
+    public void OnPhotoFee(boolean success, String errno, String errmsg, LCMessageItem item) {
+        if (item.fromId.equals(chatTarget.userId)) {
+            onPhotoFeeCallback();
+        }
+    }
+
+    @Override
+    public void OnGetPhoto(boolean isSuccess, String errno, String errmsg, LCMessageItem item) {
+//        if (item.fromId.equals(chatTarget.userId)) {
+            onGetPhotoCallback();
+//        }
+    }
+
+    @Override
+    public void OnRecvPhoto(LCMessageItem item) {
+        if (item.fromId.equals(chatTarget.userId)) {
+            onReceiveMsgUpdate(item);
+        }
+    }
+
+    @Override
+    public void OnGetVideoPhoto(LiveChatClientListener.LiveChatErrType errType, String errno, String errmsg, String fromUserId, String inviteId, String videoId, LCRequestJniLiveChat.VideoPhotoType type, String filePath, ArrayList<LCMessageItem> msgList) {
+        if (fromUserId.equals(chatTarget.userId)) {
+            onGetVideoPhotoCallback();
+        }
+    }
+
+    @Override
+    public void OnVideoFee(boolean success, String errno, String errmsg, LCMessageItem item) {
+        if (item.fromId.equals(chatTarget.userId)) {
+            onVideoFeeCallback();
+        }
+    }
+
+    @Override
+    public void OnStartGetVideo(String userId, String videoId, String inviteId, String videoPath, ArrayList<LCMessageItem> msgList) {
+
+    }
+
+    @Override
+    public void OnGetVideo(LiveChatClientListener.LiveChatErrType errType, String userId, String videoId, String inviteId, String videoPath, ArrayList<LCMessageItem> msgList) {
+
+    }
+
+    @Override
+    public void OnRecvVideo(LCMessageItem item) {
         if (item.fromId.equals(chatTarget.userId)) {
             onReceiveMsgUpdate(item);
         }

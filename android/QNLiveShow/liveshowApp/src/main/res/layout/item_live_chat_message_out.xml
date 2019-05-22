@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="36dp"
-            android:background="@drawable/message_bubble_out"
+            android:background="@drawable/live_message_bubble_out"
             android:gravity="left|center"
             android:minHeight="36dp"
             android:minWidth="48dp"
@@ -33,12 +33,13 @@
 
         <ImageButton
             android:id="@+id/btnError"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleType="fitXY"
             android:layout_centerVertical="true"
-            android:layout_marginRight="0dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/touch_feedback_holo_light_round_rectangle"
-            android:src="@drawable/ic_error_grey600_24dp"
+            android:src="@drawable/ic_error_red"
             android:visibility="gone" />
 
         <com.qpidnetwork.livemodule.view.MaterialProgressBar

@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.hangout.obj;
 
+import com.qpidnetwork.livemodule.im.listener.IMHangoutAnchorItem;
+
 /**
  * Description:
  * <p>
@@ -12,15 +14,17 @@ public class HangoutVedioWindowObj {
     public boolean isUserSelf = false;  //用户（男士）
 //    public boolean isManUser = false;
     public boolean isOnLine = false;
+    public IMHangoutAnchorItem imHangoutAnchorItem; //主播信息 (可能为空)
 
     public HangoutVedioWindowObj(){}
 
-    public HangoutVedioWindowObj(String targetUserId, String photoUrl, String nickName, boolean isUserSelf){
+    public HangoutVedioWindowObj(String targetUserId, String photoUrl, String nickName, boolean isUserSelf, IMHangoutAnchorItem imHangoutAnchorItem){
         this.targetUserId = targetUserId;
         this.photoUrl = photoUrl;
         this.nickName = nickName;
         this.isUserSelf = isUserSelf;
 //        this.isManUser = isManUser;
+        this.imHangoutAnchorItem = imHangoutAnchorItem;
     }
 
     @Override

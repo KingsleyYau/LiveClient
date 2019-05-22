@@ -47,6 +47,7 @@ import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.ButtonUtils;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 import com.qpidnetwork.livemodule.utils.HotItemStyleManager;
 import com.qpidnetwork.livemodule.utils.StringUtil;
 import com.qpidnetwork.livemodule.view.ViewSmartHelper;
@@ -155,23 +156,6 @@ public class HotListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //背景图
             if(!TextUtils.isEmpty(bean.roomPhotoUrl) && mContext!= null){
 //                //edit by Jagger 2018-6-29:picasso不会从本地取缓存，每次下载，初始化时图片显示得太慢，所以改用fresco
-//                //对齐方式(左上角对齐)
-//                PointF focusPoint = new PointF();
-//                focusPoint.x = 0f;
-//                focusPoint.y = 0f;
-//
-//                //占位图，拉伸方式
-//                GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-//                GenericDraweeHierarchy hierarchy = builder
-//                        .setFadeDuration(300)
-//                        .setPlaceholderImage(R.drawable.bg_hotlist_item)    //占位图
-//                        .setPlaceholderImageScaleType(ScalingUtils.ScaleType.FIT_XY)    //占位图拉伸
-//                        .setActualImageFocusPoint(focusPoint)
-//                        .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)     //图片拉伸（配合上面的focusPoint）
-//                        .build();
-//                viewHolder.ivRoomBg.setHierarchy(hierarchy);
-
-
                 //压缩、裁剪图片
                 int picHeight = itemHeight;
 //                int maxHeight = mContext.getResources().getInteger(R.integer.lady_hot_list_bg_max_HW);
@@ -179,16 +163,8 @@ public class HotListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if(itemHeight > maxHeight){
                     picHeight = maxHeight;
                 }
-                Uri imageUri = Uri.parse(bean.roomPhotoUrl);
-                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
-                        .setResizeOptions(new ResizeOptions(picHeight, picHeight))
-                        .build();
-                DraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setImageRequest(request)
-                        .setOldController(viewHolder.ivRoomBg.getController())
-                        .setControllerListener(new BaseControllerListener<ImageInfo>())
-                        .build();
-                viewHolder.ivRoomBg.setController(controller);
+                FrescoLoadUtil.loadUrl(viewHolder.ivRoomBg, bean.roomPhotoUrl, picHeight);
+
             }
 
             //区别处理节目和普通直播间
@@ -568,31 +544,7 @@ public class HotListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             //edit by Jagger 2018-6-29:picasso不会从本地取缓存，每次下载，初始化时图片显示得太慢，所以改用fresco
             //对齐方式(左上角对齐)
-            PointF focusPoint = new PointF();
-            focusPoint.x = 0f;
-            focusPoint.y = 0f;
-
-            // 2018/12/29 Hardy
-            /*
-                 不在 onBindViewHolder 中使用，有以下原因：
-                 1、https://www.fresco-cn.org/docs/gotchas.html
-                     不要复用 DraweeHierarchies
-                     不要在多个 DraweeHierarchy 中使用同一个 Drawable
-
-                 2、https://www.fresco-cn.org/docs/using-drawees-code.html
-                     对于同一个View，请不要多次调用setHierarchy，即使这个 View 是可回收的。创建 DraweeHierarchy 的较为耗时的一个过程，应该多次利用。
-             */
-
-            //占位图，拉伸方式
-            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(itemView.getContext().getResources());
-            GenericDraweeHierarchy hierarchy = builder
-                    .setFadeDuration(300)
-                    .setPlaceholderImage(R.drawable.bg_hotlist_item)    //占位图
-                    .setPlaceholderImageScaleType(ScalingUtils.ScaleType.FIT_XY)    //占位图拉伸
-                    .setActualImageFocusPoint(focusPoint)
-                    .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)     //图片拉伸（配合上面的focusPoint）
-                    .build();
-            ivRoomBg.setHierarchy(hierarchy);
+            FrescoLoadUtil.setHierarchy(itemView.getContext(), ivRoomBg, R.drawable.bg_hotlist_item, false);
         }
     }
 

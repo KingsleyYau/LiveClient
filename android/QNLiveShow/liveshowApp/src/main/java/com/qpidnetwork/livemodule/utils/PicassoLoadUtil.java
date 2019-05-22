@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.utils;
 
 import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -18,6 +19,10 @@ public class PicassoLoadUtil {
 
     public static void loadUrl(ImageView imageView, String url) {
 //        Picasso.with(imageView.getContext())
+        if(TextUtils.isEmpty(url)){
+            return;
+        }
+
         Picasso.get()
                 .load(url)
                 .into(imageView);
@@ -25,6 +30,10 @@ public class PicassoLoadUtil {
 
     public static void loadUrlNoMCache(ImageView imageView, String url) {
 //        Picasso.with(imageView.getContext())
+        if(TextUtils.isEmpty(url)){
+            return;
+        }
+
         Picasso.get()
                 .load(url)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -35,6 +44,11 @@ public class PicassoLoadUtil {
 
     public static void loadUrl(ImageView imageView, String url, int defaultResId) {
 //        Picasso.with(imageView.getContext())
+        if(TextUtils.isEmpty(url)){
+            loadRes(imageView, defaultResId);
+            return;
+        }
+
         Picasso.get()
                 .load(url)
                 .placeholder(defaultResId)
@@ -44,6 +58,11 @@ public class PicassoLoadUtil {
 
     public static void loadUrlNoMCache(ImageView imageView, String url, int defaultResId) {
 //        Picasso.with(imageView.getContext())
+        if(TextUtils.isEmpty(url)){
+            loadRes(imageView, defaultResId);
+            return;
+        }
+
         Picasso.get()
                 .load(url)
                 .placeholder(defaultResId)
@@ -53,10 +72,13 @@ public class PicassoLoadUtil {
     }
 
 
-
-
     public static void loadUrl(ImageView imageView, String url, int defaultResId, int targetW, int targetH) {
 //        Picasso.with(imageView.getContext())
+        if(TextUtils.isEmpty(url)){
+            loadRes(imageView, defaultResId);
+            return;
+        }
+
         Picasso.get()
                 .load(url)
                 .placeholder(defaultResId)
@@ -68,6 +90,11 @@ public class PicassoLoadUtil {
 
     public static void loadUrlNoMCache(ImageView imageView, String url, int defaultResId, int targetW, int targetH) {
 //        Picasso.with(imageView.getContext())
+        if(TextUtils.isEmpty(url)){
+            loadRes(imageView, defaultResId);
+            return;
+        }
+
         Picasso.get()
                 .load(url)
                 .placeholder(defaultResId)
@@ -94,4 +121,5 @@ public class PicassoLoadUtil {
                 .placeholder(defaultResId)
                 .into(imageView);
     }
+
 }

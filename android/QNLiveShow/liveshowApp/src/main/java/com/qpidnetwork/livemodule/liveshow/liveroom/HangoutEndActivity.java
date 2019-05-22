@@ -15,7 +15,7 @@ import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageVi
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 
 import java.util.ArrayList;

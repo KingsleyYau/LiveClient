@@ -22,10 +22,17 @@ public class HangoutMsgPopViewAdapter extends BaseRecyclerViewAdapter<BubbleMess
 
     private HangoutMsgPopViewHelper mPopViewHelper;
 
+    private int mIconBigWH;
+    private int mIconSmallWH;
+
     public HangoutMsgPopViewAdapter(Context context) {
         super(context);
 
         mPopViewHelper = new HangoutMsgPopViewHelper(context);
+
+        // icon 头像宽高大小
+        mIconBigWH = context.getResources().getDimensionPixelSize(R.dimen.live_size_30dp);
+        mIconSmallWH = context.getResources().getDimensionPixelSize(R.dimen.live_size_16dp);
     }
 
     @Override
@@ -42,6 +49,8 @@ public class HangoutMsgPopViewAdapter extends BaseRecyclerViewAdapter<BubbleMess
     public void initViewHolder(final HangoutMsgPopViewHolder holder) {
         // 2019/3/5 初始化 item 宽度
         mPopViewHelper.initItemViewWidth(holder.itemView);
+        // 2019/4/24 Hardy  外层传进图片压缩的宽高大小
+        holder.setIconWH(mIconBigWH, mIconSmallWH);
 
         // 2019/3/5 hang out 点击事件
         holder.mPbHangout.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +81,9 @@ public class HangoutMsgPopViewAdapter extends BaseRecyclerViewAdapter<BubbleMess
         public TextView mTvHangout;
         public ProgressBar mPbHangout;
 
+        private int mIconBigWH;
+        private int mIconSmallWH;
+
         public HangoutMsgPopViewHolder(View itemView) {
             super(itemView);
         }
@@ -91,13 +103,12 @@ public class HangoutMsgPopViewAdapter extends BaseRecyclerViewAdapter<BubbleMess
 
         @Override
         public void setData(BubbleMessageBean data, int position) {
-            // TODO: 2019/3/5
             mTvName.setText(data.anchorName);
             mTvDesc.setText(data.invitaionMsg);
 
             //计算倒计时
-            float progress = ((float) (System.currentTimeMillis() - data.firstShowTime)) * 100 /BubbleMessageManager.BUBBLE_SHOW_MAX_TIME;
-            mPbHangout.setProgress(progress >= 100 ? 0 : (100 - (int)progress));
+            float progress = ((float) (System.currentTimeMillis() - data.firstShowTime)) * 100 / BubbleMessageManager.BUBBLE_SHOW_MAX_TIME;
+            mPbHangout.setProgress(progress >= 100 ? 0 : (100 - (int) progress));
 
             if (data.bubbleMsgType == BubbleMessageType.Hangout) {
                 mTvHangout.setText(R.string.Hand_out);
@@ -109,14 +120,14 @@ public class HangoutMsgPopViewAdapter extends BaseRecyclerViewAdapter<BubbleMess
                 mPbHangout.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.pb_green_bg));
             }
 
-            int iconResId =  R.drawable.ic_default_photo_woman_rect;    // R.drawable.female_default_profile_photo_40dp
+            int iconResId = R.drawable.ic_default_photo_woman_rect;    // R.drawable.female_default_profile_photo_40dp
             mIvUserBig.setImageResource(iconResId);
             mIvUserSmall.setImageResource(iconResId);
-            if(!TextUtils.isEmpty(data.anchorPhotoUrl)) {
-                PicassoLoadUtil.loadUrl(mIvUserBig, data.anchorPhotoUrl, iconResId, context.getResources().getDimensionPixelSize(R.dimen.live_size_50dp), context.getResources().getDimensionPixelSize(R.dimen.live_size_50dp));
+            if (!TextUtils.isEmpty(data.anchorPhotoUrl)) {
+                PicassoLoadUtil.loadUrl(mIvUserBig, data.anchorPhotoUrl, iconResId, mIconBigWH, mIconBigWH);
             }
-            if(!TextUtils.isEmpty(data.anchorFriendPhotoUrl)) {
-                PicassoLoadUtil.loadUrl(mIvUserSmall, data.anchorFriendPhotoUrl, iconResId, context.getResources().getDimensionPixelSize(R.dimen.live_size_30dp), context.getResources().getDimensionPixelSize(R.dimen.live_size_30dp));
+            if (!TextUtils.isEmpty(data.anchorFriendPhotoUrl)) {
+                PicassoLoadUtil.loadUrl(mIvUserSmall, data.anchorFriendPhotoUrl, iconResId, mIconSmallWH, mIconSmallWH);
             }
         }
 
@@ -129,6 +140,11 @@ public class HangoutMsgPopViewAdapter extends BaseRecyclerViewAdapter<BubbleMess
 
         public int getProgress() {
             return mPbHangout.getProgress();
+        }
+
+        public void setIconWH(int mIconBigWH,int mIconSmallWH) {
+            this.mIconBigWH = mIconBigWH;
+            this.mIconSmallWH = mIconSmallWH;
         }
     }
 }

@@ -12,7 +12,7 @@ import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.personal.SettingPerfenceLive;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.SPUtils;
 
 import java.util.ArrayList;

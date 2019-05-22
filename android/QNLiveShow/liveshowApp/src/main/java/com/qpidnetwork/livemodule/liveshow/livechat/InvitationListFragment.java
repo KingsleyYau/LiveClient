@@ -16,7 +16,7 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatSessionInfoItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatTalkUserListItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserCamStatus;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;

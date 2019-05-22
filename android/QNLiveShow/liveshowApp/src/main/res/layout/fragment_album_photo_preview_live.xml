@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<com.qpidnetwork.livemodule.liveshow.livechat.album.ZoomableDraweeView-->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.qpidnetwork.livemodule.view.MaterialProgressBar
+        android:id="@+id/progress"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        wheel:matProg_barColor="@color/white"
+        wheel:matProg_progressIndeterminate="true" />
+
+</RelativeLayout>

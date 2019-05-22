@@ -1,4 +1,4 @@
-package com.qpidnetwork.livemodule.utils;
+package com.qpidnetwork.qnbridgemodule.util;
 
 import java.util.List;
 

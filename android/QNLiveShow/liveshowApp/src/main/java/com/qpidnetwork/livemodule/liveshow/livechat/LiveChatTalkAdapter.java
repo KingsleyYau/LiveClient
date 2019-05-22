@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
@@ -14,14 +15,19 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.livechat.LCMessageItem;
+import com.qpidnetwork.livemodule.livechat.LCPhotoInfoItem;
 import com.qpidnetwork.livemodule.livechat.LCSystemLinkItem;
 import com.qpidnetwork.livemodule.livechat.LCTextItem;
+import com.qpidnetwork.livemodule.livechat.LCVideoItem;
 import com.qpidnetwork.livemodule.livechat.LCWarningLinkItem;
 import com.qpidnetwork.livemodule.livechat.LiveChatManager;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.livechat.downloader.LivechatVoiceDownloader;
@@ -30,9 +36,14 @@ import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
+import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.view.MaterialProgressBar;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +67,12 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
     private static final int TYPE_TEXT_MAGIC_ICON_RECV = 17;
     private static final int TYPE_TEXT_MAGIC_ICON_SEND = 18;
     private static final int TYPE_NOTIFY = 19;
+    private static final int TYPE_TEXT_PHOTO_RECV = 20;
+    private static final int TYPE_TEXT_PHOTO_SEND = 21;
+    private static final int TYPE_TEXT_VIDEO_RECV = 22;
+    private static final int TYPE_TEXT_VIDEO_SEND = 23;
+
+    private int IMAGEVIEW_MAX_SIZE ;
 
     //格式化
     SimpleDateFormat weekFormat=new SimpleDateFormat("EEEE HH:mm", Locale.ENGLISH);
@@ -74,7 +91,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
     private CustomerHtmlTagHandler.Builder mBuilder;
 
 
-    public LiveChatTalkAdapter(Context context , List<LCMessageItem> list){
+    public LiveChatTalkAdapter(@NotNull Context context , List<LCMessageItem> list){
         mContext = context;
         mMsgList = list;
         //emoji解析
@@ -85,6 +102,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                 .setGiftImgHeight(emojiWidth)
                 .setGiftImgWidth(emojiHeight);
         imageGetter = new ExpressionImageGetter(context, DisplayUtil.dip2px( context, 28), DisplayUtil.dip2px(context, 28));
+
+        //图片最大显示宽高
+        IMAGEVIEW_MAX_SIZE = (int)context.getResources().getDimension(R.dimen.live_chat_photo_default_size);
     }
 
     @Override
@@ -106,6 +126,12 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                                 break;
                             case MagicIcon:
                                 viewType = TYPE_TEXT_MAGIC_ICON_RECV;
+                                break;
+                            case Photo:
+                                viewType = TYPE_TEXT_PHOTO_RECV;
+                                break;
+                            case Video:
+                                viewType = TYPE_TEXT_VIDEO_RECV;
                                 break;
                             case Warning:
                                 viewType = TYPE_WARNING;
@@ -130,6 +156,12 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                                 break;
                             case MagicIcon:
                                 viewType = TYPE_TEXT_MAGIC_ICON_SEND;
+                                break;
+                            case Photo:
+                                viewType = TYPE_TEXT_PHOTO_SEND;
+                                break;
+                            case Video:
+                                viewType = TYPE_TEXT_VIDEO_SEND;
                                 break;
                             case Custom:
                                 viewType = TYPE_CUSTOM;
@@ -216,6 +248,18 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                 break;
             case TYPE_NOTIFY:
                 viewHolder = new NotifyTypeViewHolder(inflater.inflate(R.layout.item_live_chat_session_pause_notify, parent, false));
+                break;
+            case TYPE_TEXT_PHOTO_RECV:
+                viewHolder = new RecvPhotoViewHolder(inflater.inflate(R.layout.item_live_chat_photo_in, parent, false));
+                break;
+            case TYPE_TEXT_PHOTO_SEND:
+                viewHolder = new SendPhotoViewHolder(inflater.inflate(R.layout.item_live_chat_photo_out, parent, false));
+                break;
+            case TYPE_TEXT_VIDEO_RECV:
+                viewHolder = new RecvVideoViewHolder(inflater.inflate(R.layout.item_live_chat_video_in, parent, false));
+                break;
+            case TYPE_TEXT_VIDEO_SEND:
+                viewHolder = new SendVideoViewHolder(inflater.inflate(R.layout.item_live_chat_video_out, parent, false));
                 break;
         }
         return viewHolder;
@@ -419,6 +463,187 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             }
             String sessionDesc = String.format(mContext.getString(R.string.livechat_seesion_pause_tips), username);
             notifyTypeViewHolder.tvDesc.setText(sessionDesc);
+        }else if(holder instanceof RecvPhotoViewHolder){
+            //接收图片
+            RecvPhotoViewHolder recvPhotoViewHolder = (RecvPhotoViewHolder)holder;
+
+            if(bean.getPhotoItem() != null){
+                if(bean.getPhotoItem().charge){
+                    //已付费
+                    //隐藏锁
+                    recvPhotoViewHolder.hideLockView();
+                    //处理图片
+                    if(bean.getPhotoItem().mClearLargePhotoInfo == null || bean.getPhotoItem().mClearLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Default){
+                        //download
+                        LiveChatManager.getInstance().GetPhoto(bean.getUserItem().userId, bean.msgId, LCRequestJniLiveChat.PhotoSizeType.Large);
+                        //显示下载
+                        recvPhotoViewHolder.showLoadingView();
+                    }else if(bean.getPhotoItem().mClearLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Downloading){
+                        //显示下载
+                        recvPhotoViewHolder.showLoadingView();
+                    }else if(bean.getPhotoItem().mClearLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Success){
+                        //显示图片
+                        recvPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearLargePhotoInfo.photoPath);
+                        //显示描述
+                        recvPhotoViewHolder.tv_des.setText(bean.getPhotoItem().photoDesc);
+                        recvPhotoViewHolder.tv_des.setVisibility(View.VISIBLE);
+                    }else if(bean.getPhotoItem().mClearLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Failed){
+                        //显示错误
+                        recvPhotoViewHolder.showErrorView();
+                    }
+                }else{
+                    //未付费
+                    //显示锁
+                    recvPhotoViewHolder.showLockView();
+                    //处理图片
+                    if(bean.getPhotoItem().mFuzzyLargePhotoInfo == null || bean.getPhotoItem().mFuzzyLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Default){
+                        //download
+                        LiveChatManager.getInstance().GetPhoto(bean.getUserItem().userId, bean.msgId, LCRequestJniLiveChat.PhotoSizeType.Large);
+                        //显示下载
+                        recvPhotoViewHolder.showLoadingView();
+                    }else if(bean.getPhotoItem().mFuzzyLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Downloading){
+                        //显示下载
+                        recvPhotoViewHolder.showLoadingView();
+                    }else if(bean.getPhotoItem().mFuzzyLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Success){
+                        //显示图片
+                        recvPhotoViewHolder.showPhoto(bean.getPhotoItem().mFuzzyLargePhotoInfo.photoPath);
+                        //显示描述
+                        recvPhotoViewHolder.tv_des.setText(bean.getPhotoItem().photoDesc);
+                        recvPhotoViewHolder.tv_des.setVisibility(View.VISIBLE);
+                    }else if(bean.getPhotoItem().mFuzzyLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Failed){
+                        //显示错误
+                        recvPhotoViewHolder.showErrorView();
+                    }
+                }
+            }
+
+
+            //去付费
+            recvPhotoViewHolder.rl_lock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPhotoClick(bean);
+                }
+            });
+
+            //看详细
+            recvPhotoViewHolder.iv_photo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPhotoClick(bean);
+                }
+            });
+        }else if(holder instanceof SendPhotoViewHolder){
+            //发送图片
+            SendPhotoViewHolder sendPhotoViewHolder = (SendPhotoViewHolder)holder;
+
+            if(bean.getPhotoItem() != null) {
+                //决定是否显示图片
+                if (bean.getPhotoItem().mClearSrcPhotoInfo == null && bean.getPhotoItem().mClearLargePhotoInfo == null){
+                    //历史下载大图
+                    //download
+                    LiveChatManager.getInstance().GetPhoto(bean.toId, bean.msgId, LCRequestJniLiveChat.PhotoSizeType.Large);
+                    //显示下载
+                    sendPhotoViewHolder.showLoadingView();
+                }else if(bean.getPhotoItem().mClearSrcPhotoInfo != null){
+                    //优先显示原图
+                    sendPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearSrcPhotoInfo.photoPath);
+                }else if(bean.getPhotoItem().mClearLargePhotoInfo != null){
+                    //历史显示大图
+                    if(!TextUtils.isEmpty(bean.getPhotoItem().mClearLargePhotoInfo.photoPath) && (new File(bean.getPhotoItem().mClearLargePhotoInfo.photoPath).exists())){
+                        sendPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearLargePhotoInfo.photoPath);
+                    }
+                }
+
+                //决定是否显示相应控件
+                if (bean.statusType == LCMessageItem.StatusType.Fail){
+                    //发送失败
+                    sendPhotoViewHolder.hideLoadingView();
+                    sendPhotoViewHolder.btnError.setVisibility(View.VISIBLE);
+                    sendPhotoViewHolder.btnError.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            listener.onErrorClicked(bean);
+                        }
+                    });
+                }else if (bean.statusType == LCMessageItem.StatusType.Processing) {
+                    //发送中
+                    sendPhotoViewHolder.showLoadingView();
+                }else if (bean.statusType == LCMessageItem.StatusType.Finish) {
+                    //发送完成
+                    sendPhotoViewHolder.hideLoadingView();
+                }
+            }
+
+            //看详细
+            sendPhotoViewHolder.iv_photo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onVideoClick(bean);
+                }
+            });
+
+            //错误
+            sendPhotoViewHolder.btnError.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onErrorClicked(bean);
+                }
+            });
+
+        }else if(holder instanceof RecvVideoViewHolder){
+            //接收视频
+            RecvVideoViewHolder recvVideoViewHolder =  (RecvVideoViewHolder)holder;
+
+            if(bean.getVideoItem() != null){
+                if(bean.getVideoItem().charget){
+                    //已付费
+                    //隐藏锁
+                    recvVideoViewHolder.hideLockView();
+                }else{
+                    //未付费
+                    //显示锁
+                    recvVideoViewHolder.showLockView();
+                }
+
+                //处理图片
+                if(bean.getVideoItem().mBigPhotoDownloadStatus == LCVideoItem.VideoPhotoDownloadStatus.Default){
+                    //download
+                    LiveChatManager.getInstance().GetVideoPhoto(bean, LCRequestJniLiveChat.VideoPhotoType.Big);
+                    //显示下载
+                    recvVideoViewHolder.showLoadingView();
+                }else if(bean.getVideoItem().mBigPhotoDownloadStatus == LCVideoItem.VideoPhotoDownloadStatus.Downloading){
+                    //显示下载
+                    recvVideoViewHolder.showLoadingView();
+                }else if(bean.getVideoItem().mBigPhotoDownloadStatus == LCVideoItem.VideoPhotoDownloadStatus.Success){
+                    //显示图片
+                    recvVideoViewHolder.showVideoPhoto(bean.getVideoItem().bigPhotoFilePath);
+                    //显示描述
+                    recvVideoViewHolder.tv_des.setText(bean.getVideoItem().videoDesc);
+                    recvVideoViewHolder.tv_des.setVisibility(View.VISIBLE);
+                }else if(bean.getVideoItem().mBigPhotoDownloadStatus == LCVideoItem.VideoPhotoDownloadStatus.Failed){
+                    //显示错误
+                    recvVideoViewHolder.showErrorView();
+                }
+            }
+
+            //未付费
+            recvVideoViewHolder.rl_lock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onVideoClick(bean);
+                }
+            });
+
+            //看详细
+            recvVideoViewHolder.rl_pay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onVideoClick(bean);
+                }
+            });
+        }else if(holder instanceof SendVideoViewHolder){
+
         }
     }
 
@@ -442,6 +667,50 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         return dateFormatString;
     }
 
+    /**
+     * 根据图片大小比例重设宽高
+     * @param simpleDraweeView
+     * @param picPath
+     */
+    private void setImageViewSizeForLocalPic(SimpleDraweeView simpleDraweeView, String picPath){
+        //取得本地图片大小
+        int[] wh = new int[2];
+        ImageUtil.getLocalPicSize(picPath, wh);
+
+        //根据图片大小比例重设宽高
+        int[] newWH = getPhotoNewSize(wh[0], wh[1]);
+        ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
+        layoutParams.width = newWH[0];
+        layoutParams.height = newWH[1];
+        simpleDraweeView.setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 根据图片大小 计算imageView新宽高
+     * @param picWidth
+     * @param picHeight
+     * @return
+     */
+    private int[] getPhotoNewSize(int picWidth, int picHeight){
+        int[] newImageViewSize = new int[2];
+        int newWidth, newHeight;
+        if(picWidth > picHeight){
+            newWidth = IMAGEVIEW_MAX_SIZE;
+            newHeight = newWidth * picHeight / picWidth;
+        }else if(picHeight > picWidth){
+            newHeight = IMAGEVIEW_MAX_SIZE;
+            newWidth = newHeight * picWidth / picHeight;
+        }else {
+            newHeight = IMAGEVIEW_MAX_SIZE;
+            newWidth = IMAGEVIEW_MAX_SIZE;
+        }
+
+        newImageViewSize[0] = newWidth;
+        newImageViewSize[1] = newHeight;
+
+        return newImageViewSize;
+    }
+
     public OnItemClickListener listener;
 
     public void setOnItemClickListener(OnItemClickListener listener){
@@ -460,8 +729,10 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         void onErrorClicked(LCMessageItem lcMessageItem);
         //点击语音
         void onVoiceItemClick(View v, LCMessageItem lcMessageItem);
-        //点击重发
-//        void onResend(LCMessageItem lcMessageItem);
+        //点击图片
+        void onPhotoClick(LCMessageItem lcMessageItem);
+        //点击图片视频
+        void onVideoClick(LCMessageItem lcMessageItem);
     }
 
     //-------------------------item数据模型 start------------------------------
@@ -618,6 +889,247 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         public SortedTimeTypeViewHolder(View itemView) {
             super(itemView);
             tvMessage = (TextView) itemView.findViewById(R.id.tvMessage);
+        }
+    }
+
+    //图片接收样式 ok
+    public class RecvPhotoViewHolder extends MessageViewHolder {
+        public MaterialProgressBar pbDownload;
+        public SimpleDraweeView iv_photo;
+        public RelativeLayout rl_lock, rl_fail;
+        public TextView tv_des;
+        private boolean isLoadedPic = false;
+        private String tempPath = "";
+
+        public RecvPhotoViewHolder(View itemView) {
+            super(itemView);
+            pbDownload = itemView.findViewById(R.id.pbDownload);
+            iv_photo = itemView.findViewById(R.id.iv_photo);
+            rl_lock = itemView.findViewById(R.id.rl_lock);
+            tv_des = itemView.findViewById(R.id.tv_des);
+            rl_fail = itemView.findViewById(R.id.rl_fail);
+        }
+
+        public void showLoadingView(){
+            pbDownload.setVisibility(View.VISIBLE);
+            rl_fail.setVisibility(View.GONE);
+            tv_des.setVisibility(View.INVISIBLE);
+            hideLockView();
+            resetImageView();
+            tempPath = "";
+        }
+
+        public void showLockView(){
+            rl_lock.setVisibility(View.VISIBLE);
+        }
+
+        public void showPhoto(String path){
+            //收起菊花
+            pbDownload.setVisibility(View.GONE);
+            rl_fail.setVisibility(View.GONE);
+
+            if(!tempPath.equals(path)){
+                //是否已加载过此图片
+                tempPath = path;
+                isLoadedPic = false;
+            }else{
+                //标记，不重复加载
+                isLoadedPic = true;
+            }
+
+            if(!isLoadedPic){
+                //重设控件大小
+                setImageViewSizeForLocalPic(iv_photo, path);
+                //显示图片
+                FrescoLoadUtil.loadFile(iv_photo, path, iv_photo.getLayoutParams().width, iv_photo.getLayoutParams().height);
+            }
+
+        }
+
+        public void showErrorView(){
+            pbDownload.setVisibility(View.GONE);
+            rl_fail.setVisibility(View.VISIBLE);
+            tv_des.setVisibility(View.INVISIBLE);
+            hideLockView();
+        }
+
+        public void hideLockView(){
+            rl_lock.setVisibility(View.GONE);
+        }
+
+        /**
+         * 重置imageView,以免重用时看到上一次的缓存
+         */
+        private void resetImageView(){
+            ViewGroup.LayoutParams layoutParams = iv_photo.getLayoutParams();
+            layoutParams.width = mContext.getResources().getDimensionPixelSize(R.dimen.live_chat_photo_default_size);
+            layoutParams.height = mContext.getResources().getDimensionPixelSize(R.dimen.live_chat_photo_default_size);
+            iv_photo.setLayoutParams(layoutParams);
+
+            FrescoLoadUtil.loadRes(iv_photo, R.color.black4);
+        }
+    }
+
+    //图片发送样式 ok
+    public class SendPhotoViewHolder extends MessageViewHolder {
+        public MaterialProgressBar pbDownload;
+        public ImageButton btnError;
+        public SimpleDraweeView iv_photo;
+        private boolean isLoadedPic = false;
+        private String tempPath = "";
+
+        public SendPhotoViewHolder(View itemView) {
+            super(itemView);
+            pbDownload = itemView.findViewById(R.id.pbDownload);
+            btnError = itemView.findViewById(R.id.btnError);
+            iv_photo = itemView.findViewById(R.id.iv_photo);
+        }
+
+        public void showLoadingView(){
+            pbDownload.setVisibility(View.VISIBLE);
+            btnError.setVisibility(View.GONE);
+        }
+
+        public void hideLoadingView(){
+            pbDownload.setVisibility(View.GONE);
+        }
+
+        public void showPhoto(String path){
+            //收起菊花
+            pbDownload.setVisibility(View.GONE);
+            btnError.setVisibility(View.GONE);
+
+            if(!tempPath.equals(path)){
+                //是否已加载过此图片
+                tempPath = path;
+                isLoadedPic = false;
+            }else{
+                //标记，不重复加载
+                isLoadedPic = true;
+            }
+
+            if(!isLoadedPic){
+                //
+                resetImageView();
+                //重设控件大小
+                setImageViewSizeForLocalPic(iv_photo, path);
+                //显示图片
+                FrescoLoadUtil.loadFile(iv_photo, path, iv_photo.getLayoutParams().width, iv_photo.getLayoutParams().height);
+            }
+
+        }
+
+        /**
+         * 重置imageView,以免重用时看到上一次的缓存
+         */
+        private void resetImageView(){
+            ViewGroup.LayoutParams layoutParams = iv_photo.getLayoutParams();
+            layoutParams.width = mContext.getResources().getDimensionPixelSize(R.dimen.live_chat_photo_default_size);
+            layoutParams.height = mContext.getResources().getDimensionPixelSize(R.dimen.live_chat_photo_default_size);
+            iv_photo.setLayoutParams(layoutParams);
+
+            FrescoLoadUtil.loadRes(iv_photo, R.color.black4);
+        }
+    }
+
+    //视频接收样式 ok
+    public class RecvVideoViewHolder extends MessageViewHolder {
+        public MaterialProgressBar pbDownload;
+        public SimpleDraweeView iv_video;
+        public RelativeLayout rl_lock, rl_pay, rl_fail;
+        public TextView tv_des;
+        private boolean isLoadedPic = false;
+        private String tempPath = "";
+
+        public RecvVideoViewHolder(View itemView) {
+            super(itemView);
+            pbDownload = itemView.findViewById(R.id.pbDownload);
+            iv_video = itemView.findViewById(R.id.iv_video);
+            rl_lock = itemView.findViewById(R.id.rl_lock);
+            rl_pay = itemView.findViewById(R.id.rl_pay);
+            rl_fail = itemView.findViewById(R.id.rl_fail);
+            tv_des = itemView.findViewById(R.id.tv_des);
+        }
+
+        public void showLoadingView(){
+            pbDownload.setVisibility(View.VISIBLE);
+            rl_fail.setVisibility(View.GONE);
+            tv_des.setVisibility(View.INVISIBLE);
+            hideLockView();
+            rl_pay.setVisibility(View.GONE);
+            resetImageView();
+            tempPath = "";
+        }
+
+        public void showLockView(){
+            rl_lock.setVisibility(View.VISIBLE);
+            rl_pay.setVisibility(View.GONE);
+            //蒙层
+            iv_video.getHierarchy().setOverlayImage(mContext.getResources().getDrawable(R.color.live_chat_video_cover));
+        }
+
+        public void showVideoPhoto(String path){
+            //收起菊花
+            pbDownload.setVisibility(View.GONE);
+            rl_fail.setVisibility(View.GONE);
+
+
+            if(!tempPath.equals(path)){
+                //是否已加载过此图片
+                tempPath = path;
+                isLoadedPic = false;
+            }else{
+                //标记，不重复加载
+                isLoadedPic = true;
+            }
+
+            if(!isLoadedPic) {
+                //重设控件大小
+                setImageViewSizeForLocalPic(iv_video, path);
+                //显示图片
+                FrescoLoadUtil.loadFile(iv_video, path, iv_video.getLayoutParams().width, iv_video.getLayoutParams().height);
+            }
+        }
+
+        public void showErrorView(){
+            rl_fail.setVisibility(View.VISIBLE);
+            tv_des.setVisibility(View.INVISIBLE);
+            pbDownload.setVisibility(View.GONE);
+            hideLockView();
+            rl_pay.setVisibility(View.GONE);
+        }
+
+        public void hideLockView(){
+            rl_lock.setVisibility(View.GONE);
+            rl_pay.setVisibility(View.VISIBLE);
+            //去掉蒙层
+            iv_video.getHierarchy().setOverlayImage(null);
+        }
+
+        /**
+         * 重置imageView,以免重用时看到上一次的缓存
+         */
+        private void resetImageView(){
+            ViewGroup.LayoutParams layoutParams = iv_video.getLayoutParams();
+            layoutParams.width = mContext.getResources().getDimensionPixelSize(R.dimen.live_chat_photo_default_size);
+            layoutParams.height = mContext.getResources().getDimensionPixelSize(R.dimen.live_chat_photo_default_size);
+            iv_video.setLayoutParams(layoutParams);
+
+            FrescoLoadUtil.loadRes(iv_video, R.color.black4);
+        }
+    }
+
+    //视频发送样式
+    public class SendVideoViewHolder extends MessageViewHolder {
+        public MaterialProgressBar pbDownload;
+        public ImageButton btnError;
+        public SimpleDraweeView iv_video;
+
+        public SendVideoViewHolder(View itemView) {
+            super(itemView);
+            pbDownload = itemView.findViewById(R.id.pbDownload);
+            btnError = itemView.findViewById(R.id.btnError);
+            iv_video = itemView.findViewById(R.id.iv_video);
         }
     }
 

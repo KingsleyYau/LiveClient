@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_default_black"
+    tools:context=".liveshow.livechat.LiveChatPhotoAndVideoPreviewActivity">
+
+    <com.qpidnetwork.qnbridgemodule.view.ViewPagerFixed
+        android:id="@+id/act_livechat_photo_and_video_preview_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/act_livechat_photo_and_video_preview_iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/live_size_30dp"
+        android:minHeight="@dimen/live_size_30dp"
+        android:padding="@dimen/live_size_10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_arrow_back_white" />
+</FrameLayout>

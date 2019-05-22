@@ -12,12 +12,13 @@
 
     <ImageButton
         android:id="@+id/btnError"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="fitXY"
         android:layout_centerVertical="true"
-        android:layout_marginRight="0dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/touch_feedback_holo_light_round_rectangle"
-        android:src="@drawable/ic_error_grey600_24dp"
+        android:src="@drawable/ic_error_red"
         android:visibility="gone" />
 
     <com.qpidnetwork.livemodule.view.MaterialProgressBar
@@ -48,7 +49,7 @@
             android:id="@+id/chat_sound_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/touch_feedback_holo_light_round_blue_36dp"
+            android:background="@drawable/touch_feedback_holo_light_round_blue_out"
             android:drawableLeft="@drawable/ic_play_circle_outline_white_24dp"
             android:drawablePadding="6dp"
             android:gravity="center"

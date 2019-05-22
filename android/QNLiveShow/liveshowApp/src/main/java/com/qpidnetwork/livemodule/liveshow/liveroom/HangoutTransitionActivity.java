@@ -30,6 +30,7 @@ import com.qpidnetwork.livemodule.im.IMHangoutEventListener;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMDealInviteItem;
+import com.qpidnetwork.livemodule.im.listener.IMHangoutAnchorItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutCountDownItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutInviteItem;
 import com.qpidnetwork.livemodule.im.listener.IMHangoutRecommendItem;
@@ -51,6 +52,7 @@ import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_EXIST_HANGOUT;
@@ -76,6 +78,9 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
 
     //Manager
     private IMManager mIMManager;
+
+    //用于存储在过渡页通过接口获取的用户信息，解决外部链接进入，邀请过程中断线，主播应邀，重连后进入直播间，主播头像缺失问题
+    private HashMap<String, UserInfoItem> mUpdateUserInfoMap = new HashMap<String, UserInfoItem>();
 
     //views
     //高斯模糊背景
@@ -150,8 +155,6 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
         setCustomContentView(R.layout.activity_hangout_transition);
 
         mIMManager = IMManager.getInstance();
-        mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(this);
-        mHangoutInvitationManager.setClientEventListener(this);
         registerListener();
 
         initViews();
@@ -308,6 +311,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
+                            mUpdateUserInfoMap.put(userItem.userId, userItem);
                             setAnchorIcon(imageView, userItem.photoUrl,userItem.userId);
                         }
                     });
@@ -419,6 +423,8 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
 //        if(!TextUtils.isEmpty(mInvitationId)){
 //            cancelHangoutInvitation(mInvitationId);
 //        }
+        //清除所有监听事件
+        unRegisterListener();
         //已有直播间，退出关闭直播间
         if(!TextUtils.isEmpty(mRoomId)){
             mIMManager.outHangOutRoomAndClearFlag(mRoomId);
@@ -448,7 +454,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
                                 if(item != null && item.liveRoomAnchor != null && item.liveRoomAnchor.length > 0){
                                     mExitRunningHangoutRoom = item;
                                     //转到已存在进行中的hangout直播间错误页
-                                    String message = String.format(getResources().getString(R.string.hangout_transition_exist_room), item.liveRoomAnchor[0].nickName);
+                                    String message = String.format(getResources().getString(R.string.hangout_transition_exist_room), mAnchorList.get(0).nickName);
                                     onPageChange(PageType.PAGE_EXIST_HANGOUT_ROOM, message);
                                 }else{
                                     //无正在进行的hangout直播间或直播间内无主播（用户创建直播间成功邀请失败）
@@ -655,6 +661,15 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
      * @param roomId
      */
     private void doStartActivity(String roomId){
+        //根据过渡页查询的信息，更新主播头像信息
+        IMHangoutRoomItem hangoutRoomItem = mIMManager.getHangoutRoomInfo(roomId);
+        if(hangoutRoomItem != null && hangoutRoomItem.livingAnchorList != null && hangoutRoomItem.livingAnchorList.size() > 0){
+            IMHangoutAnchorItem firstAnchorInfo = hangoutRoomItem.livingAnchorList.get(0);
+            if(firstAnchorInfo != null && TextUtils.isEmpty(firstAnchorInfo.photoUrl) && mUpdateUserInfoMap.containsKey(firstAnchorInfo.anchorId)){
+                firstAnchorInfo.photoUrl = mUpdateUserInfoMap.get(firstAnchorInfo.anchorId).photoUrl;
+            }
+        }
+
         Intent intent = new Intent(mContext, HangOutLiveRoomActivity.class);
         HangoutAnchorInfoItem extraAnchor = null;
         if(mAnchorList != null && mAnchorList.size() > 1){
@@ -673,6 +688,24 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
             startActivity(intent);
         }
         finish();
+    }
+
+    /**
+     * 内部发起邀请
+     * @param anchorInfo
+     * @param roomId
+     * @param recommandId
+     * @param createOnly
+     */
+    private void startInvitationInternal(final IMUserBaseInfoItem anchorInfo, String roomId, String recommandId, boolean createOnly){
+        if(mHangoutInvitationManager != null){
+            //清除旧的
+            mHangoutInvitationManager.release();
+        }
+        //互斥关系创建新的邀请client
+        mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(this);
+        mHangoutInvitationManager.setClientEventListener(this);
+        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly);
     }
 
     /*************************************************  主逻辑外的分之逻辑   *******************************************************/
@@ -706,7 +739,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
 //            public void run() {
 //                switch (item.type){
 //                    case Agree:{
-//                        //接受，进入直播间
+//                        //接受，进入直播间ee
 //                        startEnterRoom(item.roomId);
 //                    }break;
 //                    case Reject:
@@ -732,14 +765,15 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
             @Override
             public void run() {
                 if(success){
+                    mIMManager.updateHangoutLivingRoomId(item.roomId);
+                    mCreatedHangoutRoom = item;
                     if(item != null && item.livingAnchorList != null && item.livingAnchorList.size() >0){
                         //直接进入直播间
                         startEnterRoom(item.roomId);
                     }else{
-                        mCreatedHangoutRoom = item;
                         //发起邀请，等待应邀进入直播间
 //                        startHangoutInvitation(item.roomId, mAnchorList.get(0).userId, mRecommendId);
-                        mHangoutInvitationManager.startInvitationSession(mAnchorList.get(0), item.roomId, mRecommendId, false);
+                        startInvitationInternal(mAnchorList.get(0), item.roomId, mRecommendId, false);
                     }
                 }else{
                     onIMError(errType, errMsg);
@@ -821,6 +855,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
 
     @Override
     public void onHangoutInvitationFinish(boolean isSuccess, HangoutInvitationManager.HangoutInvationErrorType errorType, String errMsg, IMUserBaseInfoItem userBaseInfoItem, String roomId) {
+        Log.i("hunter", "onHangoutInvitationFinish isSuccess: " + isSuccess + "  roomid: " + roomId);
         if(isSuccess){
             mRoomId = roomId;
             startEnterRoom(roomId);
@@ -840,7 +875,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
     }
 
     @Override
-    public void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg) {
+    public void onHangoutCancel(boolean isSuccess, int httpErrCode, String errMsg, IMUserBaseInfoItem userBaseInfoItem) {
 
     }
 }

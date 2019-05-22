@@ -243,8 +243,8 @@ public abstract class BaseHangOutLiveRoomActivity extends BaseImplHangOutRoomAct
                 }
             }
         }
-        //
-        mIMHangoutRoomInItem = null;
+        //del by Jagger 不能在这置空，子类销毁逻辑还有需要用到
+//        mIMHangoutRoomInItem = null;
     }
 
     /**

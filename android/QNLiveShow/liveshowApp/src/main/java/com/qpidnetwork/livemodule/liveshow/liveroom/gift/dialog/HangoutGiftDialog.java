@@ -19,7 +19,7 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.view.HangoutGiftDialogLayout;
 import com.qpidnetwork.livemodule.view.HangoutGiftListBaseLayout;
 import com.qpidnetwork.qnbridgemodule.util.ToastUtil;

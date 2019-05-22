@@ -108,7 +108,7 @@ public class LoginItem {
     //本地默认初始化，解决代码移植问题
     public boolean photosend = false;
     public boolean photoreceived = false;
-    public boolean videoreceived = false;
+    public boolean videoreceived = true;    //edit by Jagger 2019-5-6 改为true, 接口没返回对应的值，改为默认可接收LiveChat视频
 
     public boolean premit = true;
     public boolean ladyprofile = true;

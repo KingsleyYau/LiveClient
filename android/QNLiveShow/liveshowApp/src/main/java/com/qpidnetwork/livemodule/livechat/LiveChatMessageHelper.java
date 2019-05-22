@@ -83,7 +83,7 @@ public class LiveChatMessageHelper {
 		 * <item name="receive_a_voice_message">%s sent a voice message</item>
 		 * </string-array>
 		 */
-		String[] msgs_ = context.getResources().getStringArray(R.array.livechat_msg_in_type);
+		String[] msgs_ = context.getResources().getStringArray(R.array.live_livechat_msg_in_type);
 		switch (msgItem.msgType) {
 			case Text:
 				msg = (msgItem.getTextItem().message != null) ? msgItem

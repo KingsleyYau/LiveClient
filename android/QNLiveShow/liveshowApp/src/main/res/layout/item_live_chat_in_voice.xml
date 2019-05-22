@@ -20,8 +20,8 @@
             android:id="@+id/chat_sound_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/touch_feedback_holo_light_round_blue_36dp"
-            android:drawableLeft="@drawable/ic_play_circle_outline_white_24dp"
+            android:background="@drawable/touch_feedback_holo_light_round_blue_in"
+            android:drawableLeft="@drawable/ic_play_circle_outline_black_24dp"
             android:drawablePadding="6dp"
             android:gravity="center"
             android:minHeight="36dp"
@@ -29,7 +29,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="24dp"
             android:text="13&apos;&apos;"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color_dark"
             android:textSize="16sp" />
 
         <ImageView
@@ -52,12 +52,13 @@
 
     <ImageButton
         android:id="@+id/btnError"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="fitXY"
         android:layout_centerVertical="true"
-        android:layout_marginRight="0dp"
+        android:layout_marginLeft="8dp"
         android:background="@drawable/touch_feedback_holo_light_round_rectangle"
-        android:src="@drawable/ic_error_grey600_24dp"
+        android:src="@drawable/ic_error_red"
         android:visibility="gone" />
 
 </LinearLayout>

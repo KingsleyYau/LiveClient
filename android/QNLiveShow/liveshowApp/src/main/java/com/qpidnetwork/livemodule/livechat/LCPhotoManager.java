@@ -2,12 +2,15 @@ package com.qpidnetwork.livemodule.livechat;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.livechat.LCMessageItem.MessageType;
 import com.qpidnetwork.livemodule.livechat.LCMessageItem.SendType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJni;
+import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoModeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoSizeType;
+import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetPhotoCallback;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.qnbridgemodule.util.Arithmetic;
 import com.qpidnetwork.qnbridgemodule.util.Log;
@@ -16,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 图片管理类
@@ -28,14 +33,6 @@ public class LCPhotoManager {
 	 */
 	private HashMap<Integer, LCMessageItem> mMsgIdMap;
 	/**
-	 * RequestId与item的待发送map表(RequestId, photoItem)（记录上传未成功的item，上传成功则移除）
-	 */
-	private HashMap<Long, LCMessageItem> mRequestMap;
-	/**
-	 * itme与RequestId的待发送map表(photoItem, RequestId)
-	 */
-	private HashMap<LCMessageItem, Long> mPhotoRequestMap;
-	/**
 	 * 本地缓存文件目录
 	 */
 	private String mDirPath;
@@ -43,8 +40,8 @@ public class LCPhotoManager {
 	@SuppressLint("UseSparseArrays")
 	public LCPhotoManager() {
 		mMsgIdMap = new HashMap<Integer, LCMessageItem>();
-		mRequestMap = new HashMap<Long, LCMessageItem>();
-		mPhotoRequestMap = new HashMap<LCMessageItem, Long>();
+		mRequestCallbackList = new HashMap<String, List<OnLCGetPhotoCallback>>();
+		mPhotoRequestMap = new HashMap<Long, String>();
 		mDirPath = "";
 	}
 	
@@ -66,7 +63,7 @@ public class LCPhotoManager {
 	 * @param item		消息item
 	 * @return
 	 */
-	public String getPhotoPath(LCMessageItem item, PhotoModeType modeType, PhotoSizeType sizeType) {
+	private String getPhotoPath(LCMessageItem item, PhotoModeType modeType, PhotoSizeType sizeType) {
 		String path = "";
 		if (item.msgType == MessageType.Photo && null != item.getPhotoItem()
 				&& !item.getPhotoItem().photoId.isEmpty() && !mDirPath.isEmpty()) 
@@ -113,34 +110,30 @@ public class LCPhotoManager {
 	
 	/**
 	 * 获取图片临时文件路径
-	 * @param item		消息item
+	 * @param photoId		photoId
 	 * @return
 	 */
-	public String getTempPhotoPath(LCMessageItem item, PhotoModeType modeType, PhotoSizeType sizeType) {
+	private String getTempPhotoPath(String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
 		String path = "";
-		if (item.msgType == MessageType.Photo && null != item.getPhotoItem()
-				&& !item.getPhotoItem().photoId.isEmpty() && !mDirPath.isEmpty()) 
+		if (!TextUtils.isEmpty(photoId) && !mDirPath.isEmpty())
 		{
-			path = getPhotoPath(item.getPhotoItem().photoId, modeType, sizeType) + "_temp";
+			path = getPhotoPath(photoId, modeType, sizeType) + "_temp";
 		}
 		return path;
 	}
 	
 	/**
 	 * 下载完成的临时文件转换成图片文件
-	 * @param item		消息item
-	 * @param tempPath	临时文件路径
+	 * @param photoId
 	 * @param modeType	图片类型
 	 * @param sizeType	图片尺寸
 	 * @return
 	 */
-	public boolean tempToPhoto(LCMessageItem item, String tempPath, PhotoModeType modeType, PhotoSizeType sizeType) {
+	private boolean tempToPhoto(String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
 		boolean result = false;
-		if (null != tempPath && !tempPath.isEmpty()
-				&& item.msgType == MessageType.Photo && null != item.getPhotoItem())
-		{
-			LCPhotoItem photoItem = item.getPhotoItem();
-			String path = getPhotoPath(photoItem.photoId, modeType, sizeType);
+		if (!TextUtils.isEmpty(photoId)) {
+			String tempPath = getTempPhotoPath(photoId, modeType, sizeType);
+			String path = getPhotoPath(photoId, modeType, sizeType);
 			if (!path.isEmpty()) {
 				boolean renameResult = false; 
 				File tempFile = new File(tempPath);
@@ -150,29 +143,6 @@ public class LCPhotoManager {
 					&& tempFile.renameTo(newFile)) 
 				{
 					renameResult = true;
-				}
-				
-				if (renameResult) {
-					switch (photoItem.statusType)
-					{
-					case DownloadShowFuzzyPhoto:
-						photoItem.showFuzzyFilePath = path;
-						break;
-					case DownloadThumbFuzzyPhoto:
-						photoItem.thumbFuzzyFilePath = path;
-						break;
-					case DownloadShowSrcPhoto:
-						photoItem.showSrcFilePath = path;
-						break;
-					case DownloadThumbSrcPhoto:
-						photoItem.thumbSrcFilePath = path;
-						break;
-					case DownloadSrcPhoto:
-						photoItem.srcFilePath = path;
-						break;
-					default:
-						break;
-					}
 				}
 			}
 		}
@@ -193,8 +163,8 @@ public class LCPhotoManager {
 			try {
 				Runtime.getRuntime().exec(cmd);
 				
-				// 原图路径 
-				item.srcFilePath = desFilePath;
+				// 原图路径
+				item.mClearSrcPhotoInfo = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", desFilePath);
 				
 				// 显示图路径
 				String showFilePath = getPhotoPath(item.photoId, PhotoModeType.Clear, PhotoSizeType.Large);
@@ -203,7 +173,9 @@ public class LCPhotoManager {
 					if (null != showBitmap
 						&& ImageUtil.saveBitmapToFile(showFilePath, showBitmap, Bitmap.CompressFormat.JPEG, 100))
 					{
-						item.showSrcFilePath = showFilePath;
+						LCPhotoInfoItem photoInfoItem = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", showFilePath);
+						item.mClearLargePhotoInfo = photoInfoItem;
+						item.mClearMiddlePhotoInfo = photoInfoItem;
 					}
 				}
 				
@@ -214,7 +186,7 @@ public class LCPhotoManager {
 					if (null != showBitmap
 						&& ImageUtil.saveBitmapToFile(thumbFilePath, showBitmap, Bitmap.CompressFormat.JPEG, 100))
 					{
-						item.thumbSrcFilePath = thumbFilePath;
+						item.mClearSmallPhotoInfo = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", thumbFilePath);
 					}
 				}
 				
@@ -224,32 +196,6 @@ public class LCPhotoManager {
 				e.printStackTrace();
 			}
 		}
-		return result;
-	}
-	
-	/**
-	 * 复制文件至缓冲目录
-	 * @param item	源文件路径
-	 * @return
-	 */
-	public boolean removeFuzzyPhotoFile(LCPhotoItem item) {
-		boolean result = false;
-
-		if (!item.photoId.isEmpty()) {
-			String fuzzyPath = getPhotoPathWithMode(item.photoId, PhotoModeType.Fuzzy) + "*";
-			String cmd = "rm -f " + fuzzyPath;
-			try {
-				Runtime.getRuntime().exec(cmd);
-				
-				item.showFuzzyFilePath = "";
-				item.thumbFuzzyFilePath = "";
-				result = true;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		return result;
 	}
 	
@@ -370,7 +316,7 @@ public class LCPhotoManager {
 	/**
 	 * 清除所有待发送表map表的item
 	 */
-	public void clearAllSendingItems() {
+	private void clearAllSendingItems() {
 		synchronized (mMsgIdMap)
 		{
 			mMsgIdMap.clear();
@@ -378,88 +324,207 @@ public class LCPhotoManager {
 	}
 	
 	// --------------------------- Uploading/Download Photo（正在上传/下载 ） -------------------------
+
 	/**
-	 * 获取正在上传/下载的RequestId
-	 * @param item
+	 * 存储请求中的图片及callback列表
+	 */
+	private HashMap<String, List<OnLCGetPhotoCallback>> mRequestCallbackList;
+	/**
+	 * 存储请求RequestId与UniqueId，用于请求与callback匹配
+	 */
+	private HashMap<Long, String> mPhotoRequestMap;
+
+	/**
+	 * 生成私密照下载请求唯一key
+	 * @param photoId
+	 * @param photoModeType
+	 * @param photoSizeType
 	 * @return
 	 */
-	public long getRequestIdWithItem(LCMessageItem item) {
-		long requestId = LCRequestJni.InvalidRequestId;
-		synchronized(mPhotoRequestMap) {
-			Long result = mPhotoRequestMap.get(item);
-			if (null != result) {
-				requestId = result;
+	private String createPrivatePhotoDownloadingUniqueKey(String photoId, PhotoModeType photoModeType, PhotoSizeType photoSizeType){
+		String uniqueKey = photoId;
+		if(photoModeType != null){
+			uniqueKey += "_" + photoModeType.name();
+		}
+		if(photoSizeType != null){
+			uniqueKey += "_" + photoSizeType.name();
+		}
+		return uniqueKey;
+	}
+
+	/**
+	 * 添加到请求列表
+	 * @param requestId
+	 * @param uniqueKey
+	 * @return
+	 */
+	private void addToRequestMap(Long requestId, String uniqueKey){
+		synchronized (mPhotoRequestMap){
+			mPhotoRequestMap.put(requestId, uniqueKey);
+		}
+	}
+
+	/**
+	 * 根据requestId获取uniquekey
+	 * @param requestId
+	 * @return
+	 */
+	private String getAndRemoveRequestMap(Long requestId){
+		String uniqueKey = "";
+		synchronized (mPhotoRequestMap){
+			if(mPhotoRequestMap.containsKey(requestId)){
+				uniqueKey = mPhotoRequestMap.remove(requestId);
 			}
 		}
-		return requestId;
+		return uniqueKey;
 	}
-	
+
 	/**
-	 * 获取并移除正在上传/下载的item
-	 * @param requestId	请求ID
-	 * @return
+	 * 图片下载完成回调分发
+	 * @param requestId
+	 * @param isSuccess
+	 * @param errno
+	 * @param errmsg
+	 * @param filePath
 	 */
-	public LCMessageItem getAndRemoveRequestItem(long requestId) {
-		LCMessageItem item = null;
-		synchronized (mRequestMap)
-		{
-			item = mRequestMap.remove(requestId);
-			if (null == item) {
-				Log.e("livechat", String.format("%s::%s() fail requestId: %d", "LCPhotoManager", "getRequestItem", requestId));
-			}
-			else {
-				synchronized(mPhotoRequestMap) {
-					mPhotoRequestMap.remove(item);
+	private void onGetPhotoCallback(long requestId, boolean isSuccess, String errno,
+									String errmsg, String filePath){
+		List<OnLCGetPhotoCallback> callbackList = null;
+		String uniqueKey = getAndRemoveRequestMap(requestId);
+		if(!TextUtils.isEmpty(uniqueKey)){
+			synchronized (mRequestCallbackList){
+				if(mRequestCallbackList.containsKey(uniqueKey)){
+					callbackList = mRequestCallbackList.remove(uniqueKey);
 				}
 			}
 		}
-		return item;
-	}
-	
-	/**
-	 * 添加正在上传/下载的item
-	 * @param requestId	请求ID
-	 * @param item		消息item
-	 * @return
-	 */
-	public boolean addRequestItem(long requestId, LCMessageItem item) {
-		boolean result = false;
-		synchronized (mRequestMap)
-		{
-			if (item.msgType == MessageType.Photo
-					&& null != item.getPhotoItem()
-					&& requestId != LCRequestJni.InvalidRequestId
-					&& null == mRequestMap.get(requestId)) 
-			{
-				mRequestMap.put(requestId, item);
-				synchronized(mPhotoRequestMap) {
-					mPhotoRequestMap.put(item, requestId);
-				}
-				result = true;
+		if(callbackList != null){
+			for(OnLCGetPhotoCallback callback : callbackList){
+				callback.OnLCGetPhoto(requestId, isSuccess, errno, errmsg, filePath);
 			}
-			else {
-				Log.e("livechat", String.format("%s::%s() fail requestId:%d", "LCPhotoManager", "addRequestItem", requestId));
+		}
+	}
+
+	/**
+	 * 下载指定类型私密照
+	 * @param toFlag
+	 * @param targetId
+	 * @param userId
+	 * @param sid
+	 * @param photoId
+	 * @param sizeType
+	 * @param modeType
+	 * @param callback
+	 */
+	public boolean getPrivatePhoto(LCRequestJniLiveChat.ToFlagType toFlag, String targetId, String userId, String sid, final String photoId, final PhotoSizeType sizeType, final PhotoModeType modeType, OnLCGetPhotoCallback callback){
+		boolean result = true;		//请求是否发送成功
+		boolean isDownloading = false;
+		String uniqueKey = createPrivatePhotoDownloadingUniqueKey(photoId, modeType, sizeType);
+		synchronized (mRequestCallbackList){
+			isDownloading = mRequestCallbackList.containsKey(uniqueKey);
+			List<OnLCGetPhotoCallback> callbackList;
+			if(isDownloading){
+				callbackList = mRequestCallbackList.get(uniqueKey);
+			}else{
+				callbackList = new ArrayList<OnLCGetPhotoCallback>();
+				mRequestCallbackList.put(uniqueKey, callbackList);
+			}
+			callbackList.add(callback);
+		}
+		if(!isDownloading){
+			long requestId = LCRequestJniLiveChat.GetPhoto(
+					toFlag
+					, targetId
+					, userId
+					, sid
+					, photoId
+					, sizeType
+					, modeType
+					, getTempPhotoPath(photoId, modeType, sizeType)
+					, new OnLCGetPhotoCallback() {
+
+						@Override
+						public void OnLCGetPhoto(long requestId, boolean isSuccess, String errno,
+												 String errmsg, String filePath) {
+							if(isSuccess){
+								tempToPhoto(photoId, modeType, sizeType);
+							}
+							onGetPhotoCallback(requestId, isSuccess, errno, errmsg, getPhotoPath(photoId, modeType, sizeType));
+						}
+					});
+
+			if (requestId != LCRequestJni.InvalidRequestId) {
+				addToRequestMap(requestId, uniqueKey);
+			}else{
+				result = false;
 			}
 		}
 		return result;
-	} 
+	}
 	
 	/**
 	 * 清除所有正在上传/下载的item
 	 */
-	public ArrayList<Long> clearAllRequestItems() {
-		ArrayList<Long> list = null;
-		synchronized (mRequestMap)
-		{
-			if (mRequestMap.size() > 0) {
-				list = new ArrayList<Long>(mRequestMap.keySet());
-			}
-			mRequestMap.clear();
-			
-			synchronized(mPhotoRequestMap) {
-				mPhotoRequestMap.clear();
+	private void clearAllRequestItems() {
+
+		synchronized(mPhotoRequestMap) {
+			mPhotoRequestMap.clear();
+		}
+
+		synchronized (mRequestCallbackList) {
+			mRequestCallbackList.clear();
+
+		}
+	}
+
+	// --------------------- photo presend tasks --------------------------
+	private HashMap<LCPhotoMessagePreSendTask, LCMessageItem> mPhotoPreSendingMap = new HashMap<LCPhotoMessagePreSendTask, LCMessageItem>();
+
+	/**
+	 * task添加到presending map
+	 * @param task
+	 * @param msgItem
+	 */
+	public void addToPhotoPreSendingMap(LCPhotoMessagePreSendTask task, LCMessageItem msgItem){
+		synchronized (mPhotoPreSendingMap){
+			mPhotoPreSendingMap.put(task, msgItem);
+		}
+	}
+
+	/**
+	 * 从presending map清除task
+	 * @param task
+	 * @return
+	 */
+	public LCMessageItem getAndRemovePhotoPreSengdingtMap(LCPhotoMessagePreSendTask task){
+		LCMessageItem msgItem = null;
+		synchronized (mPhotoPreSendingMap){
+			if(mPhotoPreSendingMap.containsKey(task)){
+				msgItem = mPhotoPreSendingMap.remove(task);
 			}
 		}
-		return list;
+		return msgItem;
+	}
+
+	/**
+	 * 清除所有presending task
+	 */
+	private void clearAllPreSendingTask(){
+		synchronized (mPhotoPreSendingMap){
+			Set<LCPhotoMessagePreSendTask> set = mPhotoPreSendingMap.keySet();
+			for(LCPhotoMessagePreSendTask task : set){
+				task.releaseDisposable();
+			}
+			mPhotoPreSendingMap.clear();
+		}
+	}
+
+	public void  release(){
+		// 停止所有图片请求
+		clearAllRequestItems();
+		//停止所有图片发送预处理任务
+		clearAllPreSendingTask();
+		//停止所有请求
+		clearAllSendingItems();
 	}
 }

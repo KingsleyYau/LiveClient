@@ -172,4 +172,8 @@
 
     <color name="common_list_divider_grey">#ECEDF1</color>
 
+    <color name="thin_grey_chat_credit_tip">#BD010101</color>
+    <color name="thin_grey_chat_credit_tip_press">#CD010101</color>
+    <color name="live_chat_album_image_big">#2d2d2d</color>
+    <color name="live_chat_video_cover">#66000000</color>
 </resources>

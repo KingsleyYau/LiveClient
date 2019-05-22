@@ -9,6 +9,8 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.FileInputStream;
 import java.util.regex.Matcher;
@@ -210,17 +212,17 @@ public class ExpressionImageGetter implements ImageGetter {
 	/**
 	 * 获取表情文本（HTML格式）
 	 * 
-	 * @param input要处理的文本
-	 * @param msgForward文本来源{@link MsgBean#FORWARD_IN} or
-	 *            {@link MsgBean#FORWARD_OUT}
+	 * @param input 要处理的文本
+	 * @param msgForward 文本来源{ MsgBean#FORWARD_IN} or
+	 *            { MsgBean#FORWARD_OUT}
 	 * @return
 	 */
 	public Spanned getExpressMsgHTML(String input, int msgForward) {
 //		this.msgForward = msgForward;
 		String msg = input.replace("[img:", "<img src=\"e");
-		msg = msg.replace("]", "\">");
 		msg = msg.replace("[btn:", "<img src=\"b");
 		msg = msg.replace("[emt:", "<img src=\"i");
+		msg = msg.replace("]", "\">");
 		Spanned span = Html.fromHtml(msg, this, null);
 		return span;
 	}
@@ -232,14 +234,12 @@ public class ExpressionImageGetter implements ImageGetter {
 	 * @return
 	 */
 	public Spanned getExpressMsgHTML(String input) {
-		
 		String msg = input.replace("[img:", "<img src=\"e");
-		msg = msg.replace("]", "\">");
 		msg = msg.replace("[btn:", "<img src=\"b");
 		msg = msg.replace("[emt:", "<img src=\"i");
 		msg = msg.replace("[s:", "<img src=\"");
+		msg = msg.replace("]", "\">");
 		Spanned span = Html.fromHtml(msg, this, null);
 		return span;
 	}
-
 }

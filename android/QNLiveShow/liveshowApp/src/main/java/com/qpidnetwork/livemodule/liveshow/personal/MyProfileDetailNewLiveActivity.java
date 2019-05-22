@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -38,7 +37,7 @@ import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Weight;
 import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Zodiac;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.ListUtils;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.MyProfileInterestUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.UserInfoUtil;
@@ -708,7 +707,7 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
 //        appbar.setOnButtonClickListener(this);
 
         // Hardy
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //            ImageButton imgBtnCancel = (ImageButton) findViewById(R.id.buttonCancel);
 //            ((LinearLayout.LayoutParams) imgBtnCancel.getLayoutParams()).topMargin += DisplayUtil.getStatusBarHeight(this);
 

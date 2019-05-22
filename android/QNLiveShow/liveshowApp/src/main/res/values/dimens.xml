@@ -167,6 +167,8 @@
     <!-- liveChat -->
     <dimen name="expre_drawable_size">25dip</dimen>
     <dimen name="live_chat_magic_icon_height">100dp</dimen>
+    <dimen name="live_chat_ic_size">22dp</dimen>
+    <dimen name="live_chat_photo_default_size">140dp</dimen>
 
     <!-- 按钮尺寸 -->
     <dimen name="btnWidth">80dip</dimen>
@@ -185,4 +187,6 @@
     <dimen name="live_hangout_room_ctrl_min_size">250dp</dimen>
     <!--好友横向列表头像的宽高-->
     <dimen name="live_hangout_anchor_list_wh">66dp</dimen>
+
+    <dimen name="live_chat_video_play_blue_btn_wh">87dp</dimen>
 </resources>

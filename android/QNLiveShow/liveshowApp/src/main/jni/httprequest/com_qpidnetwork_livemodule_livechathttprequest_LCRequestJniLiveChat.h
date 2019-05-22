@@ -9,30 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    CheckCoupon
- * Signature: (Ljava/lang/String;ILcom/qpidnetwork/request/OnCheckCouponCallCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_CheckCoupon
-  (JNIEnv *, jclass, jstring, jint, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    UseCoupon
- * Signature: (Ljava/lang/String;ILcom/qpidnetwork/request/OnLCUseCouponCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_UseCoupon
-  (JNIEnv *, jclass, jstring, jint, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    QueryChatVirtualGift
- * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnQueryChatVirtualGiftCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_QueryChatVirtualGift
-  (JNIEnv *, jclass, jstring, jstring, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
  * Method:    QueryChatRecord
  * Signature: (Ljava/lang/String;Lcom/qpidnetwork/request/OnQueryChatRecordCallback;)J
  */
@@ -46,30 +22,6 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_QueryChatRecordMutiple
   (JNIEnv *, jclass, jobjectArray, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    SendPhoto
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnLCSendPhotoCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_SendPhoto
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    PhotoFee
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnLCPhotoFeeCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_PhotoFee
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    GetPhoto
- * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Lcom/qpidnetwork/request/OnLCGetPhotoCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_GetPhoto
-  (JNIEnv *, jclass, jint, jstring, jstring, jstring, jstring, jint, jint, jstring, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
@@ -89,11 +41,67 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    SendGift
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCallback;)J
+ * Method:    GetMagicIconConfig
+ * Signature: (Lcom/qpidnetwork/request/OnGetMagicIconConfigCallback;)J
  */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_SendGift
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jint, jstring, jstring, jobject);
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_GetMagicIconConfig
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    CheckFunctions
+ * Signature: ([IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnCheckFunctionsCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_CheckFunctions
+  (JNIEnv *, jclass, jintArray, jint, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    CheckCoupon
+ * Signature: (Ljava/lang/String;ILcom/qpidnetwork/request/OnCheckCouponCallCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_CheckCoupon
+  (JNIEnv *, jclass, jstring, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    UseCoupon
+ * Signature: (Ljava/lang/String;ILcom/qpidnetwork/request/OnLCUseCouponCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_UseCoupon
+  (JNIEnv *, jclass, jstring, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    SendPhoto
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnLCSendPhotoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_SendPhoto
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    PhotoFee
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnLCPhotoFeeCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_PhotoFee
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    CheckPhoto
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnLCCheckPhotoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_CheckPhoto
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    GetPhoto
+ * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Lcom/qpidnetwork/request/OnLCGetPhotoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_GetPhoto
+  (JNIEnv *, jclass, jint, jstring, jstring, jstring, jstring, jint, jint, jstring, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
@@ -102,6 +110,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_QueryRecentVideo
   (JNIEnv *, jclass, jstring, jstring, jstring, jobject);
+
 
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
@@ -119,13 +128,33 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_GetVideo
   (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jint, jstring, jobject);
 
+
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    GetMagicIconConfig
- * Signature: (Lcom/qpidnetwork/request/OnGetMagicIconConfigCallback;)J
+ * Method:    UploadManPhoto
+ * Signature: (Ljava/lang/String;ILjava/lang/String;Lcom/qpidnetwork/request/OnLCPlayVoiceCallback;)J
  */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_GetMagicIconConfig
-  (JNIEnv *, jclass, jobject);
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_UploadManPhoto
+  (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    QueryChatVirtualGift
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnQueryChatVirtualGiftCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_QueryChatVirtualGift
+  (JNIEnv *, jclass, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
+ * Method:    SendGift
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_SendGift
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jint, jstring, jstring, jobject);
+
+
+
 
 /*
  * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
@@ -150,14 +179,6 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRe
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_GetThemeDetail
   (JNIEnv *, jclass, jstring, jstring, jstring, jobject);
-
-/*
- * Class:     com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat
- * Method:    CheckFunctions
- * Signature: ([IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnCheckFunctionsCallback;)J
- */
-JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJniLiveChat_CheckFunctions
-  (JNIEnv *, jclass, jintArray, jint, jstring, jstring, jstring, jobject);
 
 #ifdef __cplusplus
 }

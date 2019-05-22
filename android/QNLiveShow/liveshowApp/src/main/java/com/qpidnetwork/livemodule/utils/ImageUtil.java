@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,6 +45,148 @@ import java.nio.channels.FileLock;
  */
 
 public class ImageUtil {
+
+    /**
+     * 图片压缩处理
+     * @param image
+     * @param sizeLimit 图片最大大小（单位K）
+     * @return
+     */
+    public static Bitmap compressImage(Bitmap image, int sizeLimit) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while ( baos.toByteArray().length / 1024 > sizeLimit) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();//重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+            options -= 10;//每次都减少10
+        }
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+
+        return bitmap;
+    }
+
+    /**
+     * 根据文件路径获取图片，并精确缩放
+     * @param path		图片文件路径
+     * @param scale		缩放比例
+     * @return
+     */
+    public static Bitmap preciseScaleBitmap(String path, float scale)
+    {
+        Bitmap bitmap = null;
+
+        // 确保参数正确且图片加载成功
+        BitmapFactory.Options opts = getImageInfoWithFile(path);
+        if (scale > 0
+                && null != opts && opts.outWidth > 0 && opts.outHeight > 0)
+        {
+            if (scale < 1)
+            {
+                // ---- 缩小图片处理 ----
+                // 找到最小加载图片(1/samplesSize)的比例(减少内存占用)
+                int samplesSize = 1;
+                float ratio = 1;
+                while (true) {
+                    float temp = ratio / 2;
+                    if (temp > scale) {
+                        ratio = temp;
+                        samplesSize++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                // 加载图片缩小的图片(减少内存占用)
+                BitmapFactory.Options newOpts = new BitmapFactory.Options();
+                newOpts.inSampleSize = samplesSize;
+                newOpts.inJustDecodeBounds = false;
+                newOpts.inPurgeable = true;                 //设置内存不足，可回收
+                newOpts.inInputShareable = true;            //设置共享内存
+                newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeFile(path, newOpts);
+
+                // 精确缩放
+                if (scale != ratio)
+                {
+                    // 计算精度
+                    float ratio2 = scale / ratio;
+                    Bitmap tempBitmap = bitmap;
+
+                    // 缩放并生成新bitmap
+                    Matrix matrix = new Matrix();
+                    matrix.postScale(ratio2, ratio2);
+                    bitmap = Bitmap.createBitmap(
+                            tempBitmap
+                            , 0, 0
+                            , tempBitmap.getWidth(), tempBitmap.getHeight()
+                            , matrix ,true);
+
+                    // 释放临时bitmap
+                    tempBitmap.recycle();
+                }
+            }
+            else if (scale > 1) {
+                // ---- 放大图片处理 ----
+                // 加载图片
+                Bitmap tempBitmap = loadImageFile(path);
+
+                // 放大并生成新bitmap
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
+                bitmap = Bitmap.createBitmap(
+                        tempBitmap
+                        , 0, 0
+                        , tempBitmap.getWidth(), tempBitmap.getHeight()
+                        , matrix ,true);
+
+                // 释放临时bitmap
+                tempBitmap.recycle();
+            }
+            else {
+                // ---- 不用缩放 ----
+                bitmap = loadImageFile(path);
+            }
+        }
+        return bitmap;
+    }
+
+    /**
+     * 加载图片
+     * @param srcPath	文件路径
+     * @return
+     */
+    public static Bitmap loadImageFile(String srcPath) {
+        Bitmap bitmap = null;
+
+        if (!TextUtils.isEmpty(srcPath))
+        {
+            BitmapFactory.Options newOpts = new BitmapFactory.Options();
+            newOpts.inJustDecodeBounds = false;
+            bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        }
+
+        return bitmap;
+    }
+
+    /**
+     * 获取图片信息
+     * @param srcPath	文件路径
+     * @return
+     */
+    public static BitmapFactory.Options getImageInfoWithFile(String srcPath) {
+        BitmapFactory.Options newOpts = null;
+        if (!TextUtils.isEmpty(srcPath))
+        {
+            newOpts = new BitmapFactory.Options();
+            newOpts.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(srcPath, newOpts);
+        }
+        return newOpts;
+    }
 
     /**
      * 高效获取指定路径下图片文件Bitmap（压缩处理，防止过大导致内存溢出）
@@ -297,10 +441,14 @@ public class ImageUtil {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
+    public static void adjustImageDegree(String filePath) {
+        adjustImageDegree(filePath, filePath);
+    }
     /**
      * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
+     * https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a
      */
-    public static void adjustImageDegree(String filePath) {
+    public static void adjustImageDegree(String filePath, String saveFilePath) {
         try {
             int degree = readImageDegree(filePath);
             if (degree != 0) {
@@ -315,7 +463,8 @@ public class ImageUtil {
                  */
                 Bitmap newbitmap = rotaingImageView(degree, cbitmap);
                 cbitmap.recycle();
-                FileCacheManager.getInstance().saveImage(filePath, newbitmap, Bitmap.CompressFormat.JPEG, 100);
+                // 覆盖保存新图片
+                FileCacheManager.getInstance().saveImage(saveFilePath, newbitmap, Bitmap.CompressFormat.JPEG, 100);
                 newbitmap.recycle();
             }
         } catch (Exception e) {
@@ -331,7 +480,7 @@ public class ImageUtil {
      * @param filePath 图片绝对路径
      * @return degree旋转的角度
      */
-    private static int readImageDegree(String filePath) {
+    public static int readImageDegree(String filePath) {
         int degree = 0;
         if (TextUtils.isEmpty(filePath)) {
             return degree;
@@ -375,6 +524,12 @@ public class ImageUtil {
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
         }
+
+        // 2019/5/14 Hardy 回收旧的 Bitmap
+        if (bitmap != null && bitmap != resizedBitmap) {
+            bitmap.recycle();
+        }
+
         return resizedBitmap;
     }
 
@@ -644,6 +799,51 @@ public class ImageUtil {
             imageView.setColorFilter(color, PorterDuff.Mode.MULTIPLY);    // 阴影
         } else {
             imageView.clearColorFilter();
+        }
+    }
+
+    public static Bitmap createRotatedBitmap(Context context, Bitmap bitmap, int rotation){
+
+        if (bitmap == null) {
+            return null;
+        }
+
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        Matrix mtx = new Matrix();
+        mtx.preRotate(rotation);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+
+        return bitmap;
+    }
+
+    public static boolean writeBitmapToFile(Bitmap bitmap, String desFileUrl){
+        FileOutputStream outStream = null;
+
+        try{
+            outStream = new FileOutputStream(desFileUrl);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+            outStream.close();
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param path 本地路径,如："/mnt/sdcard/names.jpg"
+     * @param wh 长度为2的int数组，存放宽高
+     */
+    public static void getLocalPicSize(String path , int[] wh){
+        if(wh != null && wh.length >= 2){
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            //bitmap.options类为bitmap的裁剪类，通过他可以实现bitmap的裁剪；如果不设置裁剪后的宽高和裁剪比例，返回的bitmap对象将为空，但是这个对象存储了原bitmap的宽高信息，bitmap对象为空不会引发OOM。
+            BitmapFactory.decodeFile(path, options);
+
+            wh[0] = options.outWidth;
+            wh[1] = options.outHeight;
         }
     }
 }
