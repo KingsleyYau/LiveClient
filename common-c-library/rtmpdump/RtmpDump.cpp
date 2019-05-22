@@ -391,7 +391,11 @@ void RtmpDump::RecvRunnableHandle() {
             }
         }
 
-        free(frame);
+//        free(frame);
+        if(frame) {
+        	delete[] frame;
+        	frame = NULL;
+        }
     }
 
     FileLevelLog("rtmpdump",
