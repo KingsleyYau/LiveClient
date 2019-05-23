@@ -47,9 +47,13 @@ Catalog
 
 ### Demo iOS Snapshot
 -------------
+Demo iOS Project: https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
+
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS_1.PNG?raw=true)
 
 
 ### Demo Android Snapshot
 -------------
+Demo Android Project: https://github.com/KingsleyYau/LiveClient/tree/master/iOS/Modules/RtmpClient/RtmpClientTest
+
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
