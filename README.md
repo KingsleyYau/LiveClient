@@ -3,8 +3,11 @@ Table of Contents
 
    * [流媒体推拉流模块](#流媒体推拉流模块)
       * [第三方开源](#第三方开源)
-      * [iOS Demo 效果](#iOS-Demo-效果)
-      * [Android Demo 效果](#Android-Demo-效果)
+      * [Demo](#Demo)
+      * [Demo 安装包](#Demo-安装包)
+      * [Demo 使用方法](#Demo-使用方法)
+      * [iOS Demo Snapshot](#iOS-Snapshot)
+      * [Android Demo Snapshot](#Android-Snapshot)
       
       
 # 流媒体推拉流模块
@@ -26,9 +29,19 @@ Table of Contents
 [srs.librtmp](https://github.com/ossrs/srs-librtmp)</br>
 
 
-## iOS Demo 效果
+## Demo
+### 安装包
+[Android-apk](https://github.com/KingsleyYau/LiveClient/blob/master/docs/coollive.apk)
+
+
+### Demo 使用方法
+* 播放地址为输入框的地址增加序号, 如输入框为rtmp://172.25.32.17:19351/live/max
+* 则实际播放地址为rtmp://172.25.32.17:19351/live/max0, rtmp://172.25.32.17:19351/live/max1, rtmp://172.25.32.17:19351/live/max2
+
+
+### iOS Demo Snapshot
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS_1.PNG?raw=true)
 
 
-## Android Demo 效果
+### Android Demo Snapshot
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
