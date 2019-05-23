@@ -7,8 +7,10 @@ Catalog
       * [Demo](#Demo)
       * [Demo 安装包](#Demo-安装包)
       * [Demo 使用方法](#Demo-使用方法)
-      * [Demo iOS Snapshot](#iOS-Snapshot)
-      * [Demo Android Snapshot](#Android-Snapshot)
+      * [Demo iOS Project](#Demo-iOS-Project)
+      * [Demo iOS Snapshot](#Demo-iOS-Snapshot)
+      * [Demo Android Project](#Demo-Android-Project)
+      * [Demo Android Snapshot](#Demo-Android-Snapshot)
       
       
 # 流媒体推拉流模块
