@@ -45,15 +45,21 @@ Catalog
 * 则实际播放地址为rtmp://172.25.32.17:19351/live/max0, rtmp://172.25.32.17:19351/live/max1, rtmp://172.25.32.17:19351/live/max2
 
 
+### Demo Android Project
+-------------
+https://github.com/KingsleyYau/LiveClient/tree/master/iOS/Modules/RtmpClient/RtmpClientTest
+
+
 ### Demo iOS Snapshot
 -------------
-Demo iOS Project: https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
-
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS_1.PNG?raw=true)
+
+
+### Demo Android Project
+-------------
+https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
 
 
 ### Demo Android Snapshot
 -------------
-Demo Android Project: https://github.com/KingsleyYau/LiveClient/tree/master/iOS/Modules/RtmpClient/RtmpClientTest
-
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
