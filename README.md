@@ -45,10 +45,10 @@ Catalog
 
 
 ### Demo iOS Snapshot
-=================
+-------------
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS_1.PNG?raw=true)
 
 
 ### Demo Android Snapshot
-=================
+-------------
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
