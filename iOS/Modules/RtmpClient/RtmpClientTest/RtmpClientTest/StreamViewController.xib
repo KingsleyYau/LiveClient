@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -56,7 +55,7 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hvH-pO-Kb3" userLabel="Stop Button 0">
                             <rect key="frame" x="105" y="5" width="50" height="30"/>
-                            <state key="normal" title="Stop"/>
+                            <state key="normal" title="Filter"/>
                             <connections>
                                 <action selector="stop0:" destination="-1" eventType="touchUpInside" id="b9c-uQ-FEp"/>
                             </connections>
@@ -108,7 +107,7 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhX-MG-aaW" userLabel="Stop Button 1">
                             <rect key="frame" x="105" y="5" width="50" height="30"/>
-                            <state key="normal" title="Stop"/>
+                            <state key="normal" title="Filter"/>
                             <connections>
                                 <action selector="stop1:" destination="-1" eventType="touchUpInside" id="VYb-QM-as2"/>
                             </connections>
@@ -160,7 +159,7 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ecX-90-EY7" userLabel="Stop Button 2">
                             <rect key="frame" x="105" y="5" width="50" height="30"/>
-                            <state key="normal" title="Stop"/>
+                            <state key="normal" title="Filter"/>
                             <connections>
                                 <action selector="stop2:" destination="-1" eventType="touchUpInside" id="waE-rZ-HDy"/>
                             </connections>
@@ -227,7 +226,7 @@
                     </connections>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="drI-3V-bPu" userLabel="Play">
-                    <rect key="frame" x="5" y="573" width="81.333333333333329" height="30"/>
+                    <rect key="frame" x="5" y="573" width="80.666666666666671" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="hnb-Cd-cCC"/>
                     </constraints>
@@ -237,28 +236,28 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iyu-Qy-hLl" userLabel="Publisher">
-                    <rect key="frame" x="86.333333333333343" y="573" width="81.333333333333343" height="30"/>
+                    <rect key="frame" x="85.666666666666671" y="573" width="81.000000000000014" height="30"/>
                     <state key="normal" title="Publish"/>
                     <connections>
                         <action selector="publish:" destination="-1" eventType="touchUpInside" id="xnD-a3-RYY"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RM2-Fk-mCo" userLabel="StopPlay">
-                    <rect key="frame" x="167.66666666666666" y="573" width="80.666666666666657" height="30"/>
+                    <rect key="frame" x="166.66666666666666" y="573" width="80.666666666666657" height="30"/>
                     <state key="normal" title="StopPlay"/>
                     <connections>
                         <action selector="stopPlay:" destination="-1" eventType="touchUpInside" id="X2Q-J9-LZ7"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jE1-rt-oIi" userLabel="StopPush">
-                    <rect key="frame" x="248.33333333333334" y="573" width="80.333333333333343" height="30"/>
+                    <rect key="frame" x="247.33333333333337" y="573" width="81" height="30"/>
                     <state key="normal" title="StopPush"/>
                     <connections>
                         <action selector="stopPush:" destination="-1" eventType="touchUpInside" id="hE5-dk-QhW"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Lk-UT-amD" userLabel="Mute">
-                    <rect key="frame" x="5" y="543" width="81" height="30"/>
+                    <rect key="frame" x="5" y="543" width="80.666666666666671" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="YrS-7g-7Vh"/>
                     </constraints>
@@ -268,21 +267,21 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rLf-oZ-TFx" userLabel="Beauty">
-                    <rect key="frame" x="86" y="543" width="81" height="30"/>
+                    <rect key="frame" x="85.666666666666671" y="543" width="81.000000000000014" height="30"/>
                     <state key="normal" title="Beauty"/>
                     <connections>
                         <action selector="beauty:" destination="-1" eventType="touchUpInside" id="H9i-0k-tCr"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oyc-7U-k9Q" userLabel="Roate">
-                    <rect key="frame" x="167" y="543" width="80.666666666666686" height="30"/>
+                    <rect key="frame" x="166.66666666666666" y="543" width="80.666666666666657" height="30"/>
                     <state key="normal" title="Roate"/>
                     <connections>
                         <action selector="roate:" destination="-1" eventType="touchUpInside" id="kg5-J9-PLj"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Gc-rJ-oWd" userLabel="StartCam">
-                    <rect key="frame" x="247" y="543" width="81" height="28"/>
+                    <rect key="frame" x="247.33333333333337" y="543" width="81" height="28"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <state key="normal" title="StartCam"/>
                     <connections>
@@ -290,7 +289,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l7N-OT-dic" userLabel="StopCam">
-                    <rect key="frame" x="328" y="543" width="81" height="30"/>
+                    <rect key="frame" x="328.33333333333331" y="543" width="80.666666666666686" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <state key="normal" title="StopCam"/>
                     <connections>
@@ -298,7 +297,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3NY-ve-6GV" userLabel="NewPage">
-                    <rect key="frame" x="328.66666666666669" y="573" width="80.333333333333314" height="30"/>
+                    <rect key="frame" x="328.33333333333331" y="573" width="80.666666666666686" height="30"/>
                     <state key="normal" title="NewPage"/>
                     <connections>
                         <action selector="newPage:" destination="-1" eventType="touchUpInside" id="gzb-WZ-AtS"/>

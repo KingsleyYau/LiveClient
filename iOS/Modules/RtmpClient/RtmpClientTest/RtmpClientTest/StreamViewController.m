@@ -20,6 +20,7 @@
 @property (strong) NSArray<LiveStreamPlayer *> *playerArray;
 @property (strong) NSArray<GPUImageView *> *playerPreviewArray;
 @property (strong) NSArray<NSString *> *playerUrlArray;
+@property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
 @property (assign) NSUInteger playerCount;
 
 @property (strong) LiveStreamPublisher *publisher;
@@ -46,9 +47,16 @@
         self.previewView2
     ];
     NSMutableArray *playerArray = [NSMutableArray array];
+    self.playerFilterArray = @[
+        [[LSImageVibrateFilter alloc] init],
+        [[LSImageVibrateFilter alloc] init],
+        [[LSImageVibrateFilter alloc] init]
+    ];
     for (int i = 0; i < self.playerPreviewArray.count; i++) {
         LiveStreamPlayer *player = [LiveStreamPlayer instance];
         player.playView = self.playerPreviewArray[i];
+        player.customFilter = self.playerFilterArray[i];
+
         player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
         [playerArray addObject:player];
     }
@@ -61,39 +69,39 @@
     self.publisher.publishView = self.previewPublishView;
     LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = vibrateFilter;
-    
+
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.17:19351/live/max", nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 
-//    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            if (!granted) {
-//                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启麦克风权限" preferredStyle:UIAlertControllerStyleAlert];
-//                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-//                                                                   style:UIAlertActionStyleDefault
-//                                                                 handler:^(UIAlertAction *_Nonnull action){
-//
-//                                                                 }];
-//                [alertVC addAction:actionOK];
-//                [self presentViewController:alertVC animated:NO completion:nil];
-//            }
-//        });
-//    }];
-//
-//    [[LiveStreamSession session] checkVideo:^(BOOL granted) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            if (!granted) {
-//                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头权限" preferredStyle:UIAlertControllerStyleAlert];
-//                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-//                                                                   style:UIAlertActionStyleDefault
-//                                                                 handler:^(UIAlertAction *_Nonnull action){
-//
-//                                                                 }];
-//                [alertVC addAction:actionOK];
-//                [self presentViewController:alertVC animated:NO completion:nil];
-//            }
-//        });
-//    }];
+    //    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
+    //        dispatch_async(dispatch_get_main_queue(), ^{
+    //            if (!granted) {
+    //                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启麦克风权限" preferredStyle:UIAlertControllerStyleAlert];
+    //                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+    //                                                                   style:UIAlertActionStyleDefault
+    //                                                                 handler:^(UIAlertAction *_Nonnull action){
+    //
+    //                                                                 }];
+    //                [alertVC addAction:actionOK];
+    //                [self presentViewController:alertVC animated:NO completion:nil];
+    //            }
+    //        });
+    //    }];
+    //
+    //    [[LiveStreamSession session] checkVideo:^(BOOL granted) {
+    //        dispatch_async(dispatch_get_main_queue(), ^{
+    //            if (!granted) {
+    //                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头权限" preferredStyle:UIAlertControllerStyleAlert];
+    //                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+    //                                                                   style:UIAlertActionStyleDefault
+    //                                                                 handler:^(UIAlertAction *_Nonnull action){
+    //
+    //                                                                 }];
+    //                [alertVC addAction:actionOK];
+    //                [self presentViewController:alertVC animated:NO completion:nil];
+    //            }
+    //        });
+    //    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -157,9 +165,9 @@
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     for (int i = 0; i < self.playerArray.count; i++) {
-        NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-        NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-        NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+        NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+        NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+        NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
         NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
         [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
@@ -217,107 +225,126 @@
 #pragma mark - 播放
 - (IBAction)play0:(id)sender {
     int i = 0;
-    
+
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
+
     NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
-    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-    
+    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+
     NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
     [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
 - (IBAction)play1:(id)sender {
     int i = 1;
-    
+
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
+
     NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
-    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-    
+    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+
     NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
     [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
 - (IBAction)play2:(id)sender {
     int i = 2;
-    
+
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
+
     NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
-    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-    
+    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+
     NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
     [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
 - (IBAction)stop0:(id)sender {
     int i = 0;
-    [self.playerArray[i] stop];
+    
+    if( self.playerArray[i] ) {
+        if( !self.playerArray[i].customFilter ) {
+            self.playerArray[i].customFilter = self.playerFilterArray[i];
+        } else {
+            self.playerArray[i].customFilter = nil;
+        }
+    }
 }
 
 - (IBAction)stop1:(id)sender {
     int i = 1;
-    [self.playerArray[i] stop];
+    if( self.playerArray[i] ) {
+        if( !self.playerArray[i].customFilter ) {
+            self.playerArray[i].customFilter = self.playerFilterArray[i];
+        } else {
+            self.playerArray[i].customFilter = nil;
+        }
+    }
 }
 
 - (IBAction)stop2:(id)sender {
     int i = 2;
-    [self.playerArray[i] stop];
+    if( self.playerArray[i] ) {
+        if( !self.playerArray[i].customFilter ) {
+            self.playerArray[i].customFilter = self.playerFilterArray[i];
+        } else {
+            self.playerArray[i].customFilter = nil;
+        }
+    }
 }
 
 #pragma mark - 单击屏幕
 - (void)addSingleTap {
-//    if (self.singleTap == nil) {
-//        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction)];
-//        [self.view addGestureRecognizer:self.singleTap];
-//    }
+    //    if (self.singleTap == nil) {
+    //        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction)];
+    //        [self.view addGestureRecognizer:self.singleTap];
+    //    }
 }
 
 - (void)removeSingleTap {
-//    if (self.singleTap) {
-//        [self.view removeGestureRecognizer:self.singleTap];
-//        self.singleTap = nil;
-//        self.singleTap.delegate = nil;
-//    }
+    //    if (self.singleTap) {
+    //        [self.view removeGestureRecognizer:self.singleTap];
+    //        self.singleTap = nil;
+    //        self.singleTap.delegate = nil;
+    //    }
 }
 
 - (void)singleTapAction {
-//    [self.textFieldAddress resignFirstResponder];
-//    [self.textFieldPublishAddress resignFirstResponder];
-//
-//    self.navigationController.navigationBar.alpha = 0.7;
-//    self.navigationController.navigationBar.hidden = NO;
-//
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [UIView animateWithDuration:1
-//            animations:^{
-//                self.navigationController.navigationBar.alpha = 0;
-//            }
-//            completion:^(BOOL finished) {
-//                self.navigationController.navigationBar.hidden = YES;
-//            }];
-//    });
+    //    [self.textFieldAddress resignFirstResponder];
+    //    [self.textFieldPublishAddress resignFirstResponder];
+    //
+    //    self.navigationController.navigationBar.alpha = 0.7;
+    //    self.navigationController.navigationBar.hidden = NO;
+    //
+    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    //        [UIView animateWithDuration:1
+    //            animations:^{
+    //                self.navigationController.navigationBar.alpha = 0;
+    //            }
+    //            completion:^(BOOL finished) {
+    //                self.navigationController.navigationBar.hidden = YES;
+    //            }];
+    //    });
 }
 
 #pragma mark - 处理键盘回调
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
-//    BOOL bFlag = NO;
+    //    BOOL bFlag = NO;
 
     // Ensures that all pending layout operations have been completed
     [self.view layoutIfNeeded];
@@ -358,7 +385,7 @@
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
-    
+
     // 动画收起键盘
     [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
 }
@@ -372,7 +399,7 @@
     NSInteger hour = [comoponents hour];
     NSInteger minute = [comoponents minute];
     NSInteger second = [comoponents second];
-    
+
     return [NSString stringWithFormat:@"%ld_%ld_%ld_%ld_%.2ld_%.2ld", (long)year, (long)month, (long)day, (long)hour, (long)minute, (long)second];
 }
 

@@ -38,6 +38,11 @@
 @property (nonatomic, assign) BOOL mute;
 
 /**
+ 自定义滤镜
+ */
+@property (strong) GPUImageFilter *customFilter;
+
+/**
  当前播放URL
  */
 @property (strong, readonly) NSString * _Nonnull url;

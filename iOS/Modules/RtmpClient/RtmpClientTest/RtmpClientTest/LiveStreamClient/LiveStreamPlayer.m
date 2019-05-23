@@ -19,7 +19,9 @@
 
 #import "LiveStreamSession.h"
 
-@interface LiveStreamPlayer () <RtmpPlayerOCDelegate>
+@interface LiveStreamPlayer () <RtmpPlayerOCDelegate> {
+    GPUImageFilter *_customFilter;
+}
 #pragma mark - 传输处理
 @property (strong) RtmpPlayerOC *player;
 
@@ -112,6 +114,38 @@
 }
 
 #pragma mark - 私有方法
+- (GPUImageFilter *)customFilter {
+    return _customFilter;
+}
+
+- (void)setCustomFilter:(GPUImageFilter *)customFilter {
+    // TODO:切换美颜
+    if (_customFilter != customFilter) {
+        _customFilter = customFilter;
+        
+        [self installFilter];
+    }
+}
+
+- (void)installFilter {
+    // TODO:组装滤镜
+    [self.pixelBufferInput removeAllTargets];
+    [self.customFilter removeAllTargets];
+    
+    GPUImageFilter *filter = nil;
+    if( _customFilter ) {
+        [self.pixelBufferInput addTarget:_customFilter];
+        filter = _customFilter;
+    }
+    if (_playView) {
+        if( filter ) {
+            [filter addTarget:_playView];
+        } else {
+            [self.pixelBufferInput addTarget:_playView];
+        }
+    }
+}
+
 - (BOOL)mute {
     return self.player.mute;
 }
@@ -124,8 +158,7 @@
     if (_playView != playView) {
         _playView = playView;
 
-        [self.pixelBufferInput removeAllTargets];
-        [self.pixelBufferInput addTarget:_playView];
+        [self installFilter];
     }
 }
 

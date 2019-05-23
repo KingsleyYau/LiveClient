@@ -13,29 +13,29 @@
 @class LiveStreamPublisher;
 @protocol LiveStreamPublisherDelegate <NSObject>
 @optional
-- (NSString * _Nullable)publisherShouldChangeUrl:(LiveStreamPublisher * _Nonnull)publisher;
-- (void)publisherOnConnect:(LiveStreamPublisher * _Nonnull)publisher;
-- (void)publisherOnDisconnect:(LiveStreamPublisher * _Nonnull)publisher;
+- (NSString *)publisherShouldChangeUrl:(LiveStreamPublisher *)publisher;
+- (void)publisherOnConnect:(LiveStreamPublisher *)publisher;
+- (void)publisherOnDisconnect:(LiveStreamPublisher *)publisher;
 @end
 
 typedef enum LiveStreamType {
-    LiveStreamType_Audience_Private = 0,    // 观众私密    240x320, 10fps, 10kfi, 400kbps
-    LiveStreamType_Audience_Mutiple,        // 观众多人互动 240x240, 10fps, 10kfi, 400kbps
-    LiveStreamType_ShowHost_Public,         // 主播公开    320x320, 12fps, 10kfi, 700kbps
-    LiveStreamType_ShowHost_Private,        // 主播私密    240x320, 12fps, 10kfi, 700kbps
-    LiveStreamType_ShowHost_Mutiple,        // 主播多人互动 240x240, 12fps, 10kfi, 500kbps
+    LiveStreamType_Audience_Private = 0, // 观众私密    240x320, 10fps, 10kfi, 400kbps
+    LiveStreamType_Audience_Mutiple,     // 观众多人互动 240x240, 10fps, 10kfi, 400kbps
+    LiveStreamType_ShowHost_Public,      // 主播公开    320x320, 12fps, 10kfi, 700kbps
+    LiveStreamType_ShowHost_Private,     // 主播私密    240x320, 12fps, 10kfi, 700kbps
+    LiveStreamType_ShowHost_Mutiple,     // 主播多人互动 240x240, 12fps, 10kfi, 500kbps
 } LiveStreamType;
 
 @interface LiveStreamPublisher : NSObject
 /**
  显示界面
  */
-@property (weak, nonatomic) GPUImageView* _Nullable publishView;
+@property (weak, nonatomic) GPUImageView *publishView;
 
 /**
  委托
  */
-@property (weak) id<LiveStreamPublisherDelegate> _Nullable delegate;
+@property (weak) id<LiveStreamPublisherDelegate> delegate;
 
 /**
  是否开启美颜
@@ -55,14 +55,14 @@ typedef enum LiveStreamType {
 /**
  当前推送URL
  */
-@property (strong, readonly) NSString * _Nonnull url;
+@property (strong, readonly) NSString *url;
 
 /**
  *  获取实例
  *
  *  @return 实例
  */
-+ (instancetype _Nonnull)instance:(LiveStreamType)liveStreamType;
++ (instancetype)instance:(LiveStreamType)liveStreamType;
 
 /**
  发布流连接
@@ -72,7 +72,7 @@ typedef enum LiveStreamType {
  @param recordAACFilePath AAC录制路径
  @return 成功失败
  */
-- (BOOL)pushlishUrl:(NSString * _Nonnull)url recordH264FilePath:(NSString * _Nullable)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
+- (BOOL)pushlishUrl:(NSString *)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath;
 
 /**
  停止

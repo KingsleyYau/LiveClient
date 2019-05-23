@@ -343,10 +343,6 @@
     }
 }
 
-- (BOOL)mute {
-    return self.publisher.mute;
-}
-
 - (void)installFilter {
     // TODO:组装滤镜
     [self.cropFilter removeAllTargets];
@@ -366,6 +362,10 @@
         [filter addTarget:_publishView];
     }
     [filter addTarget:self.output];
+}
+
+- (BOOL)mute {
+    return self.publisher.mute;
 }
 
 - (void)setMute:(BOOL)mute {
