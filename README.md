@@ -28,10 +28,10 @@ Catalog
 [x264 Wiki](https://en.wikipedia.org/wiki/X264)</br>
 [fdk-aac](https://github.com/mstorsjo/fdk-aac)</br>
 [fdk-aac Wiki](https://en.wikipedia.org/wiki/Fraunhofer_FDK_AAC)</br>
-[fdk-aac Wiki](http://dlib.net/)</br>
 [srs](https://github.com/ossrs/srs)</br>
 [srs.librtmp](https://github.com/ossrs/srs-librtmp)</br>
 [OpenGL_ES Wiki](https://en.wikipedia.org/wiki/OpenGL_ES)</br>
+[Dlib](http://dlib.net/)</br>
 
 
 ## Demo
