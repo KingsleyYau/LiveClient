@@ -7,8 +7,8 @@ Catalog
       * [Demo](#Demo)
       * [Demo 安装包](#Demo-安装包)
       * [Demo 使用方法](#Demo-使用方法)
-      * [iOS Demo Snapshot](#iOS-Snapshot)
-      * [Android Demo Snapshot](#Android-Snapshot)
+      * [Demo iOS Snapshot](#iOS-Snapshot)
+      * [Demo Android Snapshot](#Android-Snapshot)
       
       
 # 流媒体推拉流模块
@@ -43,9 +43,9 @@ Catalog
 * 则实际播放地址为rtmp://172.25.32.17:19351/live/max0, rtmp://172.25.32.17:19351/live/max1, rtmp://172.25.32.17:19351/live/max2
 
 
-### iOS Demo Snapshot
+### Demo iOS Snapshot
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS_1.PNG?raw=true)
 
 
-### Android Demo Snapshot
+### Demo Android Snapshot
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
