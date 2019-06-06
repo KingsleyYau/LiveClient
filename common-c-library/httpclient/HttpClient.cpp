@@ -709,11 +709,16 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 			pList = curl_slist_append(pList, header.c_str());
 			FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_MSG, "HttpClient::Request( this : %p, Add header : [%s] )", this, header.c_str());
 		}
-		// add by Samson 2015-04-23, add "device_type" to http header
-		pList = curl_slist_append(pList, DEVICE_TYPE);
-        pList = curl_slist_append(pList, QN_DEVICE_TYPE);
+        
+        if( !entiy->mNoHeader ) {
+            // add by Samson 2015-04-23, add "device_type" to http header
+            pList = curl_slist_append(pList, DEVICE_TYPE);
+            pList = curl_slist_append(pList, QN_DEVICE_TYPE);
+        }
 
-        if (entiy->mFileMap.empty() && !entiy->mIsGetMethod) {
+        if( entiy->mRawData.length() > 0 && !entiy->mIsGetMethod ) {
+            curl_easy_setopt(mpCURL, CURLOPT_POSTFIELDS, entiy->mRawData.c_str());
+        } else if (entiy->mFileMap.empty() && !entiy->mContentMap.empty() && !entiy->mIsGetMethod) {
             /* Contents */
             for( HttpMap::const_iterator itr = entiy->mContentMap.begin(); itr != entiy->mContentMap.end(); itr++ ) {
                 if (!postData.empty()) {
@@ -732,8 +737,7 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
             }
             
             curl_easy_setopt(mpCURL, CURLOPT_POSTFIELDS, postData.c_str());
-        }
-        else {
+        } else {
             /* Contents */
             for( HttpMap::const_iterator itr = entiy->mContentMap.begin(); itr != entiy->mContentMap.end(); itr++ ) {
                 curl_formadd(&pPost, &pLast, CURLFORM_COPYNAME, itr->first.c_str(),

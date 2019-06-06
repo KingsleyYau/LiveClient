@@ -20,6 +20,7 @@ HttpEntiy::HttpEntiy() {
 	mAuthorization = "";
 	mIsGetMethod = false;
 	mbSaveCookie = false;
+    mNoHeader = false;
     mDownloadTimeout = DWONLOAD_TIMEOUT;
     mConnectTimeout = CONNECT_TIMEOUT;
 }
@@ -69,6 +70,14 @@ void HttpEntiy::SetConnectTimeout(unsigned int connectTimeout) {
     mConnectTimeout = connectTimeout;
 }
 
+void HttpEntiy::SetNoHeader() {
+    mNoHeader = true;
+}
+
+void HttpEntiy::SetRawData(string data) {
+    mRawData = data;
+}
+
 void HttpEntiy::AddContent(string key, string value) {
 //	FileLog(LIVESHOW_HTTP_LOG, "HttpEntiy::AddContent( key : %s, value : %s )", key.c_str(), value.c_str());
 	HttpMap::iterator itr = mContentMap.find(key);
@@ -114,6 +123,14 @@ string HttpEntiy::GetContentDesc() {
     
     if(desc.length() > 0) {
         desc = desc.substr(0, desc.length() - 1);
+    }
+    
+    if(mRawData.length() > 0) {
+        if(desc.length() > 0) {
+            desc += " ";
+        }
+        desc += "rawData:";
+        desc += mRawData;
     }
     
     return desc;
