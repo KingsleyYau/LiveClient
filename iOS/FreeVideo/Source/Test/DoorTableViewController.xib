@@ -21,18 +21,15 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IBQ-25-mU5" customClass="DoorTableView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="479"/>
+                <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IBQ-25-mU5" customClass="DoorTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </tableView>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="tDe-2o-vx3">
-                    <rect key="frame" x="0.0" y="479" width="375" height="188"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="188" id="ctu-56-xEr"/>
-                    </constraints>
                     <collectionViewLayout key="collectionViewLayout" id="FR7-a4-nV4" customClass="DoorItemLayout"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="mO7-i5-eLc"/>
@@ -44,11 +41,12 @@
             <constraints>
                 <constraint firstItem="IBQ-25-mU5" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="01f-P6-0Ce"/>
                 <constraint firstItem="tDe-2o-vx3" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="DHm-8a-OaS"/>
+                <constraint firstItem="tDe-2o-vx3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="E2i-XH-2BI"/>
                 <constraint firstItem="tDe-2o-vx3" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="WJw-6D-Eh3"/>
                 <constraint firstItem="IBQ-25-mU5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="aSb-Zy-LwH"/>
-                <constraint firstItem="tDe-2o-vx3" firstAttribute="top" secondItem="IBQ-25-mU5" secondAttribute="bottom" id="iAx-sh-tYu"/>
                 <constraint firstItem="tDe-2o-vx3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="mH8-J4-nCI"/>
                 <constraint firstItem="IBQ-25-mU5" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="pRu-70-HLn"/>
+                <constraint firstItem="IBQ-25-mU5" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="ult-fN-4fL"/>
             </constraints>
             <point key="canvasLocation" x="33.5" y="57.5"/>
         </view>

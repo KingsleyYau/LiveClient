@@ -34,7 +34,7 @@
     [super initCustomParam];
 
     self.isShowNavBar = NO;
-    
+
     self.items = [NSMutableArray array];
     self.sessionManager = [LSSessionRequestManager manager];
 }
@@ -59,6 +59,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     if (!self.viewDidAppearEver) {
         [self.tableView startPullDown:YES];
+        [self.collectionView startPullDown:YES];
     }
 
     [super viewDidAppear:animated];
@@ -76,7 +77,7 @@
     [super setupContainView];
 
     // 初始化主播列表
-    [self setupTableView];
+    //    [self setupTableView];
     [self setupCollectionView];
 }
 
@@ -94,7 +95,8 @@
     NSBundle *bundle = [LiveBundle mainBundle];
     UINib *nib = [UINib nibWithNibName:@"DoorItemCollectionViewCell" bundle:bundle];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:[DoorItemCollectionViewCell cellIdentifier]];
-    
+
+    [self.collectionView initPullRefresh:self pullDown:YES pullUp:YES];
     self.collectionView.backgroundView = nil;
     self.collectionView.backgroundColor = [UIColor clearColor];
 }
@@ -105,9 +107,9 @@
 
     // 数据填充
     if (isReloadView) {
-        self.tableView.items = self.items;
-        [self.tableView reloadData];
-        
+        //        self.tableView.items = self.items;
+        //        [self.tableView reloadData];
+
         [self.collectionView reloadData];
     }
 }
@@ -125,7 +127,7 @@
         LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
         // 房间名
         cell.labelRoomTitle.text = [NSString stringWithFormat:@"%@(%@)", item.nickName, item.userId];
-        
+
         if (item.onlineStatus == ONLINE_STATUS_LIVE) {
             if (item.roomType != HTTPROOMTYPE_NOLIVEROOM) {
                 cell.onlineImageView.hidden = NO;
@@ -133,7 +135,7 @@
         } else {
             // 不在线
         }
-        
+
         // 头像
         [cell.imageViewLoader stop];
         [cell.imageViewLoader loadHDListImageWithImageView:cell.imageViewHeader
@@ -142,7 +144,7 @@
                                           placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]
                                              finishHandler:nil];
     }
-    
+
     return cell;
 }
 
@@ -200,63 +202,39 @@
     request.hasWatch = NO;
 
     // 调用接口
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"DoorTableViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
                 [self.tableView.tableHeaderView setHidden:NO];
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    //                    [self.tableView finishPullDown:YES];
+                    [self.collectionView finishPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    //                    [self.tableView finishPullUp:YES];
+                    [self.collectionView finishPullUp:YES];
                 }
 
                 for (LiveRoomInfoItemObject *item in array) {
                     [self.items addObject:item];
                 }
 
-                // 没有数据隐藏banner
-                if (!(self.items.count > 0)) {
-                    [self.tableView.tableHeaderView setHidden:YES];
-                }
-
                 [self reloadData:YES];
-
-                if (!loadMore) {
-                    if (self.items.count > 0) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                            // 拉到最顶
-                            [self.tableView scrollsToTop];
-                        });
-                    }
-                } else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        if (self.items.count > PageSize) {
-                            // 拉到下一页
-                            UITableViewCell *cell = [self.tableView visibleCells].firstObject;
-                            NSIndexPath *index = [self.tableView indexPathForCell:cell];
-                            NSInteger row = index.row;
-                            NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
-                            [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                        }
-
-                    });
-                }
-
             } else {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:NO];
+                    //                    [self.tableView finishPullDown:NO];
+                    [self.collectionView finishPullDown:NO];
                     [self.items removeAllObjects];
-                    [self.tableView.tableHeaderView setHidden:YES];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    //                    [self.tableView finishPullUp:YES];
+                    [self.collectionView finishPullUp:YES];
                 }
 
                 [self reloadData:YES];
@@ -270,7 +248,7 @@
     return bFlag;
 }
 
-- (void)addItemIfNotExist:(LiveRoomInfoItemObject *_Nonnull)itemNew {
+- (void)addItemIfNotExist:(LiveRoomInfoItemObject *)itemNew {
     bool bFlag = NO;
 
     for (LiveRoomInfoItemObject *item in self.items) {
