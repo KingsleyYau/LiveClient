@@ -37,7 +37,9 @@ public:
 	void SetSaveCookie(bool isSaveCookie);
     void SetConnectTimeout(unsigned int connectTimeout); 
     void SetDownloadTimeout(double downloadTimeout); // downloadTimeout=1.0 is 1 second.
-
+    void SetNoHeader();
+    
+    void SetRawData(string data);
 	void AddContent(string key, string value);
 	void AddFile(string key, string fileName, string mimeType = "image/jpeg");
 
@@ -54,11 +56,13 @@ private:
 	HttpMap mHeaderMap;
 	HttpMap mContentMap;
 	FileMap mFileMap;
+    string mRawData;
 	string mAuthorization;
 	bool mIsGetMethod;
 	bool mbSaveCookie;
     double mDownloadTimeout;
     unsigned int mConnectTimeout;
+    bool mNoHeader;
 };
 
 #endif

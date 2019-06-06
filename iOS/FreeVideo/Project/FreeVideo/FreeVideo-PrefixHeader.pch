@@ -1,0 +1,38 @@
+//
+//  PrefixHeader.pch
+//  dating
+//
+//  Created by Max on 16/2/15.
+//  Copyright © 2016年 qpidnetwork. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+//#import <UIKit/UIKit.h>
+//#import <Foundation/Foundation.h>
+
+#import "LSCommon_C_Library.h"
+#import "LSCommonWidget.h"
+#import "LSUIWidget.h"
+
+#import "AppDelegate.h"
+#import "CommonDefine.h"
+
+#import "RequestErrorCode.h"
+
+#import "Masonry.h"
+
+#import "AFNetworking.h"
+
+#import "LocalErrorCode.h"
+
+#import <SDWebImage/UIImageView+WebCache.h>
+
+// 屏幕大小
+#define screenSize              [UIScreen mainScreen].bounds.size
+
+#endif /* PrefixHeader_pch */

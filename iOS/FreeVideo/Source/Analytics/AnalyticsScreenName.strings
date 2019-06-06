@@ -1,0 +1,69 @@
+/*
+  AnalyticsScreenName.strings
+  dating
+
+  Created by  Samson on 6/29/16.
+  Copyright © 2016 qpidnetwork. All rights reserved.
+*/
+
+"LSMainViewController_3" = "Live.Overview";
+"LSMainViewController_0" = "Live.HotList";
+"LSMainViewController_1" = "Live.FollowingList";
+"LSMainViewController_2" = "Live.ShowCalendar";
+
+"LSUserInfoListViewController" = "Live.PersonalCenter";
+"LSMyReservationsViewController_0" = "MySchedules.New";
+"LSMyReservationsViewController_1" = "MySchedules.Sent";
+"LSMyReservationsViewController_2" = "MySchedules.Scheduled";
+"LSMyReservationsViewController_3" = "MySchedules.History";
+
+"MyBackpackViewController_0" = "MyBackpack.PostStampOverview";
+"MyBackpackViewController_1" = "MyBackpack.Voucher";
+"MyBackpackViewController_2" = "MyBackpack.Gift";
+"MyBackpackViewController_3" = "MyBackpack.Ride";
+"AnchorPersonalViewController" = "BroadcasterProfile";
+
+"PublicViewController" = "PublicBroadcast";
+"PublicVipViewController" = "VIPPublicBroadcast";
+"PrivateVipViewController" = "VIPPrivateBroadcast";
+"PreLiveViewController" = "BroadcastTransition";
+
+"LiveFinshViewController_0" = "BroadcastEnd";
+"LiveFinshViewController_1" = "ShowEnd";
+"BookPrivateBroadcastViewController" = "RequestBooking";
+"BookPrivateBroadcastSucceedViewController" = "RequestBooking.Success";
+
+"AddMobileNumberViewController" = "InputMobileNumber";
+"VerifyMobileNumberViewController" = "VerifyMobileNumber";
+
+"ShowDetailViewController" = "ShowDetail";
+"MyTicketPageViewController_0" = "MyTicket.Scheduled";
+"MyTicketPageViewController_1" = "MyTicket.History";
+"ShowLiveViewController" = "ShowBroadcast";
+
+"HangOutViewController" = "HangOutBroadcast";
+
+"LSManProfileViewController" = "PersonalCenter.Profile";
+"LSEditInterestViewController" = "Profile.YourInterests";
+"LSMotifyAboutYouViewController" = "Profile.AboutYou";
+
+"LSUserSetUpViewController" = "Live.Settings";
+"LSPushNoticeViewController" = "Settings.PushNotifications";
+"LSChangePasswordViewController" = "Settings.ChangePassword";
+"LSAddCreditsViewController" = "Live.GetCredit";
+"LSMessageViewController" = "Live.MessageList";
+"LSChatViewController" = "MessageDetail";
+
+"LSChatAndInvitationViewController_0" = "Live.LiveChat.ChatList";
+"LSChatAndInvitationViewController_1" = "Live.LiveChat.Invitation";
+"QNChatViewController" = "LiveChatDetail";
+
+"LSOutBoxViewController" = "Outbox.MailDetail";
+"LSMailDetailViewController" = "Inbox.MailDetail";
+"LSMailViewController_1" = "Live.Mail.Inbox";
+"LSMailViewController_2" = "Live.Mail.Outbox";
+"LSSendMailViewController" = "ReplyMail";
+
+"LSGreetingsViewController" = "Live.GreetingsList";
+"LSGreetingDetailViewController" = "Greetings.MailDetail";
+

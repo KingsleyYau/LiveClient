@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="irJ-k4-1uv">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="lvk-0g-MyF">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dQg-tF-urY" customClass="LSMainViewController" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" id="DBZ-jw-QVq"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="fT4-U4-gui">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EK1-2b-gOp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3334" y="-2782"/>
+        </scene>
+        <!--程序入口Navigation Controller-->
+        <scene sceneID="KYb-IJ-UnT">
+            <objects>
+                <navigationController id="irJ-k4-1uv" userLabel="程序入口Navigation Controller" customClass="LSNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="QTm-p6-7AD">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="LW6-fi-QCa" kind="relationship" relationship="rootViewController" id="Jm8-9e-Olc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Snr-cw-nUW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4644" y="-2393"/>
+        </scene>
+        <!--LSTestViewController-->
+        <scene sceneID="MUP-dp-ZgU">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Rus-My-Ooj" userLabel="LSTestViewController" customClass="LSTestViewController" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Login Test" id="N2g-e5-pj8"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSb-qO-gmb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3302" y="-1976"/>
+        </scene>
+        <!--DoorViewController-->
+        <scene sceneID="oQV-NB-GOH">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="LW6-fi-QCa" userLabel="DoorViewController" customClass="DoorViewController" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Login Test" id="5EZ-Bc-8Zy"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UjK-ew-cle" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4031" y="-1275"/>
+        </scene>
+    </scenes>
+</document>
