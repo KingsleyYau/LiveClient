@@ -9,6 +9,8 @@
 #import "DoorTableViewController.h"
 #import "DoorTableView.h"
 
+#import "DoorItemCollectionViewCell.h"
+
 #import "DoorStreamViewController.h"
 
 #import "LSSessionRequestManager.h"
@@ -18,10 +20,11 @@
 #define DefaultSize 16
 
 @interface DoorTableViewController () <UIScrollViewRefreshDelegate>
-@property (nonatomic, strong) IBOutlet DoorTableView *tableView;
+@property (weak) IBOutlet DoorTableView *tableView;
+@property (weak) IBOutlet UICollectionView *collectionView;
 
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
-@property (nonatomic, strong) NSMutableArray *items;
+@property (strong) LSSessionRequestManager *sessionManager;
+@property (strong) NSMutableArray *items;
 
 @end
 
@@ -74,6 +77,7 @@
 
     // 初始化主播列表
     [self setupTableView];
+    [self setupCollectionView];
 }
 
 - (void)setupTableView {
@@ -86,6 +90,15 @@
     self.tableView.tableViewDelegate = self;
 }
 
+- (void)setupCollectionView {
+    NSBundle *bundle = [LiveBundle mainBundle];
+    UINib *nib = [UINib nibWithNibName:@"DoorItemCollectionViewCell" bundle:bundle];
+    [self.collectionView registerNib:nib forCellWithReuseIdentifier:[DoorItemCollectionViewCell cellIdentifier]];
+    
+    self.collectionView.backgroundView = nil;
+    self.collectionView.backgroundColor = [UIColor clearColor];
+}
+
 #pragma mark - 数据逻辑
 - (void)reloadData:(BOOL)isReloadView {
     NSLog(@"DoorTableViewController::reloadData( isReloadView : %@ )", BOOL2YES(isReloadView));
@@ -94,14 +107,52 @@
     if (isReloadView) {
         self.tableView.items = self.items;
         [self.tableView reloadData];
+        
+        [self.collectionView reloadData];
     }
 }
 
-- (void)tableView:(DoorTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
-//    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
-//    listViewController.anchorId = item.userId;
-//    listViewController.enterRoom = 1;
-//    [self.navigationController pushViewController:listViewController animated:YES];
+#pragma mark - 礼物内容委托(UICollectionViewDataSource)
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.items.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    DoorItemCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DoorItemCollectionViewCell cellIdentifier] forIndexPath:indexPath];
+    [cell reset];
+    if (indexPath.row < self.items.count) {
+        // 数据填充
+        LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
+        // 房间名
+        cell.labelRoomTitle.text = [NSString stringWithFormat:@"%@(%@)", item.nickName, item.userId];
+        
+        if (item.onlineStatus == ONLINE_STATUS_LIVE) {
+            if (item.roomType != HTTPROOMTYPE_NOLIVEROOM) {
+                cell.onlineImageView.hidden = NO;
+            }
+        } else {
+            // 不在线
+        }
+        
+        // 头像
+        [cell.imageViewLoader stop];
+        [cell.imageViewLoader loadHDListImageWithImageView:cell.imageViewHeader
+                                                   options:0
+                                                  imageUrl:item.roomPhotoUrl
+                                          placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]
+                                             finishHandler:nil];
+    }
+    
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.items.count) {
+        DoorStreamViewController *vc = [[DoorStreamViewController alloc] initWithNibName:nil bundle:nil];
+        LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
+        vc.item = item;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 #pragma mark - 上下拉
@@ -241,7 +292,7 @@
     [self.tableView startPullDown:YES];
 }
 
-- (void)tableView:(DoorTableView *)tableView didViewItem:(LiveRoomInfoItemObject *)item {
+- (void)tableView:(DoorTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
     DoorStreamViewController *vc = [[DoorStreamViewController alloc] initWithNibName:nil bundle:nil];
     vc.item = item;
     [self.navigationController pushViewController:vc animated:YES];

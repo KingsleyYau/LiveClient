@@ -43,6 +43,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    [[LSLoginManager manager] logout:LogoutTypeActive];
     [self loginAction:nil];
 }
 
