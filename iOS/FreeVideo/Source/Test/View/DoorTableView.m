@@ -44,16 +44,6 @@
     [super reloadData];
 }
 
-- (void)viewAction:(id)sender {
-    LSHighlightedButton *btn = (LSHighlightedButton *)sender;
-    NSInteger row = btn.tag;
-
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:row];
-    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didViewItem:)]) {
-        [self.tableViewDelegate tableView:self didViewItem:item];
-    }
-}
-
 #pragma mark - 列表界面回调 (UITableViewDataSource / UITableViewDelegate)
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0.01;
@@ -84,9 +74,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DoorTableViewCell *cell = [DoorTableViewCell getUITableViewCell:tableView];
-    cell.viewBtn.tag = indexPath.row;
-    [cell.viewBtn removeTarget:self action:@selector(viewAction:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.viewBtn addTarget:self action:@selector(viewAction:) forControlEvents:UIControlEventTouchUpInside];
     [cell reset];
 
     // 数据填充
@@ -96,7 +83,7 @@
 
     if (item.onlineStatus == ONLINE_STATUS_LIVE) {
         if (item.roomType != HTTPROOMTYPE_NOLIVEROOM) {
-            cell.viewBtn.hidden = NO;
+            cell.onlineImageView.hidden = NO;
         }
 
     } else {

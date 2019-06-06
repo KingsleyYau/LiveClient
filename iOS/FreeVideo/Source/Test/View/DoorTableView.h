@@ -17,7 +17,6 @@
 - (void)tableView:(DoorTableView *)tableView didShowItem:(LiveRoomInfoItemObject *)item;
 - (void)tableView:(DoorTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item;
 - (void)tableView:(DoorTableView *)tableView willDeleteItem:(LiveRoomInfoItemObject *)item;
-- (void)tableView:(DoorTableView *)tableView didViewItem:(LiveRoomInfoItemObject *)item;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;

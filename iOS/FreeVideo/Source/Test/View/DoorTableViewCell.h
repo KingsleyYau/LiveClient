@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "LSImageViewLoader.h"
 
 @class DoorTableViewCell;
@@ -22,7 +23,7 @@
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 
 @property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;
-@property (weak, nonatomic) IBOutlet LSHighlightedButton *viewBtn;
+@property (weak) IBOutlet UIImageView *onlineImageView;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

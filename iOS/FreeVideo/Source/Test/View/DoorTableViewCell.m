@@ -27,8 +27,8 @@
         cell.imageViewHeader.image = nil;
         cell.labelRoomTitle.text = @"";
         
-        cell.viewBtn.layer.cornerRadius = cell.viewBtn.frame.size.height * 0.5f;
-        cell.viewBtn.layer.masksToBounds = YES;
+        cell.onlineImageView.layer.cornerRadius = cell.onlineImageView.frame.size.height * 0.5f;
+        cell.onlineImageView.layer.masksToBounds = YES;
     }
     return cell;
 }
@@ -58,7 +58,7 @@
 - (void)reset {
     self.imageViewHeader.image = nil;
     self.labelRoomTitle.text = @"";
-    self.viewBtn.hidden = YES;
+    self.onlineImageView.hidden = YES;
 }
 
 @end
