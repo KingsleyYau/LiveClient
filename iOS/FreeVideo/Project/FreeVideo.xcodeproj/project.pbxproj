@@ -23,6 +23,9 @@
 		503A70621EEF700400BA8FF8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 503A70611EEF700400BA8FF8 /* CoreText.framework */; };
 		503A70641EEF701700BA8FF8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 503A70631EEF701700BA8FF8 /* Accelerate.framework */; };
 		5046E54122A8E4160066AEB5 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E15EB5420ABC8F300395074 /* AssetsLibrary.framework */; };
+		5046E54A22A8F6D00066AEB5 /* DoorItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5046E54722A8F6D00066AEB5 /* DoorItemCollectionViewCell.m */; };
+		5046E54B22A8F6D00066AEB5 /* DoorItemCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5046E54822A8F6D00066AEB5 /* DoorItemCollectionViewCell.xib */; };
+		5046E54E22A8F9EF0066AEB5 /* DoorItemLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5046E54D22A8F9EF0066AEB5 /* DoorItemLayout.m */; };
 		505591BA1EF40068000AF03A /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 505591B91EF40068000AF03A /* WebP.framework */; };
 		505D6DED1EC979E3007FF4C6 /* LSFileCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 505D6DE61EC979E3007FF4C6 /* LSFileCacheManager.m */; };
 		505D6DEE1EC979E3007FF4C6 /* LSImageViewLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 505D6DE81EC979E3007FF4C6 /* LSImageViewLoader.m */; };
@@ -369,6 +372,11 @@
 		503C97A41F8F090D00A11324 /* libPods-livestream.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-livestream.a"; path = "../../../../../../../Library/Developer/Xcode/DerivedData/livestream-djkcfmuzsevuxladevkuhdoeggqk/Build/Products/Debug-iphonesimulator/libPods-livestream.a"; sourceTree = "<group>"; };
 		503C97A51F8F090D00A11324 /* libSDWebImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDWebImage.a; path = "../../../../../../../Library/Developer/Xcode/DerivedData/livestream-djkcfmuzsevuxladevkuhdoeggqk/Build/Products/Debug-iphonesimulator/SDWebImage/libSDWebImage.a"; sourceTree = "<group>"; };
 		503C97A61F8F090D00A11324 /* libTTTAttributedLabel.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTTAttributedLabel.a; path = "../../../../../../../Library/Developer/Xcode/DerivedData/livestream-djkcfmuzsevuxladevkuhdoeggqk/Build/Products/Debug-iphonesimulator/TTTAttributedLabel/libTTTAttributedLabel.a"; sourceTree = "<group>"; };
+		5046E54722A8F6D00066AEB5 /* DoorItemCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoorItemCollectionViewCell.m; sourceTree = "<group>"; };
+		5046E54822A8F6D00066AEB5 /* DoorItemCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DoorItemCollectionViewCell.xib; sourceTree = "<group>"; };
+		5046E54922A8F6D00066AEB5 /* DoorItemCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoorItemCollectionViewCell.h; sourceTree = "<group>"; };
+		5046E54C22A8F9EF0066AEB5 /* DoorItemLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoorItemLayout.h; sourceTree = "<group>"; };
+		5046E54D22A8F9EF0066AEB5 /* DoorItemLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoorItemLayout.m; sourceTree = "<group>"; };
 		504D5FC21F8F384D00BBB037 /* Pods-livestream_sdk.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-livestream_sdk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-livestream_sdk/Pods-livestream_sdk.debug.xcconfig"; sourceTree = "<group>"; };
 		504D5FC31F8F384D00BBB037 /* Pods-livestream_sdk.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-livestream_sdk.release.xcconfig"; path = "Pods/Target Support Files/Pods-livestream_sdk/Pods-livestream_sdk.release.xcconfig"; sourceTree = "<group>"; };
 		504D5FD41F8F556B00BBB037 /* livestream-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "livestream-PrefixHeader.pch"; path = "livestream/livestream-PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
@@ -824,6 +832,11 @@
 		500153CA22A79CCD003A67C3 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				5046E54922A8F6D00066AEB5 /* DoorItemCollectionViewCell.h */,
+				5046E54722A8F6D00066AEB5 /* DoorItemCollectionViewCell.m */,
+				5046E54822A8F6D00066AEB5 /* DoorItemCollectionViewCell.xib */,
+				5046E54C22A8F9EF0066AEB5 /* DoorItemLayout.h */,
+				5046E54D22A8F9EF0066AEB5 /* DoorItemLayout.m */,
 				500153DB22A79CD0003A67C3 /* DoorTableView.h */,
 				500153DA22A79CCF003A67C3 /* DoorTableView.m */,
 				500153CF22A79CCD003A67C3 /* DoorTableViewCell.h */,
@@ -1056,7 +1069,6 @@
 		508C87251FB3E06A00A078C3 /* Test */ = {
 			isa = PBXGroup;
 			children = (
-				500153CA22A79CCD003A67C3 /* View */,
 				500153EA22A7A853003A67C3 /* DoorStreamViewController.h */,
 				500153E922A7A853003A67C3 /* DoorStreamViewController.mm */,
 				500153EB22A7A853003A67C3 /* DoorStreamViewController.xib */,
@@ -1066,6 +1078,7 @@
 				500153C222A774B2003A67C3 /* DoorViewController.h */,
 				500153C322A774B4003A67C3 /* DoorViewController.m */,
 				500153C422A774B4003A67C3 /* DoorViewController.xib */,
+				500153CA22A79CCD003A67C3 /* View */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -1627,6 +1640,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5046E54B22A8F6D00066AEB5 /* DoorItemCollectionViewCell.xib in Resources */,
 				50E9D03F21786D720080157D /* AnalyticsScreenName.strings in Resources */,
 				500153DC22A79CD0003A67C3 /* DoorTableViewController.xib in Resources */,
 				506D60671F0F14AD002CAD3C /* InfoPlist.strings in Resources */,
@@ -1775,6 +1789,7 @@
 				FA62D35E21E88D9300C28294 /* LSAnchorLetterPrivRequest.m in Sources */,
 				FAA0F232209AB5D80074A8F6 /* LSGetCanHangoutAnchorListRequest.m in Sources */,
 				506BC32F1F59027F001C2962 /* GetBackpackUnreadNumRequest.m in Sources */,
+				5046E54A22A8F6D00066AEB5 /* DoorItemCollectionViewCell.m in Sources */,
 				500153C522A774B5003A67C3 /* DoorViewController.m in Sources */,
 				FA19BFE521C79AE3008114C8 /* LSGetEmfDetailRequest.m in Sources */,
 				FA57B1A61FA97E620092EA2F /* LSGetUserInfoRequest.m in Sources */,
@@ -1856,6 +1871,7 @@
 				506BC32D1F59027F001C2962 /* GetAllGiftListRequest.m in Sources */,
 				FAA0F231209AB5D80074A8F6 /* LSDealKnockRequest.m in Sources */,
 				FA19BFE721C79AE3008114C8 /* LSGetLoiListRequest.m in Sources */,
+				5046E54E22A8F9EF0066AEB5 /* DoorItemLayout.m in Sources */,
 				506BC3CD1F590AC6001C2962 /* BookTimeItemObject.m in Sources */,
 				506BC32E1F59027F001C2962 /* GetAnchorListRequest.m in Sources */,
 				FAC004FF207F61A100B73174 /* LSHangoutAnchorItemObject.m in Sources */,
