@@ -169,17 +169,23 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 						+ "originalWidth : %d, "
 						+ "originalHeight : %d, "
 						+ "radioPreview : %f, "
+						+ "videoWidth : %d, "
+						+ "videoHeight : %d, "
 						+ "radioImage : %f "
 						+ " )",
 						hashCode(),
 						originalWidth,
 						originalHeight,
 						radioPreview,
+						publishConfig.videoWidth,
+						publishConfig.videoHeight,
 						radioImage
 				)
 		);
 
-		if( radioPreview < radioImage ) {
+		if ( radioPreview == radioImage ) {
+			// 不裁剪
+		} else if( radioPreview < radioImage ) {
 			// 剪裁左右
 			cropFilter.setCropRect((1 - radioImage) / 2, 0, radioImage, 1);
 		} else {

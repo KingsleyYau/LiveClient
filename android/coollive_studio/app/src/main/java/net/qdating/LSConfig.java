@@ -5,13 +5,13 @@ import net.qdating.utils.Log;
 /**
  * RTMP推拉流模块初始化配置
  * @author max
- * @version 1.9.2
+ * @version 1.9.4
  */
 public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	public final static String VERSION = "1.9.2";
+	public final static String VERSION = "1.9.4";
 	/**
 	 * 日志TAG
 	 */
@@ -61,7 +61,8 @@ public class LSConfig {
 	static public enum VideoConfigType {
 		VideoConfigType240x240,
 		VideoConfigType240x320,
-		VideoConfigType320x320
+		VideoConfigType320x320,
+		VideoConfigType480x640,
 	}
 	/**
 	 * 渲染模式类型 <br/>
