@@ -30,6 +30,8 @@ javac \
 -d $TMP_PATH \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/utils/Log.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/filter/*.java \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/filter/beauty/*.java \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/filter/sample/*.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/player/*.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/publisher/*.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/*.java \
@@ -54,6 +56,9 @@ find $TMP_PATH -name ".DS_Store" | xargs rm -rf {}
 jar cvf $VERSION/coollive.jar -C $TMP_PATH . >> $LOG_FILE 2>&1
 rm -f $ECLIPSE_PROJECT_PATH/libs/*.jar >> $LOG_FILE 2>&1
 cp -rf $ECLIPSE_PROJECT_PATH/libs $VERSION >> $LOG_FILE 2>&1
+
+# Copy assets
+cp -rf $ECLIPSE_PROJECT_PATH/assets $VERSION >> $LOG_FILE 2>&1
 
 mkdir -p $VERSION/doc
 javadoc \

@@ -1,18 +1,22 @@
-package net.qdating.filter;
+package net.qdating.filter.beauty;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 
-import net.qdating.LSConfig;
-import net.qdating.utils.Log;
+import net.qdating.filter.LSImageBufferFilter;
+import net.qdating.filter.LSImageFilter;
+import net.qdating.filter.LSImageVertex;
 
-import java.util.Random;
+import java.io.File;
 
 /**
- * 抖音滤镜
+ * 高通滤波滤镜
  * @author max
  *
  */
-public class LSImageVibrateFilter extends LSImageBufferFilter {
+public class LSImageHighPassFilter extends LSImageBufferFilter {
 	private static String vertexShaderString = ""
 			+ "// 图像顶点着色器 \n"
 			+ "// 纹理坐标(输入) \n"
@@ -30,73 +34,54 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 			+ "// 图像颜色着色器 \n"
             + "precision mediump float; \n"
 			+ "uniform sampler2D uInputTexture; \n"
-			+ "uniform lowp vec2 uImagePixel; \n"
-			+ "uniform lowp vec2 uOffet; \n"
+			+ "uniform sampler2D uBlurTexture; \n"
+			+ "const float intensity = 24.0; // 强光程度 \n"
 			+ "// 片段着色器(输入) \n"
 			+ "varying highp vec2 vTextureCoordinate; \n"
 			+ "void main() { \n"
-			+ "		// 绿和蓝右下偏移 \n"
-			+ "		vec4 right = texture2D(uInputTexture, vTextureCoordinate + uImagePixel * uOffet); \n"
-			+ "		// 红左上偏移 \n"
-			+ "		vec4 left = texture2D(uInputTexture, vTextureCoordinate - uImagePixel * uOffet); \n"
-			+ "		gl_FragColor = vec4(left.r, right.g, right.b, 1.0); \n"
-			+ "} \n";
+			+ "		lowp vec4 textureColor = texture2D(uInputTexture, vTextureCoordinate); \n"
+			+ "		lowp vec4 blurColor = texture2D(uBlurTexture, vTextureCoordinate); \n"
+			+ "		// 高通滤波之后的颜色值 \n "
+			+ "		highp vec4 highPassColor = textureColor - blurColor; \n"
+			+ "		// 对应混合模式中的强光模式(color = 2.0 * color1 * color2)，对于高反差的颜色来说，color1 和color2 是同一个 \n"
+			+ "		highPassColor.r = clamp(2.0 * highPassColor.r * highPassColor.r * intensity, 0.0, 1.0); \n"
+			+ "		highPassColor.g = clamp(2.0 * highPassColor.g * highPassColor.g * intensity, 0.0, 1.0); \n"
+			+ "		highPassColor.b = clamp(2.0 * highPassColor.b * highPassColor.b * intensity, 0.0, 1.0); \n"
+			+ "		// 输出的是把痘印等过滤掉 \n"
+			+ "		gl_FragColor = vec4(highPassColor.rgb, 1.0); \n"
+			+ "}\n";
 
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
-	private int uImagePixel;
-	private int uOffet;
 
-	private float uvImagePixel[] = new float[2];
+	private int blurTextureId;
+	private int uBlurTexture;
 
-	private Random rnd = new Random();
-
-	static private int VIBRATE_OFFSET_MAX = 10;
-	private int vibrateOffset = 5;
-
-	public LSImageVibrateFilter() {
+	public LSImageHighPassFilter() {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
 		// TODO Auto-generated constructor stub
 	}
 
-	public LSImageVibrateFilter(double level) {
-		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
-		// TODO Auto-generated constructor stub
-		this.vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
-	}
-
-	/**
-	 * 设置抖动等级
-	 * @param level 0.0 ~ 1.0
-	 */
-	public void setlevel(double level) {
-		Log.d(LSConfig.TAG,
-				String.format("LSImageVibrateFilter::setlevel( "
-								+ "level : %f "
-								+ ")",
-						level
-				)
-		);
-
-		this.vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
+	public void setBlurTexture(int textureId) {
+		blurTextureId = textureId;
 	}
 
 	@Override
-	protected ImageSize changeInputSize(int inputWidth, int inputHeight) {
-		ImageSize imageSize = super.changeInputSize(inputWidth, inputHeight);
+	public void init() {
+		super.init();
 
-		if( imageSize.bChange ) {
-			uvImagePixel[0] = 1.0f / inputWidth;
-			uvImagePixel[1] = 1.0f / inputHeight;
-		}
-
-		return imageSize;
+		uBlurTexture = GLES20.glGetUniformLocation(getProgram(), "uBlurTexture");
 	}
 
 	@Override
 	protected void onDrawStart(int textureId) {
 		super.onDrawStart(textureId);
+
+		// 绑定图像纹理
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, blurTextureId);
+		GLES20.glUniform1i(uBlurTexture, 1);
 
 		// 激活纹理单元GL_TEXTURE0
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -106,8 +91,6 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 		aPosition = GLES20.glGetAttribLocation(getProgram(), "aPosition");
 		aTextureCoordinate = GLES20.glGetAttribLocation(getProgram(), "aTextureCoordinate");
 		uInputTexture = GLES20.glGetUniformLocation(getProgram(), "uInputTexture");
-		uImagePixel = GLES20.glGetUniformLocation(getProgram(), "uImagePixel");
-		uOffet = GLES20.glGetUniformLocation(getProgram(), "uOffet");
 
 		// 填充着色器-顶点采样器
 		if( getVertexBuffer() != null ) {
@@ -125,13 +108,6 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 
 		// 填充着色器-颜色采样器, 将纹理单元GL_TEXTURE0绑元定到采样器
 		GLES20.glUniform1i(uInputTexture, 0);
-
-		// 填充着色器
-		GLES20.glUniform2f(uImagePixel, uvImagePixel[0], uvImagePixel[1]);
-
-		int num = rnd.nextInt() % vibrateOffset;
-		float uvOffset[] = {num, num};
-		GLES20.glUniform2f(uOffet, uvOffset[0], uvOffset[1]);
 	}
 
 	@Override

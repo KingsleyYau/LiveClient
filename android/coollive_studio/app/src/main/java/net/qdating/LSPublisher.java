@@ -115,7 +115,8 @@ public class LSPublisher {
 	/***
 	 * 初始化流推送器
 	 * @param surfaceView	显示界面
-	 * @param statusCallback 状态回调接口
+	 * @param rotation 旋转角度
+	 * @param fillMode 填充模式
 	 * @param statusCallback 状态回调接口
 	 * @param videoConfigType 视频配置
 	 * @param fps 帧率(12)

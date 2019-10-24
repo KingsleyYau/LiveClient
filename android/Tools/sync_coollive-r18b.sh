@@ -33,6 +33,7 @@ cp -rf $STUDIO_PROJECT_PATH/app/src/main/jni/util/* $ECLIPSE_PROJECT_PATH/jni/ut
 rm -rf $ECLIPSE_PROJECT_PATH/src/*
 cp -rf $STUDIO_PROJECT_PATH/app/src/main/java/* $ECLIPSE_PROJECT_PATH/src
 cp -rf $STUDIO_PROJECT_PATH/app/src/main/res/layout/* $ECLIPSE_PROJECT_PATH/res/layout
+cp -rf $STUDIO_PROJECT_PATH/app/src/main/assets/* $ECLIPSE_PROJECT_PATH/assets
 
 $CUR_PATH/export_jar-r18b.sh
 

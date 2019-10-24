@@ -1,18 +1,18 @@
-package net.qdating.filter;
+package net.qdating.filter.beauty;
 
 import android.opengl.GLES20;
 
 import net.qdating.LSConfig;
+import net.qdating.filter.LSImageBufferFilter;
+import net.qdating.filter.LSImageVertex;
 import net.qdating.utils.Log;
 
-import java.util.Random;
-
 /**
- * 抖音滤镜
+ * 美颜滤镜
  * @author max
  *
  */
-public class LSImageVibrateFilter extends LSImageBufferFilter {
+public class LSImageAdjustFilter extends LSImageBufferFilter {
 	private static String vertexShaderString = ""
 			+ "// 图像顶点着色器 \n"
 			+ "// 纹理坐标(输入) \n"
@@ -30,73 +30,91 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 			+ "// 图像颜色着色器 \n"
             + "precision mediump float; \n"
 			+ "uniform sampler2D uInputTexture; \n"
-			+ "uniform lowp vec2 uImagePixel; \n"
-			+ "uniform lowp vec2 uOffet; \n"
+			+ "// 原图的高斯模糊纹理 \n"
+			+ "uniform sampler2D uBlurTexture; \n"
+			+ "// 高反差保留的高斯模糊纹理 \n"
+			+ "uniform sampler2D uHighPassBlurTexture; \n"
+			+ "// 磨皮程度 \n"
+			+ "uniform lowp float uBeautyLevel; \n"
 			+ "// 片段着色器(输入) \n"
 			+ "varying highp vec2 vTextureCoordinate; \n"
 			+ "void main() { \n"
-			+ "		// 绿和蓝右下偏移 \n"
-			+ "		vec4 right = texture2D(uInputTexture, vTextureCoordinate + uImagePixel * uOffet); \n"
-			+ "		// 红左上偏移 \n"
-			+ "		vec4 left = texture2D(uInputTexture, vTextureCoordinate - uImagePixel * uOffet); \n"
-			+ "		gl_FragColor = vec4(left.r, right.g, right.b, 1.0); \n"
-			+ "} \n";
+			+ "		lowp vec4 textureColor = texture2D(uInputTexture, vTextureCoordinate); \n"
+			+ "		lowp vec4 blurColor = texture2D(uBlurTexture, vTextureCoordinate); \n"
+			+ "		lowp vec4 highPassBlurColor = texture2D(uHighPassBlurTexture, vTextureCoordinate); \n"
+			+ "		// 调节蓝色通道值 \n"
+			+ "		mediump float value = clamp((min(textureColor.b, blurColor.b) - 0.2) * 5.0, 0.0, 1.0); \n"
+			+ "		// 找到模糊之后RGB通道的最大值 \n"
+			+ "		mediump float maxChannelColor = max(max(highPassBlurColor.r, highPassBlurColor.g), highPassBlurColor.b); \n"
+			+ "		// 计算当前的强度 \n"
+			+ "		mediump float currentIntensity = (1.0 - maxChannelColor / (maxChannelColor + 0.2)) * value * uBeautyLevel; \n"
+			+ "		// 混合输出结果 \n"
+			+ "		lowp vec3 resultColor = mix(textureColor.rgb, blurColor.rgb, currentIntensity); \n"
+			+ "		// 输出颜色 \n"
+			+ "		gl_FragColor = vec4(resultColor, 1.0); \n"
+			+ "}\n";
 
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
-	private int uImagePixel;
-	private int uOffet;
 
-	private float uvImagePixel[] = new float[2];
+	private int blurTextureId;
+	private int uBlurTexture;
 
-	private Random rnd = new Random();
+	private int highPassBlurTextureId;
+	private int uHighPassBlurTexture;
 
-	static private int VIBRATE_OFFSET_MAX = 10;
-	private int vibrateOffset = 5;
+	private int uBeautyLevel;
 
-	public LSImageVibrateFilter() {
+	public LSImageAdjustFilter() {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
 		// TODO Auto-generated constructor stub
 	}
 
-	public LSImageVibrateFilter(double level) {
-		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
-		// TODO Auto-generated constructor stub
-		this.vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
-	}
+	private float beautyLevel = 1.0f;
 
 	/**
-	 * 设置抖动等级
-	 * @param level 0.0 ~ 1.0
+	 * 设置美颜等级
+	 * @param beautyLevel [0.0, 1.0]
 	 */
-	public void setlevel(double level) {
+	public void setBeautyLevel(float beautyLevel) {
 		Log.d(LSConfig.TAG,
-				String.format("LSImageVibrateFilter::setlevel( "
-								+ "level : %f "
+				String.format("LSImageAdjustFilter::setBeautyLevel( "
+								+ "beautyLevel : %f "
 								+ ")",
-						level
+						beautyLevel
 				)
 		);
 
-		this.vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
+		this.beautyLevel = beautyLevel;
+	}
+
+	public void setBlurTexture(int blurTextureId, int highPassBlurTextureId) {
+		blurTextureId = blurTextureId;
+		highPassBlurTextureId = highPassBlurTextureId;
 	}
 
 	@Override
-	protected ImageSize changeInputSize(int inputWidth, int inputHeight) {
-		ImageSize imageSize = super.changeInputSize(inputWidth, inputHeight);
+	public void init() {
+		super.init();
 
-		if( imageSize.bChange ) {
-			uvImagePixel[0] = 1.0f / inputWidth;
-			uvImagePixel[1] = 1.0f / inputHeight;
-		}
-
-		return imageSize;
+		uBlurTexture = GLES20.glGetUniformLocation(getProgram(), "uBlurTexture");
+		uHighPassBlurTexture = GLES20.glGetUniformLocation(getProgram(), "uHighPassBlurTexture");
 	}
 
 	@Override
 	protected void onDrawStart(int textureId) {
 		super.onDrawStart(textureId);
+
+		// 绑定图像纹理
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, blurTextureId);
+		GLES20.glUniform1i(uBlurTexture, 1);
+
+		// 绑定图像纹理
+		GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, highPassBlurTextureId);
+		GLES20.glUniform1i(uHighPassBlurTexture, 2);
 
 		// 激活纹理单元GL_TEXTURE0
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -106,8 +124,8 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 		aPosition = GLES20.glGetAttribLocation(getProgram(), "aPosition");
 		aTextureCoordinate = GLES20.glGetAttribLocation(getProgram(), "aTextureCoordinate");
 		uInputTexture = GLES20.glGetUniformLocation(getProgram(), "uInputTexture");
-		uImagePixel = GLES20.glGetUniformLocation(getProgram(), "uImagePixel");
-		uOffet = GLES20.glGetUniformLocation(getProgram(), "uOffet");
+
+		uBeautyLevel = GLES20.glGetUniformLocation(getProgram(), "uBeautyLevel");
 
 		// 填充着色器-顶点采样器
 		if( getVertexBuffer() != null ) {
@@ -123,15 +141,10 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 			GLES20.glEnableVertexAttribArray(aTextureCoordinate);
 		}
 
+		GLES20.glUniform1f(uBeautyLevel, beautyLevel);
+
 		// 填充着色器-颜色采样器, 将纹理单元GL_TEXTURE0绑元定到采样器
 		GLES20.glUniform1i(uInputTexture, 0);
-
-		// 填充着色器
-		GLES20.glUniform2f(uImagePixel, uvImagePixel[0], uvImagePixel[1]);
-
-		int num = rnd.nextInt() % vibrateOffset;
-		float uvOffset[] = {num, num};
-		GLES20.glUniform2f(uOffet, uvOffset[0], uvOffset[1]);
 	}
 
 	@Override

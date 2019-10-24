@@ -129,10 +129,11 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
                                         supportTypes[j]
 								)
                         );
-                        
+
+						MediaCodec videoCodec = null;
 						try {
 							// 检查编码支持的采样格式
-							MediaCodec videoCodec = MediaCodec.createEncoderByType(MIME_TYPE);
+							videoCodec = MediaCodec.createEncoderByType(MIME_TYPE);
 							if( videoCodec != null ) {
 								MediaCodecInfo.CodecCapabilities caps = videoCodec.getCodecInfo().getCapabilitiesForType(MIME_TYPE);
 								for (int k = 0; k < caps.colorFormats.length; k++) {
@@ -187,7 +188,11 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::supportHardDecoder( e : %s )", e.toString()));
+							Log.e(LSConfig.TAG, String.format("LSVideoHardDecoder::supportHardDecoder( e : %s )", e.toString()));
+
+							if (videoCodec != null) {
+								videoCodec.release();
+							}
 						}
 
         				break;
