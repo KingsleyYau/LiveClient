@@ -9,6 +9,7 @@
         android:id="@+id/layoutVideo0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+		android:visibility="gone"
         >
 
 		<Button
@@ -103,12 +104,18 @@
 		</LinearLayout>
     </RelativeLayout>
 
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/layoutVideo1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/layoutVideo0"-->
+		<!--android:layout_above="@+id/layoutPublish"-->
+        <!--&gt;-->
     <RelativeLayout
         android:id="@+id/layoutVideo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutVideo0"
-		android:layout_above="@id/layoutPublish"
+        android:layout_above="@+id/layoutPublish"
         >
 
 		<Button
@@ -157,13 +164,20 @@
 				/>
 		</LinearLayout>
 
-        <android.opengl.GLSurfaceView
-	        android:id="@+id/surfaceViewPublish"
-	        android:layout_width="180dp"
-	        android:layout_height="180dp"
-	        android:layout_alignParentRight="true"
+		<android.opengl.GLSurfaceView
+			android:id="@+id/surfaceViewPublish"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
 			android:visibility="visible"
-        />
+			/>
+        <!--<android.opengl.GLSurfaceView-->
+	        <!--android:id="@+id/surfaceViewPublish"-->
+	        <!--android:layout_width="180dp"-->
+	        <!--android:layout_height="180dp"-->
+	        <!--android:layout_alignParentRight="true"-->
+			<!--android:visibility="visible"-->
+        <!--/>-->
 
 		<LinearLayout
 			android:id="@+id/layoutButtons5"
@@ -194,6 +208,20 @@
 				android:layout_width="60dp"
 				android:layout_height="40dp"
 				android:text="Filter"
+				android:textAllCaps="false"
+				android:textSize="11dp" />
+			<Button
+				android:id="@+id/button403"
+				android:layout_width="60dp"
+				android:layout_height="40dp"
+				android:text="Filter0"
+				android:textAllCaps="false"
+				android:textSize="11dp" />
+			<Button
+				android:id="@+id/button404"
+				android:layout_width="60dp"
+				android:layout_height="40dp"
+				android:text="Photo0"
 				android:textAllCaps="false"
 				android:textSize="11dp" />
 		</LinearLayout>

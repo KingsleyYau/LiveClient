@@ -6,6 +6,7 @@ import java.util.Arrays;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
@@ -360,6 +361,14 @@ public class LSPublisher {
 	public LSImageFilter getCustomFilter() {
 		LSImageFilter filter = videoCapture.getCustomFilter();
 		return filter;
+	}
+
+	/**
+	 * 设置自定义上传图片
+	 * @param bitmap 图片
+	 */
+	public void setCaptureBitmap(Bitmap bitmap) {
+		videoCapture.setCaptureBitmap(bitmap);
 	}
 
 	/***

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -106,6 +107,16 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	public LSImageFilter getCustomFilter() {
 		LSImageFilter filter = previewRenderer.getCustomFilter();
 		return filter;
+	}
+
+	/**
+	 * 设置自定义上传图片
+	 * @param bitmap 图片
+	 */
+	public void setCaptureBitmap(Bitmap bitmap) {
+		if( previewRenderer != null ) {
+			previewRenderer.setCaptureBitmap(bitmap);
+		}
 	}
 
 	public boolean start() {
