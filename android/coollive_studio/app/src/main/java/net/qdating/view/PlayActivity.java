@@ -1,12 +1,15 @@
 package net.qdating.view;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import com.qpidnetwork.tool.CrashHandlerJni;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,14 +19,13 @@ import net.qdating.dectection.ILSFaceDetectorStatusCallback;
 import net.qdating.dectection.LSFaceDetector;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageGroupFilter;
-import net.qdating.filter.LSImageMosaicFilter;
 import net.qdating.filter.LSImageVibrateFilter;
 import net.qdating.filter.LSImageWaterMarkFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyHefeFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyLomoFilter;
 import net.qdating.filter.sample.LSImageSampleBeautySakuraFilter;
 import net.qdating.filter.sample.LSImageSampleBeautySunsetFilter;
-import net.qdating.filter.sample.LSImageSampleFilter1;
+import net.qdating.filter.sample.LSImageSampleBeautyMaxFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyBaseFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyEmeraldFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyHealthyFilter;
@@ -97,9 +99,15 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private LSImageFilter[] publishFilters;
 	private int publishFilterCount = 0;
 	private int publishFilterIndex = 0;
+	private Button filterButton;
+
+
+	private Bitmap[] publishPhotos;
+	private int publishPhotoCount = 0;
+	private int publishPhotoIndex = 0;
+	private Button photoButton;
 
 	private Handler handler = null;
-
 	private boolean supportPublish = false;
 
 	// 人面识别
@@ -131,7 +139,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		utilTestJni.Test();
 
 		handler = new Handler();
-		
+
+		// 初始化按钮
+		initItemButtons();
+
 		editText = (EditText) this.findViewById(R.id.editText);
 		editText.setText(playerUrl);
 		
@@ -220,7 +231,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					400 * 1000
 			);
 
-			publishFilterCount = 7;
+			publishFilterCount = 8;
 			publishFilterIndex = 0;
 			if ( publishFilterCount > 0 ) {
 				publishFilters = new LSImageFilter[publishFilterCount];
@@ -232,9 +243,34 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				publishFilters[4] = new LSImageSampleBeautySakuraFilter(this);
 				publishFilters[5] = new LSImageSampleBeautySunsetFilter(this);
 				publishFilters[6] = new LSImageSampleBeautyBaseFilter(this);
+				publishFilters[7] = new LSImageSampleBeautyMaxFilter(this);
+				publishFilterIndex = 7;
 
-				publishFilterIndex = 6;
 				publisher.setCustomFilter(publishFilters[publishFilterIndex]);
+				String filterName = String.format("F%d", publishFilterIndex);
+				filterButton.setText(filterName);
+			}
+
+			try {
+				publishPhotoCount = 3;
+				publishPhotoIndex = 0;
+				if ( publishPhotoCount > 0 ) {
+					publishPhotos = new Bitmap[publishPhotoCount];
+					for (int i = 0; i < publishPhotoCount; i++) {
+						String photoName = String.format("demo/%d.png", i);
+						InputStream demoInputStream = getAssets().open(photoName);
+						Bitmap demoBitmap = BitmapFactory.decodeStream(demoInputStream);
+						demoInputStream.close();
+						publishPhotos[i] = demoBitmap;
+					}
+
+					publishPhotoIndex = 1;
+					publisher.setCaptureBitmap(publishPhotos[publishPhotoIndex]);
+					String buttonName = String.format("P%d", publishPhotoIndex);
+					photoButton.setText(buttonName);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 
 			publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
@@ -243,9 +279,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			surfaceViewPublish.setVisibility(View.INVISIBLE);
 		}
 
-		// 初始化静音按钮
-		initItemButtons();
-		
 		Button playButton = (Button) this.findViewById(R.id.button1);
 		playButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -512,17 +545,39 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 		});
 
-		Button fliterButton403 = (Button) this.findViewById(R.id.button403);
-		fliterButton403.setOnClickListener(new OnClickListener() {
+		Button nextFliterButton403 = (Button) this.findViewById(R.id.button403);
+		nextFliterButton403.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
 				publishFilterIndex = ++publishFilterIndex % publishFilterCount;
 				if ( publishFilters[publishFilterIndex] != null ) {
+					String buttonName = String.format("F%d", publishFilterIndex);
+					filterButton.setText(buttonName);
 					publisher.setCustomFilter(publishFilters[publishFilterIndex]);
 				}
 			}
 		});
+		filterButton = nextFliterButton403;
+
+		Button photoButton404 = (Button) this.findViewById(R.id.button404);
+		photoButton404.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				publishPhotoIndex = ++publishPhotoIndex % (publishPhotoCount + 1);
+				if ( publishPhotoIndex < publishPhotoCount && publishFilters[publishPhotoIndex] != null ) {
+					String buttonName = String.format("P%d", publishPhotoIndex);
+					photoButton.setText(buttonName);
+					publisher.setCaptureBitmap(publishPhotos[publishPhotoIndex]);
+				} else {
+					String buttonName = String.format("C");
+					photoButton.setText(buttonName);
+					publisher.setCaptureBitmap(null);
+				}
+			}
+		});
+		photoButton = photoButton404;
 	}
 
 	private void deleteAllFiles(File root) {  

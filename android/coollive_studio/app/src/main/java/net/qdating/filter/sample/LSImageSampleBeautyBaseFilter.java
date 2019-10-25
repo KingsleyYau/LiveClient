@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import net.qdating.LSConfig;
 import net.qdating.filter.LSImageBeautyFilter;
+import net.qdating.filter.LSImageBmpFilter;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageGroupFilter;
 import net.qdating.filter.LSImageVibrateFilter;
@@ -17,6 +18,8 @@ import net.qdating.filter.beauty.LSImageHighPassFilter;
 import net.qdating.utils.Log;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 预设滤镜2
@@ -84,7 +87,7 @@ public class LSImageSampleBeautyBaseFilter extends LSImageFilter {
         /**
          * 1.输入纹理处理
          */
-        newTextureId = complexionFilter.draw(textureId, inputWidth, inputHeight);
+        newTextureId = complexionFilter.draw(newTextureId, inputWidth, inputHeight);
 
         /**
          * 2.做高反差保留处理

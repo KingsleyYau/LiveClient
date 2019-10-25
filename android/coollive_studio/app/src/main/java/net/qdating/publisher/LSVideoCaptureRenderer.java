@@ -3,6 +3,7 @@ package net.qdating.publisher;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageBeautyFilter;
+import net.qdating.filter.LSImageBmpFilter;
 import net.qdating.filter.LSImageInputCameraFilter;
 import net.qdating.filter.LSImageCropFilter;
 import net.qdating.filter.LSImageFilter;
@@ -72,6 +73,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	 * 滤镜
 	 */
 	private LSImageInputCameraFilter cameraFilter = null;
+	private LSImageBmpFilter bmpFilter = null;
 	private LSImageCropFilter cropFilter = null;
 	private LSImageOutputFilter outputFilter = null;
 	private LSImageFlipFilter recordFlipFilter = null;
@@ -86,6 +88,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		this.publishConfig = publishConfig;
 
 		cameraFilter = new LSImageInputCameraFilter();
+		bmpFilter = new LSImageBmpFilter();
 		cropFilter = new LSImageCropFilter();
 		recordFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
 		outputFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
@@ -114,7 +117,8 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::init( this : 0x%x )", hashCode()));
 
-		cameraFilter.setFilter(cropFilter);
+		cameraFilter.setFilter(bmpFilter);
+		bmpFilter.setFilter(cropFilter);
 		cropFilter.setFilter(recordFlipFilter);
 		recordFlipFilter.setFilter(recordFilter);
 		recordFilter.setFilter(outputFlipFilter);
@@ -154,28 +158,39 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		return this.customFilter;
 	}
 
-	public void setOriginalSize(int width, int height) {
-		originalWidth = width;
-		originalHeight = height;
+	/**
+	 * 设置自定义上传图片
+	 * @param bitmap 图片
+	 */
+	public void setCaptureBitmap(Bitmap bitmap) {
+		bmpFilter.updateBmpFrame(bitmap);
 
+		if ( bmpFilter.getBitmap() != null ) {
+			changeCropFilterSize(bmpFilter.getBitmap().getWidth(), bmpFilter.getBitmap().getHeight());
+		} else {
+			changeCropFilterSize(originalWidth, originalHeight);
+		}
+	}
+
+	public void changeCropFilterSize(int inputWidth, int inputHeight) {
 		// 目标比例
 		float radioPreview = 1.0f * publishConfig.videoWidth / publishConfig.videoHeight;
 		// 源比例
-		float radioImage = 1.0f * originalWidth / originalHeight;
+		float radioImage = 1.0f * inputWidth / inputHeight;
 
-		Log.d(LSConfig.TAG,
-				String.format("LSVideoCaptureRenderer::setOriginalSize( "
-						+ "this : 0x%x, "
-						+ "originalWidth : %d, "
-						+ "originalHeight : %d, "
-						+ "radioPreview : %f, "
-						+ "videoWidth : %d, "
-						+ "videoHeight : %d, "
-						+ "radioImage : %f "
-						+ " )",
+		Log.i(LSConfig.TAG,
+				String.format("LSVideoCaptureRenderer::changeCropFilterSize( "
+								+ "this : 0x%x, "
+								+ "inputWidth : %d, "
+								+ "inputHeight : %d, "
+								+ "radioPreview : %f, "
+								+ "videoWidth : %d, "
+								+ "videoHeight : %d, "
+								+ "radioImage : %f "
+								+ " )",
 						hashCode(),
-						originalWidth,
-						originalHeight,
+						inputWidth,
+						inputHeight,
 						radioPreview,
 						publishConfig.videoWidth,
 						publishConfig.videoHeight,
@@ -187,11 +202,25 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 			// 不裁剪
 		} else if( radioPreview < radioImage ) {
 			// 剪裁左右
-			cropFilter.setCropRect((1 - radioImage) / 2, 0, radioImage, 1);
+			float radio = 1.0f * inputHeight / publishConfig.videoHeight * publishConfig.videoWidth / inputWidth;
+			cropFilter.setCropRect((1 - radio) / 2, 0, radio, 1);
 		} else {
 			// 剪裁上下
-			cropFilter.setCropRect(0, (1 - radioImage) / 2, 1, radioImage);
+			float radio = 1.0f * inputWidth / publishConfig.videoWidth * publishConfig.videoHeight / inputHeight;
+			cropFilter.setCropRect(0, (1 - radio) / 2, 1, radio);
 		}
+	}
+
+	/**
+	 * 设置输入图像大小
+	 * @param width 宽
+	 * @param height 高
+	 */
+	public void setOriginalSize(int width, int height) {
+		this.originalWidth = width;
+		this.originalHeight = height;
+
+		changeCropFilterSize(originalWidth, originalHeight);
 	}
 	
 	public SurfaceTexture getSurfaceTexture() {
@@ -286,6 +315,8 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 
         // 摄像头
 		cameraFilter.init();
+		// 自定义图片
+		bmpFilter.init();
 		// 裁剪
 		cropFilter.init();
 		// 预览
