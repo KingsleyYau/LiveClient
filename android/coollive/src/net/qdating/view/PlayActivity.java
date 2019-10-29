@@ -1,50 +1,57 @@
 package net.qdating.view;
 
-import java.io.File;
-
-import com.qpidnetwork.tool.CrashHandlerJni;
-
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-
-import net.qdating.dectection.ILSFaceDetectorStatusCallback;
-import net.qdating.dectection.LSFaceDetector;
-import net.qdating.filter.LSImageBeautyFilter;
-import net.qdating.filter.LSImageColorFilter;
-import net.qdating.filter.LSImageFilter;
-import net.qdating.filter.LSImageFlipFilter;
-import net.qdating.filter.LSImageGroupFilter;
-import net.qdating.filter.LSImageMosaicFilter;
-import net.qdating.filter.LSImageVibrateFilter;
-import net.qdating.filter.LSImageWaterMarkFilter;
-import net.qdating.player.ILSPlayerStatusCallback;
-import net.qdating.player.LSVideoPlayer;
-import net.qdating.player.LSPlayerRendererBinder;
-import net.qdating.publisher.ILSPublisherStatusCallback;
-import net.qdating.utils.LSUtilTesterJni;
-import net.qdating.utils.Log;
-
-import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+
+import com.qpidnetwork.tool.CrashHandlerJni;
 
 import net.qdating.LSConfig;
+import net.qdating.LSConfig.FillMode;
 import net.qdating.LSPlayer;
 import net.qdating.LSPublisher;
 import net.qdating.R;
-import net.qdating.LSConfig.FillMode;
+import net.qdating.dectection.ILSFaceDetectorStatusCallback;
+import net.qdating.dectection.LSFaceDetector;
+import net.qdating.filter.LSImageFilter;
+import net.qdating.filter.LSImageGroupFilter;
+import net.qdating.filter.LSImageVibrateFilter;
+import net.qdating.filter.LSImageWaterMarkFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyBaseFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyBaseFilterEvent;
+import net.qdating.filter.sample.LSImageSampleBeautyEmeraldFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyHealthyFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyHefeFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyLomoFilter;
+import net.qdating.filter.sample.LSImageSampleBeautySakuraFilter;
+import net.qdating.filter.sample.LSImageSampleBeautySunsetFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyWatermarkFilter;
+import net.qdating.player.ILSPlayerStatusCallback;
+import net.qdating.player.LSPlayerRendererBinder;
+import net.qdating.player.LSVideoPlayer;
+import net.qdating.publisher.ILSPublisherStatusCallback;
 import net.qdating.utils.CrashHandler;
+import net.qdating.utils.Log;
 
-public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback, ILSFaceDetectorStatusCallback {
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback, ILSFaceDetectorStatusCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 	String filePath = "/sdcard";
 	private String[] playH264File = {
 			"",//"/sdcard/coollive/play0.h264",
@@ -56,10 +63,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			"",//"/sdcard/coollive/play1.aac",
 			"",//"/sdcard/coollive/play2.aac",
 	};
-	
+
 	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
 	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
-	
+
 	// 播放相关
 	private String[] playerUrls = {
 			"rtmp://172.25.32.17:19351/live/max0",
@@ -76,37 +83,48 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private boolean[] surfaceViewsScale = null;
 	private LSImageFilter[] imageFilters = null;
 	private LSPlayerRendererBinder[] playerRenderderBinders = null;
+//	private String playerUrl = "rtmp://172.25.32.17:19351/live/max";
+	private String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max";
+//	private String playerUrl = "rtmp://52.196.96.7:4000/cdn_standard/max";
 	private EditText editText = null;
 	private int playerRunningCount = 0;
 	private Object playerRunningCountLock = new Object();
 
 	// 推送相关
-	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
-//	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/max";
+//	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
+	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/maxa";
+//	private String publishUrl = "rtmp://172.25.32.133:8899/publish_standard/max0?token=ABC#123";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
 	private EditText editTextPublish = null;
 
 	private GLSurfaceView newSurfaceView = null;
 	private LSPlayerRendererBinder newRenderderBinder = null;
+	// 推流预设滤镜
+	private LSImageFilter[] publishFilters;
+	private int publishFilterCount = 0;
+	private int publishFilterIndex = 0;
+	private Button filterButton;
+
+
+	private Bitmap[] publishPhotos;
+	private int publishPhotoCount = 0;
+	private int publishPhotoIndex = 0;
+	private Button photoButton;
 
 	private Handler handler = null;
-
 	private boolean supportPublish = false;
 
-	// 自定义滤镜
-	private LSImageGroupFilter groupFilter = new LSImageGroupFilter();
-	private LSImageFlipFilter flipFilter = null;
-	private LSImageVibrateFilter vibrateFilter = null;
-	private LSImageBeautyFilter beautyFilter = null;
-	private LSImageWaterMarkFilter waterMarkFilter = null;
-
+	// 人面识别
 	private LSFaceDetector faceDetector = new LSFaceDetector();
 	private LSVideoPlayer previewPlayer = new LSVideoPlayer();
 	private LSImageGroupFilter previewGroupFilter = new LSImageGroupFilter();
 	private LSImageWaterMarkFilter previewWaterMarkFilter = null;
 
 	private int previewWaterMarkDisappearFrame = 15;
+
+	private SeekBar mSeekBarBeauty, mSeekBarWhite;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,10 +147,15 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		utilTestJni.Test();
 
 		handler = new Handler();
-		
+
+		// 初始化按钮
+		initItemButtons();
+
+		checkPermission();
+
 		editText = (EditText) this.findViewById(R.id.editText);
-		editText.setText(playerUrls[0]);
-		
+		editText.setText(playerUrl);
+
 		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);
 		editTextPublish.setText(publishUrl);
 
@@ -145,15 +168,17 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		imageFilters[0] = new LSImageVibrateFilter();
 
 		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
-		imageFilters[1] = new LSImageMosaicFilter(0.2f);
+//		imageFilters[1] = new LSImageMosaicFilter(0.2f);
+		imageFilters[1] = new LSImageSampleBeautyEmeraldFilter(this);
 
 		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
-		imageFilters[2] = new LSImageColorFilter();
+//		imageFilters[2] = new LSImageColorFilter();
+		imageFilters[2] = new LSImageSampleBeautyHealthyFilter(this);
 		surfaceViewsScale = new boolean[surfaceViews.length];
 
 		players = new LSPlayer[surfaceViews.length];
 		for(int i = 0; i < surfaceViews.length; i++) {
-//		for(int i = 0; i < surfaceViews.length - 1; i++) {
+//		for(int i = 0; i < surfaceViews.length - 1; i++) { // 人面识别测试
 			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
 
@@ -164,12 +189,12 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			players[i].init(this);
 
 			players[i].setRendererBinder(playerRenderderBinders[i]);
-			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
-		}
+//			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 
-//		players[0].playUrl("rtmp://172.25.32.17:19351/live/max2", "", playH264File[0], playAACFile[0]);
-//		players[1].playUrl("rtmp://172.25.32.17:19351/live/max1", "", playH264File[0], playAACFile[0]);
-//		players[2].playUrl("rtmp://172.25.32.17:19351/live/max1", "", playH264File[0], playAACFile[0]);
+//			String url = String.format("%s%d", editText.getText().toString(), i);
+			String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+//			players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
+		}
 
 //		RelativeLayout layoutVideo1 = (RelativeLayout)this.findViewById(R.id.layoutVideo1);
 //		newSurfaceView = new GLSurfaceView(this);
@@ -182,9 +207,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		layoutVideo1.setVisibility(View.VISIBLE);
 //		newRenderderBinder = new LSPlayerRendererBinder(newSurfaceView, FillMode.FillModeAspectRatioFill);
 
-		// 人面识别测试
+//		// 人面识别测试
 //		previewWaterMarkFilter = new LSImageWaterMarkFilter();
-//		File previewImgFile = new File("/sdcard/input/watermark2.png");
+//		File previewImgFile = new File("/sdcard/face_dectected/face.png");
 //		if(previewImgFile.exists()) {
 //			Bitmap bitmap = BitmapFactory.decodeFile(previewImgFile.getAbsolutePath());
 //			previewWaterMarkFilter.updateBmpFrame(bitmap);
@@ -210,36 +235,60 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					rotation,
 					FillMode.FillModeAspectRatioFill,
 					this,
-					LSConfig.VideoConfigType.VideoConfigType240x240,
+					LSConfig.VideoConfigType.VideoConfigType480x640,
 					12,
 					12,
 					400 * 1000
 			);
 
-			beautyFilter = new LSImageBeautyFilter(1.0f);
-			vibrateFilter = new LSImageVibrateFilter();
-			waterMarkFilter = new LSImageWaterMarkFilter();
-			File imgFile = new File("/sdcard/input/watermark.png");
-			if(imgFile.exists()) {
-				Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-				waterMarkFilter.updateBmpFrame(bitmap);
+			publishFilterCount = 8;
+			publishFilterIndex = 0;
+			if ( publishFilterCount > 0 ) {
+				publishFilters = new LSImageFilter[publishFilterCount];
+
+				publishFilters[0] = new LSImageSampleBeautyEmeraldFilter(this);
+				publishFilters[1] = new LSImageSampleBeautyHealthyFilter(this);
+				publishFilters[2] = new LSImageSampleBeautyHefeFilter(this);
+				publishFilters[3] = new LSImageSampleBeautyLomoFilter(this);
+				publishFilters[4] = new LSImageSampleBeautySakuraFilter(this);
+				publishFilters[5] = new LSImageSampleBeautySunsetFilter(this);
+				publishFilters[6] = new LSImageSampleBeautyWatermarkFilter(this);
+				publishFilters[7] = new LSImageSampleBeautyBaseFilter(this);
+				publishFilterIndex = 7;
+
+				publisher.setCustomFilter(publishFilters[publishFilterIndex]);
+				String filterName = String.format("F%d", publishFilterIndex);
+				filterButton.setText(filterName);
 			}
-			waterMarkFilter.setWaterMarkRect(0.05f, 0.75f, 0.2f, 0.2f);
 
-			groupFilter.addFilter(beautyFilter);
-//			groupFilter.addFilter(vibrateFilter);
-//			groupFilter.addFilter(waterMarkFilter);
+			try {
+				publishPhotoCount = 3;
+				publishPhotoIndex = 0;
+				if ( publishPhotoCount > 0 ) {
+					publishPhotos = new Bitmap[publishPhotoCount];
+					for (int i = 0; i < publishPhotoCount; i++) {
+						String photoName = String.format("demo/%d.png", i);
+						InputStream demoInputStream = getAssets().open(photoName);
+						Bitmap demoBitmap = BitmapFactory.decodeStream(demoInputStream);
+						demoInputStream.close();
+						publishPhotos[i] = demoBitmap;
+					}
 
-			publisher.setCustomFilter(groupFilter);
+					publishPhotoIndex = 1;
+					publisher.setCaptureBitmap(publishPhotos[publishPhotoIndex]);
+					String buttonName = String.format("P%d", publishPhotoIndex);
+					photoButton.setText(buttonName);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-//			publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+			publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+
 		} else {
 			surfaceViewPublish.setVisibility(View.INVISIBLE);
 		}
 
-		// 初始化静音按钮
-		initItemButtons();
-		
 		Button playButton = (Button) this.findViewById(R.id.button1);
 		playButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -247,7 +296,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			// TODO Auto-generated method stub
 			for(int i = 0; i < players.length; i++) {
 				if( players[i] != null ) {
-					players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
+//					String url = String.format("%s%d", editText.getText().toString(), i);
+					String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+					players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
 				}
 			}
 			}
@@ -304,7 +355,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 			}
 		});
-		
+
 		Button stopPublishButton = (Button) this.findViewById(R.id.button4);
 		stopPublishButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -329,7 +380,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 			}
 		});
-		
+
 		Button stopCamButton = (Button) this.findViewById(R.id.button8);
 		stopCamButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -346,14 +397,65 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-//			Intent intent = new Intent();
-//			intent.setClass(PlayActivity.this, TestActivity.class);
-//			startActivity(intent);
+			Intent intent = new Intent();
+			intent.setClass(PlayActivity.this, TestActivity.class);
+			startActivity(intent);
 
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			startActivityForResult(intent, 1);
+//			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//			startActivityForResult(intent, 1);
 			}
 		});
+
+		// TODO: 2019/10/29 Hardy
+		mSeekBarBeauty = (SeekBar)findViewById(R.id.seekBar_beauty);
+		mSeekBarWhite = (SeekBar)findViewById(R.id.seekBar_white);
+		mSeekBarBeauty.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				handlerProgressChange(progress, true);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
+		mSeekBarWhite.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				handlerProgressChange(progress,false);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
+	}
+
+	// TODO: 2019/10/29
+	private void handlerProgressChange(int progress,boolean isBeautyChange){
+		float scale = progress * 1.0f / 100;
+		Log.i("info", "--------scale: "+scale);
+
+		LSImageSampleBeautyBaseFilterEvent filter = (LSImageSampleBeautyBaseFilterEvent) publishFilters[publishFilterIndex];
+		if (isBeautyChange) {
+			filter.setBeautyLevel(scale);
+		}else {
+			filter.setStrength(scale);
+		}
 	}
 
 	private void initItemButtons() {
@@ -362,8 +464,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if( players[0] != null ) {
-				players[0].playUrl(playerUrls[0], "", playH264File[0], playAACFile[0]);
+			int i = 0;
+			if( players[i] != null ) {
+				String url = String.format("%s%d", editText.getText().toString(), i);
+				players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
 			}
 			}
 		});
@@ -397,10 +501,12 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		playButton20.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if( players[1] != null ) {
-					players[1].playUrl(playerUrls[1], "", playH264File[1], playAACFile[1]);
-				}
+			// TODO Auto-generated method stub
+			int i = 1;
+			if( players[i] != null ) {
+				String url = String.format("%s%d", editText.getText().toString(), i);
+				players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
+			}
 			}
 		});
 		Button muteButton200 = (Button) this.findViewById(R.id.button200);
@@ -408,9 +514,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if( players[1] != null ) {
-				players[1].setMute(!players[1].getMute());
-			}
+				if( players[1] != null ) {
+					players[1].setMute(!players[1].getMute());
+				}
 			}
 		});
 
@@ -434,8 +540,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( players[2] != null ) {
-					players[2].playUrl(playerUrls[2], "", playH264File[2], playAACFile[2]);
+				int i = 2;
+				if( players[i] != null ) {
+					String url = String.format("%s%d", editText.getText().toString(), i);
+					players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
 				}
 			}
 		});
@@ -491,16 +599,91 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if( publisher.getCustomFilter() == null ) {
-				publisher.setCustomFilter(groupFilter);
+				publisher.setCustomFilter(publishFilters[publishFilterIndex]);
 			} else {
 				publisher.setCustomFilter(null);
 			}
 			}
 		});
+
+		Button nextFliterButton403 = (Button) this.findViewById(R.id.button403);
+		nextFliterButton403.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			// TODO Auto-generated method stub
+				publishFilterIndex = ++publishFilterIndex % publishFilterCount;
+				if ( publishFilters[publishFilterIndex] != null ) {
+					String buttonName = String.format("F%d", publishFilterIndex);
+					filterButton.setText(buttonName);
+					publisher.setCustomFilter(publishFilters[publishFilterIndex]);
+				}
+			}
+		});
+		filterButton = nextFliterButton403;
+
+		Button photoButton404 = (Button) this.findViewById(R.id.button404);
+		photoButton404.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				publishPhotoIndex = ++publishPhotoIndex % (publishPhotoCount + 1);
+				if ( publishPhotoIndex < publishPhotoCount && publishFilters[publishPhotoIndex] != null ) {
+					String buttonName = String.format("P%d", publishPhotoIndex);
+					photoButton.setText(buttonName);
+					publisher.setCaptureBitmap(publishPhotos[publishPhotoIndex]);
+				} else {
+					String buttonName = String.format("C");
+					photoButton.setText(buttonName);
+					publisher.setCaptureBitmap(null);
+				}
+			}
+		});
+		photoButton = photoButton404;
+
+//		SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
+//		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//			@Override
+//			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//				float level = 1.0f * progress / 100;
+////				Log.w(LSConfig.TAG, String.format("PlayActivity::onProgressChanged( beauty : %f )", level));
+//				LSImageSampleBeautyBaseFilter filter = (LSImageSampleBeautyBaseFilter)publishFilters[7];
+//				filter.setBeautyLevel(level);
+//			}
+//
+//			@Override
+//			public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//
+//			@Override
+//			public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//		});
+//		SeekBar seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
+//		seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//			@Override
+//			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//				float level = 1.0f * progress / 100;
+////				Log.w(LSConfig.TAG, String.format("PlayActivity::onProgressChanged( strength : %f )", level));
+//				LSImageSampleBeautyBaseFilter filter = (LSImageSampleBeautyBaseFilter)publishFilters[7];
+//				filter.setStrength(level);
+//			}
+//
+//			@Override
+//			public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//
+//			@Override
+//			public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//		});
 	}
 
-	private void deleteAllFiles(File root) {  
-        File files[] = root.listFiles();  
+	private void deleteAllFiles(File root) {
+        File files[] = root.listFiles();
         if (files != null) {
 			for (File f : files) {
 				if (f.isDirectory()) { // 判断是否为文件夹
@@ -520,13 +703,13 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				}
 			}
 		}
-    } 
-	
+    }
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		
+
 		for(int i = 0; i < players.length; i++) {
 			if( players[i] != null ) {
 				players[i].stop();
@@ -540,7 +723,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			publisher.uninit();
 		}
 	}
-	
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -639,7 +822,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	public void onDetectedFace(byte[] data, int size, int x, int y, int width, int height) {
 		synchronized (this) {
 			if( width > 0 && height > 0 ) {
-				previewWaterMarkDisappearFrame = 15;
+				previewWaterMarkDisappearFrame = 3;
 				previewWaterMarkFilter.setWaterMarkRect(x / 240f, y / 240f, width / 240f, height / 240f);
 			} else {
 				previewWaterMarkDisappearFrame--;
@@ -647,8 +830,40 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					previewWaterMarkFilter.setWaterMarkRect(x / 240f, y / 240f, width / 240f, height / 240f);
 				}
 			}
-
 			previewPlayer.renderVideoFrame(data, size, 240, 240);
+		}
+	}
+
+	public void checkPermission() {
+		int status = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( CAMERA, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+		}
+
+		status = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( RECORD_AUDIO, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+		}
+
+		status = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( INTERNET, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
+		}
+
+		status = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( WRITE_EXTERNAL_STORAGE, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+		}
+	}
+
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		Log.e(LSConfig.TAG, String.format("PlayActivity::onRequestPermissionsResult( requestCode : %d )", requestCode));
+		for(int i = 0; i < permissions.length; i++) {
+			Log.e(LSConfig.TAG, String.format("PlayActivity::onRequestPermissionsResult( %s:%d )", permissions[i], grantResults[i]));
 		}
 	}
 }

@@ -1,53 +1,57 @@
 package net.qdating.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.qpidnetwork.tool.CrashHandlerJni;
-
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SeekBar;
 
+import com.qpidnetwork.tool.CrashHandlerJni;
+
+import net.qdating.LSConfig;
+import net.qdating.LSConfig.FillMode;
+import net.qdating.LSPlayer;
+import net.qdating.LSPublisher;
+import net.qdating.R;
 import net.qdating.dectection.ILSFaceDetectorStatusCallback;
 import net.qdating.dectection.LSFaceDetector;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageGroupFilter;
 import net.qdating.filter.LSImageVibrateFilter;
 import net.qdating.filter.LSImageWaterMarkFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyBaseFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyBaseFilterEvent;
+import net.qdating.filter.sample.LSImageSampleBeautyEmeraldFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyHealthyFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyHefeFilter;
 import net.qdating.filter.sample.LSImageSampleBeautyLomoFilter;
 import net.qdating.filter.sample.LSImageSampleBeautySakuraFilter;
 import net.qdating.filter.sample.LSImageSampleBeautySunsetFilter;
-import net.qdating.filter.sample.LSImageSampleBeautyMaxFilter;
-import net.qdating.filter.sample.LSImageSampleBeautyBaseFilter;
-import net.qdating.filter.sample.LSImageSampleBeautyEmeraldFilter;
-import net.qdating.filter.sample.LSImageSampleBeautyHealthyFilter;
+import net.qdating.filter.sample.LSImageSampleBeautyWatermarkFilter;
 import net.qdating.player.ILSPlayerStatusCallback;
-import net.qdating.player.LSVideoPlayer;
 import net.qdating.player.LSPlayerRendererBinder;
+import net.qdating.player.LSVideoPlayer;
 import net.qdating.publisher.ILSPublisherStatusCallback;
+import net.qdating.utils.CrashHandler;
 import net.qdating.utils.Log;
 
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
-import net.qdating.LSConfig;
-import net.qdating.LSPlayer;
-import net.qdating.LSPublisher;
-import net.qdating.R;
-import net.qdating.LSConfig.FillMode;
-import net.qdating.utils.CrashHandler;
-
-public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback, ILSFaceDetectorStatusCallback {
+public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback, ILSFaceDetectorStatusCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 	String filePath = "/sdcard";
 	private String[] playH264File = {
 			"",//"/sdcard/coollive/play0.h264",
@@ -59,10 +63,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			"",//"/sdcard/coollive/play1.aac",
 			"",//"/sdcard/coollive/play2.aac",
 	};
-	
+
 	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
 	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
-	
+
 	// 播放相关
 	private String[] playerUrls = {
 			"rtmp://172.25.32.17:19351/live/max0",
@@ -88,7 +92,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	// 推送相关
 //	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
-	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/maxa";
+//	private String publishUrl = "rtmp://172.25.32.133:8899/publish_standard/max0?token=ABC#123";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
 	private EditText editTextPublish = null;
@@ -117,6 +122,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private LSImageWaterMarkFilter previewWaterMarkFilter = null;
 
 	private int previewWaterMarkDisappearFrame = 15;
+
+	private SeekBar mSeekBarBeauty, mSeekBarWhite;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -143,9 +151,11 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		// 初始化按钮
 		initItemButtons();
 
+		checkPermission();
+
 		editText = (EditText) this.findViewById(R.id.editText);
 		editText.setText(playerUrl);
-		
+
 		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);
 		editTextPublish.setText(publishUrl);
 
@@ -236,14 +246,14 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			if ( publishFilterCount > 0 ) {
 				publishFilters = new LSImageFilter[publishFilterCount];
 
-				publishFilters[0] = new LSImageSampleBeautyHealthyFilter(this);
-				publishFilters[1] = new LSImageSampleBeautyHefeFilter(this);
-				publishFilters[2] = new LSImageSampleBeautyLomoFilter(this);
-				publishFilters[3] = new LSImageSampleBeautyEmeraldFilter(this);
+				publishFilters[0] = new LSImageSampleBeautyEmeraldFilter(this);
+				publishFilters[1] = new LSImageSampleBeautyHealthyFilter(this);
+				publishFilters[2] = new LSImageSampleBeautyHefeFilter(this);
+				publishFilters[3] = new LSImageSampleBeautyLomoFilter(this);
 				publishFilters[4] = new LSImageSampleBeautySakuraFilter(this);
 				publishFilters[5] = new LSImageSampleBeautySunsetFilter(this);
-				publishFilters[6] = new LSImageSampleBeautyBaseFilter(this);
-				publishFilters[7] = new LSImageSampleBeautyMaxFilter(this);
+				publishFilters[6] = new LSImageSampleBeautyWatermarkFilter(this);
+				publishFilters[7] = new LSImageSampleBeautyBaseFilter(this);
 				publishFilterIndex = 7;
 
 				publisher.setCustomFilter(publishFilters[publishFilterIndex]);
@@ -345,7 +355,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 			}
 		});
-		
+
 		Button stopPublishButton = (Button) this.findViewById(R.id.button4);
 		stopPublishButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -370,7 +380,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 			}
 		});
-		
+
 		Button stopCamButton = (Button) this.findViewById(R.id.button8);
 		stopCamButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -395,6 +405,57 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //			startActivityForResult(intent, 1);
 			}
 		});
+
+		// TODO: 2019/10/29 Hardy
+		mSeekBarBeauty = (SeekBar)findViewById(R.id.seekBar_beauty);
+		mSeekBarWhite = (SeekBar)findViewById(R.id.seekBar_white);
+		mSeekBarBeauty.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				handlerProgressChange(progress, true);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
+		mSeekBarWhite.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				handlerProgressChange(progress,false);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
+	}
+
+	// TODO: 2019/10/29
+	private void handlerProgressChange(int progress,boolean isBeautyChange){
+		float scale = progress * 1.0f / 100;
+		Log.i("info", "--------scale: "+scale);
+
+		LSImageSampleBeautyBaseFilterEvent filter = (LSImageSampleBeautyBaseFilterEvent) publishFilters[publishFilterIndex];
+		if (isBeautyChange) {
+			filter.setBeautyLevel(scale);
+		}else {
+			filter.setStrength(scale);
+		}
 	}
 
 	private void initItemButtons() {
@@ -578,10 +639,51 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 		});
 		photoButton = photoButton404;
+
+//		SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
+//		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//			@Override
+//			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//				float level = 1.0f * progress / 100;
+////				Log.w(LSConfig.TAG, String.format("PlayActivity::onProgressChanged( beauty : %f )", level));
+//				LSImageSampleBeautyBaseFilter filter = (LSImageSampleBeautyBaseFilter)publishFilters[7];
+//				filter.setBeautyLevel(level);
+//			}
+//
+//			@Override
+//			public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//
+//			@Override
+//			public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//		});
+//		SeekBar seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
+//		seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//			@Override
+//			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//				float level = 1.0f * progress / 100;
+////				Log.w(LSConfig.TAG, String.format("PlayActivity::onProgressChanged( strength : %f )", level));
+//				LSImageSampleBeautyBaseFilter filter = (LSImageSampleBeautyBaseFilter)publishFilters[7];
+//				filter.setStrength(level);
+//			}
+//
+//			@Override
+//			public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//
+//			@Override
+//			public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//			}
+//		});
 	}
 
-	private void deleteAllFiles(File root) {  
-        File files[] = root.listFiles();  
+	private void deleteAllFiles(File root) {
+        File files[] = root.listFiles();
         if (files != null) {
 			for (File f : files) {
 				if (f.isDirectory()) { // 判断是否为文件夹
@@ -601,13 +703,13 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				}
 			}
 		}
-    } 
-	
+    }
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		
+
 		for(int i = 0; i < players.length; i++) {
 			if( players[i] != null ) {
 				players[i].stop();
@@ -621,7 +723,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			publisher.uninit();
 		}
 	}
-	
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -729,6 +831,39 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				}
 			}
 			previewPlayer.renderVideoFrame(data, size, 240, 240);
+		}
+	}
+
+	public void checkPermission() {
+		int status = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( CAMERA, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+		}
+
+		status = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( RECORD_AUDIO, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+		}
+
+		status = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( INTERNET, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
+		}
+
+		status = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		Log.e(LSConfig.TAG, String.format("PlayActivity::checkPermission( WRITE_EXTERNAL_STORAGE, status : %d )", status));
+		if ( status != PackageManager.PERMISSION_GRANTED ) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+		}
+	}
+
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		Log.e(LSConfig.TAG, String.format("PlayActivity::onRequestPermissionsResult( requestCode : %d )", requestCode));
+		for(int i = 0; i < permissions.length; i++) {
+			Log.e(LSConfig.TAG, String.format("PlayActivity::onRequestPermissionsResult( %s:%d )", permissions[i], grantResults[i]));
 		}
 	}
 }

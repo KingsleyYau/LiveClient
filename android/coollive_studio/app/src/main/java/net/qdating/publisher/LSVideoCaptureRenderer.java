@@ -117,8 +117,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::init( this : 0x%x )", hashCode()));
 
-		cameraFilter.setFilter(bmpFilter);
-		bmpFilter.setFilter(cropFilter);
+		cameraFilter.setFilter(cropFilter);
 		cropFilter.setFilter(recordFlipFilter);
 		recordFlipFilter.setFilter(recordFilter);
 		recordFilter.setFilter(outputFlipFilter);
@@ -167,8 +166,11 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 
 		if ( bmpFilter.getBitmap() != null ) {
 			changeCropFilterSize(bmpFilter.getBitmap().getWidth(), bmpFilter.getBitmap().getHeight());
+			cameraFilter.setFilter(bmpFilter);
+			bmpFilter.setFilter(cropFilter);
 		} else {
 			changeCropFilterSize(originalWidth, originalHeight);
+			cameraFilter.setFilter(cropFilter);
 		}
 	}
 

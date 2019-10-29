@@ -138,7 +138,7 @@ public class LSImageBeautyFilter extends LSImageBufferFilter {
 			+ "}\n";
 
 	private float toneLevel = 0.5f;
-	private float beautyLevel = 0.5f;
+	private float beautyLevel = 1.0f;
 	private float brightLevel = 0.5f;
 
 	private int aPosition;

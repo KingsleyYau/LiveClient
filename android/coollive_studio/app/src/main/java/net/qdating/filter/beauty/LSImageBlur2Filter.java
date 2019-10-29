@@ -2,119 +2,85 @@ package net.qdating.filter.beauty;
 
 import android.opengl.GLES20;
 
-import net.qdating.LSConfig;
 import net.qdating.filter.LSImageBufferFilter;
 import net.qdating.filter.LSImageVertex;
-import net.qdating.utils.Log;
 
 /**
- * 美颜滤镜
+ * 高斯模糊滤镜
  * @author max
  *
  */
-public class LSImageAdjustFilter extends LSImageBufferFilter {
+public class LSImageBlur2Filter extends LSImageBufferFilter {
 	private static String vertexShaderString = ""
 			+ "// 图像顶点着色器 \n"
 			+ "// 纹理坐标(输入) \n"
 			+ "attribute vec4 aPosition; \n"
 			+ "// 自定义屏幕坐标(输入) \n"
 			+ "attribute vec4 aTextureCoordinate; \n"
+			+ "uniform highp float uTexelWidthOffset; \n"
+			+ "uniform highp float uTexelHeightOffset; \n"
 			+ "// 片段着色器(输出) \n"
 			+ "varying vec2 vTextureCoordinate; \n"
+			+ "const int SHIFT_SIZE = 2; \n"
+			+ "varying vec4 blurShiftCoordinates[SHIFT_SIZE]; \n"
 			+ "void main() { \n"
 			+ "		vTextureCoordinate = aTextureCoordinate.xy; \n"
 			+ "		gl_Position = aPosition; \n"
+			+ "		// 偏移步距 \n"
+			+ "		vec2 singleStepOffset = vec2(uTexelWidthOffset, uTexelHeightOffset); \n"
+			+ "		// 记录偏移坐标 \n"
+			+ "		for (int i = 0; i < SHIFT_SIZE; i++) { \n"
+			+ "			blurShiftCoordinates[i] = vec4(vTextureCoordinate.xy - float(i + 1) * singleStepOffset, vTextureCoordinate.xy + float(i + 1) * singleStepOffset); \n"
+			+ "		} \n"
 			+ "} \n";
 
 	private static String fragmentShaderString = ""
 			+ "// 图像颜色着色器 \n"
             + "precision mediump float; \n"
 			+ "uniform sampler2D uInputTexture; \n"
-			+ "// 原图的高斯模糊纹理 \n"
-			+ "uniform sampler2D uBlurTexture; \n"
-			+ "// 高反差保留的高斯模糊纹理 \n"
-			+ "uniform sampler2D uHighPassBlurTexture; \n"
-			+ "// 磨皮程度 \n"
-			+ "uniform lowp float uBeautyLevel; \n"
 			+ "// 片段着色器(输入) \n"
 			+ "varying highp vec2 vTextureCoordinate; \n"
+			+ "const int SHIFT_SIZE = 2; \n"
+			+ "varying vec4 blurShiftCoordinates[SHIFT_SIZE]; \n"
 			+ "void main() { \n"
-			+ "		lowp vec4 textureColor = texture2D(uInputTexture, vTextureCoordinate); \n"
-			+ "		lowp vec4 blurColor = texture2D(uBlurTexture, vTextureCoordinate); \n"
-			+ "		lowp vec4 highPassBlurColor = texture2D(uHighPassBlurTexture, vTextureCoordinate); \n"
-			+ "		// 调节蓝色通道值 \n"
-			+ "		mediump float value = clamp((min(textureColor.b, blurColor.b) - 0.2) * 5.0, 0.0, 1.0); \n"
-			+ "		// 找到模糊之后RGB通道的最大值 \n"
-			+ "		mediump float maxChannelColor = max(max(highPassBlurColor.r, highPassBlurColor.g), highPassBlurColor.b); \n"
-			+ "		// 计算当前的强度 \n"
-			+ "		mediump float currentIntensity = (1.0 - maxChannelColor / (maxChannelColor + 0.2)) * value * uBeautyLevel; \n"
-			+ "		// 混合输出结果 \n"
-			+ "		lowp vec3 resultColor = mix(textureColor.rgb, blurColor.rgb, currentIntensity); \n"
-			+ "		// 输出颜色 \n"
-			+ "		gl_FragColor = vec4(resultColor, 1.0); \n"
+			+ "		vec4 textureColor = texture2D(uInputTexture, vTextureCoordinate); \n"
+			+ "		mediump vec3 sum = textureColor.rgb; \n"
+			+ "		// 计算偏移坐标的颜色值总和 \n"
+			+ "		for (int i = 0; i < SHIFT_SIZE; i++) { \n"
+			+ "			sum += texture2D(uInputTexture, blurShiftCoordinates[i].xy).rgb; \n"
+			+ "			sum += texture2D(uInputTexture, blurShiftCoordinates[i].zw).rgb; \n"
+			+ "		} \n"
+			+ "		// 求出平均值 \n"
+			+ "		gl_FragColor = vec4(sum * 1.0 / float(2 * SHIFT_SIZE + 1), textureColor.a); \n"
 			+ "}\n";
 
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
 
-	private int blurTextureId;
-	private int uBlurTexture;
+	private int uTexelWidthOffset;
+	private int uTexelHeightOffset;
 
-	private int highPassBlurTextureId;
-	private int uHighPassBlurTexture;
+	public enum FlipType {
+		FlipType_Vertical,
+		FlipType_Horizontal
+	}
+	private FlipType mFlipType = FlipType.FlipType_Horizontal;
 
-	private int uBeautyLevel;
-
-	public LSImageAdjustFilter() {
+	public LSImageBlur2Filter() {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
 		// TODO Auto-generated constructor stub
 	}
 
-	private float beautyLevel = 1.0f;
-
-	/**
-	 * 设置美颜等级
-	 * @param beautyLevel [0.0, 1.0]
-	 */
-	public void setBeautyLevel(float beautyLevel) {
-		Log.d(LSConfig.TAG,
-				String.format("LSImageAdjustFilter::setBeautyLevel( "
-								+ "beautyLevel : %f "
-								+ ")",
-						beautyLevel
-				)
-		);
-
-		this.beautyLevel = beautyLevel;
-	}
-
-	public void setBlurTexture(int blurTextureId, int highPassBlurTextureId) {
-		this.blurTextureId = blurTextureId;
-		this.highPassBlurTextureId = highPassBlurTextureId;
-	}
-
-	@Override
-	public void init() {
-		super.init();
-
-		uBlurTexture = GLES20.glGetUniformLocation(getProgram(), "uBlurTexture");
-		uHighPassBlurTexture = GLES20.glGetUniformLocation(getProgram(), "uHighPassBlurTexture");
+	public LSImageBlur2Filter(LSImageBlur2Filter.FlipType type) {
+		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
+		// TODO Auto-generated constructor stub
+		mFlipType = type;
 	}
 
 	@Override
 	protected void onDrawStart(int textureId) {
 		super.onDrawStart(textureId);
-
-		// 绑定图像纹理
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, blurTextureId);
-		GLES20.glUniform1i(uBlurTexture, 1);
-
-		// 绑定图像纹理
-		GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, highPassBlurTextureId);
-		GLES20.glUniform1i(uHighPassBlurTexture, 2);
 
 		// 激活纹理单元GL_TEXTURE0
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -125,7 +91,8 @@ public class LSImageAdjustFilter extends LSImageBufferFilter {
 		aTextureCoordinate = GLES20.glGetAttribLocation(getProgram(), "aTextureCoordinate");
 		uInputTexture = GLES20.glGetUniformLocation(getProgram(), "uInputTexture");
 
-		uBeautyLevel = GLES20.glGetUniformLocation(getProgram(), "uBeautyLevel");
+		uTexelWidthOffset = GLES20.glGetAttribLocation(getProgram(), "uTexelWidthOffset");
+		uTexelHeightOffset = GLES20.glGetAttribLocation(getProgram(), "uTexelHeightOffset");
 
 		// 填充着色器-顶点采样器
 		if( getVertexBuffer() != null ) {
@@ -141,7 +108,13 @@ public class LSImageAdjustFilter extends LSImageBufferFilter {
 			GLES20.glEnableVertexAttribArray(aTextureCoordinate);
 		}
 
-		GLES20.glUniform1f(uBeautyLevel, beautyLevel);
+		if ( mFlipType == FlipType.FlipType_Horizontal ) {
+			GLES20.glUniform1f(uTexelWidthOffset, 1.0f / inputWidth);
+			GLES20.glUniform1f(uTexelHeightOffset, 0);
+		} else {
+			GLES20.glUniform1f(uTexelWidthOffset, 0);
+			GLES20.glUniform1f(uTexelHeightOffset, 1.0f / inputHeight);
+		}
 
 		// 填充着色器-颜色采样器, 将纹理单元GL_TEXTURE0绑元定到采样器
 		GLES20.glUniform1i(uInputTexture, 0);

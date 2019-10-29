@@ -21,6 +21,10 @@ public class LSImageBmpFilter extends LSImageInputFilter {
 		this.bitmap = bitmap;
 	}
 
+	public Bitmap getBitmap() {
+		return bitmap;
+	}
+
 	@Override
 	protected int onDrawFrame(int textureId) {
 		// 绘制

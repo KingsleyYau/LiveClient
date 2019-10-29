@@ -6,6 +6,7 @@ import java.util.Arrays;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
@@ -115,7 +116,8 @@ public class LSPublisher {
 	/***
 	 * 初始化流推送器
 	 * @param surfaceView	显示界面
-	 * @param statusCallback 状态回调接口
+	 * @param rotation 旋转角度
+	 * @param fillMode 填充模式
 	 * @param statusCallback 状态回调接口
 	 * @param videoConfigType 视频配置
 	 * @param fps 帧率(12)
@@ -359,6 +361,14 @@ public class LSPublisher {
 	public LSImageFilter getCustomFilter() {
 		LSImageFilter filter = videoCapture.getCustomFilter();
 		return filter;
+	}
+
+	/**
+	 * 设置自定义上传图片
+	 * @param bitmap 图片
+	 */
+	public void setCaptureBitmap(Bitmap bitmap) {
+		videoCapture.setCaptureBitmap(bitmap);
 	}
 
 	/***

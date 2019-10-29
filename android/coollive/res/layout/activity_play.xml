@@ -9,6 +9,7 @@
         android:id="@+id/layoutVideo0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+		android:visibility="visible"
         >
 
 		<Button
@@ -40,17 +41,17 @@
 
 			<Button
 				android:id="@+id/button100"
-				android:layout_width="70dp"
-				android:layout_height="40dp"
-				android:text="Mute"
+				android:layout_width="35dp"
+				android:layout_height="30dp"
+				android:text="M"
 				android:textSize="12dp"
 				android:textAllCaps="false"
 				/>
 			<Button
 				android:id="@+id/button101"
-				android:layout_width="70dp"
-				android:layout_height="40dp"
-				android:text="Filter"
+				android:layout_width="35dp"
+				android:layout_height="30dp"
+				android:text="F"
 				android:textSize="12dp"
 				android:textAllCaps="false"
 				/>
@@ -86,29 +87,35 @@
 
 			<Button
 				android:id="@+id/button200"
-				android:layout_width="70dp"
-				android:layout_height="40dp"
-				android:text="Mute"
+				android:layout_width="35dp"
+				android:layout_height="30dp"
+				android:text="M"
 				android:textSize="12dp"
 				android:textAllCaps="false"
 				/>
 			<Button
 				android:id="@+id/button201"
-				android:layout_width="70dp"
-				android:layout_height="40dp"
-				android:text="Filter"
+				android:layout_width="35dp"
+				android:layout_height="30dp"
+				android:text="F"
 				android:textSize="12dp"
 				android:textAllCaps="false"
 				/>
 		</LinearLayout>
     </RelativeLayout>
 
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/layoutVideo1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/layoutVideo0"-->
+		<!--android:layout_above="@+id/layoutPublish"-->
+        <!--&gt;-->
     <RelativeLayout
         android:id="@+id/layoutVideo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutVideo0"
-		android:layout_above="@id/layoutPublish"
+        android:layout_above="@+id/layoutPublish"
         >
 
 		<Button
@@ -141,29 +148,36 @@
 
 			<Button
 				android:id="@+id/button300"
-				android:layout_width="70dp"
-				android:layout_height="40dp"
-				android:text="Mute"
+				android:layout_width="35dp"
+				android:layout_height="30dp"
+				android:text="M"
 				android:textSize="12dp"
 				android:textAllCaps="false"
 				/>
 			<Button
 				android:id="@+id/button301"
-				android:layout_width="70dp"
-				android:layout_height="40dp"
-				android:text="Filter"
+				android:layout_width="35dp"
+				android:layout_height="30dp"
+				android:text="F"
 				android:textSize="12dp"
 				android:textAllCaps="false"
 				/>
 		</LinearLayout>
 
-        <android.opengl.GLSurfaceView
-	        android:id="@+id/surfaceViewPublish"
-	        android:layout_width="180dp"
-	        android:layout_height="180dp"
-	        android:layout_alignParentRight="true"
+		<android.opengl.GLSurfaceView
+			android:id="@+id/surfaceViewPublish"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
 			android:visibility="visible"
-        />
+			/>
+        <!--<android.opengl.GLSurfaceView-->
+	        <!--android:id="@+id/surfaceViewPublish"-->
+	        <!--android:layout_width="180dp"-->
+	        <!--android:layout_height="180dp"-->
+	        <!--android:layout_alignParentRight="true"-->
+			<!--android:visibility="visible"-->
+        <!--/>-->
 
 		<LinearLayout
 			android:id="@+id/layoutButtons5"
@@ -177,27 +191,85 @@
 
 			<Button
 				android:id="@+id/button400"
-				android:layout_width="60dp"
-				android:layout_height="40dp"
-				android:text="Mute"
+				android:layout_width="35dp"
+				android:layout_height="32dp"
+				android:text="M"
 				android:textAllCaps="false"
 				android:textSize="11dp" />
 			<Button
 				android:id="@+id/button401"
-				android:layout_width="60dp"
-				android:layout_height="40dp"
-				android:text="Rotate"
+				android:layout_width="35dp"
+				android:layout_height="32dp"
+				android:text="R"
 				android:textAllCaps="false"
 				android:textSize="11dp" />
 			<Button
 				android:id="@+id/button402"
-				android:layout_width="60dp"
-				android:layout_height="40dp"
-				android:text="Filter"
+				android:layout_width="35dp"
+				android:layout_height="32dp"
+				android:text="F"
+				android:textAllCaps="false"
+				android:textSize="11dp" />
+			<Button
+				android:id="@+id/button403"
+				android:layout_width="38dp"
+				android:layout_height="32dp"
+				android:text="F0"
+				android:textAllCaps="false"
+				android:textSize="11dp" />
+			<Button
+				android:id="@+id/button404"
+				android:layout_width="38dp"
+				android:layout_height="32dp"
+				android:text="P0"
 				android:textAllCaps="false"
 				android:textSize="11dp" />
 		</LinearLayout>
+<!--		<SeekBar-->
+<!--			android:id="@+id/seekBar"-->
+<!--			android:layout_width="match_parent"-->
+<!--			android:layout_height="32dp"-->
+<!--			android:layout_alignParentBottom="true"-->
+<!--			android:max="100"-->
+<!--			android:progress="100"-->
+<!--			/>-->
+<!--		<SeekBar-->
+<!--			android:id="@+id/seekBar2"-->
+<!--			android:layout_width="match_parent"-->
+<!--			android:layout_height="32dp"-->
+<!--			android:layout_above="@+id/seekBar"-->
+<!--			android:max="100"-->
+<!--			android:progress="100"-->
+<!--			/>-->
+		<!--Hardy-->
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:paddingBottom="20dp"
+			android:orientation="vertical">
 
+			<SeekBar
+				android:id="@+id/seekBar_beauty"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="20dp"
+				android:layout_marginRight="20dp"
+				android:layout_marginBottom="40dp"
+				android:max="100"
+				android:progress="100"
+				/>
+
+			<SeekBar
+				android:id="@+id/seekBar_white"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="20dp"
+				android:layout_marginRight="20dp"
+				android:max="100"
+				android:progress="100"
+				/>
+		</LinearLayout>
     </RelativeLayout>
 	    
  	<LinearLayout 

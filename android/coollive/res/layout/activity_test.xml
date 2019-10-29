@@ -5,19 +5,12 @@
     android:background="@color/background_floating_material_dark"
     tools:context="${relativePackage}.${activityClass}" >
 
-	<android.opengl.GLSurfaceView
-		android:id="@+id/surfaceView"
-		android:layout_width="180dp"
-		android:layout_height="180dp"
-		android:layout_alignParentLeft="true"
-		android:visibility="visible"
-		/>
-	<android.opengl.GLSurfaceView
-		android:id="@+id/surfaceViewPublish"
-		android:layout_width="180dp"
-		android:layout_height="180dp"
-		android:layout_alignParentRight="true"
-		android:visibility="invisible"
-		/>
+	<WebView
+		android:id="@+id/webView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
+	</WebView>
  	  
 </RelativeLayout>
