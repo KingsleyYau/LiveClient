@@ -63,3 +63,8 @@ https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
 ### Demo Android Snapshot
 -------------
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
+
+
+### Filter Effect
+-------------
+<img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/0.png?raw=true"/>
