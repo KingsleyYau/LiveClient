@@ -47,6 +47,11 @@ Catalog
 * 则实际播放地址为rtmp://172.25.32.17:19351/live/max0, rtmp://172.25.32.17:19351/live/max1, rtmp://172.25.32.17:19351/live/max2
 
 
+### Filter Effect
+-------------
+<img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/0.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/1.png?raw=true"/>
+
+
 ### Demo iOS Project
 https://github.com/KingsleyYau/LiveClient/tree/master/iOS/Modules/RtmpClient/RtmpClientTest
 
@@ -64,7 +69,3 @@ https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
 -------------
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
 
-
-### Filter Effect
--------------
-<img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/0.png?raw=true"/>
