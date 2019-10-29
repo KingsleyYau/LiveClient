@@ -58,7 +58,8 @@ rm -f $ECLIPSE_PROJECT_PATH/libs/*.jar >> $LOG_FILE 2>&1
 cp -rf $ECLIPSE_PROJECT_PATH/libs $VERSION >> $LOG_FILE 2>&1
 
 # Copy assets
-cp -rf $ECLIPSE_PROJECT_PATH/assets $VERSION >> $LOG_FILE 2>&1
+mkdir -p $VERSION/assets
+cp -rf $ECLIPSE_PROJECT_PATH/assets/filters $VERSION/assets/ >> $LOG_FILE 2>&1
 
 mkdir -p $VERSION/doc
 javadoc \

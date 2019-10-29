@@ -47,7 +47,7 @@ public abstract class LSImageBufferFilter extends LSImageFilter {
 		if( glFBOId != null ) {
 			GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, glFBOId[0]);
 			String method = String.format("LSImageBufferFilter::onDrawStart( glBindFramebuffer( glFBOId : %d) )", glFBOId[0]);
-			checkGLError(method, null);
+//			checkGLError(method, null);
 		}
 	}
 	
@@ -64,7 +64,7 @@ public abstract class LSImageBufferFilter extends LSImageFilter {
 		// 解绑FBO
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		String method = String.format("LSImageBufferFilter::onDrawFinish( glBindFramebuffer(Unbind) )");
-		checkGLError(method, null);
+//		checkGLError(method, null);
 	}
 
 	protected int getFBOId() {

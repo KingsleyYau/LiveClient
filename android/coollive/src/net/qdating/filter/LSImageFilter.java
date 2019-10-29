@@ -370,7 +370,7 @@ public abstract class LSImageFilter {
 
         if( fillMode == FillMode.FillModeAspectRatioFill ) {
         	// 输入图像短边填满输出
-        	if( inputHeight > 0 && outputHeight > 0 ) {
+        	if( imageHeight > 0 && outputHeight > 0 ) {
             	// 目标比例
             	double radioPreview = 1.0 * outputWidth / outputHeight;
             	// 源比例
@@ -402,7 +402,7 @@ public abstract class LSImageFilter {
         	}
         } else if ( fillMode == FillMode.FillModeAspectRatioFit ) {
         	// 输入图像长边内嵌输出
-        	if( inputHeight > 0 && outputHeight > 0 ) {
+        	if( imageHeight > 0 && outputHeight > 0 ) {
             	// 目标比例
             	double radioPreview = 1.0 * outputWidth / outputHeight;
             	// 源比例

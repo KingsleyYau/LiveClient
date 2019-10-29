@@ -76,6 +76,12 @@ public class LSPublishConfig {
                 videoWidth = 320;
                 videoHeight = 320;
             }break;
+            case VideoConfigType480x640:{
+                videoCaptureWidth = 480;
+                videoCaptureHeight = 640;
+                videoWidth = 480;
+                videoHeight = 640;
+            }break;
             default:{
                 bFlag = false;
             }break;

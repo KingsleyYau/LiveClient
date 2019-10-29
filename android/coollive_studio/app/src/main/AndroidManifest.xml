@@ -23,6 +23,7 @@
             android:name="net.qdating.view.TestActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:hardwareAccelerated="true"
             >
         </activity>        
     </application>

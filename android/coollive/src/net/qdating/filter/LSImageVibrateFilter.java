@@ -127,7 +127,6 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 		GLES20.glUniform1i(uInputTexture, 0);
 
 		// 填充着色器
-
 		GLES20.glUniform2f(uImagePixel, uvImagePixel[0], uvImagePixel[1]);
 
 		int num = rnd.nextInt() % vibrateOffset;
