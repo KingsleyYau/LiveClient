@@ -4,6 +4,7 @@ Catalog
    * [流媒体推拉流模块](#流媒体推拉流模块)
    		* [功能](#功能)
       * [第三方开源](#第三方开源)
+      * [滤镜效果](#滤镜效果)
       * [Demo](#Demo)
       * [Demo 安装包](#Demo-安装包)
       * [Demo 使用方法](#Demo-使用方法)
@@ -37,6 +38,14 @@ Catalog
 [Dlib](http://dlib.net/)</br>
 
 
+## 滤镜效果
+-------------
+原图
+<img width="240" height="320" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/original.png?raw=true"/></br>
+效果
+<img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/0.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/1.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/2.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/3.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/5.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/6.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/7.png?raw=true"/></br>
+
+
 ## Demo
 ### 安装包
 [Android-apk](https://github.com/KingsleyYau/LiveClient/blob/master/docs/coollive.apk)
@@ -45,12 +54,6 @@ Catalog
 ### Demo 使用方法
 * 播放地址为输入框的地址增加序号, 如输入框为rtmp://172.25.32.17:19351/live/max
 * 则实际播放地址为rtmp://172.25.32.17:19351/live/max0, rtmp://172.25.32.17:19351/live/max1, rtmp://172.25.32.17:19351/live/max2
-
-
-### Filter Effect
--------------
-<img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/0.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/1.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/2.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/3.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/5.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/6.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/7.png?raw=true"/></br>
-<img width="240" height="320" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/original.png?raw=true"/></br>
 
 
 ### Demo iOS Project
