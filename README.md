@@ -40,9 +40,9 @@ Catalog
 
 ## 滤镜效果
 -------------
-原图
+原图</br>
 <img width="240" height="320" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/original.png?raw=true"/></br>
-效果
+效果</br>
 <img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/0.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/1.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/2.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/3.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/5.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/6.png?raw=true"/><img width="100" height="100" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/7.png?raw=true"/></br>
 
 
