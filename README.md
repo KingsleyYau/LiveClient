@@ -39,7 +39,6 @@ Catalog
 
 
 ## 滤镜效果
--------------
 原图</br>
 <img width="240" height="320" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/effect/original.png?raw=true"/></br>
 效果</br>
