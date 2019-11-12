@@ -41,7 +41,7 @@
 // 邀请发送成功，等待主播确认
 "PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";
 // 主播已确认提示
-"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nOne-on-One broadcast will start in";
+"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nOne-on-One broadcast will start in ";
 
 
 /************** 进入直播间通用错误提示 *****************/

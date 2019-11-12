@@ -119,9 +119,8 @@
 
 - (void)startCountdown:(NSInteger)time {
     
-    CGFloat countdownTime = [LSMainNotificationManager manager].timeOutNum;
+    NSInteger countdownTime = [LSMainNotificationManager manager].timeOutNum;
     self.time = time + countdownTime;
-
     [self countdown];
 }
 
@@ -129,14 +128,22 @@
     
     self.countdownTime = [[NSDate date] timeIntervalSince1970];
     
-    CGFloat countdownTime = [LSMainNotificationManager manager].timeOutNum;
+    NSInteger countdownTime = [LSMainNotificationManager manager].timeOutNum;
     
     CGFloat percent = self.scheduledTimeView.frame.size.width / countdownTime;
     
     NSInteger times = self.time - self.countdownTime;
     
-    self.colorView.frame = CGRectMake(0, 0,self.scheduledTimeView.frame.size.width - ((countdownTime - times) * percent), self.scheduledTimeView.frame.size.height);
-    
+    CGRect rect = self.colorView.frame;
+    rect.origin.x = 0.0f;
+    rect.size.width = self.scheduledTimeView.frame.size.width - ((countdownTime - times) * percent);
+    self.colorView.frame = rect;
+
+    if (times <= 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        });
+    }
     [self performSelector:@selector(countdown) withObject:nil afterDelay:1];
 }
 

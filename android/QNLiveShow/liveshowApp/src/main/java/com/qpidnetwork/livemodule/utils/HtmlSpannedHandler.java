@@ -64,7 +64,7 @@ public class HtmlSpannedHandler {
      *
      * @param builder
      * @param input
-     * @param giftMsg
+     * @param giftMsg 是否为发礼物消息
      * @return
      */
     public static Spanned getLiveRoomMsgHTML(CustomerHtmlTagHandler.Builder builder, String input, boolean giftMsg) {

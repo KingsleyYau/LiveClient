@@ -249,5 +249,7 @@ jobject getAnchorFriendItem(JNIEnv *env, const HttpAnchorFriendItem& item);
 jobject getProgramInfoItem(JNIEnv *env, const HttpAnchorProgramInfoItem& item);
 jobjectArray getProgramInfoArray(JNIEnv *env, const AnchorProgramInfoList& list);
 
+jobject getCurrentRoomItem(JNIEnv *env, const ZBHttpCurrentRoomItem& item);
+
 
 #endif

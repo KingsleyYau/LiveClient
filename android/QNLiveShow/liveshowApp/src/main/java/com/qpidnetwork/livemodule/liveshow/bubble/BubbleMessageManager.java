@@ -516,6 +516,11 @@ public class BubbleMessageManager implements LiveChatManagerMessageListener, IMH
     }
 
     @Override
+    public void OnSendInviteMessage(LCMessageItem item) {
+
+    }
+
+    @Override
     public void OnRecvWarning(LCMessageItem item) {
 
     }

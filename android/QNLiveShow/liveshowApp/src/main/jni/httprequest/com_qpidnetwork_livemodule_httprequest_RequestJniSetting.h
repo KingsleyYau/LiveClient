@@ -21,7 +21,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniSe
    * Signature: (ZZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
    */
   JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniSetting_SetPushConfig
-    (JNIEnv *, jclass,  jboolean, jboolean, jobject);
+    (JNIEnv *, jclass,  jboolean, jboolean, jboolean, jobject);
 
 
 #ifdef __cplusplus

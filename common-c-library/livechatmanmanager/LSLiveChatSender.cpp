@@ -157,8 +157,11 @@ void LSLiveChatSender::OnSendTextMessage(const string& inUserId, const string& i
         // 处理消息
         item->m_statusType = (LSLIVECHAT_LCC_ERR_SUCCESS==err ? StatusType_Finish : StatusType_Fail);
         item->m_procResult.SetResult(err, "", errmsg);
-        //发送消息成功，如果会话状态为默认状态或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
-        OnSendMessageSessionProcess(item);
+        // Alex,2019-07-31,修改发送成功才处理会话状态
+        if (err == LSLIVECHAT_LCC_ERR_SUCCESS) {
+            //发送消息成功，如果会话状态为默认状态或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
+            OnSendMessageSessionProcess(item);
+        }
         if (NULL != m_listener) {
             m_listener->OnSendTextMessage(err, errmsg, item);
         }
@@ -203,8 +206,11 @@ void LSLiveChatSender::OnSendEmotion(const string& inUserId, const string& inEmo
         // 处理消息
         item->m_statusType = (err==LSLIVECHAT_LCC_ERR_SUCCESS ? StatusType_Finish : StatusType_Fail);
         item->m_procResult.SetResult(err, "", errmsg);
-        //发送消息成功，如果会话状态为默认状态或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
-        OnSendMessageSessionProcess(item);
+        // Alex,2019-07-31,修改发送成功才处理会话状态
+        if (err == LSLIVECHAT_LCC_ERR_SUCCESS) {
+            //发送消息成功，如果会话状态为默认状态或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
+            OnSendMessageSessionProcess(item);
+        }
         m_listener->OnSendEmotion(err, errmsg, item);
     }
     else {
@@ -389,8 +395,11 @@ void LSLiveChatSender::OnSendPhoto(LSLIVECHAT_LCC_ERR_TYPE err, const string& er
 			// 非服务器断开连接
 			item->m_statusType = (err==LSLIVECHAT_LCC_ERR_SUCCESS ? StatusType_Finish : StatusType_Fail);
 			item->m_procResult.SetResult(err, "", errmsg);
-            //发送消息成功，如果会话状态为默认状态 或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
-            OnSendMessageSessionProcess(item);
+            // Alex,2019-07-31,修改发送成功才处理会话状态
+            if (err == LSLIVECHAT_LCC_ERR_SUCCESS) {
+                //发送消息成功，如果会话状态为默认状态 或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
+                OnSendMessageSessionProcess(item);
+            }
 			m_listener->OnSendPhoto(item->m_procResult.m_errType, item->m_procResult.m_errNum, item->m_procResult.m_errMsg, item);
 		}
 		else {
@@ -438,11 +447,11 @@ void LSLiveChatSender::OnSendVoice(const string& inUserId, const string& inVoice
     
     // 修改在线状态
     m_operator->SetUserOnlineStatusWithLccErrType(item->GetUserItem(), err);
-    //发送消息成功，如果会话状态为默认状态或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
-    OnSendMessageSessionProcess(item);
     
     // 发送成功
     if (err == LSLIVECHAT_LCC_ERR_SUCCESS) {
+        //发送消息成功，如果会话状态为默认状态或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态, Alex,2019-07-31,修改发送成功才处理会话状态
+        OnSendMessageSessionProcess(item);
         m_voiceMgr->CopyVoiceFileToDir(item);
     }
     
@@ -558,8 +567,11 @@ void LSLiveChatSender::OnSendMagicIcon(const string& inUserId, const string& inI
         //处理消息
         item->m_statusType = (err == LSLIVECHAT_LCC_ERR_SUCCESS ? StatusType_Finish : StatusType_Fail);
         item->m_procResult.SetResult(err, "", errmsg);
-        //发送消息成功，如果会话状态为默认状态 或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
-        OnSendMessageSessionProcess(item);
+        // Alex,2019-07-31,修改发送成功才处理会话状态
+        if (err == LSLIVECHAT_LCC_ERR_SUCCESS) {
+            //发送消息成功，如果会话状态为默认状态 或 女士主动邀请（在节目男士端修改了，为了可以点击取消邀请），修改为男士邀请状态
+            OnSendMessageSessionProcess(item);
+        }
         m_listener->OnSendMagicIcon(err, errmsg, item);
     }
     else{

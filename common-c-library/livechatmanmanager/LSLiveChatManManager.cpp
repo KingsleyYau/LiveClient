@@ -580,8 +580,8 @@ void LSLiveChatManManager::ResetParamWithNotAutoLogin()
         // 会话管理器参数清空
         m_liveChatSessionManager->Reset();
         
-        // 清除HttpClient的cookies
-        HttpClient::CleanCookies();
+        // 清除HttpClient的cookies(注释掉，换站时，http登录比清除快时，导致清除cookies，其他的http接口就失败了，Alex，2019-07-31)
+        //HttpClient::CleanCookies();
         m_cookies.clear();
     }
 }
@@ -759,6 +759,7 @@ void LSLiveChatManManager::OnAutoInviteFilterCallback(LSLCAutoInviteItem* autoIn
     FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLiveChatManManager::OnAutoInviteFilterCallback(m_listener : %p, item : %p)", m_listener, item);
     // 回调
     if (NULL != m_listener && NULL != item) {
+
         m_listener->OnRecvMessage(item);
     }
         FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LSLiveChatManManager::OnAutoInviteFilterCallback(autoInviteItem : %p, message : %s, m_inviteMgr : %p) end", autoInviteItem, message.c_str(), m_inviteMgr);
@@ -1557,7 +1558,7 @@ LSLCMessageItem* LSLiveChatManManager::SendPhoto(const string& userId, const str
 	userItem->InsertSortMsgList(item);
     
     // 私密照发送被禁，或者,按照网络不通处理
-    if (!m_isSendPhotoPriv || !IsLogin()) {
+    if (!m_isSendPhotoPriv) {
 //        item->m_statusType = StatusType_Finish;
 //        m_listener->OnSendPhoto(LSLIVECHAT_LCC_ERR_CONNECTFAIL, "", "", item);
         // 插入线程回调
@@ -2151,7 +2152,7 @@ bool LSLiveChatManManager::InsertFeeBackcall(LSLCMessageItem* item) {
 void LSLiveChatManManager::HandleFeebackcall(LSLCMessageItem* item) {
     if (NULL != item) {
         switch (item->m_msgType) {
-            case MT_Photo:
+            case MT_Photo: 
             {
                 item->m_procResult.SetResult(LSLIVECHAT_LCC_ERR_CONNECTFAIL, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC);
                 m_listener->OnPhotoFee(false, item->m_procResult.m_errNum, item->m_procResult.m_errMsg, item);
@@ -2385,7 +2386,7 @@ LSLCMessageItem* LSLiveChatManManager::SendMagicIcon(const string& userId, const
     }
     
     LSLCMessageItem* item = NULL;
-    if(!iconId.empty()){
+    if(!iconId.empty()) {
         item = new LSLCMessageItem();
         item->Init(m_msgIdBuilder.GetAndIncrement()
                    , SendType_Send
@@ -2498,6 +2499,17 @@ string LSLiveChatManManager::GetMagicIconThumbPath(const string& magicIconId)
     
     
     return "";
+}
+
+// 发送邀请语
+bool LSLiveChatManManager::SendInviteMessage(const string& userId, const string& message, const string& nickName) {
+    
+    bool result = false;
+    if (IsLogin()) {
+        result = m_client->SendInviteMessage(userId, message, nickName);
+    }
+    return result;
+    
 }
 
 // --------- Camshare --------
@@ -3178,6 +3190,78 @@ void LSLiveChatManManager::OnPlayVideo(LSLIVECHAT_LCC_ERR_TYPE err, const string
 
 }
 
+// Alex, 发送邀请语
+void LSLiveChatManManager::OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) {
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LiveChatManager::OnSendInviteMessage() begin, userId:%s, message:%s, err:%d, errmsg:%s", inUserId.c_str(), inMessage.c_str(), err, errmsg.c_str());
+    //if (err == LSLIVECHAT_LCC_ERR_SUCCESS) {
+        LSLCMessageItem* item = NULL;
+        
+        if (IsRecvInviteRisk(false, TMT_FREE, INVITE_TYPE_CHAT)) {
+            //        // 如果风控了，而且是邀请的，就改为other，防止获取邀请列表有这个被风控的
+            //        if (userItem->m_chatType == LC_CHATTYPE_INVITE) {
+            //            userItem->m_chatType = LC_CHATTYPE_OTHER;
+            //        }
+            return;
+        }
+        
+        
+        // 添加用户到列表中（若列表中用户不存在）
+        LSLCUserItem* userItem = m_userMgr->GetUserItem(inUserId);
+        if (NULL == userItem) {
+            FileLog("LiveChatManager", "LiveChatManager::OnSendInviteMessage() getUserItem fail, fromId:%s", inUserId.c_str());
+            return;
+        }
+        
+        userItem->m_inviteId = inviteId;
+        userItem->m_userName = nickName;
+        
+        if (userItem->m_chatType == LC_CHATTYPE_OTHER) {
+            userItem->SetChatTypeWithTalkMsgType(false, TMT_FREE);
+        }
+        SetUserOnlineStatus(userItem, USTATUS_ONLINE);
+        
+        // 生成MessageItem
+        item = new LSLCMessageItem;
+        FileLog("LiveChatManager", "LiveChatManager::OnSendInviteMessage() item:%p", item);
+        FileLog("LiveChatManager", "LiveChatManager::OnSendInviteMessage() inviteId:%s", userItem->m_inviteId.c_str());
+        item->Init(m_msgIdBuilder.GetAndIncrement()
+                   , SendType_Recv
+                   , inUserId
+                   , m_userId
+                   , userItem->m_inviteId
+                   , StatusType_Finish);
+        item->m_inviteType = INVITE_TYPE_CHAT;
+        // 生成TextItem
+        LSLCTextItem* textItem = new LSLCTextItem();
+        textItem->Init(inMessage, false);
+        // 把TextItem添加到MessageItem
+        item->SetTextItem(textItem);
+        // Alex, 2019-08-01,设置冒泡的女士邀请为假消息
+        item->m_isFalseLadyInvite = true;
+        // 添加到用户聊天记录中
+        if (!userItem->InsertSortMsgList(item)) {
+            // 添加到用户聊天记录列表不成功
+            delete item;
+            item = NULL;
+        }
+        
+        
+        if (NULL != item) {
+            FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LiveChatManager::OnSendInviteMessage() callback, item:%p", item);
+            
+            // callback
+            //m_listener->OnRecvMessage(item);
+            // 为了区分OnRecvMessage,这个使用在Qn冒泡跳转到直播后，发送邀请语成功，如果用OnRecvMessage，直播会再冒泡 (Alex, 2019-07-26)
+            m_listener->OnRecvAutoInviteMessage(item);
+        }
+        
+        FileLog("LiveChatManager", "LiveChatManager::OnSendInviteMessage() end, fromId:%s, message:%s"
+                , inUserId.c_str(),  inMessage.c_str());
+    //}
+
+    
+}
+
 // 服务器主动请求
 void LSLiveChatManManager::OnRecvShowVideo(const string& toId, const string& fromId, const string& fromName, const string& inviteId, const string& videoId, const string& sendId, bool charge, const string& videoDec, int ticket)
 {
@@ -3254,6 +3338,7 @@ void LSLiveChatManManager::OnRecvMessage(const string& toId, const string& fromI
             // 通知Camshare管理器收到邀请
             m_liveChatCamshareManager->OnRecvInviteMessage(toId, fromId, inviteId, inviteType);
         }
+        
 
 		// callback
 		m_listener->OnRecvMessage(item);
@@ -3309,6 +3394,7 @@ void LSLiveChatManManager::OnRecvEmotion(const string& toId, const string& fromI
 //    // 添加到用户聊天记录中
 //    userItem->InsertSortMsgList(item);
 //
+//
 //    // callback
 //    if (NULL != m_listener) {
 //        m_listener->OnRecvEmotion(item);
@@ -3361,6 +3447,7 @@ void LSLiveChatManManager::OnRecvVoice(const string& toId, const string& fromId,
     
 	// 添加到聊天记录中
 	userItem->InsertSortMsgList(item);
+    
 	// callback
 	m_listener->OnRecvVoice(item);
 }
@@ -3548,7 +3635,7 @@ void LSLiveChatManManager::OnRecvPhoto(const string& toId, const string& fromId,
     
     // 添加到用户聊天记录中
     userItem->InsertSortMsgList(item);
-
+    
     // callback
     m_listener->OnRecvPhoto(item);
 }
@@ -3620,6 +3707,7 @@ void LSLiveChatManManager::OnRecvVideo(const string& toId, const string& fromId,
     // 添加到用户聊天记录中
     userItem->InsertSortMsgList(item);
 
+
     // callback
     m_listener->OnRecvVideo(item);
 }
@@ -3665,6 +3753,7 @@ void LSLiveChatManManager::OnRecvMagicIcon(const string& toId, const string& fro
     // 添加到用户聊天记录中
     userItem->InsertSortMsgList(item);
     
+
     // callback
     if (NULL != m_listener) {
         m_listener->OnRecvMagicIcon(item);
@@ -4069,6 +4158,8 @@ void LSLiveChatManManager::OnUploadPopLadyAutoInvite(LSLIVECHAT_LCC_ERR_TYPE err
             return;
         }
         userItem->m_inviteId = inviteId;
+        // Alex, 2019-07-26, 当用邀请id后，将之前的自动邀请消息加上邀请id
+        userItem->InsertSortMsgList(NULL);
     }
 }
 

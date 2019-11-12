@@ -32,6 +32,7 @@ static LiveGobalManager *gManager = nil;
 @property (nonatomic, weak) HangOutViewController *hangoutVC;
 @property (nonatomic, weak) LiveViewController *liveVC;
 
+@property (nonatomic, weak) LSVIPLiveViewController * vipLiveVC;
 @end
 ;
 
@@ -314,13 +315,22 @@ static LiveGobalManager *gManager = nil;
     self.hangoutVC = hangoutVC;
 }
 
+- (void)setupVIPLiveVC:(LSVIPLiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC {
+    self.vipLiveVC = liveVC;
+    self.hangoutVC = hangoutVC;
+}
+
 - (void)openOrCloseLiveSound:(BOOL)isClose {
     if (self.liveVC) {
         [self.liveVC openOrCloseSuond:isClose];
+    }
+    if (self.vipLiveVC) {
+        [self.vipLiveVC openOrCloseSuond:isClose];
     }
     if (self.hangoutVC) {
         [self.hangoutVC openOrCloseSuond:isClose];
     }
 }
+ 
 
 @end

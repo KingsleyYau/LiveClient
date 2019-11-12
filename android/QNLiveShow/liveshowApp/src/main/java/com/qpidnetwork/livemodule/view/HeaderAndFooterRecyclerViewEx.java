@@ -5,13 +5,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.MotionEvent;
 
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
@@ -79,6 +89,7 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
 
     private HFScrollListener mHFScrollListener;
     private HFRefreshListener mHFRefreshListener;
+    private List<HFRefreshListener> mPriRefreshListeners;  //内部使用
 
     //-------------自定义接口-------------
     public interface HFScrollListener {
@@ -110,13 +121,11 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
     public interface HFRefreshListener {
         /**
          * 滚到最顶了，可以看到"刷新"
-         * 由于这是手势触发的，所以会触发很多次，外部要加上标识处理
          */
         void onTopRefreshShow();
 
         /**
          * 滚到最底了，可以看到"更多"
-         * 由于这是手势触发的，所以会触发很多次，外部要加上标识处理
          */
         void onBottomMoreShow();
     }
@@ -126,10 +135,12 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
 
     public HeaderAndFooterRecyclerViewEx(@NonNull Context context) {
         super(context);
+        init();
     }
 
     public HeaderAndFooterRecyclerViewEx(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public void setHFScrollListener(HFScrollListener listener) {
@@ -138,6 +149,12 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
 
     public void setHFRefreshListner(HFRefreshListener listner){
         mHFRefreshListener = listner;
+    }
+
+    private void init(){
+        mPriRefreshListeners = new ArrayList<>();
+        initTopRefreshCallBackListener();
+        initBottomMoreCallBackListener();
     }
 
     @Override
@@ -199,8 +216,16 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
         //滚到最顶了，可以看到"刷新"
         if(firstVisibleItemPosition <= 1 && sumOffSet > 0){
             //TODO show refresh
-            if(mHFRefreshListener != null){
-                mHFRefreshListener.onTopRefreshShow();
+//            if(mHFRefreshListener != null){
+//                mHFRefreshListener.onTopRefreshShow();
+//            }
+
+            //由于这是手势触发的，所以会触发很多次
+            //通知内部事件，通过RxJava处理短时间内重复操作排重
+            for(HFRefreshListener bottomListener:mPriRefreshListeners){
+                if (bottomListener != null) {
+                    bottomListener.onTopRefreshShow();
+                }
             }
         }
     }
@@ -228,12 +253,12 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
         }
 //        if (mLoadMoreListener != null && mLoadMoreEnabled) {
 //        if (mLoadMoreEnabled) {
-            int visibleItemCount = getLayoutManager().getChildCount();
-            int totalItemCount = getLayoutManager().getItemCount();
+        int visibleItemCount = getLayoutManager().getChildCount();
+        int totalItemCount = getLayoutManager().getItemCount();
 //            Log.i("Jagger" , "visibleItemCount:" + visibleItemCount + ",lastVisibleItemPosition:" + lastVisibleItemPosition + ",totalItemCount:" + totalItemCount);
-            if (visibleItemCount > 0
-                    && lastVisibleItemPosition >= totalItemCount - 1
-                    && totalItemCount > visibleItemCount){
+        if (visibleItemCount > 0
+                && lastVisibleItemPosition >= totalItemCount - 1
+                && totalItemCount > visibleItemCount){
 //                    && !isNoMore
 //                    && !mRefreshing) {
 
@@ -244,18 +269,26 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
 //                    mLoadMoreListener.onLoadMore();
 //                }
 
-                //滚到最底了，可以看到"更多"
+            //滚到最底了，可以看到"更多"
 //                Log.i("Jagger" , "滚到最底了，可以看到\"更多\"");
-                if(mHFRefreshListener != null){
-                    mHFRefreshListener.onBottomMoreShow();
+//                if(mHFRefreshListener != null){
+//                    mHFRefreshListener.onBottomMoreShow();
+//                }
+
+            //由于这是手势触发的，所以会触发很多次
+            //通知内部事件，通过RxJava处理短时间内重复操作排重
+            for(HFRefreshListener bottomListener:mPriRefreshListeners){
+                if(bottomListener != null){
+                    bottomListener.onBottomMoreShow();
                 }
             }
+        }
 
 //        }
     }
 
     private void updateVisibleItemPosition(){
-        RecyclerView.LayoutManager layoutManager = getLayoutManager();
+        LayoutManager layoutManager = getLayoutManager();
 
         if (layoutManagerType == null) {
             if (layoutManager instanceof LinearLayoutManager) {
@@ -329,5 +362,79 @@ public class HeaderAndFooterRecyclerViewEx extends HeaderAndFooterRecyclerView {
         if ((mIsScrollDown && dy > 0) || (!mIsScrollDown && dy < 0)) {
             mDistance += dy;
         }
+    }
+
+    /**
+     * 初始化滑动到底部事件回调短时间内触发排重处理
+     */
+    public void initBottomMoreCallBackListener() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+
+            @Override
+            public void subscribe(final ObservableEmitter<Integer> emitter)
+                    throws Exception {
+                // TODO Auto-generated method stub
+                HFRefreshListener listener = new HFRefreshListener() {
+                    @Override
+                    public void onTopRefreshShow() {
+
+                    }
+
+                    @Override
+                    public void onBottomMoreShow() {
+                        emitter.onNext(1);
+                    }
+                };
+                mPriRefreshListeners.add(listener);
+            }
+        }).subscribeOn(Schedulers.computation())
+                .throttleWithTimeout(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.i("Jagger" , "滚到最底了，可以看到\"更多\"");
+                        if(mHFRefreshListener != null){
+                            mHFRefreshListener.onBottomMoreShow();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 初始化滑动到顶部事件回调短时间内触发排重处理
+     */
+    public void initTopRefreshCallBackListener() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+
+            @Override
+            public void subscribe(final ObservableEmitter<Integer> emitter)
+                    throws Exception {
+                // TODO Auto-generated method stub
+                HFRefreshListener listener = new HFRefreshListener() {
+                    @Override
+                    public void onTopRefreshShow() {
+                        emitter.onNext(1);
+                    }
+
+                    @Override
+                    public void onBottomMoreShow() {
+
+                    }
+                };
+                mPriRefreshListeners.add(listener);
+            }
+        }).subscribeOn(Schedulers.computation())
+                .throttleWithTimeout(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.i("Jagger" , "滚到顶部，可以\"下拉刷新\"");
+                        if(mHFRefreshListener != null){
+                            mHFRefreshListener.onTopRefreshShow();
+                        }
+                    }
+                });
     }
 }

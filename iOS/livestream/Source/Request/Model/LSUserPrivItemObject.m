@@ -16,6 +16,8 @@
 - (id)init {
     if( self = [super init] ) {
         self.isSayHiPriv = YES;
+        self.isGiftFlowerPriv = YES;
+        self.isPublicRoomPriv = YES;
     }
     return self;
 }
@@ -26,6 +28,8 @@
         self.mailPriv = [coder decodeObjectForKey:@"mailPriv"];
         self.hangoutPriv = [coder decodeObjectForKey:@"hangoutPriv"];
         self.isSayHiPriv = [coder decodeBoolForKey:@"isSayHiPriv"];
+        self.isGiftFlowerPriv = [coder decodeBoolForKey:@"isGiftFlowerPriv"];
+        self.isPublicRoomPriv = [coder decodeBoolForKey:@"isPublicRoomPriv"];
     }
     return self;
 }
@@ -35,6 +39,8 @@
     [coder encodeObject:self.mailPriv forKey:@"mailPriv"];
     [coder encodeObject:self.hangoutPriv forKey:@"hangoutPriv"];
     [coder encodeBool:self.isSayHiPriv forKey:@"isSayHiPriv"];
+    [coder encodeBool:self.isGiftFlowerPriv forKey:@"isGiftFlowerPriv"];
+    [coder encodeBool:self.isPublicRoomPriv forKey:@"isPublicRoomPriv"];
 }
 
 @end

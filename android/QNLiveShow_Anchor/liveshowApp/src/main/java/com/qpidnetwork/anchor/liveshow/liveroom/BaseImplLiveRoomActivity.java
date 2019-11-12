@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 
 import com.qpidnetwork.anchor.bean.CommonConstant;
 import com.qpidnetwork.anchor.framework.base.BaseFragmentActivity;
@@ -41,6 +42,7 @@ import com.qpidnetwork.anchor.im.listener.IMRecvEnterRoomItem;
 import com.qpidnetwork.anchor.im.listener.IMRecvHangoutGiftItem;
 import com.qpidnetwork.anchor.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
+import com.qpidnetwork.anchor.im.listener.IMSendInviteInfoItem;
 import com.qpidnetwork.anchor.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
 import com.qpidnetwork.anchor.liveshow.datacache.file.downloader.IFileDownloadedListener;
@@ -48,12 +50,6 @@ import com.qpidnetwork.anchor.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.anchor.liveshow.pushmanager.PushManager;
 import com.qpidnetwork.anchor.utils.Log;
 import com.qpidnetwork.anchor.view.SoftKeyboradListenFrameLayout;
-
-import static com.qpidnetwork.anchor.liveshow.liveroom.HangOutRoomTransActivity.HANGOUT_ROOMINFO_ITEM;
-import static com.qpidnetwork.anchor.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_MAN_NICKNAME;
-import static com.qpidnetwork.anchor.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_MAN_PHOTOURL;
-import static com.qpidnetwork.anchor.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ITEM;
-import static com.qpidnetwork.anchor.liveshow.liveroom.LiveRoomTransitionActivity.TRANSITION_USER_ID;
 
 /**
  * Description:直播间接口实现基类
@@ -68,6 +64,12 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         IFileDownloadedListener, IMInviteLaunchEventListener,IMLiveRoomEventListener,
         IMOtherEventListener, IMHangOutRoomEventListener, OnGetAudienceListCallback, OnGetGiftListCallback,
         OnGiftLimitNumListCallback,OnGetAudienceDetailInfoCallback,OnHangoutGiftListCallback, OnGetHangoutFriendRelationCallback {
+
+    public static final String LIVEROOM_ROOMINFO_ITEM = "roomInItem";
+    public static final String HANGOUT_ROOMINFO_ITEM = "hangOutRoomItem";
+    public static final String LIVEROOM_MAN_PHOTOURL = "manPhotoUrl";
+    public static final String TRANSITION_USER_ID = "anchorId";
+    public static final String LIVEROOM_MAN_NICKNAME = "manNickname";
 
     //数据及管理
     protected IMRoomInItem mIMRoomInItem;    //房间信息
@@ -334,19 +336,30 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         Log.d(TAG,"OnFansRoomOut-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+errMsg);
     }
 
+    @Override
+    public void OnAnchorSwitchFlow(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMClientListener.IMDeviceType deviceType) {
+
+    }
+
+    @Override
+    public void OnSendImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMSendInviteInfoItem inviteInfoItem) {
+        Log.d(TAG,"OnSendImmediatePrivateInvite-reqId:"+reqId+" success:"+success
+                +" errType:"+errType+" errMsg:"+errMsg+" invitationId:"+inviteInfoItem.inviteId+" timeout:"+inviteInfoItem.timeOut+" roomId:"+inviteInfoItem.roomId);
+    }
+
 
     @Override
     public void OnGetInviteInfo(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType,
                                 String errMsg, IMInviteListItem inviteItem) {
     }
 
-    @Override
-    public void OnSendImmediatePrivateInvite(int reqId, boolean success,
-                                             IMClientListener.LCC_ERR_TYPE errType, String errMsg,
-                                             String invitationId, int timeout, String roomId) {
-        Log.d(TAG,"OnSendImmediatePrivateInvite-reqId:"+reqId+" success:"+success
-                +" errType:"+errType+" errMsg:"+errMsg+" invitationId:"+invitationId+" timeout:"+timeout+" roomId:"+roomId);
-    }
+//    @Override
+//    public void OnSendImmediatePrivateInvite(int reqId, boolean success,
+//                                             IMClientListener.LCC_ERR_TYPE errType, String errMsg,
+//                                             String invitationId, int timeout, String roomId) {
+//        Log.d(TAG,"OnSendImmediatePrivateInvite-reqId:"+reqId+" success:"+success
+//                +" errType:"+errType+" errMsg:"+errMsg+" invitationId:"+invitationId+" timeout:"+timeout+" roomId:"+roomId);
+//    }
 
     @Override
     public void OnRecvInviteReply(String inviteId, IMClientListener.InviteReplyType replyType,

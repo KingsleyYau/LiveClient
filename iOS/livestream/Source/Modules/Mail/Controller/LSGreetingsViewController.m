@@ -41,7 +41,7 @@
 - (void)dealloc {
     NSLog(@"LSGreetingsViewController::dealloc()");
     
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -76,27 +76,24 @@
     }
     
     if (!self.viewDidAppearEver) {
-        [self.tableView startPullDown:YES];
+        [self.tableView startLSPullDown:YES];
     }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
 }
 
 - (void)setupTableView {
-    
     self.tableView.frame = CGRectMake(0, kFunctionViewHeight, SCREEN_WIDTH, SCREEN_HEIGHT - kFunctionViewHeight);
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
     self.tableView.mailDelegate = self;
 }
-
 
 - (void)hideNoMailTips {
     self.noDataIcon.hidden = YES;
@@ -122,8 +119,6 @@
         [self.tableView reloadData];
     }
 }
-
-
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
@@ -156,12 +151,10 @@
     if (!loadMore) {
         // 刷最新
         start = 0;
-        
     } else {
         // 刷更多
         start = self.page * PageSize;
     }
-    
     
     // 请求接口隐藏没有数据和失败页
     [self hideNoMailTips];
@@ -177,13 +170,13 @@
             if (success) {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishLSPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
                     self.page = 1;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                     
                     self.page++;
                 }
@@ -197,14 +190,13 @@
             } else {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:NO];
+                    [self.tableView finishLSPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                 }
-                
                 [self reloadData:YES];
             }
         });
@@ -258,7 +250,6 @@
     }
 }
 
-
 #pragma mark - LSGreetingDetailViewControllerDelegate
 - (void)lsGreetingDetailViewController:(LSGreetingDetailViewController *)vc haveReadGreetingDetailMail:(LSHttpLetterListItemObject *)model index:(int)index {
     if (self.items.count > 0) {
@@ -286,7 +277,7 @@
     self.failView.hidden = YES;
     [self hideNoMailTips];
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 @end

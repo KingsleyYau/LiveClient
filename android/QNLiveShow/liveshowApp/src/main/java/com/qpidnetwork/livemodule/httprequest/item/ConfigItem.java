@@ -46,7 +46,8 @@ public class ConfigItem {
 					  double minChat,
 					  String chatVoiceHostUrl,
 					  String sendLetter,
-					  double hangoutCreditPrice){
+					  double hangoutCreditPrice,
+					  int flowersGift){
 		this.imServerUrl = imServerUrl;
 		this.httpServerUrl = httpServerUrl;
 		this.addCreditsUrl = addCreditsUrl;
@@ -69,6 +70,7 @@ public class ConfigItem {
 		this.chatVoiceHostUrl = chatVoiceHostUrl;
 		this.sendLetter = sendLetter;
 		this.hangoutCreditPrice = hangoutCreditPrice;
+		this.flowersGift = flowersGift;
 	}
 	
 	public String imServerUrl;
@@ -100,7 +102,11 @@ public class ConfigItem {
 	// 发送信件页URL
 	public String sendLetter;
 
+
 	// Hangout相关
 	public String hangoutCreditMsg;
 	public double hangoutCreditPrice;
+
+	// 鲜花礼品的优惠折扣
+	public int flowersGift;
 }

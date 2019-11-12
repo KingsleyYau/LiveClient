@@ -1,183 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/view_gaussian_blur_tran"/>
+    <!--<include layout="@layout/view_gaussian_blur_tran"/>-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent">
-
-        <ImageView
-            android:id="@+id/btnClose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_clear_disabled"
-            android:layout_alignParentRight="true"
-            android:padding="16dp"
-            android:visibility="gone"/>
-
+        android:background="#383838">
         <LinearLayout
-            android:id="@+id/llAnchorInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="100dp">
-            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-                android:id="@+id/civPhoto"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/ic_default_photo_woman"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/tvAnchorName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/text_light_white"
-                android:singleLine="true"
-                android:ellipsize="middle"
-                android:layout_marginLeft="48dp"
-                android:layout_marginRight="48dp"
-                android:layout_marginTop="12dp"/>
-            <TextView
-                android:id="@+id/tvDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/text_light_white"
-                android:gravity="center"
-                android:text="@string/liveroom_transition_broadcast_ended"
-                android:layout_gravity="center_horizontal"
-                android:textSize="14sp"
-                android:minHeight="36dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llOperateAera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible"
-            android:gravity="center_horizontal"
-            android:layout_below="@+id/llAnchorInfo"
-            android:layout_marginTop="24dp">
-
-            <!--倒计时-->
+            android:layout_height="match_parent"
+            android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/llCountDown"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="gone">
-                <TextView
-                    android:id="@+id/tvCountDown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="36sp"
-                    android:textColor="#04EDF6" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="36sp"
-                    android:textColor="#04EDF6"
-                    android:text="@string/liveroom_transition_countdown_unit"
-                    android:layout_marginLeft="8dp"/>
-            </LinearLayout>
-
-            <!--按钮区域-->
-            <LinearLayout
-                android:id="@+id/llButtonContent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/llAnchorInfo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginTop="24dp"
-                android:gravity="center_horizontal">
-                <Button
-                    android:id="@+id/btnCancel"
-                    android:layout_width="@dimen/live_size_120dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/rectangle_radius4_connor_solid_white_stroke_gray"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"
-                    android:text="@string/common_btn_cancel"/>
-                <Button
-                    android:id="@+id/btnRetry"
-                    android:layout_width="@dimen/live_size_200dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_retry"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnYes"
-                    android:layout_width="@dimen/live_size_120dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_yes"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <ImageView
-                    android:id="@+id/btnStartPrivate"
-                    android:layout_width="@dimen/live_size_200dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnBook"
-                    android:layout_width="@dimen/live_size_200dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_book_broadcast"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnViewHot"
-                    android:layout_width="@dimen/live_size_220dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_view_hotlist"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnAddCredit"
-                    android:layout_width="@dimen/live_size_140dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_add_credit"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnViewProfile"
-                    android:layout_width="@dimen/live_size_220dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_view_anchor_profile"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnChat"
-                    android:layout_width="@dimen/live_size_200dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/list_button_chat_now"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnSendMail"
-                    android:layout_width="@dimen/live_size_200dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/list_button_send_mail"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-            </LinearLayout>
+                android:gravity="center">
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civPhoto"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_default_photo_woman"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:id="@+id/tvAnchorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_light_white"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:layout_marginTop="12dp"/>
 
+                <ImageView
+                    android:id="@+id/pb_waiting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/anim_ball_loading"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="16sp"
+                    android:minHeight="36dp" />
+
+                <!--按钮区域-->
+                <LinearLayout
+                    android:id="@+id/llButtonContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="114dp"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center_horizontal">
+                    <!--已废除-->
+                    <Button
+                        android:id="@+id/btnCancel"
+                        android:layout_width="@dimen/live_size_120dp"
+                        android:layout_height="@dimen/live_size_40dp"
+                        android:background="@drawable/rectangle_radius4_connor_solid_white_stroke_gray"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="gone"
+                        android:text="@string/common_btn_cancel"/>
+                    <!--btn retry-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnRetry"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_bule_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_btn_retry"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--btn yes 目前不会触发该业务-->
+                    <Button
+                        android:id="@+id/btnYes"
+                        android:layout_width="@dimen/live_size_120dp"
+                        android:layout_height="@dimen/live_size_40dp"
+                        android:background="@drawable/button_yes"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"/>
+                    <!--one or one-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnStartPrivate"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_room_list_private_stroke_shape"
+                        button:icon="@drawable/ic_list_public"
+                        button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                        button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_main_room_list_private"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--book-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnBook"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_room_list_book_stroke_shape"
+                        button:icon="@drawable/ic_list_book"
+                        button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                        button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_main_room_list_book"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--view hotlist-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnViewHot"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_bule_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_view_hotlist"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--Add credit-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnAddCredit"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_orange_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_btn_add_credit"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--Live chat-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnChat"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_room_list_chat_stroke_shape"
+                        button:icon="@drawable/ic_list_chat"
+                        button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                        button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_main_room_list_chat"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--send mail-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnSendMail"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_room_list_mail_stroke_shape"
+                        button:icon="@drawable/ic_list_mail"
+                        button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                        button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_main_room_list_mail"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                </LinearLayout>
+                </LinearLayout>
             <!--推荐区域-->
             <LinearLayout
                 android:id="@+id/llRecommand"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="16dp"
                 android:gravity="center_horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/live_size_28dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -240,57 +268,44 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
-        </LinearLayout>
-
-        <!--才艺动画区-->
-        <LinearLayout
-            android:id="@+id/llTalent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/live_size_70dp"
-            android:gravity="center_horizontal"
-            android:visibility="gone">
-
-            <ImageView android:id="@+id/img_talent"
-                android:layout_width="@dimen/live_size_40dp"
-                android:layout_height="@dimen/live_size_40dp"
-                android:background="@drawable/anim_talent_button"/>
-
-            <TextView
+            <!--才艺动画区-->
+            <LinearLayout
+                android:id="@+id/llTalent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/live_size_20dp"
-                android:layout_marginLeft="@dimen/live_size_20dp"
-                android:layout_marginRight="@dimen/live_size_20dp"
-                android:textColor="@color/black3"
-                android:textSize="@dimen/live_size_12sp"
-                android:text="@string/live_talent_transition_tips"/>
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/live_size_70dp"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
 
+                <ImageView android:id="@+id/img_talent"
+                    android:layout_width="@dimen/live_size_40dp"
+                    android:layout_height="@dimen/live_size_40dp"
+                    android:background="@drawable/anim_talent_button"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/live_size_20dp"
+                    android:layout_marginLeft="@dimen/live_size_20dp"
+                    android:layout_marginRight="@dimen/live_size_20dp"
+                    android:textColor="@color/black3"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:text="@string/live_talent_transition_tips"/>
+
+            </LinearLayout>
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/pb_waiting"
-            android:layout_width="51dp"
-            android:layout_height="51dp"
-            android:visibility="gone"
-            android:layout_marginBottom="36dp"
-            android:scrollbarStyle="insideInset"
-            android:indeterminateDrawable="@drawable/live_loading_progress"
-            android:indeterminateBehavior="repeat"
-            android:indeterminateDuration="1000"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
-
-
-
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_disabled"
+            android:layout_alignParentRight="true"
+            android:padding="16dp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
-    <!--<include layout="@layview_gaussian_blur_tranblur"/>-->
 
-
-    
 </FrameLayout>

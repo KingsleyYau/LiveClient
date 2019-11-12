@@ -170,6 +170,9 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self setupAlphaStatus:scrollView];
+ 
+     [self.wkWebView setNeedsLayout];
+    
 }
 
 #pragma mark - 图片点击事件
@@ -178,6 +181,7 @@
     vc.attachmentsArray = self.items;
     vc.photoIndex = indexPath.row;
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    nvc.modalPresentationStyle = UIModalPresentationFullScreen;
     [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
     [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
     [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
@@ -207,7 +211,7 @@
     LSGetEmfDetailRequest *request = [[LSGetEmfDetailRequest alloc] init];
     request.emfId = mailId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSHttpLetterDetailItemObject *item) {
-        NSLog(@"LSMailDetailViewController::getMailDeatail (请求信件详情 success : %@, errnum : %d, errmsg : %@, letterId : %@)", BOOL2SUCCESS(success), errnum, errmsg, item.letterId);
+        NSLog(@"LSOutBoxViewController::getMailDeatail (请求信件详情 success : %@, errnum : %d, errmsg : %@, letterId : %@)", BOOL2SUCCESS(success), errnum, errmsg, item.letterId);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideAndResetLoading];
             if (success) {
@@ -263,13 +267,16 @@
 #pragma mark - WKWebViewDelegate
 // 加载完webview (当main frame导航完成时，会回调)
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-    NSLog(@"LSMailDetailViewController::didFinishNavigation()");
-    WeakObject(self, weakSelf);
-    [webView evaluateJavaScript:@"document.body.offsetHeight;"
-              completionHandler:^(id _Nullable height, NSError *_Nullable error) {
-                  NSString *heightStr = [NSString stringWithFormat:@"%@", height];
-                  weakSelf.contentViewHeight.constant = heightStr.floatValue;
-              }];
+    NSLog(@"LSOutBoxViewController::didFinishNavigation()");
+     __block CGFloat webViewHeight;
+   [self.wkWebView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result,NSError * _Nullable error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    webViewHeight = [result doubleValue];
+                   self.contentViewHeight.constant = webViewHeight;
+                   self.wkWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, webViewHeight);
+                    
+                });
+    }];
 }
 
 // 设置透明状态
@@ -290,29 +297,7 @@
 
 - (void)setNeedsNavigationBackground:(CGFloat)alpha {
     // 导航栏背景透明度设置
-
-    NSArray *views = [self.navigationController.navigationBar subviews];
-    UIView *barBackgroundView = [views objectAtIndex:0];
-    UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
-    BOOL result = self.navigationController.navigationBar.isTranslucent;
-    NSLog(@"navigationBar.isTranslucent %@  barBackgroundView %@", BOOL2SUCCESS(result), [barBackgroundView subviews]);
-    if (result) {
-        if (backgroundImageView != nil && backgroundImageView.image != nil) {
-            barBackgroundView.alpha = alpha;
-        } else {
-            NSArray *subViews = [barBackgroundView subviews];
-            if (subViews.count > 1) {
-                UIView *backgroundEffectView = [subViews objectAtIndex:1];
-                if (backgroundEffectView != nil) {
-                    backgroundEffectView.alpha = alpha;
-                }
-            }else {
-                barBackgroundView.alpha = alpha;
-            }
-        }
-    } else {
-        barBackgroundView.alpha = alpha;
-    }
+    [super setNavigationBackgroundAlpha:alpha]; 
     self.navTitleLabel.alpha = alpha;
 }
 

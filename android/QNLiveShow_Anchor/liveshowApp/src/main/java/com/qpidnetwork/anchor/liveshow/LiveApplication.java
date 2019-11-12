@@ -3,6 +3,7 @@ package com.qpidnetwork.anchor.liveshow;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
@@ -56,6 +57,10 @@ public class LiveApplication extends MultiDexApplication {
 
         //Picasso 单例支持https和本地缓存
         PicassoHttpsSupportUtil.openHttpsSupport(this);
+
+        Log.i("Jagger" , "BRAND:" + android.os.Build.BRAND + ",model: " + android.os.Build.MODEL + ",product:" + android.os.Build.PRODUCT);
+        Log.i("Jagger" , "bluetooth_name:" + Settings.Secure.getString(getContentResolver(),"bluetooth_name"));
+
     }
 
     private void setStrictMode() {

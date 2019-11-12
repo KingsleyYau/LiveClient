@@ -17,5 +17,6 @@
 
 - (void)getVouchersData:(GetVoucherAvailableInfoFinishHandler)finishHandler;
 
-- (BOOL)isShowFreeLive:(NSString *)userId LiveRoomType:(HttpRoomType)type;
+- (BOOL)isShowInviteFree:(NSString *)userId;
+- (BOOL)isShowWatchNowFree:(NSString *)userId;
 @end

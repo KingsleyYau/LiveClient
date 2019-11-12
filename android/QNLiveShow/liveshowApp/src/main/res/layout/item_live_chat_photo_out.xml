@@ -16,19 +16,52 @@
         android:paddingRight="16dp"
         android:paddingTop="8dp" >
 
-        <!-- 相片 -->
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/iv_photo"
-            android:layout_width="@dimen/live_size_140dp"
-            android:layout_height="@dimen/live_size_140dp"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="36dp"
-            fresco:backgroundImage="@color/black4"
-            fresco:roundAsCircle="false"
-            fresco:roundBottomLeft="true"
-            fresco:roundBottomRight="true"
-            fresco:roundTopLeft="true"
-            fresco:roundTopRight="true"
-            fresco:roundedCornerRadius="4dp"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- 相片 -->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_photo"
+                android:layout_width="@dimen/live_size_140dp"
+                android:layout_height="@dimen/live_size_140dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                fresco:backgroundImage="@color/black4"
+                fresco:roundAsCircle="false"
+                fresco:roundBottomLeft="true"
+                fresco:roundBottomRight="true"
+                fresco:roundTopLeft="true"
+                fresco:roundTopRight="true"
+                fresco:roundedCornerRadius="4dp"/>
+
+            <!-- 加载相片操失败 -->
+            <RelativeLayout
+                android:id="@+id/rl_fail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/touch_feedback_holo_light"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/live_size_30dp"
+                    android:layout_height="@dimen/live_size_30dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_livechat_photo_fail" />
+            </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
 
         <ImageButton

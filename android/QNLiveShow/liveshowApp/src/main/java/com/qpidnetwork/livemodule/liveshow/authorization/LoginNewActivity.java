@@ -12,13 +12,15 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.base.BaseNavFragment;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.qnbridgemodule.util.AndroidBug5497Workaround;
 
 /**
  * @author Jagger 2019-2-3
  * navigation/nav_login
+ *
+ * 此Activity只负责接收参数
+ * 登录逻辑在{@link FragmentLogin}中处理
  */
 public class LoginNewActivity extends BaseFragmentActivity implements
         BaseNavFragment.OnFragmentInteractionListener{
@@ -94,7 +96,7 @@ public class LoginNewActivity extends BaseFragmentActivity implements
         layoutParamsBg.height = height;
 
         PicassoLoadUtil.loadRes(imgBg, R.drawable.bg_website_cd);
-        ImageUtil.showImageColorFilter(true, imgBg);
+//        ImageUtil.showImageColorFilter(true, imgBg);
     }
 
     @Override
@@ -112,6 +114,7 @@ public class LoginNewActivity extends BaseFragmentActivity implements
         Bundle bundle = new Bundle();
         if(flag.equals(FragmentLogin.FLAG_REQUEST_BUNDLE)){
             bundle.putString(FragmentLogin.PARAMS_KEY_DIALOG_MSG, mDialogMsg);
+            bundle.putString(FragmentLogin.PARAMS_KEY_URL, mUrl);
         }
         return bundle;
     }

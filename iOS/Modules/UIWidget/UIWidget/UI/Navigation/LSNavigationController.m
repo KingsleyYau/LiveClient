@@ -281,6 +281,9 @@
     }
 }
 
+- (UIModalPresentationStyle)modalPresentationStyle {
+    return UIModalPresentationFullScreen;
+} 
 /**
  
  当前界面时在present弹出时,调用相册和拍照消失会回调这方法,在ios10.0以下,会把当前present的界面都消失掉

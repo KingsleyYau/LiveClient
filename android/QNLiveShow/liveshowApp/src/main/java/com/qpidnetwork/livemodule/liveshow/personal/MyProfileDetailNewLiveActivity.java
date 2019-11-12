@@ -17,11 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.LiveDomainRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetMyProfileCallback;
 import com.qpidnetwork.livemodule.httprequest.OnUpdateMyProfileCallback;
@@ -37,7 +37,6 @@ import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Weight;
 import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Zodiac;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.MyProfileInterestUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.UserInfoUtil;
@@ -45,6 +44,7 @@ import com.qpidnetwork.livemodule.view.MaterialDialogSingleChoice;
 import com.qpidnetwork.livemodule.view.ProfileItemView;
 import com.qpidnetwork.livemodule.view.wrap.WrapBaseAdapter;
 import com.qpidnetwork.livemodule.view.wrap.WrapListView;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -57,7 +57,8 @@ import java.util.Locale;
  * 拷贝自 QN 的 MyProfileDetailNewActivity
  */
 //public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity implements MaterialThreeButtonDialog.OnClickCallback {
-public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
+//public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
+public class MyProfileDetailNewLiveActivity extends BaseUserIconUploadActivity {
 
 
     private class InterestLabelAdapter extends WrapBaseAdapter {
@@ -210,6 +211,7 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
      */
     private ImageView imageViewHeader;
 //    private ImageViewLoader loader;
+    private ImageButton mIvIconUpload;
 
     /**
      * 用户名称
@@ -376,16 +378,18 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
      * @param view
      */
     public void onClickImageViewHeader(View view) {
-        // TODO: 2018/9/27 查看大图头像
+        // 2018/9/27 查看大图头像
+        openIconAct();
+    }
 
-//        if (mProfileItem == null) return;
-//
-//        Intent intent = new Intent(this, MyProfilePhotoActivity.class);
-//        if (mProfileItem != null) {
-//            intent.putExtra("profile", mProfileItem);
-//        }
-//
-//        startActivity(intent);
+    /**
+     * 点击上传头像
+     *
+     * @param view
+     */
+    public void onClickImageUpload(View view) {
+        // 2018/9/27 上传大图头像
+        showIconUploadDialog();
     }
 
 //    /**
@@ -722,6 +726,9 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
          * 用户头像
          */
         imageViewHeader = (ImageView) findViewById(R.id.imageViewHeader);
+        mIvIconUpload =  findViewById(R.id.my_profile_iv_upload);
+        // TODO: 2019/8/13 test
+        mIvIconUpload.setVisibility(View.VISIBLE);
         /**
          *  用户名称
          */
@@ -1004,8 +1011,12 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
-//        RequestBaseResponse obj = (RequestBaseResponse) msg.obj;
+
         HttpRespObject obj = (HttpRespObject) msg.obj;
+
+        if (msg.what >= RequestFlag.values().length) {
+            return;
+        }
 
         switch (RequestFlag.values()[msg.what]) {
 //            case REQUEST_UPDATE_PROFILE_IMAGE_SUCCESS:
@@ -1024,6 +1035,9 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
                     mProfileTempItem = new LSProfileItem(mProfileItem);
                 }
                 MyProfilePerfenceLive.SaveProfileItem(mContext, mProfileItem);
+
+                // 2019/8/13 Hardy
+                setLsProfileItem(mProfileItem);
 
                 // 刷新界面
                 ReloadData();
@@ -1059,6 +1073,7 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
                 ToastUtil.showToast(mContext, obj.errMsg);
             }
             break;
+
             default:
                 break;
         }
@@ -1195,6 +1210,21 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
         }
     }
 
+    @Override
+    protected void onUploadIconSuccess() {
+
+    }
+
+    @Override
+    protected void onLoadUserInfo() {
+        GetMyProfile();
+    }
+
+    @Override
+    protected boolean isRegisterGetUserInfoBroadcast() {
+        return true;
+    }
+
 //    /**
 //     * 裁剪图片方法实现
 //     */
@@ -1328,6 +1358,9 @@ public class MyProfileDetailNewLiveActivity extends BaseFragmentActivity {
             } else {
                 imageViewHeader.setImageResource(R.drawable.ic_user_icon);
             }
+
+            // TODO: 2019/8/13 Hardy  暂时注释
+            mIvIconUpload.setVisibility(mProfileItem.showUpload() ? View.VISIBLE : View.GONE);
 
             /**
              * 名称

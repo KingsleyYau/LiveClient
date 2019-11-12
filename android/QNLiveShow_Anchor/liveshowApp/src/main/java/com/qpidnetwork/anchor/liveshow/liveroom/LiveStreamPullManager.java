@@ -12,6 +12,7 @@ import com.qpidnetwork.anchor.utils.SystemUtils;
 import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
 import net.qdating.player.ILSPlayerStatusCallback;
+import net.qdating.player.LSPlayerRendererBinder;
 
 /**
  * 推流器管理
@@ -61,7 +62,24 @@ public class LiveStreamPullManager implements ILSPlayerStatusCallback {
         if(mLSPlayer == null){
             mIsInit = true;
             mLSPlayer = new LSPlayer();
-            mLSPlayer.init(sv_player, LSConfig.FillMode.FillModeAspectRatioFill, this);
+//            mLSPlayer.init(sv_player, LSConfig.FillMode.FillModeAspectRatioFill, this);
+
+            // 2019/10/29 Hardy 新的构造方法
+            mLSPlayer.init(this);
+            LSPlayerRendererBinder playerRenderderBinder = new LSPlayerRendererBinder(sv_player, LSConfig.FillMode.FillModeAspectRatioFill);
+            playerRenderderBinder.setCustomFilter(null);    // 不加滤镜
+            mLSPlayer.setRendererBinder(playerRenderderBinder);
+        }
+    }
+
+    /**
+     * 更换player显示view
+     */
+    public void changePlayer(GLSurfaceView sv_player){
+        if(isInited() && mLSPlayer != null){
+            LSPlayerRendererBinder binder = new LSPlayerRendererBinder(sv_player, LSConfig.FillMode.FillModeAspectRatioFill);
+            binder.setCustomFilter(null);    // 不加滤镜
+            mLSPlayer.setRendererBinder(binder);
         }
     }
 

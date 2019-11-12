@@ -66,7 +66,7 @@ public class AppUrlHandler {
      * @param url
      * @return url是否被拦截处理了
      */
-    public boolean urlOpenActivity(String url){
+    private boolean urlOpenActivity(String url){
         boolean isCatch = URL2ActivityManager.getInstance().URL2Activity(mContext, url);
         return isCatch;
     }

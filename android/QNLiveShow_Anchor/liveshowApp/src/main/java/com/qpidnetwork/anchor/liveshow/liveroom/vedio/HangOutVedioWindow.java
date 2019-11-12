@@ -643,7 +643,7 @@ public class HangOutVedioWindow extends FrameLayout implements LiveStreamPushMan
         //开始推拉流处理
         if(videoUrlsUsuable){
             if(obj.isUserSelf && null != liveStreamPushManager){
-                liveStreamPushManager.setOrChangeManUploadUrls(videoUrls, "", "");
+                liveStreamPushManager.setOrChangeUploadUrls(videoUrls, "", "");
             }else if(null != liveStreamPullManager){
                 liveStreamPullManager.setOrChangeVideoUrls(videoUrls, "", "",null);
             }
@@ -760,7 +760,7 @@ public class HangOutVedioWindow extends FrameLayout implements LiveStreamPushMan
         mModuleGiftManager.initAdvanceGift(sdv_advanceGiftAnim);
         mModuleGiftManager.setBarGiftAnimView(sdv_barGiftAnim);
         mModuleGiftManager.setGiftAnimShowedInHangOutRoom(true);
-        mModuleGiftManager.initMultiGift(fl_multiGift);
+        mModuleGiftManager.initMultiGift(fl_multiGift, 1);
         mModuleGiftManager.showMultiGiftAs(fl_multiGift);
     }
 

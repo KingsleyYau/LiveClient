@@ -46,7 +46,7 @@ public:
             }
             /* sendTime */
             if (root[LIVEROOM_SAYHIDETAIL_DETAIL_SENDTIME].isNumeric()) {
-                sendTime = root[LIVEROOM_SAYHIDETAIL_DETAIL_SENDTIME].asInt();
+                sendTime = root[LIVEROOM_SAYHIDETAIL_DETAIL_SENDTIME].asLong();
             }
             /* text */
             if (root[LIVEROOM_SAYHIDETAIL_DETAIL_TEXT].isString()) {
@@ -122,7 +122,7 @@ public:
             }
             /* responseTime */
             if (root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME].isNumeric()) {
-                responseTime = root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME].asInt();
+                responseTime = root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_RESPONSETIME].asLong();
             }
             /* simpleContent */
             if (root[LIVEROOM_SAYHIDETAIL_RESPONSELIST_SIMPLECONTENT].isString()) {

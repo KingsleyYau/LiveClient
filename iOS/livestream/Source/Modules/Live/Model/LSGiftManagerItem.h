@@ -20,7 +20,14 @@
 - (void)giftDownloadStateChange:(LSGiftManagerItem *)giftItem;
 @end
 
+typedef enum{
+    GiftSendType_Can_Send = 0,
+    GiftSendType_Not_LoveLevel,
+    GiftSendType_Not_UserLevel,
+}GiftSendType;
+
 @interface LSGiftManagerItem : NSObject
+
 @property (nonatomic, strong) NSString *giftId;
 // 下载状态通知
 @property (nonatomic, weak) id<LSGiftManagerItemDownloadDelegate> delegate;
@@ -61,6 +68,6 @@
  @param userLevel 用户等级
  @return 能否发送
  */
-- (BOOL)canSend:(NSInteger)loveLevel userLevel:(NSInteger)userLevel;
+- (GiftSendType)canSend:(NSInteger)loveLevel userLevel:(NSInteger)userLevel;
 
 @end

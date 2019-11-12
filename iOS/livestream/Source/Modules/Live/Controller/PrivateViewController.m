@@ -9,7 +9,7 @@
 #import "PrivateViewController.h"
 #import "LiveWebViewController.h"
 #import "AnchorPersonalViewController.h"
-#import "StartHangOutTipView.h"
+//#import "StartHangOutTipView.h"
 #import "LSAddCreditsViewController.h"
 
 #import "LiveModule.h"
@@ -18,6 +18,7 @@
 #import "LSLoginManager.h"
 #import "LSConfigManager.h"
 #import "LSImManager.h"
+#import "LSMinLiveManager.h"
 
 #import "DialogTip.h"
 #import "DialogChoose.h"
@@ -25,9 +26,12 @@
 #import "SetFavoriteRequest.h"
 
 #import "LSImageViewLoader.h"
+#import "LSAnchorDetailCardViewController.h"
+#import "LSStoreListToLadyViewController.h"
 
-@interface PrivateViewController () <LiveViewControllerDelegate, IMLiveRoomManagerDelegate, PlayViewControllerDelegate, IMManagerDelegate,
-                                     StartHangOutTipViewDelegate>
+#import "LSGiftInfoView.h"
+
+@interface PrivateViewController () <LSVIPLiveViewControllerDelegate, IMLiveRoomManagerDelegate, InputViewControllerDelegate, IMManagerDelegate,LSAnchorDetailCardViewControllerDelegate>
 // IM管理器
 @property (nonatomic, strong) LSImManager *imManager;
 // 资费提示小时计时器
@@ -44,6 +48,7 @@
 @property (atomic, strong) LSImageViewLoader *intimacyLadyImageViewLoader;
 @property (atomic, strong) LSImageViewLoader *intimacyManImageViewLoader;
 @property (atomic, strong) LSImageViewLoader *manPreviewImageViewLoader;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topDistance;
 
 #pragma mark - 随机礼物控制
 @property (strong) LSTimer *randomGiftTimer;
@@ -61,11 +66,14 @@
 #pragma mark - 直播间管理器
 // 是否第一次进类型直播间管理器
 @property (nonatomic, strong) RoomTypeIsFirstManager *firstManager;
-@property (weak, nonatomic) IBOutlet UIButton *hangoutBtn;
 
 #pragma mark - 用户信息管理器
 @property (nonatomic, strong) LSRoomUserInfoManager *roomUserInfoManager;
 
+@property (nonatomic, strong) LSGiftInfoView * giftInfoView;
+@property (nonatomic, strong) LSAnchorDetailCardViewController *anchorDetailVc;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bgShadowTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bgShadowHeight;
 @end
 
 @implementation PrivateViewController
@@ -119,6 +127,8 @@
 
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
+    
+    self.giftInfoView.hidden = YES;
 }
 
 - (void)viewDidLoad {
@@ -127,19 +137,10 @@
     self.liveRoom.superView = self.view;
     self.liveRoom.superController = self;
 
-    // 隐藏亲密度控件
-    self.intimacyHeadView.hidden = YES;
+    self.giftInfoView = [[LSGiftInfoView alloc]init];
+    [self.navigationController.view addSubview:self.giftInfoView];
+    self.giftInfoView.hidden = YES;
 
-    self.hangoutBtn.layer.cornerRadius = 13.5f;
-    self.hangoutBtn.layer.masksToBounds = YES;
-
-    // 是否有权限显示多人互动按钮
-    if (self.liveRoom.imLiveRoom.isHangoutPriv && [LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
-        self.hangoutBtn.hidden = NO;
-    }
-    else {
-        self.hangoutBtn.hidden = YES;
-    }
     // 初始化播放界面
     [self setupPlayController];
 }
@@ -152,6 +153,7 @@
 
     // 设置状态栏为白色字体
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [UIApplication sharedApplication].statusBarHidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -162,11 +164,6 @@
     // 开启随机礼物定时器
     [self startRandomGiftTimer];
 
-    // 第一次进入才发送
-    if (!self.viewDidAppearEver) {
-        // 刷新双向视频状态
-        [self reloadVideoStatus];
-    }
     [super viewDidAppear:animated];
 }
 
@@ -178,6 +175,8 @@
 
     // 设置状态栏为默认字体
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    
 }
 
 - (void)setupContainView {
@@ -192,9 +191,13 @@
     }
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void)setupPlayController {
     // 输入栏
-    self.playVC = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
+    self.playVC = [[LSVIPInputViewController alloc] initWithNibName:nil bundle:nil];
     self.playVC.playDelegate = self;
     [self addChildViewController:self.playVC];
     self.playVC.liveRoom = self.liveRoom;
@@ -208,17 +211,29 @@
     // 弹幕
     self.playVC.liveVC.roomStyleItem.barrageBgColor = Color(37, 37, 37, 0.9); //Color(83, 13, 120, 0.9);
     // 消息列表界面
-    self.playVC.liveVC.roomStyleItem.myNameColor = Color(255, 109, 0, 1);
-    self.playVC.liveVC.roomStyleItem.liverNameColor = Color(92, 222, 126, 1);
-    self.playVC.liveVC.roomStyleItem.liverTypeImage = [UIImage imageNamed:@"Live_Private_Vip_Broadcaster"];
-    self.playVC.liveVC.roomStyleItem.followStrColor = Color(249, 231, 132, 1);
-    self.playVC.liveVC.roomStyleItem.sendStrColor = Color(255, 210, 5, 1);
-    self.playVC.liveVC.roomStyleItem.chatStrColor = Color(255, 255, 255, 1);
-    self.playVC.liveVC.roomStyleItem.announceStrColor = Color(255, 109, 0, 1);
-    self.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 109, 0, 1);
-    self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
-    self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(191, 191, 191, 0.17);
+    self.playVC.liveVC.roomStyleItem.myNameColor = COLOR_WITH_16BAND_RGB(0x383838);
+    self.playVC.liveVC.roomStyleItem.liverNameColor = COLOR_WITH_16BAND_RGB(0x383838);
+    self.playVC.liveVC.roomStyleItem.userNameColor = COLOR_WITH_16BAND_RGB(0x383838);
+    
+    self.playVC.liveVC.roomStyleItem.chatStrColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    self.playVC.liveVC.roomStyleItem.chatBackgroundViewColor = Color(0, 0, 0, 0.5);
+    
+    self.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
+    self.playVC.liveVC.roomStyleItem.sendBackgroundViewColor = Color(0, 0, 0, 0.5);
+    
+    self.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xff9901);
+    self.playVC.liveVC.roomStyleItem.riderBackgroundViewColor = Color(0, 0, 0, 0.5);
+    
+    self.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    self.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    self.playVC.liveVC.roomStyleItem.announceBackgroundViewColor = Color(0, 202, 255, 0.5);
+    
+    self.playVC.liveVC.roomStyleItem.warningStrColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    self.playVC.liveVC.roomStyleItem.warningBackgroundViewColor = Color(255, 71, 71, 0.5);
 
+    self.playVC.liveVC.roomStyleItem.firstFreeStrColor = COLOR_WITH_16BAND_RGB(0x383838);
+    self.playVC.liveVC.roomStyleItem.firstFreeBackgroundViewColor = COLOR_WITH_16BAND_RGB(0x00cc66);
+    
     // 修改高级私密直播间样式
     if ([self.vcDelegate respondsToSelector:@selector(setUpLiveRoomType:)]) {
         [self.vcDelegate setUpLiveRoomType:self];
@@ -226,7 +241,7 @@
 
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.titleBackGroundView.mas_bottom);
+        make.top.equalTo(self.view);
         make.left.equalTo(self.view);
         make.width.equalTo(self.view);
         if (IS_IPHONE_X) {
@@ -236,42 +251,45 @@
         }
     }];
 
-    [self.playVC.liveVC bringSubviewToFrontFromView:self.view];
+    // 置顶礼物播放层次
+    [self.view bringSubviewToFront:self.playVC.liveVC.giftView];
+    // 置顶在礼物播放之下头部层级
+    [self.playVC.liveVC bringSubviewToFrontFromView:self.ladyHeadView];
+    
+    // 置顶虚拟礼物列表
     [self.view bringSubviewToFront:self.playVC.chooseGiftListView];
     CGRect frame = self.playVC.chooseGiftListView.frame;
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
 
     // 隐藏立即私密邀请控件
-    self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+    //self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
 
     // 随机礼物
-    self.playVC.randomGiftBtnBgWidth.constant = 36;
-    self.playVC.randomGiftBtnWidth.constant = -12;
-    self.playVC.randomGiftBtnTailing.constant = -10;
+//    self.playVC.randomGiftBtnBgWidth.constant = 36;
+//    self.playVC.randomGiftBtnWidth.constant = -12;
+//    self.playVC.randomGiftBtnTailing.constant = -10;
     // 返点界面
-    self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X293FA3); //Color(53, 75, 158, 1.0);
+   // self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X293FA3); //Color(53, 75, 158, 1.0);
     // 视频播放界面
     //    self.playVC.liveVC.videoBgImageView.backgroundColor = self.view.backgroundColor;
     // 视频互动界面
-    [self.playVC.liveVC showPreview];
-    [self.playVC.liveVC.startVideoBtn addTarget:self action:@selector(startVideoAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.playVC.liveVC.stopVideoBtn addTarget:self action:@selector(stopVideoAction:) forControlEvents:UIControlEventTouchUpInside];
+   // [self.playVC.liveVC showPreview];
 
     // 随机礼物按钮
-    [self.playVC.randomGiftBtn addTarget:self action:@selector(randomGiftAction:) forControlEvents:UIControlEventTouchUpInside];
-    // 输入栏目
-    [self.playVC.chatBtn setImage:[UIImage imageNamed:@"Live_Private_Btn_Chat"]];
-    [self.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Private_Btn_Gift"] forState:UIControlStateNormal];
+//    [self.playVC.randomGiftBtn addTarget:self action:@selector(randomGiftAction:) forControlEvents:UIControlEventTouchUpInside];
+//    // 输入栏目
+//    [self.playVC.chatBtn setImage:[UIImage imageNamed:@"Live_Private_Btn_Chat"]];
+//    [self.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Private_Btn_Gift"] forState:UIControlStateNormal];
     // 发送栏目
-    [self.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Private_Send_Btn"] forState:UIControlStateNormal];
-    self.playVC.liveSendBarView.louderBtnImage = [UIImage imageNamed:@"Private_Pop_Btn"];
-    self.playVC.liveSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB(0xc39eff);
-    self.playVC.liveSendBarView.inputBackGroundImageView.image = [UIImage imageNamed:@"Private_Input_icon"];
-    self.playVC.liveSendBarView.sendBarBgImageView.image = [UIImage imageNamed:@"Live_Private_SendBar_bg"];
-    self.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
-    // 显示表情按钮
-    self.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
+//    [self.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Private_Send_Btn"] forState:UIControlStateNormal];
+//    self.playVC.liveSendBarView.louderBtnImage = [UIImage imageNamed:@"Private_Pop_Btn"];
+//    self.playVC.liveSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB(0xc39eff);
+//    self.playVC.liveSendBarView.inputBackGroundImageView.image = [UIImage imageNamed:@"Private_Input_icon"];
+//    self.playVC.liveSendBarView.sendBarBgImageView.image = [UIImage imageNamed:@"Live_Private_SendBar_bg"];
+//    self.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
+//    // 显示表情按钮
+//    self.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
 
     // 初始化推流
     [self.playVC.liveVC initPublish];
@@ -280,51 +298,36 @@
 - (void)setupHeaderImageView {
     // 计算StatusBar高度
     if (IS_IPHONE_X) {
-        self.titleBgImageTop.constant = 44;
+        self.topDistance.constant = 44;
+        self.bgShadowHeight.constant = 102;
+        self.bgShadowTop.constant = -44;
     } else {
-        self.titleBgImageTop.constant = 20;
+        self.topDistance.constant = 0;
+        self.bgShadowHeight.constant = 68;
+        self.bgShadowTop.constant = 0;
     }
+    self.roomTpyeLabel.layer.cornerRadius = self.roomTpyeLabel.frame.size.height * 0.5f;
+    self.roomTpyeLabel.layer.masksToBounds = YES;
 
     // 女士背景
     self.ladyHeadView.layer.cornerRadius = self.ladyImageView.frame.size.height / 2;
     // 女士头像
     self.ladyImageView.layer.cornerRadius = self.ladyImageView.frame.size.width / 2;
-    // 亲密度背景
-    self.intimacyHeadView.layer.cornerRadius = self.intimacyHeadView.frame.size.height / 2;
-    // 亲密度男士头像
-    self.intimacyManImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.intimacyManImageView.layer.borderWidth = 1;
-    self.intimacyManImageView.layer.cornerRadius = self.intimacyManImageView.frame.size.width / 2;
-    // 亲密度女士头像
-    self.intimacyLadyImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.intimacyLadyImageView.layer.borderWidth = 1;
-    self.intimacyLadyImageView.layer.cornerRadius = self.intimacyManImageView.frame.size.width / 2;
-    // 关注
-    if (self.liveRoom.imLiveRoom.favorite) {
-        self.followBtnWidth.constant = 0;
-    }
+    
+    self.ladyImageView.layer.borderWidth = 2;
+    self.ladyImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    
+    self.ladyIdLabel.text = self.liveRoom.userId;
 
     // 直播间类型资费提示(暂时不用)
     //    [self setupRoomTypeImageView];
 
-    // 亲密度点击事件
     WeakObject(self, weakSelf);
-    [self.intimacyImageView addTapBlock:^(id obj) {
-        [weakSelf clickIntimacyImage];
-    }];
-    [self.intimacyLadyImageView addTapBlock:^(id obj) {
-        [weakSelf clickIntimacyImage];
-    }];
-
     // 女士头像点击
     [self.ladyImageView addTapBlock:^(id obj) {
         [weakSelf pushToAnchorPersonal:nil];
     }];
 
-    // 关注
-    if (self.liveRoom.imLiveRoom.favorite) {
-        self.followBtn.hidden = YES;
-    }
 }
 
 // 直播间类型资费提示(暂时不用)
@@ -361,15 +364,6 @@
     }];
 }
 
-- (void)setupVideoPreview:(BOOL)start {
-    self.playVC.liveVC.previewImageView.hidden = start;
-    self.playVC.liveVC.startVideoImageView.hidden = start;
-    self.playVC.liveVC.startVideoBtn.hidden = start;
-    self.playVC.liveVC.showBtn.enabled = start;
-    self.playVC.liveVC.stopVideoBtn.hidden = YES;
-    self.playVC.liveVC.muteBtn.hidden = YES;
-}
-
 #pragma mark - 点击亲密度
 - (void)clickIntimacyImage {
     LiveWebViewController *webViewController = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
@@ -391,34 +385,39 @@
 }
 
 - (IBAction)pushToAnchorPersonal:(id)sender {
-    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
-    listViewController.anchorId = self.liveRoom.userId;
-    listViewController.enterRoom = 0;
-    [self.navigationController pushViewController:listViewController animated:YES];
+    // 弹出没点弹层收起键盘
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    self.anchorDetailVc = [[LSAnchorDetailCardViewController alloc] initWithNibName:nil bundle:nil];
+    self.anchorDetailVc.item = self.liveRoom;
+    self.anchorDetailVc.anchorDetailDelegate = self;
+    [self.anchorDetailVc loadAchorDetail:self.navigationController];
 }
 
-- (IBAction)followAction:(id)sender {
-    // TODO:点击关注
-    [self sendFollowRequest];
+- (void)lsAnchorDetailCardViewController:(LSAnchorDetailCardViewController *)vc didAddFavorite:(BOOL)favorite {
+    self.liveRoom.imLiveRoom.favorite = favorite;
 }
+
 
 - (IBAction)closeAction:(id)sender {
-    if (self.closeDialogTipView) {
-        [self.closeDialogTipView removeFromSuperview];
-    }
-    WeakObject(self, weakObj);
-    self.closeDialogTipView = [DialogChoose dialog];
-    [self.closeDialogTipView hiddenCheckView];
-    self.closeDialogTipView.tipsLabel.text = NSLocalizedStringFromSelf(@"EXIT_LIVEROOM_TIP");
-    [self.closeDialogTipView showDialog:self.view
-        cancelBlock:^{
-
-        }
-        actionBlock:^{
-            //        [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
-            LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
-            [nvc forceToDismissAnimated:YES completion:nil];
-        }];
+    
+     WeakObject(self, weakObj);
+   
+    NSString *leaveRoomTip = NSLocalizedStringFromSelf(@"EXIT_LIVEROOM_TIP");
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:leaveRoomTip preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"NO",nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+                                           
+                                                      }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"YES",nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+        [LSMinLiveManager manager].privateLiveVC = self;
+        [[LSMinLiveManager manager] showMinLive];
+                                                          LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
+                                                          [nvc forceToDismissAnimated:YES completion:nil];
+                                                      }]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)hangoutAction:(id)sender {
@@ -437,62 +436,12 @@
     }
 
     // 打开礼物界面
-    [self.playVC giftAction:sender];
-}
-
-- (IBAction)startVideoAction:(id)sender {
-    // TODO:点击开始视频互动
-
-    // 关闭所有输入
-    [self.playVC closeAllInputView];
-    [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickVideo eventCategory:EventCategoryBroadcast];
-    // 开始视频互动
-    if (![LSConfigManager manager].dontShow2WayVideoDialog) {
-        if (self.dialogChoose) {
-            [self.dialogChoose removeFromSuperview];
-        }
-        self.dialogChoose = [DialogChoose dialog];
-        NSString *price = [NSString stringWithFormat:@"%.2f", self.liveRoom.imLiveRoom.manPushPrice];
-        NSString *tips = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_TIPS"), price];
-        self.dialogChoose.tipsLabel.text = tips;
-        WeakObject(self, weakObj);
-        [self.dialogChoose showDialog:self.liveRoom.superView
-            cancelBlock:^{
-                // 保存参数
-                [LSConfigManager manager].dontShow2WayVideoDialog = weakObj.dialogChoose.checkBox.on;
-                [[LSConfigManager manager] saveConfigParam];
-            }
-            actionBlock:^{
-                // 保存参数
-                [LSConfigManager manager].dontShow2WayVideoDialog = weakObj.dialogChoose.checkBox.on;
-                [[LSConfigManager manager] saveConfigParam];
-
-                // 开始视频互动
-                [weakObj sendVideoControl:YES];
-            }];
-    } else {
-        // 开始视频互动
-        [self sendVideoControl:YES];
-    }
-}
-
-- (IBAction)stopVideoAction:(id)sender {
-    // TODO:点击关闭视频互动
-
-    // 关闭所有输入
-    [self.playVC closeAllInputView];
-
-    // 关闭视频互动
-    [self sendVideoControl:NO];
-
-    // 隐藏按钮
-    self.playVC.liveVC.stopVideoBtn.hidden = YES;
-    self.playVC.liveVC.muteBtn.hidden = YES;
+    //[self.playVC giftAction:sender];
 }
 
 #pragma mark - 数据逻辑
 - (void)reloadHeadImageView {
-    self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s", self.liveRoom.userName];
+    self.laddyNameLabel.text = [NSString stringWithFormat:@"%@", self.liveRoom.userName];
 
     // TODO:刷新女士头像
     [self.ladyImageViewLoader loadImageFromCache:self.ladyImageView
@@ -502,138 +451,7 @@
                                    finishHandler:^(UIImage *image){
                                    }];
 
-    // TODO:刷新亲密度男士头像
-    [self.roomUserInfoManager getUserInfo:self.loginManager.loginItem.userId
-                            finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [self.intimacyManImageViewLoader loadImageFromCache:self.intimacyManImageView
-                                                                                    options:SDWebImageRefreshCached
-                                                                                   imageUrl:item.photoUrl
-                                                                           placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]
-                                                                              finishHandler:^(UIImage *image){
-                                                                              }];
-                                });
-                            }];
-    // TODO:刷新亲密度女士头像
-    [self.intimacyLadyImageViewLoader loadImageFromCache:self.intimacyLadyImageView
-                                                 options:SDWebImageRefreshCached
-                                                imageUrl:self.liveRoom.photoUrl
-                                        placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
-                                           finishHandler:^(UIImage *image){
-                                           }];
-    // TODO:刷新亲密度
-    NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d", self.liveRoom.imLiveRoom.loveLevel];
-    UIImage *image = [UIImage imageNamed:imageName];
-    if (image) {
-        self.intimacyImageView.image = image;
-    }
-    // 设置模糊
-    UIImage *manBlurImage = [UIImage imageNamed:@"Two_Video_icon"];
-    [self.playVC.liveVC.previewImageView setImage:manBlurImage];
-}
 
-- (void)reloadVideoStatus {
-    NSLog(@"PrivateViewController::reloadVideoStatus( publishUrl : %@ )", self.liveRoom.publishUrl);
-
-    if (self.liveRoom.publishUrl.length > 0) {
-        // 已经有推流地址, 发送命令
-        [self sendVideoControl:YES];
-
-    } else {
-        // 停止推流
-        [self.playVC.liveVC stopPublish];
-
-        // 刷新界面
-        [self setupVideoPreview:NO];
-    }
-}
-
-- (void)sendVideoControl:(BOOL)start {
-    // 显示菊花
-    self.playVC.liveVC.preActivityView.hidden = NO;
-    [self.playVC.liveVC.preActivityView startAnimating];
-    IMControlType type = start ? IMCONTROLTYPE_START : IMCONTROLTYPE_CLOSE;
-    BOOL bFlag = [self.imManager controlManPush:self.liveRoom.roomId
-                                        control:type
-                                  finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSArray<NSString *> *_Nonnull manPushUrl) {
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          // 隐藏菊花
-                                          self.playVC.liveVC.preActivityView.hidden = YES;
-
-                                          if (success) {
-                                              BOOL bChange = YES;
-                                              BOOL bSuccess = NO;
-
-                                              if (start) {
-                                                  // 开启视频互动成功
-                                                  if (manPushUrl.count > 0) {
-                                                      bChange = YES;
-                                                      bSuccess = YES;
-
-                                                      // 开始推流
-                                                      self.liveRoom.publishUrlArray = manPushUrl;
-
-                                                  } else {
-                                                      bChange = NO;
-
-                                                      // 发送关闭命令
-                                                      [self.imManager controlManPush:self.liveRoom.roomId control:IMCONTROLTYPE_CLOSE finishHandler:nil];
-
-                                                      // 错误提示
-                                                      NSLog(@"PrivateViewController::sendVideoControl( 发起视频互动失败(没有推流地址), errType : %d )", errType);
-                                                      [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"LOCAL_ERROR_NO_PUSH_URL")];
-                                                  }
-                                              } else {
-                                                  // 关闭视频互动成功
-                                                  //                                                  // 停止推流
-                                                  //                                                  [self.playVC.liveVC stopPublish];
-                                              }
-
-                                              // 改变界面状态
-                                              if (bSuccess) {
-                                                  // 开始推流
-                                                  [self.playVC.liveVC publish];
-                                              } else {
-                                                  // 停止推流
-                                                  [self.playVC.liveVC stopPublish];
-                                              }
-
-                                              [self setupVideoPreview:bSuccess];
-                                              //                                              if (bChange) {
-                                              //                                                  self.playVC.liveVC.previewImageView.hidden = start;
-                                              //
-                                              //                                                  self.playVC.liveVC.startVideoImageView.hidden = start;
-                                              //                                                  self.playVC.liveVC.startVideoBtn.hidden = start;
-                                              //                                                  self.playVC.liveVC.showBtn.enabled = start;
-                                              //
-                                              //                                                  [self.playVC.liveVC.preActivityView stopAnimating];
-                                              //                                              }
-
-                                          } else {
-                                              NSString *errStr = start ? @"开启视频互动失败" : @"关闭视频互动失败";
-                                              NSLog(@"PrivateViewController::sendVideoControl( %@, errType : %d )", errStr, errType);
-                                              if (start) {
-                                                  if (errType == LCC_ERR_NO_CREDIT) {
-                                                      // 没钱, 弹出充值
-                                                      [self showAddCreditsView:NSLocalizedStringFromSelf(@"PRELIVE_ERR_ADD_CREDIT")];
-                                                      
-                                                  } else if (errType == LCC_ERR_NO_CREDIT_DOUBLE_VIDEO) {
-                                                      [self showAddCreditsView:errMsg];
-                                                  } else {
-                                                      // 错误提示
-                                                      [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:errMsg];
-                                                  }
-                                              } else {
-                                                  // 错误提示
-                                                  [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:errMsg];
-                                              }
-                                          }
-                                      });
-                                  }];
-    if (!bFlag) {
-        self.playVC.liveVC.preActivityView.hidden = YES;
-        [self.playVC.liveVC.preActivityView stopAnimating];
-    }
 }
 
 - (void)sendFollowRequest {
@@ -645,8 +463,6 @@
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                self.followBtn.hidden = YES;
-                self.followBtnWidth.constant = 0;
                 //                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
             } else {
                 // 错误提示
@@ -657,88 +473,44 @@
     [self.sessionManager sendRequest:request];
 }
 
-#pragma mark - IM回调
-- (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *_Nonnull)loveLevelItem {
-    NSLog(@"PrivateViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d, anchorId: %@, anchorName: %@ )", loveLevelItem.loveLevel, loveLevelItem.anchorId, loveLevelItem.anchorName);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // TODO:刷新亲密度
-        NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d", loveLevelItem.loveLevel];
-        UIImage *image = [UIImage imageNamed:imageName];
-        if (image) {
-            self.intimacyImageView.image = image;
-        }
-    });
-}
-
 #pragma mark - 界面显示/隐藏
-/** 显示买点弹框 **/
-- (void)showAddCreditsView:(NSString *)tip {
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:tip preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *canaelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        
-    }];
-    UIAlertAction *addAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"ADD_CREDITS", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-        LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:vc animated:YES];
-    }];
-    [alertVC addAction:canaelAC];
-    [alertVC addAction:addAC];
-    [self presentViewController:alertVC animated:YES completion:nil];
-}
 
-#pragma mark - PlayViewControllerDelegate
-- (void)pushToAddCredit:(PlayViewController *)vc {
+#pragma mark - LSVIPInputViewControllerDelegate
+- (void)pushToAddCredit:(LSVIPInputViewController *)vc {
     LSAddCreditsViewController *addVC = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:addVC animated:YES];
 }
 
-#pragma mark - 播放界面回调
-- (void)onReEnterRoom:(PlayViewController *)vc {
-    NSLog(@"PrivateViewController::onReEnterRoom()");
-    // 刷新双向视频状态
-    [self reloadVideoStatus];
+- (void)didShowGiftListInfo:(LSVIPInputViewController *)vc {
+    self.giftInfoView.hidden = NO;
+}
+
+- (void)didRemoveGiftListInfo:(LSVIPInputViewController *)vc {
+    self.giftInfoView.hidden = YES;
+    [self.anchorDetailVc dismissView];
+}
+
+- (void)pushStoreVC:(LSVIPInputViewController *)vc {
+    LSStoreListToLadyViewController * storeVC = [[LSStoreListToLadyViewController alloc]initWithNibName:nil bundle:nil];
+    storeVC.anchorId = self.liveRoom.userId;
+    storeVC.anchorName = self.liveRoom.userName;
+    storeVC.anchorImageUrl = self.liveRoom.photoUrl;
+    [self.navigationController pushViewController:storeVC animated:NO];
 }
 
 #pragma mark - 播放界面回调
-- (void)didChangeGiftList:(PlayViewController *)vc {
-    NSLog(@"PrivateViewController::didChangeGiftList()");
-    LSGiftManager *giftManager = [LSGiftManager manager];
-    [giftManager getRoomRandomGiftList:self.liveRoom.roomId
-                          finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                              // 更新礼物数组
-                              self.giftArray = giftList;
-                              self.randomGiftIndex = -1;
-
-                              if (self.giftArray.count > 0) {
-                                  int randValue = rand();
-                                  self.randomGiftIndex = randValue % self.giftArray.count;
-                                  LSGiftManagerItem *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
-
-                                  NSLog(@"PrivateViewController::didChangeGiftList( [Update random gift], count : %d, randomGiftIndex : %d )", (int)giftList.count, (int)self.randomGiftIndex);
-                                  [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:gift.infoItem.smallImgUrl]
-                                      options:0
-                                      progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *_Nullable targetURL) {
-
-                                      }
-                                      completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
-                                          if (image) {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  [self.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
-                                              });
-                                          }
-                                      }];
-                              }
-                          }];
+- (void)onReEnterRoom:(LSVIPInputViewController *)vc {
+    NSLog(@"PrivateViewController::onReEnterRoom()");
+    
 }
 
 #pragma mark - 倒数控制
 - (void)randomGiftCountDown {
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        // 修改随机礼物
-        UIImage *defaultImage = [UIImage imageNamed:@"Live_Publish_Btn_Gift"];
-        [weakSelf.playVC.randomGiftBtn setImage:defaultImage forState:UIControlStateNormal];
+//        // 修改随机礼物
+//        UIImage *defaultImage = [UIImage imageNamed:@"Live_Publish_Btn_Gift"];
+//        [weakSelf.playVC.randomGiftBtn setImage:defaultImage forState:UIControlStateNormal];
 
         if (weakSelf.giftArray.count > 0) {
             int randValue = rand();
@@ -756,7 +528,7 @@
                 completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
                     if (image) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [weakSelf.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
+                            //[weakSelf.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
                         });
                     }
                 }];

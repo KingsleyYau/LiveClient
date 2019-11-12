@@ -641,7 +641,32 @@ Reader::decodeDouble( Token &token )
    currentValue() = value;
    return true;
 }
-
+    
+// 在decodeNumber的判断中，如果超过uint的最大值而且有没有double的符号（.,e）,就调用decodeLong（之前是调用decodeDouble）alex，2019-09-18
+bool Reader::decodeLong( Token &token )
+{
+    Long value = 0;
+    const int bufferSize = 32;
+    int count;
+    int length = int(token.end_ - token.start_);
+    if ( length <= bufferSize )
+    {
+        Char buffer[bufferSize];
+        memcpy( buffer, token.start_, length );
+        buffer[length] = 0;
+        count = sscanf( buffer, "%lld", &value );
+    }
+    else
+    {
+        std::string buffer( token.start_, token.end_ );
+        count = sscanf( buffer.c_str(), "%lld", &value );
+    }
+    
+    if ( count != 1 )
+        return addError( "'" + std::string( token.start_, token.end_ ) + "' is not a number.", token );
+    currentValue() = value;
+    return true;
+}
 
 bool
 Reader::decodeString( Token &token )

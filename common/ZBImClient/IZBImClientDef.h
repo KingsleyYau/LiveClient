@@ -32,6 +32,10 @@
 #define IMLOCAL_LIVE_ERROR_CODE_TIMEOUT			2
 #define IMLOCAL_LIVE_ERROR_CODE_PARSEFAIL       3
 
+/* 推流设备码 */
+#define IMDEVICETYPE_CODE_PC    10
+#define IMDEVICETYPE_CODE_APP   30
+
 // 处理结果
 typedef enum {
     ZBLCC_ERR_SUCCESS = 0,   // 成功
@@ -99,6 +103,8 @@ typedef enum {
 //    ZBLCC_ERR_NO_FOUND_CRONJOB = 10040,                  // cronjob 里找不到对应的定时器函数
 //    ZBLCC_ERR_REPEAT_INVITEING_TALENT = 10052,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
 //    ZBLCC_ERR_RECV_REGULAR_CLOSE_ROOM = 10088,           // 用户接收正常关闭直播间
+    
+    ZBLCC_ERR_HAS_ONEONONE_LIVE = 16405,                    // 已经有私密直播间了，不能再开始公开直播间， 3.1.进入公开直播间 和 3.2.主播进入指定直播间（16405）
 
 } ZBLCC_ERR_TYPE;
 
@@ -125,17 +131,13 @@ typedef enum {
     ZBPAGENAMETYPE_BACKGROUNDPAGE = 3, // 主播后台
     ZBPAGENAMETYPE_WAITPAGE = 4,       // 预约等待页
     ZBPAGENAMETYPE_PUBLICPAGE = 5,     // 公开直播间页
-    ZBPAGENAMETYPE_PRIVATEPAGE = 6,    // 私密直播间页
+     ZBPAGENAMETYPE_PRIVATEPAGE = 6,    // 私密直播间页
     ZBPAGENAMETYPE_MOVEPAGE = 7,       // 移动端
     ZBPAGENAMETYPE_BEGIN = ZBPAGENAMETYPE_UNKNOW,
     ZBPAGENAMETYPE_END = ZBPAGENAMETYPE_MOVEPAGE
 } ZBPageNameType;
 // int 转换 PageNameType
-inline ZBPageNameType ZBGetPageNameType(int value) {
-    return ZBPAGENAMETYPE_BEGIN <= value && value <= ZBPAGENAMETYPE_END ? (ZBPageNameType)value : ZBPAGENAMETYPE_UNKNOW;
-}
-
-typedef enum {
+ typedef enum {
     ZBROOMTYPE_NOLIVEROOM = 0,            // 没有直播间
     ZBROOMTYPE_FREEPUBLICLIVEROOM = 1,    // 免费公开直播间
     ZBROOMTYPE_COMMONPRIVATELIVEROOM = 2, // 普通私密直播间
@@ -334,3 +336,32 @@ typedef enum {
 inline IMAnchorProgramStatus GetIMAnchorProgramStatus(int value) {
     return IMANCHORPROGRAMSTATUS_BEGIN < value && value <= IMANCHORPROGRAMSTATUS_END ? (IMAnchorProgramStatus)value : IMANCHORPROGRAMSTATUS_UNKNOW;
 }
+
+
+// 当前推流状态
+typedef enum {
+    IMCURRENTPUSHSTATUS_NOTPUSH = 0,         // 未推流
+    IMCURRENTPUSHSTATUS_PCPUSH = 1,          // PC推流
+    IMCURRENTPUSHSTATUS_APPPUSH = 2,         // APP推流
+    
+    IMCURRENTPUSHSTATUS_BEGIN = IMCURRENTPUSHSTATUS_NOTPUSH,
+    IMCURRENTPUSHSTATUS_END = IMCURRENTPUSHSTATUS_APPPUSH
+    
+}IMCurrentPushStatus;
+
+// int 转换 IMCurrentPushStatus
+inline IMCurrentPushStatus GetIMCurrentPushStatus(int value) {
+    return IMCURRENTPUSHSTATUS_BEGIN <= value && value <= IMCURRENTPUSHSTATUS_END ? (IMCurrentPushStatus)value : IMCURRENTPUSHSTATUS_NOTPUSH;
+}
+
+// 推流设备
+typedef enum {
+    IMDEVICETYPE_UNKNOW = 0,            // 未知推流设备
+    IMDEVICETYPE_PC = 1,                // PC推流设备
+    IMDEVICETYPE_APP = 2,               // APP推流设备
+    
+    IMDEVICETYPE_BEGIN = IMDEVICETYPE_UNKNOW,
+    IMDEVICETYPE_END = IMDEVICETYPE_APP
+    
+}IMDeviceType;
+

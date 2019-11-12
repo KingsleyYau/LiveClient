@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_profile_live"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/live_size_24dp"
-            android:paddingRight="@dimen/live_size_16dp">
+            android:paddingRight="@dimen/live_size_16dp"
+            android:paddingBottom="@dimen/live_size_24dp">
 
             <!--头部-->
             <LinearLayout
@@ -44,7 +44,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/my_profile"
                     android:textColor="@color/white"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/live_size_18sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -52,23 +52,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/live_size_16dp"
                 android:layout_marginTop="@dimen/live_size_16dp"
+                android:layout_marginBottom="@dimen/live_size_16dp"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/live_size_16dp">
 
-                <!--<com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView-->
-                    <!--android:id="@+id/my_profile_iv_userIcon"-->
-                    <!--android:layout_width="96dp"-->
-                    <!--android:layout_height="96dp"-->
-                    <!--android:scaleType="centerCrop"-->
-                    <!--android:src="@drawable/ic_user_icon"-->
-                    <!--app:civ_border_color="@color/white"-->
-                    <!--app:civ_border_width="@dimen/menu_photo_border" />-->
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/my_profile_iv_userIcon"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"/>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/my_profile_iv_userIcon"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp" />
+
+                    <ImageButton
+                        android:id="@+id/my_profile_iv_upload"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginRight="@dimen/live_size_6dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:src="@drawable/ic_icon_upload" />
+                        <!--android:padding="@dimen/live_size_6dp"-->
+                        <!--android:background="@drawable/touch_feedback_holo_dark_circle"-->
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -106,8 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_arrow_right_grey"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
@@ -138,6 +146,10 @@
             android:layout_marginTop="@dimen/live_size_20dp"
             android:background="@color/white"
             android:orientation="vertical">
+
+            <include
+                android:id="@+id/my_profile_ll_Profile_Details"
+                layout="@layout/my_profile_info_item_live" />
 
             <include
                 android:id="@+id/my_profile_ll_Credit_Balance"

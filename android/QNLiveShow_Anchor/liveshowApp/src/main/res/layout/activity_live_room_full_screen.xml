@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flContentBody"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2b2b2b">
+
+    <!-- 第一层（最底层） -->
+    <!-- 背景不随软键盘切换部分：视频播放view, 在代码中设置为屏幕高度使之全屏-->
+    <com.qpidnetwork.anchor.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/fl_bgContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/include_audience_area"
+                layout="@layout/include_liveroom_audience"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+        </FrameLayout>
+    </com.qpidnetwork.anchor.view.LiveRoomScrollView>
+
+    <!-- 第二层 -->
+    <!--覆盖在视频上的业务层-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--最上层消息控制等-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <!-- 盖在视频区上面（座驾，hangout,私密按钮, 弹幕，消息列表） -->
+            <include
+                android:id="@+id/include_im_body"
+                layout="@layout/include_liveroom_im_full_screen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/live_room_edit_height"
+                android:visibility="visible" />
+
+            <!-- 输入栏 -->
+            <include
+                layout="@layout/view_liveroom_sendmsg_public"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/live_room_edit_height"
+                android:layout_gravity="bottom" />
+
+            <!-- @谁列表 -->
+            <ListView
+                android:id="@+id/lv_audienceList"
+                android:layout_width="77dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:layout_marginLeft="13dp"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                android:background="@drawable/bg_public_live_room_audience_list"
+                android:choiceMode="singleChoice"
+                android:divider="@null"
+                tools:visibility="visible"/>
+
+            <!-- 视频加载LOADING -->
+            <ImageView
+                android:id="@+id/iv_vedioLoading"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                android:layout_width="83dp"
+                android:layout_height="83dp" />
+        </FrameLayout>
+
+        <!-- 输入法和表情区 , 通过改变高度，顶起上面的控件-->
+        <FrameLayout
+            android:id="@+id/fl_inputArea"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+    </LinearLayout>
+
+
+    <!-- 第三层 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--大礼物-->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/advanceGift"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            fresco:actualImageScaleType="fitCenter" />
+    </FrameLayout>
+
+</com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout>
+

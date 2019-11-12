@@ -7,40 +7,45 @@
 //
 
 #import "VouchersListViewController.h"
-#import "VouchersCell.h"
+#import "VouchersListTableViewCell.h"
 #import "VoucherListRequest.h"
+#import "GetChatVoucherListRequest.h"
 #import "DialogTip.h"
-@interface VouchersListViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewRefreshDelegate>
+
+#import "AnchorPersonalViewController.h"
+@interface VouchersListViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewRefreshDelegate,TTTAttributedLabel>
 
 @property (weak, nonatomic) IBOutlet UIView *infoView;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *infoBtn;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) NSArray * array;
+@property (nonatomic, strong) NSMutableArray * array;
 @property (nonatomic, strong) LSSessionRequestManager* sessionManager;
-@property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @property (nonatomic, assign) BOOL isRequstData;
 @property (nonatomic, strong) NSTimer * timer;
+@property (nonatomic, strong) NSString *anchorId;
+@property (nonatomic, strong) NSArray * showArray;
 @end
 
 @implementation VouchersListViewController
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
     NSLog(@"VouchersListViewController dealloc");
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.array = [NSArray array];
+    self.array = [NSMutableArray array];
     self.sessionManager = [LSSessionRequestManager manager];
     self.infoBtn.layer.cornerRadius = 5;
     self.infoBtn.layer.masksToBounds = YES;
     
     [self.tableView setTableFooterView:[UIView new]];
     
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:NO];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -56,7 +61,7 @@
     self.timer = nil;
     if (self.isRequstData) {
         [self showLoading];
-        [self getVoucherListRequest];
+        [self loadAllVoucher];
     }
 }
 
@@ -69,10 +74,10 @@
 }
 
 #pragma mark 重新加载
-- (IBAction)reloadBtnDid:(UIButton *)sender {
-    
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
+    self.failView.hidden = NO;
     [self showLoading];
-    [self getVoucherListRequest];
+    [self loadAllVoucher];
 }
 
 /**
@@ -80,7 +85,7 @@
  */
 - (void)pullDownRefresh {
     
-    [self getVoucherListRequest];
+    [self loadAllVoucher];
 }
 
 #pragma mark - PullRefreshView回调
@@ -90,55 +95,105 @@
 }
 
 #pragma mark 获取试聊券
-- (void)getVoucherListRequest
+- (void)loadAllVoucher {
+    [self getLiveVoucherListRequest];
+}
+
+
+- (void)getLiveVoucherListRequest
 {
-    self.infoView.hidden = YES;
+    //    self.infoView.hidden = YES;
+    self.failView.hidden = YES;
+    [self hideNoDataView];
     //self.tableView.hidden = NO;
     VoucherListRequest * request = [[VoucherListRequest alloc]init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *> * _Nullable array, int totalCount) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"VouchersListViewController::getLiveVoucherListRequest (获取直播试聊卷 success : %@, errnum : %d, errmsg : %@ ,array: %lu)",BOOL2SUCCESS(success), errnum, errmsg,(unsigned long)array.count);
+            NSLog(@"%@",self.showArray);
             [self hideLoading];
-            [self.tableView finishPullDown:YES];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
+            [self.array removeAllObjects];
+            for (VoucherItemObject *item in array) {
+                [self addItemIfNotExist:item];
+            }
             
-            self.array = array;
             if (success) {
-                
-                if (self.array.count == 0) {
-                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Vouchers") hiddenBtn:YES];
-                }
+                [self getChatVoucherListRequest];
             }
             else
             {
+                [self hideLoading];
+                [self.tableView finishLSPullDown:YES];
                 if (array.count == 0) {
-                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
+                    self.failView.hidden = NO;
                 }
                 else
                 {
                     [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
                 }
             }
-            [self.tableView reloadData];
         });
     };
     
     [self.sessionManager sendRequest:request];
 }
 
-- (void)showInfoViewMsg:(NSString *)msg hiddenBtn:(BOOL)hidden
-{
-    self.infoView.hidden = NO;
-    self.infoBtn.layer.cornerRadius = 5;
-    self.infoBtn.layer.masksToBounds = YES;
-    self.infoLabel.text = msg;
-    self.infoBtn.hidden = hidden;
-    // 是否没有数据
-    if (hidden) {
-        self.noDataIcon.image = [UIImage imageNamed:@"Common_NoDataIcon"];
-    }else {
-        self.noDataIcon.image = [UIImage imageNamed:@"Home_Hot&follow_fail"];
+- (void)getChatVoucherListRequest {
+    GetChatVoucherListRequest *request = [[GetChatVoucherListRequest alloc] init];
+    request.finishHandler = ^(BOOL success, NSString *errnum, NSString *errmsg, NSArray<VoucherItemObject *> *array, int totalCount) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"VouchersListViewController::getChatVoucherListRequest (获取聊天试聊卷 success : %@, errnum : %@, errmsg : %@ , array : %lu)",BOOL2SUCCESS(success), errnum, errmsg,(unsigned long)array.count);
+            NSLog(@"%@",self.showArray);
+            if (success) {
+                for (VoucherItemObject *item in array) {
+                    [self addItemIfNotExist:item];
+                }
+            
+                if (self.array.count == 0) {
+                    [self showNoDataView];
+                    self.noDataTip.text = @"No Vouchers available.";
+                }
+            }
+            else
+            {
+                if (array.count == 0) {
+                    self.failView.hidden = NO;
+                }
+                else
+                {
+                    [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
+                }
+            }
+            self.showArray = [self.array sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                VoucherItemObject * item1 = obj1;
+                VoucherItemObject * item2 = obj2;
+                return item1.grantedDate < item2.grantedDate;
+            }];
+            [self.tableView reloadData];
+            [self.tableView finishLSPullDown:YES];
+            
+        });
+    };
+    [self.sessionManager sendRequest:request];
+}
+
+
+- (void)addItemIfNotExist:(VoucherItemObject *_Nonnull)itemNew {
+    bool bFlag = NO;
+    
+    for (VoucherItemObject *item in self.array) {
+        if ([item.voucherId isEqualToString:itemNew.voucherId]) {
+            // 已经存在
+            bFlag = true;
+            break;
+        }
     }
-    //self.tableView.hidden = YES;
+    
+    if (!bFlag) {
+        // 不存在
+        [self.array addObject:itemNew];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -149,7 +204,7 @@
 #pragma mark tableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.array.count;
+    return self.showArray.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -159,93 +214,106 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [VouchersCell cellHeight];
+    return [VouchersListTableViewCell cellHeight];
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    VouchersCell *result = nil;
-    VouchersCell * cell = [VouchersCell getUITableViewCell:tableView];
+    UITableViewCell *result = [[UITableViewCell alloc] init];
+    VouchersListTableViewCell * cell = [VouchersListTableViewCell getUITableViewCell:tableView];
     result = cell;
     
-    if (self.array.count > 0) {
-        VoucherItemObject * obj = [self.array objectAtIndex:indexPath.row];
+    
+    if (indexPath.row < self.showArray.count) {
+        
+        VoucherItemObject * obj = [self.showArray objectAtIndex:indexPath.row];
         
         
-        if (!cell.imageViewLoader) {
-            cell.imageViewLoader = [LSImageViewLoader loader];
-        }
+        cell.voucherTime.text = [NSString stringWithFormat:@"%d",obj.offsetMin];
         
-        [cell.imageViewLoader loadImageWithImageView:cell.minImage options:0 imageUrl:obj.photoUrlMobile placeholderImage:nil finishHandler:nil];
+        cell.voucherCondition.delegate = self;
         
-        cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@ - %@",NSLocalizedString(@"Vaild_Time", @"Vaild_Time"),[cell getTime:obj.startValidDate],[cell getTime:obj.expDate]];
+        [cell updateValidTime:obj.startValidDate expTime:obj.expDate];
         
-        cell.unreadView.hidden = obj.read;
+        cell.voucherCondition.tag = indexPath.row;
         
-        cell.titleLabel.text = obj.desc;
-        
-        // 指定主播
-        if (obj.anchorType == ANCHORTYPE_APPOINTANCHOR)
-        {
-            cell.oneLadyView.hidden = NO;
-            cell.allLadyView.hidden = YES;
+        if (obj.voucherType == VOUCHERTYPE_BROADCAST) {
+            // 直播类型试聊卷
+            cell.bgImageV.image = [UIImage imageNamed:@"MyBackpack_LiveVoucherBg"];
             
-            cell.nameLabel.text = obj.anchorNcikName;
-            
-            [[LSImageViewLoader loader] loadImageFromCache:cell.ladyHeadView options:SDWebImageRefreshCached imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-            }];
-            
-            cell.ladyLabel.text = NSLocalizedStringFromSelf(@"Only_broadcaster");
-            // 公开
-            if (obj.useRoomType == USEROOMTYPE_PUBLIC)
-            {
-                cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"Only_Public");
-            }
-            //私密
-            else if (obj.useRoomType == USEROOMTYPE_PRIVATE)
-            {
-                cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
-            }
-            else
-            {
-                cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"No limit sessions");
-            }
-        }
-        // 不限和没看过直播的主播
-        else
-        {
-            cell.oneLadyView.hidden = YES;
-            cell.allLadyView.hidden = NO;
-            
-            //没看过直播的主播
-            if (obj.anchorType == ANCHORTYPE_NOSEEANCHOR) {
-                cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"New broadcasters");
-            }
-            else
-            {
-                cell.ladyTypeLabel.text =NSLocalizedStringFromSelf(@"No_limit");
+            cell.voucherType.textColor = COLOR_WITH_16BAND_RGB(0x297AF3);
+            // 指定主播
+            if (obj.anchorType == ANCHORTYPE_APPOINTANCHOR) {
+                
+                [cell updatelimitedVoucherType:NSLocalizedStringFromSelf(@"Only_broadcaster") withAchor:obj.anchorId];
+                
+            }else {
+                // 不限和没看过直播的主播
+                //没看过直播的主播
+                if (obj.anchorType == ANCHORTYPE_NOSEEANCHOR) {
+                    cell.voucherCondition.text = NSLocalizedStringFromSelf(@"New broadcasters");
+                }else {
+                    cell.voucherCondition.text = NSLocalizedStringFromSelf(@"No_limit");
+                }
             }
             
             // 公开
-            if (obj.useRoomType == USEROOMTYPE_PUBLIC)
-            {
-                cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Public");
+            if (obj.useRoomType == USEROOMTYPE_PUBLIC) {
+                cell.voucherType.text = NSLocalizedStringFromSelf(@"Only_Public");
+            } else if (obj.useRoomType == USEROOMTYPE_PRIVATE) {
+                //私密
+                cell.voucherType.text = NSLocalizedStringFromSelf(@"Only_Private");
+            } else {
+                cell.voucherType.text = NSLocalizedStringFromSelf(@"No limit sessions");
             }
-            //私密
-            else if (obj.useRoomType == USEROOMTYPE_PRIVATE)
-            {
-                cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
+            
+        }else {
+            // livechat聊天试聊卷
+            cell.bgImageV.image = [UIImage imageNamed:@"MyBackpack_ChatVoucherBg"];
+            cell.voucherType.textColor = COLOR_WITH_16BAND_RGB(0x00CC33);
+            
+            // 指定主播
+            if (obj.anchorType == ANCHORTYPE_APPOINTANCHOR) {
+                
+                [cell updatelimitedVoucherType:NSLocalizedStringFromSelf(@"Only_Chat") withAchor:obj.anchorId];
+                
+            }else {
+                // 不限和没聊过的主播
+                // 没聊过的主播
+                if (obj.anchorType == ANCHORTYPE_NOSEEANCHOR) {
+                    cell.voucherCondition.text = NSLocalizedStringFromSelf(@"New_Chat");
+                }else {
+                    cell.voucherCondition.text = NSLocalizedStringFromSelf(@"No_Limit_Chat");
+                }
             }
-            else
-            {
-                cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"No limit sessions");
-            }
+            
+            
+            cell.voucherType.text = NSLocalizedStringFromSelf(@"Chat_Vorcher");
+            
         }
+        
+        cell.unreadIcon.hidden = obj.read;
+        
+        
     }
     
     return result;
 }
+
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if( [[url absoluteString] isEqualToString:[NSString stringWithFormat:@"%d",(int)label.tag]] ) {
+        if (label.tag < self.showArray.count) {
+            VoucherItemObject * obj = [self.showArray objectAtIndex:label.tag];
+            AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
+            listViewController.anchorId = obj.anchorId;
+            listViewController.enterRoom = 1;
+            [self.navigationController pushViewController:listViewController animated:YES];
+        }
+    }
+}
+
 
 @end
 

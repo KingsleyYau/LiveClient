@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+	tools:ignore="MissingTranslation,ExtraTranslation">
+
     <!-- ScreenName KeyWords Define -->
     <!-- for dialog in full path -->
     <string name="parent_keywords">;parentkeywords;</string>
@@ -81,6 +83,12 @@
 	<string name="com.qpidnetwork.livemodule.liveshow.livechat.LiveChatMainActivity_0">Live.LiveChat.ChatList</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.livechat.LiveChatMainActivity_1">Live.LiveChat.Invitation</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.livechat.LiveChatTalkActivity">LiveChatDetail</string>
+
+	<!--SayHi相关-->
+	<string name="com.qpidnetwork.livemodule.liveshow.sayhi.SayHiListActivity_0">Live.SayHi.AllList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.sayhi.SayHiListActivity_1">Live.SayHi.ResponseList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.sayhi.SayHiDetailsActivity">SayHiDetail</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.sayhi.SayHiEditActivity">SayHiEdit</string>
 
 	<!-- Event Define -->
 	<!--列表点击相关-->
@@ -186,6 +194,15 @@
 	<string name="Live_LiveChat_Label_SendVoice">LiveChat.send_VoiceMessage</string>
 	<string name="Live_LiveChat_Action_PushClick">click_LiveChatPush</string>
 	<string name="Live_LiveChat_Label_PushClick">LiveChat.click_LiveChatPush</string>
+
+	<!--SayHi-->
+	<string name="Live_SayHi_Category">SayHi</string>
+	<string name="Live_SayHi_Action_Edit_Click">click_SayHi</string>
+	<string name="Live_SayHi_Label_Edit_Click">SayHi.click_SayHi</string>
+	<string name="Live_SayHi_Action_Reply_Click">click_Reply</string>
+	<string name="Live_SayHi_Label_Reply_Click">SayHi.click_Reply</string>
+	<string name="Live_SayHi_Action_SendNow_Click">click_SendNow</string>
+	<string name="Live_SayHi_Label_SendNow_Click">SayHi.click_SendNow</string>
 
 	<!--Global-->
 	<string name="Live_Global_Category">Global</string>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_white"
+    app:cardCornerRadius="@dimen/live_size_6dp"
+    app:cardElevation="2dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
+
+    <!-- 为了封面图可以 以宽约束高 -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--   上半部分    -->
+        <FrameLayout
+            android:id="@+id/item_flowers_store_fl_top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/item_flowers_store_iv_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:backgroundImage="@color/black4" />
+
+            <ImageView
+                android:id="@+id/item_flowers_store_iv_new"
+                android:layout_width="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_40dp"
+                android:layout_gravity="right|top"
+                android:src="@drawable/ic_flowers_store_new"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/item_flowers_store_tv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/live_size_8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/live_text_color_black"
+            android:textSize="@dimen/live_size_14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_flowers_store_fl_top"
+            tools:text="Dream of you" />
+
+        <TextView
+            android:id="@+id/item_flowers_store_tv_money_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_8dp"
+            android:layout_marginTop="@dimen/live_size_8dp"
+            android:layout_marginBottom="@dimen/live_size_8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/red_light"
+            android:textSize="@dimen/live_size_14sp"
+            android:textStyle="italic|bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/item_flowers_store_tv_money_grey"
+            app:layout_constraintTop_toBottomOf="@+id/item_flowers_store_tv_name"
+            tools:text="ssssssss" />
+
+        <TextView
+            android:id="@+id/item_flowers_store_tv_money_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_6dp"
+            android:layout_marginTop="@dimen/live_size_8dp"
+            android:layout_marginBottom="9dp"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/live_size_50dp"
+            android:singleLine="true"
+            android:textColor="@color/text_color_grey_light"
+            android:textSize="@dimen/live_size_12sp"
+            android:textStyle="italic|bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/item_flowers_store_tv_money_red"
+            app:layout_constraintRight_toLeftOf="@+id/item_flowers_store_iv_add"
+            tools:text="sssssssssssssssssssssssss" />
+
+        <ImageView
+            android:id="@+id/item_flowers_store_iv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/live_size_20dp"
+            android:minHeight="@dimen/live_size_20dp"
+            android:padding="@dimen/live_size_8dp"
+            android:src="@drawable/ic_flowers_store_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

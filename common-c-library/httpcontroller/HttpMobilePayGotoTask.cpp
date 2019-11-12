@@ -28,7 +28,8 @@ void HttpMobilePayGotoTask::SetParam(
                                          HTTP_OTHER_SITE_TYPE siteId,
                                          LSOrderType orderType,
                                          const string& clickFrom,
-                                         const string& number
+                                         const string& number,
+                                         const string& orderNo
                                           ) {
 
 	mHttpEntiy.Reset();
@@ -55,6 +56,10 @@ void HttpMobilePayGotoTask::SetParam(
         mHttpEntiy.AddContent(LIVEROOM_MOBILEPAYGOTO_CLICKFROM, clickFrom.c_str());
     }
     
+    if (orderNo.length() > 0) {
+        mHttpEntiy.AddContent(LIVEROOM_MOBILEPAYGOTO_ORDERNO, orderNo.c_str());
+    }
+    
     if (number.length() > 0) {
         mHttpEntiy.AddContent(LIVEROOM_MOBILEPAYGOTO_NUMBER, number.c_str());
     }
@@ -67,13 +72,15 @@ void HttpMobilePayGotoTask::SetParam(
             "orderType : %d ,"
             "clickFrom : %s ,"
             "number : %s ,"
+            "orderNo : %s "
             ")",
             this,
             url.c_str(),
             strSite.c_str(),
             orderType,
             clickFrom.c_str(),
-            number.c_str()
+            number.c_str(),
+            orderNo.c_str()
             );
 }
 

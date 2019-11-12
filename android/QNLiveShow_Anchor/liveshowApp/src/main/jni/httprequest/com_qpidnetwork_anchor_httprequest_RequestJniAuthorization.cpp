@@ -62,9 +62,9 @@ RequestZBLoginCallback gRequestZBLoginCallback;
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniAuthorization_Login
-  (JNIEnv *env, jclass cls, jstring anchorId, jstring password, jstring code, jstring deviceId, jstring model, jstring manufacturer, jobject callback){
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::Login( anchorId : %s, password : %s, code : %s )",
-            JString2String(env, anchorId).c_str(), JString2String(env, password).c_str(), JString2String(env, code).c_str());
+  (JNIEnv *env, jclass cls, jstring anchorId, jstring password, jstring code, jstring deviceId, jstring model, jstring manufacturer, jstring deviceName, jobject callback){
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::Login( anchorId : %s, password : %s, code : %s, deviceName : %s)",
+            JString2String(env, anchorId).c_str(), JString2String(env, password).c_str(), JString2String(env, code).c_str(), JString2String(env, deviceName).c_str());
     jlong taskId = -1;
 
     taskId = gHttpRequestController.ZBLogin(&gHttpRequestManager,
@@ -74,6 +74,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniAuthor
                                         JString2String(env, deviceId),
                                         JString2String(env, model),
                                         JString2String(env, manufacturer),
+                                        JString2String(env, deviceName),
                                         &gRequestZBLoginCallback);
 
     jobject obj = env->NewGlobalRef(callback);

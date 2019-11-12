@@ -13,7 +13,6 @@ import com.qpidnetwork.livemodule.livemessage.item.LMPrivateMsgContactItem;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,8 +81,8 @@ public class MessageContactListFragment extends BaseListFragment implements LMLi
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
         //点击空页引导，跳转回主页
 //        MainFragmentActivity.launchActivityWithListType(getActivity(), 0);
         MainFragmentActivity.launchActivityWithListType(getActivity(), MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER);
@@ -94,7 +93,7 @@ public class MessageContactListFragment extends BaseListFragment implements LMLi
      */
     private void showEmptyView(){
         setDefaultEmptyMessage(getResources().getString(R.string.message_contactlist_empty_desc));
-        setDefaultEmptyButtonText(getResources().getString(R.string.live_common_btn_search));//无按钮，隐藏
+        setEmptyGuideButtonText(getResources().getString(R.string.live_common_btn_search));//无按钮，隐藏
         showNodataPage();
     }
 

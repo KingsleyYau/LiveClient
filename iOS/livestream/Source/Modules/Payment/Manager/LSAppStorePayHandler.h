@@ -27,7 +27,7 @@
 /**
  *  开始支付
  *
- *  @return 支付调用是否成功
+ *   支付调用是否成功
  */
 - (void)pay;
 
@@ -72,7 +72,6 @@
  *
  *  @param handler 支付处理器
  *  @param result  是否支付成功
- *  @param
  */
 - (void)getProductFinish:(LSAppStorePayHandler* _Nonnull)handler result:(BOOL)result;
 @end

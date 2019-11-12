@@ -37,6 +37,11 @@ public:
             if (root[LETTER_HAS_REPLIED].isNumeric()) {
                 hasReplied = root[LETTER_HAS_REPLIED].asInt() == 0 ? false : true;
             }
+            
+            /* onlineStatus */
+            if (root[LETTER_ONLINE_STATUS].isNumeric()) {
+                onlineStatus = root[LETTER_ONLINE_STATUS].asInt() == 0 ? false : true;
+            }
 
         }
         result = true;
@@ -48,6 +53,7 @@ public:
         hasVideo = false;
         hasRead = false;
         hasReplied = false;
+        onlineStatus = false;
     }
     
     virtual ~HttpLetterHasItem() {
@@ -60,11 +66,13 @@ public:
      * hasVideo       是否有视频
      * hasRead        是否已读
      * hasReplied     是否已回复
+     * onlineStatus   是否在线
      */
     bool    hasImg;
     bool    hasVideo;
     bool    hasRead;
     bool    hasReplied;
+    bool    onlineStatus;
 };
 
 

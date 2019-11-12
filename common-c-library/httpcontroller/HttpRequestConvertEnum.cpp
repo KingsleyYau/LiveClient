@@ -419,7 +419,9 @@ HTTP_LCC_ERR_TYPE GetStringToHttpErrorType(const string& code) {
     else if (code == HTTP_STRING_ERROR_APPEXISTLOGS) {
         type = HTTP_LCC_ERR_DEMAIN_APP_EXIST_LOGS;
     }
-  
+    else if (code == HTTP_STRING_ERROR_TOKENOUTTIME) {
+        type = HTTP_LCC_ERR_TOKEN_EXPIRE;
+    }
     
     return type;
 }

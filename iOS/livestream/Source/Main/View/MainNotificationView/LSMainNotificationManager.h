@@ -17,7 +17,6 @@
 
 - (void)mainNotificationManagerRemoveNotificaitonView;
 
-- (void)mainNotificationManagerRemoveselectedItem;
 @end
 
 @interface LSMainNotificationManager : NSObject

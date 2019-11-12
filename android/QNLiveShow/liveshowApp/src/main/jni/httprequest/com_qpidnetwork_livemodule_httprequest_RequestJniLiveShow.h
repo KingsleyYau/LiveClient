@@ -119,6 +119,30 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPromoAnchorList
   (JNIEnv *, jclass, jint, jint, jstring, jobject);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetPageRecommendAnchorList
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetPageRecommendAnchorListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPageRecommendAnchorList
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetMyContactList
+ * Signature: (IILcom/qpidnetwork/livemodule/httprequest/OnGetMyContactListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetMyContactList
+  (JNIEnv *, jclass, jint, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetGiftTypeList
+ * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetGiftTypeListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetGiftTypeList
+  (JNIEnv *, jclass, jint, jobject);
+
 #ifdef __cplusplus
 }
 #endif

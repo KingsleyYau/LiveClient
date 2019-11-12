@@ -593,7 +593,7 @@ static QNContactManager *gManager = nil;
     });
 }
 
-- (void)onGetUserInfo:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg userId:(NSString *)userId userInfo:(LSLCLiveChatUserItemObject *)userInfo {
+- (void)onGetUserInfo:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg userId:(NSString *)userId userInfo:(LSLCLiveChatUserInfoItemObject *)userInfo {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (LSLIVECHAT_LCC_ERR_SUCCESS == errType) {
             BOOL isChange = [self updateRecentWithUserInfoItem:userInfo];
@@ -613,12 +613,12 @@ static QNContactManager *gManager = nil;
     });
 }
 
-- (void)onGetUsersInfo:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg seq:(int)seq userIdList:(NSArray *)userIdList usersInfo:(NSArray<LSLCLiveChatUserItemObject *> *)usersInfo {
+- (void)onGetUsersInfo:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg seq:(int)seq userIdList:(NSArray *)userIdList usersInfo:(NSArray<LSLCLiveChatUserInfoItemObject *> *)usersInfo {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"QNContactManager::onGetUsersInfo( count : %d )", (int)usersInfo.count);
         if (LSLIVECHAT_LCC_ERR_SUCCESS == errType) {
             BOOL isChange = NO;
-            for (LSLCLiveChatUserItemObject *userInfo in usersInfo) {
+            for (LSLCLiveChatUserInfoItemObject *userInfo in usersInfo) {
                 BOOL bFlag = [self updateRecentWithUserInfoItem:userInfo];
                 if (bFlag) {
                     isChange = bFlag;
@@ -642,6 +642,14 @@ static QNContactManager *gManager = nil;
         [self reloadDataWithRecvMsg:msg];
     });
 }
+
+- (void)onRecvAutoInviteMsg:(LSLCLiveChatMsgItemObject *)msg {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"QNContactManager::onRecvAutoInviteMsg( [收到自动邀请文本消息], fromId : %@ )", msg.fromId);
+        [self reloadDataWithRecvMsg:msg];
+    });
+}
+
 
 - (void)onRecvVoice:(LSLCLiveChatMsgItemObject *)msg {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -748,7 +756,7 @@ static QNContactManager *gManager = nil;
     return bFlag;
 }
 
-- (BOOL)updateRecentWithUserInfoItem:(LSLCLiveChatUserItemObject *)userInfo {
+- (BOOL)updateRecentWithUserInfoItem:(LSLCLiveChatUserInfoItemObject *)userInfo {
     // TODO:根据LiveChat接口更新联系人信息
     BOOL bFlag = NO;
     
@@ -819,7 +827,7 @@ NSInteger sortRecent(id obj1, id obj2, void *context) {
 }
 
 #pragma mark - 内部邀请管理
-- (BOOL)updateInviteWithUserInfoItem:(LSLCLiveChatUserItemObject *)userInfo {
+- (BOOL)updateInviteWithUserInfoItem:(LSLCLiveChatUserInfoItemObject *)userInfo {
     // TODO:根据LiveChat接口更新邀请信息
     BOOL bFlag = NO;
     

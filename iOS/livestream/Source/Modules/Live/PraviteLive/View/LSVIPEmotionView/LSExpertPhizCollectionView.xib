@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSExpertPhizCollectionView"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Jsh-at-lLa" customClass="LSExpertPhizCollectionView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="222"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="BoA-nJ-gK6" userLabel="Emotion Collection View">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="222"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Pe0-iP-9qW">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="Jsh-at-lLa" id="KEF-sX-Ado"/>
+                        <outlet property="delegate" destination="Jsh-at-lLa" id="I6I-uy-U5C"/>
+                    </connections>
+                </collectionView>
+                <view hidden="YES" alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="983-vD-nRU">
+                    <rect key="frame" x="40" y="80.5" width="240" height="61"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sorry. To use advanced emoticion, you need to upgrade the intimacy to 10" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="63H-0c-Vin">
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="61"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="61" id="GGE-Tm-tk6"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="983-vD-nRU" firstAttribute="centerX" secondItem="Jsh-at-lLa" secondAttribute="centerX" id="Hhu-HN-ieZ"/>
+                <constraint firstAttribute="trailing" secondItem="983-vD-nRU" secondAttribute="trailing" constant="40" id="PSk-uJ-WgQ"/>
+                <constraint firstItem="BoA-nJ-gK6" firstAttribute="top" secondItem="Jsh-at-lLa" secondAttribute="top" id="Ro6-Xs-KWa"/>
+                <constraint firstItem="BoA-nJ-gK6" firstAttribute="width" secondItem="Jsh-at-lLa" secondAttribute="width" id="Zse-eQ-jYF"/>
+                <constraint firstItem="983-vD-nRU" firstAttribute="leading" secondItem="Jsh-at-lLa" secondAttribute="leading" constant="40" id="hKt-zD-spA"/>
+                <constraint firstItem="BoA-nJ-gK6" firstAttribute="leading" secondItem="Jsh-at-lLa" secondAttribute="leading" id="mQ5-ev-681"/>
+                <constraint firstItem="983-vD-nRU" firstAttribute="centerY" secondItem="Jsh-at-lLa" secondAttribute="centerY" id="oM3-Ry-fRr"/>
+                <constraint firstItem="BoA-nJ-gK6" firstAttribute="height" secondItem="Jsh-at-lLa" secondAttribute="height" id="sJC-a7-fed"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="emotionCollectionView" destination="BoA-nJ-gK6" id="1cd-zf-lae"/>
+                <outlet property="tipBGView" destination="983-vD-nRU" id="qpU-Vt-a1G"/>
+                <outlet property="tipLabel" destination="63H-0c-Vin" id="Nn7-U7-LRW"/>
+            </connections>
+            <point key="canvasLocation" x="350.39999999999998" y="341.82908545727139"/>
+        </view>
+    </objects>
+</document>

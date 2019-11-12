@@ -34,7 +34,7 @@
     [self.timer invalidate];
     self.timer = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -47,7 +47,7 @@
     self.tableView.estimatedSectionFooterHeight = 0;
 
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
 
     [self.tableView registerNib:[UINib nibWithNibName:@"ShowCell" bundle:[LiveBundle mainBundle]] forCellReuseIdentifier:[ShowCell cellIdentifier]];
 
@@ -60,7 +60,7 @@
     [super viewWillAppear:animated];
 
     if (self.items.count == 0) {
-        [self.tableView startPullDown:YES];
+        [self.tableView startLSPullDown:YES];
     }
 }
 
@@ -100,7 +100,7 @@
 
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishLSPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
 
@@ -108,7 +108,7 @@
 
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
 
                     self.page++;
                 }
@@ -129,12 +129,12 @@
                 self.noDataTipView.hidden = YES;
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:NO];
+                    [self.tableView finishLSPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                 }
 
                 [self.tableView reloadData];
@@ -181,7 +181,7 @@
         [self pullUpRefresh];
     } else {
         // 停止底部
-        [self.tableView finishPullUp:NO];
+        [self.tableView finishLSPullUp:NO];
     }
 }
 
@@ -193,7 +193,7 @@
 - (void)reloadBtnClick:(id)sender {
     self.failView.hidden = YES;
 
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 #pragma mark TableViewDeleagate

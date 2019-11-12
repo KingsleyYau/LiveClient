@@ -12,7 +12,7 @@
 @protocol LSSayHiDetailHeadViewDelegate <NSObject>
 
 - (void)sayHiDetailHeadViewDidNoteBtn;
-
+- (void)sayHiDetailHeadViewDidHeadImage;
 @end
 
 @interface LSSayHiDetailHeadView : UIView 
@@ -20,7 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *noteBtn;
-@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *bgImage;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImage;
 @property (nonatomic, strong) LSImageViewLoader * imageLoader;
 @property (nonatomic, strong) LSImageViewLoader *backgroundImageloader;
 @property (weak, nonatomic) id<LSSayHiDetailHeadViewDelegate> delegate;

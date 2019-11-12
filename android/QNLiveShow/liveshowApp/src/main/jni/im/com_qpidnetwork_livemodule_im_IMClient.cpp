@@ -384,23 +384,24 @@ public:
     }
 
     // 接收充值通知
-    virtual void OnRecvLackOfCreditNotice(const string& roomId, const string& msg, double credit) override{
+    virtual void OnRecvLackOfCreditNotice(const string& roomId, const string& msg, double credit, LCC_ERR_TYPE err) override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
-		FileLog(TAG, "OnRecvLackOfCreditNotice() callback, env:%p, isAttachThread:%d, roomId:%s, msg:%s, credit:%f", env, isAttachThread, roomId.c_str(),
-				msg.c_str(), credit);
+		FileLog(TAG, "OnRecvLackOfCreditNotice() callback, env:%p, isAttachThread:%d, roomId:%s, msg:%s, credit:%f err:%d", env, isAttachThread, roomId.c_str(),
+				msg.c_str(), credit, err);
 
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;Ljava/lang/String;D)V";
+			string signure = "(Ljava/lang/String;Ljava/lang/String;DI)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvLackOfCreditNotice", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvLackOfCreditNotice() callback now");
 				jstring jroomId = env->NewStringUTF(roomId.c_str());
 				jstring jmsg = env->NewStringUTF(msg.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, jmsg, credit);
+				int jerrortype = IMErrorTypeToInt(err);
+				env->CallVoidMethod(gListener, jCallback, jroomId, jmsg, credit, jerrortype);
 				env->DeleteLocalRef(jroomId);
 				env->DeleteLocalRef(jmsg);
 				FileLog(TAG, "OnRecvLackOfCreditNotice() callback ok");
@@ -1531,7 +1532,7 @@ public:
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
-		FileLog(TAG, "alextest:OnRecvLeaveHangoutRoomNotice() callback, env:%p, isAttachThread:%d err:%d", env, isAttachThread, item.errNo);
+		FileLog(TAG, "OnRecvLeaveHangoutRoomNotice() callback, env:%p, isAttachThread:%d err:%d", env, isAttachThread, item.errNo);
 
 		jobject jItem = getRecvLeaveHangoutRoomItem(env, item);
 		//callback 回调

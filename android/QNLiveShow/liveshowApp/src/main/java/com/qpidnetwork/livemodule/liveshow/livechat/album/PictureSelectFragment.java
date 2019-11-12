@@ -19,13 +19,15 @@ import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumDataHolderManager;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumHelper;
 import com.qpidnetwork.qnbridgemodule.view.camera.ImageBean;
+import com.qpidnetwork.qnbridgemodule.view.camera.observer.SystemPhotoChangeListener;
+import com.qpidnetwork.qnbridgemodule.view.camera.observer.SystemPhotoChangeManager;
 
 import java.util.List;
 
 /**
  * 图片选择
  */
-public class PictureSelectFragment extends BaseFragment {
+public class PictureSelectFragment extends BaseFragment implements SystemPhotoChangeListener {
 
     private GridView gvAlbum;
     private ImageView ivScale;
@@ -41,8 +43,11 @@ public class PictureSelectFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_picture_select_live, null);
+        View view = inflater.inflate(R.layout.fragment_picture_select_live, container,false);
         initViews(view);
+
+        registerSysImageChange();
+
         return view;
     }
 
@@ -61,6 +66,29 @@ public class PictureSelectFragment extends BaseFragment {
         AlbumDataHolderManager.getInstance().clear();
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        unRegisterSysImageChange();
+    }
+
+    private void registerSysImageChange() {
+        SystemPhotoChangeManager.getInstance(mContext).registerListener(this);
+    }
+
+    private void unRegisterSysImageChange() {
+        SystemPhotoChangeManager.getInstance(mContext).unregisterListener(this);
+    }
+
+    @Override
+    public void onSystemPhotoChange(List<ImageBean> list) {
+        mAdapter.setData(list);
+
+        hideCurItemOperaBtn();
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -68,10 +96,7 @@ public class PictureSelectFragment extends BaseFragment {
         AlbumHelper helper = new AlbumHelper(getActivity());
 
         // 2018/12/20 Hardy
-        List<ImageBean> mDataList = helper.getAlbumImageList();
-        // 2019/5/10 Hardy
-        mDataList = helper.sortNotPngImagePath(mDataList);
-
+        List<ImageBean> mDataList = helper.getAlbumImageListNoPng();
         AlbumDataHolderManager.getInstance().setDataList(mDataList);
 
         mAdapter = new LiveChatAlbumGridAdapter(getActivity(), mDataList);
@@ -299,4 +324,5 @@ public class PictureSelectFragment extends BaseFragment {
                     }).start();
         }
     }
+
 }

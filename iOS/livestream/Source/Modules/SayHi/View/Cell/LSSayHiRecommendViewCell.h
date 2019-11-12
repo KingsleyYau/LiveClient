@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LSSayHiRecommendViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *anchorPhoto;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *anchorPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *onlineImageView;
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIImageView *statusImageView;

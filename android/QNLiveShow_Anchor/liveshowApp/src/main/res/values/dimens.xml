@@ -126,4 +126,16 @@
     <dimen name="custom_dialog_left_right_margin">30dp</dimen>
     <dimen name="custom_dialog_text_size_simple">12sp</dimen>
 
+    <!-- 全屏直播间 -->
+    <dimen name="min_keyboard_height">200dp</dimen>
+    <dimen name="live_room_edit_height">49dp</dimen>
+    <dimen name="live_room_msg_area_max_height">80dp</dimen>
+    <dimen name="live_room_header_height">50dp</dimen>
+    <dimen name="live_room_header_man_icon_size">34dp</dimen>
+    <dimen name="live_room_header_man_pic_size">32dp</dimen>
+    <dimen name="live_room_header_man_icon_space">10dp</dimen>
+    <dimen name="live_enter_car_size">83dp</dimen>
+    <dimen name="live_room_pri_header_man_icon_size">40dp</dimen>
+    <dimen name="live_room_pri_man_video_width">96dp</dimen>
+    <dimen name="live_room_pri_man_video_height">147dp</dimen>
 </resources>

@@ -5,10 +5,8 @@
     android:layout_height="match_parent"
     android:background="#F2F2F2"
     android:orientation="vertical">
-
-    <com.qpidnetwork.livemodule.view.MartinListView
-        android:id="@+id/refreshListview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        <com.qpidnetwork.livemodule.view.MartinBallListView
+            android:id="@+id/refreshListview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 </FrameLayout>

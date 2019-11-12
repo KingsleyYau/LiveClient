@@ -1,25 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_msgItemContainer"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvMsgDescription"
+<!--    <TextView-->
+<!--        android:id="@+id/tvMsgDescription"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        android:clickable="true"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:textSize="14sp"-->
+<!--        android:textStyle="normal" />-->
+
+    <!--
+          2019/9/12 Hardy
+          发送昵称+内容的混排
+          [内容] 覆盖在 [昵称] 标签的上面，内容中开始位置，拼接昵称的内容，作为占位，看起来有混排的效果
+      -->
+    <!-- 普通文本 -->
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:clickable="true"
-        android:gravity="center_vertical"
-        android:textSize="14sp"
-        android:textStyle="normal" />
+        android:padding="3dp">
+
+        <!--
+            文本内容
+            android:layout_marginLeft="4dp"
+            由于昵称的圆角背景内边距是 4dp，故这里也距离左边一致距离，则文本内容中的占位昵称与昵称标签重合，不会跑出圆角背景的范围
+
+            android:lineSpacingMultiplier="1.1"
+            内容的换行间距，1.1 数值，刚好换行时，在昵称标签的下面，并且预留一点顶部空隙，不会与昵称标签重合。
+            并且，尽量不要设置 > 1.1 ，如果第一行文本有表情时，会导致表情与文本不对齐
+        -->
+        <TextView
+            android:id="@+id/tvMsgDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:lineSpacingMultiplier="1.1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            tools:text="HardyHardyHardyHardy"
+            tools:textColor="@color/black"
+            android:textColor="@color/white"
+            android:textStyle="normal" />
+
+        <!-- 昵称 -->
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            tools:textColor="@color/black"
+            tools:text="Hardy"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </FrameLayout>
 
     <!-- 推荐的主播信息 -->
     <LinearLayout
         android:id="@+id/llRecommended"
-        android:layout_width="match_parent"
+        android:layout_width="215dp"
         android:layout_height="60dp"
         android:layout_marginTop="@dimen/live_size_4dp"
         android:paddingBottom="2dp">
@@ -40,7 +93,7 @@
             fresco:roundingBorderColor="@color/white" />
 
         <LinearLayout
-            android:layout_width="140dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rectangle_rounded_angle_hangout_recommend_bg"
             android:gravity="center_vertical"

@@ -19,6 +19,7 @@
         self.voucherUnreadNum = 0;
         self.giftUnreadNum = 0;
         self.rideUnreadNum = 0;
+        self.livechatVoucherUnreadNum = 0;
     }
     return self;
 }
@@ -29,6 +30,7 @@
         self.voucherUnreadNum = [coder decodeIntForKey:@"voucherUnreadNum"];
         self.giftUnreadNum = [coder decodeIntForKey:@"giftUnreadNum"];
         self.rideUnreadNum = [coder decodeIntForKey:@"rideUnreadNum"];
+        self.livechatVoucherUnreadNum = [coder decodeIntForKey:@"livechatVoucherUnreadNum"];
     }
     return self;
 }
@@ -38,6 +40,7 @@
     [coder encodeInt:self.voucherUnreadNum forKey:@"voucherUnreadNum"];
     [coder encodeInt:self.giftUnreadNum forKey:@"giftUnreadNum"];
     [coder encodeInt:self.rideUnreadNum forKey:@"rideUnreadNum"];
+    [coder encodeInt:self.livechatVoucherUnreadNum forKey:@"livechatVoucherUnreadNum"];
 }
 
 @end

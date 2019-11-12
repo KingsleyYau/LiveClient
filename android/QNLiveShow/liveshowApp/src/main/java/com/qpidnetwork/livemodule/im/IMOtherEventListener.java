@@ -40,7 +40,7 @@ public interface IMOtherEventListener {
 	 * @param message
 	 * @param credit
 	 */
-	public void OnRecvLackOfCreditNotice(String roomId, String message, double credit);
+	public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, LCC_ERR_TYPE err);
 	
 	/**
 	 * 3.10.接收定时扣费通知

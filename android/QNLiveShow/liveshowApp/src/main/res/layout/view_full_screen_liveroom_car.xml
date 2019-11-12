@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_carView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <!-- 入场文字 -->
+    <!-- layout_width为固定宽度的话，动画不能动，原因不明 -->
+    <TextView
+        android:id="@+id/tv_joined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        tools:text="EAR AF DAFS sS"
+        tools:visibility="visible"/>
+
+    <!-- 座驾 -->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_car"
+        android:layout_width="@dimen/live_enter_car_size"
+        android:layout_height="@dimen/live_enter_car_size"
+        android:visibility="invisible"/>
+
+</LinearLayout>

@@ -2,9 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.livechat;
 
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,7 +39,6 @@ import com.qpidnetwork.qnbridgemodule.util.FileUtil;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
 import com.xiao.nicevideoplayer.NiceVideoPlayerManager;
-import com.xiao.nicevideoplayer.base.HomeKeyWatcher;
 
 import java.util.ArrayList;
 
@@ -618,7 +615,7 @@ public class LiveChatVideoPreviewFragment extends LiveChatBasePreviewFragment {
      */
     @Override
     public void OnGetVideoPhoto(LiveChatClientListener.LiveChatErrType errType, String errno, String errmsg, String userId, String inviteId, String videoId, LCRequestJniLiveChat.VideoPhotoType type, String filePath, ArrayList<LCMessageItem> msgList) {
-        if (!isCurMessageItem(userId)) {
+        if (!isCurMessageItem(videoId, inviteId)) {
             return;
         }
 
@@ -668,7 +665,7 @@ public class LiveChatVideoPreviewFragment extends LiveChatBasePreviewFragment {
      */
     @Override
     public void OnStartGetVideo(String userId, String videoId, String inviteId, String videoPath, ArrayList<LCMessageItem> msgList) {
-        if (!isCurMessageItem(userId)) {
+        if (!isCurMessageItem(videoId, inviteId)) {
             return;
         }
 
@@ -683,7 +680,7 @@ public class LiveChatVideoPreviewFragment extends LiveChatBasePreviewFragment {
      */
     @Override
     public void OnGetVideo(LiveChatClientListener.LiveChatErrType errType, String userId, String videoId, String inviteId, String videoPath, ArrayList<LCMessageItem> msgList) {
-        if (!isCurMessageItem(userId)) {
+        if (!isCurMessageItem(videoId, inviteId)) {
             return;
         }
 
@@ -706,41 +703,59 @@ public class LiveChatVideoPreviewFragment extends LiveChatBasePreviewFragment {
 
 
     //=======================   视频播放器的生命周期控制    ===============================================
-    private boolean pressedHome;
-    private HomeKeyWatcher mHomeKeyWatcher;
+//    private boolean pressedHome;
+//    private HomeKeyWatcher mHomeKeyWatcher;
+//
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        mHomeKeyWatcher = new HomeKeyWatcher(getActivity());
+//        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
+//            @Override
+//            public void onHomePressed() {
+//                pressedHome = true;
+//            }
+//        });
+//        pressedHome = false;
+////        mHomeKeyWatcher.startWatch();
+//    }
+
+//    @Override
+//    public void onStart() {
+//        mHomeKeyWatcher.startWatch();
+//        pressedHome = false;
+//        super.onStart();
+//        NiceVideoPlayerManager.instance().resumeNiceVideoPlayer();
+//    }
+
+//    @Override
+//    public void onStop() {
+//        // 在OnStop中是release还是suspend播放器，需要看是不是因为按了Home键
+//        if (pressedHome) {
+//            NiceVideoPlayerManager.instance().suspendNiceVideoPlayer();
+//        } else {
+//            NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
+//        }
+//        super.onStop();
+//        mHomeKeyWatcher.stopWatch();
+//    }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mHomeKeyWatcher = new HomeKeyWatcher(getActivity());
-        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
-            @Override
-            public void onHomePressed() {
-                pressedHome = true;
-            }
-        });
-        pressedHome = false;
-        mHomeKeyWatcher.startWatch();
+    public void onPause() {
+        super.onPause();
+        NiceVideoPlayerManager.instance().suspendNiceVideoPlayer();
     }
 
     @Override
-    public void onStart() {
-        mHomeKeyWatcher.startWatch();
-        pressedHome = false;
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         NiceVideoPlayerManager.instance().resumeNiceVideoPlayer();
     }
 
     @Override
-    public void onStop() {
-        // 在OnStop中是release还是suspend播放器，需要看是不是因为按了Home键
-        if (pressedHome) {
-            NiceVideoPlayerManager.instance().suspendNiceVideoPlayer();
-        } else {
-            NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
-        }
-        super.onStop();
-        mHomeKeyWatcher.stopWatch();
+    public void onDestroyView() {
+        super.onDestroyView();
+        NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
     }
     //=======================   视频播放器的生命周期控制    ===============================================
 }

@@ -135,13 +135,9 @@ public class ScheduleInvitePackageUnreadManager implements IMOtherEventListener{
     public void GetPackageUnreadCount(){
         LiveRequestOperator.getInstance().GetPackageUnreadCount(new OnGetPackageUnreadCountCallback() {
             @Override
-            public void onGetPackageUnreadCount(boolean isSuccess, int errCode, String errMsg, int total,
-                                                int voucherNum, int giftNum, int rideNum) {
-                Log.d(TAG,"onGetPackageUnreadCount-isSuccess:"+isSuccess+" errCode:"+errCode
-                        +" errMsg:"+errMsg+" total:"+total+" voucherNum:"+voucherNum
-                        +" giftNum:"+giftNum+" rideNum:"+rideNum);
+            public void onGetPackageUnreadCount(boolean isSuccess, int errCode, String errMsg, PackageUnreadCountItem item) {
                 if(isSuccess){
-                    mPackageUnreadCountItem = new PackageUnreadCountItem(total, voucherNum, giftNum, rideNum);
+                    mPackageUnreadCountItem = item;
                     onPackageUnreadCallback(mPackageUnreadCountItem);
                 }
             }
@@ -205,7 +201,7 @@ public class ScheduleInvitePackageUnreadManager implements IMOtherEventListener{
     public void OnKickOff(IMClientListener.LCC_ERR_TYPE errType, String errMsg) {}
 
     @Override
-    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {}
+    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, IMClientListener.LCC_ERR_TYPE err) {}
 
     @Override
     public void OnRecvCreditNotice(String roomId, double credit) {}

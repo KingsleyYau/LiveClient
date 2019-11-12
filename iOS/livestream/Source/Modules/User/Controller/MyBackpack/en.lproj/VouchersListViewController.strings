@@ -7,15 +7,26 @@
 "Failed to load" = "Failed to load";
 
 //适用主播
-"Only_broadcaster" = "Only with broadcaster:";
+"Only_broadcaster" = "For broadcaster:";
 
-"New broadcasters" = "New broadcasters";
+"New broadcasters" = "For broadcasters never watched.";
 
-"No_limit" = "No limit broadcasters";
+"No_limit" = "For watching all broadcasters.";
 
 //使用范围
-"Only_Private" = "Only in One-on-One";
+"Only_Private" = "One-on-One Voucher";
 
-"Only_Public" = "Only in Public sessions";
+"Only_Public" = "Public Broadcast Voucher";
 
-"No limit sessions" = "No limit sessions";
+"No limit sessions" = "Broadcast Voucher";
+
+"Chat_Vorcher" = "Chat Voucher";
+
+
+
+
+"No_Limit_Chat" = "For chatting with all broadcasters.";
+
+"New_Chat" = "For broadcasters never chatted with.";
+
+"Only_Chat" = "For chatting with:";

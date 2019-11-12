@@ -11,6 +11,7 @@
 @interface VoucherItemObject : NSObject
 /**
  * 使用卷结构体
+ * voucherType     试聊劵类型（VOUCHERTYPE_BROADCAST：直播试聊劵 VOUCHERTYPE_LIVECHAT：livechat试聊劵）
  * voucherId       试用劵ID
  * photoUrl        试用劵图标url
  * photoUrlMobile  试用券图标url（移动端使用）
@@ -24,7 +25,9 @@
  * startValidDate 有效开始时间
  * expDate         过期时间
  * read            已读状态（0:未读 1:已读）
+ * offsetMin       试聊劵时长（分钟）
  */
+@property (nonatomic, assign) VoucherType voucherType;
 @property (nonatomic, copy) NSString* _Nonnull voucherId;
 @property (nonatomic, copy) NSString* _Nonnull photoUrl;
 @property (nonatomic, copy) NSString* _Nonnull photoUrlMobile;
@@ -38,5 +41,6 @@
 @property (nonatomic, assign) NSInteger startValidDate;
 @property (nonatomic, assign) NSInteger expDate;
 @property (nonatomic, assign) BOOL read;
+@property (nonatomic, assign) int offsetMin;
 
 @end

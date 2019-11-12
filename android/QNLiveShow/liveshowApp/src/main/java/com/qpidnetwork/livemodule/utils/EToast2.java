@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -47,17 +49,17 @@ public class EToast2 {
     private Context mContext;
     private static final String TAG = EToast2.class.getSimpleName();
 
-    private EToast2(Context context, CharSequence text, int HIDE_DELAY){
+    private EToast2(Context context, CharSequence text, int HIDE_DELAY) {
         manger = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.mContext = context.getApplicationContext();
         this.text = text;
 
-        if(HIDE_DELAY == EToast2.LENGTH_SHORT)
+        if (HIDE_DELAY == EToast2.LENGTH_SHORT)
             this.time = 2000L;
-        else if(HIDE_DELAY == EToast2.LENGTH_LONG)
+        else if (HIDE_DELAY == EToast2.LENGTH_LONG)
             this.time = 3000L;
 
-        if(oldToast == null){
+        if (oldToast == null) {
             toast = new Toast(context);
             contentView = View.inflate(context, R.layout.view_custom_toast, null);
             toast.setView(contentView);
@@ -74,10 +76,10 @@ public class EToast2 {
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
         params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-        params.y = DisplayUtil.dip2px(context,64f);
+        params.y = DisplayUtil.dip2px(context, 64f);
 
-        if(handler == null){
-            handler = new Handler(){
+        if (handler == null) {
+            handler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                     EToast2.this.cancel();
@@ -86,33 +88,37 @@ public class EToast2 {
         }
     }
 
-    public static EToast2 makeText(Context context, String text, int HIDE_DELAY){
+    public static EToast2 makeText(Context context, String text, int HIDE_DELAY) {
         EToast2 toast = new EToast2(context, text, HIDE_DELAY);
         return toast;
     }
 
     public static EToast2 makeText(Context context, int resId, int HIDE_DELAY) {
-        return makeText(context,context.getText(resId).toString(),HIDE_DELAY);
+        return makeText(context, context.getText(resId).toString(), HIDE_DELAY);
     }
 
-    public EToast2 setGravity(int gravity){
-        if(null != params){
+    public EToast2 setGravity(int gravity) {
+        if (null != params) {
             params.gravity = gravity;
-            if(gravity == Gravity.CENTER){
+            if (gravity == Gravity.CENTER) {
                 params.y = 0;
-            }else if(gravity == (Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM)){
-                params.y = DisplayUtil.dip2px(mContext,64f);
+            } else if (gravity == (Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM)) {
+                params.y = DisplayUtil.dip2px(mContext, 64f);
             }
         }
         return this;
     }
 
-    public void show(){
-        if(oldToast == null){
+    public void show() {
+        if (oldToast == null) {
             oldToast = toast;
+            ViewParent parent = contentView.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(contentView);
+            }
             manger.addView(contentView, params);
-        }else{
-            manger.updateViewLayout(contentView,params);
+        } else {
+            manger.updateViewLayout(contentView, params);
             timer.cancel();
             oldToast.setText(text);
         }
@@ -125,7 +131,7 @@ public class EToast2 {
         }, time);
     }
 
-    public void cancel(){
+    public void cancel() {
         try {
             manger.removeView(contentView);
         } catch (IllegalArgumentException e) {
@@ -141,16 +147,18 @@ public class EToast2 {
         contentView = null;
         handler = null;
     }
-    public void setText(CharSequence s){
+
+    public void setText(CharSequence s) {
         toast.setText(s);
     }
 
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
+
     /**
      * 用来判断是否开启通知权限
-     * */
-    public static boolean isNotificationEnabled(Context context){
+     */
+    public static boolean isNotificationEnabled(Context context) {
         boolean isNotificationEnabled = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
@@ -162,22 +170,22 @@ public class EToast2 {
                 appOpsClass = Class.forName(AppOpsManager.class.getName());
                 Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
                 Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
-                int value = (int)opPostNotificationValue.get(Integer.class);
-                isNotificationEnabled = ((int)checkOpNoThrowMethod.invoke(mAppOps,value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+                int value = (int) opPostNotificationValue.get(Integer.class);
+                isNotificationEnabled = ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        Log.d(TAG,"isNotificationEnabled-isNotificationEnabled:"+isNotificationEnabled);
+        Log.d(TAG, "isNotificationEnabled-isNotificationEnabled:" + isNotificationEnabled);
         return isNotificationEnabled;
     }
 
-    public static boolean isErrToastDevice(){
+    public static boolean isErrToastDevice() {
         boolean isErrToastDevice = false;
-        for(String deviceName: errShowToastDeviceNames){
-            if(deviceName.equals(android.os.Build.MODEL)){
+        for (String deviceName : errShowToastDeviceNames) {
+            if (deviceName.equals(android.os.Build.MODEL)) {
                 isErrToastDevice = true;
-                Log.d(TAG,"isErrToastDevice-deviceName:"+deviceName+" isErrToastDevice:"+isErrToastDevice);
+                Log.d(TAG, "isErrToastDevice-deviceName:" + deviceName + " isErrToastDevice:" + isErrToastDevice);
                 break;
             }
         }

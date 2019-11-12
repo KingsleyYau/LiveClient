@@ -1,0 +1,20 @@
+
+/* Class = "UILabel"; text = "Type Your Message..."; ObjectID = "XyS-Nw-hFB"; */
+"XyS-Nw-hFB.text" = "Type Your Message...";
+
+/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "aBn-nw-oqB"; */
+"aBn-nw-oqB.normalTitle" = "Send";
+
+/* Class = "UITextField"; placeholder = "How are you today?"; ObjectID = "lK0-qv-0c6"; */
+"lK0-qv-0c6.placeholder" = "Type Your Message...";
+
+"STANDARD" = "Standard";
+
+"ADVANCE" = "Advanced";
+
+"SPEAK_TOO_FAST" = "Please do not send repeatedly";
+
+"BOTTOM_MSG" = "Type Your Message...";
+
+"INPUT_MSG" = "Type Your Message...";
+

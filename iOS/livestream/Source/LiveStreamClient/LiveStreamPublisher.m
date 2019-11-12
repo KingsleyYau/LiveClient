@@ -598,7 +598,9 @@
         [self.publisher pausePushVideo];
 
         // 暂停摄像头采集队列
-        [self.videoCaptureSession pauseCameraCapture];
+        if ( self.isPreview ) {
+            [self.videoCaptureSession pauseCameraCapture];
+        }
         
         // 暂停OpenGL处理队列
         dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];

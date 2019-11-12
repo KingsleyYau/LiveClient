@@ -7,7 +7,6 @@
 //
 
 #import "LiveRoomMsgManager.h"
-#import "LSImageViewLoader.h"
 
 #define MessageFontSize 16
 #define MessageFont [UIFont systemFontOfSize:MessageFontSize]
@@ -83,7 +82,7 @@
             // 姓名
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ", item.sendName] font:MessageFont color:nameColor]];
             // 内容
-            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ \"%@\"", NSLocalizedString(@"Member_RiderJoin", @"Member_RiderJoin"), item.riderName] font:MessageFont color:roomStyleItem.riderStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:NSLocalizedString(@"Member_RiderJoin", @"Member_RiderJoin"), item.riderName] font:MessageFont color:roomStyleItem.riderStrColor]];
         } break;
         case MsgType_Talent: {
             /**才艺点播**/
@@ -106,7 +105,7 @@
         [attributeString appendAttributedString:[self parseMessage:@" " font:MessageFont color:styleItem.myNameColor]];
     }
     [attributeString appendAttributedString:attachText];
-    [attributeString appendAttributedString:[self parseMessage:@" " font:MessageFont color:styleItem.myNameColor]];
+    [attributeString appendAttributedString:[self parseMessage:@" " font:MessageFont color:styleItem.myNameColor]];
 
     return attributeString;
 }

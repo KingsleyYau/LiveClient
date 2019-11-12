@@ -142,14 +142,17 @@ public class RoomPackageGiftManager {
         //排重和合并数目
         if(packageGiftItems != null && packageGiftItems.length > 0){
             for(PackageGiftItem item : packageGiftItems){
-                if(tempPackage.containsKey(item.giftId)){
-                    //合并数目
-                    PackageGiftItem tempItem = tempPackage.get(item.giftId);
-                    tempItem.num = tempItem.num + item.num;
-                }else{
-                    tempPackage.put(item.giftId, item);
-                    //解决排序与原排序一致问题
-                    packageGiftSort.add(item.giftId);
+                //增加礼物有效性判断
+                if(isPackageValid(item)) {
+                    if (tempPackage.containsKey(item.giftId)) {
+                        //合并数目
+                        PackageGiftItem tempItem = tempPackage.get(item.giftId);
+                        tempItem.num = tempItem.num + item.num;
+                    } else {
+                        tempPackage.put(item.giftId, item);
+                        //解决排序与原排序一致问题
+                        packageGiftSort.add(item.giftId);
+                    }
                 }
             }
         }
@@ -237,5 +240,23 @@ public class RoomPackageGiftManager {
                 mOnGetPackageGiftListCallback.clear();
             }
         }
+    }
+
+    /**
+     * 判断当前礼物是否可以发送
+     * @param item
+     * @return
+     */
+    private boolean isPackageValid(PackageGiftItem item){
+        boolean isValid = false;
+        long currentTime = System.currentTimeMillis();
+        if(item != null){
+            long startValid = ((long)item.startValidDate) * 1000;
+            long expireValid = ((long)item.expiredDate) * 1000;
+            if(startValid <= currentTime && currentTime <= expireValid ){
+                isValid = true;
+            }
+        }
+        return isValid;
     }
 }

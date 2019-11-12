@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 直播间HTML样式文字专用 -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <!--font标签只实现了两个属性 color和face，如要控制字体大小，可以通过small和big来粗略区分，
+    具体参考源码android.text.HtmlToSpannedConverter#startFont/android.text.HtmlToSpannedConverter#handleEndTag-->
+
+    <!--2018改版后的直播间消息列表样式,勋章功能去掉-->
+    <!--入场-->
+    <!--公开直播间，有座驾入场-->
+    <string name="enterlive_withrider">&#160;Joined with \"%1$s\"</string>
+    <string name="enterlive_norider">&#160;Joined</string>
+    <string name="livemsg_temp_roomin_public"><![CDATA[
+        <jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FF8700\">%2$s</font>
+    ]]></string>
+    <!--公开直播间入场消息文字颜色-->
+    <string name="livemsg_temp_roomin_public_self"><![CDATA[
+        <jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FF8700\"> %2$s</font>
+    ]]></string>
+    <!--私密直播间入场消息文字颜色-->
+    <string name="livemsg_temp_roomin_private_self"><![CDATA[
+        <jimg src=\"ticket\"/><font color=\"#FF9901\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FF9901\"> %2$s</font>
+    ]]></string>
+
+    <!--文本/弹幕-->
+    <!--公开直播间-->
+    <string name="livemsg_temp_normal_public_anchor"><![CDATA[
+                <jimg src=\"anchor1\"></jimg><font color=\"#009927\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#000000\">%2$s</font>
+        ]]></string>
+    <string name="livemsg_temp_normal_public_self"><![CDATA[
+                <jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#000000\">%2$s</font>
+        ]]></string>
+    <!--私密直播间-->
+    <!--  2019/9/11 Hardy  message_username 发送人昵称的占位(后面接 2 个空格作为间隙)-->
+    <string name="livemsg_temp_normal_private_anchor"><![CDATA[
+            <b><font color=\"#FFFFFF\"><xliff:g id="message_username">%1$s&#160;&#160; </xliff:g></font></b><font color=\"#FFFFFF\">%2$s</font>
+        ]]></string>
+    <string name="livemsg_temp_normal_private_self"><![CDATA[
+            <b><font color=\"#FFFFFF\"><xliff:g id="message_username">%1$s&#160;&#160; </xliff:g></font></b><font color=\"#FFFFFF\">%2$s</font>
+        ]]></string>
+<!--
+    <string name="livemsg_temp_normal_private_anchor"><![CDATA[
+                <font color=\"#FFFFFF\">%1$s</font>
+        ]]></string>
+    <string name="livemsg_temp_normal_private_self"><![CDATA[
+                <font color=\"#FFFFFF\">%1$s</font>
+        ]]></string>
+       -->
+
+    <!--送礼-->
+    <!--公开直播间-->
+    <string name="livemsg_temp_gift_public_self"><![CDATA[
+                <jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s</xliff:g></font><b><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font><b>
+        ]]></string>
+    <string name="livemsg_temp_gift_public_anchor"><![CDATA[
+                <jimg src=\"anchor1\"/><font color=\"#009927\"><xliff:g id="message_username">&#160;%1$s</xliff:g></font><b><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
+        ]]></string>
+    <string name="livemsg_temp_gift_public"><![CDATA[
+                <jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g></font><b><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
+        ]]></string>
+    <!--私密直播间-送礼-->
+    <!--  2019/9/11 Hardy  message_username 发送人昵称的占位(后面接 2 个空格作为间隙)-->
+    <string name="livemsg_temp_gift_private_self"><![CDATA[
+                <jimg src=\"ticket\"/><b><font color=\"#FFFFFF\"><xliff:g id="message_username">%1$s&#160;&#160;</xliff:g></font><font color=\"#FFD205\"> sent \"<xliff:g id="message_giftname">%2$s</xliff:g>\" </font> [gift:%3$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
+        ]]></string>
+    <string name="livemsg_temp_gift_private_anchor"><![CDATA[
+                <b><font color=\"#FFFFFF\"><xliff:g id="message_username">%1$s&#160;&#160;</xliff:g></font><font color=\"#FFD205\"> sent \"<xliff:g id="message_giftname">%2$s</xliff:g>\" </font> [gift:%3$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
+        ]]></string>
+<!--
+    <string name="livemsg_temp_gift_private_self"><![CDATA[
+                <jimg src=\"ticket\"/><b><font color=\"#FFD205\"> sent \"<xliff:g id="message_giftname">%1$s</xliff:g>\" </font> [gift:%2$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%3$s</xliff:g> </font></b>
+        ]]></string>
+    <string name="livemsg_temp_gift_private_anchor"><![CDATA[
+                <b><font color=\"#FFD205\"> sent \"<xliff:g id="message_giftname">%1$s</xliff:g>\" </font> [gift:%2$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%3$s</xliff:g> </font></b>
+        ]]></string>
+-->
+
+
+    <!-- 试聊卷 -->
+    <!--公开直播间-->
+    <!--私密直播间-->
+    <string name="livemsg_voucher_private"><![CDATA[
+                <font color=\"#000000\">Broadcast Voucher has been appied. First </font><b><font color=\"#FF6d00\"><xliff:g id="use_coupon">%1$s</xliff:g></font></b><font color=\"#000000\"> minutes are free of charge.</font>
+        ]]></string>
+
+
+
+
+
+
+    <!--HangOut直播间入场-->
+    <string name="livemsg_temp_roomin_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> joined </font>]]></string>
+    <string name="livemsg_temp_roomin_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> joined </font>]]></string>
+
+    <string name="livemsg_temp_normal_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+    <string name="livemsg_temp_normal_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_bar_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_bar_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_bar_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_giftstore_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_giftstore_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_giftstore_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_celeb_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
+    <string name="livemsg_temp_gift_hangout_celeb_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
+
+    <string name="livemsg_temp_hangout_recommend"><![CDATA[
+        <font color=\"#05C775\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> Recommended </font><font color=\"#05C775\">%2$s</xliff:g></font><font color=\"#FF6D00\"> to join the hang-out. </font>
+    ]]></string>
+    <string name="livemsg_temp_private_recommend"><![CDATA[
+        <font color=\"#FF6D00\">You invited </font><font color=\"#FF6D00\">%1$s</font><font color=\"#FF6D00\"> to hang out with </font><font color=\"#FF6D00\">%2$s</xliff:g></font>
+    ]]></string>
+
+
+</resources>

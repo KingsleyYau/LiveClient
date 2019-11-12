@@ -47,72 +47,72 @@ public class DateSelectorWheelView extends RelativeLayout implements
     public static final int TYPE_YYYYMMDDHHMM = 2;
     public static final int TYPE_YYYYMMDDHHMMSS = 3;
 
-    protected RelativeLayout rlTitle;
-    protected View lineL;
-    protected LinearLayout llWheelViews;
-    protected TextView tvSubTitle;
-    protected TextView tvYear;
-    protected TextView tvMonth;
-    protected TextView tvDay;
-    protected TextView tvHour;
-    protected TextView tvMinute;
-    protected TextView tvSecond;
-    protected View line0;
-    protected TextView tv_empty;
-    protected TextView tv_line1;
-    protected TextView tv_line2;
-    protected WheelView wvYear;
-    protected WheelView wvMonth;
-    protected WheelView wvDay;
-    protected WheelView wvHour;
-    protected WheelView wvMinute;
-    protected WheelView wvSecond;
+    private RelativeLayout rlTitle;
+    private View lineL;
+    private LinearLayout llWheelViews;
+    private TextView tvSubTitle;
+    private TextView tvYear;
+    private TextView tvMonth;
+    private TextView tvDay;
+    private TextView tvHour;
+    private TextView tvMinute;
+    private TextView tvSecond;
+    private View line0;
+    private TextView tv_empty;
+    private TextView tv_line1;
+    private TextView tv_line2;
+    private WheelView wvYear;
+    private WheelView wvMonth;
+    private WheelView wvDay;
+    private WheelView wvHour;
+    private WheelView wvMinute;
+    private WheelView wvSecond;
     /**
      * 设置显示的日期
      */
-    protected long mDate;
+    private long mDate;
     /**
      * 显示年份数
      */
-    protected String[] years = new String[141];
+    private String[] years = new String[141];
     /**
      * 显示月份数
      */
-    protected String[] months = new String[12];
+    private String[] months = new String[12];
     /**
      * 显示日数
      */
-    protected String[] tinyDays = new String[28];
-    protected String[] smallDays = new String[29];
-    protected String[] normalDays = new String[30];
-    protected String[] bigDays = new String[31];
+    private String[] tinyDays = new String[28];
+    private String[] smallDays = new String[29];
+    private String[] normalDays = new String[30];
+    private String[] bigDays = new String[31];
     /**
      * 显示时数
      */
-    protected String[] hours = new String[24];
+    private String[] hours = new String[24];
     /**
      * 显示分数
      */
-    protected String[] minutes = new String[60];
+    private String[] minutes = new String[60];
     /**
      * 显示秒数
      */
-    protected String[] seconds = new String[60];
+    private String[] seconds = new String[60];
 
-    protected StrericWheelAdapter yearsAdapter;
-    protected StrericWheelAdapter monthsAdapter;
-    protected StrericWheelAdapter tinyDaysAdapter;
-    protected StrericWheelAdapter smallDaysAdapter;
-    protected StrericWheelAdapter bigDaysAdapter;
-    protected StrericWheelAdapter normalDaysAdapter;
+    private StrericWheelAdapter yearsAdapter;
+    private StrericWheelAdapter monthsAdapter;
+    private StrericWheelAdapter tinyDaysAdapter;
+    private StrericWheelAdapter smallDaysAdapter;
+    private StrericWheelAdapter bigDaysAdapter;
+    private StrericWheelAdapter normalDaysAdapter;
 
-    protected StrericWheelAdapter hoursAdapter;
-    protected StrericWheelAdapter minutesAdapter;
-    protected StrericWheelAdapter secondsAdapter;
-    protected int currentDateType;
-    protected int todayHour;
-    protected int todayMinute;
-    protected int todaySecond;
+    private StrericWheelAdapter hoursAdapter;
+    private StrericWheelAdapter minutesAdapter;
+    private StrericWheelAdapter secondsAdapter;
+    private int currentDateType;
+    private int todayHour;
+    private int todayMinute;
+    private int todaySecond;
 
     public DateSelectorWheelView(Context context, AttributeSet attrs,
                                  int defStyleAttr) {
@@ -130,7 +130,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
         initLayout(context);
     }
 
-    protected void initLayout(Context context) {
+    private void initLayout(Context context) {
         LayoutInflater.from(context).inflate(R.layout.dialogui_datepick_date_selector_layout, this,
                 true);
         rlTitle = (RelativeLayout) findViewById(R.id.rl_date_time_title);
@@ -166,7 +166,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
         setShowDateType(TYPE_YYYYMMDD);
     }
 
-    protected void setData() {
+    private void setData() {
         /** 年初始化 */
         for (int i = 0; i < years.length; i++) {
             years[i] = 1960 + i + " 年";
@@ -252,9 +252,8 @@ public class DateSelectorWheelView extends RelativeLayout implements
         if (isBigMonth(getTodayMonth() + 1)) {
             wvDay.setAdapter(bigDaysAdapter);
         } else if (getTodayMonth() == 1
-//                && isLeapYear(wvYear.getCurrentItemValue().subSequence(0, 4)  //初始化没选中,这个为null
-//                .toString().trim())) {
-                && isLeapYear(String.valueOf(getTodayYear()))){
+                && isLeapYear(wvYear.getCurrentItemValue().subSequence(0, 4)
+                .toString().trim())) {
             wvDay.setAdapter(smallDaysAdapter);
         } else if (getTodayMonth() == 1) {
             wvDay.setAdapter(tinyDaysAdapter);
@@ -372,7 +371,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      *
      * @param year
      */
-    private void setCurrentYear(String year) {
+    public void setCurrentYear(String year) {
         boolean overYear = true;
         year = year + " 年";
         for (int i = 0; i < years.length; i++) {
@@ -392,7 +391,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      *
      * @param month
      */
-    private void setCurrentMonth(String month) {
+    public void setCurrentMonth(String month) {
         month = month + " 月";
         for (int i = 0; i < months.length; i++) {
             if (month.equals(months[i])) {
@@ -407,7 +406,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      *
      * @param day 14
      */
-    private void setCurrentDay(String day) {
+    public void setCurrentDay(String day) {
         day = day + " 日";
         for (int i = 0; i < smallDays.length; i++) {
             if (day.equals(smallDays[i])) {
@@ -482,7 +481,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      * @param year
      * @return
      */
-    protected boolean isLeapYear(String year) {
+    private boolean isLeapYear(String year) {
         int temp = Integer.parseInt(year);
         return temp % 4 == 0 && (temp % 100 != 0 || temp % 400 == 0) ? true
                 : false;
@@ -494,7 +493,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      * @param month
      * @return
      */
-    protected boolean isBigMonth(int month) {
+    private boolean isBigMonth(int month) {
         boolean isBigMonth = false;
         switch (month) {
             case 1:
@@ -620,7 +619,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
         if (tvYear != null) {
             tvYear.setText(year);
         }
-        year = year + " 年"; //与getToday()中的格式相对应
+        year = year + " 年";
         for (int i = 0; i < years.length; i++) {
             if (year.equals(years[i])) {
                 position = i;
@@ -635,7 +634,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      *
      * @return
      */
-    protected int getTodayMonth() {
+    private int getTodayMonth() {
         // 2015年12月01日
         int position = 0;
         String today = getToday();
@@ -658,7 +657,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
      *
      * @return
      */
-    protected int getTodayDay() {
+    private int getTodayDay() {
         // 2015年12月01日
         int position = 0;
         String today = getToday();
@@ -676,7 +675,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
         return position;
     }
 
-    protected int getTodayHour() {
+    public int getTodayHour() {
         int position = 0;
         String today = getToday();
         String hour = today.substring(12, 14);
@@ -693,7 +692,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
         return position;
     }
 
-    protected int getTodayMinute() {
+    public int getTodayMinute() {
         int position = 0;
         String today = getToday();
         String minute = today.substring(15, 17);
@@ -710,7 +709,7 @@ public class DateSelectorWheelView extends RelativeLayout implements
         return position;
     }
 
-    protected int getTodaySecond() {
+    public int getTodaySecond() {
         int position = 0;
         String today = getToday();
         String second = today.substring(18, 20);

@@ -151,7 +151,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     // 如果在直播间中 关闭直播间声音
-    [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+    [[LiveGobalManager manager] openOrCloseLiveSound:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -160,7 +160,7 @@
     [self.playManager removeVideoView];
     [self.playManager removeNotification];
     
-    [[LiveGobalManager manager] openOrCloseLiveSound:YES];
+    [[LiveGobalManager manager] openOrCloseLiveSound:NO];
 }
 
 #pragma mark - 界面显示/隐藏

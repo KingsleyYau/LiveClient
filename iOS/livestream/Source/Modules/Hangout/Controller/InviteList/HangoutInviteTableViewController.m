@@ -49,7 +49,7 @@
 }
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -60,13 +60,13 @@
     // 去除列表多余分割线
     self.tableView.tableFooterView = [[UIView alloc] init];
     // 初始化列表上下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     // 默认下拉刷新
     if (!self.viewDidAppearEver) {
-        [self.tableView startPullDown:YES];
+        [self.tableView startLSPullDown:YES];
     }
     [super viewDidAppear:animated];
 }
@@ -79,7 +79,7 @@
         [self.items removeAllObjects];
         // 刷新界面
         [self.tableView reloadData];
-        [self.tableView startPullDown:YES];
+        [self.tableView startLSPullDown:YES];
     }
 }
 
@@ -97,7 +97,7 @@
         NSLog(@"HangoutInviteTableViewController::LSGetHangoutFriendsRequest([获取主播好友列表] %@, errnum : %d, errmsg : %@, friends : %lu)",BOOL2SUCCESS(success), errnum, errmsg, (unsigned long)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             // 停止头部
-            [self.tableView finishPullDown:NO];
+            [self.tableView finishLSPullDown:NO];
             if (success) {
                 // 清空列表
                 [self.items removeAllObjects];
@@ -164,7 +164,7 @@
         cell.labelDesc.text = [NSString stringWithFormat:@"%dyrs / %@", item.age, item.country, nil];
 
         if (item.onlineStatus == ONLINE_STATUS_LIVE) {
-            [cell.buttonInvite setBackgroundImage:[UIImage imageNamed:@"Live_Line_Icon"] forState:UIControlStateNormal];
+            [cell.buttonInvite setBackgroundImage:[UIImage imageNamed:@"Home_hangoutBg"] forState:UIControlStateNormal];
             cell.buttonInvite.enabled = YES;
             cell.onlineView.hidden = NO;
         } else {

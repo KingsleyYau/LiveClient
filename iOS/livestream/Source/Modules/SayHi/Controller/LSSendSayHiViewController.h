@@ -6,9 +6,9 @@
 //  Copyright © 2019 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsPageViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-@interface LSSendSayHiViewController : LSGoogleAnalyticsPageViewController
+@interface LSSendSayHiViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, copy) NSString *anchorId;
 

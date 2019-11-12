@@ -71,6 +71,7 @@
         self.appSite = [coder decodeObjectForKey:@"appSite"];
         self.chatVoiceHostUrl = [coder decodeObjectForKey:@"chatVoiceHostUrl"];
         self.minBalanceForChat = [coder decodeDoubleForKey:@"minBalanceForChat"];
+        self.flowersGift = [coder decodeIntForKey:@"flowersGift"];
     }
     return self;
 }
@@ -100,6 +101,7 @@
     [coder encodeObject:self.appSite forKey:@"appSite"];
     [coder encodeObject:self.chatVoiceHostUrl forKey:@"chatVoiceHostUrl"];
     [coder encodeDouble:self.minBalanceForChat forKey:@"minBalanceForChat"];
+    [coder encodeInt:self.flowersGift forKey:@"flowersGift"];
 
 }
 

@@ -991,3 +991,58 @@ jobjectArray getProgramInfoArray(JNIEnv *env, const AnchorProgramInfoList& list)
     }
     return jItemArray;
 }
+
+jobject getCurrentRoomUserItem(JNIEnv *env, const ZBHttpUserInfoItem& item) {
+    jobject jItem = NULL;
+    jclass jItemCls = GetJClass(env, PUSH_ROOM_AUD_INFO_ITEM_CLASS);
+    if (NULL != jItemCls){
+        string signature = "(Ljava/lang/String;";   // userId
+        signature += "Ljava/lang/String;";          // nickName
+        signature += "Ljava/lang/String;";           // photoUrl
+        signature += ")V";
+        jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+        jstring juserId = env->NewStringUTF(item.userId.c_str());
+        jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+        jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
+        jItem = env->NewObject(jItemCls, init,
+                               juserId,
+                               jnickName,
+                               jphotoUrl
+        );
+        env->DeleteLocalRef(juserId);
+        env->DeleteLocalRef(jnickName);
+        env->DeleteLocalRef(jphotoUrl);
+    }
+    return jItem;
+}
+
+jobject getCurrentRoomItem(JNIEnv *env, const ZBHttpCurrentRoomItem& item) {
+    jobject jItem = NULL;
+    jclass jItemCls = GetJClass(env, PUSH_ROOM_INFO_ITEM_CLASS);
+    if (NULL != jItemCls){
+        string signature = "(Ljava/lang/String;";   // anchorId
+        signature += "Ljava/lang/String;";          // roomId
+        signature += "I";                           // roomType
+        signature += "L";
+        signature += PUSH_ROOM_AUD_INFO_ITEM_CLASS; // userInfo
+        signature += ";";
+        signature += ")V";
+        jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+        jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+        jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+        jint jroomType = LiveRoomTypeToInt(item.roomType);
+        jobject juserInfo = getCurrentRoomUserItem(env, item.userInfo);
+        jItem = env->NewObject(jItemCls, init,
+                               janchorId,
+                               jroomId,
+                               jroomType,
+                               juserInfo
+        );
+        env->DeleteLocalRef(janchorId);
+        env->DeleteLocalRef(jroomId);
+        if(juserInfo != NULL){
+           env->DeleteLocalRef(juserInfo);
+        }
+    }
+    return jItem;
+}

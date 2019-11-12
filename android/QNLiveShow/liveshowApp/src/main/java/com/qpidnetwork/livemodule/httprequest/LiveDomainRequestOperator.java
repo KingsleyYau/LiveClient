@@ -12,7 +12,6 @@ import com.qpidnetwork.livemodule.httprequest.item.LSProfileItem;
 import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum;
 import com.qpidnetwork.livemodule.httprequest.item.LSValidSiteIdItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.DomainManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.IDomainListener;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 
@@ -353,6 +352,51 @@ public class LiveDomainRequestOperator {
             }
         });
     }
+
+
+    /**
+     * 2.23.提交用户头像
+     * @param callback
+     * @return
+     */
+    public long UploadUserPhoto(final String photoName, final OnRequestCallback callback) {
+        // Domain认证改变重新调用接口
+        final IDomainListener callbackLogin = new IDomainListener() {
+
+            @Override
+            public void onDomainHandle(boolean isSuccess, int errCode, String errMsg) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // Domain认证成功
+                    // 再次调用jni接口
+                    RequestJniAuthorization.UploadUserPhoto(photoName, callback);
+                } else {
+                    // Domain认证不成功, 回调失败
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
+                }
+            }
+        };
+
+        return RequestJniAuthorization.UploadUserPhoto(photoName, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+                // 公共处理
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    if(callback != null) {
+                        callback.onRequest(isSuccess, errCode, errMsg);
+                    }
+                }
+            }
+        });
+    }
+
 
 
     /**************************************  模块处理 other ********************************************/

@@ -17,10 +17,14 @@
 
 @interface LSListViewController : LSViewController
 
-
 /** 错误页 */
 @property (nonatomic, strong) UIView* failView;
-
+/** 没数据页 */
+@property (nonatomic, strong) UIView* noDataView;
+/** 没数据页 */
+@property (nonatomic, strong) UILabel *noDataTip;;
+/** 没数据图标 */
+@property (nonatomic, strong) UIImageView *noDataIcon;
 /** 错误提示 */
 @property (nonatomic, strong) UILabel *failTips;
 
@@ -33,8 +37,8 @@
 @property (nonatomic, copy) NSString *failBtnText;
 /** 代理 */
 @property (nonatomic, weak) id<LSListViewControllerDelegate> listDelegate;
-@property (nonatomic, assign) SEL delegateSelect;
-
+/** 错误图标 */
+@property (nonatomic, strong) UIImageView *failIcon;
 /** 修改失败页提示(已设置默认值)  */
 - (void)reloadFailViewFailTipsText:(NSString *)failTipsText failBtnText:(NSString *)failBtnText;
 
@@ -52,4 +56,7 @@
 // 更新未读数量
 - (void)reloadUnreadNum;
 
+- (void)showNoDataView;
+
+- (void)hideNoDataView;
 @end

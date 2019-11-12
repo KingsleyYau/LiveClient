@@ -83,7 +83,9 @@ static LiveMutexService *gService = nil;
                 case LiveUrlTypeMyLevel:
                 case LiveUrlTypeChatList:
                 case LiveUrlTypeGreetMailList:
-                case LiveUrlTypeMailList: {
+                case LiveUrlTypeMailList:
+                case LiveUrlTypeSayHiList:
+                case LiveUrlTypeGiftFlowerList: {
                     bFlag = YES;
                 }
                 default:

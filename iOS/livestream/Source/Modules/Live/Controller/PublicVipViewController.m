@@ -13,6 +13,8 @@
 #import "SetFavoriteRequest.h"
 #import "LiveFansListRequest.h"
 
+#import "LSMinLiveManager.h"
+
 #import "LSLoginManager.h"
 #import "LiveModule.h"
 #import "AudienModel.h"
@@ -187,7 +189,7 @@
     self.playVC.liveVC.roomStyleItem.announceStrColor = Color(41, 122, 243, 1);
     self.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 135, 0, 1);
     self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
-    self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(181, 181, 181, 0.49);
+    self.playVC.liveVC.roomStyleItem.sendBackgroundViewColor = Color(181, 181, 181, 0.49);
     
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -222,23 +224,21 @@
             self.playVC.liveVC.startOneViewHeigh.constant = 40;
             self.playVC.liveVC.startOneView.hidden = NO;
             self.playVC.liveVC.startOneBtn.hidden = NO;
-            self.playVC.liveVC.startHangoutBtn.hidden = NO;
         }
         //没有立即私密权限，有多人互动权限
         else if (!self.liveRoom.priv.isHasOneOnOneAuth && [LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv && self.liveRoom.imLiveRoom.isHangoutPriv) {
             self.playVC.liveVC.startOneViewHeigh.constant = 40;
             self.playVC.liveVC.startOneView.hidden = NO;
             self.playVC.liveVC.startOneBtn.hidden = YES;
-            self.playVC.liveVC.startHangoutBtn.hidden = NO;
-            self.playVC.liveVC.startHangoutBtnX.constant = 0;
         }
         //有立即私密权限，没有多人互动权限
-        else if (self.liveRoom.priv.isHasOneOnOneAuth &&(![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) && !self.liveRoom.imLiveRoom.isHangoutPriv) {
-            self.playVC.liveVC.startOneViewHeigh.constant = 40;
-            self.playVC.liveVC.startOneView.hidden = NO;
-            self.playVC.liveVC.startOneBtn.hidden = NO;
-            self.playVC.liveVC.startHangoutBtn.hidden = YES;
-            self.playVC.liveVC.startOneBtnX.constant = 0;
+        else if (self.liveRoom.priv.isHasOneOnOneAuth) {
+            // 如果用户没有多人互动权限或者主播没有多人互动权限不显示多人互动按钮
+            if ((![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) || !self.liveRoom.imLiveRoom.isHangoutPriv) {
+                self.playVC.liveVC.startOneViewHeigh.constant = 40;
+                self.playVC.liveVC.startOneView.hidden = NO;
+                self.playVC.liveVC.startOneBtn.hidden = NO;
+            }
         }else {
             
             
@@ -485,6 +485,10 @@
                             }
                             actionBlock:^{
                                 //       [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+        
+        [LSMinLiveManager manager].privateLiveVC = self;
+        [[LSMinLiveManager manager] showMinLive];
+        
                                 LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
                                 [nvc forceToDismissAnimated:YES completion:nil];
                             }];

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!-- 主播信息 -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:paddingLeft="@dimen/live_my_cart_item_padding_LR"
+        android:paddingRight="@dimen/live_my_cart_item_padding_LR">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="1dp"
+            android:text="To:"
+            android:textColor="#383838"
+            android:textSize="16sp"
+
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintEnd_toStartOf="@+id/tvName"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv1"
+            android:ellipsize="end"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:textColor="#1A1A1A"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv1"
+            app:layout_constraintStart_toEndOf="@+id/tv1"
+            tools:text="NameNameNameNameNameNamsdfsdf dsf sdf s" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv1"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="1dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#999999"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/tv1"
+            app:layout_constraintTop_toTopOf="@+id/guideline3"
+            tools:text="MAY 06, 2019 10:30" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img_anchor"
+            android:layout_width="@dimen/my_cart_anchor_img_size"
+            android:layout_height="@dimen/my_cart_anchor_img_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/live_size_2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!-- 分割线 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black4"/>
+
+    <!-- 订单信息 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/live_my_cart_item_padding_LR"
+        android:paddingRight="@dimen/live_my_cart_item_padding_LR"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/live_size_13sp"
+            android:textColor="#999999"
+            tools:text="AD23FDAD"/>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/live_size_14sp"
+            android:textColor="#297AF3"
+            android:layout_alignParentRight="true"
+            tools:text="Pending"/>
+
+    </RelativeLayout>
+
+    <!-- 礼物列表 -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ry_gifts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"/>
+
+</LinearLayout>

@@ -26,7 +26,6 @@
 @implementation LSChatEmotionManager
 
 + (instancetype)emotionManager {
-    
     static LSChatEmotionManager *chatEmotionManager = nil;
     if (chatEmotionManager == nil) {
         chatEmotionManager = [[LSChatEmotionManager alloc] init];
@@ -72,7 +71,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
            
             if (success) {
-                
+
                 for (int i = 0; i < item.count; i++) {
                     EmoticonItemObject *object = item[i];
                     ChatEmotionListItem *listItem = [[ChatEmotionListItem alloc] init];
@@ -99,6 +98,11 @@
                     } else {
                         self.advanListItem = listItem;
                         [self downloadAdvancedEmoticon];
+                    }
+                    
+                    //本地写死2个表情列表，如果有多需要升级版本更换逻辑
+                    if (i >= 2) {
+                        break;
                     }
                 }
                 self.isFirstLogin = NO;

@@ -55,7 +55,13 @@ public class GiftRecommandManager {
                     if(mRoomSendableGiftManager != null){
                         List<GiftItem> recommandGiftList = mRoomSendableGiftManager.getFilterRecommandGiftList();
                         if(recommandGiftList != null && recommandGiftList.size() > 0){
-                            int position = new Random().nextInt(recommandGiftList.size() - 1);
+                            int position;
+                            if(recommandGiftList.size() == 1){
+                                position = 0;
+                            }else{
+                                position = new Random().nextInt(recommandGiftList.size() - 1);
+                            }
+
                             GiftItem recomGiftItem = recommandGiftList.get(position);
                             if (mRecommandListener != null) {
                                 mRecommandListener.onGiftRecommand(recomGiftItem);

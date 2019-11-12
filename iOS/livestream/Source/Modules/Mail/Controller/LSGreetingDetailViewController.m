@@ -59,7 +59,7 @@ typedef enum : NSUInteger {
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 // 头像
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 // 在线图片
 @property (weak, nonatomic) IBOutlet UIImageView *onlineImageView;
 // 寄件人姓名
@@ -225,16 +225,12 @@ typedef enum : NSUInteger {
                 [self getLoiDetail:self.letterItem.letterId];
             }
         }
-        
-        // 初始化草稿管理器
-        [[LSSendMailDraftManager manager] initMailDraftLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName];
     }
 
-    // 不在当前显示
-    if( !self.viewIsAppear ) {
-        self.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:self.letterItem.anchorId];
-        [self.replyTextView setText:self.quickReplyStr];
-    }
+    // 初始化草稿管理器
+    [[LSSendMailDraftManager manager] initMailDraftLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName];
+    self.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:self.letterItem.anchorId];
+    [self.replyTextView setText:self.quickReplyStr];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -389,7 +385,7 @@ typedef enum : NSUInteger {
     [self.creditsView removeFromSuperview];
     self.creditsView = nil;
     self.poststampView = [LSOutOfPoststampView initWithActionViewDelegate:self];
-    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"Send by Credits (%0.1f credits)", self.stamps]];
+    [self.poststampView outOfPoststampShowCreditView:self.view balanceCount:[NSString stringWithFormat:@"Send by Credits (%0.1f credits)", self.credit]];
 }
 
 - (void)lsOutOfPoststampView:(LSOutOfPoststampView *)addView didSelectAddCredit:(UIButton *)creditBtn {
@@ -410,7 +406,7 @@ typedef enum : NSUInteger {
     [self.poststampView removeFromSuperview];
     self.poststampView = nil;
     self.creditsView = [LSOutOfCreditsView initWithActionViewDelegate:self];
-    [self.creditsView outOfCreditShowPoststampAndAddCreditView:self.view poststampCount:[NSString stringWithFormat:@"%0.1f", self.credit]];
+    [self.creditsView outOfCreditShowPoststampAndAddCreditView:self.view poststampCount:[NSString stringWithFormat:@"%ld", (long)self.stamps]];
 }
 
 - (void)lsOutOfCreditsView:(LSOutOfCreditsView *)addView didSelectAddCredit:(UIButton *)creditBtn {
@@ -566,6 +562,10 @@ typedef enum : NSUInteger {
 
                 }];
                 [[LSSendMailDraftManager manager] deleteMailDraft:weakSelf.letterItem.anchorId];
+                [[LSSendMailDraftManager manager] initMailDraftLadyId:weakSelf.letterItem.anchorId name:weakSelf.letterItem.anchorNickName];
+                weakSelf.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:weakSelf.letterItem.anchorId];
+                [weakSelf.replyTextView setText:weakSelf.quickReplyStr];
+                
             } else {
                 if (errnum == HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP) {
                     if (weakSelf.isSpendStamp) {
@@ -913,7 +913,7 @@ typedef enum : NSUInteger {
     vc.attachmentsArray = self.items;
     vc.attachmentDelegate = self;
     vc.photoIndex = indexPath.row;
-    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    LSNavigationController * nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
     [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
     [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
     [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];

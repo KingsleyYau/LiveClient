@@ -21,8 +21,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *liveFriendHead;
 @property (weak, nonatomic) IBOutlet UILabel *liveName;
 @property (weak, nonatomic) IBOutlet TopLeftLabel *liveMsg;
-@property (nonatomic, assign) CGFloat time;
-@property (nonatomic, assign) CGFloat countdownTime;
+@property (nonatomic, assign) NSInteger time;
+@property (nonatomic, assign) NSInteger countdownTime;
 @property (weak, nonatomic) IBOutlet UIImageView *colorView;
 @property (weak, nonatomic) IBOutlet UIView *scheduledTimeView;
 @property (weak, nonatomic) IBOutlet UILabel *countdownLabel;

@@ -5,14 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
-import android.provider.MediaStore.Images.Thumbnails;
 import android.text.TextUtils;
 
 import com.qpidnetwork.qnbridgemodule.util.FileUtil;
 import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public class AlbumHelper {
     Context context;
     ContentResolver cr;
     // 缩略图列表
-    HashMap<String, String> thumbnailList = new HashMap<String, String>();
+//    HashMap<String, String> thumbnailList = new HashMap<String, String>();
 
 
     public AlbumHelper(Context context) {
@@ -54,7 +53,7 @@ public class AlbumHelper {
         Cursor cur = cr.query(Media.EXTERNAL_CONTENT_URI, columns,
                 MediaStore.Images.Media.MIME_TYPE + "=? or "
                         + MediaStore.Images.Media.MIME_TYPE + "=?",
-                        new String[] {"image/jpeg","image/png"},
+                new String[]{"image/jpeg", "image/png"},
                 MediaStore.Images.Media.DATE_MODIFIED + " desc"); //edit by Jagger 2018-12-25 sortOrder改为递减
 
         if (cur != null) {
@@ -110,65 +109,77 @@ public class AlbumHelper {
         return albumList;
     }
 
-    /**
-     * 得到缩略图
-     */
-    private void getThumbnail() {
-        String[] projection = {Thumbnails._ID, Thumbnails.IMAGE_ID,
-                Thumbnails.DATA};
-        Cursor cursor = cr.query(Thumbnails.EXTERNAL_CONTENT_URI, projection,
-                null, null, null);
-        if (cursor != null) {
-            getThumbnailColumnData(cursor);
-        }
+//    /**
+//     * 得到缩略图
+//     */
+//    private void getThumbnail() {
+//        String[] projection = {Thumbnails._ID, Thumbnails.IMAGE_ID,
+//                Thumbnails.DATA};
+//        Cursor cursor = cr.query(Thumbnails.EXTERNAL_CONTENT_URI, projection,
+//                null, null, null);
+//        if (cursor != null) {
+//            getThumbnailColumnData(cursor);
+//        }
+//
+//        // 2018/12/25 Hardy
+//        if (cursor != null && !cursor.isClosed()) {
+//            cursor.close();
+//        }
+//    }
+//
+//    /**
+//     * 从数据库中得到缩略图
+//     *
+//     * @param cur
+//     */
+//    @SuppressWarnings("unused")
+//    private void getThumbnailColumnData(Cursor cur) {
+//        if (cur.moveToFirst()) {
+//            int _id;
+//            int image_id;
+//            String image_path;
+//            int _idColumn = cur.getColumnIndex(Thumbnails._ID);
+//            int image_idColumn = cur.getColumnIndex(Thumbnails.IMAGE_ID);
+//            int dataColumn = cur.getColumnIndex(Thumbnails.DATA);
+//
+//            do {
+//                _id = cur.getInt(_idColumn);
+//                image_id = cur.getInt(image_idColumn);
+//                image_path = cur.getString(dataColumn);
+//                thumbnailList.put("" + image_id, image_path);
+//            } while (cur.moveToNext());
+//        }
+//    }
 
-        // 2018/12/25 Hardy
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
-    }
-
     /**
-     * 从数据库中得到缩略图
+     * 过滤 png 图片，暂时只用于直播模块，QN 不过滤
      *
-     * @param cur
+     * @return
      */
-    @SuppressWarnings("unused")
-    private void getThumbnailColumnData(Cursor cur) {
-        if (cur.moveToFirst()) {
-            int _id;
-            int image_id;
-            String image_path;
-            int _idColumn = cur.getColumnIndex(Thumbnails._ID);
-            int image_idColumn = cur.getColumnIndex(Thumbnails.IMAGE_ID);
-            int dataColumn = cur.getColumnIndex(Thumbnails.DATA);
-
-            do {
-                _id = cur.getInt(_idColumn);
-                image_id = cur.getInt(image_idColumn);
-                image_path = cur.getString(dataColumn);
-                thumbnailList.put("" + image_id, image_path);
-            } while (cur.moveToNext());
-        }
+    public List<ImageBean> getAlbumImageListNoPng() {
+        List<ImageBean> mDataList = getAlbumImageList();
+        return sortNotPngImagePath(mDataList);
     }
 
     /**
      * 过滤掉 png 图片
+     *
      * @param list
      * @return
      */
-    public List<ImageBean> sortNotPngImagePath(List<ImageBean> list){
-        if (!ListUtils.isList(list)) {
-            return list;
-        }
+    private List<ImageBean> sortNotPngImagePath(List<ImageBean> list) {
+        if (ListUtils.isList(list)) {
+            Iterator<ImageBean> itemBeanIterator = list.iterator();
 
-        List<ImageBean> newList = new ArrayList<>();
-        for (ImageBean bean : list) {
-            if (bean != null && !TextUtils.isEmpty(bean.imagePath) && !bean.imagePath.endsWith(".png")) {
-                newList.add(bean);
+            while (itemBeanIterator.hasNext()) {
+                ImageBean bean = itemBeanIterator.next();
+
+                if (bean != null && !TextUtils.isEmpty(bean.imagePath) && bean.imagePath.toLowerCase().endsWith(".png")) {
+                    itemBeanIterator.remove();
+                }
             }
         }
 
-        return newList;
+        return list;
     }
 }

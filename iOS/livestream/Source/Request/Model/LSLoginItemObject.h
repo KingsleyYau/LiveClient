@@ -35,6 +35,7 @@
                                      LSHTTP_LIVECHATINVITE_RISK_LIMITALL：收发全部限制）
  * mailPriv         信件及意向信权限相关
  * userPriv         信件及意向信权限相关
+ * isGiftFlowerSwitch   是否有鲜花礼品开关(1:打开  0:关闭)
  */
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* token;
@@ -55,6 +56,7 @@
 //@property (nonatomic, assign) LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
 //@property (nonatomic, strong) LSMailPrivItemObject* mailPriv;
 @property (nonatomic, strong) LSUserPrivItemObject* userPriv;
+@property (nonatomic, assign) BOOL isGiftFlowerSwitch;
 
 
 @end

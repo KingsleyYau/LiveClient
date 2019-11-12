@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -51,35 +50,27 @@
                                 </mask>
                             </variation>
                         </imageView>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Otc-7n-sN6">
-                            <rect key="frame" x="177.5" y="20" width="20" height="20"/>
-                        </activityIndicatorView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PullRefreshLoading7" translatesAutoresizingMaskIntoConstraints="NO" id="zAq-tZ-dae">
+                            <rect key="frame" x="167.5" y="15" width="40" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="40" id="jAn-EP-97K"/>
+                                <constraint firstAttribute="height" constant="30" id="tLf-hB-bbj"/>
+                            </constraints>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="pl2-wi-vIW" firstAttribute="top" secondItem="ls5-R9-Fp1" secondAttribute="bottom" constant="5" id="87V-Jc-CQS"/>
+                        <constraint firstItem="zAq-tZ-dae" firstAttribute="centerX" secondItem="Xgx-6Y-vou" secondAttribute="centerX" id="EDo-2p-3wK"/>
                         <constraint firstItem="wd8-1l-11O" firstAttribute="leading" secondItem="Xgx-6Y-vou" secondAttribute="leading" constant="14" id="FMg-0V-kcu"/>
-                        <constraint firstItem="Otc-7n-sN6" firstAttribute="leading" secondItem="wd8-1l-11O" secondAttribute="leading" id="H5n-ir-G8S"/>
+                        <constraint firstItem="zAq-tZ-dae" firstAttribute="centerY" secondItem="Xgx-6Y-vou" secondAttribute="centerY" id="FmZ-SB-uBv"/>
                         <constraint firstAttribute="height" constant="60" id="HOd-bT-Dwb"/>
                         <constraint firstItem="ls5-R9-Fp1" firstAttribute="centerX" secondItem="Xgx-6Y-vou" secondAttribute="centerX" id="K0y-K2-bYX"/>
                         <constraint firstItem="ls5-R9-Fp1" firstAttribute="top" secondItem="Xgx-6Y-vou" secondAttribute="top" constant="15" id="NlS-OS-EA8"/>
-                        <constraint firstItem="Otc-7n-sN6" firstAttribute="width" secondItem="wd8-1l-11O" secondAttribute="width" id="Qwc-0h-alD"/>
                         <constraint firstItem="wd8-1l-11O" firstAttribute="trailing" secondItem="ls5-R9-Fp1" secondAttribute="leading" constant="-20" id="R1S-AN-IGD"/>
-                        <constraint firstItem="Otc-7n-sN6" firstAttribute="centerX" secondItem="Xgx-6Y-vou" secondAttribute="centerX" id="SI2-W7-frV"/>
                         <constraint firstItem="pl2-wi-vIW" firstAttribute="centerX" secondItem="Xgx-6Y-vou" secondAttribute="centerX" id="XKC-Ks-f9Z"/>
-                        <constraint firstItem="Otc-7n-sN6" firstAttribute="centerY" secondItem="Xgx-6Y-vou" secondAttribute="centerY" id="YS9-6c-uWI"/>
-                        <constraint firstItem="Otc-7n-sN6" firstAttribute="height" secondItem="wd8-1l-11O" secondAttribute="height" id="Zmn-FH-YQw"/>
                         <constraint firstItem="wd8-1l-11O" firstAttribute="top" secondItem="Xgx-6Y-vou" secondAttribute="top" constant="12" id="kuu-vg-UWj"/>
-                        <constraint firstItem="Otc-7n-sN6" firstAttribute="top" secondItem="wd8-1l-11O" secondAttribute="top" id="x7C-TU-G9c"/>
                     </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="H5n-ir-G8S"/>
-                            <exclude reference="Qwc-0h-alD"/>
-                            <exclude reference="Zmn-FH-YQw"/>
-                            <exclude reference="x7C-TU-G9c"/>
-                        </mask>
-                    </variation>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -89,15 +80,17 @@
                 <constraint firstItem="Xgx-6Y-vou" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="wn1-Kh-Syk"/>
             </constraints>
             <connections>
-                <outlet property="activityView" destination="Otc-7n-sN6" id="oTU-dC-mBh"/>
                 <outlet property="arrowImageView" destination="wd8-1l-11O" id="RYJ-3X-VTf"/>
                 <outlet property="bgView" destination="Xgx-6Y-vou" id="oW3-ul-ypE"/>
                 <outlet property="lastUpdateLabel" destination="pl2-wi-vIW" id="E9A-C7-2xO"/>
+                <outlet property="loadingActivity" destination="zAq-tZ-dae" id="vpo-Of-HpW"/>
                 <outlet property="statusLabel" destination="ls5-R9-Fp1" id="9Ue-2k-xGu"/>
             </connections>
+            <point key="canvasLocation" x="138.40000000000001" y="154.27286356821591"/>
         </view>
     </objects>
     <resources>
         <image name="Arrow" width="15" height="40"/>
+        <image name="PullRefreshLoading7" width="27" height="27"/>
     </resources>
 </document>

@@ -18,6 +18,7 @@
         self.anchorAvatar= @"";
         self.anchorNickName= @"";
         self.isFollow = NO;
+        self.onlineStatus = NO;
         self.letterId= @"";
         self.letterSendTime = 0;
         self.letterBrief= @"";
@@ -35,6 +36,7 @@
         self.anchorAvatar = [coder decodeObjectForKey:@"anchorAvatar"];
         self.anchorNickName = [coder decodeObjectForKey:@"anchorNickName"];
         self.isFollow = [coder decodeBoolForKey:@"isFollow"];
+        self.onlineStatus = [coder decodeBoolForKey:@"onlineStatus"];
         self.letterId = [coder decodeObjectForKey:@"letterId"];
         self.letterSendTime = [coder decodeIntegerForKey:@"letterSendTime"];
         self.letterBrief = [coder decodeObjectForKey:@"letterBrief"];
@@ -52,6 +54,7 @@
     [coder encodeObject:self.anchorAvatar forKey:@"anchorAvatar"];
     [coder encodeObject:self.anchorNickName forKey:@"anchorNickName"];
     [coder encodeBool:self.isFollow forKey:@"isFollow"];
+    [coder encodeBool:self.onlineStatus forKey:@"onlineStatus"];
     [coder encodeObject:self.letterId forKey:@"letterId"];
     [coder encodeInteger:self.letterSendTime forKey:@"letterSendTime"];
     [coder encodeObject:self.letterBrief forKey:@"letterBrief"];

@@ -23,10 +23,10 @@
 @property (nonatomic, assign) LMStatusType statusType;
 @property (nonatomic, assign) LCC_ERR_TYPE sendErr;
 @property (nonatomic, assign) LMMessageType msgType;
-@property (nonatomic, strong) LMPrivateMsgContactObject* _Nullable userItem;
-@property (nonatomic, strong) LMPrivateMsgItemObject* _Nullable privateItem;
-@property (nonatomic, strong) LMSystemNoticeItemObject* _Nullable systemItem;
-@property (nonatomic, strong) LMWarningItemObject* _Nullable warningItem;
-@property (nonatomic, strong) LMTimeMsgItemObject* _Nullable timeMsgItem;
+@property (nonatomic, strong) LMPrivateMsgContactObject*  userItem;
+@property (nonatomic, strong) LMPrivateMsgItemObject*  privateItem;
+@property (nonatomic, strong) LMSystemNoticeItemObject*  systemItem;
+@property (nonatomic, strong) LMWarningItemObject*  warningItem;
+@property (nonatomic, strong) LMTimeMsgItemObject*  timeMsgItem;
 
 @end

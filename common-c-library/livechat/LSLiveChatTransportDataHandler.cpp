@@ -150,13 +150,16 @@ void CLSLiveChatTransportDataHandler::Uninit()
         IAutoLock::ReleaseAutoLock(m_socketLock);
         m_socketLock = NULL;
     }
-    
-	delete m_sendBuffer;
-	m_sendBuffer = NULL;
+    if (NULL != m_sendBuffer) {
+        delete[] m_sendBuffer;
+        m_sendBuffer = NULL;
+    }
 	m_sendBufferSize = 0;
 
-	delete m_recvBuffer;
-	m_recvBuffer = NULL;
+    if (NULL != m_recvBuffer) {
+        delete[] m_recvBuffer;
+        m_recvBuffer = NULL;
+    }
 	m_recvBufferSize = 0;
 
 	m_listener = NULL;

@@ -170,7 +170,7 @@
     self.playVC.liveVC.roomStyleItem.announceStrColor = Color(41, 122, 243, 1);
     self.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 135, 0, 1);
     self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
-    self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(181, 181, 181, 0.49);
+    self.playVC.liveVC.roomStyleItem.sendBackgroundViewColor = Color(181, 181, 181, 0.49);
 
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -206,8 +206,6 @@
                 self.playVC.liveVC.startOneViewHeigh.constant = 40;
                 self.playVC.liveVC.startOneView.hidden = NO;
                 self.playVC.liveVC.startOneBtn.hidden = NO;
-                self.playVC.liveVC.startHangoutBtn.hidden = YES;
-                self.playVC.liveVC.startOneBtnX.constant = 0;
             }
         }
         //没有立即私密权限，有多人互动权限
@@ -215,8 +213,6 @@
             self.playVC.liveVC.startOneViewHeigh.constant = 40;
             self.playVC.liveVC.startOneView.hidden = NO;
             self.playVC.liveVC.startOneBtn.hidden = YES;
-            self.playVC.liveVC.startHangoutBtn.hidden = NO;
-            self.playVC.liveVC.startHangoutBtnX.constant = 0;
         } else {
             //有立即私密权限，有多人互动权限，默认UI
         }

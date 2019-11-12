@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="160dp"
+        android:background="@drawable/dialogui_shape_wihte_round_corner"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialogui_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            android:layout_marginRight="@dimen/live_size_12dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:textSize="@dimen/live_size_16sp"
+            android:textStyle="bold"
+            tools:text="title"/>
+
+        <TextView
+            android:id="@+id/dialogui_tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            android:layout_marginTop="@dimen/live_size_12dp"
+            android:layout_marginRight="@dimen/live_size_12dp"
+            android:gravity="center"
+            android:lineSpacingExtra="8sp"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:textSize="@dimen/live_size_14sp"
+            tools:text="texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext"/>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/img_close"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right"
+        android:background="@drawable/ic_close_black"/>
+</FrameLayout>
+
+
+

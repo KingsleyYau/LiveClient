@@ -13,6 +13,7 @@ import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetHangoutGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutGiftListItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
@@ -914,7 +915,7 @@ public abstract class BaseHangOutLiveRoomActivity extends BaseImplHangOutRoomAct
         // 2019/4/17 Hardy 刷新余额，避免充值买点之后没有刷新余额
         LiveRoomCreditRebateManager.getInstance().loadCredits(new OnGetAccountBalanceCallback() {
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, double balance, int coupon) {
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, LSLeftCreditItem creditItem) {
                 onCreditUpdate();
             }
         });
@@ -1157,6 +1158,7 @@ public abstract class BaseHangOutLiveRoomActivity extends BaseImplHangOutRoomAct
             for (int i = 0; i < mIMHangoutRoomInItem.livingAnchorList.size(); i ++){
                 if(mIMHangoutRoomInItem.livingAnchorList.get(i).anchorId.equals(item.userId)){
                     mIMHangoutRoomInItem.livingAnchorList.remove(i);
+                    break;
                 }
             }
         }

@@ -161,6 +161,7 @@ public:
 	MessageType		m_msgType;		// 消息类型
 	ProcResult		m_procResult;	// 处理(发送/接收/购买)结果
     INVITE_TYPE     m_inviteType;   // 会话类型
+    bool            m_isFalseLadyInvite;    // Alex, 2019-07-31, 从QN冒泡过来的女士邀请（服务器不认可的邀请，但是需要邀请列表显示）
     
 private:
 	LSLCTextItem*		m_textItem;		// 文本item

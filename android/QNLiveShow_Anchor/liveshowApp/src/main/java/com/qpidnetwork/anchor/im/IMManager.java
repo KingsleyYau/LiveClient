@@ -31,6 +31,7 @@ import com.qpidnetwork.anchor.im.listener.IMRecvHangoutGiftItem;
 import com.qpidnetwork.anchor.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
 import com.qpidnetwork.anchor.im.listener.IMScheduleRoomItem;
+import com.qpidnetwork.anchor.im.listener.IMSendInviteInfoItem;
 import com.qpidnetwork.anchor.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.anchor.im.listener.IMTextMessageContent;
 import com.qpidnetwork.anchor.im.listener.IMUserBaseInfoItem;
@@ -595,6 +596,25 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	/**
+	 * 3.11 主播切换推流接口
+	 * @return
+	 */
+	public int AnchorSwitchFlow(String roomId){
+		int reqId = IM_INVALID_REQID;
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			if(!IMClient.AnchorSwitchFlow(reqId, roomId, IMDeviceType.App)){
+				reqId = IM_INVALID_REQID;
+			}
+		}
+		if(reqId == IM_INVALID_REQID){
+			//未登录或本地调用错误
+			mListenerManager.OnAnchorSwitchFlow(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_normal_newwork_error_tips), new String[]{}, IMDeviceType.App);
+		}
+		return reqId;
+	}
+
+	/**
 	 * 断线重连获取指定邀请信息
 	 * @param invatationId
 	 * @return
@@ -686,7 +706,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		}
 		if(reqId == IM_INVALID_REQID) {
 			//未登录或本地调用错误
-			mListenerManager.OnSendImmediatePrivateInvite(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_normal_newwork_error_tips), "", 0, "");
+			mListenerManager.OnSendImmediatePrivateInvite(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_normal_newwork_error_tips), null);
 		}
 		return reqId;
 	}
@@ -813,6 +833,13 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
+	public void OnAnchorSwitchFlow(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMDeviceType deviceType) {
+		Log.d(TAG,"OnAnchorSwitchFlow-errType:"+errType+" errMsg:"+errMsg+" reqId:"+reqId+" success:"+success);
+
+		mListenerManager.OnAnchorSwitchFlow(reqId, success, errType, errMsg, pushUrl, deviceType);
+	}
+
+	@Override
 	public void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
 		Log.d(TAG,"OnRoomOut-errType:"+errType+" errMsg:"+errMsg+" reqId:"+reqId+" success:"+success);
 		//退出房间成功，清除房间id
@@ -864,13 +891,21 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType,
-											 String errMsg, String invitationId, int timeout, String roomId) {
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMSendInviteInfoItem inviteInfoItem) {
 		Log.i(TAG, "OnSendImmediatePrivateInvite mRoomId: " + mRoomId
-								+ " invitationId: " + invitationId + " success: " + success);
+				+ " invitationId: " + inviteInfoItem.inviteId + " success: " + success);
 		mListenerManager.OnSendImmediatePrivateInvite(reqId, success, errType,
-				errMsg, invitationId, timeout, roomId);
+				errMsg, inviteInfoItem);
 	}
+
+//	@Override
+//	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType,
+//											 String errMsg, String invitationId, int timeout, String roomId) {
+//		Log.i(TAG, "OnSendImmediatePrivateInvite mRoomId: " + mRoomId
+//								+ " invitationId: " + invitationId + " success: " + success);
+//		mListenerManager.OnSendImmediatePrivateInvite(reqId, success, errType,
+//				errMsg, invitationId, timeout, roomId);
+//	}
 
 	@Override
 	public void OnKickOff(LCC_ERR_TYPE errType, String errMsg) {
@@ -1002,7 +1037,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		boolean isAnchorInviteShow = false;
 		//生成发送push
 
-		String url = URL2ActivityManager.createAnchorInviteUrl(userId, nickname, photoUrl, invitationId);
+		String url = URL2ActivityManager.createManInviteUrl(userId, nickname, photoUrl, invitationId);
 		PushManager.getInstance().ShowNotification(PushMessageType.Anchor_Invite_Notify,
 											mContext.getResources().getString(R.string.app_name),
 											String.format(mContext.getResources().getString(R.string.notification_anchor_inite_tips), nickname),
@@ -1364,6 +1399,36 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 					msg,
 					"", true);
 		}
+	}
+
+	/**
+	 * 12.1.多端获取预约邀请未读或代处理数量同步推送
+	 * @param total					以下参数数量总和
+	 * @param pendingNum			待主播处理的数量
+	 * @param confirmedUnreadCount	已接受的未读数量
+	 * @param otherUnreadCount		历史超时、拒绝的未读数量
+	 */
+	@Override
+	public void OnRecvGetScheduleListNReadNum(int total, int pendingNum, int confirmedUnreadCount, int otherUnreadCount) {
+		ScheduleInviteManager.getInstance().onRecvGetScheduleListNReadNumSuccess(total, pendingNum, confirmedUnreadCount, otherUnreadCount);
+	}
+
+	/**
+	 * 12.2.多端获取已确认的预约数同步推送
+	 * @param scheduleNum	已确认的预约数量
+	 */
+	@Override
+	public void OnRecvGetScheduledAcceptNum(int scheduleNum) {
+		ScheduleInviteManager.getInstance().onRecvGetScheduledAcceptNumSuccess(scheduleNum);
+	}
+
+	/**
+	 * 12.3.多端获取节目未读数同步推送
+	 * @param num	未读数量
+	 */
+	@Override
+	public void OnRecvNoreadShowNum(int num) {
+		ProgramUnreadManager.getInstance().onRecvNoreadShowNumSuccess(num);
 	}
 
 	/**

@@ -12,6 +12,7 @@
 #import "LSImManager.h"
 #import "LSGetHangoutFriendsRequest.h"
 #import "LSAutoInvitationHangoutLiveDisplayRequest.h"
+#import "LSLoginManager.h"
 //显示冒泡最大数
 #define SHOW_MAX_NUM 8
 //显示聊天消息的最大数
@@ -27,7 +28,7 @@
 
 static LSMainNotificationManager *mainNotificationManager = nil;
 
-@interface LSMainNotificationManager () <QNLiveChatLocalPushManagerDelegate, IMManagerDelegate>
+@interface LSMainNotificationManager () <QNLiveChatLocalPushManagerDelegate, IMManagerDelegate,LoginManagerDelegate>
 @property (nonatomic, strong) NSMutableArray *cacheArray; //缓存数据数组
 @property (nonatomic, strong) NSMutableArray *showArray;  //显示气泡数组
 @property (nonatomic, strong) NSTimer *timer;
@@ -53,6 +54,7 @@ static LSMainNotificationManager *mainNotificationManager = nil;
         self.hangoutDic = [NSMutableDictionary dictionary];
         [QNLiveChatLocalPushManager sharedInstance].delegate = self;
         [[LSImManager manager] addDelegate:self];
+        [[LSLoginManager manager]addDelegate:self];
         self.isRequestEnd = YES;
     }
     return self;
@@ -263,8 +265,8 @@ static LSMainNotificationManager *mainNotificationManager = nil;
         }
     }
 
-    if ([self.delegate respondsToSelector:@selector(mainNotificationManagerRemoveselectedItem)]) {
-        [self.delegate mainNotificationManagerRemoveselectedItem];
+    if ([self.delegate respondsToSelector:@selector(mainNotificationManagerHideNotificaitonView:)]) {
+        [self.delegate mainNotificationManagerHideNotificaitonView:item];
     }
 }
 
@@ -317,4 +319,9 @@ static LSMainNotificationManager *mainNotificationManager = nil;
     });
 }
 
+- (void)manager:(LSLoginManager *)manager onLogout:(LogoutType)type msg:(NSString *)msg {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.hangoutDic removeAllObjects];
+    });
+}
 @end

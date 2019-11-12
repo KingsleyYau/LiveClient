@@ -467,19 +467,21 @@ void LSLCPhotoManager::ClearBindMap()
 void LSLCPhotoManager::ClearBindMapWithUserId(const string &userId) {
     m_photoBindMap.lock();
     for (PhotoMsgMap::iterator iter = m_photoBindMap.begin();
-         iter != m_photoBindMap.end();
-         iter++) {
-        LCMessageList messageList = (*iter).second;
+         iter != m_photoBindMap.end();) {
+        // Alex, 2019-07-26, 修改有erase得都需要把 iter++ 放到for里面来
+        PhotoMsgMap::iterator tempIter = iter++;
+        LCMessageList messageList = (*tempIter).second;
         for (LCMessageList::iterator msgIter = messageList.begin();
-             msgIter != messageList.end();
-             msgIter++) {
-            LSLCMessageItem *item = (*msgIter);
+             msgIter != messageList.end();) {
+            // Alex, 2019-07-26, 修改有erase得都需要把 iter++ 放到for里面来
+            LCMessageList::iterator tempMsgIter = msgIter++;
+            LSLCMessageItem *item = (*tempMsgIter);
             if ((item->m_sendType == SendType_Recv && item->m_fromId == userId) || (item->m_sendType == SendType_Send && item->m_toId == userId)) {
-                (*iter).second.erase(msgIter);
+                (*iter).second.erase(tempMsgIter);
             }
         }
         if (messageList.size() <= 0) {
-            m_photoBindMap.erase(iter);
+            m_photoBindMap.erase(tempIter);
         }
     }
     m_photoBindMap.unlock();

@@ -101,6 +101,10 @@ static LSLiveChatManagerOC *liveChatManager = nil;
 
 - (void)onTokenOverTimeHandler:(const string &)errMsg;
 
+#pragma mark---- 发送邀请语回调处理（OC）-----
+// 为了区分OnRecvMessage,这个使用在Qn冒泡跳转到直播后，发送邀请语成功，如果用OnRecvMessage，直播会再冒泡 (Alex, 2019-07-26)
+- (void)onRecvAutoInviteMessage:(LSLCMessageItem *)msgItem;
+
 @end
 
 #pragma mark - LiveChatManManagerListener
@@ -446,6 +450,13 @@ class LiveChatManManagerListener : public ILSLiveChatManManagerListener {
     void OnTokenOverTimeHandler(const string& errNo, const string& errmsg) {
         if (nil != liveChatManager) {
             [liveChatManager onTokenOverTimeHandler:errmsg.c_str()];
+        }
+    }
+    
+    // 为了区分OnRecvMessage,这个使用在Qn冒泡跳转到直播后，发送邀请语成功，如果用OnRecvMessage，直播会再冒泡 (Alex, 2019-07-26)
+    void OnRecvAutoInviteMessage(LSLCMessageItem* msgItem) {
+        if (nil != liveChatManager) {
+            [liveChatManager onRecvAutoInviteMessage:msgItem];
         }
     }
 };
@@ -1428,6 +1439,28 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
         result = mILSLiveChatManManager->CheckPhoto(strUserId, strPhotoId);
     }
 
+    return result;
+}
+
+- (BOOL)sendInviteMessage:(NSString *)userId message:(NSString *)message nickName:(NSString *)nickName {
+    
+    BOOL result = NO;
+    if (NULL != mILSLiveChatManManager) {
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        string stMessage = "";
+        if (message != nil) {
+            stMessage = [message UTF8String];
+        }
+        string strNickName = "";
+        if (nickName != nil) {
+            strNickName = [nickName UTF8String];
+        }
+        result = mILSLiveChatManManager->SendInviteMessage(strUserId, stMessage, strNickName);
+    }
+    
     return result;
 }
 
@@ -2460,6 +2493,25 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
             }
         }
     }
+}
+
+- (void)onRecvAutoInviteMessage:(LSLCMessageItem *)msgItem
+{
+    LSLCLiveChatMsgItemObject *msgObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:msgItem];
+    
+    if ([self iniviteMsgIsRiskControl:msgObj]) {
+        return;
+    }
+    
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAutoInviteMsg:)]) {
+                [delegate onRecvAutoInviteMsg:msgObj];
+            }
+        }
+    }
+    
 }
 
 @end

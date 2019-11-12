@@ -170,13 +170,13 @@
                 cell.viewBtnTopDistance.constant = 9;
             }
 
-            if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
-                //显示Free
-                cell.freeIcon.hidden = NO;
-            } else {
-                //不显示Free
-                cell.freeIcon.hidden = YES;
-            }
+//            if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
+//                //显示Free
+//                cell.freeIcon.hidden = NO;
+//            } else {
+//                //不显示Free
+//                cell.freeIcon.hidden = YES;
+//            }
 
         } else if (item.roomType == HTTPROOMTYPE_COMMONPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM || item.roomType == HTTPROOMTYPE_NOLIVEROOM) {
             // 普通私密和付费私密,没有直播间
@@ -186,13 +186,13 @@
                    cell.anchorNameCenterX.constant = -30;
                 cell.vipPrivateBtn.hidden = NO;
 
-                if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
-                    //显示Free
-                    cell.freeIcon.hidden = NO;
-                } else {
-                    //不显示Free
-                    cell.freeIcon.hidden = YES;
-                }
+//                if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
+//                    //显示Free
+//                    cell.freeIcon.hidden = NO;
+//                } else {
+//                    //不显示Free
+//                    cell.freeIcon.hidden = YES;
+//                }
 
             } else {
                 // 没有私密邀请权限判断是否livechat在线显示对应按钮

@@ -57,52 +57,55 @@ public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizatio
 
     private static ShowUnreadManager mShowUnreadManager;
 
-    private int mShowNoRead = 0;
+    private int msgUnReadNum = 0;
     /**
      * 私信未读数量
      */
-    private int msgUnReadNum = 0;
-
     public int getMsgUnReadNum(){ return msgUnReadNum; }
 
+    private int mailUnReadNum = 0;
     /**
      * emf未读数量
      */
-    private int mailUnReadNum = 0;
-
     public int getMailUnReadNum(){ return mailUnReadNum; }
 
+    private int greetMailUnReadNum = 0;
     /**
      * 意向信未读数量
      */
-    private int greetMailUnReadNum = 0;
-
     public int getGreetMailUnReadNum(){ return greetMailUnReadNum; }
 
-    public void setGreetMailUnReadNum(int greetMailUnReadNum){
-        this.greetMailUnReadNum = greetMailUnReadNum;
-    }
-
+    private int mShowTicketUnreadNum = 0;
     /**
      * 是否有节目购票未读
      */
-    private int mShowTicketUnreadNum = 0;
-
     public int getShowTicketUnreadNum(){ return mShowTicketUnreadNum; }
 
+    private int mBookingUnReadNum = 0;
     /**
      * 是否有预约未读
      */
-    private int mBookingUnReadNum = 0;
-
     public int getBookingUnReadNum(){ return mBookingUnReadNum; }
 
+    private int mBackpackUnreadNum = 0;
     /**
      * 是否有背包礼物更新未读
      */
-    private int mBackpackUnreadNum = 0;
-
     public int getBackpackUnreadNum(){ return mBackpackUnreadNum; }
+
+    private int mSayHiUnreadNum = 0;
+    /**
+     * SayHi未读
+     */
+    public int getSayHiUnreadNum() {
+        return mSayHiUnreadNum;
+    }
+
+    private int mLivechatVocherUnreadNum = 0;
+    /**
+     * 是否有背包礼物更新未读
+     */
+    public int getLivechatVocherUnreadNum(){ return mLivechatVocherUnreadNum; }
 
     /**
      * 构建单例
@@ -146,7 +149,6 @@ public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizatio
             @Override
             public void onGetNoReadNumProgram(boolean isSuccess, int errCode, String errMsg, int num) {
                 if(isSuccess){
-                    mShowNoRead = num;
                     onShowUnreadCallback(num);
                 }
             }
@@ -171,6 +173,8 @@ public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizatio
                     mShowTicketUnreadNum = unreadItem.showTicketUnreadNum;
                     mBackpackUnreadNum = unreadItem.backpackUnreadNum;
                     mBookingUnReadNum = unreadItem.bookingUnreadNum;
+                    mSayHiUnreadNum = unreadItem.sayHiResponseUnreadNum;
+                    mLivechatVocherUnreadNum = unreadItem.livechatVocherUnreadNum;
                     //需要注意的是这里并不是UI线程--刷新界面
                     for(OnShowUnreadListener listener : mUnreadListenerList){
                         listener.onUnReadDataUpdate();
@@ -299,6 +303,8 @@ public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizatio
         mShowTicketUnreadNum = 0;
         mBackpackUnreadNum = 0;
         mBookingUnReadNum = 0;
+        mSayHiUnreadNum = 0;
+        mLivechatVocherUnreadNum = 0;
         //需要注意的是这里并不是UI线程--刷新界面
         for(OnShowUnreadListener listener : mUnreadListenerList){
             listener.onUnReadDataUpdate();

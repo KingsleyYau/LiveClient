@@ -936,12 +936,12 @@
     }
 }
 
-- (void)onRecvLackOfCreditNotice:(NSString *)roomId msg:(NSString *)msg credit:(double)credit {
-    NSLog(@"HangOutUserViewController::onRecvLackOfCreditNotice( [接收充值通知], roomId : %@ credit:%f", roomId, credit);
+- (void)onRecvLackOfCreditNotice:(NSString *)roomId msg:(NSString *)msg credit:(double)credit errType:(LCC_ERR_TYPE)errType {
+    NSLog(@"HangOutUserViewController::onRecvLackOfCreditNotice( [接收充值通知], roomId : %@ credit:%f errType:%d", roomId, credit, errType);
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.liveRoom.roomId isEqualToString:roomId]) {
             if ([self.userDelegate respondsToSelector:@selector(showManPushError:errNum:)]) {
-                [self.userDelegate showManPushError:msg errNum:LCC_ERR_NO_CREDIT];
+                [self.userDelegate showManPushError:msg errNum:errType];
             }
             [self sendRequestManPush:NO];
         }

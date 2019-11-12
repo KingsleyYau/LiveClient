@@ -57,6 +57,7 @@
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GsX-CL-mS3" customClass="MailTableView">
                     <rect key="frame" x="0.0" y="46" width="375" height="621"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <inset key="separatorInset" minX="82" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_No_eMail" translatesAutoresizingMaskIntoConstraints="NO" id="Yuz-qM-A8V" userLabel="No Data Icon">
                     <rect key="frame" x="145.5" y="154" width="84" height="84"/>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSAddresseeViewController">
+            <connections>
+                <outlet property="activitView" destination="Owi-Gs-4a4" id="Aga-vn-Qmo"/>
+                <outlet property="addOrderBtn" destination="hc5-wt-ZlH" id="DHp-rg-DvM"/>
+                <outlet property="addresseeView" destination="QiY-2G-cTP" id="Zhb-vt-K2x"/>
+                <outlet property="chooseView" destination="wYo-IH-Nwi" id="Dqc-AK-plF"/>
+                <outlet property="chooseViewHeight" destination="zFj-F7-W2Z" id="hsX-BR-JUn"/>
+                <outlet property="closeBtn" destination="Tc1-KJ-QDZ" id="CHW-KG-92e"/>
+                <outlet property="collectionView" destination="blO-ah-EEg" id="vX9-2q-0BB"/>
+                <outlet property="errorLabel" destination="Dxu-ch-QtK" id="xFM-TV-tQc"/>
+                <outlet property="orderBtn" destination="Xny-8L-3Sr" id="DDQ-1X-TVy"/>
+                <outlet property="searchField" destination="qLl-wd-6qz" id="kJn-k3-6Bl"/>
+                <outlet property="searchView" destination="2ng-cU-Ulh" id="VYV-mn-LPk"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wYo-IH-Nwi" userLabel="Choose View">
+                    <rect key="frame" x="30" y="184" width="354" height="368"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send this gift to:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dSm-il-1ED">
+                            <rect key="frame" x="117.33333333333334" y="30" width="119.33333333333334" height="20"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ng-cU-Ulh" userLabel="Search View">
+                            <rect key="frame" x="0.0" y="50" width="354" height="318"/>
+                            <subviews>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Member ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qLl-wd-6qz">
+                                    <rect key="frame" x="35" y="30" width="284" height="20"/>
+                                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVz-pG-Kb0" userLabel="Line">
+                                    <rect key="frame" x="35" y="58" width="284" height="1"/>
+                                    <color key="backgroundColor" red="0.92549019610000005" green="0.93333333330000001" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="NF9-yP-DG2"/>
+                                    </constraints>
+                                </view>
+                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID Invalid" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dxu-ch-QtK">
+                                    <rect key="frame" x="41" y="65" width="59" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" red="1" green="0.2784313725" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xny-8L-3Sr">
+                                    <rect key="frame" x="35" y="112" width="284" height="44"/>
+                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="44" id="OXV-Pu-YdU"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <state key="normal" title="Order Now">
+                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="orderAnchorAction:" destination="-1" eventType="touchUpInside" id="qN1-3c-1TT"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bgn-KW-sND">
+                                    <rect key="frame" x="161" y="171" width="32" height="29"/>
+                                    <state key="normal">
+                                        <attributedString key="attributedTitle">
+                                            <fragment content="Back">
+                                                <attributes>
+                                                    <font key="NSFont" size="14" name="AndaleMono"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                        <tabStops>
+                                                            <textTab alignment="left" location="28.299999237060547">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="56.650001525878906">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="85">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="113.34999847412109">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="141.69999694824219">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="170.05000305175781">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="198.39999389648438">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="226.75">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="255.10000610351562">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="283.45001220703125">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="311.79998779296875">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="340.14999389648438">
+                                                                <options/>
+                                                            </textTab>
+                                                        </tabStops>
+                                                    </paragraphStyle>
+                                                    <integer key="NSUnderline" value="1"/>
+                                                    <color key="NSUnderlineColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </state>
+                                    <connections>
+                                        <action selector="backToAction:" destination="-1" eventType="touchUpInside" id="YTf-tH-C2r"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="Dxu-ch-QtK" firstAttribute="leading" secondItem="HVz-pG-Kb0" secondAttribute="leading" constant="6" id="679-St-8eJ"/>
+                                <constraint firstItem="bgn-KW-sND" firstAttribute="centerX" secondItem="2ng-cU-Ulh" secondAttribute="centerX" id="6s9-XE-lKJ"/>
+                                <constraint firstItem="qLl-wd-6qz" firstAttribute="leading" secondItem="2ng-cU-Ulh" secondAttribute="leading" constant="35" id="9yD-Oi-af1"/>
+                                <constraint firstItem="HVz-pG-Kb0" firstAttribute="trailing" secondItem="qLl-wd-6qz" secondAttribute="trailing" id="CNf-dm-hDr"/>
+                                <constraint firstItem="Xny-8L-3Sr" firstAttribute="top" secondItem="Dxu-ch-QtK" secondAttribute="bottom" constant="30" id="DNt-qy-TWq"/>
+                                <constraint firstItem="HVz-pG-Kb0" firstAttribute="top" secondItem="qLl-wd-6qz" secondAttribute="bottom" constant="8" id="Dhe-ce-2qI"/>
+                                <constraint firstItem="bgn-KW-sND" firstAttribute="top" secondItem="Xny-8L-3Sr" secondAttribute="bottom" constant="15" id="EPY-ko-dMP"/>
+                                <constraint firstItem="qLl-wd-6qz" firstAttribute="top" secondItem="2ng-cU-Ulh" secondAttribute="top" constant="30" id="KCn-P2-eLM"/>
+                                <constraint firstItem="Xny-8L-3Sr" firstAttribute="trailing" secondItem="qLl-wd-6qz" secondAttribute="trailing" id="OK1-x1-Gw9"/>
+                                <constraint firstItem="Dxu-ch-QtK" firstAttribute="top" secondItem="HVz-pG-Kb0" secondAttribute="bottom" constant="6" id="m3g-ly-NDT"/>
+                                <constraint firstAttribute="trailing" secondItem="qLl-wd-6qz" secondAttribute="trailing" constant="35" id="s6q-iB-RZU"/>
+                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Dxu-ch-QtK" secondAttribute="trailing" constant="20" symbolic="YES" id="uJ3-Se-LSW"/>
+                                <constraint firstItem="HVz-pG-Kb0" firstAttribute="leading" secondItem="qLl-wd-6qz" secondAttribute="leading" id="ubS-fd-KCy"/>
+                                <constraint firstItem="Xny-8L-3Sr" firstAttribute="leading" secondItem="qLl-wd-6qz" secondAttribute="leading" id="z0E-0B-dXY"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QiY-2G-cTP" userLabel="Addressee View">
+                            <rect key="frame" x="0.0" y="50" width="354" height="318"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cdk-J3-Ha5">
+                                    <rect key="frame" x="136.66666666666666" y="269.66666666666669" width="81" height="28.333333333333314"/>
+                                    <state key="normal">
+                                        <attributedString key="attributedTitle">
+                                            <fragment content="Search by ID">
+                                                <attributes>
+                                                    <font key="NSFont" size="14" name="AndaleMono"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                        <tabStops>
+                                                            <textTab alignment="left" location="28.299999237060547">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="56.650001525878906">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="85">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="113.34999847412109">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="141.69999694824219">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="170.05000305175781">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="198.39999389648438">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="226.75">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="255.10000610351562">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="283.45001220703125">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="311.79998779296875">
+                                                                <options/>
+                                                            </textTab>
+                                                            <textTab alignment="left" location="340.14999389648438">
+                                                                <options/>
+                                                            </textTab>
+                                                        </tabStops>
+                                                    </paragraphStyle>
+                                                    <integer key="NSUnderline" value="1"/>
+                                                    <color key="NSUnderlineColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </state>
+                                    <connections>
+                                        <action selector="backToAction:" destination="-1" eventType="touchUpInside" id="mqT-v8-3fa"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hc5-wt-ZlH">
+                                    <rect key="frame" x="106" y="225.66666666666669" width="142" height="34"/>
+                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="34" id="eyb-LW-HS3"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <state key="normal" title="Order Now">
+                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="orderAnchorAction:" destination="-1" eventType="touchUpInside" id="aID-pK-8OE"/>
+                                    </connections>
+                                </button>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="blO-ah-EEg">
+                                    <rect key="frame" x="106" y="12.666666666666657" width="142" height="194"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="194" id="0XN-t4-8Jp"/>
+                                        <constraint firstAttribute="width" constant="142" id="v2y-Y6-Ubz"/>
+                                    </constraints>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="zeR-Sh-SgZ">
+                                        <size key="itemSize" width="50" height="50"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                </collectionView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6h8-Yd-SQw" userLabel="Left Button">
+                                    <rect key="frame" x="0.0" y="84.666666666666686" width="50" height="50"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="6h8-Yd-SQw" secondAttribute="height" multiplier="1:1" id="T48-YK-RBe"/>
+                                        <constraint firstAttribute="width" constant="50" id="rrh-bk-UHW"/>
+                                    </constraints>
+                                    <state key="normal" image="LS_Addressee_Left"/>
+                                    <connections>
+                                        <action selector="leftListAction:" destination="-1" eventType="touchUpInside" id="cnV-jr-rat"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9YM-z6-72w" userLabel="Right Button">
+                                    <rect key="frame" x="304" y="84.666666666666686" width="50" height="50"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="50" id="A8a-rB-DZq"/>
+                                        <constraint firstAttribute="width" secondItem="9YM-z6-72w" secondAttribute="height" multiplier="1:1" id="WcW-Tg-OO3"/>
+                                    </constraints>
+                                    <state key="normal" image="LS_Addressee_Right"/>
+                                    <connections>
+                                        <action selector="rightListAction:" destination="-1" eventType="touchUpInside" id="mf8-di-iZr"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="hc5-wt-ZlH" firstAttribute="width" secondItem="blO-ah-EEg" secondAttribute="width" id="1uh-kX-rnr"/>
+                                <constraint firstItem="cdk-J3-Ha5" firstAttribute="centerX" secondItem="QiY-2G-cTP" secondAttribute="centerX" id="2ZN-oz-m3Q"/>
+                                <constraint firstItem="6h8-Yd-SQw" firstAttribute="leading" secondItem="QiY-2G-cTP" secondAttribute="leading" id="9aX-ai-r4t"/>
+                                <constraint firstItem="hc5-wt-ZlH" firstAttribute="top" secondItem="blO-ah-EEg" secondAttribute="bottom" constant="19" id="AMd-7S-DtZ"/>
+                                <constraint firstItem="blO-ah-EEg" firstAttribute="centerX" secondItem="QiY-2G-cTP" secondAttribute="centerX" id="HwO-b4-o0L"/>
+                                <constraint firstItem="9YM-z6-72w" firstAttribute="centerY" secondItem="6h8-Yd-SQw" secondAttribute="centerY" id="bcK-7j-fba"/>
+                                <constraint firstItem="blO-ah-EEg" firstAttribute="centerY" secondItem="6h8-Yd-SQw" secondAttribute="centerY" id="eCH-Cd-gWf"/>
+                                <constraint firstItem="hc5-wt-ZlH" firstAttribute="centerX" secondItem="QiY-2G-cTP" secondAttribute="centerX" id="im6-3Y-xdL"/>
+                                <constraint firstItem="cdk-J3-Ha5" firstAttribute="top" secondItem="hc5-wt-ZlH" secondAttribute="bottom" constant="10" id="ovL-zg-I3O"/>
+                                <constraint firstAttribute="trailing" secondItem="9YM-z6-72w" secondAttribute="trailing" id="t8m-oD-lxh"/>
+                                <constraint firstAttribute="bottom" secondItem="cdk-J3-Ha5" secondAttribute="bottom" constant="20" id="wBZ-J6-60J"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Owi-Gs-4a4" userLabel="Activit View">
+                            <rect key="frame" x="0.0" y="50" width="354" height="318"/>
+                            <subviews>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="nr6-re-iDj">
+                                    <rect key="frame" x="152" y="134" width="50" height="50"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="nr6-re-iDj" secondAttribute="height" multiplier="1:1" id="XYA-sF-hzj"/>
+                                        <constraint firstAttribute="width" constant="50" id="uHQ-eE-BUq"/>
+                                    </constraints>
+                                </activityIndicatorView>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="nr6-re-iDj" firstAttribute="centerX" secondItem="Owi-Gs-4a4" secondAttribute="centerX" id="7Y9-IK-K8R"/>
+                                <constraint firstItem="nr6-re-iDj" firstAttribute="centerY" secondItem="Owi-Gs-4a4" secondAttribute="centerY" id="CvK-2a-l8O"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="2ng-cU-Ulh" secondAttribute="bottom" id="475-Jk-KSZ"/>
+                        <constraint firstItem="QiY-2G-cTP" firstAttribute="leading" secondItem="wYo-IH-Nwi" secondAttribute="leading" id="5gs-o1-CAO"/>
+                        <constraint firstAttribute="bottom" secondItem="QiY-2G-cTP" secondAttribute="bottom" id="83w-pb-hNw"/>
+                        <constraint firstItem="2ng-cU-Ulh" firstAttribute="leading" secondItem="wYo-IH-Nwi" secondAttribute="leading" id="8PD-hp-mnQ"/>
+                        <constraint firstAttribute="trailing" secondItem="2ng-cU-Ulh" secondAttribute="trailing" id="OJ8-Mx-1Bf"/>
+                        <constraint firstItem="dSm-il-1ED" firstAttribute="centerX" secondItem="wYo-IH-Nwi" secondAttribute="centerX" id="R1e-TD-sJZ"/>
+                        <constraint firstAttribute="trailing" secondItem="QiY-2G-cTP" secondAttribute="trailing" id="V5l-bC-HXE"/>
+                        <constraint firstItem="Owi-Gs-4a4" firstAttribute="leading" secondItem="wYo-IH-Nwi" secondAttribute="leading" id="VEt-87-sic"/>
+                        <constraint firstItem="QiY-2G-cTP" firstAttribute="top" secondItem="dSm-il-1ED" secondAttribute="bottom" id="cxq-0P-qy6"/>
+                        <constraint firstItem="2ng-cU-Ulh" firstAttribute="top" secondItem="dSm-il-1ED" secondAttribute="bottom" id="erX-55-DCv"/>
+                        <constraint firstAttribute="trailing" secondItem="Owi-Gs-4a4" secondAttribute="trailing" id="fOw-p0-QgO"/>
+                        <constraint firstItem="dSm-il-1ED" firstAttribute="top" secondItem="wYo-IH-Nwi" secondAttribute="top" constant="30" id="oCC-C3-WL9"/>
+                        <constraint firstAttribute="bottom" secondItem="Owi-Gs-4a4" secondAttribute="bottom" id="t2I-38-ArW"/>
+                        <constraint firstItem="Owi-Gs-4a4" firstAttribute="top" secondItem="dSm-il-1ED" secondAttribute="bottom" id="wB6-1W-9gL"/>
+                        <constraint firstAttribute="height" constant="368" id="zFj-F7-W2Z"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tc1-KJ-QDZ" userLabel="Close Button">
+                    <rect key="frame" x="369" y="169" width="30" height="30"/>
+                    <state key="normal" image="VIPLive_Close"/>
+                    <connections>
+                        <action selector="closeAddresseeView:" destination="-1" eventType="touchUpInside" id="gbq-p9-fEm"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="wYo-IH-Nwi" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="MdR-I5-qcj"/>
+                <constraint firstItem="Tc1-KJ-QDZ" firstAttribute="centerY" secondItem="wYo-IH-Nwi" secondAttribute="top" id="YqI-so-uux"/>
+                <constraint firstAttribute="trailing" secondItem="wYo-IH-Nwi" secondAttribute="trailing" constant="30" id="d5O-Rh-6p3"/>
+                <constraint firstItem="Tc1-KJ-QDZ" firstAttribute="centerX" secondItem="wYo-IH-Nwi" secondAttribute="trailing" id="fdi-mb-O7r"/>
+                <constraint firstItem="wYo-IH-Nwi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="kGP-A0-60d"/>
+            </constraints>
+            <point key="canvasLocation" x="131.8840579710145" y="128.57142857142856"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_Addressee_Left" width="24" height="24"/>
+        <image name="LS_Addressee_Right" width="24" height="24"/>
+        <image name="VIPLive_Close" width="30" height="30"/>
+    </resources>
+</document>

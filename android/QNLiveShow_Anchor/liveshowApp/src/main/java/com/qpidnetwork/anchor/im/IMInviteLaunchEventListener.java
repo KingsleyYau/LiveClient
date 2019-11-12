@@ -1,10 +1,12 @@
 package com.qpidnetwork.anchor.im;
 
 import com.qpidnetwork.anchor.httprequest.item.LiveRoomType;
+import com.qpidnetwork.anchor.im.listener.IMClientListener;
 import com.qpidnetwork.anchor.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.anchor.im.listener.IMClientListener.LCC_ERR_TYPE;
 import com.qpidnetwork.anchor.im.listener.IMInviteListItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
+import com.qpidnetwork.anchor.im.listener.IMSendInviteInfoItem;
 
 /**
  * 直播邀请及启动相关回调
@@ -32,16 +34,22 @@ public interface IMInviteLaunchEventListener {
     void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
 
 	/**
+	 * 3.11. 主播切换推流
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 */
+	void OnAnchorSwitchFlow(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMClientListener.IMDeviceType deviceType);
+
+	/**
 	 * 9.1.观众立即私密邀请
 	 * @param reqId
 	 * @param success
 	 * @param errType
 	 * @param errMsg
-	 * @param invitationId
-	 * @param timeout
-	 * @param roomId
 	 */
-    void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
+    void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMSendInviteInfoItem inviteInfoItem);
 
 	/**
 	 * 9.2.接收立即私密邀请回复通知

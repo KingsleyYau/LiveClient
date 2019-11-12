@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flContentBody"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2b2b2b">
+
+    <!-- 第一层（最底层） -->
+    <!-- 背景不随软键盘切换部分：视频播放view, 在代码中设置为屏幕高度使之全屏-->
+    <com.qpidnetwork.livemodule.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/fl_bgContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- 视频播放区 -->
+                <include
+                    android:id="@+id/include_audience_area"
+                    layout="@layout/include_full_screen_liveroom_audience"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+
+            </FrameLayout>
+    </com.qpidnetwork.livemodule.view.LiveRoomScrollView>
+
+    <!-- 第二层 -->
+    <!--覆盖在视频上的业务层-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!--最上层消息控制等-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/live_room_edit_height">
+
+                <!-- 顶部操作区域 -->
+                <include
+                    android:id="@+id/view_roomHeader"
+                    layout="@layout/view_full_screen_liveshow_header_new"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- 盖在视频区上面（座驾，hangout,私密按钮, 弹幕，消息列表） -->
+                <include
+                    android:id="@+id/include_im_body"
+                    layout="@layout/include_full_screen_liveroom_im"
+                    android:layout_below="@id/view_roomHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:visibility="visible" />
+
+                <!-- 资费提示 -->
+                <include
+                    android:id="@+id/view_tariff_prompt"
+                    layout="@layout/view_full_screen_tariff_prompt"
+                    android:layout_below="@id/view_roomHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="3dp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <!-- 输入栏 -->
+            <include
+                android:id="@+id/rl_inputMsg"
+                layout="@layout/view_full_screen_live_buttom_sendmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" />
+
+        </FrameLayout>
+
+
+        <!-- 输入法和表情区 , 通过改变高度，顶起上面的控件-->
+        <FrameLayout
+            android:id="@+id/fl_inputArea"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <!--最底部为表情选择器-->
+            <!-- 2019/09/50 Hardy  -->
+            <include layout="@layout/layout_emoji_tab_icon" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- 第三层 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--大礼物-->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/advanceGift"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            fresco:actualImageScaleType="fitCenter" />
+
+        <!--视频上传区域-->
+        <include
+            android:id="@+id/includePublish"
+            layout="@layout/include_liveroom_publish_new"
+            android:layout_width="93dp"
+            android:layout_height="125dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="83dp"
+            android:layout_marginRight="13dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+
+</com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout>

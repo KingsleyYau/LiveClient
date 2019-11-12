@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.liveshow.flowergift.store.FlowersTypeNameView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flowers_type_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/flowers_type_name_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/live_size_10dp"
+        android:paddingRight="@dimen/live_size_10dp">
+
+        <TextView
+            android:id="@+id/flowers_type_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="170dp"
+            android:singleLine="true"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/live_size_14sp"
+            tools:text="free_greeting_cardfree_greeting_cardfree_greeting_card" />
+
+        <TextView
+            android:id="@+id/flowers_type_tv_free_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/free_greeting_card_tag"
+            android:textColor="@color/live_ho_orange_credits"
+            android:textSize="@dimen/live_size_14sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/flowers_type_iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:visibility="gone"
+            tools:src="@drawable/ic_live_emoji_pear"
+            tools:visibility="gone" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/flowers_type_line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/theme_default_divider_grey"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</com.qpidnetwork.livemodule.liveshow.flowergift.store.FlowersTypeNameView>

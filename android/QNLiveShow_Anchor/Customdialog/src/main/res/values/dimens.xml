@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="dialogui_round_corner_radius">6dp</dimen>
-    <dimen name="dialogui_l_round_corner_radius">6dp</dimen>
+    <dimen name="dialogui_round_corner_radius">4dp</dimen>
+    <dimen name="dialogui_l_round_corner_radius">4dp</dimen>
     <dimen name="dialogui_line_with">1dp</dimen>
     <dimen name="dialogui_margin_small">8dp</dimen>
     <dimen name="dialogui_margin_smid">14dp</dimen>

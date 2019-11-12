@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.view.RefreshRecyclerView;
+import com.qpidnetwork.livemodule.view.ballRefresh.BallRefreshRecyclerView;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
@@ -21,25 +21,58 @@ import com.qpidnetwork.qnbridgemodule.util.Log;
 public class BaseRecyclerViewFragment extends BaseLoadingFragment implements RefreshRecyclerView.OnPullRefreshListener {
 
 	
-//	public static final int Default_Step = 50;	//默认下拉更多步长
+	public static final int Default_Step = 50;	//默认下拉更多步长
 //	private PageBean pageBean = new PageBean(mPageSize);
-	protected RefreshRecyclerView refreshRecyclerView;
-	protected FrameLayout fl_baseListContainer;
-	
+
+//	protected RefreshRecyclerView refreshRecyclerView;
+	protected BallRefreshRecyclerView refreshRecyclerView;
+
+//	protected FrameLayout fl_baseListContainer;
+	protected View fl_baseListContainer;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		TAG = BaseRecyclerViewFragment.class.getSimpleName();
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		View chileView = inflater.inflate(R.layout.fragment_live_base_pulltorefreshrecyclerview,null);
-		refreshRecyclerView = (RefreshRecyclerView) chileView.findViewById(R.id.refreshRecyclerView);
-		fl_baseListContainer = (FrameLayout) chileView.findViewById(R.id.fl_baseListContainer);
+		View chileView = inflater.inflate(getRecyclerViewRootViewId(), container, false);
+
+		refreshRecyclerView =  chileView.findViewById(R.id.refreshRecyclerView);
+		fl_baseListContainer = chileView.findViewById(R.id.fl_baseListContainer);
 		setCustomContent(chileView);
 		setRefreshView();
+
+		initView(view);
+
 		return view;
 	}
 
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		TAG = this.getClass().getSimpleName();
+		super.onActivityCreated(savedInstanceState);
+
+		initData();
+	}
+
+	/**
+	 * 2019/10/8 Hardy
+	 * 获取列表页的内容根 view id
+	 * @return
+	 */
+	protected int getRecyclerViewRootViewId(){
+		return R.layout.fragment_live_base_pulltorefreshrecyclerview;
+	}
+
+	protected void initView(View view){
+
+	}
+
+	protected void initData(){
+
+	}
 
 	/**
 	 * 设置背景颜色
@@ -56,11 +89,6 @@ public class BaseRecyclerViewFragment extends BaseLoadingFragment implements Ref
 
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		TAG = this.getClass().getSimpleName();
-		super.onActivityCreated(savedInstanceState);
-	}
 
 	public void setRefreshView() {
 		refreshRecyclerView.setOnPullRefreshListener(this);
@@ -95,5 +123,16 @@ public class BaseRecyclerViewFragment extends BaseLoadingFragment implements Ref
 	public void closePullDownRefresh(){
 		refreshRecyclerView.setCanPullDown(false);
 	}
-	
+
+	@Override
+	public void showLoadingProcess() {
+		refreshRecyclerView.showRefreshing();
+		super.showLoadingProcess();
+	}
+
+	@Override
+	public void hideLoadingProcess() {
+		refreshRecyclerView.hideRefreshing();
+		super.hideLoadingProcess();
+	}
 }

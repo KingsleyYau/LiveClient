@@ -244,12 +244,28 @@ public:
             if(root[LOGIN_USER_PRIV_SAYHI].isNumeric()) {
                 isSayHiPriv = root[LOGIN_USER_PRIV_SAYHI].asInt() == 0 ? false : true;
             }
+            /* priv */
+            if (root[LOGIN_PRIV].isObject()) {
+                Json::Value element = root[LOGIN_PRIV];
+                /* isGiftFlowerPriv */
+                if (element[LOGIN_PRIV_PRIV_MB_GIFT_FLOWER].isNumeric()) {
+                    isGiftFlowerPriv = element[LOGIN_PRIV_PRIV_MB_GIFT_FLOWER].asInt() == 0 ? false : true;
+                }
+                /* isPublicRoomPriv */
+                if (element[LOGIN_PRIV_PRIV_MB_SWITCH_PUBLICE_ROOM].isNumeric()) {
+                    isPublicRoomPriv = element[LOGIN_PRIV_PRIV_MB_SWITCH_PUBLICE_ROOM].asInt() == 0 ? false : true;
+                }
+            }
+            
+            
             result = true;
             return result;
         }
         
         HttpUserPrivItem() {
             isSayHiPriv = true;
+            isGiftFlowerPriv = false;
+            isPublicRoomPriv = false;
         }
         
         virtual ~HttpUserPrivItem() {
@@ -261,11 +277,16 @@ public:
          *  mailPriv            信件及意向信权限相关
          *  hangoutPriv         Hangout权限相关
          *  isSayHiPriv         SayHi权限(1:有  0:无)
+         *  isGiftFlowerPriv    鲜花礼品权限(1:有  0:无)
+         *  isPublicRoomPriv    观看公开直播限(1:有  0:无)
          */
         HttpLiveChatPrivItem         liveChatPriv;
         HttpMailPrivItem             mailPriv;
         HttpHangoutPrivItem          hangoutPriv;
         bool                         isSayHiPriv;
+        bool                         isGiftFlowerPriv;
+        bool                         isPublicRoomPriv;
+        
     };
     
     void Parse(const Json::Value& root) {
@@ -371,6 +392,19 @@ public:
                 userPriv.Parse(root[LOGIN_USER_PRIV]);
             }
             
+//            /* isGiftFlowerPriv */
+//            if (root[LOGIN_PRIV].isObject()) {
+//                Json::Value element = root[LOGIN_PRIV];
+//                if (element[LOGIN_PRIV_PRIV_MB_GIFT_FLOWER].isNumeric()) {
+//                    isGiftFlowerPriv = element[LOGIN_PRIV_PRIV_MB_GIFT_FLOWER].asInt() == 0 ? false : true;
+//                }
+//            }
+            
+            /* isGiftFlowerSwitch */
+            if (root[LOGIN_USER_FLOWERS_GIFT_SWITCH].isNumeric()) {
+                isGiftFlowerSwitch = root[LOGIN_USER_FLOWERS_GIFT_SWITCH].asInt() == 0 ? false : true;
+            }
+            
         }
         
     }
@@ -392,6 +426,7 @@ public:
         isLiveChatRisk = false;
         isHangoutRisk = false;
         liveChatInviteRiskType = LSHTTP_LIVECHATINVITE_RISK_NOLIMIT;
+        isGiftFlowerSwitch = false;
     }
     
     virtual ~HttpLoginItem() {
@@ -422,6 +457,7 @@ public:
      *
      * mailPriv   信件及意向信权限相关
      * userPriv   信件及意向信权限相关
+     * isGiftFlowerSwitch  鲜花礼品开关(1:打开  0:关闭)
      */
     string userId;
     string token;
@@ -442,6 +478,8 @@ public:
     LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
 //    HttpMailPrivItem mailPriv;
     HttpUserPrivItem userPriv;
+//    bool isGiftFlowerPriv;
+    bool isGiftFlowerSwitch;
 };
 
 #endif /* LOGINITEM_H_ */

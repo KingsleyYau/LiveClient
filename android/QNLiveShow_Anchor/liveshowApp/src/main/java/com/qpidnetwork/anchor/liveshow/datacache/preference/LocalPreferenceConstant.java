@@ -24,4 +24,8 @@ public class LocalPreferenceConstant {
     //promotion  key
     public final static String KEY_PROMOTION_UTM_REFERENCE = "utm_reference";
 
+    // 直播间美颜滤镜 key
+    public final static String KEY_LIVE_ROOM_FILTER_BEAUTY_LEVEL = "liveRoomFilterBeautyLevel";
+    public final static String KEY_LIVE_ROOM_FILTER_BEAUTY_STRENGTH = "liveRoomFilterBeautyStrength";
+    public final static String KEY_LIVE_ROOM_FILTER_TYPE = "liveRoomFilterType";
 }

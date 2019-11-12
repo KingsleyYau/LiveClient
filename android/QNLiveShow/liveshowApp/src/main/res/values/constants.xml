@@ -30,7 +30,7 @@
     <!--聊天栏最大的信息条目数-->
     <integer name="liveMsgListMaxNum">500</integer>
     <!--聊天栏单个条目数的最大停留时间-->
-    <integer name="liveMsgListItemHoldTime">5000</integer>
+    <integer name="liveMsgListItemHoldTime">500000</integer>
     <!--Toast失败弹出时长-->
     <integer name="toast_failed_max_show_time">2000</integer>
     <!--连击动画播放速度-->

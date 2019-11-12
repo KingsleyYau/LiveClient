@@ -439,16 +439,17 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
      */
     public void updateTabDiginalHint(final int position, boolean showHint, boolean onlyShowRedPoint, int unReadNumb) {
         View tabItemView = tabsContainer.getChildAt(position);
-        DotView dv_digitalHint = (DotView) tabItemView.findViewById(R.id.dv_digitalHint);
-        if (showHint) {
-            if (!onlyShowRedPoint && unReadNumb > 0) {
-                dv_digitalHint.setText(String.valueOf(unReadNumb));
+        if(tabItemView != null) {
+            DotView dv_digitalHint = (DotView) tabItemView.findViewById(R.id.dv_digitalHint);
+            if (showHint) {
+                if (!onlyShowRedPoint && unReadNumb > 0) {
+                    dv_digitalHint.setText(String.valueOf(unReadNumb));
+                }
+                dv_digitalHint.setVisibility(View.VISIBLE);
+            } else {
+                dv_digitalHint.setVisibility(View.GONE);
             }
-            dv_digitalHint.setVisibility(View.VISIBLE);
-        } else {
-            dv_digitalHint.setVisibility(View.GONE);
         }
-
     }
 
     /**

@@ -72,7 +72,15 @@ public:
      */
     bool ZBRoomOut(SEQ_T reqId, const string& roomId) override;
 
-
+    /**
+     *  3.11.主播切换推流
+     *
+     *  @param reqId         请求序列号
+     *  @param roomId        直播间ID
+     *  @param deviceType    终端类型
+     *
+     */
+    bool ZBAnchorSwitchFlow(SEQ_T reqId, const string& roomId, IMDeviceType deviceType) override;
 
     // --------- 直播间文本消息 ---------
     /**
@@ -111,9 +119,10 @@ public:
      *
      *  @param reqId                 请求序列号
      *  @param userId                主播ID
+     *  @param deviceType            多端设备类型（APP端默认）
      *
      */
-    bool ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userIde) override;
+    bool ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userIde, IMDeviceType deviceType) override;
 
     /**
      *  9.5.获取指定立即私密邀请信息
@@ -284,6 +293,15 @@ private:
      *
      */
     void OnZBRoomOut(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) override;
+    
+    /**
+     *  3.11.主播切换推流通知回调
+     *
+     *  @param pushUrl      推流地址
+     *  @param deviceType   终端类型
+     *
+     */
+    void OnAnchorSwitchFlow(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const list<string> pushUrl, IMDeviceType deviceType) override;
 
     /**
      *  4.1.发送直播间文本消息回调
@@ -315,12 +333,10 @@ private:
      *  @param reqId         请求序列号
      *  @param err           结果类型
      *  @param errMsg        结果描述
-     *  @param invitationId      邀请ID
-     *  @param timeOut           邀请的剩余有效时间
-     *  @param roomId            直播间ID
+     *  @param infoItem         主播邀请返回信息
      *
      */
-    void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId) override;
+    void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const ZBIMSendInviteInfoItem& infoItem) override;
     
     
     // ------------- 多人互动直播间 -------------
@@ -696,5 +712,29 @@ private:
      *
      */
     void OnRecvAnchorShowMsgNotice(const string& backgroundUrl, const string& msg) override;
+    
+    /**
+     *  12.1.多端获取预约邀请未读或代处理数量同步推送接口 回调
+     *
+     *  @param item         未读信息
+     *
+     */
+    void OnRecvGetScheduleListNReadNum(const ZBIMBookingUnreadUnhandleNumItem& item) override;
+    
+    /**
+     *  12.2.多端获取已确认的预约数同步推送接口 回调
+     *
+     *  @param scheduleNum         已确认的预约数量
+     *
+     */
+    void OnRecvGetScheduledAcceptNum(int scheduleNum) override;
+    
+    /**
+     *  12.3.多端获取节目未读数同步推送接口 回调
+     *
+     *  @param num         未读数量
+     *
+     */
+    void OnRecvNoreadShowNum(int num) override;
 
 };

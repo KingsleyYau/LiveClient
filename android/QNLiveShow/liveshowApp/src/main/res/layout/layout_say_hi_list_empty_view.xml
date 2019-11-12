@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadingEdge="none"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <com.qpidnetwork.livemodule.liveshow.sayhi.view.SayHiListEmptyView
+        android:id="@+id/layout_say_hi_list_empty_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/live_size_20dp">
+
+        <ImageView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:src="@drawable/ic_say_hi_list_empty" />
+
+        <TextView
+            android:id="@+id/layout_say_hi_list_empty_tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.3"
+            android:text="@string/say_hi_list_all_empty_tip"
+            android:textColor="@color/text_color_grey_light"
+            android:textSize="@dimen/live_size_14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="@dimen/live_size_14dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="@dimen/live_size_14dp"
+            android:background="@color/live_message_contact_list_background_color" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/say_hi_list_empty_You_may_be_interested_in"
+            android:textColor="@color/live_text_color_black"
+            android:textSize="@dimen/live_size_14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="208dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="@dimen/live_size_30dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/layout_say_hi_list_empty_fl_left"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="15dp"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:id="@+id/layout_say_hi_list_empty_fl_right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/layout_say_hi_list_empty_btn_search"
+            android:layout_width="@dimen/live_size_200dp"
+            android:layout_height="@dimen/normal_button_height_44dp"
+            app:background="@color/theme_sky_blue"
+            app:raisebutton_radius="6dp"
+            app:title="@string/Search_More"
+            app:title_color="@color/white"
+            app:touch_feedback="@drawable/touch_feedback_holo_light" />
+    </com.qpidnetwork.livemodule.liveshow.sayhi.view.SayHiListEmptyView>
+</ScrollView>

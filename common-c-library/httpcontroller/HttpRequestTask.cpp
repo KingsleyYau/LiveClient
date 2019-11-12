@@ -271,6 +271,69 @@ bool HttpRequestTask::ParseIOSPaid(const char* buf, int size, string &code, Json
     return result;
 }
 
+bool HttpRequestTask::ParseLiveChatVoucherCommon(const char* buf, int size, string &errnum, string &errmsg, Json::Value *data, Json::Value *errdata) {
+    bool bFlag = false;
+    
+    // 默认错误码是解析错误
+    errnum = LOCAL_ERROR_CODE_PARSEFAIL;
+    errmsg = LOCAL_ERROR_CODE_PARSEFAIL_DESC;
+    
+    // Try Parse JSON
+    Json::Value root;
+    Json::Reader reader;
+    Json::Value resultRoot;
+    int status = 0;
+    if( reader.parse(buf, root, false) ) {
+        FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseCommon( [Parse Json Finish], task : %p )", this);
+        if( root.isObject() ) {
+            if( root[COMMON_RESULT].isObject() ) {
+                resultRoot = root[COMMON_RESULT];
+                if (resultRoot[COMMON_STATUS].isNumeric()) {
+                    status = resultRoot[COMMON_STATUS].asInt();
+                }
+                if (resultRoot[COMMON_ERRCODE].isString()) {
+                    errnum = resultRoot[COMMON_ERRCODE].asString();
+                }
+                if (resultRoot[COMMON_ERRMSG].isString()) {
+                    errmsg = resultRoot[COMMON_ERRMSG].asString();
+                }
+                if( data != NULL ) {
+                    *data = root[COMMON_DATA];
+                }
+                
+                bFlag = (status == 1) ? true : false;
+            } else {
+                // 解析公共结果, 返回错误
+                if( root[COMMON_ERRNO].isString() ) {
+                    errnum = root[COMMON_ERRNO].asString();
+                    
+                    // 自定义错误码处理
+                    if( mpErrcodeHandler != NULL ) {
+                        mpErrcodeHandler->ErrcodeHandle(this, errnum);
+                    }
+                }
+                
+                // 错误消息
+                if( root[COMMON_ERRMSG].isString() ) {
+                    errmsg = root[COMMON_ERRMSG].asString();
+                }
+                
+                if( errdata != NULL ) {
+                    *errdata = root[COMMON_ERRDATA];
+                }
+                
+                bFlag = false;
+            }
+        }
+    }
+    
+    mErrCode = errnum;
+    
+    FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseCommon( [Handle Json %s], task : %p, errnum : %s )", bFlag?"Success":"Fail", this, errnum.c_str());
+    
+    return bFlag;
+}
+
 
 void HttpRequestTask::OnFinish(HttpRequest* request, bool bFlag, const char* buf, int size) {
 	// Handle in sub class

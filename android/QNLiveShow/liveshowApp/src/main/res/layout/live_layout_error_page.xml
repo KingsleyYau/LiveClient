@@ -1,10 +1,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="77dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivError"
+        android:layout_width="98dp"
+        android:layout_height="98dp"
+        android:layout_marginBottom="@dimen/live_size_20dp"
+        android:src="@drawable/icon_list_refreash_error_new" />
+
+    <LinearLayout
+        android:id="@+id/ll_errorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/live_size_30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/live_size_16dp"
+        android:paddingRight="@dimen/live_size_16dp">
+
+        <TextView
+            android:id="@+id/tvErrorMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/live_load_error_tip_new"
+            android:textColor="@color/text_color_grey_light"
+            android:textSize="@dimen/live_size_16sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRetry"
+        style="@style/blueCircle6dpButton" />
+</LinearLayout>
+
+    <!--    Old
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
     android:gravity="center_horizontal|top"
     android:orientation="vertical"
-    android:clickable="true">
+    android:paddingTop="77dp">
 
     <ImageView
         android:id="@+id/ivError"
@@ -20,22 +59,20 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/tvErrorMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:ellipsize="middle"
-            android:lines="3"
-            android:text="@string/tip_failed_to_load"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:textSize="14sp"
+            android:ellipsize="middle"
+            android:gravity="center_horizontal"
+            android:lines="3"
+            android:text="@string/tip_failed_to_load"
             android:textColor="#C2C2C2"
-            />
-
+            android:textSize="14sp" />
     </LinearLayout>
-
 
     <Button
         android:id="@+id/btnRetry"
@@ -43,11 +80,11 @@
         android:layout_height="35dp"
         android:layout_marginTop="29dp"
         android:background="@drawable/rectangle_rounded_angle_purple_bg"
-        android:text="@string/tip_reload"
-        android:textAllCaps="false"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:text="@string/tip_reload"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="13sp" />
-
 </LinearLayout>
+-->

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2B2B2B"
+    tools:context=".liveshow.sayhi.SayHiNoteActivity">
+
+
+    <!-- 背景图 -->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="54dp"
+        fresco:actualImageScaleType="fitXY" />
+
+    <include layout="@layout/layout_say_hi_note_content"/>
+
+</FrameLayout>

@@ -52,7 +52,9 @@ import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.MediaUtility;
 import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
+import com.qpidnetwork.qnbridgemodule.util.FileUtil;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.WebviewSSLProcessHelper;
 
 import java.io.File;
 
@@ -66,6 +68,7 @@ import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_ERROR
 public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActivity implements IAuthorizationListener, JSCallbackListener {
 
     private static final int LOGIN_CALLBACK = 10001;
+    private final int PIC_MAX_SIZE = 3000;
 
     public static final String WEB_URL = "web_url";
     public static final String WEB_TITLE = "web_title";
@@ -213,7 +216,7 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
         }
         //以下设置为配合Chrome DevTools调试webview的h5页面[setWebContentsDebuggingEnabled是静态方法，针对整个app的WebView]
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
+            WebView.setWebContentsDebuggingEnabled(LiveModule.mIsDebug);
         }
 
         //Android 4.2以下存在漏洞问题,待解决
@@ -332,14 +335,22 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
 
     @Override
     public void onClick(View v) {
-        super.onClick(v);
         int i = v.getId();
         if (i == R.id.btnRetry) {
             view_errorpage.setVisibility(View.GONE);
             loadUrl(true, false);
         } else if(R.id.iv_commBack == i) {
-            finish();
+//            finish();
+            //修改原有的关闭为逐级退出
+            if( owv_content.canGoBack() ) {
+                owv_content.goBack();
+            } else {
+                //交给页面处理
+                finish();
+            }
+            return;
         }
+        super.onClick(v);
     }
 
     @Override
@@ -526,7 +537,7 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                 if(!TextUtils.isEmpty(errorcode)
                         && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)){
                     LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
-                    if(loginStatus == LoginManager.LoginStatus.Logined){
+                    if(loginStatus != LoginManager.LoginStatus.Logined){
                         LoginNewActivity.launchRegisterActivity(mContext);
                     }else{
                         pb_loading.setVisibility(View.VISIBLE);
@@ -733,7 +744,8 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Log.d(TAG, "onReceivedSslError");
                 //                super.onReceivedSslError(view, handler, error);
-                handler.proceed();//表示等待证书响应
+//                handler.proceed();//表示等待证书响应
+                WebviewSSLProcessHelper.showWebviewSSLErrorTips(BaseAlphaBarWebViewActivity.this, view, handler, error);
                 // handler.cancel//表示挂起连接-默认处理方式
                 // handler.handleMessage(null)//可做其他处理
             }
@@ -807,6 +819,9 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Log.d(TAG,"onActivityResult-requestCode:"+requestCode+" resultCode:"+resultCode);
+        //onActivityResult 即拍照返回，无需重新更新cookie，防止异步更新cookie（先清除，后更新导致回调使用cookie异常，红米note拍砸返回上传session过期）
+        mIsNeedResume = false;
+
         //需要回调onReceiveValue方法防止下次无法响应js方法
         if (resultCode != RESULT_OK) {
             if (mOpenFileWebChromeClient.mFilePathCallback != null) {
@@ -831,15 +846,33 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
             //因为拍照在红米note2手机上返回的intent为null，因此需要自己处理uri
             uri = Uri.fromFile(new File(FileCacheManager.getInstance().GetTempCameraImageUrl()));
         }
-        Log.logD(TAG,"onActivityResult-result:"+result+" uri:"+uri);
+        Log.logD(TAG,"onActivityResult-result:"+result+" uri:"+uri.getPath());
 
         // 2018/11/27 Hardy
-        if (uri != null && requestCode == OpenFileWebChromeClient.REQUEST_CAPTURE_PHOTO) {
-            String path = FileCacheManager.getInstance().GetTempCameraImageUrl();
-//            String fileName = "file_choose" + "_" + System.currentTimeMillis() + ".jpg";
-//            Log.logD(TAG,"onActivityResult-result:"+result+" path:"+ path +"----> fileName: "+"");
-            ImageUtil.SaveImageToGallery(this, path);
+        if (uri != null ){
+            if(requestCode == OpenFileWebChromeClient.REQUEST_CAPTURE_PHOTO) {
+                String scanPath = FileCacheManager.getInstance().GetTempCameraImageUrl();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    //5.0以下处理兼容,兼容部分手机由于文件名一样导致导致web收不到change导致连续拍照上传异常
+                    String compatPath = renameCameraTempUrl();
+                    if (!TextUtils.isEmpty(compatPath)) {
+                        scanPath = compatPath;
+                    }
+                }
+                //add by Jagger
+                reSizePic(scanPath, scanPath);
+                uri = Uri.fromFile(new File(scanPath));
+                ImageUtil.SaveImageToGallery(this, scanPath);
+            }else if(requestCode == OpenFileWebChromeClient.REQUEST_FILE_PICKER) {
+                //add by Jagger 2019-7-5
+                //如果取自相册，则压缩到合适上传的尺寸
+                String scanPath = FileCacheManager.getInstance().GetTempImageUrl();
+                reSizePic(uri.getPath(), scanPath);
+                uri = Uri.fromFile(new File(scanPath));
+            }
         }
+
+        Log.logD(TAG,"Compat onActivityResult-result:"+result+" uri:"+uri);
 
         if(null != mOpenFileWebChromeClient.mFilePathCallback){
             mOpenFileWebChromeClient.mFilePathCallback.onReceiveValue(uri);
@@ -854,6 +887,22 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
     }
 
     /**
+     * 拷贝拍照临时文件（重命名解决找不到指定照片问题）
+     * @return
+     */
+    private String renameCameraTempUrl(){
+        String tempPath = "";
+        String path = FileCacheManager.getInstance().GetTempCameraImageUrl();
+        String compatPath = FileCacheManager.getInstance().GetWebviewCompatTempCameraImageUrl();
+        FileUtil.renameFile(path, compatPath);
+        File file = new File(compatPath);
+        if(file.exists() && file.isFile()){
+            tempPath = compatPath;
+        }
+        return tempPath;
+    }
+
+    /**
      * 通知页面用户返回
      */
     public void notifyResume() {
@@ -861,6 +910,18 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
         if(owv_content != null){
             owv_content.loadUrl(url);
         }
+    }
+
+    /**
+     * 压缩为合适上传的尺寸
+     * @param filePath
+     * @param savePath
+     */
+    private void reSizePic(String filePath, String savePath){
+        //压缩 长边小于3000
+        Bitmap bitmapResize = ImageUtil.decodeSampledBitmapFromFile(filePath, PIC_MAX_SIZE, PIC_MAX_SIZE);
+        //覆盖原文件
+        ImageUtil.saveBitmapToFile(savePath, bitmapResize, Bitmap.CompressFormat.JPEG, 70);
     }
 
 }

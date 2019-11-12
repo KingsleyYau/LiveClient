@@ -24,11 +24,11 @@ public class VouchorAvailableInfoItem {
 	 * @param onlyprivateNewExpTime			仅私密的新关系试用券到期时间（1970年起的秒数）
 	 * @param watchedAnchor				我看过的主播列表[主播ID]
 	 */
-	public VouchorAvailableInfoItem(int onlypublicExpTime,
-                                    int onlyprivateExpTime,
+	public VouchorAvailableInfoItem(long onlypublicExpTime,
+									long onlyprivateExpTime,
 									BindAnchorItem[] svrList,
-									int onlypublicNewExpTime,
-									int onlyprivateNewExpTime,
+									long onlypublicNewExpTime,
+									long onlyprivateNewExpTime,
 									String[] watchedAnchor){
 		this.onlypublicExpTime = onlypublicExpTime;
 		this.onlyprivateExpTime = onlyprivateExpTime;
@@ -39,11 +39,11 @@ public class VouchorAvailableInfoItem {
 
 	}
 	
-	public int onlypublicExpTime;
-	public int onlyprivateExpTime;
+	public long onlypublicExpTime;
+	public long onlyprivateExpTime;
 	public BindAnchorItem[] svrList;
-	public int onlypublicNewExpTime;
-	public int onlyprivateNewExpTime;
+	public long onlypublicNewExpTime;
+	public long onlyprivateNewExpTime;
 	public String[] watchedAnchor;
 
 

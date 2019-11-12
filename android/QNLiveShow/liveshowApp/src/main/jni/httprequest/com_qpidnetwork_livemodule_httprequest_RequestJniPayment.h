@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (ILjava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnMobilePayGotoCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPayment_MobilePayGoto
-  (JNIEnv *, jclass, jint, jstring , jstring , jobject);
+  (JNIEnv *, jclass, jint, jstring , jstring , jstring , jobject);
 
 
 

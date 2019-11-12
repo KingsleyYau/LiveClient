@@ -35,6 +35,10 @@
     self.stampsBuyBtn.layer.masksToBounds = YES;
     self.creditsBuyBtn.layer.cornerRadius = 5;
     self.creditsBuyBtn.layer.masksToBounds = YES;
+    
+    if( IS_IPHONE_X ) {
+        self.noteLabelBottom.constant = -44;
+    }
 }
 
 - (void)hideenAllView {

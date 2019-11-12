@@ -20,6 +20,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--<item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>-->
     </style>
+
     <style name="CustomTheme.SimpleDialog.Anim" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/gift_dialog_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_exit</item>
@@ -67,10 +68,12 @@
         <item name="android:layout_height">30dp</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="CustomTheme.SimpleDialog.Btn.Cancel" parent="@style/CustomTheme.SimpleDialog.Btn">
         <item name="android:background">@drawable/bg_custom_dialog_cancel</item>
         <item name="android:layout_marginRight">24dp</item>
     </style>
+
     <style name="CustomTheme.SimpleDialog.Btn.Confirm" parent="@style/CustomTheme.SimpleDialog.Btn">
         <item name="android:background">@drawable/bg_custom_dialog_confirm</item>
         <item name="android:layout_marginLeft">24dp</item>
@@ -116,7 +119,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#bebebe</item>
-       <item name="android:textSize">12sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">3dp</item>
     </style>
 
@@ -169,6 +172,7 @@
     <style name="HangoutBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
     </style>
+
     <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
         <item name="behavior_peekHeight">@dimen/live_hangout_detail_dialog_height</item>
     </style>
@@ -180,10 +184,46 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/animation_bottom_in_out</item>
     </style>
+
     <style name="animation_bottom_in_out" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/anim_bottom_in</item>
         <item name="android:activityOpenExitAnimation">@anim/anim_bottom_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/anim_bottom_in</item>
         <item name="android:activityCloseExitAnimation">@anim/anim_bottom_out</item>
+    </style>
+
+    <!--SayHi 新手引导弹窗-->
+    <style name="SayHiGuideDialog" parent="@style/CustomTheme.SimpleDialog">
+        <item name="android:windowAnimationStyle">@style/SayHiGuideDialog.Anim</item>
+    </style>
+
+    <style name="SayHiGuideDialog.Anim">
+        <item name="android:windowExitAnimation">@anim/anim_say_hi_guide_out</item>
+    </style>
+    <!--<item name="android:windowEnterAnimation">@anim/scale_in</item>-->
+
+    <!--圆角蓝色背景的按钮-->
+    <style name="blueCircle6dpButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">@dimen/live_size_200dp</item>
+        <item name="android:minHeight">@dimen/normal_button_height_44dp</item>
+        <item name="android:layout_marginLeft">@dimen/live_size_16dp</item>
+        <item name="android:layout_marginRight">@dimen/live_size_16dp</item>
+        <item name="android:paddingLeft">@dimen/live_size_10dp</item>
+        <item name="android:paddingRight">@dimen/live_size_10dp</item>
+        <item name="android:background">@drawable/rectangle_radius6_ripple_solid_sky_blue</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/live_common_btn_retry</item>
+        <item name="android:textSize">@dimen/live_size_16sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!--红色小红点提示-->
+    <style name="redCircleStyle">
+        <item name="android:layout_width">9dp</item>
+        <item name="android:layout_height">9dp</item>
+        <item name="android:background">@drawable/bg_red_solid_circle_shape</item>
     </style>
 </resources>

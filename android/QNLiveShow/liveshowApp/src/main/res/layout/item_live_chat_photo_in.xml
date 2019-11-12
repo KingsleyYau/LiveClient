@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -99,14 +100,49 @@
             app:layout_constraintTop_toTopOf="@+id/cl_content" />
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/tv_des"
+    <!-- 描述 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_des"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_black"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="60dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:visibility="invisible"/>
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_quo"
+            android:textColor="@color/text_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tv_des" />
+
+        <TextView
+            android:id="@+id/tv_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="240dp"
+            android:maxLines="1"
+            android:textColor="@color/text_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/tv_a"
+            app:layout_constraintRight_toLeftOf="@+id/tv_b"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_quo"
+            android:textColor="@color/text_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/tv_des"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 </LinearLayout>

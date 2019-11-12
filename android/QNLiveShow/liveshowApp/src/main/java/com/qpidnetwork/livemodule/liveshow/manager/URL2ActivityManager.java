@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.dou361.dialogui.DialogUIUtils;
 import com.dou361.dialogui.listener.DialogUIListener;
@@ -20,6 +21,8 @@ import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
+import com.qpidnetwork.livemodule.liveshow.flowergift.FlowersMainActivity;
+import com.qpidnetwork.livemodule.liveshow.flowergift.store.FlowersAnchorShopListActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
 import com.qpidnetwork.livemodule.liveshow.livechat.LiveChatMainActivity;
@@ -33,17 +36,20 @@ import com.qpidnetwork.livemodule.liveshow.message.MessageContactListActivity;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.personal.MyProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
+import com.qpidnetwork.livemodule.liveshow.personal.mycontact.MyContactListActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.tickets.MyTicketsActivity;
+import com.qpidnetwork.livemodule.liveshow.sayhi.SayHiDetailsActivity;
+import com.qpidnetwork.livemodule.liveshow.sayhi.SayHiEditActivity;
+import com.qpidnetwork.livemodule.liveshow.sayhi.SayHiListActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
-import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +58,61 @@ import java.util.Set;
 import static com.qpidnetwork.livemodule.liveshow.loi.BaseAlphaBarWebViewActivity.WEB_TITLE;
 import static com.qpidnetwork.livemodule.liveshow.loi.BaseAlphaBarWebViewActivity.WEB_TITLE_BAR_SHOW_LOADSUC;
 import static com.qpidnetwork.livemodule.liveshow.loi.BaseAlphaBarWebViewActivity.WEB_URL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_BOOKING_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_BOOKING_PACKLIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_BUY_CREDIT;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_CHAT;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_CHAT_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_GIFT_FLOWER_ANCHOR_STORE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_GIFT_FLOWER_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_GREETMAIL_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_HANGOUT_DIALOG;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_HANGOUT_TRANSITION;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_ANCHOR_DETAIL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_CHAT;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_CHAT_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_LOGIN;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_MAIN;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_ROOM;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_LOGIN;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_MAIL_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_MY_CONTACT_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_MY_LEVEL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_MY_PROFILE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_MY_TICKETS;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_NEW_BOOKING;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_POP_YESNO_DIALOG;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_SAYHI_DETAIL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_SAYHI_LIST;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_SENDSAYHI;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_MODULE_NAME_SEND_MAIL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_APP_TITLE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_CLICK_FROM;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_D_MSG;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_D_NO_TITLE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_D_TITLE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_D_YES_TITLE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_D_YES_URL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_ANCHORID;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_ANCHORNAME;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_ANCHORTYPE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_BUBBLE_FLAG;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_GASCREENNAME;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_INVITATIONID;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_INVITE_MSG_ID;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_LISTTYPE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_LIVESHOWID;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_ROOMID;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_ROOMTYPE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_SAYHIID;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_SELECT_INDEX;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_KEY_STORE_LIST_TYPE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_OPEN_TYPE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_ORDER_NUMBER;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_ORDER_TYPE;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_RESUMECB;
+import static com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder.KEY_URL_PARAM_STYLE_TYPE;
 
 /**
  * 以URL拼写规则　决定　走向哪个窗口的管理类
@@ -60,63 +121,6 @@ import static com.qpidnetwork.livemodule.liveshow.loi.BaseAlphaBarWebViewActivit
 
 public class URL2ActivityManager {
     private static String TAG = URL2ActivityManager.class.getSimpleName();
-
-    //URL中module的值
-    public static final String KEY_URL_MODULE_NAME_LIVE_LOGIN = "liveLogin";
-    public static final String KEY_URL_MODULE_NAME_LIVE_MAIN = "main";
-    public static final String KEY_URL_MODULE_NAME_LIVE_ANCHOR_DETAIL = "anchordetail";
-    public static final String KEY_URL_MODULE_NAME_LIVE_ROOM = "liveroom";
-    public static final String KEY_URL_MODULE_NAME_NEW_BOOKING = "newbooking";
-    public static final String KEY_URL_MODULE_NAME_BOOKING_LIST = "bookinglist";
-    public static final String KEY_URL_MODULE_NAME_BOOKING_PACKLIST = "backpacklist";
-    public static final String KEY_URL_MODULE_NAME_BUY_CREDIT = "buycredit";
-    public static final String KEY_URL_MODULE_NAME_MY_LEVEL = "mylevel";
-    public static final String KEY_URL_MODULE_NAME_CHAT_LIST = "chatlist";      //私信联系人列表
-    public static final String KEY_URL_MODULE_NAME_CHAT = "chat";               //私信联系人列表
-    public static final String KEY_URL_MODULE_NAME_LIVE_CHAT_LIST = "livechatlist";     // 2018/11/17 Hardy
-    public static final String KEY_URL_MODULE_NAME_LIVE_CHAT = "livechat";              // 2018/11/21 Hardy
-    public static final String KEY_URL_MODULE_NAME_GREETMAIL_LIST = "greetmaillist";
-    public static final String KEY_URL_MODULE_NAME_MAIL_LIST = "maillist";
-    public static final String KEY_URL_MODULE_NAME_POP_YESNO_DIALOG = "popyesnodialog";
-    public static final String KEY_URL_MODULE_NAME_MY_TICKETS = "mytickets";
-    public static final String KEY_URL_MODULE_NAME_LOGIN = "login"; //add by Jagger 2018-9-26
-    public static final String KEY_URL_MODULE_NAME_MY_PROFILE = "myprofile"; //add by Jagger 2018-9-28
-    public static final String KEY_URL_MODULE_NAME_SEND_MAIL = "sendmail"; //写信
-    public static final String KEY_URL_MODULE_NAME_HANGOUT_DIALOG = "hangout_dialog";   //打开hangoutdialog
-    public static final String KEY_URL_MODULE_NAME_HANGOUT_TRANSITION = "hangout";   //打开hangout过渡页
-
-    //URL中的KEYS
-    public static final String KEY_URL_PARAM_KEY_LISTTYPE = "listtype";
-    public static final String KEY_URL_PARAM_KEY_ROOMID = "roomid";
-    public static final String KEY_URL_PARAM_KEY_ANCHORID = "anchorid";
-    public static final String KEY_URL_PARAM_KEY_ANCHORNAME = "anchorname";
-    public static final String KEY_URL_PARAM_KEY_ROOMTYPE = "roomtype";
-    public static final String KEY_URL_PARAM_KEY_INVITATIONID = "invitationid";
-    public static final String KEY_URL_PARAM_KEY_ANCHORTYPE = "anchor_type";
-    public static final String KEY_URL_PARAM_KEY_LIVESHOWID = "liveshowid";
-    public static final String KEY_URL_PARAM_KEY_GASCREENNAME = "gascreen";
-    public static final String KEY_URL_PARAM_KEY_SELECT_INDEX = "selectIndex";
-
-    //自定义key
-    public static final String KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL = "anchorAvatar";
-
-    //外部链接携带打开模式及title
-    private static final String KEY_URL_PARAM_OPEN_TYPE = "opentype";
-    private static final String KEY_URL_PARAM_STYLE_TYPE = "styletype";
-    private static final String KEY_URL_PARAM_APP_TITLE = "apptitle";
-
-    //买点外部链接参数
-    private static final String KEY_URL_PARAM_ORDER_TYPE = "order_type";
-    private static final String KEY_URL_PARAM_CLICK_FROM = "click_from";
-    private static final String KEY_URL_PARAM_ORDER_NUMBER = "number";
-    private static final String KEY_URL_PARAM_RESUMECB = "resumecb";
-
-    //弹出对话框参数
-    private static final String KEY_URL_PARAM_D_TITLE = "title";
-    private static final String KEY_URL_PARAM_D_MSG = "msg";
-    private static final String KEY_URL_PARAM_D_YES_TITLE = "yes_title";
-    private static final String KEY_URL_PARAM_D_NO_TITLE = "no_title";
-    private static final String KEY_URL_PARAM_D_YES_URL = "yes_url";
 
     public static URL2ActivityManager getInstance() {
         if (singleton == null) {
@@ -193,6 +197,18 @@ public class URL2ActivityManager {
                     else if (moduleStr.equals(KEY_URL_MODULE_NAME_LIVE_CHAT)) {
                         URL4LiveChatAcitivity(context, uri);
                     }
+                    //打开 MyContact 聊天界面     2019/8/16 Hardy
+                    else if (moduleStr.equals(KEY_URL_MODULE_NAME_MY_CONTACT_LIST)) {
+                        URL4MyContactList(context);
+                    }
+                    //打开鲜花礼品列表页——商店主页下     2019/10/12 Hardy
+                    else if (moduleStr.equals(KEY_URL_MODULE_NAME_GIFT_FLOWER_LIST)) {
+                        URL4GiftFlowersList(context, uri);
+                    }
+                    //打开鲜花礼品列表页——主播主页下     2019/10/12 Hardy
+                    else if (moduleStr.equals(KEY_URL_MODULE_NAME_GIFT_FLOWER_ANCHOR_STORE)) {
+                        URL4GiftFlowersAnchorStoreList(context, uri);
+                    }
                     //打开私信聊天界面
                     else if (moduleStr.equals(KEY_URL_MODULE_NAME_CHAT)) {
                         URL4ChatDetail(context, uri);
@@ -262,6 +278,12 @@ public class URL2ActivityManager {
                         URL4ShowHangoutInviteDialog(context, uri);
                     }else if (moduleStr.equals(KEY_URL_MODULE_NAME_HANGOUT_TRANSITION)) {
                         URL4HangoutTransition(context, uri);
+                    }else if (moduleStr.equals(KEY_URL_MODULE_NAME_SAYHI_LIST)) {
+                        URL4SayHiList(context, uri);
+                    }else if (moduleStr.equals(KEY_URL_MODULE_NAME_SENDSAYHI)) {
+                        URL4SayHiEdit(context, uri);
+                    }else if (moduleStr.equals(KEY_URL_MODULE_NAME_SAYHI_DETAIL)) {
+                        URL4SayHiDetail(context, uri);
                     }
                 }
             }else{
@@ -372,300 +394,6 @@ public class URL2ActivityManager {
         return showLiveId;
     }
 
-    //---------------------- 生成对应界面的URL start ---------------------------
-
-    /**
-     * 生成基础URL构造
-     * @return
-     */
-    private static String doCreateBaseUrl(){
-        return CoreUrlHelper.getUrlBasePath(LiveModule.getInstance());
-    }
-
-    /**
-     * 外部链接打开应用到hot列表url
-     * @return
-     */
-    public static String createServiceEnter(){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_MAIN;
-
-        url += "&" + KEY_URL_PARAM_KEY_LISTTYPE + "=" + String.valueOf(1);
-        return url;
-    }
-
-    /**
-     * 生成外部打开主播资料页url
-     * @param anchorId
-     * @return
-     */
-    public static String createOutOpenAnchorProfile(String anchorId){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_ANCHOR_DETAIL;
-
-        url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        return url;
-    }
-
-    /**
-     * 主播主动立即私密邀请时，生成Push所带Url
-     * @return
-     */
-    public static String createAnchorInviteUrl(String anchorId, String anchorName, String anchorPhotoUrl, String inviteId){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_ROOM;
-
-        if(!TextUtils.isEmpty(anchorId)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        }
-
-        if(!TextUtils.isEmpty(anchorName)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORNAME + "=" + anchorName;
-        }
-
-        if(!TextUtils.isEmpty(inviteId)){
-            url += "&" + KEY_URL_PARAM_KEY_INVITATIONID + "=" + inviteId;
-        }
-
-        if(!TextUtils.isEmpty(anchorPhotoUrl)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL + "=" + URLEncoder.encode(anchorPhotoUrl);
-        }
-
-        //roomType 主播发来立即私密邀请
-        url += "&" + KEY_URL_PARAM_KEY_ROOMTYPE + "=" + String.valueOf(3);
-
-        return url;
-    }
-
-    /**
-     * 预约邀请到期通知，生成Push所带Url
-     * @return
-     */
-    public static String createBookExpiredUrl(String anchorId, String anchorName, String anchorPhotoUrl, String roomId){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_ROOM;
-
-        if(!TextUtils.isEmpty(anchorId)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        }
-
-        if(!TextUtils.isEmpty(anchorName)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORNAME + "=" + anchorName;
-        }
-
-        if(!TextUtils.isEmpty(roomId)){
-            url += "&" + KEY_URL_PARAM_KEY_ROOMID + "=" + roomId;
-        }
-
-        if(!TextUtils.isEmpty(anchorPhotoUrl)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL + "=" + URLEncoder.encode(anchorPhotoUrl);
-        }
-
-        //roomType 预约到期进入直播间
-        url += "&" + KEY_URL_PARAM_KEY_ROOMTYPE + "=" + String.valueOf(1);
-
-        return url;
-    }
-
-    /**
-     * 节目开播通知url构建
-     * @return
-     */
-    public static String createProgramShowUrl(String anchorId, String anchorName, String anchorPhotoUrl, String liveshowid){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_ROOM;
-
-        if(!TextUtils.isEmpty(anchorId)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        }
-
-        if(!TextUtils.isEmpty(anchorName)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORNAME + "=" + anchorName;
-        }
-
-        if(!TextUtils.isEmpty(liveshowid)){
-            url += "&" + KEY_URL_PARAM_KEY_LIVESHOWID + "=" + liveshowid;
-        }
-
-        if(!TextUtils.isEmpty(anchorPhotoUrl)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL + "=" + URLEncoder.encode(anchorPhotoUrl);
-        }
-
-        //roomType 预约到期进入直播间
-        url += "&" + KEY_URL_PARAM_KEY_ROOMTYPE + "=" + String.valueOf(0);
-
-        return url;
-    }
-
-    /**
-     * 构建买点URL
-     * @param orderType
-     * @param clickFrom
-     * @param number
-     * @return
-     */
-    public static String createAddCreditUrl(String orderType, String clickFrom, String number){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_BUY_CREDIT;
-
-        if(TextUtils.isEmpty(orderType)){
-            orderType = "0";
-        }
-        url += "&" + KEY_URL_PARAM_ORDER_TYPE + "=" + orderType;
-
-        url += "&" + KEY_URL_PARAM_CLICK_FROM + "=" + clickFrom;
-
-        url += "&" + KEY_URL_PARAM_ORDER_NUMBER + "=" + number;
-
-        return url;
-    }
-
-    /**
-     * 构建私信联系人列表URL
-     * @return
-     */
-    public static String createMessageListUrl(){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_CHAT_LIST;
-        return url;
-    }
-
-    /**
-     * 构建 LiveChatList 列表
-     * @return
-     */
-    public static String createLiveChatListUrl(){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_CHAT_LIST;
-        return url;
-    }
-
-    /**
-     * 构建打开LiveChat聊天界面
-     * @return
-     */
-    public static String createLiveChatActivityUrl(String anchorId, String anchorName, String photoUrl){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_CHAT;
-        if(!TextUtils.isEmpty(anchorId)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        }
-        if(!TextUtils.isEmpty(anchorName)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORNAME + "=" + anchorName;
-        }
-        if(!TextUtils.isEmpty(photoUrl)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL + "=" + photoUrl;
-        }
-        return url;
-    }
-
-    /**
-     * 构建打开senmail界面
-     * @return
-     */
-    public static String createSendMailActivityUrl(String anchorId){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_SEND_MAIL;
-        if(!TextUtils.isEmpty(anchorId)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        }
-        return url;
-    }
-
-
-    /**
-     * 构建邮件列表URL
-     * @return
-     */
-    public static String createMailList(){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_MAIL_LIST;
-        return url;
-    }
-
-    /**
-     * 构建意向信列表URL
-     * @return
-     */
-    public static String createGreetMailList(){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_GREETMAIL_LIST;
-        return url;
-    }
-
-    /**
-     * 构建我的票据URL
-     * @param selectIndex
-     * @return
-     */
-    public static String createMyTickets(int selectIndex){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_MY_TICKETS;
-
-        url += "&" + KEY_URL_PARAM_KEY_SELECT_INDEX + "=" + selectIndex;
-        return url;
-    }
-
-    /**
-     * 构建MyBooking URL
-     * @param listType 大于0才有效
-     * @return
-     */
-    public static String createScheduleInviteActivity(int listType){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_BOOKING_LIST;
-
-        url += "&" + KEY_URL_PARAM_KEY_LISTTYPE + "=" + listType;
-        return url;
-    }
-
-
-    /**
-     * 构建个人资料URL
-     * @return
-     */
-    public static String createMyProfile(){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_MY_PROFILE;
-
-        return url;
-    }
-
-    /**
-     * 构建MyBackpack URL
-     * @param listType
-     * @return
-     */
-    public static String createMyBackpackActivity(int listType){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_BOOKING_PACKLIST;
-
-        url += "&" + KEY_URL_PARAM_KEY_LISTTYPE + "=" + listType;
-        return url;
-    }
-
-    /**
-     * 构建Hangout过渡页 URL
-     * @param anchorId
-     * @param anchorName
-     * @return
-     */
-    public static String createHangoutTransitionActivity(String anchorId, String anchorName){
-        String url = doCreateBaseUrl() //以上是基本结构，后面接的是参数
-                + "&" + CoreUrlHelper.KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_HANGOUT_TRANSITION;
-
-        if(!TextUtils.isEmpty(anchorId)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORID + "=" + anchorId;
-        }
-        if(!TextUtils.isEmpty(anchorName)){
-            url += "&" + KEY_URL_PARAM_KEY_ANCHORNAME + "=" + anchorName;
-        }
-        return url;
-    }
-
-
-    //---------------------- 生成对应界面的URL end ---------------------------
-
     //----------------------- 使用URL跳转 start -----------------------------
 
     /**
@@ -772,6 +500,7 @@ public class URL2ActivityManager {
         String anchorName = "";
         String anchorPhotoUrl = "";
         String invitationId = "";
+        String bubbleFlag = "";
         int roomType = 0;
         String liveshowid = "";
         if(params != null){
@@ -795,6 +524,10 @@ public class URL2ActivityManager {
             }
             if(params.containsKey(KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL)){
                 anchorPhotoUrl = URLDecoder.decode(params.get(KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL));
+            }
+
+            if(params.containsKey(KEY_URL_PARAM_KEY_BUBBLE_FLAG)){
+                bubbleFlag = params.get(KEY_URL_PARAM_KEY_BUBBLE_FLAG);
             }
         }
         LiveRoomTransitionActivity.CategoryType categoryType = null;
@@ -830,7 +563,15 @@ public class URL2ActivityManager {
             }else if(categoryType == LiveRoomTransitionActivity.CategoryType.Enter_Program_Public_Room){
                 context.startActivity(LiveRoomTransitionActivity.getProgramShowIntent(context, categoryType, anchorId, anchorName, anchorPhotoUrl, liveshowid));
             }else{
-                context.startActivity(LiveRoomTransitionActivity.getIntent(context, categoryType, anchorId, anchorName, anchorPhotoUrl, roomId, ""));
+                boolean isBubble = false;
+                if(!TextUtils.isEmpty(bubbleFlag)){
+                    isBubble = (Integer.valueOf(bubbleFlag) == 1) ? true:false;
+                }
+                if(isBubble){
+                    context.startActivity(LiveRoomTransitionActivity.getIntentFromBubble(context, categoryType, anchorId, anchorName, anchorPhotoUrl, roomId, ""));
+                }else{
+                    context.startActivity(LiveRoomTransitionActivity.getIntent(context, categoryType, anchorId, anchorName, anchorPhotoUrl, roomId, ""));
+                }
             }
         }
     }
@@ -944,6 +685,36 @@ public class URL2ActivityManager {
     }
 
     /**
+     * 进入livechat列表界面
+     * @param context
+     */
+    private void URL4MyContactList(Context context){
+        MyContactListActivity.startAct(context);
+    }
+
+    /**
+     * 鲜花礼品列表——商店下
+     */
+    private void URL4GiftFlowersList(Context context, Uri uri){
+        String listType = uri.getQueryParameter(KEY_URL_PARAM_KEY_STORE_LIST_TYPE);
+        if (!TextUtils.isEmpty(listType)) {
+            FlowersMainActivity.startAct(context, listType);
+        }else{
+            FlowersMainActivity.startAct(context);
+        }
+    }
+    /**
+     * 鲜花礼品列表——主播下
+     */
+    private void URL4GiftFlowersAnchorStoreList(Context context,Uri uri){
+        String anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
+        if (!TextUtils.isEmpty(anchorId)) {
+            FlowersAnchorShopListActivity.startAct(context, anchorId, "", "");
+        }
+    }
+
+
+    /**
      * 进入livechat聊天界面
      * @param context
      * @param uri
@@ -953,17 +724,24 @@ public class URL2ActivityManager {
             String anchorId = "";
             String anchorName = "";
             String photoUrl = "";
+            String inviteMsgId = "";
             try {
                 anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
                 anchorName = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORNAME);
                 photoUrl = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHOR_PHOTOURL);
+                // 2019/7/15 Hardy
+                inviteMsgId = new String(Base64.decode(uri.getQueryParameter(KEY_URL_PARAM_KEY_INVITE_MSG_ID).getBytes(), Base64.DEFAULT));
+
+                Log.i("Jagger" , "URL2ActivityManager URL4LiveChatAcitivity inviteMsgId1:" + inviteMsgId);
+
             }catch (Exception e){
                 e.printStackTrace();
+                Log.i("Jagger" , "URL2ActivityManager URL4LiveChatAcitivity Exception:" + e.toString());
             }
+
+
             if(!TextUtils.isEmpty(anchorId)){
-//                ChatActivity.launchChatActivity(context, anchorId, anchorName, photoUrl);
-                //test Jagger
-                LiveChatTalkActivity.launchChatActivity(context, anchorId, anchorName, photoUrl);
+                LiveChatTalkActivity.launchChatActivity(context, anchorId, anchorName, photoUrl, inviteMsgId);
             }
         }
     }
@@ -976,8 +754,10 @@ public class URL2ActivityManager {
     private void URL4SendMail(Context context, Uri uri){
         if(uri != null){
             String anchorId = "";
+            String sayHiId = "";
             try {
                 anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
+                sayHiId = uri.getQueryParameter(KEY_URL_PARAM_KEY_SAYHIID);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -991,6 +771,13 @@ public class URL2ActivityManager {
                     sb.append("?anchorid=");
                 }
                 sb.append(anchorId);
+                if(!TextUtils.isEmpty(sayHiId)){
+                    sb.append("&sayhiid=");
+                    sb.append(sayHiId);
+                }
+                //增加resume刷新cookie逻辑，解决红米写信，选择照片返回cookie丢失导致自动登录被踢
+                sb.append("&resumecb=1");
+
                 context.startActivity(AlphaBarWebViewActivity.getIntent(context,
                         "",
                         sb.toString(),
@@ -1099,7 +886,7 @@ public class URL2ActivityManager {
 //                            anchorItem.coverImg,
 //                            "");
 //                    context.startActivity(intent);
-                    String url = URL2ActivityManager.createHangoutTransitionActivity(anchorItem.anchorId, anchorItem.nickName);
+                    String url = LiveUrlBuilder.createHangoutTransitionActivity(anchorItem.anchorId, anchorItem.nickName);
                     new AppUrlHandler(context).urlHandle(url);
                 }
             });
@@ -1114,18 +901,74 @@ public class URL2ActivityManager {
     private void URL4HangoutTransition(final Context context, Uri uri){
         String anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
         String anchorName = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORNAME);
+        String bubbleFlag = uri.getQueryParameter(KEY_URL_PARAM_KEY_BUBBLE_FLAG);
         if(!TextUtils.isEmpty(anchorId)){
             //生成被邀请的主播列表（这里是目标主播一人）
             ArrayList<IMUserBaseInfoItem> anchorList = new ArrayList<>();
             anchorList.add(new IMUserBaseInfoItem(anchorId, anchorName, ""));
+            boolean isBubble = false;
+            if(!TextUtils.isEmpty(bubbleFlag)){
+                isBubble = (Integer.valueOf(bubbleFlag) == 1)?true:false;
+            }
             //过渡页
             Intent intent = HangoutTransitionActivity.getIntent(
                     context,
                     anchorList,
                     "",
                     "",
-                    "");
+                    "",
+                    isBubble);
             context.startActivity(intent);
+        }
+    }
+
+    /**
+     * 打开SayHi列表页
+     * @param context
+     * @param uri
+     */
+    private void URL4SayHiList(final Context context, Uri uri){
+        int listType = 1;
+        try {
+            String tempType = uri.getQueryParameter(KEY_URL_PARAM_KEY_LISTTYPE);
+            if(!TextUtils.isEmpty(tempType)){
+                listType = Integer.valueOf(tempType);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //打开sayhi列表页
+        SayHiListActivity.TabType tabType = SayHiListActivity.TabType.ALL;
+        if(listType == 2){
+            tabType =  SayHiListActivity.TabType.RESPONSE;
+        }
+        SayHiListActivity.startAct(context, tabType);
+    }
+
+    /**
+     * 打开SayHi编辑页面
+     * @param context
+     * @param uri
+     */
+    private void URL4SayHiEdit(final Context context, Uri uri){
+        String anchorId = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORID);
+        String anchorName = uri.getQueryParameter(KEY_URL_PARAM_KEY_ANCHORNAME);
+        //打开sayhi编辑页面
+        if(!TextUtils.isEmpty(anchorId) && !TextUtils.isEmpty(anchorName)){
+            SayHiEditActivity.startAct(context, anchorId, anchorName);
+        }
+    }
+
+    /**
+     * 打开SayHi详情页面
+     * @param context
+     * @param uri
+     */
+    private void URL4SayHiDetail(final Context context, Uri uri){
+        String sayHiId = uri.getQueryParameter(KEY_URL_PARAM_KEY_SAYHIID);
+        //打开sayhi详情页面
+        if(!TextUtils.isEmpty(sayHiId)){
+            SayHiDetailsActivity.launch(context, sayHiId);
         }
     }
 
@@ -1201,7 +1044,10 @@ public class URL2ActivityManager {
                             || moduleName.equals(KEY_URL_MODULE_NAME_NEW_BOOKING)
                             || moduleName.equals(KEY_URL_MODULE_NAME_LIVE_CHAT)
                             || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)
-                            || moduleName.equals(KEY_URL_MODULE_NAME_HANGOUT_DIALOG)){
+                            || moduleName.equals(KEY_URL_MODULE_NAME_HANGOUT_DIALOG)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_SENDSAYHI)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_SAYHI_DETAIL)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_GIFT_FLOWER_ANCHOR_STORE)){
                         isModuleConflict = false;
                     }else{
                         isModuleConflict = true;
@@ -1234,7 +1080,10 @@ public class URL2ActivityManager {
                             || moduleName.equals(KEY_URL_MODULE_NAME_NEW_BOOKING)
                             || moduleName.equals(KEY_URL_MODULE_NAME_LIVE_ROOM)
                             || moduleName.equals(KEY_URL_MODULE_NAME_LIVE_CHAT)
-                            || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)){
+                            || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_SENDSAYHI)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_SAYHI_DETAIL)
+                            || moduleName.equals(KEY_URL_MODULE_NAME_GIFT_FLOWER_ANCHOR_STORE)){
                         isNewPage = true;
                     }else{
                         isNewPage = false;
@@ -1270,13 +1119,19 @@ public class URL2ActivityManager {
                     || moduleName.equals(KEY_URL_MODULE_NAME_CHAT_LIST)
                     || moduleName.equals(KEY_URL_MODULE_NAME_CHAT)
                     || moduleName.equals(KEY_URL_MODULE_NAME_LIVE_CHAT_LIST)    // 2018/11/17 Hardy
+                    || moduleName.equals(KEY_URL_MODULE_NAME_MY_CONTACT_LIST)    // 2019/8/16 Hardy
+                    || moduleName.equals(KEY_URL_MODULE_NAME_GIFT_FLOWER_LIST)    // 2019/10/12 Hardy
+                    || moduleName.equals(KEY_URL_MODULE_NAME_GIFT_FLOWER_ANCHOR_STORE)    // 2019/10/12 Hardy
                     || moduleName.equals(KEY_URL_MODULE_NAME_LIVE_CHAT)
                     || moduleName.equals(KEY_URL_MODULE_NAME_GREETMAIL_LIST)
                     || moduleName.equals(KEY_URL_MODULE_NAME_MAIL_LIST)
                     || moduleName.equals(KEY_URL_MODULE_NAME_MY_PROFILE)
                     || moduleName.equals(KEY_URL_MODULE_NAME_MY_TICKETS)
                     || moduleName.equals(KEY_URL_MODULE_NAME_SEND_MAIL)
-                    || moduleName.equals(KEY_URL_MODULE_NAME_HANGOUT_TRANSITION)))){
+                    || moduleName.equals(KEY_URL_MODULE_NAME_HANGOUT_TRANSITION)
+                    || moduleName.equals(KEY_URL_MODULE_NAME_SAYHI_LIST)
+                    || moduleName.equals(KEY_URL_MODULE_NAME_SENDSAYHI)
+                    || moduleName.equals(KEY_URL_MODULE_NAME_SAYHI_DETAIL)))){
 
                     //且未登录
                     if(!doCheckIsLogined()){

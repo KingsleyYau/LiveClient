@@ -120,6 +120,8 @@ public class PicassoLoadUtil {
                 .load(new File(path))
                 .placeholder(defaultResId)
                 .into(imageView);
+
+
     }
 
 }

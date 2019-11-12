@@ -27,15 +27,15 @@
         android:layout_height="fill_parent"
         layout="@layout/live_layout_error_page" />
 
-    <ProgressBar
-        android:id="@+id/pbLoading"
-        android:layout_width="51dp"
-        android:layout_height="51dp"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:scrollbarStyle="insideInset"
-        android:indeterminateDrawable="@drawable/live_loading_progress"
-        android:indeterminateBehavior="repeat"
-        android:indeterminateDuration="1000"/>
+    <!--<ProgressBar-->
+        <!--android:id="@+id/pbLoading"-->
+        <!--android:layout_width="51dp"-->
+        <!--android:layout_height="51dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:scrollbarStyle="insideInset"-->
+        <!--android:indeterminateDrawable="@drawable/live_loading_progress"-->
+        <!--android:indeterminateBehavior="repeat"-->
+        <!--android:indeterminateDuration="1000"/>-->
 
 </FrameLayout>

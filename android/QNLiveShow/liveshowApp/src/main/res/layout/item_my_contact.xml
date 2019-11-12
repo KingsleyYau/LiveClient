@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="@color/white">
+
+    <!--中间内容区域-->
+    <LinearLayout
+        android:id="@+id/item_my_contact_ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/touch_feedback_holo_light"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/live_size_20dp"
+        android:paddingRight="@dimen/live_size_20dp">
+
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/item_my_contact_iv_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <View
+                android:id="@+id/item_my_contact_online"
+                android:layout_width="@dimen/live_size_10dp"
+                android:layout_height="@dimen/live_size_10dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/live_size_2dp"
+                android:background="@drawable/anchor_status_online" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/item_my_contact_tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:paddingRight="@dimen/live_size_40dp"
+                    android:singleLine="true"
+                    android:textColor="@color/live_text_color_black"
+                    android:textSize="@dimen/live_size_16sp"
+                    android:textStyle="bold"
+                    tools:text="Jennifer" />
+
+                <TextView
+                    android:id="@+id/item_my_contact_tv_live"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/item_my_contact_tv_name"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/rectangle_radius40_red"
+                    android:paddingLeft="@dimen/live_size_6dp"
+                    android:paddingRight="@dimen/live_size_6dp"
+                    android:text="@string/LIVE"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/item_my_contact_tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/live_size_4dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/text_color_grey_light"
+                android:textSize="@dimen/live_size_14sp"
+                tools:text="Last Contacted: May 04, 2019" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/item_my_contact_iv_fun_left"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/live_size_6dp"
+            tools:src="@drawable/ic_live_circle_public_broadcast" />
+
+        <ImageView
+            android:id="@+id/item_my_contact_iv_fun_right"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/live_size_6dp"
+            tools:src="@drawable/ic_live_circle_chat" />
+    </LinearLayout>
+
+    <!--分割线-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="75dp"
+        android:background="@color/live_message_contact_list_background_color" />
+</FrameLayout>

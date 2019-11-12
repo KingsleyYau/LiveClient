@@ -20,6 +20,8 @@ import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.qnbridgemodule.view.ViewPagerFixed;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumDataHolderManager;
 import com.qpidnetwork.qnbridgemodule.view.camera.ImageBean;
+import com.qpidnetwork.qnbridgemodule.view.camera.observer.SystemPhotoChangeListener;
+import com.qpidnetwork.qnbridgemodule.view.camera.observer.SystemPhotoChangeManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -30,7 +32,8 @@ import java.util.List;
  * 2018/12/14 Hardy
  * Chat 聊天，在相册里，查看本地大图
  */
-public class AlbumPhotoPreviewActivity extends BaseFragmentActivity implements ViewPager.OnPageChangeListener {
+public class AlbumPhotoPreviewActivity extends BaseFragmentActivity implements ViewPager.OnPageChangeListener,
+        SystemPhotoChangeListener {
 
     public static final String LOCAL_FILE_PATH = "localFilePath";
     private static final String LOCAL_FILE_PATH_POSITION = "localFilePathPosition";
@@ -64,14 +67,32 @@ public class AlbumPhotoPreviewActivity extends BaseFragmentActivity implements V
         this.getWindow().setBackgroundDrawable(new ColorDrawable(bgColor));
 
         initView();
+
+        registerSysImageChange();
+
         initData();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        unRegisterSysImageChange();
     }
 
+    private void registerSysImageChange() {
+        SystemPhotoChangeManager.getInstance(mContext).registerListener(this);
+    }
+
+    private void unRegisterSysImageChange() {
+        SystemPhotoChangeManager.getInstance(mContext).unregisterListener(this);
+    }
+
+    @Override
+    public void onSystemPhotoChange(List<ImageBean> list) {
+        // 收到图片更新，关闭当前页面
+        finish();
+    }
 
     private void initView() {
         if (getIntent() != null) {
@@ -213,7 +234,6 @@ public class AlbumPhotoPreviewActivity extends BaseFragmentActivity implements V
         }
         return result;
     }
-
 
     /**
      * adapter

@@ -14,6 +14,9 @@
 #define IM_LOGIN_ROOM_ITEM_CLASS 			    "com/qpidnetwork/anchor/im/listener/IMLoginRoomItem"
 
 #define IM_ROOMIN_ITEM_CLASS 					"com/qpidnetwork/anchor/im/listener/IMRoomInItem"
+#define IM_CURRENTPUSHINFO_ITEM_CLASS 			"com/qpidnetwork/anchor/im/listener/IMCurrentPushInfoItem"
+
+#define IM_SENDINVITEINFO_ITEM_CLASS 			"com/qpidnetwork/anchor/im/listener/IMSendInviteInfoItem"
 
 #define IM_HANGOUT_GIFTNUM_ITEM_CLASS 			"com/qpidnetwork/anchor/im/listener/IMGiftNumItem"
 #define IM_HANGOUT_RECVGIFT_ITEM_CLASS 			"com/qpidnetwork/anchor/im/listener/IMRecvGiftItem"

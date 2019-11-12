@@ -14,17 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/llBackBody"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
             <FrameLayout
                 android:id="@+id/fl_bgContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <!-- 视频播放区 -->
                 <include
                     android:id="@+id/include_audience_area"
                     layout="@layout/include_liveroom_audience"
@@ -33,7 +28,6 @@
                     android:visibility="gone" />
 
             </FrameLayout>
-        </LinearLayout>
     </com.qpidnetwork.livemodule.view.LiveRoomScrollView>
 
     <!--覆盖在视频上的业务层-->
@@ -64,13 +58,14 @@
                 android:background="@android:color/transparent"
                 android:paddingBottom="@dimen/imButtomMargin">
 
+                <!-- 顶部操作区域 -->
                 <include
                     android:id="@+id/view_roomHeader"
                     layout="@layout/view_liveshow_header_new"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <!--房间头部-->
+                <!-- 盖在视频区上面（坐架，hangout,私密按钮, 弹幕，消息列表） -->
                 <include
                     android:id="@+id/include_im_body"
                     layout="@layout/include_liveroom_im"
@@ -98,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:visibility="invisible" />
+
             <!--大礼物-->
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/advanceGift"

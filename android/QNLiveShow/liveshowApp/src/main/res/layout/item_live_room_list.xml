@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--注:blocksDescendants解决RecyclerView初始化后自动滚动到第一个Item -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/live_programme_list_group_gray"
+    android:orientation="vertical"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:descendantFocusability="blocksDescendants" >
+
+    <!-- cardview为了搞个阴影 -->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        app:cardCornerRadius="@dimen/live_size_6dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <!-- 为了封面图可以 以宽约束高 -->
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1.8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <!-- 下半部分 -->
+                <LinearLayout
+                    android:id="@+id/ll_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- 主播名 -->
+                        <TextView
+                            android:id="@+id/tvName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxWidth="100dp"
+                            android:singleLine="true"
+                            android:text="Marry"
+                            android:textColor="#006699"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/ivOnline"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- 在线状态 -->
+                        <ImageView
+                            android:id="@+id/ivOnline"
+                            android:layout_width="46dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="@dimen/live_size_8dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_livetype_room_online"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/tvName"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <!-- 底部按钮 -->
+                    <LinearLayout
+                        android:id="@+id/ll_opera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <!-- SayHi -->
+                        <FrameLayout
+                            android:id="@+id/fl_sayhi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:id="@+id/iv_sayhi"
+                                android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                                android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginLeft="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                                android:layout_marginRight="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                                android:src="@drawable/ic_list_sayhi"/>
+                            <!-- Free -->
+                            <ImageView
+                                android:layout_width="21dp"
+                                android:layout_height="11dp"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="4dp"
+                                android:src="@drawable/live_list_sayhi_free" />
+                        </FrameLayout>
+
+                        <!-- Chat -->
+                        <ImageView
+                            android:id="@+id/iv_chat"
+                            android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:layout_marginRight="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:src="@drawable/ic_list_chat_small"/>
+
+                        <!-- Mail -->
+                        <ImageView
+                            android:id="@+id/iv_mail"
+                            android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:layout_marginRight="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:src="@drawable/ic_list_mail_small"/>
+
+                        <!-- Book -->
+                        <ImageView
+                            android:id="@+id/iv_book"
+                            android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:layout_marginRight="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:src="@drawable/ic_list_book_small"/>
+
+                        <!-- 收藏 -->
+                        <ImageView
+                            android:id="@+id/iv_follow"
+                            android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:layout_marginRight="@dimen/live_main_room_list_bottom_btn_LR_margin"
+                            android:src="@drawable/ic_unfollow"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 上半部分 -->
+                <!-- layout_constraintDimensionRatio “width：height”形式的比例宽高约束  -->
+                <RelativeLayout
+                    android:id="@+id/rl_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/ll_bottom">
+
+                    <!-- 相片 -->
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/iv_roomBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        fresco:backgroundImage="@color/black4" />
+
+                    <!-- 底部渐变层 -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="92dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/bg_hang_out_list_gradient" />
+
+                    <!-- 左上角直播中动图 -->
+                    <ImageView
+                        android:id="@+id/ivLiveType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/live_size_10dp"/>
+
+                    <!-- 左上角直播中动图 -->
+                    <ImageView
+                        android:id="@+id/ivCam"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_margin="@dimen/live_size_10dp"
+                        android:src="@drawable/live_list_cam"/>
+
+                    <!-- 右上角是否要付费标志 -->
+                    <ImageView
+                        android:id="@+id/ivPremium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/live_size_10dp"
+                        android:src="@drawable/list_premium_public"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone"/>
+
+                    <!-- 按钮 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="13dp">
+
+                        <!-- 公开按钮 -->
+                        <FrameLayout
+                            android:id="@+id/fl_public"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp">
+                            <!-- 按钮　-->
+                            <com.qpidnetwork.livemodule.view.ButtonRaised
+                                android:id="@+id/btn_public"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/live_main_room_list_btn_height"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/live_main_room_list_btn_LR_size"
+                                android:layout_marginRight="@dimen/live_main_room_list_btn_LR_size"
+                                button:background_res="@drawable/btn_room_list_public_stroke_shape"
+                                button:icon="@drawable/ic_list_public"
+                                button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                                button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                                button:raisebutton_radius="@dimen/live_size_20dp"
+                                button:title="@string/live_main_room_list_public"
+                                button:title_color="@color/white"
+                                button:title_text_size="@dimen/live_main_room_list_btn_text_size"
+                                button:title_text_bold="true"
+                                button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                            <!-- Free -->
+                            <ImageView
+                                android:id="@+id/img_free_public"
+                                android:layout_width="27dp"
+                                android:layout_height="11dp"
+                                android:layout_gravity="right"
+                                android:layout_marginRight="@dimen/live_size_20dp"
+                                android:elevation="2dp"
+                                android:src="@drawable/ic_free" />
+                        </FrameLayout>
+
+                        <!-- 私密按钮 -->
+                        <FrameLayout
+                            android:id="@+id/fl_private"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp">
+                            <!-- 按钮　-->
+                            <com.qpidnetwork.livemodule.view.ButtonRaised
+                                android:id="@+id/btn_private"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/live_main_room_list_btn_height"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/live_main_room_list_btn_LR_size"
+                                android:layout_marginRight="@dimen/live_main_room_list_btn_LR_size"
+                                button:background_res="@drawable/btn_room_list_private_stroke_shape"
+                                button:icon="@drawable/ic_list_public"
+                                button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                                button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                                button:raisebutton_radius="@dimen/live_size_20dp"
+                                button:title="@string/live_main_room_list_private"
+                                button:title_color="@color/white"
+                                button:title_text_size="@dimen/live_main_room_list_btn_text_size"
+                                button:title_text_bold="true"
+                                button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                            <!-- Free -->
+                            <ImageView
+                                android:id="@+id/img_free_private"
+                                android:layout_width="27dp"
+                                android:layout_height="11dp"
+                                android:layout_gravity="right"
+                                android:layout_marginRight="@dimen/live_size_20dp"
+                                android:elevation="2dp"
+                                android:src="@drawable/ic_free" />
+                        </FrameLayout>
+
+                        <!-- Chat按钮 -->
+                        <FrameLayout
+                            android:id="@+id/fl_chat"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp">
+                            <!-- 按钮　-->
+                            <com.qpidnetwork.livemodule.view.ButtonRaised
+                                android:id="@+id/btn_chat"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/live_main_room_list_btn_height"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/live_main_room_list_btn_LR_size"
+                                android:layout_marginRight="@dimen/live_main_room_list_btn_LR_size"
+                                button:background_res="@drawable/btn_room_list_chat_stroke_shape"
+                                button:icon="@drawable/ic_list_chat"
+                                button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                                button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                                button:raisebutton_radius="@dimen/live_size_20dp"
+                                button:title="@string/live_main_room_list_chat"
+                                button:title_color="@color/white"
+                                button:title_text_size="@dimen/live_main_room_list_btn_text_size"
+                                button:title_text_bold="true"
+                                button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                        </FrameLayout>
+
+                        <!-- Mail按钮 -->
+                        <FrameLayout
+                            android:id="@+id/fl_mail"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp">
+                            <!-- 按钮　-->
+                            <com.qpidnetwork.livemodule.view.ButtonRaised
+                                android:id="@+id/btn_mail"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/live_main_room_list_btn_height"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/live_main_room_list_btn_LR_size"
+                                android:layout_marginRight="@dimen/live_main_room_list_btn_LR_size"
+                                button:background_res="@drawable/btn_room_list_mail_stroke_shape"
+                                button:icon="@drawable/ic_list_mail"
+                                button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                                button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                                button:raisebutton_radius="@dimen/live_size_20dp"
+                                button:title="@string/live_main_room_list_mail"
+                                button:title_color="@color/white"
+                                button:title_text_size="@dimen/live_main_room_list_btn_text_size"
+                                button:title_text_bold="true"
+                                button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

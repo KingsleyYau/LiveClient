@@ -46,42 +46,32 @@
                     android:onClick="onClickCancel"
                     android:src="@drawable/ic_arrow_back_white_24dp" />
 
-                <!--<FrameLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:minHeight="100dp">-->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
 
-                <!--&lt;!&ndash;<com.qpidnetwork.framework.widget.CircleImageView&ndash;&gt;-->
-                <!--<com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView-->
-                <!--android:id="@+id/imageViewHeader"-->
-                <!--android:layout_width="96dp"-->
-                <!--android:layout_height="96dp"-->
-                <!--android:onClick="onClickImageViewHeader"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@drawable/ic_user_icon"-->
-                <!--app:border_color="@color/white"-->
-                <!--app:border_width="1dp" />-->
+                    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                        android:id="@+id/imageViewHeader"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:onClick="onClickImageViewHeader"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_user_icon"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="@dimen/menu_photo_border" />
 
-                <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom|center_horizontal"-->
-                <!--android:background="@drawable/touch_feedback_holo_dark_circle"-->
-                <!--android:onClick="onClickImageViewTakePhoto"-->
-                <!--android:padding="@dimen/live_size_6dp"-->
-                <!--android:src="@drawable/ic_photo_camera_white_24dp" />-->
-                <!--</FrameLayout>-->
-                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-                    android:id="@+id/imageViewHeader"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:layout_gravity="center_horizontal"
-                    android:onClick="onClickImageViewHeader"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_user_icon"
-                    app:civ_border_color="@color/white"
-                    app:civ_border_width="@dimen/menu_photo_border" />
+                    <ImageButton
+                        android:id="@+id/my_profile_iv_upload"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginRight="@dimen/live_size_6dp"
+                        android:onClick="onClickImageUpload"
+                        android:src="@drawable/ic_icon_upload"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/textViewName"

@@ -49,7 +49,7 @@ class RequestMobilePayGotoCallback : public IRequestMobilePayGotoCallback{
 RequestMobilePayGotoCallback gRequestMobilePayGotoCallback;
 
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPayment_MobilePayGoto
-		(JNIEnv *env, jclass cls, jint orderType, jstring clickFrom, jstring numberId, jobject callback) {
+		(JNIEnv *env, jclass cls, jint orderType, jstring clickFrom, jstring numberId, jstring orderNo, jobject callback) {
 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::MobilePayGoto( orderType:%d)", orderType);
 	string strUrl = "/app?siteid=";
 	HTTP_OTHER_SITE_TYPE siteId = HTTP_OTHER_SITE_PAYMENT;
@@ -61,6 +61,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPa
 												  type,
 												  JString2String(env, clickFrom),
 												  JString2String(env, numberId),
+												  JString2String(env, orderNo),
                                                   &gRequestMobilePayGotoCallback);
 
     jobject obj = env->NewGlobalRef(callback);

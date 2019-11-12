@@ -16,6 +16,7 @@
 #import "LSCancelInviteHangoutRequest.h"
 #import "LSGetHangoutStatusRequest.h"
 #import "LSGetHangoutInvitStatusRequest.h"
+#import "LSUpQNInviteIdRequest.h"
 #import "LSSessionRequestManager.h"
 
 #import "HangOutViewController.h"
@@ -323,11 +324,25 @@ typedef enum {
             if (weakSelf.exitLeftSecond > 0) {
                 if (success) {
                     weakSelf.inviteId = inviteId;
+                    [weakSelf upQNInviteId:inviteId roomId:roomId];
                 } else {
                     [weakSelf showHttpErrorType:errnum tip:errmsg];
                 }
             }
         });
+    };
+    [self.sessionManager sendRequest:request];
+}
+
+- (void)upQNInviteId:(NSString *)inviteId roomId:(NSString *)roomId {
+    LSUpQnInviteIdRequest *request = [[LSUpQnInviteIdRequest alloc] init];
+    request.manId = [LSLoginManager manager].loginItem.userId;
+    request.anchorId = self.inviteAnchorId;
+    request.inviteId = inviteId;
+    request.roomId = roomId;
+    request.inviteType = LSBUBBLINGINVITETYPE_HANGOUT;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+        
     };
     [self.sessionManager sendRequest:request];
 }

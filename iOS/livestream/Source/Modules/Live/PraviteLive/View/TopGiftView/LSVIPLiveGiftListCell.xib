@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LSVIPLiveGiftListCell" id="umk-ZC-niK" customClass="LSVIPLiveGiftListCell">
+            <rect key="frame" x="0.0" y="0.0" width="96" height="111"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="96" height="111"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VIPLive_GiftBG" translatesAutoresizingMaskIntoConstraints="NO" id="YhN-JC-nYC">
+                        <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="juQ-2l-c6T" userLabel="Gift Image View">
+                        <rect key="frame" x="11" y="11" width="74" height="74"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_BigGift_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="9we-bK-kIr" userLabel="Gift Big Image View">
+                        <rect key="frame" x="81" y="4" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="15" id="77p-Yz-Cem"/>
+                            <constraint firstAttribute="width" secondItem="9we-bK-kIr" secondAttribute="height" multiplier="1:1" id="BIp-Ou-Fcx"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5q0-h5-8T5" userLabel="Gift Count View">
+                        <rect key="frame" x="76" y="2" width="18" height="18"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pqE-yG-qe0" userLabel="Gift Count Label">
+                                <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.27843137254901962" blue="0.27843137254901962" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="pqE-yG-qe0" secondAttribute="trailing" id="Bly-co-ybx"/>
+                            <constraint firstAttribute="width" secondItem="5q0-h5-8T5" secondAttribute="height" multiplier="1:1" id="CHI-q2-trw"/>
+                            <constraint firstItem="pqE-yG-qe0" firstAttribute="top" secondItem="5q0-h5-8T5" secondAttribute="top" id="KhJ-Fe-wbN"/>
+                            <constraint firstAttribute="width" constant="18" id="Nnf-vO-UzF"/>
+                            <constraint firstItem="pqE-yG-qe0" firstAttribute="leading" secondItem="5q0-h5-8T5" secondAttribute="leading" id="Tkj-gJ-f8J"/>
+                            <constraint firstAttribute="bottom" secondItem="pqE-yG-qe0" secondAttribute="bottom" id="nx4-hd-UXy"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 Credit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ab-1M-yfs" userLabel="Gift Credit Label">
+                        <rect key="frame" x="0.0" y="100" width="96" height="11"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="11" id="eai-5z-MB6"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                        <color key="textColor" red="1" green="0.42745098039215684" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cdg-3s-1VC">
+                        <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
+                        <color key="backgroundColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="cdg-3s-1VC" secondAttribute="height" multiplier="1:1" id="V3C-dZ-XmS"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="7Ab-1M-yfs" secondAttribute="trailing" id="7jN-rq-SKQ"/>
+                <constraint firstItem="YhN-JC-nYC" firstAttribute="leading" secondItem="umk-ZC-niK" secondAttribute="leading" id="93o-aI-2Vg"/>
+                <constraint firstItem="juQ-2l-c6T" firstAttribute="top" secondItem="umk-ZC-niK" secondAttribute="top" constant="11" id="AZe-xc-wOf"/>
+                <constraint firstAttribute="trailing" secondItem="9we-bK-kIr" secondAttribute="trailing" id="Ap6-RT-af5"/>
+                <constraint firstItem="YhN-JC-nYC" firstAttribute="top" secondItem="umk-ZC-niK" secondAttribute="top" id="G3E-wP-8JG"/>
+                <constraint firstAttribute="trailing" secondItem="YhN-JC-nYC" secondAttribute="trailing" id="GfZ-Wa-gHj"/>
+                <constraint firstAttribute="bottom" secondItem="7Ab-1M-yfs" secondAttribute="bottom" id="HyS-ld-5wq"/>
+                <constraint firstAttribute="trailing" secondItem="juQ-2l-c6T" secondAttribute="trailing" constant="11" id="QhQ-OU-fkx"/>
+                <constraint firstItem="7Ab-1M-yfs" firstAttribute="top" secondItem="YhN-JC-nYC" secondAttribute="bottom" constant="4" id="UVn-PZ-1BQ"/>
+                <constraint firstItem="cdg-3s-1VC" firstAttribute="leading" secondItem="YhN-JC-nYC" secondAttribute="leading" id="Voh-yt-8rw"/>
+                <constraint firstItem="9we-bK-kIr" firstAttribute="top" secondItem="umk-ZC-niK" secondAttribute="top" constant="4" id="Wta-IT-hgh"/>
+                <constraint firstItem="7Ab-1M-yfs" firstAttribute="top" secondItem="juQ-2l-c6T" secondAttribute="bottom" constant="15" id="dVw-xq-EeT"/>
+                <constraint firstItem="cdg-3s-1VC" firstAttribute="trailing" secondItem="YhN-JC-nYC" secondAttribute="trailing" id="h6L-3s-SZO"/>
+                <constraint firstItem="7Ab-1M-yfs" firstAttribute="leading" secondItem="umk-ZC-niK" secondAttribute="leading" id="pyh-z1-2pL"/>
+                <constraint firstAttribute="trailing" secondItem="5q0-h5-8T5" secondAttribute="trailing" constant="2" id="qIa-7q-vz0"/>
+                <constraint firstItem="5q0-h5-8T5" firstAttribute="top" secondItem="umk-ZC-niK" secondAttribute="top" constant="2" id="sXB-Xp-Z5v"/>
+                <constraint firstItem="cdg-3s-1VC" firstAttribute="top" secondItem="YhN-JC-nYC" secondAttribute="top" id="uRC-Sd-LSu"/>
+                <constraint firstItem="juQ-2l-c6T" firstAttribute="leading" secondItem="umk-ZC-niK" secondAttribute="leading" constant="11" id="urV-16-WUk"/>
+            </constraints>
+            <size key="customSize" width="167" height="184"/>
+            <connections>
+                <outlet property="giftBgView" destination="YhN-JC-nYC" id="kbR-Fd-y0q"/>
+                <outlet property="giftBigImageView" destination="9we-bK-kIr" id="WXV-Ft-L6c"/>
+                <outlet property="giftCountLabel" destination="pqE-yG-qe0" id="fxD-0k-PrT"/>
+                <outlet property="giftCountView" destination="5q0-h5-8T5" id="Ddo-YZ-slG"/>
+                <outlet property="giftCreditLabel" destination="7Ab-1M-yfs" id="bfx-xr-feM"/>
+                <outlet property="giftImageView" destination="juQ-2l-c6T" id="6ls-77-61x"/>
+                <outlet property="shadowView" destination="cdg-3s-1VC" id="edw-eY-XHY"/>
+            </connections>
+            <point key="canvasLocation" x="-121.73913043478262" y="60.602678571428569"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Live_BigGift_Logo" width="13" height="13"/>
+        <image name="VIPLive_GiftBG" width="64" height="64"/>
+    </resources>
+</document>

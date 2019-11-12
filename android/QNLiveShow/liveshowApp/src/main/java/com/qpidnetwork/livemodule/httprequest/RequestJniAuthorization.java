@@ -144,4 +144,13 @@ public class RequestJniAuthorization {
 
     static private native long GetValidateCode(int validateCodeType, OnRequestGetValidateCodeCallback callback);
 
+    /**
+     * 2.23.提交用户头像
+     * @param photoName                上传头像文件名
+     * @param callback
+     * @return
+     */
+    static public native long UploadUserPhoto(String photoName,
+                                              OnRequestCallback callback);
+
 }

@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumPictureCache;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumPictureCache.ImageCallback;
 import com.qpidnetwork.qnbridgemodule.view.camera.ImageBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,11 +60,23 @@ public class AlbumGridAdapter extends BaseAdapter {
 
     public AlbumGridAdapter(Activity act, List<ImageBean> list) {
         this.mActivity = act;
-        mAlbumList = list;
         cache = new AlbumPictureCache();
+
+        mAlbumList = new ArrayList<>();
+        if (ListUtils.isList(list)) {
+            mAlbumList.addAll(list);
+        }
 
         int itemSize = getInitItemSize(act, 3);
         mItemParam = getInitItemLayoutParam(itemSize);
+    }
+
+    public void setData(List<ImageBean> list){
+        mAlbumList.clear();
+        if (ListUtils.isList(list)) {
+            mAlbumList.addAll(list);
+        }
+        this.notifyDataSetChanged();
     }
 
     public static int getInitItemSize(Activity mActivity, int gridCount) {

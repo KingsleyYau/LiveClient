@@ -18,6 +18,7 @@
  * anchorAvatar       主播头像
  * anchorNickName     主播昵称
  * isFollow           是否关注
+ * onlineStatus       是否在线
  * letterId         信件ID(意向信和EMF)
  * letterSendTime   信件发送时间
  * letterBrief      信件内容摘要
@@ -30,6 +31,7 @@
 @property (nonatomic, copy) NSString* _Nonnull anchorAvatar;
 @property (nonatomic, copy) NSString* _Nonnull anchorNickName;
 @property (nonatomic, assign) BOOL isFollow;
+@property (nonatomic, assign) BOOL onlineStatus;
 @property (nonatomic, copy) NSString* _Nonnull letterId;
 @property (nonatomic, assign) NSInteger letterSendTime;
 @property (nonatomic, copy) NSString* _Nonnull letterBrief;

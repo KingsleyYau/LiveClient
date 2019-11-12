@@ -26,6 +26,7 @@
 #import "LSImageViewLoader.h"
 #import "LSLoginManager.h"
 #import "LSSayHiManager.h"
+#import "LiveModule.h"
 
 #define SelectViewHeight 117
 
@@ -141,6 +142,10 @@
     [self.dialogVC removeFromParentViewController];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
 #pragma mark - HTTP请求
 - (void)sendSayHiRequest:(NSString *)anchorId {
     [self showAndResetLoading];
@@ -219,6 +224,7 @@
 }
 
 - (void)didSubmitSayHi {
+    [[LiveModule module].analyticsManager reportActionEvent:SayHiEditClickSendNow eventCategory:EventCategorySayHi];
     [self sendSayHiRequest:self.anchorId];
 }
 

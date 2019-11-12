@@ -49,7 +49,7 @@
 
 - (void)dealloc {
     NSLog(@"LSMailViewController::dealloc()");
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
     [self removeSingleTap];
 }
 
@@ -105,7 +105,7 @@
     }
     [self reportDidShowPage:self.mailType];
     if (!self.viewDidAppearEver) {
-        [self.tableView startPullDown:YES];
+        [self.tableView startLSPullDown:YES];
     }
 }
 
@@ -117,7 +117,7 @@
     
     self.tableView.frame = CGRectMake(0, kFunctionViewHeight, SCREEN_WIDTH, SCREEN_HEIGHT - kFunctionViewHeight);
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -214,13 +214,13 @@
             if (success) {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishLSPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
                     self.page = 1;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                     
                     self.page++;
                 }
@@ -236,12 +236,12 @@
             }else {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:NO];
+                    [self.tableView finishLSPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                 }
                 
                 [self reloadData:YES];
@@ -276,7 +276,7 @@
     
     self.mailType = LSEMFTYPE_INBOX;
     [self reportDidShowPage:self.mailType];
-    [self.tableView startPullDown:NO];
+    [self.tableView startLSPullDown:NO];
 
 }
 
@@ -287,7 +287,7 @@
     
     self.mailType = LSEMFTYPE_OUTBOX;
     [self reportDidShowPage:self.mailType];
-    [self.tableView startPullDown:NO];
+    [self.tableView startLSPullDown:NO];
 
 }
 
@@ -428,6 +428,6 @@
     self.failView.hidden = YES;
     [self hideNoMailTips];
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 @end

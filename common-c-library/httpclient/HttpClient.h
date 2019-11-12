@@ -100,7 +100,8 @@ private:
 	double mdDownloadLast;
 	double mdDownloadLastTime;
     double mdDownloadTimeout;
-    
+    // 判断是否是没有文本大小关闭curl，alex，2019-09-23
+    bool mIsAborted;
 };
 
 #endif /* HttpClient_H_ */

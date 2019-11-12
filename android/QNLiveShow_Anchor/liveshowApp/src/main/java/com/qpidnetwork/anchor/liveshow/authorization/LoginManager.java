@@ -323,7 +323,8 @@ public class LoginManager {
         String model = android.os.Build.MODEL;
         String deviceId = SystemUtils.getDeviceId(mContext);
         String manufacturer = android.os.Build.MANUFACTURER;
-        RequestJniAuthorization.Login(broadcasterId, password, verficationCode, deviceId, model, manufacturer, new OnRequestLoginCallback() {
+        String deviceName = SystemUtils.getDeviceName(mContext);
+        RequestJniAuthorization.Login(broadcasterId, password, verficationCode, deviceId, model, manufacturer, deviceName, new OnRequestLoginCallback() {
             @Override
             public void onRequestLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
                 Message msg = Message.obtain();

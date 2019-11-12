@@ -206,6 +206,19 @@ void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
  	InitClassHelper(env, TALENT_INVITE_ITEM_CLASS, &jTalentInviteItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(TALENT_INVITE_ITEM_CLASS, jTalentInviteItem));
 
+
+ 	jobject jContactItem;
+ 	InitClassHelper(env, LSCONTACT_ITEM_CLASS, &jContactItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(LSCONTACT_ITEM_CLASS, jContactItem));
+
+ 	jobject jPageRecommendItem;
+ 	InitClassHelper(env, PAGERECOMMEND_ITEM_CLASS, &jPageRecommendItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(PAGERECOMMEND_ITEM_CLASS, jPageRecommendItem));
+
+ 	jobject jGiftTypeItem;
+ 	InitClassHelper(env, GIFTTYPE_ITEM_CLASS, &jGiftTypeItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(GIFTTYPE_ITEM_CLASS, jGiftTypeItem));
+
  	/* 4.个人信息模块    */
  	jobject jBookInviteItem;
  	InitClassHelper(env, BOOK_INVITE_ITEM_CLASS, &jBookInviteItem);
@@ -231,7 +244,6 @@ void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
     InitClassHelper(env, HTTP_AUTHORITY_ITEM_CLASS, &jauthorityItem);
     gJavaItemMap.insert(JavaItemMap::value_type(HTTP_AUTHORITY_ITEM_CLASS, jauthorityItem));
 
-
  	/* 5.背包    */
  	jobject jPackageGiftItem;
  	InitClassHelper(env, PACKAGE_GIFT_ITEM_CLASS, &jPackageGiftItem);
@@ -252,6 +264,12 @@ void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
 	jobject jPackageVouchorAvailableItem;
 	InitClassHelper(env, PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS, &jPackageVouchorAvailableItem);
 	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS, jPackageVouchorAvailableItem));
+
+
+	jobject jPackageUnreadItem;
+	InitClassHelper(env, PACKAGE_VOUCHOR_BACKPACKUNREAD_ITEM_CLASS, &jPackageUnreadItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_VOUCHOR_BACKPACKUNREAD_ITEM_CLASS, jPackageUnreadItem));
+
 
  	/* 6.其他    */
  	jobject jConfigItem;
@@ -277,6 +295,10 @@ void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
 	 jobject jLSVersionCheckItem;
 	 InitClassHelper(env, OTHER_LSVERSIONCHECK_ITEM_CLASS, &jLSVersionCheckItem);
 	 gJavaItemMap.insert(JavaItemMap::value_type(OTHER_LSVERSIONCHECK_ITEM_CLASS, jLSVersionCheckItem));
+
+	 jobject jLSLeftCreditItem;
+	 InitClassHelper(env, OTHER_LSLEFTCREDIT_ITEM_CLASS, &jLSLeftCreditItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(OTHER_LSLEFTCREDIT_ITEM_CLASS, jLSLeftCreditItem));
 
 
 	 /* 8.多人互动 */
@@ -372,6 +394,85 @@ jobject jCoupon;
 	InitClassHelper(env, OTHER_GETCOUNT_ITEM_CLASS, &jOtherGetCountItem);
 	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_GETCOUNT_ITEM_CLASS, jOtherGetCountItem));
 
+	/* SayHi */
+	jobject jSayHiAllListInfoItem;
+	InitClassHelper(env, SAYHI_SAYHIALLLISTINFO_ITEM_CLASS, &jSayHiAllListInfoItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIALLLISTINFO_ITEM_CLASS, jSayHiAllListInfoItem));
+	jobject jSayHiAllListItem;
+	InitClassHelper(env, SAYHI_SAYHIALLLLIST_ITEM_CLASS, &jSayHiAllListItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIALLLLIST_ITEM_CLASS, jSayHiAllListItem));
+	jobject jSayHiDetailAnchorItem;
+	InitClassHelper(env, SAYHI_SAYHIDETAILANCHOR_ITEM_CLASS, &jSayHiDetailAnchorItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIDETAILANCHOR_ITEM_CLASS, jSayHiDetailAnchorItem));
+	jobject jSayHiDetailItem;
+	InitClassHelper(env, SAYHI_SAYHIDETAIL_ITEM_CLASS, &jSayHiDetailItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIDETAIL_ITEM_CLASS, jSayHiDetailItem));
+	jobject jSayHiDetailResponseListItem;
+	InitClassHelper(env, SAYHI_SAYHIDETAILRESPONSELIST_ITEM_CLASS, &jSayHiDetailResponseListItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIDETAILRESPONSELIST_ITEM_CLASS, jSayHiDetailResponseListItem));
+	jobject jSayHiRecommendAnchorItem;
+	InitClassHelper(env, SAYHI_SAYHIRECOMMENDANCHOR_ITEM_CLASS, &jSayHiRecommendAnchorItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIRECOMMENDANCHOR_ITEM_CLASS, jSayHiRecommendAnchorItem));
+	jobject jSayHiResourceConfigItemm;
+	InitClassHelper(env, SAYHI_SAYHIRESOURCECONFIG_ITEM_CLASS, &jSayHiResourceConfigItemm);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIRESOURCECONFIG_ITEM_CLASS, jSayHiResourceConfigItemm));
+	jobject jSayHiResponseListInfoItem;
+	InitClassHelper(env, SAYHI_SAYHIRESPONSELISTINFO_ITEM_CLASS, &jSayHiResponseListInfoItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIRESPONSELISTINFO_ITEM_CLASS, jSayHiResponseListInfoItem));
+	jobject jSayHiResponseListItem;
+	InitClassHelper(env, SAYHI_SAYHIRESPONSELIST_ITEM_CLASS, &jSayHiResponseListItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHIRESPONSELIST_ITEM_CLASS, jSayHiResponseListItem));
+	jobject jSayHiSendInfoItem;
+	InitClassHelper(env, SAYHI_SAYHISENDINFO_ITEM_CLASS, &jSayHiSendInfoItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHISENDINFO_ITEM_CLASS, jSayHiSendInfoItem));
+	jobject jSayHiTextItem;
+	InitClassHelper(env, SAYHI_SAYHITEXT_ITEM_CLASS, &jSayHiTextItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHITEXT_ITEM_CLASS, jSayHiTextItem));
+	jobject jSayHiThemeItem;
+	InitClassHelper(env, SAYHI_SAYHITHEME_ITEM_CLASS, &jSayHiThemeItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(SAYHI_SAYHITHEME_ITEM_CLASS, jSayHiThemeItem));
+
+	/* 鲜花礼品 */
+	jobject jFlowerGiftItem;
+	InitClassHelper(env, FLOWERGIFT_FLOWERGIFT_ITEM_CLASS, &jFlowerGiftItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_FLOWERGIFT_ITEM_CLASS, jFlowerGiftItem));
+
+	jobject jStoreFlowerGiftItem;
+	InitClassHelper(env, FLOWERGIFT_STROREFLOWERGIFT_ITEM_CLASS, &jStoreFlowerGiftItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_STROREFLOWERGIFT_ITEM_CLASS, jStoreFlowerGiftItem));
+
+	jobject jFlowerGiftBaseInfoItem;
+	InitClassHelper(env, FLOWERGIFT_FLOWERGIFTBASEINFO_ITEM_CLASS, &jFlowerGiftBaseInfoItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_FLOWERGIFTBASEINFO_ITEM_CLASS, jFlowerGiftBaseInfoItem));
+
+	jobject jDeliveryItem;
+	InitClassHelper(env, FLOWERGIFT_DELIVERY_ITEM_CLASS, &jDeliveryItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_DELIVERY_ITEM_CLASS, jDeliveryItem));
+
+	jobject jRecipientAnchorGiftItem;
+	InitClassHelper(env, FLOWERGIFT_RECIPIENTANCHORGIFT_ITEM_CLASS, &jRecipientAnchorGiftItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_RECIPIENTANCHORGIFT_ITEM_CLASS, jRecipientAnchorGiftItem));
+
+	jobject jMyCartItem;
+	InitClassHelper(env, FLOWERGIFT_MYCART_ITEM_CLASS, &jMyCartItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_MYCART_ITEM_CLASS, jMyCartItem));
+
+	jobject jCheckoutGiftItem;
+	InitClassHelper(env, FLOWERGIFT_CHECKOUTGIFT_ITEM_CLASS, &jCheckoutGiftItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_CHECKOUTGIFT_ITEM_CLASS, jCheckoutGiftItem));
+
+	jobject jGreetingCardItem;
+	InitClassHelper(env, FLOWERGIFT_GREETINGCARD_ITEM_CLASS, &jGreetingCardItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_GREETINGCARD_ITEM_CLASS, jGreetingCardItem));
+
+	jobject jCheckoutItem;
+	InitClassHelper(env, FLOWERGIFT_CHECKOUT_ITEM_CLASS, &jCheckoutItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(FLOWERGIFT_CHECKOUT_ITEM_CLASS, jCheckoutItem));
+
+	/* 广告 */
+	jobject jadwomanListAdvertItem;
+	InitClassHelper(env, OTHER_ADWOMANLISTADVERT_ITEM_CLASS, &jadwomanListAdvertItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_ADWOMANLISTADVERT_ITEM_CLASS, jadwomanListAdvertItem));
 
  	return JNI_VERSION_1_4;
  }

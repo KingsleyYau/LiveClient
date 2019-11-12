@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.qpidnetwork.anchor.im.IMOtherEventListener;
 import com.qpidnetwork.anchor.im.listener.IMClientListener;
 import com.qpidnetwork.anchor.im.listener.IMInviteListItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
+import com.qpidnetwork.anchor.im.listener.IMSendInviteInfoItem;
 import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
 import com.qpidnetwork.anchor.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.anchor.liveshow.manager.CameraMicroPhoneCheckManager;
@@ -90,6 +92,9 @@ public class ProgramLiveTransitionActivity extends BaseFragmentActivity implemen
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         TAG = ProgramLiveTransitionActivity.class.getSimpleName();
+        //直播中保持屏幕点亮不熄屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_program_transition);
 
         mIMManager = IMManager.getInstance();
@@ -563,9 +568,10 @@ public class ProgramLiveTransitionActivity extends BaseFragmentActivity implemen
                             //跳转前关闭显示dialog
                             hideExitDialog();
                             //进入成功直接调用进入直播间
-                            Intent intent = new Intent(ProgramLiveTransitionActivity.this, PublicLiveRoomActivity.class);
-                            intent.putExtra(LIVEROOM_ROOMINFO_ITEM, roomInfo);
-                            startActivity(intent);
+//                            Intent intent = new Intent(ProgramLiveTransitionActivity.this, PublicLiveRoomActivity.class);
+//                            intent.putExtra(LIVEROOM_ROOMINFO_ITEM, roomInfo);
+//                            startActivity(intent);
+                            FullScreenLiveRoomActivity.lanchActPublicLiveRoom(mContext, roomInfo);
                             mRoomId = "";
                             //注销事件监听器
                             unRegisterConfictReceiver();
@@ -588,7 +594,12 @@ public class ProgramLiveTransitionActivity extends BaseFragmentActivity implemen
     }
 
     @Override
-    public void OnSendImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
+    public void OnAnchorSwitchFlow(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMClientListener.IMDeviceType deviceType) {
+
+    }
+
+    @Override
+    public void OnSendImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMSendInviteInfoItem inviteInfoItem) {
 
     }
 

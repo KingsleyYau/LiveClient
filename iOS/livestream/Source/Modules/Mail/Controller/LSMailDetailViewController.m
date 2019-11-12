@@ -62,7 +62,7 @@ typedef enum : NSUInteger {
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineImageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -175,6 +175,7 @@ typedef enum : NSUInteger {
 
     self.wkWebView.UIDelegate = self;
     self.wkWebView.navigationDelegate = self;
+    self.wkWebView.translatesAutoresizingMaskIntoConstraints = NO;
 
     self.scrollView.delegate = self;
     self.tableView.delegate = self;
@@ -242,19 +243,10 @@ typedef enum : NSUInteger {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
 
-    // 判断是否读信受阻
-    [self getLeftCredit];
-
-    if (!self.viewDidAppearEver) {
-        // 初始化草稿管理器
-        [[LSSendMailDraftManager manager] initMailDraftLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName];
-    }
-
-    // 不在当前显示
-    if( !self.viewIsAppear ) {
-        self.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:self.letterItem.anchorId];
-        self.replyTextView.text = self.quickReplyStr;
-    }
+    // 初始化草稿管理器
+    [[LSSendMailDraftManager manager] initMailDraftLadyId:self.letterItem.anchorId name:self.letterItem.anchorNickName];
+    self.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:self.letterItem.anchorId];
+    self.replyTextView.text = self.quickReplyStr;
     
     [self setupAlphaStatus:self.scrollView];
 }
@@ -272,6 +264,9 @@ typedef enum : NSUInteger {
     
     self.navigationController.navigationBar.hidden = NO;
     [self setupAlphaStatus:self.scrollView];
+    
+    // 判断是否读信受阻
+    [self getLeftCredit];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -636,6 +631,10 @@ typedef enum : NSUInteger {
 
                 }];
                 [[LSSendMailDraftManager manager] deleteMailDraft:weakSelf.letterItem.anchorId];
+                [[LSSendMailDraftManager manager] initMailDraftLadyId:weakSelf.letterItem.anchorId name:weakSelf.letterItem.anchorNickName];
+                weakSelf.quickReplyStr = [[LSSendMailDraftManager manager] getDraftContent:weakSelf.letterItem.anchorId];
+                weakSelf.replyTextView.text = weakSelf.quickReplyStr;
+                
             } else {
                 if (errnum == HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP) {
                     if (weakSelf.isSpendStamp) {
@@ -756,7 +755,7 @@ typedef enum : NSUInteger {
 
     CGFloat tableHeight = 0;
     if (self.freeImages.count > 0) {
-        self.freeCellHeight = imageWidth + 46;
+        self.freeCellHeight = 146;
         tableHeight += self.freeCellHeight;
         [self.typeArray addObject:FREEPHOTO];
     }
@@ -917,7 +916,7 @@ typedef enum : NSUInteger {
                 vc.attachmentsArray = self.items;
                 vc.attachmentDelegate = self;
                 vc.photoIndex = index;
-                UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+                LSNavigationController * nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
@@ -1031,6 +1030,7 @@ typedef enum : NSUInteger {
     if (![self.replyTextView isEqual:scrollView]) {
         [self setupAlphaStatus:scrollView];
     }
+    [self.wkWebView setNeedsLayout];
 }
 
 #pragma mark - UITextViewDelegate
@@ -1070,12 +1070,15 @@ typedef enum : NSUInteger {
 // 加载完webview (当main frame导航完成时，会回调)
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     NSLog(@"LSMailDetailViewController::didFinishNavigation()");
-    WeakObject(self, weakSelf);
-    [webView evaluateJavaScript:@"document.body.offsetHeight;"
-              completionHandler:^(id _Nullable height, NSError *_Nullable error) {
-                  NSString *heightStr = [NSString stringWithFormat:@"%@", height];
-                  weakSelf.contentViewHeight.constant = heightStr.floatValue;
-              }];
+      __block CGFloat webViewHeight;
+    [self.wkWebView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result,NSError * _Nullable error) {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     webViewHeight = [result doubleValue];
+                    self.contentViewHeight.constant = webViewHeight;
+                    self.wkWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, webViewHeight);
+                     
+                 });
+     }];
 }
 
 #pragma mark -KeyboardNSNotification
@@ -1144,34 +1147,9 @@ typedef enum : NSUInteger {
 
 - (void)setNeedsNavigationBackground:(CGFloat)alpha {
     // 导航栏背景透明度设置
-    [self.navigationController.navigationBar layoutIfNeeded];
-    NSArray *views = [self.navigationController.navigationBar subviews];
-    UIView *barBackgroundView = [views objectAtIndex:0];
-    UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
-    BOOL result = self.navigationController.navigationBar.isTranslucent;
-    NSLog(@"navigationBar.isTranslucent %@  barBackgroundView %@", BOOL2SUCCESS(result), [barBackgroundView subviews]);
-    if (result) {
-        if (backgroundImageView != nil && backgroundImageView.image != nil) {
-            barBackgroundView.alpha = alpha;
-        } else {
-            NSArray * subViews = [barBackgroundView subviews];
-            if (subViews.count > 1) {
-                UIView *backgroundEffectView = [subViews objectAtIndex:1];
-                if (backgroundEffectView != nil) {
-                    backgroundEffectView.alpha = alpha;
-                }
-            } else {
-                barBackgroundView.alpha = alpha;
-            }
-        }
-    } else {
-        barBackgroundView.alpha = alpha;
-    }
-    
+    [super setNavigationBackgroundAlpha:alpha];
     self.navTitleLabel.alpha = alpha;
-//    self.navLeftBtn.alpha = alpha;
     self.navRightBtn.alpha = alpha;
-//    self.rightcontainVew.hidden = NO;
 }
 
 -(BOOL)isEmpty:(NSString *) str {

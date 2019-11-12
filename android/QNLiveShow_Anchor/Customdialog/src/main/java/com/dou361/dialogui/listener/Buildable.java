@@ -5,10 +5,8 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 //import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -25,7 +23,6 @@ import com.dou361.dialogui.holder.AlertDialogHolder;
 import com.dou361.dialogui.holder.SheetHolder;
 import com.dou361.dialogui.utils.ToolUtils;
 import com.dou361.dialogui.widget.DateSelectorWheelView;
-import com.dou361.dialogui.widget.JDateSelectorWheelView;
 
 /**
  * ========================================
@@ -54,9 +51,6 @@ public class Buildable {
     protected BuildBean buildByType(BuildBean bean) {
         ToolUtils.fixContext(bean);
         switch (bean.type) {
-            case DialogConfig.TYPE_JDATEPICK:
-                buildJDatePick(bean);
-                break;
             case DialogConfig.TYPE_DATEPICK:
                 buildDatePick(bean);
                 break;
@@ -85,10 +79,10 @@ public class Buildable {
                 buildCustomAlert(bean);
                 break;
             case DialogConfig.TYPE_CUSTOM_BOTTOM_ALERT:
-                buildCustomBottomAlert(bean);
+//                buildCustomBottomAlert(bean);
                 break;
             case DialogConfig.TYPE_BOTTOM_SHEET:
-                buildBottomSheet(bean);
+//                buildBottomSheet(bean);
                 break;
             default:
                 break;
@@ -137,72 +131,6 @@ public class Buildable {
                 }
             }
         });
-
-        builder.setView(root);
-        final AlertDialog dialog = builder.create();
-        bean.alertDialog = dialog;
-        if (bean.gravity == Gravity.BOTTOM) {
-            Window window = dialog.getWindow();
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-
-        flFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        flNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != bean.dateTimeListener) {
-                    bean.dateTimeListener.onSaveSelectedDate(bean.tag, dwvDate.getSelectedDate());
-                }
-                dialog.dismiss();
-            }
-        });
-        return bean;
-    }
-
-    private BuildBean buildJDatePick(final BuildBean bean) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(bean.mContext);
-        View root = View.inflate(bean.mContext, R.layout.dialogui_jdatepick_layout, null);
-
-        RelativeLayout rl_title_panel = (RelativeLayout) root
-                .findViewById(R.id.rl_title_panel);
-        FrameLayout flFirst = (FrameLayout) root
-                .findViewById(R.id.fl_first);
-        FrameLayout flNext = (FrameLayout) root
-                .findViewById(R.id.fl_next);
-        TextView tv_title = (TextView) root
-                .findViewById(R.id.tv_title);
-        TextView tv_first = (TextView) root
-                .findViewById(R.id.tv_first);
-        TextView tv_next = (TextView) root
-                .findViewById(R.id.tv_next);
-        FrameLayout fl_top_customPanel = (FrameLayout) root
-                .findViewById(R.id.fl_top_customPanel);
-        final JDateSelectorWheelView  dwvDate = (JDateSelectorWheelView) root
-                .findViewById(R.id.dwv_date);
-        FrameLayout fl_bottom_customPanel = (FrameLayout) root
-                .findViewById(R.id.fl_bottom_customPanel);
-        dwvDate.setYearRange(bean.maxYear , bean.minYear);
-        dwvDate.setShowDate(bean.date);
-        dwvDate.setShowDateType(bean.dateType);
-        dwvDate.setTitleVisible(false); //Title不可视,暂时写死
-//        dwvDate.setTitleClick(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int id = v.getId();
-//                if (id == R.id.rl_date_time_title) {
-//                    if (dwvDate.getDateSelectorVisibility() == View.VISIBLE) {
-//                        dwvDate.setDateSelectorVisiblility(View.GONE);
-//                    } else {
-//                        dwvDate.setDateSelectorVisiblility(View.VISIBLE);
-//                    }
-//                }
-//            }
-//        });
 
         builder.setView(root);
         final AlertDialog dialog = builder.create();
@@ -292,14 +220,18 @@ public class Buildable {
                 .setPositiveButton(bean.text1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        bean.listener.onPositive();
+                        if (bean.listener != null) {
+                            bean.listener.onPositive();
+                        }
                         dialog.dismiss();
                     }
                 })
                 .setNegativeButton(bean.text2, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        bean.listener.onNegative();
+                        if (bean.listener != null) {
+                            bean.listener.onNegative();
+                        }
                         dialog.dismiss();
                     }
                 }).setNeutralButton(bean.text3, new DialogInterface.OnClickListener() {
@@ -313,7 +245,9 @@ public class Buildable {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                bean.listener.onCancle();
+                if (bean.listener != null) {
+                    bean.listener.onCancle();
+                }
             }
         });
         bean.alertDialog = dialog;
@@ -415,8 +349,7 @@ public class Buildable {
 //        return bean;
 
         //使用Dialog而不用AlertDialog　，　是因为AlertDialog始终有一个背景框，例如想改变对话框圆角角度在AlertDialog是没效果的
-        //对话框边距在 style.dialogui_datepick_tran 中处理
-        Dialog dialog = new Dialog(bean.mContext , R.style.dialogui_datepick_tran);
+        Dialog dialog = new Dialog(bean.mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         bean.dialog = dialog;
         AlertDialogHolder holder = new AlertDialogHolder(bean.mContext);
@@ -425,11 +358,11 @@ public class Buildable {
         return bean;
     }
 
-    private void buildCustomBottomAlert(BuildBean bean) {
-        BottomSheetDialog dialog = new BottomSheetDialog(bean.mContext);
-        dialog.setContentView(bean.customView);
-        bean.dialog = dialog;
-    }
+//    private void buildCustomBottomAlert(BuildBean bean) {
+//        BottomSheetDialog dialog = new BottomSheetDialog(bean.mContext);
+//        dialog.setContentView(bean.customView);
+//        bean.dialog = dialog;
+//    }
 
     protected BuildBean buildSheet(BuildBean bean) {
 //        AlertDialog.Builder builder = new AlertDialog.Builder(bean.mContext);
@@ -458,13 +391,13 @@ public class Buildable {
         return bean;
     }
 
-    private void buildBottomSheet(BuildBean bean) {
-        BottomSheetDialog dialog = new BottomSheetDialog(bean.mContext);
-        SheetHolder sheetHolder = new SheetHolder(bean.mContext, false);
-        dialog.setContentView(sheetHolder.rootView);
-        sheetHolder.assingDatasAndEvents(bean.mContext, bean);
-        bean.dialog = dialog;
-    }
+//    private void buildBottomSheet(BuildBean bean) {
+//        BottomSheetDialog dialog = new BottomSheetDialog(bean.mContext);
+//        SheetHolder sheetHolder = new SheetHolder(bean.mContext, false);
+//        dialog.setContentView(sheetHolder.rootView);
+//        sheetHolder.assingDatasAndEvents(bean.mContext, bean);
+//        bean.dialog = dialog;
+//    }
 
 
 }

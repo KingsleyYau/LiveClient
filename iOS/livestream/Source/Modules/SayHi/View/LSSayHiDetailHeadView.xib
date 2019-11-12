@@ -15,18 +15,33 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="105"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Sayhi_DetailHeadBG" translatesAutoresizingMaskIntoConstraints="NO" id="CzN-b7-g0a" customClass="LSUIImageViewTopFit">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
+                <imageView userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Sayhi_DetailHeadBG" translatesAutoresizingMaskIntoConstraints="NO" id="CzN-b7-g0a">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="105"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="110" id="Dlk-5z-nW2"/>
+                        <constraint firstAttribute="height" constant="105" id="Dlk-5z-nW2"/>
                     </constraints>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="cRs-oz-bGI">
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qfj-1h-1f9">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="105"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Yci-y6-vYT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="105"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="105" id="YzE-ge-KFI"/>
+                    </constraints>
+                    <blurEffect style="light"/>
+                </visualEffectView>
+                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="cRs-oz-bGI">
                     <rect key="frame" x="20" y="23" width="64" height="64"/>
+                    <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="width" constant="64" id="Hwe-HK-uRu"/>
                         <constraint firstAttribute="height" constant="64" id="ZQq-Nh-S5W"/>
                     </constraints>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Jlc-Td-sVu" appends="YES" id="MsF-3k-ofG"/>
+                    </connections>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To: Jassica, 22" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DJA-L8-T4m">
                     <rect key="frame" x="99" y="29" width="183" height="21"/>
@@ -63,15 +78,19 @@
                 <constraint firstItem="cRs-oz-bGI" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="2So-mL-ZzO"/>
                 <constraint firstItem="DJA-L8-T4m" firstAttribute="leading" secondItem="EGV-Ci-sSq" secondAttribute="leading" id="5ZL-iu-fYn"/>
                 <constraint firstItem="EGV-Ci-sSq" firstAttribute="top" secondItem="DJA-L8-T4m" secondAttribute="bottom" constant="10" id="BZ1-GP-SXy"/>
+                <constraint firstItem="Qfj-1h-1f9" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="EOq-bP-ZxG"/>
                 <constraint firstAttribute="trailing" secondItem="rId-g0-qKL" secondAttribute="trailing" constant="20" id="EQC-5z-zlN"/>
                 <constraint firstAttribute="trailing" secondItem="CzN-b7-g0a" secondAttribute="trailing" id="FLJ-jg-DNa"/>
                 <constraint firstItem="DJA-L8-T4m" firstAttribute="leading" secondItem="cRs-oz-bGI" secondAttribute="trailing" constant="15" id="Ix5-9w-Rny"/>
                 <constraint firstItem="CzN-b7-g0a" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="LCb-vD-9ah"/>
-                <constraint firstItem="CzN-b7-g0a" firstAttribute="centerY" secondItem="cRs-oz-bGI" secondAttribute="centerY" id="Y6j-sK-kxd"/>
+                <constraint firstAttribute="bottom" secondItem="Qfj-1h-1f9" secondAttribute="bottom" id="LZ6-8E-VR6"/>
+                <constraint firstItem="CzN-b7-g0a" firstAttribute="centerY" secondItem="cRs-oz-bGI" secondAttribute="centerY" constant="-2.5" id="Y6j-sK-kxd"/>
                 <constraint firstItem="DJA-L8-T4m" firstAttribute="top" secondItem="cRs-oz-bGI" secondAttribute="top" constant="6" id="da4-bi-6G7"/>
                 <constraint firstItem="DJA-L8-T4m" firstAttribute="trailing" secondItem="EGV-Ci-sSq" secondAttribute="trailing" id="eRd-qc-1Hi"/>
-                <constraint firstItem="CzN-b7-g0a" firstAttribute="centerY" secondItem="rId-g0-qKL" secondAttribute="centerY" id="fIY-Pd-IrT"/>
+                <constraint firstItem="CzN-b7-g0a" firstAttribute="centerY" secondItem="rId-g0-qKL" secondAttribute="centerY" constant="-2.5" id="fIY-Pd-IrT"/>
                 <constraint firstItem="rId-g0-qKL" firstAttribute="leading" secondItem="DJA-L8-T4m" secondAttribute="trailing" constant="8" id="hOE-Cp-6rx"/>
+                <constraint firstItem="Qfj-1h-1f9" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hVT-ao-Aad"/>
+                <constraint firstAttribute="trailing" secondItem="Qfj-1h-1f9" secondAttribute="trailing" id="r3B-Gg-Isy"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
@@ -81,8 +100,13 @@
                 <outlet property="timeLabel" destination="EGV-Ci-sSq" id="D40-EL-Som"/>
                 <outlet property="titleLabel" destination="DJA-L8-T4m" id="Bm9-Yz-N8t"/>
             </connections>
-            <point key="canvasLocation" x="20" y="-40.479760119940032"/>
+            <point key="canvasLocation" x="20" y="-40.929535232383813"/>
         </view>
+        <tapGestureRecognizer id="Jlc-Td-sVu">
+            <connections>
+                <action selector="headImageTap:" destination="i5M-Pr-FkT" id="GRf-Pp-n9u"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>

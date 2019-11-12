@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialogui_shape_wihte_round_corner"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_say_hi_tip_three_btn_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/live_size_20dp"
+        android:layout_marginBottom="@dimen/live_size_20dp"
+        android:gravity="center"
+        android:text="@string/say_hi_dialog_tip_three_btn"
+        android:textColor="@color/live_text_color_black"
+        android:textSize="@dimen/live_size_16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_dd" />
+
+        <Button
+            android:id="@+id/dialog_say_hi_tip_three_btn_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/dialogui_selector_all_no"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/common_btn_ok"
+            android:textColor="@color/blue_color"
+            android:textSize="@dimen/live_size_18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_dd" />
+
+        <Button
+            android:id="@+id/dialog_say_hi_tip_three_btn_no_ask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/dialogui_selector_all_no"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/Dont_Ask_Again"
+            android:textAllCaps="false"
+            android:textColor="@color/blue_color"
+            android:textSize="@dimen/live_size_18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_dd" />
+
+        <Button
+            android:id="@+id/dialog_say_hi_tip_three_btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/dialogui_selector_all_bottom"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/common_btn_cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/blue_color"
+            android:textSize="@dimen/live_size_18sp" />
+    </LinearLayout>
+</LinearLayout>

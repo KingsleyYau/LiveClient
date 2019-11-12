@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSFollowingViewController">
             <connections>
+                <outlet property="collectionView" destination="5qZ-gP-b0Z" id="A1d-Tm-GMW"/>
                 <outlet property="noDataImageView" destination="aSD-wl-1ZB" id="uou-5V-7w5"/>
                 <outlet property="noDataTips" destination="IGM-YN-fZw" id="DV8-tl-m3g"/>
-                <outlet property="tableView" destination="Ot5-SV-BFO" id="gQB-Dd-TQf"/>
                 <outlet property="view" destination="geZ-pP-WWP" id="gAj-ss-8rS"/>
                 <outlet property="viewHotBtn" destination="vTs-UO-m8s" id="U8D-ZW-0fG"/>
             </connections>
@@ -23,59 +23,94 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Ot5-SV-BFO" customClass="HotTableView">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="5qZ-gP-b0Z" customClass="LSHomeCollectionView">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                </tableView>
-                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Common_NoDataIcon" translatesAutoresizingMaskIntoConstraints="NO" id="aSD-wl-1ZB">
-                    <rect key="frame" x="147.5" y="80" width="80" height="80"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qA3-Jd-zn3">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IGM-YN-fZw">
+                    <rect key="frame" x="30" y="241.5" width="315" height="96"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="80" id="Y4q-oc-m68"/>
-                        <constraint firstAttribute="height" constant="80" id="trN-VC-Z9I"/>
+                        <constraint firstAttribute="height" constant="96" id="pe2-kV-ijx"/>
                     </constraints>
-                </imageView>
-                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No following broadcasters" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IGM-YN-fZw">
-                    <rect key="frame" x="10" y="172" width="355" height="18"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="18" id="lcB-4p-1VV"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.76078431372549016" green="0.76078431372549016" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
+                    <attributedString key="attributedText">
+                        <fragment>
+                            <string key="content">You have not followed anyone yet.
+</string>
+                            <attributes>
+                                <color key="NSColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <font key="NSFont" size="16" name=".SFNSText"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment>
+                            <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                            <attributes>
+                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <font key="NSFont" size="16" name=".SFNSText"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="Add your favorite broadcasters here to discover fun now.">
+                            <attributes>
+                                <color key="NSColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="16" name=".SFNSText"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
                     <nil key="highlightedColor"/>
                 </label>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vTs-UO-m8s">
-                    <rect key="frame" x="97" y="220" width="180" height="36"/>
+                    <rect key="frame" x="87.5" y="353" width="200" height="43"/>
                     <color key="backgroundColor" red="0.16078431372549018" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="36" id="3es-h2-esC"/>
-                        <constraint firstAttribute="width" constant="180" id="D5K-MO-266"/>
+                        <constraint firstAttribute="width" constant="200" id="0u2-EC-Xr8"/>
+                        <constraint firstAttribute="height" constant="43" id="IIZ-TM-Krb"/>
                     </constraints>
-                    <state key="normal" title="View Hot Broadcasts">
+                    <state key="normal" title="Search">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="viewHotlistDidClick:" destination="-1" eventType="touchUpInside" id="JBA-tq-TIV"/>
                     </connections>
                 </button>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Common_NoDataIcon" translatesAutoresizingMaskIntoConstraints="NO" id="aSD-wl-1ZB">
+                    <rect key="frame" x="147.5" y="146" width="80" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="jdj-04-C3K"/>
+                        <constraint firstAttribute="height" constant="80" id="nX9-EX-A84"/>
+                    </constraints>
+                </imageView>
             </subviews>
-            <color key="backgroundColor" red="0.92941176470588238" green="0.92549019607843142" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="vTs-UO-m8s" firstAttribute="centerX" secondItem="aSD-wl-1ZB" secondAttribute="centerX" id="4Ac-8P-l7c"/>
-                <constraint firstItem="IGM-YN-fZw" firstAttribute="top" secondItem="aSD-wl-1ZB" secondAttribute="bottom" constant="12" id="6uy-cO-0GE"/>
-                <constraint firstItem="aSD-wl-1ZB" firstAttribute="top" secondItem="geZ-pP-WWP" secondAttribute="top" constant="80" id="AnG-IG-cGt"/>
-                <constraint firstAttribute="bottom" secondItem="Ot5-SV-BFO" secondAttribute="bottom" id="AuB-Rt-xpi"/>
-                <constraint firstAttribute="trailing" secondItem="Ot5-SV-BFO" secondAttribute="trailing" id="DZl-bf-ARg"/>
-                <constraint firstAttribute="trailing" secondItem="IGM-YN-fZw" secondAttribute="trailing" constant="10" id="Dot-su-3AZ"/>
-                <constraint firstItem="IGM-YN-fZw" firstAttribute="leading" secondItem="geZ-pP-WWP" secondAttribute="leading" constant="10" id="Lnz-7Y-UAd"/>
-                <constraint firstItem="Ot5-SV-BFO" firstAttribute="top" secondItem="geZ-pP-WWP" secondAttribute="top" id="NuU-HD-acE"/>
-                <constraint firstItem="aSD-wl-1ZB" firstAttribute="centerX" secondItem="geZ-pP-WWP" secondAttribute="centerX" id="qmd-Bf-ndd"/>
-                <constraint firstItem="Ot5-SV-BFO" firstAttribute="leading" secondItem="geZ-pP-WWP" secondAttribute="leading" id="tG2-sh-2pV"/>
-                <constraint firstItem="vTs-UO-m8s" firstAttribute="top" secondItem="IGM-YN-fZw" secondAttribute="bottom" constant="30" id="yCU-ZY-RM0"/>
+                <constraint firstItem="IGM-YN-fZw" firstAttribute="centerX" secondItem="geZ-pP-WWP" secondAttribute="centerX" id="5y1-ZF-Ynv"/>
+                <constraint firstAttribute="bottom" secondItem="5qZ-gP-b0Z" secondAttribute="bottom" id="BfS-BV-tKd"/>
+                <constraint firstItem="5qZ-gP-b0Z" firstAttribute="leading" secondItem="geZ-pP-WWP" secondAttribute="leading" id="BjS-It-Z2c"/>
+                <constraint firstItem="5qZ-gP-b0Z" firstAttribute="top" secondItem="geZ-pP-WWP" secondAttribute="top" id="PZ6-oO-XiX"/>
+                <constraint firstAttribute="trailing" secondItem="IGM-YN-fZw" secondAttribute="trailing" constant="30" id="Rse-mz-12O"/>
+                <constraint firstItem="vTs-UO-m8s" firstAttribute="centerX" secondItem="geZ-pP-WWP" secondAttribute="centerX" id="T4k-wE-J7T"/>
+                <constraint firstItem="IGM-YN-fZw" firstAttribute="top" secondItem="aSD-wl-1ZB" secondAttribute="bottom" constant="15.5" id="TKN-6X-IX1"/>
+                <constraint firstItem="aSD-wl-1ZB" firstAttribute="centerX" secondItem="geZ-pP-WWP" secondAttribute="centerX" id="Vg9-LP-qQm"/>
+                <constraint firstItem="IGM-YN-fZw" firstAttribute="centerY" secondItem="geZ-pP-WWP" secondAttribute="centerY" constant="-44" id="bg4-wh-kP1"/>
+                <constraint firstItem="5qZ-gP-b0Z" firstAttribute="centerY" secondItem="geZ-pP-WWP" secondAttribute="centerY" id="d8Y-Hw-bma"/>
+                <constraint firstAttribute="trailing" secondItem="5qZ-gP-b0Z" secondAttribute="trailing" id="dkg-kA-kn5"/>
+                <constraint firstItem="IGM-YN-fZw" firstAttribute="leading" secondItem="geZ-pP-WWP" secondAttribute="leading" constant="30" id="f2r-3I-iuY"/>
+                <constraint firstItem="vTs-UO-m8s" firstAttribute="top" secondItem="IGM-YN-fZw" secondAttribute="bottom" constant="15.5" id="ijo-Ux-hmo"/>
+                <constraint firstItem="5qZ-gP-b0Z" firstAttribute="centerX" secondItem="geZ-pP-WWP" secondAttribute="centerX" id="s9m-WG-UjR"/>
             </constraints>
+            <point key="canvasLocation" x="140" y="154.27286356821591"/>
         </view>
     </objects>
     <resources>
-        <image name="Common_NoDataIcon" width="82" height="77"/>
+        <image name="Common_NoDataIcon" width="82.5" height="77.5"/>
     </resources>
 </document>

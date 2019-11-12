@@ -17,9 +17,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tipsLabel;
-@property (weak, nonatomic) IBOutlet UIButton *closeBtn;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
 @property (weak, nonatomic) IBOutlet UIButton *reloadBtn;
 @property (weak, nonatomic) IBOutlet UIButton *bookBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *loadingView;
+@property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @end

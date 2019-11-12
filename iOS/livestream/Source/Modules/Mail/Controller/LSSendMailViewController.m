@@ -188,6 +188,12 @@ typedef enum : NSUInteger {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    if (@available(iOS 11, *)) {
+        self.contentScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewTextDidChange:) name:UITextViewTextDidChangeNotification object:nil];
@@ -678,7 +684,7 @@ typedef enum : NSUInteger {
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:titleMsg preferredStyle:UIAlertControllerStyleAlert];
         if (cancelMsg.length > 0) {
             UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:cancelMsg style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                 [self alertView:type clickCancleOrOther:1];
+                 [self alertView:type clickCancleOrOther:0];
             }];
             [alertVC addAction:cancelAC];
         }

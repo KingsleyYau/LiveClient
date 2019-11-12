@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InterimShowViewController">
             <connections>
-                <outlet property="addBtn" destination="UcZ-bM-k6r" id="66n-BI-lBV"/>
-                <outlet property="bookBtn" destination="IOQ-fd-xIn" id="phJ-o8-1wJ"/>
+                <outlet property="addBtn" destination="nd7-wF-uSz" id="0Is-6B-BdC"/>
+                <outlet property="bookBtn" destination="xUP-hp-1dB" id="Qn7-5E-m68"/>
                 <outlet property="closeBtn" destination="QLQ-Wb-do2" id="5eA-iP-Epi"/>
-                <outlet property="headImage" destination="V1q-GF-JSS" id="yOD-yF-UBl"/>
-                <outlet property="loading" destination="Tk9-i8-Hb7" id="tfA-Zg-Aex"/>
-                <outlet property="nameLabel" destination="4Zg-HP-xoB" id="iXa-JG-DNd"/>
-                <outlet property="reloadBtn" destination="UcZ-bM-k6r" id="j34-i7-8hH"/>
-                <outlet property="tipsLabel" destination="NUy-l2-1bb" id="wqP-wB-cLR"/>
+                <outlet property="headImage" destination="Pe5-Wh-iT3" id="VFn-kH-80D"/>
+                <outlet property="loadingView" destination="vfV-7P-Rn3" id="7be-aJ-bYO"/>
+                <outlet property="nameLabel" destination="hod-fj-Baz" id="xod-ra-Kbe"/>
+                <outlet property="reloadBtn" destination="gUc-Eq-Rhs" id="14R-xh-0T7"/>
+                <outlet property="tipsLabel" destination="AQD-LI-wb8" id="nc5-pV-Bct"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -27,70 +27,117 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="V1q-GF-JSS" userLabel="Lady Photo ImageView">
-                    <rect key="frame" x="126" y="59" width="123" height="123"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Malinla" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Zg-HP-xoB" userLabel="Lady Name Label">
-                    <rect key="frame" x="40" y="205" width="295" height="21"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLQ-Wb-do2" userLabel="Cancel Button">
-                    <rect key="frame" x="320" y="20" width="40" height="40"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oCS-fv-iyE" userLabel="Tip View">
+                    <rect key="frame" x="0.0" y="208.5" width="375" height="250.5"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="Pe5-Wh-iT3" userLabel="Lady Photo ImageView">
+                            <rect key="frame" x="137.5" y="0.0" width="100" height="100"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="Yi8-xg-VLs"/>
+                                <constraint firstAttribute="height" constant="100" id="b3n-Qo-QPk"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Malinla" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hod-fj-Baz" userLabel="Lady Name Label">
+                            <rect key="frame" x="15" y="110" width="345" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tips" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AQD-LI-wb8" userLabel="Tips Label">
+                            <rect key="frame" x="15" y="157" width="345" height="19.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUP-hp-1dB" userLabel="Book Private Button">
+                            <rect key="frame" x="20" y="206.5" width="335" height="44"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="9GE-ag-Pk3"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                            <state key="normal" title="Book One-on-One" image="PreLive_Book_Button" backgroundImage="Home_BookingBg"/>
+                            <connections>
+                                <action selector="bookBtnDid:" destination="-1" eventType="touchUpInside" id="aUL-ld-42f"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gUc-Eq-Rhs" userLabel="Retry Button">
+                            <rect key="frame" x="20" y="206.5" width="335" height="44"/>
+                            <color key="backgroundColor" red="0.16078431369999999" green="0.47843137250000001" blue="0.95294117649999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <state key="normal" title="Retry"/>
+                            <connections>
+                                <action selector="reloadBtnDid:" destination="-1" eventType="touchUpInside" id="vYI-sT-cw2"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd7-wF-uSz" userLabel="Add Credit Button">
+                            <rect key="frame" x="20" y="206.5" width="335" height="44"/>
+                            <color key="backgroundColor" red="1" green="0.4431372549" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <state key="normal" title="Add Credits"/>
+                            <connections>
+                                <action selector="addBtnDid:" destination="-1" eventType="touchUpInside" id="e0d-1n-iLa"/>
+                            </connections>
+                        </button>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Prelive_Loading1" translatesAutoresizingMaskIntoConstraints="NO" id="vfV-7P-Rn3">
+                            <rect key="frame" x="179.5" y="211.5" width="16" height="16"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="gUc-Eq-Rhs" firstAttribute="height" secondItem="xUP-hp-1dB" secondAttribute="height" id="06u-BP-A5H"/>
+                        <constraint firstItem="hod-fj-Baz" firstAttribute="top" secondItem="Pe5-Wh-iT3" secondAttribute="bottom" constant="10" id="0tH-SC-6Xu"/>
+                        <constraint firstItem="nd7-wF-uSz" firstAttribute="leading" secondItem="xUP-hp-1dB" secondAttribute="leading" id="1HX-Mj-L8D"/>
+                        <constraint firstItem="gUc-Eq-Rhs" firstAttribute="top" secondItem="xUP-hp-1dB" secondAttribute="top" id="3bd-ys-PeL"/>
+                        <constraint firstItem="AQD-LI-wb8" firstAttribute="leading" secondItem="hod-fj-Baz" secondAttribute="leading" id="99H-nZ-X6R"/>
+                        <constraint firstItem="Pe5-Wh-iT3" firstAttribute="top" secondItem="oCS-fv-iyE" secondAttribute="top" id="BmE-AT-aZS"/>
+                        <constraint firstItem="gUc-Eq-Rhs" firstAttribute="trailing" secondItem="xUP-hp-1dB" secondAttribute="trailing" id="C4F-ZC-aOT"/>
+                        <constraint firstAttribute="bottom" secondItem="xUP-hp-1dB" secondAttribute="bottom" id="Chw-N9-EAf"/>
+                        <constraint firstItem="Pe5-Wh-iT3" firstAttribute="centerX" secondItem="oCS-fv-iyE" secondAttribute="centerX" id="EfA-he-ZBb"/>
+                        <constraint firstItem="vfV-7P-Rn3" firstAttribute="top" secondItem="AQD-LI-wb8" secondAttribute="bottom" constant="35" id="GwE-tB-7LN"/>
+                        <constraint firstItem="hod-fj-Baz" firstAttribute="leading" secondItem="oCS-fv-iyE" secondAttribute="leading" constant="15" id="MqL-x1-gVJ"/>
+                        <constraint firstItem="nd7-wF-uSz" firstAttribute="height" secondItem="xUP-hp-1dB" secondAttribute="height" id="SAW-7y-WZA"/>
+                        <constraint firstAttribute="trailing" secondItem="xUP-hp-1dB" secondAttribute="trailing" constant="20" id="Uok-qu-IQN"/>
+                        <constraint firstItem="AQD-LI-wb8" firstAttribute="top" secondItem="hod-fj-Baz" secondAttribute="bottom" constant="30" id="V9G-XT-SlE"/>
+                        <constraint firstItem="xUP-hp-1dB" firstAttribute="leading" secondItem="oCS-fv-iyE" secondAttribute="leading" constant="20" id="W2J-M6-UwS"/>
+                        <constraint firstItem="xUP-hp-1dB" firstAttribute="top" secondItem="AQD-LI-wb8" secondAttribute="bottom" constant="30" id="ZfH-Px-IH2"/>
+                        <constraint firstItem="nd7-wF-uSz" firstAttribute="trailing" secondItem="xUP-hp-1dB" secondAttribute="trailing" id="aFl-pR-Jih"/>
+                        <constraint firstItem="gUc-Eq-Rhs" firstAttribute="leading" secondItem="xUP-hp-1dB" secondAttribute="leading" id="f0m-BS-81l"/>
+                        <constraint firstAttribute="trailing" secondItem="hod-fj-Baz" secondAttribute="trailing" constant="15" id="iPm-vi-7RL"/>
+                        <constraint firstItem="AQD-LI-wb8" firstAttribute="trailing" secondItem="hod-fj-Baz" secondAttribute="trailing" id="tPB-WU-gh3"/>
+                        <constraint firstItem="vfV-7P-Rn3" firstAttribute="centerX" secondItem="oCS-fv-iyE" secondAttribute="centerX" id="uM5-Ke-H0f"/>
+                        <constraint firstItem="nd7-wF-uSz" firstAttribute="top" secondItem="xUP-hp-1dB" secondAttribute="top" id="ya8-vx-sgV"/>
+                    </constraints>
+                </view>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLQ-Wb-do2" userLabel="Cancel Button">
+                    <rect key="frame" x="325" y="30" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="QLQ-Wb-do2" secondAttribute="height" multiplier="1:1" id="Cra-Xj-hho"/>
+                        <constraint firstAttribute="width" constant="40" id="ycv-O0-uaH"/>
+                    </constraints>
                     <state key="normal" image="Live_Preview_Btn_Cancel"/>
                     <connections>
                         <action selector="closeBtnDid:" destination="-1" eventType="touchUpInside" id="Rxs-fN-pev"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tips" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NUy-l2-1bb" userLabel="Tips Label">
-                    <rect key="frame" x="40" y="246" width="295" height="54"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="diC-0C-rpT" userLabel="Try Again Button">
-                    <rect key="frame" x="82" y="321" width="211" height="33"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="Live_PreLive_Btn_Retry"/>
-                    <connections>
-                        <action selector="reloadBtnDid:" destination="-1" eventType="touchUpInside" id="cMx-l5-daC"/>
-                    </connections>
-                </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IOQ-fd-xIn" userLabel="Book Private Button">
-                    <rect key="frame" x="84" y="320" width="207" height="35"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="Home_HotAndFollow_Btn_BookPrivateBroadcast"/>
-                    <connections>
-                        <action selector="bookBtnDid:" destination="-1" eventType="touchUpInside" id="Rjv-iT-0SM"/>
-                    </connections>
-                </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcZ-bM-k6r" userLabel="Add Credit Button">
-                    <rect key="frame" x="122" y="321" width="131" height="33"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="Live_PreLive_Btn_AddCredit"/>
-                    <connections>
-                        <action selector="addBtnDid:" destination="-1" eventType="touchUpInside" id="8Nb-lx-w05"/>
-                    </connections>
-                </button>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Tk9-i8-Hb7">
-                    <rect key="frame" x="177" y="324" width="20" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                </activityIndicatorView>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" red="0.19215686274509802" green="0.19215686274509802" blue="0.19215686274509802" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="oCS-fv-iyE" secondAttribute="trailing" id="2jE-wG-QdO"/>
+                <constraint firstItem="oCS-fv-iyE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Ji2-Qc-rNA"/>
+                <constraint firstAttribute="trailing" secondItem="QLQ-Wb-do2" secondAttribute="trailing" constant="10" id="jsM-IJ-49g"/>
+                <constraint firstItem="oCS-fv-iyE" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="juo-MM-1UA"/>
+                <constraint firstItem="QLQ-Wb-do2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="30" id="qmZ-n9-sxd"/>
+            </constraints>
             <point key="canvasLocation" x="-6.5" y="-9.5"/>
         </view>
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
-        <image name="Home_HotAndFollow_Btn_BookPrivateBroadcast" width="207" height="35"/>
-        <image name="Live_PreLive_Btn_AddCredit" width="131" height="33"/>
-        <image name="Live_PreLive_Btn_Retry" width="211" height="33"/>
-        <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
+        <image name="Home_BookingBg" width="3" height="3"/>
+        <image name="Live_Preview_Btn_Cancel" width="16.5" height="16.5"/>
+        <image name="PreLive_Book_Button" width="28" height="28"/>
+        <image name="Prelive_Loading1" width="27" height="27"/>
     </resources>
 </document>

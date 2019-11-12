@@ -69,12 +69,12 @@
     
     // 监听未读数的刷新
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadUnreadNum) name:@"SayHiGetUnreadCount" object:nil];
-    
 }
 
 - (void)pageRightAction:(UIButton *)btn {
     LSSayHiLeadInfoView *info = [LSSayHiLeadInfoView leadInfoView];
     info.leadInfoDelegate = self;
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     [info showSayHiLeadInfoView:self.navigationController.view];
 }
 
@@ -121,6 +121,7 @@
     [UIView animateWithDuration:1 animations:^{
         view.bgView.alpha = 0;
     } completion:^(BOOL finished) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         view.hidden = YES;
         [view removeFromSuperview];
     }];
@@ -172,6 +173,7 @@
     if (!firstTime) {
         LSSayHiLeadInfoView *info = [LSSayHiLeadInfoView leadInfoView];
         info.leadInfoDelegate = self;
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         [info showSayHiLeadInfoView:self.navigationController.view];
         [[NSUserDefaults standardUserDefaults] setObject:@"first" forKey:@"sayHiFirstTimeInfo"];
     }
@@ -223,6 +225,7 @@
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView didShowPageViewForDisplay:(NSUInteger)index {
     self.curIndex = index;
+    [self reportDidShowPage:index];
     [self.segment selectButtonTag:self.curIndex];
     
 }

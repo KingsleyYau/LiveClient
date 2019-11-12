@@ -31,9 +31,12 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQl-FB-AYL">
-                        <rect key="frame" x="275" y="20.5" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQl-FB-AYL">
+                        <rect key="frame" x="272" y="20.5" width="45" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="45" id="osD-VZ-gCP"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -76,7 +79,7 @@
                     <constraint firstAttribute="bottom" secondItem="5RD-jy-9NJ" secondAttribute="bottom" constant="20" id="gjD-TQ-ddf"/>
                     <constraint firstItem="mlY-B0-Vr7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="hw1-JH-Uxy"/>
                     <constraint firstItem="UVC-Gl-twj" firstAttribute="leading" secondItem="ChC-d1-jwE" secondAttribute="trailing" constant="4" id="nhK-Xk-XVX"/>
-                    <constraint firstItem="cQl-FB-AYL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Thx-p3-woK" secondAttribute="trailing" constant="10" id="pf4-n7-jul"/>
+                    <constraint firstItem="cQl-FB-AYL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Thx-p3-woK" secondAttribute="trailing" priority="750" constant="10" id="pf4-n7-jul"/>
                     <constraint firstAttribute="bottom" secondItem="mlY-B0-Vr7" secondAttribute="bottom" constant="16" id="qtW-yF-deh"/>
                     <constraint firstItem="Thx-p3-woK" firstAttribute="leading" secondItem="UVC-Gl-twj" secondAttribute="trailing" constant="9" id="yDl-eJ-M2D"/>
                 </constraints>

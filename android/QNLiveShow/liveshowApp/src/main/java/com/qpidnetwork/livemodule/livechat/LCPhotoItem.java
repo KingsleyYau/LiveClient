@@ -16,6 +16,15 @@ import java.io.Serializable;
 public class LCPhotoItem implements Serializable{
 
 	private static final long serialVersionUID = 8719070618687111312L;
+
+	/**
+	 * 增加用户属性，解决由于男女士图片不同表，即可能出现相同photoId对应不同图片
+	 */
+	public enum PhotoUserAttribute{
+		Man,
+		Woman
+	}
+
 	/**
 	 * 图片ID
 	 */
@@ -28,6 +37,11 @@ public class LCPhotoItem implements Serializable{
 	 * 发送ID（仅发送）
 	 */
 	public String sendId;
+
+	/**
+	 * photoItem唯一性以来（photoUserAttr， photoId）
+	 */
+	public PhotoUserAttribute photoUserAttr;
 
 	/**
 	 * 是否已付费
@@ -80,6 +94,7 @@ public class LCPhotoItem implements Serializable{
 		sendId = "";
 		photoDesc = "";
 		charge = false;
+		photoUserAttr = PhotoUserAttribute.Man;
 	}
 	
 	public void init(
@@ -87,31 +102,41 @@ public class LCPhotoItem implements Serializable{
 			,String photoId
 			, String sendId
 			, String photoDesc
-			, boolean charge) 
+			, boolean charge
+			, boolean isMan)
 	{
 		this.photoId = photoId;
 		this.sendId = sendId;
 		this.photoDesc = photoDesc;
 		this.charge = charge;
 
+		if(isMan){
+			photoUserAttr = PhotoUserAttribute.Man;
+		}else{
+			photoUserAttr = PhotoUserAttribute.Woman;
+		}
+
 		//处理本地已存在，直接赋值
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Original);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Large);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Middle);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Clear, PhotoSizeType.Small);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Original);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Large);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Middle);
-		initPhotoInfos(photoManager,photoId, PhotoModeType.Fuzzy, PhotoSizeType.Small);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Clear, PhotoSizeType.Original);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Clear, PhotoSizeType.Large);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Clear, PhotoSizeType.Middle);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Clear, PhotoSizeType.Small);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Fuzzy, PhotoSizeType.Original);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Fuzzy, PhotoSizeType.Large);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Fuzzy, PhotoSizeType.Middle);
+		initPhotoInfos(photoManager, photoUserAttr, photoId, PhotoModeType.Fuzzy, PhotoSizeType.Small);
 	}
 
 	/**
 	 * 初始化private photo状态，如果本地已存在，直接赋值
 	 * @param photoManager
+	 * @param photoUserAttr
 	 * @param photoId
+	 * @param modeType
+	 * @param sizeType
 	 */
-	private void initPhotoInfos(LCPhotoManager photoManager, String photoId, PhotoModeType modeType, PhotoSizeType sizeType){
-		String localPath = photoManager.getPhotoPath(photoId, modeType, sizeType);
+	private void initPhotoInfos(LCPhotoManager photoManager, PhotoUserAttribute photoUserAttr, String photoId, PhotoModeType modeType, PhotoSizeType sizeType){
+		String localPath = photoManager.getPhotoPath(photoUserAttr, photoId, modeType, sizeType);
 		if(!TextUtils.isEmpty(localPath)){
 			File file = new File(localPath);
 			if(file.exists()){

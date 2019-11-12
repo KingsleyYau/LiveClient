@@ -57,6 +57,7 @@
                 }
                 
                 _inviteId = [LSURLQueryParam urlParamForKey:@"invitationid" url:url];
+                _sourceSite = [LSURLQueryParam urlParamForKey:@"origin" url:url];
                 
             } break;
             case LiveUrlTypeBooking: {
@@ -105,6 +106,7 @@
             } break;
             case LiveUrlTypeLiveChat:{
                 // TODO:联系人
+                _inviteMsg = [LSURLQueryParam urlParamForKey:@"invitemsg" url:url];
             }break;
             case LiveUrlTypeLiveChatList: {
                 // TODO:联系人列表
@@ -118,6 +120,7 @@
             }break;
             case LiveUrlTypeHangout: {
                 // TODO:多人直播间
+                _sourceSite = [LSURLQueryParam urlParamForKey:@"origin" url:url];
             }break;
             case LiveUrlTypeSendSayHi: {
                 // TODO:进入发送SayHi界面
@@ -135,6 +138,15 @@
             }break;
             case LiveUrlTypeGreetMailDetail: {
                 _loiId = [LSURLQueryParam urlParamForKey:@"loi_id" url:url];
+            }break;
+            case LiveUrlTypeGiftFlowerList: {
+                  NSString *listTypeString = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+                if( [listTypeString intValue] >= LiveUrlGiftFlowerListTypeStore && [listTypeString intValue] < LiveUrlGiftFlowerListTypeUnknow ) {
+                    _flowerListType = [listTypeString intValue];
+                }
+            }break;
+            case LiveUrlTypeGiftFlowerAnchorStore: {
+                
             }break;
             default: {
             } break;
@@ -175,6 +187,8 @@
     
     _anchorId = @"";
     _anchorName = @"";
+    _inviteMsg = @"";
+    _sourceSite = @"";
     
 }
 
@@ -226,8 +240,12 @@
         type = LiveUrlTypeSayHiDetail;
     }else if ([moduleString isEqualToString:@"greetmaildetail"]) {
         type = LiveUrlTypeGreetMailDetail;
+    }else if ([moduleString isEqualToString:@"giftflower_list"]) {
+        type = LiveUrlTypeGiftFlowerList;
+    }else if ([moduleString isEqualToString:@"giftflower_anchor_store"]) {
+        type = LiveUrlTypeGiftFlowerAnchorStore;
     }
-    
+
     return type;
 }
 

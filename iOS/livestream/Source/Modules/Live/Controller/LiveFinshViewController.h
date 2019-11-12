@@ -12,26 +12,6 @@
 
 @interface LiveFinshViewController : LSGoogleAnalyticsPageViewController
 
-@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
-
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
-
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-
-@property (weak, nonatomic) IBOutlet UILabel *tipLabel;
-
-@property (weak, nonatomic) IBOutlet UIView *recommandView;
-
-@property (weak, nonatomic) IBOutlet UICollectionView *recommandCollectionView;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *recommandViewWidth;
-
-@property (weak, nonatomic) IBOutlet UIButton *bookPrivateBtn;
-
-@property (weak, nonatomic) IBOutlet UIButton *viewHotBtn;
-
-@property (weak, nonatomic) IBOutlet UIButton *addCreditBtn;
-@property (weak, nonatomic) IBOutlet ShowListView *showView;
 @property (nonatomic, assign) LCC_ERR_TYPE errType;
 @property (nonatomic, copy) NSString *errMsg;
 

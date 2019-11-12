@@ -308,7 +308,7 @@ typedef enum : NSUInteger {
             } else {
                 //余额不足
                 if( [self.liveChatManager isNoMoneyWithErrCode:errNo] ) {
-                    
+                    self.status = self.msgItem.secretPhoto.isGetCharge?SecretPhotoStatusFee:SecretPhotoStatusNormal;
                     if (self.viewDelegate != nil && [self.viewDelegate respondsToSelector:@selector(photoDetailspushAddCreditsViewController)]) {
                         [self.viewDelegate photoDetailspushAddCreditsViewController];
                     }

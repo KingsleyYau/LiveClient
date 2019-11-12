@@ -5,7 +5,6 @@ import android.os.Message;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
-import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetVouchersListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
@@ -88,6 +87,7 @@ public class VoucherFragment extends BaseListFragment {
                 showEmptyView();
             } else {
                 hideNodataPage();
+                hideErrorPage();
             }
         } else {
             if (mVoucherList != null && mVoucherList.size() > 0) {
@@ -106,8 +106,8 @@ public class VoucherFragment extends BaseListFragment {
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
 //        queryVoucherList();
     }
 
@@ -116,7 +116,7 @@ public class VoucherFragment extends BaseListFragment {
      */
     private void showEmptyView() {
         setDefaultEmptyMessage(getResources().getString(R.string.my_package_voucher_empty_tips));
-        setDefaultEmptyButtonText("");//无按钮，隐藏
+        setEmptyGuideButtonText("");//无按钮，隐藏
         showNodataPage();
     }
 
@@ -139,7 +139,7 @@ public class VoucherFragment extends BaseListFragment {
      * 刷新试聊券列表
      */
     private void queryVoucherList() {
-        LiveRequestOperator.getInstance().GetVouchersList(new OnGetVouchersListCallback() {
+        new VoucherRequestTask(getActivity()).queryVoucherList(new OnGetVouchersListCallback() {
             @Override
             public void onGetVouchersList(boolean isSuccess, int errCode, String errMsg, VoucherItem[] voucherList, int totalCount) {
                 Message msg = Message.obtain();

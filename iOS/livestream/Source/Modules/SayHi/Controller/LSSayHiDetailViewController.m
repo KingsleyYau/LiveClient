@@ -19,6 +19,9 @@
 #import "LSSayHiCardDetailsViewController.h"
 #import "LSAddCreditsViewController.h"
 #import "LSSayHiReadResponseRequest.h"
+#import "AnchorPersonalViewController.h"
+#import "LSDateTool.h"
+#import "LiveModule.h"
 @interface LSSayHiDetailViewController ()<UITableViewDelegate,UITableViewDataSource,LSSayHiDetailHeadViewDelegate,LSSayHiReadReplyCellDelegate,LSSayHiDetailAddCreditsCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) LSSayHiDetailHeadView * headView;
@@ -26,6 +29,8 @@
 @property (nonatomic, assign) BOOL isLoadImage;
 @property (nonatomic, assign) BOOL isNoCredits;
 @property (nonatomic, assign) NSInteger responseTime;
+@property (weak, nonatomic) IBOutlet UIView *photoDetailView;
+@property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @end
 
 @implementation LSSayHiDetailViewController
@@ -57,6 +62,7 @@
     imageView.frame = self.tableView.frame;
     self.tableView.backgroundView = imageView;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.bounces = NO;
 }
 
 - (void)tableViewScrollTop {
@@ -65,6 +71,9 @@
 }
 
 - (LSSayHiDetailResponseListItemObject *)newDeailItem:(SayHiDetailLoadingType)type {
+    if (type == SayHiDetailLoadingType_Fail) {
+        [self setTableViewBGView];
+    }
     LSSayHiDetailResponseListItemObject * itemModel = [[LSSayHiDetailResponseListItemObject alloc]init];
     itemModel.type = type;
     return itemModel;
@@ -72,18 +81,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     if (!self.viewDidAppearEver) {
-        
         if (!self.headView) {
             self.headView = [[LSSayHiDetailHeadView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 105)];
             self.headView.delegate = self;
             [self.tableView setTableHeaderView:self.headView];
         }
         [self.headView loadData:self.detail];
-        
-        [self getSayHiDetail:YES];
     }
+    [self getSayHiDetail:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -98,72 +104,81 @@
     request.sayHiId = self.sayHiID;
     request.type = isUnread?LSSAYHIDETAILTYPE_LATEST:LSSAYHIDETAILTYPE_EARLIEST;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSayHiDetailInfoItemObject *item) {
-         dispatch_async(dispatch_get_main_queue(), ^{
-             NSLog(@"LSSayHiDetailViewController::getSayHiDetail( [%@], Count : %d)", BOOL2SUCCESS(success), (int)item.responseList.count);
-             [self hideLoading];
-             if (success) {
-                 [self.headView loadData:item.detail];
-                 self.detail =item.detail;
-                 self.items = item.responseList;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"LSSayHiDetailViewController::getSayHiDetail( [%@], Count : %d)", BOOL2SUCCESS(success), (int)item.responseList.count);
+            [self hideLoading];
+            if (success) {
+                self.headView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 105);
+                [self.headView loadData:item.detail];
+                self.detail =item.detail;
+                self.items = item.responseList;
                 
-                 if (self.items.count > 0) {
-                     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                     
-                     for (int i = 0; i < self.items.count; i++) {
-                         LSSayHiDetailResponseListItemObject * obj = self.items[i];
-                         obj.type = SayHiDetailLoadingType_Successed;
-                     }
-                     
-                     if (self.items.count > 1) {
-                         LSSayHiDetailResponseListItemObject * itemModel = nil;
-                         for (LSSayHiDetailResponseListItemObject * obj  in self.items) {
-                             //Say Hi只有单个回复，默认展开
-                             if ([self.responseId isEqualToString:obj.responseId] || obj.isFree) {
-                                 obj.isUnfold = YES;
-                                 obj.contentH = [self calculateContentH:obj.content];
-                                 itemModel = obj;
-                                 break;
-                             }
-                         }
-                         
-                         [self.items insertObject:[self newDeailItem:SayHiDetailLoadingType_Successed] atIndex:0];
-                         
-                         [self.items insertObject:itemModel atIndex:0];
-                         
-                         if (!itemModel.hasRead) {
-                             [self buyMail:itemModel.responseId];
-                         }
-                         
-                     }else {
-                         LSSayHiDetailResponseListItemObject * itemModel = [self.items firstObject];
-                         itemModel.isUnfold = YES;
-                         itemModel.contentH = [self calculateContentH:itemModel.content];
-                         
-                         if (!itemModel.hasRead) {
-                             [self buyMail:itemModel.responseId];
-                         }
-                     }                 }
-                 else {
-                     [self.items removeAllObjects];
-                     [self.items addObject:[self newDeailItem:SayHiDetailLoadingType_NoData]];
-                     [self setTableViewBGView];
-                 }
-                 
-                 [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
-                 [self performSelector:@selector(tableViewScrollTop) withObject:nil afterDelay:0.5];
-                 
-             }
-             else {
-                 [self.items removeAllObjects];
-                 [self.items addObject:[self newDeailItem:errnum ==HTTP_LCC_ERR_NO_CREDIT?SayHiDetailLoadingType_NoCredits:SayHiDetailLoadingType_Fail]];
-                 [self.tableView reloadData];
-             }
-         });
+                if (self.items.count > 0) {
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    
+                    for (int i = 0; i < self.items.count; i++) {
+                        LSSayHiDetailResponseListItemObject * obj = self.items[i];
+                        obj.type = SayHiDetailLoadingType_Successed;
+                    }
+                    
+                    if (self.items.count > 1) {
+                        LSSayHiDetailResponseListItemObject * itemModel = nil;
+                        for (LSSayHiDetailResponseListItemObject * obj  in self.items) {
+                            //Say Hi只有单个回复，默认展开
+                            if ([self.responseId isEqualToString:obj.responseId] || obj.isFree) {
+                                obj.isUnfold = YES;
+                                obj.contentH = [self calculateContentH:obj.content];
+                                itemModel = obj;
+                                break;
+                            }
+                        }
+                        
+                        if (!itemModel) {
+                            itemModel = [self newDeailItem:SayHiDetailLoadingType_Fail];
+                        }
+                        
+                        [self.items insertObject:[self newDeailItem:SayHiDetailLoadingType_Successed] atIndex:0];
+                        
+                        [self.items insertObject:itemModel atIndex:0];
+                        
+                        if (!itemModel.hasRead) {
+                            self.responseTime = itemModel.responseTime;
+                            [self buyMail:itemModel.responseId];
+                        }
+                        
+                    }else {
+                        LSSayHiDetailResponseListItemObject * itemModel = [self.items firstObject];
+                        itemModel.isUnfold = YES;
+                        itemModel.contentH = [self calculateContentH:itemModel.content];
+                        
+                        if (!itemModel.hasRead) {
+                            self.responseTime = itemModel.responseTime;
+                            [self buyMail:itemModel.responseId];
+                        }
+                    }                 }
+                else {
+                    [self.items removeAllObjects];
+                    [self.items addObject:[self newDeailItem:SayHiDetailLoadingType_NoData]];
+                    [self setTableViewBGView];
+                }
+                
+                [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
+                [self performSelector:@selector(tableViewScrollTop) withObject:nil afterDelay:0.5];
+                
+            }
+            else {
+                [self.items removeAllObjects];
+                [self.items addObject:[self newDeailItem:errnum ==HTTP_LCC_ERR_NO_CREDIT?SayHiDetailLoadingType_NoCredits:SayHiDetailLoadingType_Fail]];
+                [self.tableView reloadData];
+            }
+        });
     };
     [[LSSessionRequestManager manager] sendRequest:request];
 }
 
 - (void)buyMail:(NSString *)responseId {
+    [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
+    [self performSelector:@selector(tableViewScrollTop) withObject:nil afterDelay:0.3];
     [self showLoading];
     LSSayHiReadResponseRequest * request = [[LSSayHiReadResponseRequest alloc]init];
     request.sayHiId =self.sayHiID;
@@ -173,14 +188,22 @@
             NSLog(@"LSSayHiDetailViewController::buyMail( [%@])", BOOL2SUCCESS(success));
             [self hideLoading];
             if (success) {
-                self.responseId = responseId;
                 [self getSayHiDetail:YES];
             }
             else {
                 @synchronized (self) {
                     [self.items removeObjectAtIndex:0];
                     [self.items insertObject:[self newDeailItem:errnum ==HTTP_LCC_ERR_SAYHI_READ_NO_CREDIT?SayHiDetailLoadingType_NoCredits:SayHiDetailLoadingType_Fail] atIndex:0];
-                    [self.tableView reloadData];
+                    
+                    for (LSSayHiDetailResponseListItemObject * obj  in self.items) {
+                        if ([self.responseId isEqualToString:obj.responseId]) {
+                            obj.isUnfold = YES;
+                        }else {
+                            obj.isUnfold = NO;
+                        }
+                    }
+                    [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
+                    [self performSelector:@selector(tableViewScrollTop) withObject:nil afterDelay:0.5];
                 }
             }
         });
@@ -195,6 +218,13 @@
     vc.contentStr = self.detail.text;
     vc.photoUrl = self.detail.img;
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)sayHiDetailHeadViewDidHeadImage {
+    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
+    listViewController.anchorId = self.detail.anchorId;
+    listViewController.enterRoom = 1;
+    [self.navigationController pushViewController:listViewController animated:YES];
 }
 
 #pragma mark - UITableViewDelegate
@@ -213,19 +243,19 @@
             cellH = [LSSayHiResponseNumCell cellHeight];
         }
         else {
-           cellH = [LSSayHiUnreadReplyCell cellHeight];
+            cellH = [LSSayHiUnreadReplyCell cellHeight];
         }
     }
     else if (obj.type == SayHiDetailLoadingType_NoData){
         cellH = [LSSayHiNoReplyCell cellHeight];
     }
     else if (obj.type == SayHiDetailLoadingType_NoCredits) {
-         cellH = [LSSayHiDetailAddCreditsCell cellHeight];
+        cellH = [LSSayHiDetailAddCreditsCell cellHeight];
     }
     else {
         cellH = [LSSayHiDetailErrorCell cellHeight];
     }
-
+    
     return cellH;
 }
 
@@ -235,41 +265,42 @@
     if (obj.type == SayHiDetailLoadingType_Successed) {
         if (indexPath.row == 0) {
             LSSayHiReadReplyCell * cell = [LSSayHiReadReplyCell getUITableViewCell:tableView];
-                cell.cellDelegate = self;
-                tableViewCell = cell;
-                cell.timeLabel.text =[NSString stringWithFormat:@"ID:%@ %@",obj.responseId,[self getTime:obj.responseTime type:@"dd MMM,yyyy"]];
-                cell.nameLabel.text = self.detail.nickName;
-                cell.freeW.constant = obj.isFree?35:0;
-                cell.contentLabel.text = obj.content;
-                
-                if (obj.hasImg) {
-                    cell.replyBtnY.constant = 23;
-                    [cell.imageLoader loadImageWithImageView:cell.contentImage options:0 imageUrl:obj.img placeholderImage:nil finishHandler:^(UIImage *image) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (image) {
-                                CGFloat imageW = image.size.width;
-                                CGFloat proportion = cell.contentImage.tx_width/imageW;
-                                CGFloat height = proportion * image.size.height;
-                                obj.imageH =height;
-                            }
-                            else {
-                                obj.imageH = cell.contentImage.tx_width;
-                            }
-                            if (!self.isLoadImage) {
-                                self.isLoadImage = YES;
-                                [self.tableView reloadData];
-                            }
-                        });
-                    }];
-                } else {
-                    cell.replyBtnY.constant = 0;
-                }
-                
-                cell.contentLabelH.constant = obj.contentH;
-                cell.imageViewH.constant =obj.imageH;
-                
-                [cell layoutIfNeeded];
-
+            cell.cellDelegate = self;
+            tableViewCell = cell;
+            cell.timeLabel.text =[NSString stringWithFormat:@"ID:%@ %@",obj.responseId,[LSDateTool getTime:obj.responseTime]];
+            cell.nameLabel.text = self.detail.nickName;
+            cell.freeW.constant = obj.isFree?35:0;
+            cell.contentLabel.text = obj.content;
+            
+            if (obj.hasImg) {
+                cell.replyBtnY.constant = 23;
+                [cell.imageLoader loadImageWithImageView:cell.contentImage options:0 imageUrl:obj.img placeholderImage:nil finishHandler:^(UIImage *image) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (image) {
+                            CGFloat imageW = image.size.width;
+                            CGFloat proportion = cell.contentImage.tx_width/imageW;
+                            CGFloat height = proportion * image.size.height;
+                            obj.imageH =height;
+                            self.photoView.image = image;
+                        }
+                        else {
+                            obj.imageH = cell.contentImage.tx_width;
+                        }
+                        if (!self.isLoadImage) {
+                            self.isLoadImage = YES;
+                            [self.tableView reloadData];
+                        }
+                    });
+                }];
+            } else {
+                cell.replyBtnY.constant = 0;
+            }
+            
+            cell.contentLabelH.constant = obj.contentH;
+            cell.imageViewH.constant =obj.imageH;
+            
+            [cell layoutIfNeeded];
+            
         }
         else if (indexPath.row == 1) {
             LSSayHiResponseNumCell * cell = [LSSayHiResponseNumCell getUITableViewCell:tableView];
@@ -295,7 +326,7 @@
         tableViewCell = cell;
         cell.cellDelegate = self;
         [cell setLadyName:self.detail.nickName];
-        cell.timeLabel.text = [NSString stringWithFormat:@"ID:%@ %@",self.responseId,[self getTime:self.responseTime type:@"dd MMM,yyyy"]];
+        cell.timeLabel.text = [NSString stringWithFormat:@"ID:%@ %@",self.responseId,[LSDateTool getTime:self.responseTime]];
     }
     else {
         LSSayHiDetailErrorCell * cell = [LSSayHiDetailErrorCell getUITableViewCell:tableView];
@@ -305,19 +336,35 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-         LSSayHiDetailResponseListItemObject * obj = [self.items objectAtIndex:indexPath.row];
+    LSSayHiDetailResponseListItemObject * obj = [self.items objectAtIndex:indexPath.row];
     if (obj.type == SayHiDetailLoadingType_Fail) {
         [self getSayHiDetail:YES];
     }
     else {
         if (indexPath.row > 1) {
+            
+            //            for (LSSayHiDetailResponseListItemObject * item  in self.items) {
+            //                if ([item.responseId isEqualToString:obj.responseId]) {
+            //                    item.isUnfold = YES;
+            //                }else {
+            //                    item.isUnfold = NO;
+            //                }
+            //            }
+            //
             [self sayHiUnreadReplyCellReadNowBtnDid:indexPath.row];
         }
     }
 }
 
+- (void)sayHiReadReplyCellContentImageTap {
+    self.photoDetailView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    [self.view.window addSubview:self.photoDetailView];
+    self.photoDetailView.hidden = NO;
+}
+
 - (void)sayHiReadReplyCellReplyBtnDid {
-     LSSayHiDetailResponseListItemObject * obj = [self.items objectAtIndex:0];
+    [[LiveModule module].analyticsManager reportActionEvent:SayHiDetailClickReply eventCategory:EventCategorySayHi];
+    LSSayHiDetailResponseListItemObject * obj = [self.items objectAtIndex:0];
     LSSendMailViewController * vc = [[LSSendMailViewController alloc]initWithNibName:nil bundle:nil];
     vc.anchorId = self.detail.anchorId;
     vc.anchorName = self.detail.nickName;
@@ -332,9 +379,10 @@
 }
 
 - (void)sayHiUnreadReplyCellReadNowBtnDid:(NSInteger)row {
-     LSSayHiDetailResponseListItemObject * obj = [self.items objectAtIndex:row];
+    LSSayHiDetailResponseListItemObject * obj = [self.items objectAtIndex:row];
     self.responseTime = obj.responseTime;
-    if (![[NSUserDefaults standardUserDefaults]objectForKey:@"SayHiAgainTip"]) {
+    self.responseId = obj.responseId;
+    if (!obj.isFree && !obj.hasRead && ![[NSUserDefaults standardUserDefaults]objectForKey:@"SayHiAgainTip"]) {
         UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"BUY_TIP") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self buyMail:obj.responseId];
@@ -367,6 +415,11 @@
 - (CGFloat)calculateContentH:(NSString *)text {
     CGRect rect = [text boundingRectWithSize:CGSizeMake(self.tableView.tx_width - 40, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:16] }  context:nil];
     return ceil(rect.size.height);
+}
+
+- (IBAction)photoDetailBackBtnDid:(id)sender {
+    
+    self.photoDetailView.hidden = YES;
 }
 
 @end

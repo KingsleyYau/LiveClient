@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/live_room_edit_height" >
+
+    <!-- 底色，根据输入栏位置而改变 -->
+    <FrameLayout
+        android:id="@+id/v_roomEditMegBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_full" />
+
+    <LinearLayout
+        android:id="@+id/ll_roomEditMsgiInput"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical">
+
+        <!-- 输入法底图，根据输入栏位置而改变 -->
+        <LinearLayout
+            android:id="@+id/ll_input_edit_body"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/full_screen_edittext_bg_white"
+            android:gravity="center"
+            android:clickable="true"
+            android:visibility="visible"
+            android:onClick="onClick"
+            android:orientation="horizontal">
+
+            <!-- 输入框 -->
+            <EditText
+                android:id="@+id/et_liveMsg"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:hint="@string/full_screen_live_room_input_hint"
+                android:textColorHint="#b5b5b5"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:imeOptions="actionSend"/>
+
+            <!-- Emoji -->
+            <ImageView
+                android:id="@+id/iv_emojiSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="onClick"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_full_screen_live_room_emoji"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <!-- 发送按钮 -->
+        <TextView
+            android:id="@+id/iv_sendMsg"
+            android:layout_width="55dp"
+            android:layout_height="36dp"
+            android:background="@drawable/full_screen_live_room_send_btn_bg"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            android:text="@string/txt_send_msg"
+            android:layout_marginLeft="12dp"
+            android:onClick="onClick"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>

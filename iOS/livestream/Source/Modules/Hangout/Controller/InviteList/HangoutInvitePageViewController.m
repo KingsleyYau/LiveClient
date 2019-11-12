@@ -34,37 +34,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // 填充固定分栏
-//    NSMutableArray<JTSegmentItem *> *array = [NSMutableArray array];
-//    JTSegmentItem *item = nil;
-//    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Online")];
-//    [array addObject:item];
-//    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Following")];
-//    [array addObject:item];
-//    item = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:NSLocalizedStringFromSelf(@"Watched")];
-//    [array addObject:item];
-//    self.sliderFixArray = array;
-//
-//    // 填充固定分页内容
-//    HangoutInviteTableViewController *vc0 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-//    vc0.inviteType = HANGOUTANCHORLISTTYPE_ONLINEANCHOR;
-//    [self addChildViewController:vc0];
-//
-//    HangoutInviteTableViewController *vc1 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-//    vc1.inviteType = HANGOUTANCHORLISTTYPE_FOLLOW;
-//    [self addChildViewController:vc1];
-//
-//    HangoutInviteTableViewController *vc2 = [[HangoutInviteTableViewController alloc] initWithNibName:nil bundle:nil];
-//    vc2.inviteType = HANGOUTANCHORLISTTYPE_WATCHED;
-//    [self addChildViewController:vc2];
-//
-//    self.vcFixArray = [NSArray arrayWithObjects:vc0, vc1, vc2, nil];
-    
     UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-    effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:effectView];
     [self.view sendSubviewToBack:effectView];
+    [effectView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -112,7 +88,7 @@
     // 填充好友分栏和分页
     if( self.anchorIdArray.count > 0 && !self.viewControllers.count) {
         for(HangoutInviteAnchor *item in self.anchorIdArray) {
-            NSString *title = [NSString stringWithFormat:@"%@'s Friend", item.anchorName];
+            NSString *title = [NSString stringWithFormat:@"%@'s Friends", item.anchorName];
             JTSegmentItem *segmentItem = [[JTSegmentItem alloc] initWithImage:nil selectedImage:nil title:title];
             // 填充好友分栏内容
             [sliderArray addObject:segmentItem];

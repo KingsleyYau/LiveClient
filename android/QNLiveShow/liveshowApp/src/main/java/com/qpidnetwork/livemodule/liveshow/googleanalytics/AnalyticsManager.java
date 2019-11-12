@@ -1,7 +1,5 @@
 package com.qpidnetwork.livemodule.liveshow.googleanalytics;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
@@ -9,7 +7,10 @@ import android.text.TextUtils;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.qpidnetwork.qnbridgemodule.fa.FirebaseAnalyticsManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Analytics管理类（包括GoogleAnalytics、Facebook等）
@@ -42,6 +43,10 @@ public class AnalyticsManager
 	private Tracker mGaTracker = null;
 	private GoogleAnalytics mGaAnalytics = null;
 
+	// 2019/6/26 Hardy Fa 统计
+	// FireBase Analytics
+	private FirebaseAnalyticsManager mFaManager;
+
 	/**
 	 * 获取单例
 	 * @return
@@ -71,7 +76,7 @@ public class AnalyticsManager
 	 * @param configResId	跟踪配置资源ID
 	 * @return
 	 */
-	public boolean init(Application application, int configResId)
+	public boolean init(Application application, int configResId, boolean isDemo)
 	{
 		boolean result = false;
 		if (null != application) 
@@ -79,6 +84,8 @@ public class AnalyticsManager
 			mActivityMgr.SetApplication(application);
 			// GA跟踪初始化
 			result = GaInit(application, configResId);
+			// 2019/6/26 Hardy Fa 统计
+			result = result && FaInit(application, isDemo);
 		}
 		return result;
 	}
@@ -426,12 +433,18 @@ public class AnalyticsManager
 		String backScreenPath = mActivityMgr.GetBackScreenPath(activity);
 		if (!backScreenPath.isEmpty()) {
 			GaReportScreenPath(backScreenPath);
+
+			// 2019/6/26 Hardy Fa 统计
+			mFaManager.FaReportScreenPath(backScreenPath);
 		}
 		
 		// 提交screen路径
 		String screenPath = mActivityMgr.ReportScreenPath(activity);
 		if (!screenPath.isEmpty()) {
 			GaReportScreenPath(screenPath);
+
+			// 2019/6/26 Hardy Fa 统计
+			mFaManager.FaReportScreenPath(screenPath);
 		}
 	}
 	
@@ -442,6 +455,9 @@ public class AnalyticsManager
 	{
 		// Ga统计
 		GaReportEvent(category, action, label);
+
+		// 2019/6/26 Hardy Fa 统计
+		mFaManager.FaReportEvent(category, action, label);
 	}
 	
 	/**
@@ -456,6 +472,9 @@ public class AnalyticsManager
 			
 			// 设置GA用户跟踪ID
 			GaSetUserId(mGaUserId);
+
+			// 2019/6/26 Hardy Fa 统计
+			mFaManager.GaSetUserId(mGaUserId);
 		}
 	}
 	
@@ -470,6 +489,9 @@ public class AnalyticsManager
 			
 			// 设置GA用户跟踪ID
 			GaSetActivity(gaActivity);
+
+			// 2019/6/26 Hardy Fa 统计
+			mFaManager.FaSetActivity(gaActivity);
 		}
 	}
 	
@@ -496,6 +518,8 @@ public class AnalyticsManager
 	{
 		// GA注册成功统计
 		GaRegisterSuccess(registerType);
+		// 2019/6/26 Hardy Fa 统计
+		mFaManager.FaRegisterSuccess(GetRegisterTypeString(registerType));
 	}
 	
 	/**
@@ -554,6 +578,8 @@ public class AnalyticsManager
 			mIsNotPause = true;
 			// GA开始activity统计
 			GaReportStart(screenName);
+			// 2019/6/26 Hardy Fa 统计
+			mFaManager.FaReportStart(screenName);
 		}
 		else {
 			Log.e("AnalyticsManager", "ReportResumeProc() screenName:%s, mIsNotPause:%b", screenName, mIsNotPause);
@@ -577,7 +603,34 @@ public class AnalyticsManager
 		
 		// GA停止activity统计
 		GaReportStop(screenName);
+
+		// 2019/6/26 Hardy Fa 统计
+		mFaManager.FaReportStop(screenName);
 	}
+
+	// -------------- FireBase Analytics --------------
+	// 2019/6/26 Hardy Fa 统计
+	/**
+	 * FA 初始化
+	 * @return
+	 */
+	private boolean FaInit(Application application, boolean isDemo){
+		boolean result = false;
+
+		if (application != null) {
+			FirebaseAnalyticsManager.AnalyticsEnvType envType = isDemo ?
+					FirebaseAnalyticsManager.AnalyticsEnvType.DEMO:
+					FirebaseAnalyticsManager.AnalyticsEnvType.OFFICIAL;
+
+			mFaManager = new FirebaseAnalyticsManager(application, FirebaseAnalyticsManager.AnalyticsModeType.LIVE, envType);
+
+			result = true;
+		}
+
+		return result;
+	}
+
+
 	// -------------- Google Analytics --------------
 	/**
 	 * GA初始化

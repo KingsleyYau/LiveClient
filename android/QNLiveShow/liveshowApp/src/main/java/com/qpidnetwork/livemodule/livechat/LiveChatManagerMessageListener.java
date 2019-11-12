@@ -25,6 +25,12 @@ public interface LiveChatManagerMessageListener {
 	 * @param item		消息item
 	 */
 	public void OnRecvMessage(LCMessageItem item);
+
+	/**
+	 * 发送邀请消息回调
+	 * @param item
+	 */
+	public void OnSendInviteMessage(LCMessageItem item);
 	
 	/**
 	 * 接收警告消息回调

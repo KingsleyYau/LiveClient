@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <!--右上角返点信息显示、中间的视频加载loading动画、左下角的连送动画、右下角的立即私密按钮、入场动画-->
+    <FrameLayout
+        android:id="@+id/rl_media"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="right|bottom"
+            android:visibility="gone"
+            android:layout_marginRight="13dp"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- 结束倒计时 -->
+        <LinearLayout
+            android:id="@+id/ll_enterPriRoomTimeCount"
+            android:background="@drawable/bg_liveroom_leaving_timecount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="25dp"
+            android:layout_marginRight="13dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_marginBottom="9dp"
+            android:layout_gravity="bottom|right"
+            android:visibility="visible"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/liveroom_leaving_room_time_count_tips"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/tv_enterPrvRoomTimerCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFD205"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="30"
+                android:textSize="15sp"
+                />
+        </LinearLayout>
+
+        <!-- 座驾 -->
+        <include
+            android:id="@+id/ll_entranceCar"
+            layout="@layout/view_full_screen_liveroom_car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="right"/>
+
+        <!-- 连击礼物区 -->
+        <FrameLayout
+            android:id="@+id/flMultiGift"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_gravity="bottom|left"
+            android:layout_marginRight="80dp"
+            android:paddingLeft="13dp" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_vedioLoading"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_width="83dp"
+            android:layout_height="83dp">
+
+        </com.facebook.drawee.view.SimpleDraweeView>
+
+        <!-- HangOut邀请提示 -->
+        <TextView
+            android:id="@+id/tvInviteTips"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:padding="@dimen/live_size_4dp"
+            android:background="@drawable/bg_liveroom_leaving_timecount"
+            android:layout_gravity="right"
+            android:textColor="@color/bg_white"
+            android:textSize="@dimen/live_size_12sp"
+            android:text="invite tips"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <!-- 消息列表区 layout_height代码设置-->
+    <RelativeLayout
+        android:id="@+id/fl_imMsgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:minHeight="50dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="horizontal">
+
+        <!-- 消息列表旁边菜单 -->
+        <LinearLayout
+            android:id="@+id/ll_msg_menu"
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="vertical">
+
+            <!-- 男士打开视频推流按钮 -->
+            <ImageButton
+                android:id="@+id/iv_publish_cam"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/ic_man_publish_cam"/>
+
+            <!-- 鲜花礼品 -->
+            <ImageButton
+                android:id="@+id/iv_flowers"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/live_size_10dp"
+                android:background="@drawable/ic_buy_flowers"/>
+
+        </LinearLayout>
+
+        <!-- 消息列表 -->
+        <include layout="@layout/view_full_screen_liveroom_msglist"
+            android:id="@+id/fl_msglist"
+            android:layout_toLeftOf="@id/ll_msg_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <!-- 推荐礼物 -->
+    <LinearLayout
+        android:id="@+id/ll_recommendGift"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/rectangle_rounded_solid_light_purple"
+        android:orientation="horizontal">
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <FrameLayout
+                android:id="@+id/flStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/pb_waiting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/anim_ball_loading"
+                    android:visibility="gone"/>
+                <LinearLayout
+                    android:id="@+id/llEmptyError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+                    <ImageView
+                        android:id="@+id/ivEmptyError"
+                        android:layout_width="@dimen/live_size_26dp"
+                        android:layout_height="@dimen/live_size_26dp"
+                        android:background="@drawable/ic_hangout_load_error"/>
+                    <TextView
+                        android:id="@+id/tvEmptyDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="Tap to retry"
+                        android:layout_marginLeft="@dimen/live_size_12dp"
+                        android:textColor="#999999"/>
+                </LinearLayout>
+            </FrameLayout>
+        </FrameLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/live_size_8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#33FFFFFF"/>
+        <FrameLayout
+            android:id="@+id/flShowGift"
+            android:layout_width="58dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="@dimen/live_size_24dp"
+                android:layout_height="@dimen/live_size_24dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_show_gift_list"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

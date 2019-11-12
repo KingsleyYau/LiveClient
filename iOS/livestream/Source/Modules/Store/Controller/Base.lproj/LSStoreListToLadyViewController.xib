@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSStoreListToLadyViewController">
+            <connections>
+                <outlet property="bgView" destination="we8-wl-oYG" id="peL-kq-U5N"/>
+                <outlet property="headView" destination="YyL-z9-h70" id="NjR-hV-wCe"/>
+                <outlet property="headViewH" destination="tHc-mC-cmr" id="dRu-E6-stb"/>
+                <outlet property="storeView" destination="fjK-lS-7gG" id="yJx-4e-ld6"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fjK-lS-7gG" customClass="LSStoreCollectionView">
+                    <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </view>
+                <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="we8-wl-oYG">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="sfE-MX-Yet" appends="YES" id="HNM-Rb-VBb"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YyL-z9-h70" customClass="LSStoreListHeadView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="tHc-mC-cmr"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fjK-lS-7gG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="44" id="9Ox-wR-w0D"/>
+                <constraint firstAttribute="bottom" secondItem="we8-wl-oYG" secondAttribute="bottom" id="J8c-6W-FeK"/>
+                <constraint firstItem="we8-wl-oYG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Op0-gu-8k8"/>
+                <constraint firstAttribute="trailing" secondItem="YyL-z9-h70" secondAttribute="trailing" id="Pzf-Kn-xuv"/>
+                <constraint firstItem="we8-wl-oYG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Ztj-0o-N0l"/>
+                <constraint firstItem="YyL-z9-h70" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="blD-GQ-BKB"/>
+                <constraint firstAttribute="bottom" secondItem="fjK-lS-7gG" secondAttribute="bottom" id="jai-Dt-EDb"/>
+                <constraint firstAttribute="trailing" secondItem="fjK-lS-7gG" secondAttribute="trailing" id="nR0-tl-6UL"/>
+                <constraint firstItem="fjK-lS-7gG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nW8-UZ-yHA"/>
+                <constraint firstAttribute="trailing" secondItem="we8-wl-oYG" secondAttribute="trailing" id="pn2-pB-Q5h"/>
+                <constraint firstItem="YyL-z9-h70" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="vFN-LM-xTj"/>
+            </constraints>
+            <point key="canvasLocation" x="138.40000000000001" y="122.78860569715144"/>
+        </view>
+        <tapGestureRecognizer id="sfE-MX-Yet">
+            <connections>
+                <action selector="bgViewTap:" destination="-1" id="0tT-zZ-N94"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+</document>

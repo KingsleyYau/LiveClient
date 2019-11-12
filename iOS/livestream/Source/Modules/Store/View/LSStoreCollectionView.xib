@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSStoreCollectionView">
+            <connections>
+                <outlet property="collectionView" destination="OFT-dW-6hE" id="dB8-4B-i0U"/>
+                <outlet property="noDataTip" destination="HVC-KM-aFX" id="Fo4-iI-3ca"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="OFT-dW-6hE">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bol-we-TZT">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="20" minY="10" maxX="20" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No gifts&amp;flowers are added yet." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HVC-KM-aFX">
+                    <rect key="frame" x="73" y="279.5" width="229" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.2470588235" green="0.2470588235" blue="0.2470588235" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="HVC-KM-aFX" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-44" id="3c8-2c-Lf2"/>
+                <constraint firstItem="OFT-dW-6hE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3cX-LG-h2C"/>
+                <constraint firstItem="OFT-dW-6hE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="5CZ-YV-6Yx"/>
+                <constraint firstAttribute="bottom" secondItem="OFT-dW-6hE" secondAttribute="bottom" id="TBL-mn-7Le"/>
+                <constraint firstItem="HVC-KM-aFX" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ahe-4z-jcz"/>
+                <constraint firstAttribute="trailing" secondItem="OFT-dW-6hE" secondAttribute="trailing" id="qoB-uA-6T4"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="96.799999999999997" y="138.98050974512745"/>
+        </view>
+    </objects>
+</document>

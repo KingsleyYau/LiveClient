@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/liveroom_mulitgift_height"
+    android:id="@+id/ll_giftAnimContainer"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/ivGift"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_default_gift"/>
+
+    <LinearLayout
+        android:id="@+id/ll_gift_info"
+        android:layout_width="@dimen/liveroom_mulitgift_width"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="7dp">
+        <TextView
+            android:id="@+id/tvNickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:maxEms="6"
+            android:minEms="3"
+            android:singleLine="true" />
+        <TextView
+            android:id="@+id/tvGiftName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/send_mult_gift"
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

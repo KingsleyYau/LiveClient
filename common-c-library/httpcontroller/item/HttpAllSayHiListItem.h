@@ -46,7 +46,7 @@ public:
             }
             /* sendTime */
             if (root[LIVEROOM_ALLSAYHILIST_LIST_SENDTIME].isNumeric()) {
-                sendTime = root[LIVEROOM_ALLSAYHILIST_LIST_SENDTIME].asInt();
+                sendTime = root[LIVEROOM_ALLSAYHILIST_LIST_SENDTIME].asLong();
             }
             /* content */
             if (root[LIVEROOM_ALLSAYHILIST_LIST_CONTENT].isString()) {

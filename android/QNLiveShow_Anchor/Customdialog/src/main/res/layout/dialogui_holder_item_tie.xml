@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
-    <!--底部弹出菜单，文本控件-->
-    <TextView
-        android:id="@+id/tv_title"
+    <LinearLayout
+        android:id="@+id/ll_tie"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:textColor="@color/color_text_black"
-        android:gravity="center"
-        android:text="1"/>
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_text_black"
+            android:text="1"/>
+    </LinearLayout>
+
 
 </LinearLayout>

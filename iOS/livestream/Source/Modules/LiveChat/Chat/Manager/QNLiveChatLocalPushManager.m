@@ -142,9 +142,10 @@
 
         UILocalNotification *notification = [[UILocalNotification alloc] init];
         notification.alertBody = [NSString stringWithFormat:@"%@: %@", userInfo.userName, message];
+        notification.soundName = UILocalNotificationDefaultSoundName;
         notification.userInfo = @{ @"jumpurl" : [[[LiveUrlHandler shareInstance] createLiveChatByanchorId:msgItem.fromId anchorName:userInfo.userName] absoluteString] };
         if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-            UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
+            UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
             UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type categories:nil];
             [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
             notification.repeatInterval = NSCalendarUnitDay;

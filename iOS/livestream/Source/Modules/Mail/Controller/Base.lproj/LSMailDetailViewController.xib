@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -50,7 +48,7 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_TopBG" translatesAutoresizingMaskIntoConstraints="NO" id="4qB-fg-41j">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="281"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="O3x-84-1yZ" userLabel="Head Image View">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="O3x-84-1yZ" userLabel="Head Image View" customClass="LSUIImageViewTopFit">
                             <rect key="frame" x="150.5" y="47" width="74" height="74"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="O3x-84-1yZ" secondAttribute="height" multiplier="1:1" id="C8T-V1-kCY"/>
@@ -72,7 +70,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qg2-QA-nGF">
-                            <rect key="frame" x="20" y="137" width="335" height="20"/>
+                            <rect key="frame" x="166.5" y="137" width="42.5" height="20"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                             <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -276,14 +274,16 @@
                         <constraint firstItem="ZJv-0D-R0g" firstAttribute="leading" secondItem="quV-bO-7DR" secondAttribute="leading" constant="20" id="Vfe-eC-Pw5"/>
                         <constraint firstItem="0PN-Cz-SU5" firstAttribute="leading" secondItem="quV-bO-7DR" secondAttribute="leading" constant="20" id="WCR-fM-Pxc"/>
                         <constraint firstItem="2Rv-fg-cOR" firstAttribute="leading" secondItem="qFn-PF-zk6" secondAttribute="leading" id="WMC-8V-OtX"/>
-                        <constraint firstAttribute="trailing" secondItem="Qg2-QA-nGF" secondAttribute="trailing" constant="20" id="Wk6-bi-MOe"/>
+                        <constraint firstItem="Qg2-QA-nGF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="quV-bO-7DR" secondAttribute="leading" constant="20" id="XZb-Lu-exF"/>
                         <constraint firstItem="4qB-fg-41j" firstAttribute="top" secondItem="quV-bO-7DR" secondAttribute="top" id="YBF-HF-5nR"/>
                         <constraint firstItem="GIl-eB-7zh" firstAttribute="trailing" secondItem="O3x-84-1yZ" secondAttribute="trailing" id="aQP-gZ-4pZ"/>
+                        <constraint firstItem="Qg2-QA-nGF" firstAttribute="centerX" secondItem="quV-bO-7DR" secondAttribute="centerX" id="bFz-eJ-PN5"/>
                         <constraint firstItem="2Rv-fg-cOR" firstAttribute="leading" secondItem="quV-bO-7DR" secondAttribute="leading" id="bxp-Za-AF0"/>
                         <constraint firstAttribute="trailing" secondItem="p7h-GM-Woa" secondAttribute="trailing" id="eaO-W3-7Dr"/>
                         <constraint firstItem="O3x-84-1yZ" firstAttribute="top" secondItem="quV-bO-7DR" secondAttribute="top" constant="47" id="fUj-a5-h8L"/>
                         <constraint firstItem="HBp-uz-IbB" firstAttribute="top" secondItem="p7h-GM-Woa" secondAttribute="top" id="fWn-CD-jbp"/>
                         <constraint firstItem="GIl-eB-7zh" firstAttribute="leading" secondItem="O3x-84-1yZ" secondAttribute="leading" id="fef-bK-pZk"/>
+                        <constraint firstItem="bnk-41-Lvy" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Qg2-QA-nGF" secondAttribute="trailing" constant="5" id="hei-x5-6eK"/>
                         <constraint firstAttribute="trailing" secondItem="HBp-uz-IbB" secondAttribute="trailing" id="kxe-Gr-fcr"/>
                         <constraint firstItem="O3x-84-1yZ" firstAttribute="centerX" secondItem="quV-bO-7DR" secondAttribute="centerX" id="mrt-fT-lJ4"/>
                         <constraint firstAttribute="trailing" secondItem="ZJv-0D-R0g" secondAttribute="trailing" constant="20" id="nx5-uF-Joe"/>
@@ -294,7 +294,6 @@
                         <constraint firstItem="Qg2-QA-nGF" firstAttribute="top" secondItem="O3x-84-1yZ" secondAttribute="bottom" constant="16" id="sdv-Sz-w8U"/>
                         <constraint firstAttribute="trailing" secondItem="LAr-oa-1ME" secondAttribute="trailing" id="sg1-Ta-ntb"/>
                         <constraint firstItem="4qB-fg-41j" firstAttribute="leading" secondItem="quV-bO-7DR" secondAttribute="leading" id="wBM-eo-Oon"/>
-                        <constraint firstItem="Qg2-QA-nGF" firstAttribute="leading" secondItem="quV-bO-7DR" secondAttribute="leading" constant="20" id="zNS-xY-Imr"/>
                         <constraint firstItem="aWZ-rS-ELh" firstAttribute="top" secondItem="p7h-GM-Woa" secondAttribute="bottom" id="zzi-ag-Hid"/>
                     </constraints>
                 </scrollView>
@@ -307,12 +306,12 @@
                 <constraint firstItem="quV-bO-7DR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hQK-eC-tVd"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="24.5" y="50.5"/>
+            <point key="canvasLocation" x="23.4375" y="50.176056338028168"/>
         </view>
     </objects>
     <resources>
-        <image name="Default_Img_Lady_HangOut" width="187" height="187"/>
-        <image name="LS_BtnBG_O" width="20" height="52"/>
+        <image name="Default_Img_Lady_HangOut" width="187.5" height="187.5"/>
+        <image name="LS_BtnBG_O" width="20.5" height="52"/>
         <image name="Mail_Reply_Button" width="26" height="26"/>
         <image name="Mail_TopBG" width="377" height="281"/>
     </resources>

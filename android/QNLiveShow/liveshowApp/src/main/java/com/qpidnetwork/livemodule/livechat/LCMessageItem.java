@@ -98,6 +98,10 @@ public class LCMessageItem implements Serializable{
 	 */
 	public InviteStatusType inviteType = InviteStatusType.INVITE_TYPE_CHAT;
 	/**
+	 * 用于区分普通女士邀请消息和冒泡主动发送邀请，在判断是否能回复消息中使用
+	 */
+	public boolean isBubbleSendInvite = false;
+	/**
 	 * 文本item
 	 */
 	private LCTextItem textItem;
@@ -145,6 +149,7 @@ public class LCMessageItem implements Serializable{
 	 * 服务器数据库当前时间
 	 */
 	static private int mDbTime = 0;
+
 	/**
 	 * 发送接收错误类型
 	 * (本地用 add by Jagger 2018-11-21)
@@ -352,12 +357,14 @@ public class LCMessageItem implements Serializable{
 				LCPhotoItem photoItem = new LCPhotoItem();
 				// 男士端发送的为已付费
 				boolean photoCharge = (this.sendType == SendType.Send ? true : record.photoCharge);
+				boolean isManSend = (this.sendType == SendType.Send ? true : false);
 				photoItem.init(
 						photoMgr
 						, record.photoId
 						, ""
 						, record.photoDesc
-						, photoCharge);
+						, photoCharge
+						, isManSend);
 				setPhotoItem(photoItem);
 				result = true;
 			}
@@ -379,6 +386,8 @@ public class LCMessageItem implements Serializable{
 			if (null != record.videoId)
 			{
 				LCVideoItem videoItem = new LCVideoItem();
+				// 男士端发送的为已付费
+				boolean videoCharge = (this.sendType == SendType.Send ? true : record.photoCharge);
 				videoItem.init(
 						record.videoId
 						, record.videoSendId
@@ -387,7 +396,7 @@ public class LCMessageItem implements Serializable{
 						, videoMgr.getVideoPhotoPath(userId, record.videoId, inviteId, LCRequestJniLiveChat.VideoPhotoType.Default)
 						, ""
 						, videoMgr.getVideoPath(userId, record.videoId, inviteId)
-						, record.videoCharge);
+						, videoCharge);
 				setVideoItem(videoItem);
 				result = true;
 			}

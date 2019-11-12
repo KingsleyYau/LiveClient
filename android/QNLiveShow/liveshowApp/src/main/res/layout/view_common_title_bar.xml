@@ -68,6 +68,7 @@
     android:id="@+id/fl_commTitleBar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/actionbar_height"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/theme_default_white">
 
     <!-- 返回 -->
@@ -82,6 +83,7 @@
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/ll_title_body"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 主布局 -->
@@ -90,7 +92,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center"
         app:layout_constraintLeft_toRightOf="@+id/iv_commBack"
@@ -103,21 +104,78 @@
             android:layout_height="@dimen/live_size_40dp"
             android:layout_marginRight="@dimen/live_size_8dp"
             android:visibility="gone"
+            tools:visibility="visible"
             fresco:backgroundImage="@color/black4"/>
 
         <!-- 标题文字 -->
-        <TextView
-            android:id="@+id/tv_commTitle"
+        <!--2019/08/01 Hardy-->
+        <!--
+            RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:lines="1"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="@color/theme_default_black" />
+            是为了在无头像和右边 loading 时，纯标题栏可以居中显示，不能改成 match_parent
+        -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
+            <TextView
+                android:id="@+id/tv_commTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:lines="1"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:focusable="true"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/app_name"
+                tools:text="哈哈哈哈哈哈"
+                android:textColor="@color/theme_default_black" />
+                <!--该间距，在基类 Act 里的代码动态设置，避免写死该间距，导致不存在 loading 时，标题不居中-->
+                <!--android:paddingRight="@dimen/live_size_38dp"-->
+
+            <ProgressBar
+                android:id="@+id/pb_commTitle_loading"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:indeterminateBehavior="repeat"
+                android:layout_alignRight="@+id/tv_commTitle"
+                android:indeterminateDrawable="@drawable/live_loading_progress"
+                android:indeterminateDuration="1000"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:scrollbarStyle="insideInset" />
+        </RelativeLayout>
+
+        <!--old-->
+        <!--<TextView-->
+            <!--android:id="@+id/tv_commTitle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:lines="1"-->
+            <!--android:clickable="true"-->
+            <!--android:ellipsize="end"-->
+            <!--android:focusable="true"-->
+            <!--android:gravity="center"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="@string/app_name"-->
+            <!--tools:text="你按嗨嗨嗨啊哈里还好看卡精神可嘉阿克苏阿卡丽社交恐惧拉你按嗨嗨嗨啊哈里还好看卡精神可嘉"-->
+            <!--android:textColor="@color/theme_default_black" />-->
+
+        <!--<ProgressBar-->
+            <!--android:id="@+id/pb_commTitle_loading"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:indeterminateBehavior="repeat"-->
+            <!--android:indeterminateDrawable="@drawable/live_loading_progress"-->
+            <!--android:indeterminateDuration="1000"-->
+            <!--android:layout_marginLeft="@dimen/live_size_10dp"-->
+            <!--android:visibility="gone"-->
+            <!--tools:visibility="visible"-->
+            <!--android:scrollbarStyle="insideInset" />-->
     </LinearLayout>
 
     <!-- 右边布局 -->
@@ -128,6 +186,7 @@
         android:minWidth="@dimen/actionbar_height"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@+id/ll_title_body"
         fresco:layout_constraintEnd_toEndOf="parent">
 
     </LinearLayout>

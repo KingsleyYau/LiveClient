@@ -259,6 +259,8 @@ HttpClient::HttpClient() {
 	mpCURL = NULL;
 	mUrl = "";
 	mContentType = "";
+    
+    mIsAborted = false;
 }
 
 HttpClient::~HttpClient() {
@@ -803,7 +805,11 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 	cookie = GetCookies(host);
 	FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Request( this : %p, Cookie Recv : %s )", this, cookie.c_str());
 
-	bFlag = (res == CURLE_OK);
+    // alex, 2019-09-21, 当res = CURLE_ABORTED_BY_CALLBACK 和不是下载文件时，都算http成功了
+    if (res == CURLE_ABORTED_BY_CALLBACK && !entiy->mIsDownloadFile) {
+        mIsAborted = true;
+    }
+    bFlag = (res == CURLE_OK) || (res == CURLE_ABORTED_BY_CALLBACK && !entiy->mIsDownloadFile);
     FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_MSG, "HttpClient::Request( this : %p, bFlag : %s , res : %d )", this, bFlag?"true":"false", res);
 
 	return bFlag;
@@ -889,7 +895,7 @@ size_t HttpClient::HttpProgress(double downloadTotal, double downloadNow, double
         
 //		if( downloadTotal != downloadNow && mdDownloadLast != -1 &&  mdDownloadLast == downloadNow ) {
             if (downloadTotal == 0 || downloadTotal != downloadNow) {
-                if (mdDownloadLast != -1 && mdDownloadLast == downloadNow) {
+                if (mdDownloadLast != 0 && mdDownloadLast == downloadNow) {
                     if( totalTime - mdDownloadLastTime > mdDownloadTimeout ) {
                         // DWONLOAD_TIMEOUT no receive data, download timeout
                         FileLog(LIVESHOW_HTTP_LOG, "HttpClient::HttpProgress( download timeout )");

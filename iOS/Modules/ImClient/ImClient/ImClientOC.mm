@@ -45,7 +45,7 @@ class ImClientCallback;
 
 - (void)onRecvRoomKickoffNotice:(const string &)roomId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg credit:(double)credit item:(IMAuthorityItem)item;
 
-- (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit;
+- (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit errType:(LCC_ERR_TYPE)errType;
 
 - (void)onRecvCreditNotice:(const string &)roomId credit:(double)credit;
 
@@ -58,6 +58,8 @@ class ImClientCallback;
 - (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg manPushUrl:(const list<string> &)manPushUrl;
 
 - (void)onGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg item:(const PrivateInviteItem &)item privItem:(const IMAuthorityItem&)privItem;
+
+- (void)onRecvPublicRoomFreeMsgNotice:(const string &)roomId message:(const string &)message;
 
 #pragma mark - 直播间文本消息信息
 
@@ -234,9 +236,9 @@ class ImClientCallback : public IImClientListener {
         }
     }
 
-    virtual void OnRecvLackOfCreditNotice(const string &roomId, const string &msg, double credit) override {
+    virtual void OnRecvLackOfCreditNotice(const string &roomId, const string &msg, double credit, LCC_ERR_TYPE err) override {
         if (nil != clientOC) {
-            [clientOC onRecvLackOfCreditNotice:roomId msg:msg credit:credit];
+            [clientOC onRecvLackOfCreditNotice:roomId msg:msg credit:credit errType:err];
         }
     }
 
@@ -283,11 +285,19 @@ class ImClientCallback : public IImClientListener {
         }
     };
 
+    virtual void OnRecvPublicRoomFreeMsgNotice(const string& roomId, const string& message) override {
+        if (nil != clientOC) {
+            [clientOC onRecvPublicRoomFreeMsgNotice:roomId message:message];
+        }
+    }
+    
     virtual void OnRecvSendSystemNotice(const string &roomId, const string &msg, const string &link, IMSystemType type) override {
         if (nil != clientOC) {
             [clientOC onRecvSendSystemNotice:roomId msg:msg link:link type:type];
         }
     }
+    
+    
 
     // ------------- 直播间点赞 -------------
     virtual void OnSendGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) override {
@@ -714,7 +724,7 @@ class ImClientCallback : public IImClientListener {
             strUserId = [userId UTF8String];
         }
 
-        result = self.client->PublicRoomIn(reqId, strUserId);
+        result = self.client->PublicRoomIn(reqId, strUserId, YES);
     }
     return result;
 }
@@ -1319,6 +1329,20 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
+- (void)onRecvPublicRoomFreeMsgNotice:(const string &)roomId message:(const string &)message {
+    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString *nsMessage = [NSString stringWithUTF8String:message.c_str()];
+    
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvPublicRoomFreeMsgNotice:message:)]) {
+                [delegate onRecvPublicRoomFreeMsgNotice:nsRoomId message:nsMessage];
+            }
+        }
+    }
+}
+
 #pragma mark - 直播间接收操作回调
 
 - (void)onRecvRoomCloseNotice:(const string &)roomId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg priv:(const IMAuthorityItem &)item {
@@ -1423,15 +1447,15 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-- (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit {
+- (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit errType:(LCC_ERR_TYPE)errType {
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString *nsMsg = [NSString stringWithUTF8String:msg.c_str()];
 
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onRecvLackOfCreditNotice:msg:credit:)]) {
-                [delegate onRecvLackOfCreditNotice:nsRoomId msg:nsMsg credit:credit];
+            if ([delegate respondsToSelector:@selector(onRecvLackOfCreditNotice:msg:credit:errType:)]) {
+                [delegate onRecvLackOfCreditNotice:nsRoomId msg:nsMsg credit:credit errType:errType];
             }
         }
     }

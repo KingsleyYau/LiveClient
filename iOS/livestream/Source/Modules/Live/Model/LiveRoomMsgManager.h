@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MsgItem.h"
 #import "RoomStyleItem.h"
+#import "LSImageViewLoader.h"
 
 @interface LiveRoomMsgManager : NSObject
 

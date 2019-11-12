@@ -19,34 +19,34 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="xCJ-i6-hgv">
-                        <rect key="frame" x="20" y="16" width="40" height="40"/>
+                        <rect key="frame" x="26" y="16" width="40" height="40"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="40" id="DN0-mx-dsN"/>
                             <constraint firstAttribute="width" secondItem="xCJ-i6-hgv" secondAttribute="height" multiplier="1:1" id="vZX-cr-Ej6"/>
                         </constraints>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Is_Reply" translatesAutoresizingMaskIntoConstraints="NO" id="BYb-TB-t3R">
-                        <rect key="frame" x="12" y="8" width="16" height="16"/>
+                        <rect key="frame" x="7" y="28" width="16" height="16"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iMR-JE-eeF">
-                        <rect key="frame" x="17" y="13" width="10" height="10"/>
-                        <color key="backgroundColor" red="1" green="0.20679030879999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <rect key="frame" x="8" y="32" width="8" height="8"/>
+                        <color key="backgroundColor" red="0.16470588235294117" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="iMR-JE-eeF" secondAttribute="height" multiplier="1:1" id="TzX-MC-QsE"/>
-                            <constraint firstAttribute="width" constant="10" id="fDV-2g-oXH"/>
+                            <constraint firstAttribute="width" constant="8" id="fDV-2g-oXH"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                        <color key="textColor" red="1" green="0.2784313725" blue="0.2784313725" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" red="0.16470588235294117" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randyfdhssdfgfghdfdfgghdfdfg" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nyH-We-fIh">
-                        <rect key="frame" x="76" y="16" width="159" height="19.5"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                        <rect key="frame" x="82" y="16" width="127" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="gjldfjgldjgjdfgdojfgdfgodlgjkdgjkdjghdjgdlgdf;jgldkfgjdlg..." textAlignment="natural" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vwU-gl-H2f">
-                        <rect key="frame" x="76" y="39.5" width="160" height="17"/>
+                        <rect key="frame" x="82" y="39.5" width="160" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="160" id="2ix-gP-fEQ"/>
                         </constraints>
@@ -55,61 +55,84 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Image" translatesAutoresizingMaskIntoConstraints="NO" id="OCU-pu-bUD">
-                        <rect key="frame" x="241" y="19.5" width="12" height="12"/>
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="OCU-pu-bUD" secondAttribute="height" multiplier="1:1" id="d9K-d8-bC0"/>
-                            <constraint firstAttribute="width" constant="12" id="gHx-yx-nKu"/>
-                        </constraints>
-                    </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Video" translatesAutoresizingMaskIntoConstraints="NO" id="hrY-rj-d3t">
-                        <rect key="frame" x="258" y="19.5" width="12" height="12"/>
+                        <rect key="frame" x="331" y="39" width="12" height="12"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yesterday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fve-yd-4y3">
-                        <rect key="frame" x="305" y="18.5" width="56" height="14.5"/>
+                        <rect key="frame" x="304" y="18.5" width="56" height="14.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Online" translatesAutoresizingMaskIntoConstraints="NO" id="nQb-eE-xme">
+                        <rect key="frame" x="215" y="18.5" width="40" height="14"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="5D5-jI-HNm"/>
+                        </constraints>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Follow" translatesAutoresizingMaskIntoConstraints="NO" id="MHB-mb-oV2">
+                        <rect key="frame" x="261" y="18.5" width="14" height="14"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="MHB-mb-oV2" secondAttribute="height" multiplier="1:1" id="Hxg-I0-ANd"/>
+                            <constraint firstAttribute="width" constant="14" id="ZGj-Hd-Ek4"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Video" translatesAutoresizingMaskIntoConstraints="NO" id="hrY-rj-d3t">
+                        <rect key="frame" x="348" y="39" width="12" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="12" id="6yH-mi-pSu"/>
+                            <constraint firstAttribute="width" secondItem="hrY-rj-d3t" secondAttribute="height" multiplier="1:1" id="sI9-el-bna"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="iMR-JE-eeF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="2Mi-fO-9dl"/>
+                    <constraint firstItem="BYb-TB-t3R" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="3al-B8-8Ng"/>
+                    <constraint firstItem="hrY-rj-d3t" firstAttribute="top" secondItem="fve-yd-4y3" secondAttribute="bottom" constant="6" id="4Fk-aX-eCM"/>
+                    <constraint firstItem="MHB-mb-oV2" firstAttribute="leading" secondItem="nQb-eE-xme" secondAttribute="trailing" constant="6" id="BFf-zh-VfV"/>
                     <constraint firstItem="hrY-rj-d3t" firstAttribute="leading" secondItem="OCU-pu-bUD" secondAttribute="trailing" constant="5" id="DtF-Ln-arz"/>
                     <constraint firstItem="nyH-We-fIh" firstAttribute="top" secondItem="xCJ-i6-hgv" secondAttribute="top" id="EkO-1q-UeX"/>
-                    <constraint firstItem="xCJ-i6-hgv" firstAttribute="top" secondItem="iMR-JE-eeF" secondAttribute="top" constant="3" id="FTZ-cx-Odk"/>
-                    <constraint firstItem="BYb-TB-t3R" firstAttribute="centerX" secondItem="xCJ-i6-hgv" secondAttribute="leading" id="Qlp-Lb-lXE"/>
+                    <constraint firstItem="nQb-eE-xme" firstAttribute="leading" secondItem="nyH-We-fIh" secondAttribute="trailing" constant="6" id="GZ9-Kg-HQD"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MHB-mb-oV2" secondAttribute="trailing" constant="100" id="PQm-Wq-kZE"/>
+                    <constraint firstItem="MHB-mb-oV2" firstAttribute="centerY" secondItem="nQb-eE-xme" secondAttribute="centerY" id="RIV-D2-lYs"/>
                     <constraint firstItem="vwU-gl-H2f" firstAttribute="top" secondItem="nyH-We-fIh" secondAttribute="bottom" constant="4" id="V8C-Dp-x0l"/>
-                    <constraint firstItem="xCJ-i6-hgv" firstAttribute="leading" secondItem="iMR-JE-eeF" secondAttribute="leading" constant="3" id="WcJ-sm-t5g"/>
-                    <constraint firstItem="fve-yd-4y3" firstAttribute="centerY" secondItem="hrY-rj-d3t" secondAttribute="centerY" id="Y0e-Qa-dyV"/>
-                    <constraint firstItem="OCU-pu-bUD" firstAttribute="centerY" secondItem="nyH-We-fIh" secondAttribute="centerY" id="Z7u-0G-vb7"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nyH-We-fIh" secondAttribute="trailing" constant="140" id="hBy-Cl-zYe"/>
-                    <constraint firstItem="OCU-pu-bUD" firstAttribute="leading" secondItem="nyH-We-fIh" secondAttribute="trailing" constant="6" id="hHM-oU-sO4"/>
-                    <constraint firstItem="xCJ-i6-hgv" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="hJj-SO-OPg"/>
-                    <constraint firstItem="BYb-TB-t3R" firstAttribute="centerY" secondItem="xCJ-i6-hgv" secondAttribute="top" id="hld-h9-iPS"/>
-                    <constraint firstItem="hrY-rj-d3t" firstAttribute="centerY" secondItem="OCU-pu-bUD" secondAttribute="centerY" id="uYE-Tn-hPr"/>
+                    <constraint firstItem="nQb-eE-xme" firstAttribute="centerY" secondItem="nyH-We-fIh" secondAttribute="centerY" id="W57-0Q-gdN"/>
+                    <constraint firstItem="xCJ-i6-hgv" firstAttribute="leading" secondItem="iMR-JE-eeF" secondAttribute="trailing" constant="10" id="YP2-KU-wch"/>
+                    <constraint firstItem="MHB-mb-oV2" firstAttribute="centerY" secondItem="nQb-eE-xme" secondAttribute="centerY" id="ZeA-wO-Mfy"/>
+                    <constraint firstItem="fve-yd-4y3" firstAttribute="centerY" secondItem="nyH-We-fIh" secondAttribute="centerY" id="Zv6-J6-84w"/>
+                    <constraint firstItem="iMR-JE-eeF" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="nRI-gI-BWe"/>
                     <constraint firstItem="xCJ-i6-hgv" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="uum-1C-McX"/>
-                    <constraint firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" constant="14" id="x6d-qd-550"/>
+                    <constraint firstItem="BYb-TB-t3R" firstAttribute="leading" secondItem="iMR-JE-eeF" secondAttribute="leading" constant="-1" id="w8S-qT-VeI"/>
+                    <constraint firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" constant="15" id="x6d-qd-550"/>
+                    <constraint firstItem="hrY-rj-d3t" firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" id="xeR-DR-83Q"/>
                     <constraint firstItem="nyH-We-fIh" firstAttribute="leading" secondItem="xCJ-i6-hgv" secondAttribute="trailing" constant="16" id="z5n-Fc-Mvy"/>
+                    <constraint firstItem="hrY-rj-d3t" firstAttribute="top" secondItem="OCU-pu-bUD" secondAttribute="top" id="zUB-rg-Xa5"/>
                     <constraint firstItem="vwU-gl-H2f" firstAttribute="leading" secondItem="nyH-We-fIh" secondAttribute="leading" id="zxm-jg-sWZ"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="anchorNameLabel" destination="nyH-We-fIh" id="y7H-fK-Drf"/>
                 <outlet property="contentLabel" destination="vwU-gl-H2f" id="T9G-fR-Fgi"/>
+                <outlet property="followImageView" destination="MHB-mb-oV2" id="XsP-tN-qxN"/>
                 <outlet property="headImage" destination="xCJ-i6-hgv" id="NmD-Gp-OWM"/>
+                <outlet property="onLineImageView" destination="nQb-eE-xme" id="cvC-Ai-pdc"/>
+                <outlet property="onlineImageViewWidth" destination="5D5-jI-HNm" id="7du-Bd-V6i"/>
                 <outlet property="receiveImageIcon" destination="OCU-pu-bUD" id="w6b-hl-UBS"/>
-                <outlet property="receiveImageIconWidth" destination="gHx-yx-nKu" id="OG4-et-FjR"/>
                 <outlet property="receiveVideoIcon" destination="hrY-rj-d3t" id="Ycr-Bu-ghW"/>
                 <outlet property="receiveVideoIconLeft" destination="DtF-Ln-arz" id="mhq-1G-1hQ"/>
+                <outlet property="receiveVideoIconWidth" destination="6yH-mi-pSu" id="t2t-BR-ZC1"/>
                 <outlet property="redLabel" destination="iMR-JE-eeF" id="cX1-ds-gG8"/>
                 <outlet property="replyImage" destination="BYb-TB-t3R" id="cyE-rh-58B"/>
                 <outlet property="timeLabel" destination="fve-yd-4y3" id="zQ2-9n-bmB"/>
             </connections>
-            <point key="canvasLocation" x="-11" y="35"/>
+            <point key="canvasLocation" x="-12" y="34.182908545727138"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="Default_Img_Lady_HangOut" width="187.5" height="187.5"/>
         <image name="Mail_Is_Reply" width="16" height="16"/>
+        <image name="Mail_Receive_Follow" width="14" height="14"/>
         <image name="Mail_Receive_Image" width="12" height="12"/>
+        <image name="Mail_Receive_Online" width="40" height="14"/>
         <image name="Mail_Receive_Video" width="12" height="12"/>
     </resources>
 </document>

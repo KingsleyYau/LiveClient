@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "LSGoogleAnalyticsViewController.h"
-#import "PlayViewController.h"
+#import "LSVIPInputViewController.h"
 #import "LiveRoom.h"
 
 #import "LSUITapImageView.h"
@@ -39,7 +39,7 @@
 /**
  播放控制器
  */
-@property (nonatomic, strong) PlayViewController *playVC;
+@property (nonatomic, strong) LSVIPInputViewController *playVC;
 
 #pragma mark - 标题栏
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
@@ -51,23 +51,17 @@
 @property (strong, nonatomic) ChardTipView *tipView;
 
 #pragma mark - 标题栏背景
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleBgImageTop;
+
+@property (weak, nonatomic) IBOutlet UILabel *roomTpyeLabel;
 
 #pragma mark - 女士头像(控件)
 @property (weak, nonatomic) IBOutlet UIView *ladyHeadView;
 @property (weak, nonatomic) IBOutlet LSUITapImageView *ladyImageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *followBtnWidth;
 @property (weak, nonatomic) IBOutlet UILabel *laddyNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ladyIdLabel;
 
-
-#pragma mark - 亲密度控件
-@property (weak, nonatomic) IBOutlet UIView *intimacyHeadView;
-@property (weak, nonatomic) IBOutlet UIImageView *intimacyManImageView;
-@property (weak, nonatomic) IBOutlet LSUITapImageView *intimacyLadyImageView;
-@property (weak, nonatomic) IBOutlet LSUITapImageView *intimacyImageView;
 
 #pragma mark - 按钮
-@property (weak, nonatomic) IBOutlet UIButton *followBtn;
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 
 @end

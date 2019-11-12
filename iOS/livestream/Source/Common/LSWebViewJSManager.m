@@ -24,7 +24,7 @@
 #define LIVEAPP_CALLBACK_APPPUBLICGAEVENT_CATEGORY @"category"
 #define LIVEAPP_CALLBACK_APPPUBLICGAEVENT_LABEL @"label"
 // js回调的函数名是callbackAppCloseWebView
-#define LIVEAPP_CALLBACK_APPCLOSEWEBVIEW @"callbackAppCloseWebView"
+#define LIVEAPP_CALLBACK_APPCLOSEWEBVIEW @"callbackCloseWebView"
 // js回调的函数名是callbackWebReload
 #define LIVEAPP_CALLBACK_WEBRELOAD @"callbackWebReload"
 #define LIVEAPP_CALLBACK_WEBRELOAD_ERROR @"Errno"

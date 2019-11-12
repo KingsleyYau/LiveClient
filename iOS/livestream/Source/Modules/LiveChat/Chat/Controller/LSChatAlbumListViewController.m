@@ -14,16 +14,18 @@
 #import "LSImageViewLoader.h"
 #import "Masonry.h"
 #import "LSChatPhotoPreviewViewController.h"
-@interface LSChatAlbumListViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface LSChatAlbumListViewController ()<UICollectionViewDelegate, UICollectionViewDataSource,ChatPhotoDataManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) QNChatTitleView *titleView;
+@property (nonatomic, strong) NSArray * array;
 @end
 
 @implementation LSChatAlbumListViewController
 
 - (void)dealloc {
     NSLog(@"LSChatAlbumListViewController::dealloc");
+    [[LSChatPhotoDataManager manager] removeDelegate:self];
 }
 
 - (void)viewDidLoad {
@@ -32,6 +34,7 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     
+    [[LSChatPhotoDataManager manager] addDelegate:self];
     // 设置布局样式
     UICollectionViewFlowLayout *flowlayout = [[UICollectionViewFlowLayout alloc] init];
     flowlayout.minimumLineSpacing = 0;
@@ -43,6 +46,8 @@
     
     UINib *nib = [UINib nibWithNibName:@"LSChatPhotoCollectionViewCell" bundle:[LiveBundle mainBundle]];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:[LSChatPhotoCollectionViewCell cellIdentifier]];
+    
+    self.array = [LSChatPhotoDataManager manager].photoPathArray;
     
     [self.collectionView reloadData];
 }
@@ -68,6 +73,11 @@
     self.title = @"Album";
 }
 
+- (void)chatPhotoDataManagerReloadData {
+    self.array = [LSChatPhotoDataManager manager].photoPathArray;
+    [self.collectionView reloadData];
+}
+
 - (void)backBtnDid:(UIButton *)btn {
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -79,24 +89,25 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [LSChatPhotoDataManager manager].photoPathArray.count;
+    return self.array.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     LSChatPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[LSChatPhotoCollectionViewCell cellIdentifier] forIndexPath:indexPath];
-    
-    LSChatPhoneAlbumPhoto *albumPhoto = [[LSChatPhotoDataManager manager].photoPathArray objectAtIndex:indexPath.row];
-    
-    [[PHImageManager defaultManager] requestImageForAsset:albumPhoto.asset
-                                               targetSize:CGSizeMake(screenSize.width/2,screenSize.width/2)
-                                              contentMode:PHImageContentModeAspectFill
-                                                  options:nil
-                                            resultHandler:^(UIImage *result, NSDictionary *info) {
-                                                if (result) {
-                                                    [cell.photoImageView setImage:result];
-                                                }
-                                            }];
-    
+    if (self.array.count  > 0) {
+        LSChatPhoneAlbumPhoto *albumPhoto = [self.array objectAtIndex:indexPath.row];
+        
+        [[PHImageManager defaultManager] requestImageForAsset:albumPhoto.asset
+                                                   targetSize:CGSizeMake(screenSize.width/2,screenSize.width/2)
+                                                  contentMode:PHImageContentModeAspectFill
+                                                      options:nil
+                                                resultHandler:^(UIImage *result, NSDictionary *info) {
+                                                    if (result) {
+                                                        [cell.photoImageView setImage:result];
+                                                    }
+                                                }];
+    }
+
     return cell;
 }
 

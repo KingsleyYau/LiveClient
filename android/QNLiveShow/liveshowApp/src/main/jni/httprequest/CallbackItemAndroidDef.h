@@ -31,6 +31,9 @@
 #define TALENT_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/TalentInfoItem"
 #define TALENT_INVITE_ITEM_CLASS        "com/qpidnetwork/livemodule/httprequest/item/TalentInviteItem"
 #define AUDIENCE_BASE_INFO_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/AudienceBaseInfoItem"
+#define LSCONTACT_ITEM_CLASS 	        "com/qpidnetwork/livemodule/httprequest/item/ContactItem"
+#define PAGERECOMMEND_ITEM_CLASS 	    "com/qpidnetwork/livemodule/httprequest/item/PageRecommendItem"
+#define GIFTTYPE_ITEM_CLASS 	        "com/qpidnetwork/livemodule/httprequest/item/GiftTypeItem"
 
 /* 4.预约私密     */
 #define BOOK_INVITE_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/BookInviteItem"
@@ -47,6 +50,7 @@
 #define PACKAGE_RIDE_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/RideItem"
 #define PACKAGE_BIND_ANCHOR_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/BindAnchorItem"
 #define PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/VouchorAvailableInfoItem"
+#define PACKAGE_VOUCHOR_BACKPACKUNREAD_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/PackageUnreadCountItem"
 
 /* 6.其他    */
 #define OTHER_CONFIG_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/ConfigItem"
@@ -55,6 +59,7 @@
 #define OTHER_MAINUNREADNUM_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/MainUnreadNumItem"
 #define OTHER_LSPROFILE_ITEM_CLASS		    "com/qpidnetwork/livemodule/httprequest/item/LSProfileItem"
 #define OTHER_LSVERSIONCHECK_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/LSOtherVersionCheckItem"
+#define OTHER_LSLEFTCREDIT_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/LSLeftCreditItem"
 
 
 /* 8.多人互动 */
@@ -82,11 +87,39 @@
 #define LIVECHAT_THEME_ITEM_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/ThemeItem"
 
 
-///* 8.Other模块*/
+/* 8.Other模块*/
 #define OTHER_EMOTIONCONFIG_ITEM_CLASS    "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigItem"
 #define OTHER_EMOTIONCONFIG_TYPE_ITEM_CLASS        "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigTypeItem"
 #define OTHER_EMOTIONCONFIG_TAG_ITEM_CLASS        "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigTagItem"
 #define OTHER_EMOTIONCONFIG_EMOTION_ITEM_CLASS    "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigEmotionItem"
 #define OTHER_GETCOUNT_ITEM_CLASS        "com/qpidnetwork/livemodule/livechathttprequest/item/LCOtherGetCountItem"
+
+/* 14.SayHi模块*/
+#define SAYHI_SAYHIALLLISTINFO_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/SayHiAllListInfoItem"
+#define SAYHI_SAYHIALLLLIST_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/SayHiAllListItem"
+#define SAYHI_SAYHIDETAILANCHOR_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/SayHiDetailAnchorItem"
+#define SAYHI_SAYHIDETAIL_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/SayHiDetailItem"
+#define SAYHI_SAYHIDETAILRESPONSELIST_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/SayHiDetailResponseListItem"
+#define SAYHI_SAYHIRECOMMENDANCHOR_ITEM_CLASS 	    "com/qpidnetwork/livemodule/httprequest/item/SayHiRecommendAnchorItem"
+#define SAYHI_SAYHIRESOURCECONFIG_ITEM_CLASS 	    "com/qpidnetwork/livemodule/httprequest/item/SayHiResourceConfigItem"
+#define SAYHI_SAYHIRESPONSELISTINFO_ITEM_CLASS 	    "com/qpidnetwork/livemodule/httprequest/item/SayHiResponseListInfoItem"
+#define SAYHI_SAYHIRESPONSELIST_ITEM_CLASS 	        "com/qpidnetwork/livemodule/httprequest/item/SayHiResponseListItem"
+#define SAYHI_SAYHISENDINFO_ITEM_CLASS 	            "com/qpidnetwork/livemodule/httprequest/item/SayHiSendInfoItem"
+#define SAYHI_SAYHITEXT_ITEM_CLASS 	                "com/qpidnetwork/livemodule/httprequest/item/SayHiTextItem"
+#define SAYHI_SAYHITHEME_ITEM_CLASS 	            "com/qpidnetwork/livemodule/httprequest/item/SayHiThemeItem"
+
+/* 15.鲜花礼品模块*/
+#define FLOWERGIFT_FLOWERGIFT_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/LSFlowerGiftItem"
+#define FLOWERGIFT_STROREFLOWERGIFT_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/LSStoreFlowerGiftItem"
+#define FLOWERGIFT_FLOWERGIFTBASEINFO_ITEM_CLASS 	    "com/qpidnetwork/livemodule/httprequest/item/LSFlowerGiftBaseInfoItem"
+#define FLOWERGIFT_DELIVERY_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/LSDeliveryItem"
+#define FLOWERGIFT_RECIPIENTANCHORGIFT_ITEM_CLASS 	    "com/qpidnetwork/livemodule/httprequest/item/LSRecipientAnchorGiftItem"
+#define FLOWERGIFT_MYCART_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/LSMyCartItem"
+#define FLOWERGIFT_CHECKOUTGIFT_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/LSCheckoutGiftItem"
+#define FLOWERGIFT_GREETINGCARD_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/LSGreetingCardItem"
+#define FLOWERGIFT_CHECKOUT_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/LSCheckoutItem"
+
+/* 广告 */
+#define OTHER_ADWOMANLISTADVERT_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/LSAdWomanListAdvertItem"
 
 #endif /* CALLBACKITEMANDROIDDEF_H_ */

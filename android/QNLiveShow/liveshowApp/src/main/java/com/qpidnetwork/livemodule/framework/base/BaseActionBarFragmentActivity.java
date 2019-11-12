@@ -1,17 +1,18 @@
 package com.qpidnetwork.livemodule.framework.base;
 
+import android.app.ActionBar;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.transition.Slide;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,9 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity {
 
     protected View mBottomDivider;
 
+    // 2019/7/15 Hardy
+    protected ProgressBar mPbTitleLoading;
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -73,10 +77,25 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity {
         ll_title_right = findViewById(R.id.ll_title_right);
 
         mBottomDivider = (View) findViewById(R.id.bottomDivider);
+
+        // 2019/7/15 Hardy
+        mPbTitleLoading = findViewById(R.id.pb_commTitle_loading);
     }
 
+    /**
+     * 设入布局(Body)
+     * @param layoutResId
+     */
     protected void setCustomContentView(int layoutResId) {
         LayoutInflater.from(this).inflate(layoutResId, llContainer);
+        initCustomView();
+    }
+
+    /**
+     * 初始化布局
+     */
+    protected void initCustomView(){
+
     }
 
     public MaterialAppBar getCustomActionBar(String title, int txtColor) {
@@ -92,7 +111,7 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity {
         }
     }
 
-    protected void setTitle(String title, int txtColorResId) {
+    protected void setTitle(String title,@ColorRes int txtColorResId) {
         if (!TextUtils.isEmpty(title)) {
             tv_commTitle.setText(title);
         }
@@ -122,9 +141,9 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity {
 
         img_commTitle.setVisibility(View.VISIBLE);
 
-        //对齐方式(左上角对齐)
+        //对齐方式(中上对齐)
         PointF focusPoint = new PointF();
-        focusPoint.x = 0f;
+        focusPoint.x = 0.5f;
         focusPoint.y = 0f;
 
         //初始化圆角圆形参数对象
@@ -218,6 +237,19 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity {
     }
 
     /**
+     * 2019/07/15   Hardy
+     * 展示 or 隐藏标题栏的 loading view
+     * @param isShow    是否展示
+     */
+    protected void showOrHideTitleProgressLoading(boolean isShow){
+        mPbTitleLoading.setVisibility(isShow ? View.VISIBLE : View.GONE);
+
+        // 2019/8/1 Hardy
+        int titlePaddingRight = isShow ? mContext.getResources().getDimensionPixelSize(R.dimen.live_size_38dp) : 0;
+        tv_commTitle.setPadding(tv_commTitle.getPaddingLeft(), tv_commTitle.getPaddingTop(), titlePaddingRight, tv_commTitle.getPaddingBottom());
+    }
+
+    /**
      *
      * @param drawableId
      * @param onClickListener
@@ -233,6 +265,17 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity {
         layoutParams.width = getResources().getDimensionPixelSize(R.dimen.actionbar_backicon_height);
         layoutParams.height = getResources().getDimensionPixelSize(R.dimen.actionbar_backicon_height);
         imageView.setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 自定义TitleView
+     * @param customTitleView
+     */
+    protected void setCustomTitleView(View customTitleView){
+        ll_title_body.removeAllViews();
+        ll_title_body.addView(customTitleView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        ll_title_right.setVisibility(View.GONE);
     }
 
     @Override

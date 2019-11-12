@@ -87,6 +87,10 @@
 
 
 /**
+    livechat登录
+ */
+@property (nonatomic, assign) BOOL isLivechatLogin;
+/**
  *  获取实例
  *
  *  @return 实例

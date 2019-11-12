@@ -223,20 +223,17 @@ public class LiveChatMainActivity extends BaseActionBarFragmentActivity implemen
     public class MyPackageAdapter extends FragmentPagerAdapter {
 
         private String[] mTitles = null;
-        //        private HashMap<Integer, SoftReference<BaseFragment>> mLocalCache = null;
         private HashMap<Integer, SoftReference<ChatOrInvitationListFragment>> mLocalCache = null;
 
         public MyPackageAdapter(FragmentActivity activity) {
             super(activity.getSupportFragmentManager());
             mTitles = activity.getResources().getStringArray(R.array.LiveChatTab);
-//            mLocalCache = new HashMap<Integer, SoftReference<BaseFragment>>();
             mLocalCache = new HashMap<>();
         }
 
         @Override
         public Fragment getItem(int position) {
-//            SoftReference<BaseFragment> fragmentRefer = mLocalCache.get(Integer.valueOf(position));
-            SoftReference<ChatOrInvitationListFragment> fragmentRefer = mLocalCache.get(Integer.valueOf(position));
+            SoftReference<ChatOrInvitationListFragment> fragmentRefer = mLocalCache.get(position);
 
             if (fragmentRefer != null && fragmentRefer.get() != null) {
                 return fragmentRefer.get();
@@ -248,13 +245,13 @@ public class LiveChatMainActivity extends BaseActionBarFragmentActivity implemen
                     fragment = new ChatListFragment();
                     break;
 
-                case 1:
+                default:
                     fragment = new InvitationListFragment();
                     break;
             }
             fragment.setOnUnreadMsgListener(onInviteUnreadMsgListener);
 
-            mLocalCache.put(Integer.valueOf(position), new SoftReference<>(fragment));
+            mLocalCache.put(position, new SoftReference<>(fragment));
 
             return fragment;
         }

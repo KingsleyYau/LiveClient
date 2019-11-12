@@ -1,9 +1,5 @@
 package com.dou361.dialogui.bean;
 
-import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.view.Gravity;
-
 import java.io.Serializable;
 
 /**
@@ -31,8 +27,6 @@ public class TieBean implements Serializable {
     private int id;
     private String title;
     private boolean isSelect;
-    private int textColor = Color.BLACK;
-    private int textGravity = Gravity.LEFT;
 
     public TieBean(String title) {
         this.title = title;
@@ -65,21 +59,5 @@ public class TieBean implements Serializable {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    public void setColor(@ColorInt int color) {
-        textColor = color;
-    }
-
-    public int getColor() {
-        return textColor;
-    }
-
-    public void setGravity(int gravity){
-        textGravity = gravity;
-    }
-
-    public int getGravity() {
-        return textGravity;
     }
 }

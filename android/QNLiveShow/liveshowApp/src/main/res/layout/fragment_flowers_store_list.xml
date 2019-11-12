@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_baseListContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".liveshow.flowergift.store.FlowersStoreListFragment">
+
+    <!--  列表  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_flowers_type_name_item" />
+
+        <include
+            android:id="@+id/refreshRecyclerView"
+            layout="@layout/refresh_ball_recyclerview" />
+    </LinearLayout>
+
+    <!--  购物车  -->
+    <RelativeLayout
+        android:id="@+id/fg_flowers_store_list_cart_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/live_size_20dp"
+        android:layout_marginTop="@dimen/live_size_20dp"
+        android:layout_marginRight="@dimen/live_size_16dp"
+        android:layout_marginBottom="@dimen/live_size_20dp">
+
+        <FrameLayout
+            android:id="@+id/fg_flowers_store_list_ll_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_flowers_cart_bg_circle" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_flowers_cart" />
+
+            <TextView
+                android:id="@+id/fg_flowers_store_list_cart_tv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/live_size_10dp"
+                android:textColor="@color/red_light"
+                android:textSize="@dimen/live_size_12sp"
+                tools:text="99" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/fg_flowers_store_list_cart_tv_bubble_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/fg_flowers_store_list_ll_cart"
+            android:layout_toLeftOf="@+id/fg_flowers_store_list_ll_cart"
+            android:background="@drawable/bg_flowers_bubble"
+            android:gravity="center"
+            android:paddingLeft="@dimen/live_size_10dp"
+            android:paddingTop="@dimen/live_size_10dp"
+            android:paddingRight="@dimen/live_size_20dp"
+            android:paddingBottom="@dimen/live_size_10dp"
+            android:text="@string/check_my_selected_items"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            tools:visibility="visible" />
+    </RelativeLayout>
+
+    <!--  鲜花类型弹出 view  -->
+    <include
+        layout="@layout/layout_flowers_type"
+        android:visibility="gone" />
+</FrameLayout>

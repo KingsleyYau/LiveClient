@@ -143,7 +143,7 @@ public class LiveCleanCacheManager {
             }
         });
 
-        mDCleanCache = observable.subscribeOn(Schedulers.io())
+        mDCleanCache = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Boolean>() {
                     @Override
@@ -156,11 +156,12 @@ public class LiveCleanCacheManager {
 
                         onCleanCompleted();
 
+                        //清除完成，注销会自动关闭当前页面回主界面，弹出dialog会leakedwindow
                         // dialog
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setMessage("All cache has been clean!");
-                        builder.setPositiveButton(mContext.getString(R.string.common_btn_ok), null);
-                        builder.create().show();
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//                        builder.setMessage("All cache has been clean!");
+//                        builder.setPositiveButton(mContext.getString(R.string.common_btn_ok), null);
+//                        builder.create().show();
                     }
                 });
     }

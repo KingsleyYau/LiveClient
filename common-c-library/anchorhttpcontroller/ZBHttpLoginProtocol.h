@@ -29,6 +29,7 @@
 #define LADYLOGIN_DEVICEID		    "deviceid"
 #define LADYLOGIN_MODEL		        "model"
 #define LADYLOGIN_MANUFACTURER		"manufacturer"
+#define LADYLOGIN_DEVICENAME        "device_name"
 
 /**
  * 返回
@@ -186,6 +187,21 @@
  *  请求
  */
 #define SETAUTOPUSH_STATUS      "status"
+
+/* 3.9.获取主播当前直播间信息 */
+/* 接口路径 */
+#define GETCURRENTROOMINFO_PATH             "/lady/v1/getCurrentRoomInfo"
+
+/**
+ *  返回
+ */
+#define GETCURRENTROOMINFO_ANCHORID         "anchor_id"
+#define GETCURRENTROOMINFO_ROOMID           "room_id"
+#define GETCURRENTROOMINFO_ROOMTYPE         "room_type"
+#define GETCURRENTROOMINFO_USERINFO         "userInfo"
+#define GETCURRENTROOMINFO_USERINFO_USERID          "userid"
+#define GETCURRENTROOMINFO_USERINFO_NICKNAME        "nickname"
+#define GETCURRENTROOMINFO_USERINFO_PHOTOURL        "photourl"
 
 
 /* ########################    预约私密 模块  ######################## */

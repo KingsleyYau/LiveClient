@@ -40,7 +40,6 @@
  *
  *  @param handler  查询处理器
  *  @param products 查询结果(查询失败则返回nil)
- *  @param
  */
 - (void)getProductFinish:(LSAppStoreProductQueryHandler* _Nonnull)handler products:(NSArray<SKProduct*>* _Nullable)products;
 @end

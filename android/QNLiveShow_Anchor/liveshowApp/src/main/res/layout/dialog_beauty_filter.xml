@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/beauty_filter_dialog_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="@dimen/live_size_12dp">
+
+        <TextView
+            android:layout_width="@dimen/live_size_80dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_beauty_smooth"
+            android:drawablePadding="@dimen/live_size_8dp"
+            android:text="@string/smooth"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp" />
+
+        <SeekBar
+            android:id="@+id/dialog_beauty_filer_sb_smooth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:maxHeight="3dp"
+            android:progressDrawable="@drawable/sb_beauty_filter_bg"
+            android:thumb="@drawable/sb_beauty_filter_shape"
+            tools:progress="30" />
+
+        <TextView
+            android:id="@+id/dialog_beauty_filer_tv_smooth"
+            android:layout_width="@dimen/live_size_30dp"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            tools:text="50" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="@dimen/live_size_12dp">
+
+        <TextView
+            android:layout_width="@dimen/live_size_80dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_beauty_whiten"
+            android:drawablePadding="@dimen/live_size_8dp"
+            android:text="@string/whiten"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp" />
+
+        <SeekBar
+            android:id="@+id/dialog_beauty_filer_sb_whiten"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:maxHeight="3dp"
+            android:progressDrawable="@drawable/sb_beauty_filter_bg"
+            android:thumb="@drawable/sb_beauty_filter_shape"
+            tools:progress="50" />
+
+        <TextView
+            android:id="@+id/dialog_beauty_filer_tv_whiten"
+            android:layout_width="@dimen/live_size_30dp"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            tools:text="100" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dialog_beauty_filer_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="@dimen/live_size_14dp"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+</LinearLayout>

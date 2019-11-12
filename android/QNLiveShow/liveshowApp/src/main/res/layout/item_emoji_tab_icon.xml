@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_emojiContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_emoji"
+        android:layout_width="@dimen/live_emoji_item_icon_width"
+        android:layout_height="@dimen/live_emoji_item_icon_height"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_live_chat_emoji_default"
+        tools:src="@drawable/ic_live_emoji_pear" />
+    <!--        android:src="@drawable/ic_live_chat_emoji_default" -->
+    <!--        android:scaleType="fitCenter"-->
+
+    <View
+        android:id="@+id/view_blur"
+        android:layout_width="@dimen/live_emoji_item_icon_width"
+        android:layout_height="@dimen/live_emoji_item_icon_width"
+        android:layout_gravity="center"
+        android:background="@color/white_half" />
+</FrameLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -45,7 +45,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thg-W7-gTe" userLabel="topMsg">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="IO7-ts-TMK" userLabel="Head Image View">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="IO7-ts-TMK" userLabel="Head Image View" customClass="LSUIImageViewTopFit">
                                     <rect key="frame" x="23" y="13" width="64" height="64"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="64" id="6LX-JB-F4n"/>
@@ -67,13 +67,13 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From : Randy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9X-JG-h51" userLabel="From Name Label">
-                                    <rect key="frame" x="97" y="13" width="102" height="20"/>
+                                    <rect key="frame" x="97" y="13" width="102" height="15"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                     <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9aD-Oj-A6r" userLabel="To Me Label">
-                                    <rect key="frame" x="97" y="37" width="45" height="20"/>
+                                    <rect key="frame" x="97" y="32" width="45" height="20"/>
                                     <attributedString key="attributedText">
                                         <fragment content="To:">
                                             <attributes>
@@ -92,7 +92,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ke-0G-XbS" userLabel="Time Label">
-                                    <rect key="frame" x="97" y="61" width="40" height="20"/>
+                                    <rect key="frame" x="97" y="56" width="40" height="20"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="textColor" red="0.24705882352941178" green="0.24705882352941178" blue="0.24705882352941178" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -123,6 +123,7 @@
                                 <constraint firstItem="9aD-Oj-A6r" firstAttribute="top" secondItem="m9X-JG-h51" secondAttribute="bottom" constant="4" id="C8o-yO-kMr"/>
                                 <constraint firstItem="3ke-0G-XbS" firstAttribute="top" secondItem="9aD-Oj-A6r" secondAttribute="bottom" constant="4" id="FGZ-hr-Anz"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3ke-0G-XbS" secondAttribute="trailing" constant="20" symbolic="YES" id="PXP-zM-MXK"/>
+                                <constraint firstItem="kGT-JD-Yb2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="m9X-JG-h51" secondAttribute="bottom" constant="1" id="Py3-KH-COx"/>
                                 <constraint firstItem="jgi-6L-1wC" firstAttribute="trailing" secondItem="IO7-ts-TMK" secondAttribute="trailing" id="QcU-BF-uaJ"/>
                                 <constraint firstItem="jgi-6L-1wC" firstAttribute="bottom" secondItem="IO7-ts-TMK" secondAttribute="bottom" id="Uel-5W-UtN"/>
                                 <constraint firstItem="IO7-ts-TMK" firstAttribute="leading" secondItem="thg-W7-gTe" secondAttribute="leading" constant="23" id="UiH-na-T9a"/>

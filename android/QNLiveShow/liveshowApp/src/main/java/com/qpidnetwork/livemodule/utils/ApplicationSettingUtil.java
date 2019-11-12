@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
 
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 /**
@@ -63,8 +63,20 @@ public class ApplicationSettingUtil {
      * @return
      */
     public static String formatCoinValue(double coinsValue){
-        NumberFormat nf = NumberFormat.getInstance();
-        nf.setGroupingUsed(false);
-        return String.valueOf(nf.format(coinsValue));
+
+//        NumberFormat nf = NumberFormat.getNumberInstance();
+//        nf.setGroupingUsed(false);
+//        String c = nf.format(coinsValue);
+
+        // 2019/10/9 Hardy
+        if (coinsValue < 0) {
+            coinsValue = 0;
+        }
+
+        //edit by Jagger 2019-9-16 保留小数点前1位和后两位 BUG#20749
+        DecimalFormat df = new DecimalFormat("0.00");
+        String c = df.format(coinsValue);
+
+        return c;
     }
 }

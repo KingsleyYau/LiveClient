@@ -23,8 +23,19 @@
 
     view.bounds = CGRectMake(0, 0, view.frame.size.width, 60);
     view.arrowImageView.hidden = YES;
-    view.activityView.hidden = NO;
-    [view.activityView startAnimating];
+    
+    NSMutableArray *iconArray = [[NSMutableArray alloc] init];
+    for (int i = 1; i <= 7
+         ; i++) {
+        NSString *imgStr = [[[LSUIWidgetBundle resourceBundle] bundlePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"PullRefreshLoading%d.png", i]];
+        UIImage *image = [UIImage imageNamed:imgStr];
+        [iconArray addObject:image];
+    }
+    view.loadingActivity.animationImages = iconArray;
+    view.loadingActivity.animationRepeatCount = 0;
+    view.loadingActivity.animationDuration = 0.6;
+    [view.loadingActivity startAnimating];
+    view.loadingActivity.hidden = NO;
 
     view.statusTipsNormal = @"Pull to Refresh";
     view.statusTipsPulling = @"Release to Refresh";
@@ -67,8 +78,10 @@
                 //                self.arrowImageView.hidden = NO;
                 //                self.activityView.hidden = YES;
                 self.arrowImageView.hidden = YES;
-                self.activityView.hidden = NO;
-                [self.activityView stopAnimating];
+                
+                self.loadingActivity.hidden = NO;
+                [self.loadingActivity stopAnimating];
+                
                 self.statusLabel.text = self.statusTipsNormal;
 
                 if (_state == PullRefreshPulling || _state == PullRefreshLoadFinish) {
@@ -84,9 +97,10 @@
                 //                self.arrowImageView.hidden = NO;
                 //                self.activityView.hidden = YES;
                 self.arrowImageView.hidden = YES;
-                self.activityView.hidden = NO;
-                [self.activityView stopAnimating];
-                //                [self.activityView startAnimating];
+                
+                self.loadingActivity.hidden = NO;
+                [self.loadingActivity stopAnimating];
+                
                 self.statusLabel.text = self.statusTipsPulling;
 
                 [UIView beginAnimations:nil context:nil];
@@ -100,16 +114,20 @@
                 //                self.arrowImageView.hidden = YES;
                 //                self.activityView.hidden = NO;
                 self.arrowImageView.hidden = YES;
-                self.activityView.hidden = NO;
-                [self.activityView startAnimating];
+                
+                self.loadingActivity.hidden = NO;
+                [self.loadingActivity startAnimating];
+                
                 self.statusLabel.text = self.statusTipsLoading;
 
             } break;
             case PullRefreshLoadFinish: {
                 //                NSLog(@"PullRefreshView::setState( PullRefreshLoadFinish )");
                 self.arrowImageView.hidden = YES;
-                self.activityView.hidden = NO;
-                [self.activityView stopAnimating];
+                
+                self.loadingActivity.hidden = NO;
+                [self.loadingActivity stopAnimating];
+                
                 self.statusLabel.text = self.statusTipsLoadFinish;
                 self.lastUpdateLabel.text = [LSDateFormatter toStringToday:[NSDate dateWithTimeIntervalSinceNow:0]];
 

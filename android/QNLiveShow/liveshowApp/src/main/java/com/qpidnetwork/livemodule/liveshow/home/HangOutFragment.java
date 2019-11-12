@@ -1,6 +1,5 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
@@ -13,21 +12,19 @@ import android.view.ViewGroup;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.base.BaseRecyclerViewFragment;
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetHangoutOnlineAnchorCallback;
-import com.qpidnetwork.livemodule.httprequest.RequestJniHangout;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutOnlineAnchorItem;
-import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginNewActivity;
-import com.qpidnetwork.livemodule.liveshow.liveroom.HangoutTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutDetailDialogFragment;
 import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutFriendsDetailDialog;
-import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.view.HangOutHeaderViewHelper;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
@@ -94,8 +91,8 @@ public class HangOutFragment extends BaseRecyclerViewFragment implements HangOut
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
         if(getActivity() != null){
             if(LoginManager.getInstance().getLoginStatus() == LoginManager.LoginStatus.Logined) {
                 //已登录
@@ -155,7 +152,7 @@ public class HangOutFragment extends BaseRecyclerViewFragment implements HangOut
 //                        anchorItem.coverImg,
 //                        "");
 //                getActivity().startActivity(intent);
-                String url = URL2ActivityManager.createHangoutTransitionActivity(anchorItem.anchorId, anchorItem.nickName);
+                String url = LiveUrlBuilder.createHangoutTransitionActivity(anchorItem.anchorId, anchorItem.nickName);
                 new AppUrlHandler(getActivity()).urlHandle(url);
             }
         });
@@ -185,7 +182,7 @@ public class HangOutFragment extends BaseRecyclerViewFragment implements HangOut
 //        }
 
         //
-        RequestJniHangout.GetHangoutOnlineAnchor(new OnGetHangoutOnlineAnchorCallback() {
+        LiveRequestOperator.getInstance().GetHangoutOnlineAnchor(new OnGetHangoutOnlineAnchorCallback() {
             @Override
             public void onGetHangoutOnlineAnchor(boolean isSuccess, int errCode, String errMsg, HangoutOnlineAnchorItem[] list) {
                 //回调界面
@@ -296,7 +293,7 @@ public class HangOutFragment extends BaseRecyclerViewFragment implements HangOut
         if(null != getActivity()){
             if(null != getActivity()){
                 setDefaultEmptyMessage(getActivity().getResources().getString(R.string.hangout_list_empty_text));
-                setDefaultEmptyButtonText("");
+                setEmptyGuideButtonText("");
             }
             showNodataPage();
         }
@@ -312,7 +309,7 @@ public class HangOutFragment extends BaseRecyclerViewFragment implements HangOut
             hideLoadingProcess();
 
             setDefaultEmptyMessage(getActivity().getResources().getString(R.string.followinglist_logout_text));
-            setDefaultEmptyButtonText(getActivity().getResources().getString(R.string.txt_login));
+            setEmptyGuideButtonText(getActivity().getResources().getString(R.string.txt_login));
         }
         showNodataPage();
     }

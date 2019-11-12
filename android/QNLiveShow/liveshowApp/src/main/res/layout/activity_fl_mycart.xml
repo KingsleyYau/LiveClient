@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sl_root"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/activity_fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout>

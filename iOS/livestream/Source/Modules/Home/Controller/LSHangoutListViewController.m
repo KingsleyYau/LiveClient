@@ -36,12 +36,14 @@
 @property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @property (weak, nonatomic) IBOutlet UILabel *noDataTips;
 @property (nonatomic, strong) LSHangoutListHeadView *headView;
+// 正在下拉
+@property (nonatomic, assign) BOOL pullDowning;
 @end
 
 @implementation LSHangoutListViewController
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -52,11 +54,12 @@
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-
+    
     self.items = [NSArray array];
     self.sessionManager = [LSSessionRequestManager manager];
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:NO];
+    self.tableView.pullScrollEnabled = YES;
     [self setupTableView];
     //    [self setupTableHeaderView];
 }
@@ -69,6 +72,15 @@
     [super viewDidAppear:animated];
     [self viewDidAppearGetList:NO];
     //    [self setupTableHeaderView];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.pullDowning) {
+        [self.tableView finishLSPullDown:NO];
+        self.pullDowning = NO;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -86,6 +98,8 @@
     self.isFirstLogin = NO;
     // 是否刷新数据
     self.isLoadData = NO;
+    
+    self.pullDowning = NO;
 }
 
 #pragma mark - HTTP登录调用
@@ -102,7 +116,7 @@
     if (self.isFirstLogin || isSwitchSite || self.isLoadData) {
         // 界面是否显示
         if (self.viewDidAppearEver) {
-            [self.tableView startPullDown:YES];
+            [self.tableView startLSPullDown:YES];
             self.isFirstLogin = NO;
         }
     }
@@ -168,13 +182,15 @@
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
     self.failView.hidden = YES;
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
-    self.view.userInteractionEnabled = NO;
-    [self getListRequest];
+    if (!self.pullDowning) {
+        [self getListRequest];
+    }
+    self.pullDowning = YES;
 }
 
 #pragma mark - PullRefreshView回调
@@ -207,9 +223,11 @@
                 self.isLoadData = YES;
             }
             // 停止头部
-            [self.tableView finishPullDown:NO];
+            if (self.pullDowning) {
+                [self.tableView finishLSPullDown:NO];
+                self.pullDowning = NO;
+            }
             [self reloadData];
-            self.view.userInteractionEnabled = YES;
         });
     };
 

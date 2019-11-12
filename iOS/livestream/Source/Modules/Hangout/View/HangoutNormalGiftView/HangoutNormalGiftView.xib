@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,10 +16,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vqZ-25-PMf">
-                    <rect key="frame" x="20" y="0.0" width="335" height="167.5"/>
+                    <rect key="frame" x="20" y="0.0" width="335" height="169"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="vqZ-25-PMf" secondAttribute="height" multiplier="2:1" id="IB1-LB-Ost"/>
+                        <constraint firstAttribute="width" secondItem="vqZ-25-PMf" secondAttribute="height" multiplier="2:1.01" id="IB1-LB-Ost"/>
                     </constraints>
                     <collectionViewLayout key="collectionViewLayout" id="seR-Xc-AUl" customClass="HangoutGiftLayout"/>
                 </collectionView>
@@ -33,7 +32,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="191"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VJB-yO-Wxc" userLabel="Retry Button">
-                            <rect key="frame" x="135.5" y="83" width="104" height="26"/>
+                            <rect key="frame" x="135.5" y="82.5" width="104" height="26"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <state key="normal" title=" Tap to retry" image="Hangout_Invite_Fail">
                                 <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -44,7 +43,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nD-P7-vBC" userLabel="Noyet Button">
-                            <rect key="frame" x="135" y="83" width="105" height="26"/>
+                            <rect key="frame" x="135" y="82.5" width="105" height="26"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <state key="normal" title=" No gifts yet" image="Live_No_Yet_Gifts">
                                 <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -53,7 +52,7 @@
                             <state key="highlighted" title=" No gifts yet" image="Live_No_Yet_Gifts"/>
                         </button>
                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="FmX-rO-NHd" userLabel="LoadingView">
-                            <rect key="frame" x="169.5" y="77.5" width="37" height="37"/>
+                            <rect key="frame" x="169" y="77" width="37" height="37"/>
                             <color key="color" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </activityIndicatorView>
                     </subviews>

@@ -20,6 +20,7 @@ import com.qpidnetwork.anchor.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.anchor.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.anchor.httprequest.item.LoginItem;
 import com.qpidnetwork.anchor.httprequest.item.ProgramInfoItem;
+import com.qpidnetwork.anchor.httprequest.item.PushRoomInfoItem;
 import com.qpidnetwork.anchor.httprequest.item.SetAutoPushType;
 import com.qpidnetwork.anchor.httprequest.item.TalentReplyType;
 import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
@@ -537,6 +538,50 @@ public class LiveRequestOperator {
     }
 
     /**
+     * 3.9.获取主播当前直播间信息
+     * @param callback
+     * @return
+     */
+    public long GetCurrentRoomInfo(final OnGetCurrentRoomInfoCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniLiveShow.GetCurrentRoomInfo(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetCurrentRoomInfo(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniLiveShow.GetCurrentRoomInfo(new OnGetCurrentRoomInfoCallback() {
+            @Override
+            public void onGetCurrentRoomInfo(boolean isSuccess, int errCode, String errMsg, PushRoomInfoItem pushItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetCurrentRoomInfo(isSuccess, errCode, errMsg, pushItem);
+                }
+            }
+        });
+    }
+
+    /**
      * 4.1.获取预约邀请列表
      * @param type
      * @param start
@@ -763,34 +808,6 @@ public class LiveRequestOperator {
                 }
             }
         };
-
-//        RequestJniProgram.GetProgramList(RequestJniProgram.ProgramSortType.UnVerify, 0, 3, new OnGetProgramListCallback() {
-//            @Override
-//            public void onGetProgramList(boolean isSuccess, int errCode, String errMsg, ProgramInfoItem[] list) {
-//                int i = 0;
-//            }
-//        });
-//
-//        RequestJniProgram.GetNoReadNumProgram(new OnGetNoReadNumProgramCallback() {
-//            @Override
-//            public void onGetNoReadNumProgram(boolean isSuccess, int errCode, String errMsg, int Num) {
-//                int i = 0;
-//            }
-//        });
-
-//        RequestJniProgram.GetShowRoomInfo("11", new OnGetShowRoomInfoCallback() {
-//            @Override
-//            public void onGetShowRoomInfo(boolean isSuccess, int errCode, String errMsg, ProgramInfoItem item, String roomId) {
-//                int i = 0;
-//            }
-//        });
-
-        RequestJniProgram.CheckPublicRoomType(new OnCheckPublicRoomTypeCallback() {
-            @Override
-            public void onCheckPublicRoomType(boolean isSuccess, int errCode, String errMsg, int liveShowType, String liveShowId) {
-                int i = 0;
-            }
-        });
 
         // 调用jni接口
         return RequstJniSchedule.GetScheduledAcceptNum(new OnGetScheduledAcceptNumCallback() {

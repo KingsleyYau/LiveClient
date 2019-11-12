@@ -31,13 +31,13 @@
     
     self.myRidesWaterfallView.delegates = self;
     
-    [self.myRidesWaterfallView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.myRidesWaterfallView setupPullRefresh:self pullDown:YES pullUp:NO];
     
     self.dialogTipView = [DialogTip dialogTip];
 }
 
 - (void)dealloc {
-    [self.myRidesWaterfallView unInitPullRefresh];
+    [self.myRidesWaterfallView unSetupPullRefresh];
     NSLog(@"MyRidesViewController dealloc");
 }
 
@@ -72,24 +72,27 @@
 {
     self.infoView.hidden = YES;
     //self.myRidesWaterfallView.hidden = NO;
+    [self hideNoDataView];
+    self.failView.hidden = YES;
     RideListRequest * request = [[RideListRequest alloc]init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *> * _Nullable array, int totalCount) {
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
-            [self.myRidesWaterfallView finishPullDown:YES];
+            [self.myRidesWaterfallView finishLSPullDown:YES];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
             self.myRidesWaterfallView.items = array;
             if (success) {
 
                 if (self.myRidesWaterfallView.items.count == 0) {
-                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Rides") hiddenBtn:YES];
+                    [self showNoDataView];
+                    self.noDataTip.text = NSLocalizedStringFromSelf(@"No Rides");
                 }
             }
             else
             {
                 if (array.count == 0) {
-                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
+                    self.failView.hidden = NO;
                 }
                 else
                 {
@@ -104,23 +107,9 @@
     [self.sessionManager sendRequest:request];
 }
 
-- (void)showInfoViewMsg:(NSString *)msg hiddenBtn:(BOOL)hidden
-{
-    self.infoView.hidden = NO;
-    self.infoBtn.layer.cornerRadius = 5;
-    self.infoBtn.layer.masksToBounds = YES;
-    self.infoLabel.text = msg;
-    self.infoBtn.hidden = hidden;
-    // 是否没有数据
-    if (hidden) {
-        self.noDataIcon.image = [UIImage imageNamed:@"Common_NoDataIcon"];
-    }else {
-        self.noDataIcon.image = [UIImage imageNamed:@"Home_Hot&follow_fail"];
-    }
-    //self.myRidesWaterfallView.hidden = YES;
-}
 
-- (IBAction)reloadBtnDid:(UIButton *)sender {
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
+    self.failView.hidden = YES;
     [self showLoading];
     [self getMyRidesData];
 }

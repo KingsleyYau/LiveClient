@@ -247,9 +247,10 @@ public class URL2ActivityManager {
 
     /**
      * 主播主动立即私密邀请时，生成Push所带Url
+     * (9.3.接收用户立即私密邀请通知)
      * @return
      */
-    public static String createAnchorInviteUrl(String userId, String userName, String userPhotoUrl, String inviteId){
+    public static String createManInviteUrl(String userId, String userName, String userPhotoUrl, String inviteId){
         String url = KEY_URL_SCHEME + "://"
                 + KEY_URL_AUTHORITY
                 + KEY_URL_PATH + "?"
@@ -273,6 +274,34 @@ public class URL2ActivityManager {
 
         //roomType 主播发来立即私密邀请
         url += "&" + KEY_URL_PARAM_KEY_ROOMTYPE + "=" + String.valueOf(3);
+
+        return url;
+    }
+
+    /**
+     * 主播主动私密邀请，生成Push所带Url
+     * @return
+     */
+    public static String createInviteUrl(String userId, String userName, String userPhotoUrl){
+        String url = KEY_URL_SCHEME + "://"
+                + KEY_URL_AUTHORITY
+                + KEY_URL_PATH + "?"
+                + "&" + KEY_URL_MODULE + "=" + KEY_URL_MODULE_NAME_LIVE_ROOM;
+
+        if(!TextUtils.isEmpty(userId)){
+            url += "&" + KEY_URL_PARAM_KEY_USERID + "=" + userId;
+        }
+
+        if(!TextUtils.isEmpty(userName)){
+            url += "&" + KEY_URL_PARAM_KEY_USERNAME + "=" + userName;
+        }
+
+        if(!TextUtils.isEmpty(userPhotoUrl)){
+            url += "&" + KEY_URL_PARAM_KEY_USERPHOTOURL+ "=" + URLEncoder.encode(userPhotoUrl);
+        }
+
+        //roomType 主播私密邀请
+        url += "&" + KEY_URL_PARAM_KEY_ROOMTYPE + "=" + String.valueOf(2);
 
         return url;
     }

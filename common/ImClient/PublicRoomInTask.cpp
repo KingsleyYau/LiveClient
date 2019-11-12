@@ -15,6 +15,7 @@
 
 // 请求参数定义
 #define USERID_PARAM           "userid"
+#define FROM_PARAM             "from"
 
 PublicRoomInTask::PublicRoomInTask(void)
 {
@@ -25,6 +26,7 @@ PublicRoomInTask::PublicRoomInTask(void)
 	m_errMsg = "";
     
     m_userId = "";
+    m_isFree = false;
     
 }
 
@@ -103,6 +105,11 @@ bool PublicRoomInTask::GetSendData(Json::Value& data)
         // 构造json协议
         Json::Value value;
         value[USERID_PARAM] = m_userId;
+        // alex FROM_PARAM 这个参数会有免费3秒钟，如果以后不用有免费3秒，那就不用这个参数
+        if (m_isFree) {
+            value[FROM_PARAM] = "App";
+        }
+        
         data = value;
     }
 
@@ -145,11 +152,12 @@ void PublicRoomInTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool PublicRoomInTask::InitParam(const string& userId)
+bool PublicRoomInTask::InitParam(const string& userId, bool isFree)
 {
 	bool result = false;
     if (!userId.empty()) {
         m_userId = userId;
+        m_isFree = isFree;
         result = true;
         
     }

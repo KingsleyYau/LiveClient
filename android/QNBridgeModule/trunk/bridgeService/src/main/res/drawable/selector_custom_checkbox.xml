@@ -1,0 +1,11 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:drawable="@drawable/password_visible"
+        android:state_checked="true"/>
+    <item
+        android:drawable="@drawable/password_invisible"
+        android:state_checked="false"/>
+    <item
+        android:drawable="@drawable/password_visible"/>
+
+</selector>

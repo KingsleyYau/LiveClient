@@ -6,13 +6,13 @@
     <ImageView
         android:id="@+id/iv_vedioBg"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/defaultVedioPlayerHeight"
+        android:layout_height="match_parent"
         android:background="#BFBFBF"
         android:scaleType="centerCrop" />
 
     <android.opengl.GLSurfaceView
         android:id="@+id/sv_push"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/defaultVedioPlayerHeight"
+        android:layout_height="match_parent"
         android:visibility="visible"/>
 </RelativeLayout>

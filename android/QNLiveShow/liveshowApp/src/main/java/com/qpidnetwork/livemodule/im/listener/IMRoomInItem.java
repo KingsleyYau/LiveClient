@@ -51,6 +51,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param honorId           勋章ID
      * @param honorImg          勋章图片url
 	 * @param popPrice			直播间的POP消息资费
+	 * @param useCoupon 		试聊卷分钟数
 	 * @param liveShowType		公开直播间类型
 	 * @param isHasTalent		是否有才艺
 	 * @param isHangoutPriv     多人互动开播权限（true：没有权限，false：有权限）

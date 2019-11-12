@@ -91,6 +91,12 @@ static const string ZB_CMD_RECVANCHORPROGRAMPLAYNOTICE = "imLady/showToStartNoti
 static const string ZB_CMD_RECVANCHORSTATUSCHANGENOTICE = "imLady/statusChangeNotice";    // 11.2.接收节目状态改变通知
 static const string ZB_CMD_RECVSHOWMSGNOTICE = "imShare/showMsgNotice";    // 11.3.接收无操作的提示通知
 
+// ------------ 12.多端功能 --------------
+static const string ZB_CMD_ANCHORSWITCHFLOW = "imLady/anchorSwitchFlow"; // 3.11.主播切换推流地址
+static const string ZB_CMD_GETSCHEDULELISTNOREADNUM = "share/v1/getScheduleListNoReadNum";// 12.1.多端获取预约邀请未读或代处理数量同步推送
+static const string ZB_CMD_GETSCHEDULEDACCEPTNUM = "lady/v1/getScheduledAcceptNum"; // 12.2.多端获取已确认的预约数同步推送
+static const string ZB_CMD_NOREADSHOWNUM = "lady/v1/noreadShowNum"; // 12.3.多端获取节目未读数同步推送
+
 // 判断是否客户端主动请求的命令
 inline bool ZBIsRequestCmd(const string& cmd)
 {
@@ -111,9 +117,27 @@ inline bool ZBIsRequestCmd(const string& cmd)
         || cmd == ZB_CMD_LEAVEHANGOUTROOM               // 10.2.退出多人互动直播间
         || cmd == ZB_CMD_SENDHANGOUTGIFT                // 10.11.发送多人互动直播间礼物消息
         || cmd == ZB_CMD_HANGOUTSENDLIVECHAT            // 10.14.发送多人互动直播间文本消息
+        || cmd == ZB_CMD_ANCHORSWITCHFLOW               // 3.11.主播切换推流地址
         )
     {
         result = true;
     }
 	return result;
+}
+
+// 判断是否是2端命令（主播新加pc和app可以同时登录操作，收发，导致一些客户端发送的接口，另一端可以接收到发送返回的结果）alex 2019-11-7
+inline bool ZBIsTowTerminalCmd(const string& cmd)
+{
+    bool result = false;
+    if (
+        cmd == ZB_CMD_ROOMIN            // 3.2.主播进入指定直播间
+        || cmd == ZB_CMD_PUBLICROOMIN        // 3.1.新建/进入公开直播间
+        || cmd == ZB_CMD_ANCHORSWITCHFLOW        // 3.11.主播切换推流地址
+        || cmd == ZB_CMD_SENDPRIVATELIVEINVITE        // 9.1.观众立即私密邀请
+        || cmd == ZB_CMD_ENTERHANGOUTROOM               // 10.1.进入多人互动直播间
+        )
+    {
+        result = true;
+    }
+    return result;
 }

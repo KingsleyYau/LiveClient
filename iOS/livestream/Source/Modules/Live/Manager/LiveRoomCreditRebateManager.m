@@ -112,17 +112,17 @@
 - (void)getLeftCreditRequest:(GetCreditFinshtHandler)handler {
 
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit, int coupon, double postStamp) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSLeftCreditItemObject *_Nonnull item) {
 
-        NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon : %d, postStamp : %f)", success, (long)errnum, errmsg, credit, coupon, postStamp);
+        NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon : %d, postStamp : %f, livechatCount : %d)", success, (long)errnum, errmsg, item.credit, item.coupon, item.postStamp, item.liveChatCount);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler(success, credit, coupon, postStamp,errnum,errmsg);
+            handler(success, item.credit, item.coupon + item.liveChatCount, item.postStamp,errnum,errmsg);
 
             if (success) {
-                [self setCredit:credit];
-                self.mCoupon = coupon;
-                self.mPostStamp = postStamp;
+                [self setCredit:item.credit];
+                self.mCoupon = item.coupon + item.liveChatCount;
+                self.mPostStamp = item.postStamp;
             } else {
             }
         });

@@ -439,7 +439,7 @@ typedef enum : NSUInteger {
             if (success) {
                 NSLog(@"LSAddCreditsViewController::LeftCredit( 获取男士余额成功 )");
                 self.money = [NSString stringWithFormat:@"%.2f", credit];
-
+                [self reloadData:YES];
             } else {
                 NSLog(@"LSAddCreditsViewController::LeftCredit( 获取男士余额失败");
             }
@@ -483,20 +483,22 @@ typedef enum : NSUInteger {
 #pragma mark - Apple支付回调
 - (void)onGetProductsInfo:(LSPaymentManager *)mgr products:(NSArray<SKProduct *> *)products {
     NSLog(@"LSAddCreditsViewController::onGetProductsInfo( 获取订单成功, orderNo : %@ )", products);
-    [self hideLoading];
-    if (products.count > 0) {
-        for (SKProduct *product in products) {
-            NSString *productLocalePrice = [NSString stringWithFormat:@"%@ %@%@", [product.priceLocale objectForKey:NSLocaleCurrencyCode], [product.priceLocale objectForKey:NSLocaleCurrencySymbol], product.price];
-            for (LSProductItemObject *obj in self.membershipItem.list) {
-                if ([obj.productId isEqualToString:product.productIdentifier]) {
-                    obj.price = productLocalePrice;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideLoading];
+        if (products.count > 0) {
+            for (SKProduct *product in products) {
+                NSString *productLocalePrice = [NSString stringWithFormat:@"%@ %@%@", [product.priceLocale objectForKey:NSLocaleCurrencyCode], [product.priceLocale objectForKey:NSLocaleCurrencySymbol], product.price];
+                for (LSProductItemObject *obj in self.membershipItem.list) {
+                    if ([obj.productId isEqualToString:product.productIdentifier]) {
+                        obj.price = productLocalePrice;
+                    }
                 }
             }
+            [self reloadData:YES];
+        } else {
+            [[DialogTip dialogTip] showDialogTip:self.view tipText:@""];
         }
-        [self reloadData:YES];
-    } else {
-        [[DialogTip dialogTip] showDialogTip:self.view tipText:@""];
-    }
+    });
 }
 
 - (void)onGetOrderNo:(LSPaymentManager *_Nonnull)mgr result:(BOOL)result code:(NSString *_Nonnull)code orderNo:(NSString *_Nonnull)orderNo {

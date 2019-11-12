@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSStoreListViewController">
+            <connections>
+                <outlet property="cartNumLabel" destination="Fnm-b1-GhX" id="r5b-fD-xRD"/>
+                <outlet property="cartTipView" destination="Ak5-Tj-uGe" id="c8T-cG-vJt"/>
+                <outlet property="cartTipViewW" destination="pYB-KI-0gT" id="eKZ-c8-QXW"/>
+                <outlet property="cartView" destination="fn7-NG-U5f" id="6cp-xJ-e3B"/>
+                <outlet property="storeView" destination="ZZB-30-Tif" id="aGf-6e-xOo"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZZB-30-Tif" customClass="LSStoreCollectionView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ak5-Tj-uGe">
+                    <rect key="frame" x="153" y="617" width="159" height="34"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_StoreList_Cart_TipBG" translatesAutoresizingMaskIntoConstraints="NO" id="Hyt-Ub-V2h">
+                            <rect key="frame" x="0.0" y="0.0" width="159" height="34"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90v-Hj-tZ4">
+                            <rect key="frame" x="8" y="6" width="135" height="21"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Check my selected items">
+                                    <attributes>
+                                        <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <font key="NSFont" size="12" name="ArialMT"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Hyt-Ub-V2h" secondAttribute="trailing" id="3sS-kY-272"/>
+                        <constraint firstAttribute="height" constant="34" id="O2j-Iq-tBB"/>
+                        <constraint firstItem="Hyt-Ub-V2h" firstAttribute="top" secondItem="Ak5-Tj-uGe" secondAttribute="top" id="XNj-aJ-fh4"/>
+                        <constraint firstItem="Hyt-Ub-V2h" firstAttribute="leading" secondItem="Ak5-Tj-uGe" secondAttribute="leading" id="eB8-sB-iXp"/>
+                        <constraint firstAttribute="bottom" secondItem="Hyt-Ub-V2h" secondAttribute="bottom" id="lVy-oY-JGe"/>
+                        <constraint firstAttribute="width" constant="159" id="pYB-KI-0gT"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fn7-NG-U5f">
+                    <rect key="frame" x="311" y="603" width="44" height="44"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_StoreList_CartBG" translatesAutoresizingMaskIntoConstraints="NO" id="Qch-Rc-e7k">
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LS_StoreList_Cart" translatesAutoresizingMaskIntoConstraints="NO" id="Tsv-jq-CXq">
+                            <rect key="frame" x="7" y="8" width="30" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fnm-b1-GhX">
+                            <rect key="frame" x="17" y="9" width="14" height="14"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <attributedString key="attributedText">
+                                <fragment content="99">
+                                    <attributes>
+                                        <color key="NSColor" red="1" green="0.2784313725" blue="0.2784313725" alpha="1" colorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="12" name="Arial-BoldMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstItem="Qch-Rc-e7k" firstAttribute="top" secondItem="fn7-NG-U5f" secondAttribute="top" id="14I-T5-Qw5"/>
+                        <constraint firstAttribute="height" constant="44" id="H4k-7x-2N5"/>
+                        <constraint firstAttribute="bottom" secondItem="Qch-Rc-e7k" secondAttribute="bottom" id="OSm-yi-Kje"/>
+                        <constraint firstItem="Qch-Rc-e7k" firstAttribute="leading" secondItem="fn7-NG-U5f" secondAttribute="leading" id="PdX-UQ-nnm"/>
+                        <constraint firstAttribute="width" constant="44" id="iNs-uz-PEw"/>
+                        <constraint firstAttribute="trailing" secondItem="Qch-Rc-e7k" secondAttribute="trailing" id="mQ9-s9-yWI"/>
+                    </constraints>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="ysB-JN-USw" appends="YES" id="aZK-pG-ReL"/>
+                    </connections>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Ak5-Tj-uGe" secondAttribute="bottom" constant="16" id="21N-X6-u7x"/>
+                <constraint firstAttribute="trailing" secondItem="fn7-NG-U5f" secondAttribute="trailing" constant="20" id="B7m-ZC-EBQ"/>
+                <constraint firstItem="ZZB-30-Tif" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="O1C-qN-LeE"/>
+                <constraint firstAttribute="bottom" secondItem="fn7-NG-U5f" secondAttribute="bottom" constant="20" id="Pdk-4e-bzJ"/>
+                <constraint firstItem="ZZB-30-Tif" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="YlX-zA-fWF"/>
+                <constraint firstAttribute="trailing" secondItem="Ak5-Tj-uGe" secondAttribute="trailing" constant="63" id="d1B-4D-sLg"/>
+                <constraint firstItem="ZZB-30-Tif" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="tez-pV-oZm"/>
+                <constraint firstItem="ZZB-30-Tif" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="zac-0r-I97"/>
+            </constraints>
+            <point key="canvasLocation" x="138.40000000000001" y="141.67916041979012"/>
+        </view>
+        <tapGestureRecognizer id="ysB-JN-USw">
+            <connections>
+                <action selector="cartViewTap:" destination="-1" id="vLU-Uq-yki"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="LS_StoreList_Cart" width="30" height="30"/>
+        <image name="LS_StoreList_CartBG" width="52" height="52"/>
+        <image name="LS_StoreList_Cart_TipBG" width="159" height="34"/>
+    </resources>
+</document>

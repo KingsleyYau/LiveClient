@@ -9,8 +9,6 @@ import android.util.DisplayMetrics;
 
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
-import java.lang.reflect.Method;
-
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 /**
@@ -101,6 +99,17 @@ public class DisplayUtil {
     }
 
     /**
+     * 应用程序显示区域指定可能包含应用程序窗口的显示部分，不包括系统装饰。 应用程序显示区域可以小于实际显示区域，因为系统减去诸如状态栏之类的装饰元素所需的空间。 使用以下方法查询应用程序显示区域：getSize（Point），getRectSize（Rect）和getMetrics（DisplayMetrics）。
+     * @param context
+     * @return
+     */
+    public static int getActivityHeight(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return dm.heightPixels;
+    }
+
+    /**
      * 检测屏幕分辨率是否低于720，用于设备适配
      * @param context
      * @return
@@ -123,18 +132,29 @@ public class DisplayUtil {
             if (id > 0) {
                 hasNavigationBar = rs.getBoolean(id);
             }
-            try {
-                Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-                Method m = systemPropertiesClass.getMethod("get", String.class);
-                String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
-                if ("1".equals(navBarOverride)) {
-                    hasNavigationBar = false;
-                } else if ("0".equals(navBarOverride)) {
-                    hasNavigationBar = true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            /*
+             2019/3/1 Hardy
+             在某些没有底部虚拟导航栏的三星机器，例如 C7 Pro (SM-C7010) 上，以上资源 id 判断存在，
+             并且 hasNavigationBar = rs.getBoolean(id); 返回 false ，符合事实。
+
+             但在下面的反射代码里，navBarOverride 获取出的值又是 0，导致判断出错。
+
+             经搜索资料，"qemu.hw.mainkeys" 该属性，在 8.0 机器上已失效，或者可以通过 root 手机去修改，又或者手机在厂家出厂时，没有修改该值，都会导致该
+             检查方法失效，故这里屏蔽
+             */
+
+//            try {
+//                Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+//                Method m = systemPropertiesClass.getMethod("get", String.class);
+//                String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+//                if ("1".equals(navBarOverride)) {
+//                    hasNavigationBar = false;
+//                } else if ("0".equals(navBarOverride)) {
+//                    hasNavigationBar = true;
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
         Log.d(TAG,"checkDeviceHasNavigationBar-hasNavigationBar:"+hasNavigationBar);
         return hasNavigationBar;

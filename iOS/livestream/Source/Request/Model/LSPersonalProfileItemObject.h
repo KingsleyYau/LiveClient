@@ -128,17 +128,23 @@ typedef enum ResumeStatus {
 @property (nonatomic, assign) int zodiac;
 
 /**
- *  是否允许上传头像
  *
- *  @return <#return value description#>
+ *
+ *  @return 是否允许上传头像
  */
 - (BOOL)canUpdatePhoto;
 
 /**
- *  是否允修改描述
  *
- *  @return <#return value description#>
+ *
+ *  @return 是否允修改描述
  */
 - (BOOL)canUpdateResume;
+
+/**
+
+ @return 是否为没有图片
+ */
+- (BOOL)noPhotoStatus;
 
 @end

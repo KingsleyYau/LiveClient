@@ -17,7 +17,7 @@
 #define ROOMID_PARAM           "roomid"
 #define ERRMSG_PARAM           "errmsg"
 #define LEFTCREDIT_PARAM       "left_credit"
-
+#define ERRNO_PARAM            "errno"
 
 
 RecvLackOfCreditNoticeTask::RecvLackOfCreditNoticeTask(void)
@@ -31,6 +31,7 @@ RecvLackOfCreditNoticeTask::RecvLackOfCreditNoticeTask(void)
     m_roomId = "";
     m_msg = "";
     m_credit = 0.0;
+    m_errReason = LCC_ERR_FAIL;
 
 }
 
@@ -72,6 +73,9 @@ bool RecvLackOfCreditNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[LEFTCREDIT_PARAM].isNumeric()) {
             m_credit = tp.m_data[LEFTCREDIT_PARAM].asDouble();
         }
+        if (tp.m_data[ERRNO_PARAM].isNumeric()) {
+            m_errReason = (LCC_ERR_TYPE)tp.m_data[ERRNO_PARAM].asInt();
+        }
     }
     
     // 协议解析失败
@@ -84,7 +88,7 @@ bool RecvLackOfCreditNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvLackOfCreditNotice(m_roomId, m_msg, m_credit);
+        m_listener->OnRecvLackOfCreditNotice(m_roomId, m_msg, m_credit, m_errReason);
 		FileLog("ImClient", "RecvLackOfCreditNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

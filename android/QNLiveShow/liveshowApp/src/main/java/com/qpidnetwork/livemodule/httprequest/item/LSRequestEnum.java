@@ -593,4 +593,28 @@ public class LSRequestEnum {
     	SendChangeEmail,
     	ReSend
     }
+
+    public enum LSBubblingInviteType{
+    	Unknow,
+		OneOnOne,
+		Hangout,
+		LiveChat
+	}
+
+	/**
+	 * 直播广告页类型
+	 *
+	 */
+	public enum LSBannerType{
+    	Unknow,
+		NineSquared,				// 直播站内九宫格
+		AllBroadcasters,			// All Broadcasters
+		FeatureBroadcasters,		// Featured Broadcasters
+		SayHi,						// Say Hi		  （SayHi页）
+		GreetMail,					// Greeting Mail （意向信页）
+		Mail,						// Mail		 （信件页）
+		Chat,						// Chat      （chat页）
+		Hangout,					// Hang-out （Hangout页）
+		GiftsFlowers				// Gifts & Flowers （礼物鲜花页）
+	}
 }

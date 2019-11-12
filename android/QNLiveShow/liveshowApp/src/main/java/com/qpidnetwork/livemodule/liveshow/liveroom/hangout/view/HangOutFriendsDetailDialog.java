@@ -85,9 +85,9 @@ public class HangOutFriendsDetailDialog {
         SimpleDraweeView iv_anchor = rootView.findViewById(R.id.iv_anchor);
         int bgSize = (int) (DisplayUtil.getScreenWidth(context) * 0.8);//屏幕宽 80% 尽量节省内存
 
-        //对齐方式(左上角对齐)
+        //对齐方式(中上对齐)
         PointF focusPoint = new PointF();
-        focusPoint.x = 0f;
+        focusPoint.x = 0.5f;
         focusPoint.y = 0f;
 
         //占位图，拉伸方式

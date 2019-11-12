@@ -16,7 +16,6 @@ typedef enum {
 } PullRefreshState;
 
 @interface LSPullRefreshView : UIView
-@property (nonatomic, assign) IBOutlet UIActivityIndicatorView* activityView;
 @property (nonatomic, assign) IBOutlet UIImageView* arrowImageView;
 @property (nonatomic, assign) IBOutlet UILabel* statusLabel;
 @property (nonatomic, assign) IBOutlet UILabel* lastUpdateLabel;
@@ -30,6 +29,7 @@ typedef enum {
 @property (nonatomic, strong) NSString* statusTipsLoading;
 @property (nonatomic, strong) NSString* statusTipsLoadFinish;
 @property (weak, nonatomic) IBOutlet UIView *bgView;
+@property (weak, nonatomic) IBOutlet UIImageView *loadingActivity;
 
 + (instancetype)pullRefreshView:(id)owner;
 - (void)setup;

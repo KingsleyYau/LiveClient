@@ -19,7 +19,7 @@ import com.qpidnetwork.anchor.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.anchor.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.anchor.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.BaseImplLiveRoomActivity;
-import com.qpidnetwork.anchor.liveshow.liveroom.PublicLiveRoomActivity;
+import com.qpidnetwork.anchor.liveshow.liveroom.FullScreenLiveRoomActivity;
 import com.qpidnetwork.anchor.liveshow.member.MemberProfileActivity;
 import com.qpidnetwork.anchor.utils.DisplayUtil;
 import com.qpidnetwork.anchor.utils.ImageUtil;
@@ -178,8 +178,8 @@ public class AudienceInfoDialog extends Dialog implements View.OnClickListener{
             case R.id.btn_invitePriLive:
                 if(null != audienceInfoItem && !TextUtils.isEmpty(audienceInfoItem.userId)
                         && null != mActivity && null != mActivity.get()){
-                    if(mActivity.get() instanceof PublicLiveRoomActivity){
-                        PublicLiveRoomActivity publicActivity = (PublicLiveRoomActivity) mActivity.get();
+                    if(mActivity.get() instanceof FullScreenLiveRoomActivity){
+                        FullScreenLiveRoomActivity publicActivity = (FullScreenLiveRoomActivity) mActivity.get();
                         publicActivity.sendPrivLiveInvite2Man(audienceInfoItem.userId,
                                 audienceInfoItem.nickName,audienceInfoItem.photoUrl);
                     }

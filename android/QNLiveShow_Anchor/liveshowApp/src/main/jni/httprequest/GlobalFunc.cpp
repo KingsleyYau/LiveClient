@@ -134,6 +134,14 @@ string gToken;
  	InitClassHelper(env, EMOTION_ITEM_CLASS, &jEmotionItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(EMOTION_ITEM_CLASS, jEmotionItem));
 
+  	jobject jPushRoomInfoItem;
+  	InitClassHelper(env, PUSH_ROOM_INFO_ITEM_CLASS, &jPushRoomInfoItem);
+  	gJavaItemMap.insert(JavaItemMap::value_type(PUSH_ROOM_INFO_ITEM_CLASS, jPushRoomInfoItem));
+
+  	jobject jPushRoomAudInfoItem;
+  	InitClassHelper(env, PUSH_ROOM_AUD_INFO_ITEM_CLASS, &jPushRoomAudInfoItem);
+  	gJavaItemMap.insert(JavaItemMap::value_type(PUSH_ROOM_AUD_INFO_ITEM_CLASS, jPushRoomAudInfoItem));
+
  	/* 4.个人信息模块    */
  	jobject jBookInviteItem;
  	InitClassHelper(env, BOOK_INVITE_ITEM_CLASS, &jBookInviteItem);

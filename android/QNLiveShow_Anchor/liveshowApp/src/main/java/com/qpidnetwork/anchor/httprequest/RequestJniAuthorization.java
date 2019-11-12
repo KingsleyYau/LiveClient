@@ -16,11 +16,12 @@ public class RequestJniAuthorization {
      * @param deviceId              设备唯一标识
      * @param model                 设备型号（格式：设备型号-系统版本号）
      * @param manufacturer          制造厂商
+     * @param deviceName            设备名字
      * @param callback
      * @return
      */
 
-    static public native long Login(String sn, String password, String code, String deviceId, String model, String manufacturer, OnRequestLoginCallback callback);
+    static public native long Login(String sn, String password, String code, String deviceId, String model, String manufacturer, String deviceName, OnRequestLoginCallback callback);
     
 
     /**

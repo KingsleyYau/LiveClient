@@ -9,6 +9,6 @@
 #import "LSViewController.h"
 
 @interface QNChatListViewController : LSViewController
-@property (weak, nonatomic) IBOutlet UIButton *searchBtn;
+
 - (void)reloadContactList;
 @end

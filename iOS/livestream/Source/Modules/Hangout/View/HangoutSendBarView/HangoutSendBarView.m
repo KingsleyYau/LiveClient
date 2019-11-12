@@ -41,7 +41,7 @@
 }
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
-    [self.inputTextField setValue:placeholderColor forKeyPath:@"_placeholderLabel.textColor"];
+    self.inputTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"Evr-UX-9TI.placeholder") attributes:@{NSForegroundColorAttributeName:placeholderColor}];
 }
 
 #pragma mark - 文本输入回调 (UITextFieldDelegate)

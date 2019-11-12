@@ -84,7 +84,11 @@
 #define LOGIN_USER_PRIV_MAILPRIV_USERSENDMAILIMGPRIV_QUICKREPLYCOINMSG      "quickreply_coinMsg"
 #define LOGIN_USER_PRIV_HANGOUT         "hangout"
 #define LOGIN_USER_PRIV_HANGOUT_HANGOUTPRIV         "hangoutPriv"
+#define LOGIN_PRIV                      "priv"
+#define LOGIN_PRIV_PRIV_MB_GIFT_FLOWER              "priv_mb_gift_flower"
+#define LOGIN_PRIV_PRIV_MB_SWITCH_PUBLICE_ROOM      "priv_mb_switch_public_room"
 #define LOGIN_USER_PRIV_SAYHI           "say_hi"
+#define LOGIN_USER_FLOWERS_GIFT_SWITCH  "flowers_gift_switch"
 
 
 /* 2.2.注销 */
@@ -333,6 +337,14 @@
  */
 #define LIVEROOM_VALIDATECODE_ID                     "id"
 
+/* 2.23.提交用户头像 */
+#define LIVEROOM_UPLOADPHOTO_PATH                   "/user/uploadPhoto"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_UPLOADPHOTO_PHOTONAME              "photoname"
+
 /* ########################	直播间 模块  ######################## */
 /* 直播间公共部分 */
 /**
@@ -503,6 +515,8 @@
 #define LIVEROOM_GETGIFTLISTBYUSERID_ID                             "id"
 #define LIVEROOM_GETGIFTLISTBYUSERID_ISHOW                          "is_show"
 #define LIVEROOM_GETGIFTLISTBYUSERID_ISPROMO                        "is_promo"
+#define LIVEROOM_GETGIFTLISTBYUSERID_TYPEID                         "type_id"
+#define LIVEROOM_GETGIFTLISTBYUSERID_ISFREE                         "is_free"
 
 /* 3.7.获取指定礼物详情（用于观众端／主播端在直播间收到《获取礼物列表》没有礼物时，获取指定礼物详情来显示） */
 /* 接口路径 */
@@ -649,6 +663,85 @@
 #define LIVEROOM_GETPROMOANCHORLIST_LIST_ROOMTYPE               "room_type"
 #define LIVEROOM_GETPROMOANCHORLIST_LIST_INTEREST               "interest"
 
+/* 3.15.获取页面推荐的主播列表 */
+/* 接口路径 */
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST             "/pman/anchor/api/getPageRecommendAnchorList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_TYPE        "type"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_ISFEATURED          "is_featured"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST                "list"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHOR             "anchor_id"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORNICKNAME     "anchor_nickname"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORCOVER        "anchor_cover"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORAVATAR       "anchor_avatar"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ISFOLLOW           "is_follow"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ONLINESTATUS       "online_status"
+#define LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_PUBLICROOMID       "public_room_id"
+
+/* 3.16.获取我的联系人列表 */
+/* 接口路径 */
+#define LIVEROOM_GETCONTACTLIST             "/pman/user/api/getContactList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETCONTACTLIST_START        "start"
+#define LIVEROOM_GETCONTACTLIST_STEP         "step"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETCONTACTLIST_TOTALCOUNT          "total_count"
+#define LIVEROOM_GETCONTACTLIST_LIST                "list"
+#define LIVEROOM_GETCONTACTLIST_LIST_ANCHOR             "anchor_id"
+#define LIVEROOM_GETCONTACTLIST_LIST_ANCHORNICKNAME     "anchor_nickname"
+#define LIVEROOM_GETCONTACTLIST_LIST_ANCHORCOVERIMG     "anchor_cover_img"
+#define LIVEROOM_GETCONTACTLIST_LIST_ANCHORAVATARIMG    "anchor_avatar_img"
+#define LIVEROOM_GETCONTACTLIST_LIST_ONLINESTATUS       "online_status"
+#define LIVEROOM_GETCONTACTLIST_LIST_PUBLICROOMID       "public_room_id"
+#define LIVEROOM_GETCONTACTLIST_LIST_ROOMTYPE           "room_type"
+#define LIVEROOM_GETCONTACTLIST_LIST_LASTCONTACTTIME    "last_contact_time"
+#define LIVEROOM_GETCONTACTLIST_LIST_ANCHORPRIV         "anchor_priv"
+
+/* 3.17.获取我的联系人列表 */
+/* 接口路径 */
+#define LIVEROOM_GETTYPELIST             "/pman/live/gift/getTypeList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETTYPELIST_ROOMTYPE        "room_type"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETTYPELIST_TYPEID          "type_id"
+#define LIVEROOM_GETTYPELIST_TYPENAME        "type_name"
+
+/* 3.18.Featured欄目的推荐主播列表 */
+/* 接口路径 */
+#define LIVEROOM_GETFEATUREDANCHORLIST       "/pman/anchor/api/getFeaturedAnchorList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETFEATUREDANCHORLIST_START        "start"
+#define LIVEROOM_GETFEATUREDANCHORLIST_STEP         "step"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETTYPELIST_TYPEID          "type_id"
+#define LIVEROOM_GETTYPELIST_TYPENAME        "type_name"
+
+
 /* ########################	背包 模块  ######################## */
 /* 4.1.观众待处理的预约邀请列表 */
 /* 接口路径 */
@@ -791,6 +884,8 @@
 #define LIVEROOM_BACKPACK_GIFT_LIST_READ                    "read"
 #define LIVEROOM_BACKPACK_GIFT_TOTALCOUNT             "total_count"
 
+
+
 /* 5.2.获取试用劵列表 */
 /* 接口路径 */
 #define LIVEROOM_VOUCHERLIST                  "/share/v1/voucherList"
@@ -812,6 +907,7 @@
 #define LIVEROOM_VOUCHERLIST_LIST_STARTVALIDDATE            "start_valid_date"
 #define LIVEROOM_VOUCHERLIST_LIST_EXPDATE                   "exp_date"
 #define LIVEROOM_VOUCHERLIST_LIST_READ                      "read"
+#define LIVEROOM_VOUCHERLIST_LIST_OFFSETMIN                 "offset_min"
 #define LIVEROOM_VOUCHERLIST_TOTALCOUNT              "total_count"
 
 /* 5.3.获取座驾列表 */
@@ -852,10 +948,12 @@
 #define LIVEROOM_GETBACKPACKUNREADNUM_VOUCHERUNREADNUM               "voucher_unread_num"
 #define LIVEROOM_GETBACKPACKUNREADNUM_GIFTUNREADNUM                  "gift_unread_num"
 #define LIVEROOM_GETBACKPACKUNREADNUM_RIDEUNREADNUM                  "ride_unread_num"
+#define LIVEROOM_GETBACKPACKUNREADNUM_LIVECHARVOUCHERUNREADNUM       "livechat_voucher_unread_num"
 
 /* 5.6.获取试用券可用信息 */
 /* 接口路径 */
 #define LIVEROOM_GETVOUCHERAVAILABLEINFO                  "/share/v1/getVoucherAvailableInfo"
+
 
 /**
  *  返回
@@ -870,6 +968,31 @@
 #define LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATENEWANCHOREXPTIME                 "onlyprivate_new_anchor_exp_time"
 #define LIVEROOM_GETVOUCHERAVAILABLEINFO_WATCHEDANCHOR                               "watched_anchor"
 #define LIVEROOM_GETVOUCHERAVAILABLEINFO_WATCHEDANCHOR_ANCHORID                                 "anchor_id"
+
+
+/* 5.7.获取LiveChat聊天试用券列表 */
+/* 接口路径 */
+#define LIVEROOM_GETCHATVOUCHERLIST                "/pman/livechat/setStatus/?action=getChatVoucherList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETCHATVOUCHERLIST_START          "start"
+#define LIVEROOM_GETCHATVOUCHERLIST_STEP           "step"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETCHATVOUCHERLIST_TOTAL                          "total"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST                           "list"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_TICKETID                       "ticket_id"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_ABLELADY                       "able_lady"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_ANCHORID                       "anchor_id"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_ADDTIME                        "add_time"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_STARTTIME                      "start_time"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_ENDTIME                        "end_time"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_ISREAD                         "is_read"
+#define LIVEROOM_GETCHATVOUCHERLIST_LIST_DURATION                       "duration"
 
 
 /* ########################	其它 模块  ######################## */
@@ -914,6 +1037,7 @@
 #define LIVEROOM_MIN_BALANCE_FOR_CHAT           "min_balance_for_chat"
 #define LIVEROOM_CHAT_VOICE_HOSTURL             "chat_voice_hosturl"
 #define LIVEROOM_SEND_LETTER                    "send_letter"
+#define LIVEROOM_FLOWERS_GIFT                   "flowers_gift"
 
 /* 6.2.获取账号余额 */
 /* 接口路径 */
@@ -925,6 +1049,7 @@
 #define LIVEROOM_GETCREDIT_CREDIT                 "credit"
 #define LIVEROOM_GETCREDIT_COUPON                 "coupon"
 #define LIVEROOM_GETCREDIT_POSTSTAMP              "poststamp"
+#define LIVEROOM_GETCREDIT_LIVECHATCOUNT          "LiveChatCount"
 
 /* 6.3.添加／取消收藏 */
 /* 接口路径 */
@@ -1112,6 +1237,7 @@
 #define LIVEROOM_GETTOTALNOREADNUM_BOOKINGUNREADNUM               "booking_unread_num"
 #define LIVEROOM_GETTOTALNOREADNUM_BACKPACKUNREADNUM              "backpack_unread_num"
 #define LIVEROOM_GETTOTALNOREADNUM_SAYHIRESPONSEUNREADNUM         "say_hi_response_unread_num"
+#define LIVEROOM_GETTOTALNOREADNUM_LIVECHATVOUCHERUNREADNUM       "livechat_voucher_unread_num"
 
 /* 6.18.查询个人信息 */
 /* 接口路径 */
@@ -1352,6 +1478,7 @@
 #define LIVEROOM_MOBILEPAYGOTO_ORDERTYPE                        "orderType"
 #define LIVEROOM_MOBILEPAYGOTO_CLICKFROM                        "clickFrom"
 #define LIVEROOM_MOBILEPAYGOTO_NUMBER                           "number"
+#define LIVEROOM_MOBILEPAYGOTO_ORDERNO                          "orderno"
 
 /**
  *  返回
@@ -1976,5 +2103,306 @@
  *  返回
  */
 #define LIVEROOM_READRESPONSE_RESULT        "result"
+
+
+/* 6.23.qn邀请弹窗更新邀请id */
+/* 接口路径 */
+#define LIVEROOM_UPONINVITEID             "/man/v1/upQnInviteId"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_UPONINVITEID_MAN_ID                "man_id"
+#define LIVEROOM_UPONINVITEID_ANCHOR_ID             "anchor_id"
+#define LIVEROOM_UPONINVITEID_INVITE_ID             "invite_id"
+#define LIVEROOM_UPONINVITEID_ROOM_ID               "room_id"
+#define LIVEROOM_UPONINVITEID_INVITE_TYPE           "invite_type"
+
+/* 6.24.获取直播广告 */
+/* 接口路径 */
+#define LIVEROOM_RETRIEVEBANNER             "/member/advert/api/retrieveBanner"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_RETRIEVEBANNER_USERID             "userid"
+#define LIVEROOM_RETRIEVEBANNER_ISANCHORPAGE       "isanchorpage"
+#define LIVEROOM_RETRIEVEBANNER_PAGEID             "page_id"
+
+/* 15.1.获取鲜花礼品列表*/
+/* 接口路径 */
+#define LIVEROOM_GETSTOREGIFTLIST                "/pman/giftFlower/api/getStoreGiftList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETSTOREGIFTLIST_ANCHORID        "anchor_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETSTOREGIFTLIST_LIST              "list"
+#define LIVEROOM_GETSTOREGIFTLIST_TYPEID            "type_id"
+#define LIVEROOM_GETSTOREGIFTLIST_TYPENAME          "type_name"
+#define LIVEROOM_GETSTOREGIFTLIST_ISHASGREETING     "is_has_greeting"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST          "gift_list"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_TYPEID               "type_id"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTID               "gift_id"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTNAME             "gift_name"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTIMG              "gift_img"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_PRICESHOWTYPE        "price_show_type"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTWEEKDAYPRICE     "gift_weekday_price"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTDISCOUNTPRICE    "gift_discount_price"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTPRICE            "gift_price"
+#define LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_ISNEW                "is_new"
+
+/* 15.2.获取鲜花礼品详情*/
+/* 接口路径 */
+#define LIVEROOM_GETGIFTDETAIL                "/pman/giftFlower/api/getGiftDetail"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETGIFTDETAIL_GIFTID        "gift_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETGIFTDETAIL_DETAIL               "detail"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_TYPEID                "type_id"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTID                "gift_id"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTNAME              "gift_name"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTIMG               "gift_img"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_PRICESHOWTYPE         "price_show_type"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTWEEKDAYPRICE      "gift_weekday_price"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTDISCOUNTPRICE     "gift_discount_price"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTPRICE             "gift_price"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_ISNEW                 "is_new"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_DELIVERABLECOUNTRY    "deliverable_country"
+#define LIVEROOM_GETGIFTDETAIL_DETAIL_GIFTDESCRIPTION       "gift_description"
+
+
+/* 15.3.获取推荐鲜花礼品列表*/
+/* 接口路径 */
+#define LIVEROOM_GETRECOMMENDGIFTLIST                "/pman/giftFlower/api/getRecommendGiftList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETRECOMMENDGIFTLIST_GIFTID            "gift_id"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_ANCHORID          "anchor_id"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_NUMBER            "number"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST               "list"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_TYPEID               "type_id"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_GIFTID               "gift_id"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_GIFTNAME             "gift_name"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_GIFTIMG              "gift_img"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_PRICESHOWTYPE        "price_show_type"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_GIFTWEEKDAYPRICE     "gift_weekday_price"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_GIFTDISCOUNTPRICE    "gift_discount_price"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_GIFTPRICE            "gift_price"
+#define LIVEROOM_GETRECOMMENDGIFTLIST_LIST_ISNEW                "is_new"
+
+
+/* 15.4.获取Resent Recipient主播列表*/
+/* 接口路径 */
+#define LIVEROOM_GETRESENTRECIPIENTLIST                "/pman/giftFlower/api/getResentRecipientList"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETRESENTRECIPIENTLIST_LIST                    "list"
+#define LIVEROOM_GETRESENTRECIPIENTLIST_LIST_ANCHORID                   "anchor_id"
+#define LIVEROOM_GETRESENTRECIPIENTLIST_LIST_ANCHORNICKNAME             "anchor_nickname"
+#define LIVEROOM_GETRESENTRECIPIENTLIST_LIST_ANCHORAVATARIMG            "anchor_avatar_img"
+#define LIVEROOM_GETRESENTRECIPIENTLIST_LIST_ANCHORAGE                  "anchor_age"
+
+/* 15.5.获取My delivery列表*/
+/* 接口路径 */
+#define LIVEROOM_GETDELIVERYLIST               "/pman/giftFlower/api/getDeliveryList"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETDELIVERYLIST_LIST                    "list"
+#define LIVEROOM_GETDELIVERYLIST_LIST_ORDERNUMBER                   "order_number"
+#define LIVEROOM_GETDELIVERYLIST_LIST_ORDERDATE                     "order_date"
+#define LIVEROOM_GETDELIVERYLIST_LIST_ANCHORID                      "anchor_id"
+#define LIVEROOM_GETDELIVERYLIST_LIST_ANCHORNICKNAME                "anchor_nickname"
+#define LIVEROOM_GETDELIVERYLIST_LIST_ANCHORAVATAR                  "anchor_avatar"
+#define LIVEROOM_GETDELIVERYLIST_LIST_DELIVERYSTATUS                "delivery_status"
+#define LIVEROOM_GETDELIVERYLIST_LIST_DELIVERYSTATUSVAL             "delivery_status_val"
+#define LIVEROOM_GETDELIVERYLIST_LIST_GIFTLIST                      "gift_list"
+#define LIVEROOM_GETDELIVERYLIST_LIST_GIFTLIST_GIFTID                       "gift_id"
+#define LIVEROOM_GETDELIVERYLIST_LIST_GIFTLIST_GIFTNAME                     "gift_name"
+#define LIVEROOM_GETDELIVERYLIST_LIST_GIFTLIST_GIFTIMG                      "gift_img"
+#define LIVEROOM_GETDELIVERYLIST_LIST_GIFTLIST_GIFTNUMBER                   "gift_number"
+#define LIVEROOM_GETDELIVERYLIST_LIST_GREETINGMESSAGE               "greeting_message"
+#define LIVEROOM_GETDELIVERYLIST_LIST_SPECIALDELIVERYREQUEST        "special_delivery_request"
+
+
+/* 15.6.获取购物车礼品种类数*/
+/* 接口路径 */
+#define LIVEROOM_GETCARTGIFTTYPENUM                "/pman/giftFlower/cart/getCartGiftTypeNum"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETCARTGIFTTYPENUM_ANCHORID          "anchor_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETCARTGIFTTYPENUM_NUM               "num"
+
+
+/* 15.7.获取购物车My cart列表*/
+/* 接口路径 */
+#define LIVEROOM_GETCARTGIFTLIST               "/pman/giftFlower/cart/getCartGiftList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETCARTGIFTLIST_START          "start"
+#define LIVEROOM_GETCARTGIFTLIST_STEP           "step"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETCARTGIFTLIST_TOTAL                      "total"
+#define LIVEROOM_GETCARTGIFTLIST_LIST                       "list"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_ANCHORID                      "anchor_id"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_ANCHORNICKNAME                "anchor_nickname"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_ANCHORAVATARIMG               "anchor_avatar_img"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_ANCHORAGE                     "anchor_age"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_GIFTLIST                      "gift_list"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_GIFTLIST_GIFTID               "gift_id"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_GIFTLIST_GIFTNAME             "gift_name"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_GIFTLIST_GIFTIMG              "gift_img"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_GIFTLIST_GIFTPRICE            "gift_price"
+#define LIVEROOM_GETCARTGIFTLIST_LIST_GIFTLIST_GIFTNUMBER           "gift_number"
+
+
+/* 15.8.添加购物车商品*/
+/* 接口路径 */
+#define LIVEROOM_ADDCARTGIFT                "/pman/giftFlower/cart/addCartGift"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_ADDCARTGIFT_ANCHORID           "anchor_id"
+#define LIVEROOM_ADDCARTGIFT_GIFTID             "gift_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_ADDCARTGIFT_STATUS             "status"
+
+/* 15.9.修改购物车商品数量*/
+/* 接口路径 */
+#define LIVEROOM_CHANGECARTGIFTNUMBER           "/pman/giftFlower/cart/changeCartGiftNumber"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_CHANGECARTGIFTNUMBER_ANCHORID           "anchor_id"
+#define LIVEROOM_CHANGECARTGIFTNUMBER_GIFTID             "gift_id"
+#define LIVEROOM_CHANGECARTGIFTNUMBER_GIFTNUMBER         "gift_number"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_CHANGECARTGIFTNUMBER_STATUS             "status"
+
+
+/* 15.10.删除购物车商品*/
+/* 接口路径 */
+#define LIVEROOM_REMOVECARTGIFT                "/pman/giftFlower/cart/removeCartGift"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_REMOVECARTGIFT_ANCHORID           "anchor_id"
+#define LIVEROOM_REMOVECARTGIFT_GIFTID             "gift_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_REMOVECARTGIFT_STATUS             "status"
+
+
+/* 15.11.Checkout商品*/
+/* 接口路径 */
+#define LIVEROOM_CHECKOUT               "/pman/giftFlower/cart/checkout"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_CHECKOUT_ANCHORID          "anchor_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_CHECKOUT_GIFTLIST                      "gift_list"
+#define LIVEROOM_CHECKOUT_GIFTLIST_GIFTID                       "gift_id"
+#define LIVEROOM_CHECKOUT_GIFTLIST_GIFTNAME                     "gift_name"
+#define LIVEROOM_CHECKOUT_GIFTLIST_GIFTIMG                      "gift_img"
+#define LIVEROOM_CHECKOUT_GIFTLIST_GIFTPRICE                    "gift_price"
+#define LIVEROOM_CHECKOUT_GIFTLIST_GIFTNUMBER                   "gift_number"
+#define LIVEROOM_CHECKOUT_GIFTLIST_GIFTSTATUS                   "gift_status"
+#define LIVEROOM_CHECKOUT_GIFTLIST_ISGREETINGCARD               "is_greeting_card"
+#define LIVEROOM_CHECKOUT_GREETINGCARD                  "greeting_card"
+#define LIVEROOM_CHECKOUT_GREETINGCARD_GIFTID                   "gift_id"
+#define LIVEROOM_CHECKOUT_GREETINGCARD_GIFTNAME                 "gift_name"
+#define LIVEROOM_CHECKOUT_GREETINGCARD_GIFTNUMBER               "gift_number"
+#define LIVEROOM_CHECKOUT_DELIVERYFEE                   "delivery_fee"
+#define LIVEROOM_CHECKOUT_DELIVERYFEE_PRICE                     "price"
+#define LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER           "holiday_special_offer"
+#define LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER_PRICE             "price"
+#define LIVEROOM_CHECKOUT_TOTALPRICE                    "total_price"
+#define LIVEROOM_CHECKOUT_GREETINGMESSAGE               "greeting_message"
+#define LIVEROOM_CHECKOUT_SPECIALDELIVERYREQUEST        "special_delivery_request"
+
+
+/* 15.12.生成订单*/
+/* 接口路径 */
+#define LIVEROOM_CREATEGIFTORDER                "/pman/giftFlower/cart/createGiftOrder"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_CREATEGIFTORDER_ANCHORID                   "anchor_id"
+#define LIVEROOM_CREATEGIFTORDER_GREETINGMESSAGE            "greeting_message"
+#define LIVEROOM_CREATEGIFTORDER_SPECIALDELIVERYREQUEST     "special_delivery_request"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_CREATEGIFTORDER_ORDERNUMBER                "order_number"
+
+/* 6.25.获取直播主播列表广告 */
+/* 接口路径 */
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_PATH                "/member/advert/api/retrieveAdvertSingle"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_DEVICEID            "deviceId"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_ADSPACEID           "adspaceId"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_ADVERTID         "advertId"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_IMAGE            "image"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_WIDTH            "width"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_HEIGHT           "height"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_ADURL            "adurl"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_OPENTYPE         "opentype"
+#define LIVEROOM_ADVERT_WOMANLISTADVERT_RETURN_ADVERTTITLE      "advertTitle"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

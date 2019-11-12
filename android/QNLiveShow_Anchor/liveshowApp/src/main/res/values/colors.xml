@@ -123,13 +123,13 @@
 
     <color name="public_tran_color_sb_checked">#297AF3</color>
     <color name="public_tran_color_sb_unchecked">#292929</color>
-    <color name="public_tran_txt_color">#383838</color>
-    <color name="public_tran_tips_color">#666666</color>
+    <color name="public_tran_txt_color">#FFFFFF</color>
+    <color name="public_tran_tips_color">#FFFFFF</color>
 
     <color name="public_liveroom_audience_list_unselected">#CE297AF3</color>
     <color name="public_liveroom_audience_list_selected">#CE000000</color>
     <color name="public_liveroom_audience_list_txt">#FEFEFF</color>
-    <color name="public_liveroom_audience_current">#297AF3</color>
+    <color name="public_liveroom_audience_current">#FFFF02</color>
     <color name="public_liveroom_audience_total_bg">#9BBEBEBE</color>
     <color name="public_liveroom_msglist_bg">#ECEDF1</color>
     <color name="public_liveroom_giftlist_count">#F7CD3A</color>
@@ -148,5 +148,22 @@
 
     <!-- 推荐 -->
     <color name="live_msg_list_recommend_bg">#05c775</color>
+
+
+    <!--所有底部弹出菜单列表公用的字体颜色-->
+    <!--正常字体颜色-->
+    <color name="common_bottom_item_simple">#383838</color>
+    <!--诸如cancel等文本的字体颜色-->
+    <color name="common_bottom_item_cancel">#8b8b8b</color>
+    <!--默认的列表分割线颜色-->
+    <color name="common_bottom_item_decoration">#66000000</color>
+
+    <!-- 全屏直播间 -->
+    <color name="live_room_header_gradient_start_color">#67000000</color>
+    <color name="live_room_header_gradient_end_color">#00000000</color>
+
+    <color name="test">#FFD205</color>
+
+    <color name="beauty_filter_dialog_bg">#D4000000</color>
 
 </resources>

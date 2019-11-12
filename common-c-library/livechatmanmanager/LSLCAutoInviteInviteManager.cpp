@@ -113,7 +113,8 @@ void LSLCAutoInviteInviteManager::RemoveOverTimeAutoInvite() {
     for (AutoInviteList::const_iterator iter = tempList.begin(); iter != tempList.end(); iter++) {
         LSLCMessageItem* item = (*iter);
         if (item != NULL) {
-            if (item->m_createTime + g_handleTimeInterval >= getCurrentTime()/1000) {
+
+            if (item->m_createTime + g_handleTimeInterval <= getCurrentTime()/1000) {
                 delete item;
                 item = NULL;
             } else {

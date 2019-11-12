@@ -140,6 +140,7 @@ public class LiveRoomChatManager {
                 currLiveRoomType == IMRoomInItem.IMLiveRoomType.HangoutRoom ?
                         R.dimen.listmsgview_item_vert_space_hangout : R.dimen.listmsgview_item_vert_space)).intValue());
         lvlv_roomMsgList.setGradualColor(roomThemeManager.getRoomMsgListTopGradualColor(currLiveRoomType));
+        lvlv_roomMsgList.setDisplayDirection(MessageRecyclerView.DisplayDirection.BottomToTop); //数据从底向上排
 
         initMsgListCache();
     }

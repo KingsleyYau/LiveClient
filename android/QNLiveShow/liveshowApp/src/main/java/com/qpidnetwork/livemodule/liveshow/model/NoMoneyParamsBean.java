@@ -15,6 +15,11 @@ public class NoMoneyParamsBean {
         orderType = LSOrderType.credit;
     }
 
+    public NoMoneyParamsBean(String orderNo){
+        orderType = LSOrderType.flowerGift;
+        this.orderNo = orderNo;
+    }
+
     public NoMoneyParamsBean(String orderType, String clickFrom, String number){
         this.orderType = parseLSOrderType(orderType);
         this.clickFrom = clickFrom;
@@ -32,6 +37,7 @@ public class NoMoneyParamsBean {
     public LSOrderType orderType;
     public String clickFrom;
     public String number;
+    public String orderNo;
 
     /**
      * 买点触发转换器

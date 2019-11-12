@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--注:blocksDescendants解决RecyclerView初始化后自动滚动到第一个Item -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_full"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants" >
+
+    <!-- cardview为了搞个阴影 -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewLeft"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        app:cardCornerRadius="@dimen/live_size_6dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:id="@+id/rl_left_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 相片 -->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_left_roomBg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                fresco:backgroundImage="@color/black4" />
+
+            <!-- 底部渐变层 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/live_size_50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_hang_out_list_gradient" />
+
+            <!--在线及主播名字-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/live_size_10dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/ivLeftOnline"
+                    android:layout_width="@dimen/live_size_10dp"
+                    android:layout_height="@dimen/live_size_10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/circle_solid_green" />
+                <TextView
+                    android:id="@+id/tvLeftName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="middle"
+                    android:maxWidth="100dp"
+                    android:singleLine="true"
+                    android:text="Marry"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="@dimen/live_size_4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/live_size_8dp">
+                
+                <ImageView
+                    android:id="@+id/ivLeftFollow"
+                    android:layout_marginTop="@dimen/live_size_8dp"
+                    android:layout_width="@dimen/live_size_28dp"
+                    android:layout_height="@dimen/live_size_28dp"
+                    android:src="@drawable/ic_recommand_unfollow"/>
+
+                <ImageView
+                    android:id="@+id/ivLeftSayhi"
+                    android:layout_marginTop="@dimen/live_size_4dp"
+                    android:layout_width="@dimen/live_size_28dp"
+                    android:layout_height="@dimen/live_size_28dp"
+                    android:src="@drawable/ic_recommand_list_sayhi"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <!-- cardview为了搞个阴影 -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewRight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        app:cardCornerRadius="@dimen/live_size_6dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        android:layout_marginLeft="@dimen/live_size_8dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_right_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 相片 -->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_right_roomBg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                fresco:backgroundImage="@color/black4" />
+
+            <!-- 底部渐变层 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/live_size_50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_hang_out_list_gradient" />
+
+            <!--在线及主播名字-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/live_size_10dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/ivRightOnline"
+                    android:layout_width="@dimen/live_size_10dp"
+                    android:layout_height="@dimen/live_size_10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/circle_solid_green" />
+                <TextView
+                    android:id="@+id/tvRightName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="middle"
+                    android:maxWidth="100dp"
+                    android:singleLine="true"
+                    android:text="Marry"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="@dimen/live_size_4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/live_size_8dp">
+
+                <ImageView
+                    android:id="@+id/ivRightFollow"
+                    android:layout_marginTop="@dimen/live_size_8dp"
+                    android:layout_width="@dimen/live_size_28dp"
+                    android:layout_height="@dimen/live_size_28dp"
+                    android:src="@drawable/ic_recommand_unfollow"/>
+
+                <ImageView
+                    android:id="@+id/ivRightSayhi"
+                    android:layout_marginTop="@dimen/live_size_4dp"
+                    android:layout_width="@dimen/live_size_28dp"
+                    android:layout_height="@dimen/live_size_28dp"
+                    android:src="@drawable/ic_recommand_list_sayhi"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

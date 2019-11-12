@@ -6,7 +6,7 @@
  */
 
 #ifndef LMENUMJNICONVERT_H
-#define IMENUMJNICONVERT_H
+#define LMENUMJNICONVERT_H
 
 #include <jni.h>
 #include <ILiveMessageManManager.h>

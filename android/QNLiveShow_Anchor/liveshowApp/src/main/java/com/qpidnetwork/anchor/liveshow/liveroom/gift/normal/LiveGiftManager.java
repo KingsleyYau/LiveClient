@@ -1,6 +1,7 @@
 package com.qpidnetwork.anchor.liveshow.liveroom.gift.normal;
 
 import com.qpidnetwork.anchor.im.listener.IMMessageItem;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 
@@ -27,9 +28,8 @@ public class LiveGiftManager {
      * @param listener
      */
     public void registerOnGiftStateChangeLinstener(onGiftStateChangeListener listener){
-        if(!mOnGiftStateChangeListeners.contains(listener)){
-            mOnGiftStateChangeListeners.add(listener);
-        }
+        mOnGiftStateChangeListeners.add(listener);
+        Log.i("Jagger" , "registerOnGiftStateChangeLinstener:" + listener.getClass().getSimpleName());
     }
 
     /**
@@ -43,7 +43,7 @@ public class LiveGiftManager {
     /**
      * 清空监听
      */
-    public void removeAllOnGiftStateChangeLinstener(){
+    private void removeAllOnGiftStateChangeLinstener(){
         mOnGiftStateChangeListeners.clear();
     }
 
@@ -124,11 +124,19 @@ public class LiveGiftManager {
     }
 
     /**
-     * 销毁
+     * 清空礼物数据
      */
-    public void destory(){
+    public void clean(){
         mGiftCacheList.clear();
         mGiftShowList.clear();
+    }
+
+    /**
+     * 销毁
+     */
+    public void destroy(){
+        clean();
+        removeAllOnGiftStateChangeLinstener();
     }
 
     /**

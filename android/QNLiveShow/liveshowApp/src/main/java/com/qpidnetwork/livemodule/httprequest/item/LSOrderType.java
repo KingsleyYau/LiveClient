@@ -7,6 +7,7 @@ package com.qpidnetwork.livemodule.httprequest.item;
  */
 public enum LSOrderType {
 	credit,			// 信用点
+	flowerGift,	    // 鲜花礼品
 	monthFree,	    // 月费服务
 	stamp			// 邮票
 }

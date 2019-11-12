@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,21 +15,20 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="48"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Public_Bg_Combo" translatesAutoresizingMaskIntoConstraints="NO" id="JSm-z7-Gs4" userLabel="Bg Image View">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Combo" translatesAutoresizingMaskIntoConstraints="NO" id="JSm-z7-Gs4" userLabel="Bg Image View">
                     <rect key="frame" x="5" y="0.0" width="370" height="48"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fLN-w4-HmG">
                     <rect key="frame" x="0.0" y="0.0" width="160" height="48"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="7Rg-Hs-zQe" userLabel="Icon Image View">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Gift_Nomal" translatesAutoresizingMaskIntoConstraints="NO" id="7Rg-Hs-zQe" userLabel="Icon Image View">
                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="7Rg-Hs-zQe" secondAttribute="height" multiplier="1:1" id="PqX-np-yCd"/>
                             </constraints>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vQY-GG-YEP">
+                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vQY-GG-YEP">
                             <rect key="frame" x="112" y="10" width="28" height="28"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
@@ -44,7 +42,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gift" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZYd-aB-m6p">
-                            <rect key="frame" x="55" y="25" width="52" height="15"/>
+                            <rect key="frame" x="55" y="25" width="103" height="15"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -53,11 +51,11 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="9PK-0x-akL" firstAttribute="trailing" secondItem="vQY-GG-YEP" secondAttribute="leading" constant="-5" id="0Jg-1O-TqN"/>
-                        <constraint firstItem="ZYd-aB-m6p" firstAttribute="trailing" secondItem="9PK-0x-akL" secondAttribute="trailing" id="6OL-Y9-F6a"/>
                         <constraint firstItem="ZYd-aB-m6p" firstAttribute="bottom" secondItem="fLN-w4-HmG" secondAttribute="bottom" constant="-8" id="95r-lg-uaF"/>
                         <constraint firstAttribute="width" constant="160" id="AT3-Bw-sZS"/>
                         <constraint firstItem="9PK-0x-akL" firstAttribute="leading" secondItem="7Rg-Hs-zQe" secondAttribute="trailing" constant="7" id="AuQ-Yx-DHz"/>
                         <constraint firstItem="vQY-GG-YEP" firstAttribute="bottom" secondItem="fLN-w4-HmG" secondAttribute="bottom" constant="-10" id="Cyg-e2-jfH"/>
+                        <constraint firstAttribute="trailing" secondItem="ZYd-aB-m6p" secondAttribute="trailing" constant="2" id="LMh-y4-tNh"/>
                         <constraint firstItem="vQY-GG-YEP" firstAttribute="trailing" secondItem="fLN-w4-HmG" secondAttribute="trailing" constant="-20" id="NcL-so-pOI"/>
                         <constraint firstItem="ZYd-aB-m6p" firstAttribute="leading" secondItem="9PK-0x-akL" secondAttribute="leading" id="SY2-7T-pZA"/>
                         <constraint firstItem="7Rg-Hs-zQe" firstAttribute="leading" secondItem="fLN-w4-HmG" secondAttribute="leading" id="XBy-pY-s2I"/>
@@ -68,7 +66,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bkk-Uu-XQQ" customClass="GiftComboNumView">
-                    <rect key="frame" x="170" y="12" width="200" height="25"/>
+                    <rect key="frame" x="170" y="11.5" width="200" height="25"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="25" id="LhP-oc-Dq1"/>
@@ -103,7 +101,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Default_Img_Man_Circyle" width="100" height="100"/>
-        <image name="Live_Public_Bg_Combo" width="240" height="40"/>
+        <image name="Live_Gift_Nomal" width="44" height="44"/>
+        <image name="Live_Private_Bg_Combo" width="250" height="40"/>
     </resources>
 </document>

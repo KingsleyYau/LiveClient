@@ -8,5 +8,11 @@
 // 邀请发送成功，等待主播确认
 "PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";
 
-// 主播已拒绝、无回复或缺席
-"PRELIVE_ERR_INVITE_NO_RESPONE" = "Failed to connect.\nPlease try again later.";
+"SHOW" = "Show";
+
+"SHOW_NAME" = "\"%@\"";
+
+"STAER_IN" = "is starting in %ds. Please wait.";
+
+// 未知错误
+"SERVER_ERROR_TIP" = "A problem occur while communicating with the server.";

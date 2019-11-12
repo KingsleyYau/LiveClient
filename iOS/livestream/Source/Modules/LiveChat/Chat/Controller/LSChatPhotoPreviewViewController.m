@@ -75,19 +75,22 @@
 - (IBAction)sendBtnDid:(id)sender {
     self.sendBtn.userInteractionEnabled = NO;
     LSChatPhoneAlbumPhoto *albumPhoto = [[LSChatPhotoDataManager manager].photoPathArray objectAtIndex:self.photoIndex];
-
+    PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
+    option.resizeMode = PHImageRequestOptionsResizeModeNone;//控制照片尺寸
+    option.synchronous = YES;//主要是这个设为YES这样才会只走一次
+    option.networkAccessAllowed = YES;
     [[PHImageManager defaultManager] requestImageForAsset:albumPhoto.asset
                                                targetSize:PHImageManagerMaximumSize
                                               contentMode:PHImageContentModeAspectFill
-                                                  options:nil
+                                                  options:option
                                             resultHandler:^(UIImage *result, NSDictionary *info) {
+                                                [self.navigationController dismissViewControllerAnimated:NO completion:nil];
                                                 if (result) {
                                                     result = [result imageCropForSize:1280];
                                                     NSString *path = [[LSChatPhotoDataManager manager] getOriginalPhotoPath:result andImageName:albumPhoto.fileName];
                                                     albumPhoto.originalPath = path;
                                                     [[LSChatPhotoDataManager manager] choosePhotoURL:path];
                                                 }
-                                                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
                                             }];
 }
 

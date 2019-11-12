@@ -63,6 +63,10 @@ protected:
     bool ParseIOSPaid(const char* buf, int size, string &code, Json::Value *data);
     // 这个直播新的头部
     bool ParseNewLiveCommon(const char* buf, int size, int &errnum, string &errmsg, Json::Value *data, Json::Value *errdata = NULL);
+    
+    // 处理公共头部
+    bool ParseLiveChatVoucherCommon(const char* buf, int size, string &errnum, string &errmsg, Json::Value *data, Json::Value *errdata = NULL);
+    
     // 子类处理业务
 	virtual bool ParseData(const string& url, bool bFlag, const char* buf, int size) = 0;
 

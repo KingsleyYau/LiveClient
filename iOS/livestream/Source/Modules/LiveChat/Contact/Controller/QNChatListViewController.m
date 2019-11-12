@@ -11,8 +11,13 @@
 #import "QNContactManager.h"
 #import "QNChatViewController.h"
 #import "QNRiskControlManager.h"
+#import "LSShadowView.h"
+#import "LSLoginManager.h"
 @interface QNChatListViewController ()<QNContactManagerDelegate,QNContactListTableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIView *noDataView;
+@property (weak, nonatomic) IBOutlet UIButton *searchBtn;
+@property (weak, nonatomic) IBOutlet UIView *noPrivDataView;
+@property (weak, nonatomic) IBOutlet UIButton *privSearchBtn;
 @property (weak, nonatomic) IBOutlet QNContactListTableView *tableView;
 /**
  *  数据列表
@@ -30,8 +35,17 @@
     self.tableView.tableViewDelegate = self;
     [[QNContactManager manager] addDelegate:self];
     [self setupTableView];
-    self.searchBtn.layer.cornerRadius = 18.0f;
+    self.searchBtn.layer.cornerRadius = 8.0f;
     self.searchBtn.layer.masksToBounds = YES;
+    
+    LSShadowView * view = [[LSShadowView alloc]init];
+    [view showShadowAddView:self.searchBtn];
+    
+    self.privSearchBtn.layer.cornerRadius = 8.0f;
+    self.privSearchBtn.layer.masksToBounds = YES;
+    
+    LSShadowView * view1 = [[LSShadowView alloc]init];
+    [view1 showShadowAddView:self.privSearchBtn];
 }
 
 
@@ -60,9 +74,18 @@
     self.tableView.items = self.items;
     
     if (self.items.count == 0) {
-        self.noDataView.hidden = NO;
+    //没有公开权限
+      if (![LSLoginManager manager].loginItem.userPriv.isPublicRoomPriv) {
+          self.noPrivDataView.hidden = NO;
+      }else {
+          self.noDataView.hidden = NO;
+      }
     } else {
-        self.noDataView.hidden = YES;
+        if (![LSLoginManager manager].loginItem.userPriv.isPublicRoomPriv) {
+                self.noPrivDataView.hidden = YES;
+            }else {
+                self.noDataView.hidden = YES;
+            }
     }
 
     if (isReloadView) {

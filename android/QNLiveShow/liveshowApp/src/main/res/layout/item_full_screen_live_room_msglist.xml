@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_msgItemContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="2dp">
+
+    <!--
+          2019/9/12 Hardy
+          发送昵称+内容的混排
+          [内容] 覆盖在 [昵称] 标签的上面，内容中开始位置，拼接昵称的内容，作为占位，看起来有混排的效果
+      -->
+    <!-- 普通文本 -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp">
+
+        <!--
+            文本内容
+            android:layout_marginLeft="4dp"
+            由于昵称的圆角背景内边距是 4dp，故这里也距离左边一致距离，则文本内容中的占位昵称与昵称标签重合，不会跑出圆角背景的范围
+
+            android:lineSpacingMultiplier="1.1"
+            内容的换行间距，1.1 数值，刚好换行时，在昵称标签的下面，并且预留一点顶部空隙，不会与昵称标签重合。
+            并且，尽量不要设置 > 1.1 ，如果第一行文本有表情时，会导致表情与文本不对齐
+        -->
+        <TextView
+            android:id="@+id/tvMsgDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:lineSpacingMultiplier="1.1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            tools:text="HardyHardyHardyHardy"
+            tools:textColor="@color/black"
+            android:textColor="@color/white"
+            android:textStyle="normal" />
+
+        <!-- 昵称 -->
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            tools:textColor="@color/black"
+            tools:text="Hardy"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+
+    <!--增加才艺推荐样式-->
+    <LinearLayout
+        android:id="@+id/llRecommended"
+        android:layout_width="215dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="@dimen/live_size_4dp"
+        android:paddingBottom="2dp"
+        android:visibility="visible">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imgMsgAnchorPhoto"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:backgroundImage="@color/black4"
+            fresco:placeholderImage="@drawable/ic_default_photo_woman_rect"
+            fresco:roundAsCircle="false"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="6dp"
+            fresco:roundingBorderColor="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle_rounded_angle_talent_recommand"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/live_size_8dp"
+                android:layout_marginRight="@dimen/live_size_8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--增加hangout推荐及敲门界面-->
+    <LinearLayout
+        android:id="@+id/llAnchorRecommended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_4dp"
+        android:minWidth="@dimen/live_size_200dp"
+        android:minHeight="75dp"
+        android:paddingBottom="2dp"
+        android:visibility="gone">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ivAnchorPhoto"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:backgroundImage="@color/black4"
+            fresco:roundAsCircle="false"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="6dp"
+            fresco:roundingBorderColor="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_hangout_recommend_shape"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/live_size_8dp"
+            android:paddingTop="@dimen/live_size_6dp"
+            android:paddingRight="@dimen/live_size_8dp"
+            android:paddingBottom="@dimen/live_size_2dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvAnchorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold"
+                tools:text="Nico" />
+
+            <TextView
+                android:id="@+id/tvAnchorDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_12sp"
+                tools:text="Nico" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/tvEventButton"-->
+            <!--android:layout_width="@dimen/live_size_90dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+            <!--android:background="@drawable/btn_hangout_invite_white_ba"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingTop="@dimen/live_size_2dp"-->
+            <!--android:paddingBottom="@dimen/live_size_2dp"-->
+            <!--android:textColor="@color/live_ho_orange_deep"-->
+            <!--android:textSize="@dimen/live_size_12sp"-->
+            <!--android:visibility="gone" />-->
+
+            <LinearLayout
+                android:id="@+id/llEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginTop="@dimen/live_size_8dp"
+                android:background="@drawable/btn_recommand_hangout_list_stroke_shape"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/live_size_10dp"
+                android:paddingRight="@dimen/live_size_10dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_list_public" />
+
+                <TextView
+                    android:id="@+id/tvEventButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_2dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/live_common_invite_now"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

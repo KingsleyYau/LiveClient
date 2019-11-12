@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/fl_vedioTips"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="28dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:background="@drawable/rectangle_radius14_transparent_7"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/iv_vedioTips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="14dp"
+        android:minWidth="14dp"
+        android:layout_marginRight="7dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_liveroom_vedio_tips"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/tv_vedioTip0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:maxWidth="110dp"
+        android:ellipsize="end"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text=""
+        tools:visibility="visible"
+        tools:text="Tip0"/>
+
+    <TextView
+        android:id="@+id/tv_vedioTip1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text="@string/liveroom_leaving_room_time_count_tips1"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_vedioTip2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxWidth="110dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text=""
+        tools:visibility="visible"
+        tools:text="Tip2"/>
+
+    <TextView
+        android:id="@+id/tv_vedioTip3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/google_yellow"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text="30"
+        android:textStyle="bold"
+        tools:visibility="visible"
+        tools:text="Tip3" />
+
+    <TextView
+        android:id="@+id/tv_vedioTip4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/google_yellow"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:text="@string/liveroom_leaving_room_time_count_s"
+        tools:visibility="visible"
+        tools:text="Tip4" />
+</LinearLayout>

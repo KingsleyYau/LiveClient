@@ -12,7 +12,7 @@
     <dimen name="coverphoto_selected_stroke_width">1dp</dimen>
     <dimen name="coverphoto_unselected_stroke_width">0dp</dimen>
     <dimen name="coverphoto_corner_radiu">3dp</dimen>
-    <integer name="lady_hot_list_bg_max_HW">500</integer>
+    <dimen name="lady_hot_list_bg_max_HW">200dp</dimen>
 
     <dimen name="liveroom_bullet_height">46dp</dimen>
     <dimen name="min_keyboard_height">200dp</dimen>
@@ -27,6 +27,7 @@
     <dimen name="defaultVedioPlayerHeight">270dp</dimen>
     <dimen name="imButtomMargin">56dp</dimen>
     <dimen name="liveroom_mulitgift_height">40dp</dimen>
+    <dimen name="liveroom_mulitgift_width">100dp</dimen>
 
     <dimen name="liveroom_car_default_width">34dp</dimen>
     <dimen name="liveroom_car_default_height">34dp</dimen>
@@ -107,6 +108,7 @@
     <dimen name="live_size_16dp">16dp</dimen>
     <dimen name="live_size_24dp">24dp</dimen>
     <dimen name="live_size_26dp">26dp</dimen>
+    <dimen name="live_size_28dp">28dp</dimen>
     <dimen name="live_size_20dp">20dp</dimen>
     <dimen name="live_size_30dp">30dp</dimen>
     <dimen name="live_size_38dp">38dp</dimen>
@@ -114,17 +116,21 @@
     <dimen name="live_size_50dp">50dp</dimen>
     <dimen name="live_size_48dp">48dp</dimen>
     <dimen name="live_size_60dp">60dp</dimen>
+    <dimen name="live_size_67dp">67dp</dimen>
     <dimen name="live_size_70dp">70dp</dimen>
     <dimen name="live_size_80dp">80dp</dimen>
+    <dimen name="live_size_88dp">88dp</dimen>
     <dimen name="live_size_90dp">90dp</dimen>
     <dimen name="live_size_100dp">100dp</dimen>
     <dimen name="live_size_110dp">110dp</dimen>
     <dimen name="live_size_120dp">120dp</dimen>
     <dimen name="live_size_140dp">140dp</dimen>
     <dimen name="live_size_180dp">180dp</dimen>
+    <dimen name="live_size_194dp">194dp</dimen>
     <dimen name="live_size_200dp">200dp</dimen>
     <dimen name="live_size_210dp">210dp</dimen>
     <dimen name="live_size_220dp">220dp</dimen>
+    <dimen name="live_size_336dp">336dp</dimen>
 
     <dimen name="normal_button_height_44dp">44dp</dimen>
     <!-- progressButton -->
@@ -154,6 +160,13 @@
     <dimen name="live_main_top_menu_txt_top_margin_min">0dp</dimen>
     <dimen name="live_main_top_menu_badge_txt_size_max">11sp</dimen>
     <dimen name="live_main_top_menu_badge_txt_size_min">9sp</dimen>
+
+    <!-- 主界面 直播间列表-->
+    <dimen name="live_main_room_list_btn_LR_size">8dp</dimen>
+    <dimen name="live_main_room_list_btn_icon_size">28dp</dimen>
+    <dimen name="live_main_room_list_btn_text_size">12sp</dimen>
+    <dimen name="live_main_room_list_btn_height">34dp</dimen>
+    <dimen name="live_main_room_list_bottom_btn_LR_margin">12dp</dimen>
 
     <!-- 私信 -->
     <dimen name="mesage_emoji_item_height">50dp</dimen>
@@ -185,8 +198,33 @@
     <dimen name="msgListButtomMarginInHangoutRoom">50dp</dimen>
     <dimen name="live_hangout_bottom_opera_btn_size">39dp</dimen>
     <dimen name="live_hangout_room_ctrl_min_size">250dp</dimen>
+
     <!--好友横向列表头像的宽高-->
     <dimen name="live_hangout_anchor_list_wh">66dp</dimen>
-
     <dimen name="live_chat_video_play_blue_btn_wh">87dp</dimen>
+
+    <!-- SayHi -->
+    <dimen name="sayHi_list_opera_btn_size">26dp</dimen>
+    <dimen name="sayHi_list_opera_btn_margin">8dp</dimen>
+    <dimen name="sayHi_edit_handle_height">47dp</dimen>
+    <dimen name="sayHi_edit_handle_icon_size">20dp</dimen>
+    <dimen name="sayHi_edit_theme_item_width">162dp</dimen>
+    <dimen name="sayHi_edit_theme_item_height">98dp</dimen>
+    <dimen name="sayHi_list_response_filter_width">150dp</dimen>
+
+    <!-- 直播间 -->
+    <dimen name="live_enter_car_size">83dp</dimen>
+    <dimen name="live_room_msg_area_max_height">80dp</dimen>
+    <dimen name="live_room_edit_height">41dp</dimen>
+
+    <!-- 鲜花礼品   -->
+    <dimen name="flowers_type_name_height">44dp</dimen>
+    <dimen name="live_my_cart_item_padding_LR">20dp</dimen>
+    <dimen name="my_cart_anchor_img_size">44dp</dimen>
+    <dimen name="my_cart_flower_img_size">60dp</dimen>
+    <dimen name="my_cart_item_space_size">5dp</dimen>
+    <dimen name="check_out_bottom_menu_size">44dp</dimen>
+    <dimen name="check_out_shadow_height">4dp</dimen>
+    <dimen name="delivery_gift_size">70dp</dimen>
+    <dimen name="delivery_img_size">60dp</dimen>
 </resources>

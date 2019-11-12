@@ -31,6 +31,7 @@ const long long HEARTBEAT_TIMEOUT = 25*1000;     // 心跳超时（毫秒）
 #include "AnchorLeaveHangoutRoomTask.h"
 #include "SendAnchorHangoutGiftTask.h"
 #include "SendAnchorHangoutLiveChatTask.h"
+#include "ZBAnchorSwitchFlowTask.h"
 
 ZBImClient::ZBImClient()
 {
@@ -596,6 +597,43 @@ void ZBImClient::OnZBRoomOut(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, cons
     m_listenerListLock->Unlock();
 }
 
+bool ZBImClient::ZBAnchorSwitchFlow(SEQ_T reqId, const string& roomId, IMDeviceType deviceType) {
+    bool result = false;
+    m_loginStatusLock->Lock();
+    ZBLoginStatus loginStatus = m_loginStatus;
+    m_loginStatusLock->Unlock();
+    FileLog("ImClient", "ZBImClient::ZBAnchorSwitchFlow() begin, m_taskManager:%p roomId:%s deviceType:%d", m_taskManager, roomId.c_str(), deviceType);
+    // 若为已登录状态
+    if (ZBLOGINED == loginStatus) {
+        ZBAnchorSwitchFlowTask* task = new ZBAnchorSwitchFlowTask();
+        if (NULL != task) {
+            task->Init(this);
+            task->InitParam(roomId, deviceType);
+            
+            task->SetSeq(reqId);
+            result = m_taskManager->HandleRequestTask(task);
+        }
+    }
+    else
+    {
+        result = false;
+    }
+    FileLog("ImClient", "ZBImClient::ZBAnchorSwitchFlow() end, m_taskManager:%p roomId:%s deviceType:%d result:%d", m_taskManager, roomId.c_str(), deviceType, result);
+    return result;
+}
+
+void ZBImClient::OnAnchorSwitchFlow(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const list<string> pushUrl, IMDeviceType deviceType) {
+    FileLog("ImClient", "ZBImClient::OnAnchorSwitchFlow() begin, ImClient:%p reqId:%d success:%d err:%d errMsg:%s", this, reqId, success, err, errMsg.c_str());
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end(); itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnAnchorSwitchFlow(reqId, success, err, errMsg, pushUrl, deviceType);
+    }
+    FileLog("ImClient", "ZBImClient::OnAnchorSwitchFlow() end, ImClient:%p reqId:%d success:%d err:%d errMsg:%s", this, reqId, success, err, errMsg.c_str());
+    m_listenerListLock->Unlock();
+}
+
 
 // --------- 直播间文本消息 ---------
 // 4.1.发送直播间文本消息
@@ -679,7 +717,7 @@ void ZBImClient::OnZBSendGift(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, con
 }
 
 // 9.1.主播发送立即私密邀请
-bool ZBImClient::ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userId)
+bool ZBImClient::ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userId, IMDeviceType deviceType)
 {
     bool result = false;
     m_loginStatusLock->Lock();
@@ -691,7 +729,7 @@ bool ZBImClient::ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userId)
         ZBSendPrivateLiveInviteTask* task = new ZBSendPrivateLiveInviteTask();
         if (NULL != task) {
             task->Init(this);
-            task->InitParam(userId);
+            task->InitParam(userId, deviceType);
             
             task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
@@ -712,21 +750,19 @@ bool ZBImClient::ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userId)
  *  @param reqId         请求序列号
  *  @param err           结果类型
  *  @param errMsg        结果描述
- *  @param invitationId      邀请ID
- *  @param timeOut           邀请的剩余有效时间
- *  @param roomId            直播间ID
+ *  @param infoItem      主播邀请返回信息
  *
  */
-void ZBImClient::OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId)
+void ZBImClient::OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const ZBIMSendInviteInfoItem& infoItem)
 {
-    FileLog("ImClient", "ZBImClient::OnZBSendPrivateLiveInvite() begin, ZBImClient:%p reqId:%d err:%d errMsg:%s invitationId:%s time:%d roomId:%s", this, reqId, err, errMsg.c_str(), invitationId.c_str(), timeOut, roomId.c_str());
+    FileLog("ImClient", "ZBImClient::OnZBSendPrivateLiveInvite() begin, ZBImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
     m_listenerListLock->Lock();
     for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end(); itr++) {
         IZBImClientListener* callback = *itr;
-        callback->OnZBSendPrivateLiveInvite(reqId, success,err, errMsg, invitationId, timeOut, roomId);
+        callback->OnZBSendPrivateLiveInvite(reqId, success,err, errMsg, infoItem);
     }
-    FileLog("ImClient", "ZBImClient::OnZBSendPrivateLiveInvite() end, ImClient:%p reqId:%d err:%d errMsg:%s invitationId:%s time:%d roomId:%s", this, reqId, err, errMsg.c_str(), invitationId.c_str(), timeOut, roomId.c_str());
+    FileLog("ImClient", "ZBImClient::OnZBSendPrivateLiveInvite() end, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
     
     m_listenerListLock->Unlock();
 }
@@ -1581,6 +1617,63 @@ void ZBImClient::OnRecvAnchorShowMsgNotice(const string& backgroundUrl, const st
         callback->OnRecvAnchorShowMsgNotice(backgroundUrl, msg);
     }
     FileLog("ImClient", "ZBImClient::OnRecvAnchorShowMsgNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  12.1.多端获取预约邀请未读或代处理数量同步推送接口 回调
+ *
+ *  @param item         未读信息
+ *
+ */
+void ZBImClient::OnRecvGetScheduleListNReadNum(const ZBIMBookingUnreadUnhandleNumItem& item) {
+    FileLog("ImClient", "ZBImClient::OnRecvGetScheduleListNReadNum() begin, ImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnRecvGetScheduleListNReadNum(item);
+    }
+    FileLog("ImClient", "ZBImClient::OnRecvGetScheduleListNReadNum() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  12.2.多端获取已确认的预约数同步推送接口 回调
+ *
+ *  @param scheduleNum         已确认的预约数量
+ *
+ */
+void ZBImClient::OnRecvGetScheduledAcceptNum(int scheduleNum) {
+    FileLog("ImClient", "ZBImClient::OnRecvGetScheduledAcceptNum() begin, ImClient:%p, scheduleNum : %d", this, scheduleNum);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnRecvGetScheduledAcceptNum(scheduleNum);
+    }
+    FileLog("ImClient", "ZBImClient::OnRecvGetScheduledAcceptNum() end, ImClient:%p, scheduleNum : %d", this, scheduleNum);
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  12.3.多端获取节目未读数同步推送接口 回调
+ *
+ *  @param num         未读数量
+ *
+ */
+void ZBImClient::OnRecvNoreadShowNum(int num) {
+    FileLog("ImClient", "ZBImClient::OnRecvNoreadShowNum() begin, ImClient:%p, num : %d", this, num);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnRecvNoreadShowNum(num);
+    }
+    FileLog("ImClient", "ZBImClient::OnRecvNoreadShowNum() end, ImClient:%p, num : %d", this, num);
     m_listenerListLock->Unlock();
 }
 

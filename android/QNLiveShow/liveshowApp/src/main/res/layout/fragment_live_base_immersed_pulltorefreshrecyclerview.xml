@@ -24,12 +24,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.qpidnetwork.livemodule.view.RefreshRecyclerView
+    <!--<BallRefreshRecyclerView-->
+    <!--<com.qpidnetwork.livemodule.view.RefreshRecyclerView-->
+        <!--android:id="@+id/refreshRecyclerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scrollbars="none"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--/>-->
+
+    <include
         android:id="@+id/refreshRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        layout="@layout/refresh_ball_recyclerview"
+        />
 
     <!--Empty提示图-->
     <com.qpidnetwork.livemodule.view.ErrorView

@@ -28,7 +28,8 @@ public class IMMessageItem implements Serializable{
 		SysNotice,			//系统公告
 		TalentRecommand,	//才艺推荐
 		AnchorRecommand,	//多人互动主播推荐
-		AnchorKnock			//多人互动，主播敲门
+		AnchorKnock,		//多人互动，主播敲门
+		Voucher         	//试聊卷
 	}
 
 	public MessageType msgType;	//消息类型
@@ -56,6 +57,9 @@ public class IMMessageItem implements Serializable{
 
 	/* 主播敲门信息 */
 	public IMRecvKnockRequestItem hangoutKnockRequestItem;
+
+	/* 试聊卷消息内容 */
+	public IMVoucherMessageContent voucherMessageContent;
 	
 	public IMMessageItem(){
 		msgType = MessageType.Unknown;
@@ -207,6 +211,22 @@ public class IMMessageItem implements Serializable{
 		this.msgId = msgId;
 		this.msgType = msgType;
 		this.hangoutKnockRequestItem = hangoutKnockRequestItem;
+	}
+
+	/**
+	 * 试聊卷
+	 * @param roomId
+	 * @param roomPrice		直播间资费
+	 * @param useCoupon  	试聊卷分钟数
+	 */
+	public IMMessageItem(String roomId,
+						 int msgId,
+						 double roomPrice,
+						 int useCoupon){
+		this.roomId = roomId;
+		this.msgId = msgId;
+		this.msgType = MessageType.Voucher;
+		this.voucherMessageContent = new IMVoucherMessageContent(roomPrice, useCoupon);
 	}
 
 	/**

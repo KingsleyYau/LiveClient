@@ -89,7 +89,8 @@
                         android:paddingLeft="9dp"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
-                        android:src="@drawable/ic_level_icon_1" />
+                        android:src="@drawable/ic_level_icon_1"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 

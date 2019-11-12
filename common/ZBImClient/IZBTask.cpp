@@ -44,7 +44,16 @@
 #include "RecvAnchorChangeStatusNoticeTask.h"
 #include "RecvAnchorShowMsgNoticeTask.h"
 
+#include "RecvGetScheduleListNoReadNumTask.h"
+#include "RecvGetScheduledAcceptNumTask.h"
+#include "RecvNoreadShowNumTask.h"
 
+// 多端
+#include "ZBPublicRoomInTask.h"
+#include "ZBRoomInTask.h"
+#include "ZBAnchorSwitchFlowTask.h"
+#include "ZBSendPrivateLiveInviteTask.h"
+#include "AnchorHangoutRoomTask.h"
 
 // 根据 cmd 创建 task
 IZBTask* IZBTask::CreateTaskWithCmd(const string& cmd)
@@ -178,6 +187,39 @@ IZBTask* IZBTask::CreateTaskWithCmd(const string& cmd)
         // 11.3.接收无操作的提示通知
         task = new RecvAnchorShowMsgNoticeTask();
     }
+    else if (cmd == ZB_CMD_GETSCHEDULELISTNOREADNUM) {
+        // 12.1.多端获取预约邀请未读或代处理数量同步推送
+        task = new RecvGetScheduleListNoReadNumTask();
+    }
+    else if (cmd == ZB_CMD_GETSCHEDULEDACCEPTNUM) {
+        // 12.2.多端获取已确认的预约数同步推送
+        task = new RecvGetScheduledAcceptNumTask();
+    }
+    else if (cmd == ZB_CMD_NOREADSHOWNUM) {
+        // 12.3.多端获取节目未读数同步推送
+        task = new RecvNoreadShowNumTask();
+    }
+    // 多端都需要的接口
+    else if (cmd == ZB_CMD_PUBLICROOMIN) {
+        // 3.1.新建/进入公开直播间
+        task = new ZBPublicRoomInTask();
+    }
+    else if (cmd == ZB_CMD_ROOMIN) {
+        // 3.2.主播进入指定直播间
+        task = new ZBRoomInTask();
+    }
+    else if (cmd == ZB_CMD_ANCHORSWITCHFLOW) {
+        // 3.11.主播切换推流地址
+        task = new ZBAnchorSwitchFlowTask();
+    }
+    else if (cmd == ZB_CMD_SENDPRIVATELIVEINVITE) {
+        // 9.1.观众立即私密邀请
+        task = new ZBSendPrivateLiveInviteTask();
+    }
+//    else if (cmd == ZB_CMD_ENTERHANGOUTROOM) {
+//        // 10.1.进入多人互动直播间
+//        task = new AnchorHangoutRoomTask();
+//    }
 
     return task;
 }

@@ -1,0 +1,44 @@
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "bf8-cZ-hZV"; */
+"bf8-cZ-hZV.normalTitle" = "Button";
+
+"UnRead_Messages" = "new messages";
+
+"Member_Share" = "has shared the broadcast";
+
+"Member_ThumbUp" = "likes this stream";
+
+"Msg_Type_Rider" = "Car";
+
+"SENDTOSAT_ERR_ADD_CREDIT" = "You don't have enough credits to send this gift. Please buy more!";
+
+"WATCHING_WILL_NO_MONEY" = "You are running out of credits. Please buy more credits to continue watching.";
+
+"Rebate_Tip" = "Credit rebate: ";
+
+"Recv_Rebate" = "You have been given a rebate of";
+
+"Open_Permissions_Tip" = "Please open the camera and record permissions";
+
+"LIVE_VOUCHER_APPLIED" = "Live voucher is applied. The first %d minutes is free";
+
+"LIVE_NOT_ROOM" = "Broadcast has ended.\nPlease check back later.";
+
+"INVITING_HANG_OUT" = "Inviting %@ to start Hang-out...";
+
+"INVITE_SUCCESS_HANGOUT" = "Hang-out will start soon.";
+
+"INVITE_REJECT_HANGOUT" = "%@ is not responding. Please try again later.";
+
+"WOULD_LIKE_TO_HANGOUT" = "%@ would like to start Hang-out with you and %@.";
+
+"SEND_INVITE_NO_CREDIT" = "You have insufficient credits to send the invitation.";
+
+"CAM_NO_CREDITS" = "You don't have enough credits to start 2-way video, please buy more.";
+
+"OPEN_MAN_PUSH_ERROR" = "Could not start 2-way video chat. Please try again later.";
+
+"CLOSE_MAN_PUSH_ERROR" = "Could not end 2-way video chat. Please try again later.";
+
+"PUSH_TIPS" = "2-way video is billed at %@ credit per minute. Are you sure to turn it on?";
+

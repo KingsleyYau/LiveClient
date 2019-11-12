@@ -11,11 +11,13 @@ import android.widget.RelativeLayout;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
+import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumPictureCache;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumPictureCache.ImageCallback;
 import com.qpidnetwork.qnbridgemodule.view.camera.ImageBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.qpidnetwork.livemodule.liveshow.livechat.album.AlbumGridAdapter.getInitItemLayoutParam;
@@ -78,11 +80,23 @@ public class LiveChatAlbumGridAdapter extends BaseAdapter {
 
     public LiveChatAlbumGridAdapter(Activity act, List<ImageBean> list) {
         this.mActivity = act;
-        mAlbumList = list;
         cache = new AlbumPictureCache();
+
+        mAlbumList = new ArrayList<>();
+        if (ListUtils.isList(list)) {
+            mAlbumList.addAll(list);
+        }
 
         int itemSize = AlbumGridAdapter.getInitItemSize(act, 2);
         mItemParam = getInitItemLayoutParam(itemSize);
+    }
+
+    public void setData(List<ImageBean> list){
+        mAlbumList.clear();
+        if (ListUtils.isList(list)) {
+            mAlbumList.addAll(list);
+        }
+        this.notifyDataSetChanged();
     }
 
     @Override

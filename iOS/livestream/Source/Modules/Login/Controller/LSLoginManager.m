@@ -54,6 +54,7 @@ static LSLoginManager *loginManager = nil;
 
         self.delegates = [NSMutableArray array];
         self.isAutoLogin = NO;
+         self.isLivechatLogin = NO;
     }
     return self;
 }
@@ -344,9 +345,9 @@ static LSLoginManager *loginManager = nil;
         if (type == LogoutTypeActive || type == LogoutTypeKick) {
             // 主动注销(被踢)
             // 标记不能自动重
-            self.isAutoLogin = NO;
-            _password = nil;
-
+             self.isAutoLogin = NO;
+             _password = nil;
+   
             [self closePushToken];
         }
        
@@ -356,6 +357,12 @@ static LSLoginManager *loginManager = nil;
 
         // 标记为已经注销
         _status = NONE;
+        
+        
+        if (type != LogoutTypeRelogin) {
+            _isLivechatLogin = NO;
+        }
+    
          
          // 移除SayHi配置
          [[LSSayHiManager manager] removeAllSayHiConfig];

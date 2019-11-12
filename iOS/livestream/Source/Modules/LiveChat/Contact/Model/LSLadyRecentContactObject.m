@@ -147,7 +147,11 @@
     if (self.firstname.length == 0) {
         self.firstname = (userInfo.userName.length > 0) ? userInfo.userName : self.firstname;
     }
-
+    
+    if (self.photoURL.length == 0) {
+        self.photoURL = (userInfo.avatarImg.length > 0) ? userInfo.avatarImg : self.photoURL;
+    }
+    
     if (bOnline != self.isOnline || ![self.firstname isEqualToString:userName]) {
         bFlag = YES;
     }
@@ -299,24 +303,27 @@
     NSString *premiumSticker = NSLocalizedStringFromSelf(@"NOTICE_MESSAGE_ANIMATING_STICKER");
     NSString *animationSticker = NSLocalizedStringFromSelf(@"NOTICE_MESSAGE_PREMIUM_STICKER");
 
+
     if ([self isLastMsgChange:msg]) {
-        // 更新邀请
-        self.msg = msg;
-
-        if (msg.msgType == MT_Text && msg.textMsg) {
-            NSString *string = [LSStringEncoder htmlEntityDecode:msg.textMsg.displayMsg];
-            NSString *trimmedString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            self.lastInviteMessage = [self parseMessageTextEmotion:trimmedString font:[UIFont systemFontOfSize:15]];
-        } else if (msg.msgType == MT_Emotion) {
-            self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, premiumSticker] font:[UIFont systemFontOfSize:15]];
-        } else if (msg.msgType == MT_MagicIcon) {
-            self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, animationSticker] font:[UIFont systemFontOfSize:15]];
-        } else {
-            // 如果消息被清空,当前联系还是保存之前的内容,需要置空
-            self.lastInviteMessage = [[NSMutableAttributedString alloc] initWithString:@""];
+        if (msg.sendType == SendType_Recv) {
+            // 更新邀请
+            self.msg = msg;
+            
+            if (msg.msgType == MT_Text && msg.textMsg) {
+                NSString *string = [LSStringEncoder htmlEntityDecode:msg.textMsg.displayMsg];
+                NSString *trimmedString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                self.lastInviteMessage = [self parseMessageTextEmotion:trimmedString font:[UIFont systemFontOfSize:15]];
+            } else if (msg.msgType == MT_Emotion) {
+                self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, premiumSticker] font:[UIFont systemFontOfSize:15]];
+            } else if (msg.msgType == MT_MagicIcon) {
+                self.lastInviteMessage = [self parseMessageTextEmotion:[NSString stringWithFormat:@"%@ %@", self.firstname, animationSticker] font:[UIFont systemFontOfSize:15]];
+            } else {
+                // 如果消息被清空,当前联系还是保存之前的内容,需要置空
+                self.lastInviteMessage = [[NSMutableAttributedString alloc] initWithString:@""];
+            }
         }
+        
     }
-
     return bFlag;
 }
 

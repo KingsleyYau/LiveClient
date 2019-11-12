@@ -84,6 +84,7 @@ public class InviteHistoryFragment extends BaseListFragment{
                         showEmptyView();
                     }else{
                         hideNodataPage();
+                        hideErrorPage();
                     }
                 }else{
                     if(mInviteHistoryList.size()>0){
@@ -110,8 +111,8 @@ public class InviteHistoryFragment extends BaseListFragment{
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
         if(null != getActivity()){
             Intent intent = new Intent( getActivity(), MainFragmentActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -127,7 +128,7 @@ public class InviteHistoryFragment extends BaseListFragment{
     private void showEmptyView(){
         if(null != getActivity()){
             setDefaultEmptyMessage(getActivity().getResources().getString(R.string.history_empty_tips));
-            setDefaultEmptyButtonText(getActivity().getResources().getString(R.string.invite_empty_hot_broadcasters));
+            setEmptyGuideButtonText(getActivity().getResources().getString(R.string.invite_empty_hot_broadcasters));
         }
         showNodataPage();
     }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/live_size_10dp">
+
+    <!--蓝色背景-->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:actualImageScaleType="fitXY"
+        app:backgroundImage="@drawable/bg_sayhi_guide_bg"
+        app:roundAsCircle="false"
+        app:roundedCornerRadius="6dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/live_size_16dp"
+        android:layout_marginRight="@dimen/live_size_16dp"
+        android:orientation="vertical">
+
+        <!--标题图片-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:src="@drawable/bg_sayhi_guide_title" />
+
+        <!--提示 1-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginTop="@dimen/live_size_10dp"
+                android:layout_marginRight="@dimen/live_size_10dp"
+                android:background="@drawable/circle_blue_bg_sayhi_guide" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/say_hi_guide_tip1"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_18sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <!--提示 2-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_10dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginTop="@dimen/live_size_10dp"
+                android:layout_marginRight="@dimen/live_size_10dp"
+                android:background="@drawable/circle_blue_bg_sayhi_guide" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/say_hi_guide_tip2"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_18sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <!--提示 3-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_10dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginTop="@dimen/live_size_10dp"
+                android:layout_marginRight="@dimen/live_size_10dp"
+                android:background="@drawable/circle_blue_bg_sayhi_guide" />
+
+            <TextView
+                android:id="@+id/dialog_say_hi_guide_tv_tip_free"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/say_hi_guide_tip3"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_18sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <!--底部照片-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@drawable/bg_sayhi_guide_bottom" />
+    </LinearLayout>
+
+    <!--关闭按钮-->
+    <ImageView
+        android:id="@+id/dialog_say_hi_guide_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:padding="@dimen/live_size_10dp"
+        android:src="@drawable/ic_close_grey600_24dp" />
+</FrameLayout>

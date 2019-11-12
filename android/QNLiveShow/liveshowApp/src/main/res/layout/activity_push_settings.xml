@@ -77,119 +77,36 @@
                 android:track="@drawable/switch_track" />
         </RelativeLayout>
 
-
-        <!--
-        <RelativeLayout
-            android:id="@+id/act_push_setting_rl_private_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/touch_feedback_holo_light"
-            android:padding="@dimen/live_size_16dp">
-
-            <TextView
-                android:id="@+id/act_push_setting_tv_private_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/Private_Messages"
-                android:textColor="@color/text_color_dark"
-                android:textSize="@dimen/live_size_16sp" />
-
-            <TextView
-                android:id="@+id/act_push_setting_tv_private_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/act_push_setting_tv_private_title"
-                android:layout_marginTop="@dimen/live_size_4dp"
-                android:textColor="@color/text_color_grey"
-                android:textSize="@dimen/live_size_16sp"
-                tools:text="@string/Private_Messages" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_right_grey" />
-        </RelativeLayout>
-
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/theme_default_activity_bg_grey" />
 
         <RelativeLayout
-            android:id="@+id/act_push_setting_rl_mails_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/touch_feedback_holo_light"
-            android:padding="@dimen/live_size_16dp">
+            android:layout_height="@dimen/profile_item_view_height"
+            android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/act_push_setting_tv_mails_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Mails_from_CharmLive"
-                android:textColor="@color/text_color_dark"
+                android:layout_alignParentLeft="true"
+                android:text="@string/New_Say_Hi_Response"
+                android:textColor="@color/black"
                 android:textSize="@dimen/live_size_16sp" />
 
-            <TextView
-                android:id="@+id/act_push_setting_tv_mails_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/act_push_setting_tv_mails_title"
-                android:layout_marginTop="@dimen/live_size_4dp"
-                android:textColor="@color/text_color_grey"
-                android:textSize="@dimen/live_size_16sp"
-                tools:text="@string/Private_Messages" />
-
-            <ImageView
-                android:layout_width="wrap_content"
+            <Switch
+                android:id="@+id/act_push_setting_sw_sayHi"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_right_grey" />
+                android:checked="true"
+                android:switchMinWidth="20dp"
+                android:textOff=" "
+                android:textOn=" "
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/theme_default_activity_bg_grey" />
-
-        <RelativeLayout
-            android:id="@+id/act_push_setting_rl_invitation_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/touch_feedback_holo_light"
-            android:padding="@dimen/live_size_16dp">
-
-            <TextView
-                android:id="@+id/act_push_setting_tv_invitation_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/One_on_One_Invitation"
-                android:textColor="@color/text_color_dark"
-                android:textSize="@dimen/live_size_16sp" />
-
-            <TextView
-                android:id="@+id/act_push_setting_tv_invitation_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/act_push_setting_tv_invitation_title"
-                android:layout_marginTop="@dimen/live_size_4dp"
-                android:textColor="@color/text_color_grey"
-                android:textSize="@dimen/live_size_16sp"
-                tools:text="@string/Private_Messages" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_right_grey" />
-        </RelativeLayout>
-        -->
-
     </LinearLayout>
 
 </LinearLayout>

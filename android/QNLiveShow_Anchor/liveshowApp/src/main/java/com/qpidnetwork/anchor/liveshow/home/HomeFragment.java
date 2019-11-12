@@ -2,6 +2,8 @@ package com.qpidnetwork.anchor.liveshow.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -21,6 +24,7 @@ import com.qpidnetwork.anchor.framework.base.BaseFragment;
 import com.qpidnetwork.anchor.httprequest.OnGetTodayCreditCallback;
 import com.qpidnetwork.anchor.liveshow.hangout.OngoingHangoutListActivity;
 import com.qpidnetwork.anchor.liveshow.manager.AnchorInfoManager;
+import com.qpidnetwork.anchor.liveshow.manager.CheckPCBroadCastRoomStatusManager;
 import com.qpidnetwork.anchor.liveshow.manager.ProgramUnreadManager;
 import com.qpidnetwork.anchor.liveshow.manager.ScheduleInviteManager;
 import com.qpidnetwork.anchor.liveshow.personal.scheduleinvite.ScheduleInviteActivity;
@@ -34,7 +38,7 @@ import q.rorbin.badgeview.QBadgeView;
  */
 
 public class HomeFragment extends BaseFragment implements ScheduleInviteManager.OnScheduleInviteChangeListener,
-        ProgramUnreadManager.OnProgramUnreadListener{
+        ProgramUnreadManager.OnProgramUnreadListener {
 
     private final static int EVNET_ANCHOR_COINS_UPDATE = 1;
     private final static int EVNET_SHCEDULED_INVITE_NOTIFY = 2;
@@ -47,6 +51,11 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
     private TextView tvScheduled;
     private QBadgeView qbvUnread, qbvCalendarUnread;
     private LinearLayout mLinearLayoutTodoItem, mLinearLayoutCalendarItem;
+
+    // 2019/11/8 Hardy  多端，在 PC 端开启直播间
+    private View mLLBroadcastRoomItem;
+    private ImageView mIvBroadcastRoomLiving;
+    private TextView mTvBroadcastRoomDesc;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -75,9 +84,9 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+        if (isVisibleToUser) {
             //刷新未读数目
-            if(mContext != null) {
+            if (mContext != null) {
                 ProgramUnreadManager.getInstance().GetNoReadNumProgram();
             }
             ScheduleInviteManager.getInstance().GetCountOfUnreadAndPendingInvite();
@@ -93,20 +102,20 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_main_home, null);
 
-        mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mProgressBar.setProgress(0);
 
-        rlMonthProgress = (RelativeLayout)view.findViewById(R.id.rlMonthProgress);
-        tvMonthlyProgress = (TextView)view.findViewById(R.id.tvMonthlyProgress);
-        tvCoins = (TextView)view.findViewById(R.id.tvCoins);
+        rlMonthProgress = (RelativeLayout) view.findViewById(R.id.rlMonthProgress);
+        tvMonthlyProgress = (TextView) view.findViewById(R.id.tvMonthlyProgress);
+        tvCoins = (TextView) view.findViewById(R.id.tvCoins);
 
-        LinearLayout llScheduledBooking = (LinearLayout)view.findViewById(R.id.llScheduledBooking);
+        LinearLayout llScheduledBooking = (LinearLayout) view.findViewById(R.id.llScheduledBooking);
         llScheduledBooking.setOnClickListener(this);
-        tvScheduled = (TextView)view.findViewById(R.id.tvScheduled);
-        mLinearLayoutTodoItem = (LinearLayout)view.findViewById(R.id.ll_todo_item);
+        tvScheduled = (TextView) view.findViewById(R.id.tvScheduled);
+        mLinearLayoutTodoItem = (LinearLayout) view.findViewById(R.id.ll_todo_item);
         mLinearLayoutTodoItem.setOnClickListener(this);
 
-        mLinearLayoutCalendarItem = (LinearLayout)view.findViewById(R.id.ll_calendar_item);
+        mLinearLayoutCalendarItem = (LinearLayout) view.findViewById(R.id.ll_calendar_item);
         mLinearLayoutCalendarItem.setOnClickListener(this);
 
         //增加hang-out点击效果
@@ -124,29 +133,69 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
                 .setShowShadow(false)//不要阴影
                 .bindTarget(mLinearLayoutCalendarItem);
 
+        // 2019/11/8 Hardy
+        mLLBroadcastRoomItem = view.findViewById(R.id.fg_main_home_item_ll_broadcast_room);
+        mIvBroadcastRoomLiving = view.findViewById(R.id.adapter_home_broadcast_room_item_iv_icon);
+        mTvBroadcastRoomDesc = view.findViewById(R.id.adapter_home_broadcast_room_item_tv_desc);
+        mLLBroadcastRoomItem.setOnClickListener(this);
+        // 隐藏直播间冒泡 view
+        hideBroadCastRoomView();
+
+        // 注册
+        CheckPCBroadCastRoomStatusManager.getInstance().register(new CheckPCBroadCastRoomStatusManager.OnCheckRoomStatusChangeListener() {
+            @Override
+            public void onOpen(String desc) {
+                openBroadCastRoomView(desc);
+            }
+
+            @Override
+            public void onHide() {
+                hideBroadCastRoomView();
+            }
+
+            @Override
+            public void onPublicRoomPreview() {
+                if (mContext instanceof MainFragmentActivity) {
+                    ((MainFragmentActivity) mContext).publicRoomOpenClick();
+                }
+            }
+        });
+        // 主动查询直播间信息
+        CheckPCBroadCastRoomStatusManager.getInstance().getCurRoomInfo();
+
         return view;
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
-            case R.id.ll_todo_item:{
+        switch (v.getId()) {
+            case R.id.ll_todo_item: {
                 Intent intent = new Intent(getActivity(), ScheduleInviteActivity.class);
                 startActivity(intent);
-            }break;
-            case R.id.llScheduledBooking:{
+            }
+            break;
+            case R.id.llScheduledBooking: {
                 Intent intent = new Intent(getActivity(), ScheduleInviteActivity.class);
                 startActivity(intent);
-            }break;
-            case R.id.ll_calendar_item:{
+            }
+            break;
+            case R.id.ll_calendar_item: {
                 Intent intent = new Intent(getActivity(), MyShowsActivity.class);
                 startActivity(intent);
-            }break;
-            case R.id.ll_hangout_item:{
+            }
+            break;
+            case R.id.ll_hangout_item: {
                 Intent intent = new Intent(getActivity(), OngoingHangoutListActivity.class);
                 startActivity(intent);
-            }break;
+            }
+            break;
+
+            case R.id.fg_main_home_item_ll_broadcast_room: {
+                CheckPCBroadCastRoomStatusManager.getInstance().handlerClickEvent(mContext);
+            }
+            break;
+
             default:
                 break;
         }
@@ -155,6 +204,8 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        CheckPCBroadCastRoomStatusManager.getInstance().unRegister();
     }
 
     @Override
@@ -164,7 +215,7 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
         ProgramUnreadManager.getInstance().GetNoReadNumProgram();
     }
 
-    private void initData(){
+    private void initData() {
         //本地更新预约邀请信息
         ScheduleInviteUnreadItem unreadItem = ScheduleInviteManager.getInstance().getScheduleInviteUnreadItem();
         int scheduleCount = ScheduleInviteManager.getInstance().getAllScheduledInviteCount();
@@ -178,17 +229,18 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
 
     /**
      * 刷新预约邀请信息
+     *
      * @param unreadItem
      * @param scheduleInviteCount
      */
-    public void refreshScheduleInvite(ScheduleInviteUnreadItem unreadItem, int scheduleInviteCount){
+    public void refreshScheduleInvite(ScheduleInviteUnreadItem unreadItem, int scheduleInviteCount) {
         tvScheduled.setText(String.valueOf(scheduleInviteCount));
-        if(unreadItem != null){
-            if(unreadItem.confirmedUnreadCount > 0){
+        if (unreadItem != null) {
+            if (unreadItem.confirmedUnreadCount > 0) {
 //                tvUnread.setVisibility(View.VISIBLE);
 //                tvUnread.setText(String.valueOf(unreadItem.confirmedUnreadCount));
                 qbvUnread.setBadgeText(String.valueOf(unreadItem.confirmedUnreadCount));
-            }else{
+            } else {
 //                tvUnread.setVisibility(View.GONE);
                 qbvUnread.setBadgeNumber(0);
             }
@@ -197,17 +249,18 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
 
     /**
      * 刷新主播信用点信息
+     *
      * @param anchorInfo
      */
-    private void refreshAnchorCoinsInfo(AnchorInCoinInfo anchorInfo){
-        if(anchorInfo != null) {
+    private void refreshAnchorCoinsInfo(AnchorInCoinInfo anchorInfo) {
+        if (anchorInfo != null) {
 //            rlMonthProgress.setVisibility(View.VISIBLE);
             rlMonthProgress.setVisibility(View.GONE);
             tvMonthlyProgress.setText(String.format(getResources().getString(R.string.live_home_month_task_progress_desc),
                     String.valueOf(anchorInfo.monthCompleted), String.valueOf(anchorInfo.monthTarget)));
             tvCoins.setText(String.valueOf(anchorInfo.monthCredit));
             mProgressBar.setProgress(anchorInfo.monthProgress);
-        }else{
+        } else {
 //            rlMonthProgress.setVisibility(View.INVISIBLE);
             rlMonthProgress.setVisibility(View.GONE);
             tvCoins.setText(getResources().getString(R.string.common_default_middle_dash));
@@ -217,12 +270,13 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
 
     /**
      * 刷新节目未读数目
+     *
      * @param unreadNum
      */
-    private void refreshProgramUnread(int unreadNum){
-        if(unreadNum > 0){
+    private void refreshProgramUnread(int unreadNum) {
+        if (unreadNum > 0) {
             qbvCalendarUnread.setBadgeText(String.valueOf(unreadNum));
-        }else{
+        } else {
             qbvCalendarUnread.setBadgeNumber(0);
         }
     }
@@ -230,33 +284,36 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
-        switch (msg.what){
-            case EVNET_ANCHOR_COINS_UPDATE:{
-                AnchorInCoinInfo anchorInfo = (AnchorInCoinInfo)msg.obj;
+        switch (msg.what) {
+            case EVNET_ANCHOR_COINS_UPDATE: {
+                AnchorInCoinInfo anchorInfo = (AnchorInCoinInfo) msg.obj;
                 refreshAnchorCoinsInfo(anchorInfo);
-            }break;
+            }
+            break;
 
-            case EVNET_SHCEDULED_INVITE_NOTIFY:{
+            case EVNET_SHCEDULED_INVITE_NOTIFY: {
                 int scheduledInviteCount = msg.arg1;
-                ScheduleInviteUnreadItem item = (ScheduleInviteUnreadItem)msg.obj;
+                ScheduleInviteUnreadItem item = (ScheduleInviteUnreadItem) msg.obj;
                 refreshScheduleInvite(item, scheduledInviteCount);
-            }break;
+            }
+            break;
 
-            case EVNET_PROGRAM_UNREAD_NOTIFY:{
+            case EVNET_PROGRAM_UNREAD_NOTIFY: {
                 int unreadNum = msg.arg1;
                 refreshProgramUnread(unreadNum);
-            }break;
+            }
+            break;
         }
     }
 
     /**
      * 更新主播coins信息
      */
-    private void updateAnchorCoinInfo(){
+    private void updateAnchorCoinInfo() {
         AnchorInfoManager.getInstance().GetInCoinsInfo(new OnGetTodayCreditCallback() {
             @Override
             public void onGetTodayCredit(boolean isSuccess, int errCode, String errMsg, int monthCredit, int monthCompleted, int monthTarget, int monthProgress) {
-                if(isSuccess) {
+                if (isSuccess) {
                     Message msg = Message.obtain();
                     msg.what = EVNET_ANCHOR_COINS_UPDATE;
                     msg.obj = new AnchorInCoinInfo(monthCredit, monthCompleted, monthTarget, monthProgress);
@@ -284,4 +341,46 @@ public class HomeFragment extends BaseFragment implements ScheduleInviteManager.
         msg.arg1 = unreadNum;
         sendUiMessage(msg);
     }
+
+    //****************************** 多端直播 **********************************************
+
+    private void openBroadCastRoomView(String roomTypeDesc) {
+        setBroadCastRoomDesc(roomTypeDesc);
+        showBroadCastRoomLiving(true);
+        showBroadCastRoomView(true);
+    }
+
+    private void hideBroadCastRoomView() {
+        showBroadCastRoomLiving(false);
+        showBroadCastRoomView(false);
+    }
+
+    private void setBroadCastRoomDesc(String val) {
+        mTvBroadcastRoomDesc.setText(val);
+    }
+
+    private void showBroadCastRoomLiving(boolean isShow) {
+        if (isShow) {
+            mIvBroadcastRoomLiving.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Drawable tempDrawable = mIvBroadcastRoomLiving.getDrawable();
+                    if (tempDrawable instanceof AnimationDrawable) {
+                        ((AnimationDrawable) tempDrawable).start();
+                    }
+                }
+            }, 200);
+        } else {
+            Drawable tempDrawable = mIvBroadcastRoomLiving.getDrawable();
+            if (tempDrawable instanceof AnimationDrawable) {
+                ((AnimationDrawable) tempDrawable).stop();
+            }
+        }
+    }
+
+    private void showBroadCastRoomView(boolean isShow) {
+        mLLBroadcastRoomItem.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    //****************************** 多端直播 **********************************************
 }

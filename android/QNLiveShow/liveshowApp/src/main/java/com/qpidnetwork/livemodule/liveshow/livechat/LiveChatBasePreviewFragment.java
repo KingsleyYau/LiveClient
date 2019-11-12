@@ -22,6 +22,7 @@ import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 import com.qpidnetwork.qnbridgemodule.anim.TopBottomAnimHandler;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
@@ -125,10 +126,10 @@ public abstract class LiveChatBasePreviewFragment extends BaseFragment implement
         return false;
     }
 
-    protected boolean isCurMessageItem(String womanId) {
-        if (!TextUtils.isEmpty(womanId) && messageItem != null &&
-                (womanId.equals(messageItem.fromId) ||
-                        womanId.equals(messageItem.toId))) {
+    protected boolean isCurMessageItem(String videoId, String inviteId) {
+        if (messageItem != null && messageItem.getVideoItem() != null &&
+                !TextUtils.isEmpty(videoId) && videoId.equals(messageItem.getVideoItem().videoId) &&
+                !TextUtils.isEmpty(inviteId) && inviteId.equals(messageItem.inviteId)) {
             return true;
         }
 
@@ -156,7 +157,7 @@ public abstract class LiveChatBasePreviewFragment extends BaseFragment implement
     protected void openBuyCredits() {
         //2019/3/18  打开买点页面
         //edit by Jagger 2018-9-21 使用URL方式跳转
-        String urlAddCredit = URL2ActivityManager.createAddCreditUrl("", "B30", "");
+        String urlAddCredit = LiveUrlBuilder.createAddCreditUrl("", "B30", "");
         new AppUrlHandler(mContext).urlHandle(urlAddCredit);
 
         // 关闭界面
@@ -226,7 +227,7 @@ public abstract class LiveChatBasePreviewFragment extends BaseFragment implement
     @Override
     public void OnGetVideoPhoto(LiveChatClientListener.LiveChatErrType errType, String errno, String errmsg, String userId, String inviteId, String videoId, LCRequestJniLiveChat.VideoPhotoType type, String filePath, ArrayList<LCMessageItem> msgList) {
         Log.i(TAG, "------------------OnGetVideoPhoto-------------------");
-        if (!isCurMessageItem(userId)) {
+        if (!isCurMessageItem(videoId, inviteId)) {
             return;
         }
     }
@@ -242,7 +243,7 @@ public abstract class LiveChatBasePreviewFragment extends BaseFragment implement
     @Override
     public void OnStartGetVideo(String userId, String videoId, String inviteId, String videoPath, ArrayList<LCMessageItem> msgList) {
         Log.i(TAG, "------------------OnStartGetVideo-------------------");
-        if (!isCurMessageItem(userId)) {
+        if (!isCurMessageItem(videoId, inviteId)) {
             return;
         }
     }
@@ -250,7 +251,7 @@ public abstract class LiveChatBasePreviewFragment extends BaseFragment implement
     @Override
     public void OnGetVideo(LiveChatClientListener.LiveChatErrType errType, String userId, String videoId, String inviteId, String videoPath, ArrayList<LCMessageItem> msgList) {
         Log.i(TAG, "------------------OnGetVideo-------------------");
-        if (!isCurMessageItem(userId)) {
+        if (!isCurMessageItem(videoId, inviteId)) {
             return;
         }
     }

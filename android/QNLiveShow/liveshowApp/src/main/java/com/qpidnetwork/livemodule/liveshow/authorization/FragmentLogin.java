@@ -25,6 +25,7 @@ import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.httprequest.item.LSValidateCodeType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
@@ -44,6 +45,7 @@ public class FragmentLogin extends BaseNavFragment implements
         IAuthorizationListener,
         SoftKeyboardSizeWatchLayout.OnResizeListener{
     public static final String PARAMS_KEY_DIALOG_MSG = "PARAMS_KEY_DIALOG_MSG";
+    public static final String PARAMS_KEY_URL = "PARAMS_KEY_URL";
 
     @Override
     public void OnSoftPop(int height) {
@@ -75,6 +77,7 @@ public class FragmentLogin extends BaseNavFragment implements
     private boolean mIsGettingCheckCode = false;
     private boolean mbHasGetCheckCode = false;
     private String mDialogMsg = "";
+    private String mUrl = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -163,16 +166,32 @@ public class FragmentLogin extends BaseNavFragment implements
     public void onResume() {
         super.onResume();
 
-        doGetCheckCode();
+        //向Activity取参数
+        getActivityBundle();
 
         // 增加登录状态改变监听
         LoginManager.getInstance().register(this);
 
-        //向Activity取参数
-        getActivityBundle();
-
         //取本地数据,以判断是否走初始启动流程
         doGetAccountInfoInDB();
+
+        //根据登录状态先处理
+        switch (LoginManager.getInstance().getLoginStatus()) {
+            case Default: {
+                // 调用刷新注册码接口
+                doGetCheckCode();
+            }break;
+            case Logining:{
+                // 此处该弹菊花
+                showLoading(getString(R.string.txt_login_loading));
+            }break;
+            case Logined:{
+                // 登录成功
+                onFinishAct();
+            }break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -180,10 +199,13 @@ public class FragmentLogin extends BaseNavFragment implements
         super.onGetActivityBundle();
 
         Bundle bundle = getArguments();
+
         mDialogMsg = bundle.getString(PARAMS_KEY_DIALOG_MSG);
         if(!TextUtils.isEmpty(mDialogMsg)){
             doShowDialog(mDialogMsg);
         }
+
+        mUrl = bundle.getString(PARAMS_KEY_URL);
     }
 
     @Override
@@ -208,6 +230,8 @@ public class FragmentLogin extends BaseNavFragment implements
         switch (RequestFlag.values()[msg.what]) {
             case REQUEST_SUCCESS: {
                 // 登录成功
+                // 按旧的逻辑(RegisterActivity中edit by Jagger 2018-9-29 )
+                URL2ActivityManager.getInstance().URL2Activity(mContext , mUrl);
                 onFinishAct();
             }
             break;

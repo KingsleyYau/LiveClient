@@ -174,7 +174,6 @@
  *
  *  @param handler 支付处理器
  *  @param result  是否支付成功
- *  @param
  */
 - (void)getProductFinish:(LSAppStorePayHandler* _Nonnull)handler result:(BOOL)result
 {

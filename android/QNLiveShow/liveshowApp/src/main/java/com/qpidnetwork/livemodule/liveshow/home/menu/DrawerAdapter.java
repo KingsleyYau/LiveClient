@@ -1,8 +1,10 @@
 package com.qpidnetwork.livemodule.liveshow.home.menu;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,10 +49,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     private static final int TYPE_HEADER = 2;
     private static final int TYPE_CREDITS = 3;
     private static final int TYPE_TITLE = 4;
-    private static final int TYPE_WEBSITE = 5;
-    private static final int TYPE_BLANK = 6;
+    private static final int TYPE_MIN_TITLE = 5;
+    private static final int TYPE_WEBSITE = 6;
+    private static final int TYPE_BLANK = 7;
 
-    //item id
+    //item id 根据它处理事件，未读
     public static final int ITEM_ID_MESSAGE = 1;
     public static final int ITEM_ID_MAIL = 2;
     public static final int ITEM_ID_GREETS = 3;
@@ -59,6 +62,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     public static final int ITEM_ID_BACKPACK = 6;
     public static final int ITEM_ID_CHAT = 7;   // 2018/11/16 Hardy
     public static final int ITEM_ID_HANGOUT = 8;
+    public static final int ITEM_ID_SAYHI = 9;  //2019-5-28 jagger
+    public static final int ITEM_ID_MY_CONTEACT = 10;  //2019-8-8 jagger
+    public static final int ITEM_ID_FLOWERS = 11;  //鲜花礼品 2019-9-30 jagger
 
     private Context mContext;
 
@@ -68,22 +74,31 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     public DrawerAdapter(Context context) {
         mContext = context;
         //初始化菜单数据，动态添加站点信息
-        dataList = new ArrayList<DrawerItem>();
+        dataList = new ArrayList<>();
         dataList.addAll(Arrays.asList(
 //                new DrawerItemHeader(),   //由于不需要滑动，移到列表外处理。在MainFragmentActivity ()中处理
 //                new DrawerItemCredits(),
 //                new DrawerItemDivider(),
+                new DrawerItemTypeMinTitle(R.string.live_main_drawer_menu_services),
                 new DrawerItemBlank(),
-                new DrawerItemNormal(ITEM_ID_CHAT, R.drawable.ic_live_menu_item_chat, R.string.Chat),   // 2018/11/16 Hardy
-                new DrawerItemNormal(ITEM_ID_MAIL, R.drawable.ic_live_menu_item_mail, R.string.live_main_drawer_menu_Mail),
+                new DrawerItemNormal(ITEM_ID_SAYHI, R.drawable.ic_live_menu_item_sayhi, R.string.sayhi),   //2019-5-28 jagger
                 new DrawerItemNormal(ITEM_ID_GREETS, R.drawable.ic_live_menu_item_greet, R.string.live_main_drawer_menu_GreetMail),
+                new DrawerItemNormal(ITEM_ID_MAIL, R.drawable.ic_live_menu_item_mail, R.string.live_main_drawer_menu_Mail),
+                new DrawerItemNormal(ITEM_ID_CHAT, R.drawable.ic_live_menu_item_chat, R.string.Chat),   // 2018/11/16 Hardy
+                new DrawerItemNormal(ITEM_ID_FLOWERS, R.drawable.ic_live_menu_item_flower, R.string.live_main_drawer_menu_Flowers),
+                new DrawerItemBlank(),
+                new DrawerItemTypeMinTitle(R.string.live_main_drawer_menu_broadcaster),
+                new DrawerItemBlank(),
                 new DrawerItemNormal(ITEM_ID_HANGOUT, R.drawable.ic_live_menu_item_hangout, R.string.live_main_drawer_menu_hangout),
+                new DrawerItemNormal(ITEM_ID_MY_CONTEACT, R.drawable.ic_live_menu_item_mycontact, R.string.live_main_drawer_menu_my_contact),
 //                new DrawerItemNormal(ITEM_ID_MESSAGE, R.drawable.ic_live_menu_item_message, R.string.live_main_drawer_menu_Message),  //私信
+//                new DrawerItemBlank(),
+//                new DrawerItemDivider(),
                 new DrawerItemBlank(),
-                new DrawerItemDivider(),
+                new DrawerItemTypeMinTitle(R.string.live_main_drawer_menu_others),
                 new DrawerItemBlank(),
-                new DrawerItemNormal(ITEM_ID_SHOWTICKETS, R.drawable.ic_live_menu_item_showtickets, R.string.live_main_drawer_menu_showtickets),
                 new DrawerItemNormal(ITEM_ID_BOOKS, R.drawable.ic_live_menu_item_bookings, R.string.live_main_drawer_menu_books),
+                new DrawerItemNormal(ITEM_ID_SHOWTICKETS, R.drawable.ic_live_menu_item_showtickets, R.string.live_main_drawer_menu_showtickets),
                 new DrawerItemNormal(ITEM_ID_BACKPACK, R.drawable.ic_live_menu_item_backpack, R.string.live_main_drawer_menu_backpack),
                 new DrawerItemBlank()
         ));
@@ -114,6 +129,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             return TYPE_CREDITS;
         } else if (drawerItem instanceof DrawerItemTypeTitle) {
             return TYPE_TITLE;
+        } else if (drawerItem instanceof DrawerItemTypeMinTitle) {
+            return TYPE_MIN_TITLE;
         } else if (drawerItem instanceof DrawerItemWebSite) {
             return TYPE_WEBSITE;
         } else if (drawerItem instanceof DrawerItemBlank) {
@@ -147,6 +164,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             case TYPE_TITLE:
                 viewHolder = new TitleViewHolder(inflater.inflate(R.layout.view_live_drawer_item_title, parent, false));
                 break;
+            case TYPE_MIN_TITLE:
+                viewHolder = new MinTitleViewHolder(inflater.inflate(R.layout.view_live_drawer_item_min_title, parent, false));
+                break;
             case TYPE_WEBSITE:
                 viewHolder = new WebSiteViewHolder(inflater.inflate(R.layout.view_live_drawer_item_website, parent, false));
                 break;
@@ -168,6 +188,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             setCreditsView((CreditsViewHolder) holder);
         } else if (holder instanceof TitleViewHolder) {
             setTypeTitleView((TitleViewHolder) holder, (DrawerItemTypeTitle) item);
+        } else if (holder instanceof MinTitleViewHolder) {
+            setTypeMinTitleView((MinTitleViewHolder) holder, (DrawerItemTypeMinTitle) item);
         } else if (holder instanceof WebSiteViewHolder) {
             setWebSiteView((WebSiteViewHolder) holder, (DrawerItemWebSite) item);
         } else if (holder instanceof BlankViewHolder) {
@@ -198,6 +220,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         holder.tv_typeTitle.setText(mContext.getResources().getString(item.titleRes));
     }
 
+    private void setTypeMinTitleView(MinTitleViewHolder holder, DrawerItemTypeMinTitle item) {
+        holder.tv_typeTitle.setText(mContext.getResources().getString(item.titleRes));
+    }
+
     private void setCreditsView(CreditsViewHolder holder) {
         LiveRoomCreditRebateManager liveRoomCreditRebateManager = LiveRoomCreditRebateManager.getInstance();
         String currCredits = ApplicationSettingUtil.formatCoinValue(liveRoomCreditRebateManager.getCredit());
@@ -219,6 +245,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         final DrawerItemNormal itemNormal = item;
         holder.iv_itemIcon.setImageDrawable(mContext.getResources().getDrawable(itemNormal.iconRes));
         holder.tv_itemTitle.setText(itemNormal.titleRes);
+        holder.dv_digitalHint.setVisibility(View.GONE);
+        holder.badge.setBadgeNumber(0);
+
         switch (item.id) {
             case ITEM_ID_SHOWTICKETS:
             case ITEM_ID_BOOKS:
@@ -256,12 +285,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             }
             break;
 
+            case ITEM_ID_SAYHI:
             case ITEM_ID_MESSAGE:
             case ITEM_ID_MAIL:
             case ITEM_ID_GREETS: {
                 holder.dv_digitalHint.setVisibility(View.GONE);
                 if (itemNormal.unreadNum > 0) {
-                    //显示红点
                     holder.badge.setBadgeNumber(itemNormal.unreadNum);
                 } else {
                     holder.badge.setBadgeNumber(0);
@@ -274,6 +303,16 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 holder.dv_digitalHint.setVisibility(View.GONE);
                 holder.badge.setBadgeNumber(0);
                 break;
+        }
+
+        /**
+         * 文字右上角气泡信息
+         */
+        if(!TextUtils.isEmpty(itemNormal.popMsg)){
+            holder.tv_pop.setText(itemNormal.popMsg);
+            holder.tv_pop.setVisibility(View.VISIBLE);
+        }else{
+            holder.tv_pop.setVisibility(View.GONE);
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -407,6 +446,24 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         }
     }
 
+    /**
+     * 某个ITEM显示气泡提醒
+     *
+     * @param itemId
+     * @param msg    气泡提示内容
+     */
+    public void showPopMsg(int itemId, String msg) {
+        for (int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i) instanceof DrawerItemNormal) {
+                if (((DrawerItemNormal) dataList.get(i)).id == itemId) {
+                    ((DrawerItemNormal) dataList.get(i)).popMsg = msg;
+                    notifyItemChanged(i);
+                    return;
+                }
+            }
+        }
+    }
+
     public void updateHeaderView() {
         if (null == dataList) {
             return;
@@ -472,12 +529,21 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         public int iconRes;
         public int titleRes;
         public int unreadNum;
+        public String popMsg;
 
         public DrawerItemNormal(int id, int iconRes, int titleRes) {
             this.id = id;
             this.iconRes = iconRes;
             this.titleRes = titleRes;
             this.unreadNum = 0;
+        }
+
+        public DrawerItemNormal(int id, int iconRes, int titleRes, String popMsg) {
+            this.id = id;
+            this.iconRes = iconRes;
+            this.titleRes = titleRes;
+            this.unreadNum = 0;
+            this.popMsg = popMsg;
         }
 
     }
@@ -488,12 +554,23 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         }
     }
 
-    //分割线item
+    //分割标题item
     public class DrawerItemTypeTitle extends DrawerItem {
 
         public int titleRes;
 
         public DrawerItemTypeTitle(int titleRes) {
+            this.titleRes = titleRes;
+        }
+
+    }
+
+    //分割小标题item
+    public class DrawerItemTypeMinTitle extends DrawerItem {
+
+        public int titleRes;
+
+        public DrawerItemTypeMinTitle(int titleRes) {
             this.titleRes = titleRes;
         }
 
@@ -538,7 +615,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     public class NormalViewHolder extends DrawerViewHolder {
         public View view;
         public LinearLayout root;
-        public TextView tv_itemTitle;
+        private ConstraintLayout l_content;
+        public TextView tv_itemTitle, tv_pop;
         public ImageView iv_itemIcon;
         public Badge badge;
         public DotView dv_digitalHint;
@@ -547,10 +625,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             super(itemView);
             view = itemView;
             root = (LinearLayout) itemView.findViewById(R.id.root);
+            l_content = itemView.findViewById(R.id.l_content);
             tv_itemTitle = (TextView) itemView.findViewById(R.id.tv_itemTitle);
             iv_itemIcon = (ImageView) itemView.findViewById(R.id.iv_itemIcon);
+            tv_pop = itemView.findViewById(R.id.tv_pop);
             //带数字的未读效果用QBadgeView来实现
-            badge = new QBadgeView(mContext).bindTarget(itemView.findViewById(R.id.tv_itemTitle));
+            badge = new QBadgeView(mContext).bindTarget(l_content);
             badge.setBadgeNumber(0);  //先隐藏, 因为初始化时取不到准确的坐标,会在右上角先显示一个图标,不好看
             badge.setBadgeGravity(Gravity.END | Gravity.CENTER_VERTICAL);
             BadgeHelper.setBaseStyle(mContext, badge);
@@ -610,6 +690,16 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         public TextView tv_typeTitle;
 
         public TitleViewHolder(View itemView) {
+            super(itemView);
+            tv_typeTitle = (TextView) itemView.findViewById(R.id.tv_typeTitle);
+        }
+    }
+
+    public class MinTitleViewHolder extends DrawerViewHolder {
+
+        public TextView tv_typeTitle;
+
+        public MinTitleViewHolder(View itemView) {
             super(itemView);
             tv_typeTitle = (TextView) itemView.findViewById(R.id.tv_typeTitle);
         }

@@ -2,38 +2,38 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
-import com.qpidnetwork.livemodule.httprequest.OnGetPromoAnchorListCallback;
-import com.qpidnetwork.livemodule.httprequest.RequestJniLiveShow;
-import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
+import com.qpidnetwork.livemodule.httprequest.OnGetPageRecommendAnchorListCallback;
+import com.qpidnetwork.livemodule.httprequest.item.PageRecommendItem;
 import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
+import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
+import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL;
 
@@ -51,31 +51,30 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
     private static final String LIVEROOM_PAGE_SHOW_RECOMMAND = "recommandFlag";
     private static final String LIVEROOM_AUTH = "auth";
 
+    private final int MAX_RECOMMAND_COUT = 6;
+
     //view
     private ImageView btnClose;
     private CircleImageView civPhoto;
     private TextView tvAnchorName;
     private TextView tvDesc;
 
-    private Button btnBook;
-    private Button btnViewHot;
-    private Button btnAddCredit;
+    private ButtonRaised btnBook;
+    private ButtonRaised btnViewHot;
+    private ButtonRaised btnAddCredit;
 
     private LinearLayout llRecommand;
-    private CircleImageView civRecommand1;
-    private TextView tvRecommandName1;
-    private LinearLayout llRecommand2;
-    private CircleImageView civRecommand2;
-    private TextView tvRecommandName2;
-
-    //高斯模糊背景
-    private SimpleDraweeView iv_gaussianBlur;
-    private View v_gaussianBlurFloat;
+    private RecyclerView recycleView;
+    private ImageView ivLeftArraw;
+    private ImageView ivRightArraw;
 
     //data
     private String mAnchorId;
     private String mAnchorName;
     private IMAuthorityItem mAuthorityItem;
+
+    //纪录recycle当前可见索引
+    int mRecycleViewCurrentPoston = 0;
 
     public static Intent getIntent(Context context, PageErrorType type, String errMsg, String anchorId
             , String anchorName, String anchorPhotoUrl, String roomPhotoUrl, boolean isShowRecommand, IMAuthorityItem priv){
@@ -115,33 +114,55 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
         tvAnchorName = (TextView)findViewById(R.id.tvAnchorName);
         tvDesc = (TextView)findViewById(R.id.tvDesc);
 
-        btnBook = (Button)findViewById(R.id.btnBook);
-        btnViewHot = (Button)findViewById(R.id.btnViewHot);
-        btnAddCredit = (Button)findViewById(R.id.btnAddCredit);
+        btnBook = (ButtonRaised)findViewById(R.id.btnBook);
+        btnViewHot = (ButtonRaised)findViewById(R.id.btnViewHot);
+        btnAddCredit = (ButtonRaised)findViewById(R.id.btnAddCredit);
 
         llRecommand = (LinearLayout)findViewById(R.id.llRecommand);
-        civRecommand1 = (CircleImageView)findViewById(R.id.civRecommand1);
-        civRecommand1.setOnClickListener(this);
-        tvRecommandName1 = (TextView)findViewById(R.id.tvRecommandName1);
-        tvRecommandName1.setOnClickListener(this);
+        ivLeftArraw = (ImageView) findViewById(R.id.ivLeftArraw);
+        ivRightArraw = (ImageView) findViewById(R.id.ivRightArraw);
 
-        llRecommand2 = (LinearLayout)findViewById(R.id.llRecommand2);
-        civRecommand2 = (CircleImageView)findViewById(R.id.civRecommand2);
-        civRecommand2.setOnClickListener(this);
-        tvRecommandName2 = (TextView)findViewById(R.id.tvRecommandName2);
-        tvRecommandName2.setOnClickListener(this);
+        recycleView = (RecyclerView) findViewById(R.id.recycleView);
+
+        //设定宽度，解决使用权重在部分手机（moto）导致recycle加载 getItemCount个数据导致内存爆
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recycleView.getLayoutParams();
+        params.width = DisplayUtil.getScreenWidth(mContext) - DisplayUtil.dip2px(mContext, 56) * 2;
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recycleView.setLayoutManager(linearLayoutManager);
+        recycleView.setNestedScrollingEnabled(false);
+        //屏蔽手动拖动等手动滚动列表动作
+        recycleView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE
+                || motionEvent.getAction() == MotionEvent.ACTION_SCROLL){
+                    return true;
+                }
+                return false;
+            }
+        });
+        recycleView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                return true;
+            }
+        });
+
+        recycleView.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int i, int i1) {
+                return true;
+            }
+        });
 
         btnClose.setOnClickListener(this);
         btnAddCredit.setOnClickListener(this);
         btnBook.setOnClickListener(this);
         btnViewHot.setOnClickListener(this);
-        civRecommand1.setOnClickListener(this);
-        civRecommand2.setOnClickListener(this);
-
-        //高斯模糊背景
-        iv_gaussianBlur = (SimpleDraweeView) findViewById(R.id.iv_gaussianBlur);
-        v_gaussianBlurFloat = findViewById(R.id.v_gaussianBlurFloat);
-        v_gaussianBlurFloat.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#cc000000")));
+        ivLeftArraw.setOnClickListener(this);
+        ivRightArraw.setOnClickListener(this);
     }
 
     private void initData(){
@@ -181,32 +202,10 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
 
         }
         if(!TextUtils.isEmpty(anchorPhotoUrl)) {
-//            Picasso.with(getApplicationContext()).load(anchorPhotoUrl)
-//                    .placeholder(R.drawable.ic_default_photo_woman)
-//                    .error(R.drawable.ic_default_photo_woman)
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                    .into(civPhoto);
             PicassoLoadUtil.loadUrlNoMCache(civPhoto,anchorPhotoUrl,R.drawable.ic_default_photo_woman);
         }
 
-        if(!TextUtils.isEmpty(roomPhotoUrl)) {
-            try {
-                Uri uri = Uri.parse(roomPhotoUrl);
-                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                        .setPostprocessor(new IterativeBoxBlurPostProcessor(
-                                getResources().getInteger(R.integer.gaussian_blur_iterations),
-                                getResources().getInteger(R.integer.gaussian_blur_tran)))
-                        .build();
-                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setOldController(iv_gaussianBlur.getController())
-                        .setImageRequest(request)
-                        .build();
-                iv_gaussianBlur.setController(controller);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        tvAnchorName.setText(mAnchorName);
+        tvAnchorName.setText(Html.fromHtml(getResources().getString(R.string.liveroom_transition_anchor_name_and_id, mAnchorName, mAnchorId)));
         Log.i("Jagger" , "直播间结束页 initData book:" + (mAuthorityItem == null?"null":mAuthorityItem.isHasBookingAuth));
         switch (errType){
             case PAGE_ERROR_LIEV_EDN:{
@@ -224,6 +223,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
 
                 //获取推荐列表
                 if(isRecommand) {
+                    llRecommand.setVisibility(View.INVISIBLE);
                     getPromoAnchorList();
                 }
             }break;
@@ -276,6 +276,18 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
 
             //点击推荐，关闭界面
             finish();
+        }else if (i == R.id.ivLeftArraw) {
+            if(llRecommand.getVisibility() == View.VISIBLE){
+                mRecycleViewCurrentPoston = mRecycleViewCurrentPoston + 1;
+                recycleView.smoothScrollToPosition(mRecycleViewCurrentPoston);
+            }
+        }else if (i == R.id.ivRightArraw) {
+            if(llRecommand.getVisibility() == View.VISIBLE){
+                if(mRecycleViewCurrentPoston >= 1){
+                    mRecycleViewCurrentPoston = mRecycleViewCurrentPoston - 1;
+                    recycleView.smoothScrollToPosition(mRecycleViewCurrentPoston);
+                }
+            }
         }
     }
 
@@ -284,56 +296,70 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
      */
     private void getPromoAnchorList(){
         Log.d(TAG,"getPromoAnchorList");
-        LiveRequestOperator.getInstance().GetPromoAnchorList(2,
-                RequestJniLiveShow.PromotionCategoryType.LiveRoom, mAnchorId,
-                new OnGetPromoAnchorListCallback() {
+        LiveRequestOperator.getInstance().GetPageRecommendAnchorList(new OnGetPageRecommendAnchorListCallback() {
                     @Override
-                    public void onGetPromoAnchorList(boolean isSuccess, int errCode, String errMsg,
-                                                     final HotListItem[] anchorList) {
-                        if( isSuccess && anchorList != null && anchorList.length > 0) {
+                    public void onGetPageRecommendAnchorList(boolean isSuccess, int errCode, String errMsg, final PageRecommendItem[] anchorList) {
+                        final List<PageRecommendItem> recommandList = filterSelfFromRecommand(anchorList);
+                        if( isSuccess && recommandList != null && recommandList.size() > 1) {
                             //显示推荐模块
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    civRecommand1.setImageResource(R.drawable.ic_default_photo_woman);
-                                    civRecommand2.setImageResource(R.drawable.ic_default_photo_woman);
-                                    if(!TextUtils.isEmpty(anchorList[0].photoUrl)){
-//                                        Picasso.with(getApplicationContext())
-//                                                .load(anchorList[0].photoUrl)
-//                                                .placeholder(R.drawable.ic_default_photo_woman)
-//                                                .error(R.drawable.ic_default_photo_woman)
-//                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                                                .into(civRecommand1);
-                                        PicassoLoadUtil.loadUrlNoMCache(civRecommand1,
-                                                anchorList[0].photoUrl,R.drawable.ic_default_photo_woman);
-                                    }
-                                    civRecommand1.setTag(anchorList[0].userId);
-                                    tvRecommandName1.setTag(anchorList[0].userId);
-                                    tvRecommandName1.setText(anchorList[0].nickName);
-
-                                    if(anchorList.length >= 2){
-                                        civRecommand2.setTag(anchorList[1].userId);
-                                        tvRecommandName2.setTag(anchorList[1].userId);
-                                        llRecommand2.setVisibility(View.VISIBLE);
-                                        if(!TextUtils.isEmpty(anchorList[1].photoUrl)){
-//                                            Picasso.with(getApplicationContext())
-//                                                    .load(anchorList[1].photoUrl)
-//                                                    .placeholder(R.drawable.ic_default_photo_woman)
-//                                                    .error(R.drawable.ic_default_photo_woman)
-//                                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                                                    .into(civRecommand2);
-                                            PicassoLoadUtil.loadUrlNoMCache(civRecommand2,
-                                                    anchorList[1].photoUrl,R.drawable.ic_default_photo_woman);
-                                        }
-                                        tvRecommandName2.setText(anchorList[1].nickName);
-                                    }else{
-                                        llRecommand2.setVisibility(View.GONE);
-                                    }
                                     llRecommand.setVisibility(View.VISIBLE);
+                                    int width = DisplayUtil.getScreenWidth(mContext) - DisplayUtil.dip2px(mContext, 56) * 2;
+                                    PageRecommendItem[] recommandArray = recommandList.toArray(new PageRecommendItem[recommandList.size()]);
+                                    LiveRoomRecommandAdapter adapter = new LiveRoomRecommandAdapter(mContext, filterAnchorList(recommandArray), width);
+                                    recycleView.setAdapter(adapter);
+                                    mRecycleViewCurrentPoston = Integer.MAX_VALUE/2;//初始化到第一个
+                                    recycleView.scrollToPosition(mRecycleViewCurrentPoston);
                                 }
                             });
                         }
                     }
                 });
+    }
+
+    /**
+     * 推荐主播过滤当前主播
+     * @param anchorList
+     * @return
+     */
+    private List<PageRecommendItem> filterSelfFromRecommand(PageRecommendItem[] anchorList){
+        List<PageRecommendItem> recommandList = new ArrayList<PageRecommendItem>();
+        if(anchorList != null && anchorList.length > 1){
+            for(PageRecommendItem item : anchorList){
+                if(!item.anchorId.equals(mAnchorId)){
+                    recommandList.add(item);
+                }
+            }
+        }
+        return recommandList;
+    }
+
+
+    /**
+     * 根据设计需要，取前6个
+     * @param anchorList
+     * @return
+     */
+    private List<LiveRoomRecommandAdapter.RecommandDataBean> filterAnchorList(PageRecommendItem[] anchorList){
+        List<LiveRoomRecommandAdapter.RecommandDataBean> list = new ArrayList<LiveRoomRecommandAdapter.RecommandDataBean>();
+        if(anchorList != null){
+            int length = anchorList.length;
+            if(anchorList.length < MAX_RECOMMAND_COUT){
+                if(anchorList.length % 2 != 0){
+                    length = anchorList.length - 1;
+                }
+            }else{
+                length = MAX_RECOMMAND_COUT;
+            }
+            for(int i=0; i< length; i=i+2){
+                LiveRoomRecommandAdapter.RecommandDataBean bean = new LiveRoomRecommandAdapter.RecommandDataBean();
+                bean.leftData = anchorList[i];
+                bean.rightData = anchorList[i+1];
+                list.add(bean);
+            }
+        }
+        return list;
     }
 }

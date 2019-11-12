@@ -13,14 +13,17 @@ import android.view.WindowManager;
 
 import com.appsflyer.AppsFlyerLib;
 import com.qpidnetwork.livemodule.httprequest.LiveDomainRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnGetSayHiResourceConfigCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestLoginCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestSidCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.RequestJniAuthorization;
+import com.qpidnetwork.livemodule.httprequest.RequestJniLiveShow;
 import com.qpidnetwork.livemodule.httprequest.RequestJniOther;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiResourceConfigItem;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
@@ -28,6 +31,8 @@ import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.RoomGiftTypeListManager;
+import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.SpeedTestManager;
 import com.qpidnetwork.livemodule.liveshow.manager.SynConfigerManager;
@@ -35,6 +40,7 @@ import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.MyProfilePerfenceLive;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
+import com.qpidnetwork.livemodule.liveshow.sayhi.SayHiConfigManager;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.bean.AccountInfoBean;
 import com.qpidnetwork.qnbridgemodule.datacache.LocalCorePreferenceManager;
@@ -162,6 +168,16 @@ public class LoginManager {
                             //上传phoneInfo
                             uploadPhoneInfo(mLoginItem);
 
+                            //登陆成功刷新SayHi配置
+                            if(item.userPriv != null && item.userPriv.isSayHiPriv) {
+                                SayHiConfigManager.getInstance().GetSayHiResourceConfig(new OnGetSayHiResourceConfigCallback() {
+                                    @Override
+                                    public void onGetSayHiResourceConfig(boolean isSuccess, int errCode, String errMsg, SayHiResourceConfigItem configItem) {
+
+                                    }
+                                });
+                            }
+
                             //通知IM登陆，IM登陆成功才算登陆成功
                             notifyImLogin(response.isSuccess, response.errCode, response.errMsg, item);
                         }else{
@@ -197,6 +213,9 @@ public class LoginManager {
 
                             //更新礼物配置信息
                             NormalGiftManager.getInstance().getAllGiftItems(null);
+
+                            // 2019/9/4 Hardy 更新礼物分类
+                            RoomGiftTypeListManager.getInstance().getGiftTypeItemList(RequestJniLiveShow.GiftRoomType.Private, null);
 
                             //表情配置
                             ChatEmojiManager.getInstance().getEmojiList(null);
@@ -679,6 +698,16 @@ public class LoginManager {
             if(unreadManager != null) {
                 unreadManager.clearResetSelf();
             }
+
+            //重置SayHiConfig刷新标志位
+            SayHiConfigManager.getInstance().resetSayHiConfig();
+
+            //手动注销清空通知栏
+            PushManager.getInstance().CancelAll();
+
+            //直播间虚拟礼物相关
+            NormalGiftManager.getInstance().onDestroy();
+            RoomGiftTypeListManager.getInstance().onDestroy();
         }
     }
 
@@ -964,7 +993,7 @@ public class LoginManager {
         }
 
         @Override
-        public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
+        public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, IMClientListener.LCC_ERR_TYPE err) {
 
         }
 

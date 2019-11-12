@@ -1224,6 +1224,8 @@ long LSLiveChatRequestLiveChatController::GetPhoto(
 		, const string& filePath)
 {
 	HttpEntiy entiy;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    entiy.SetIsDownLoadFile(true);
 	char temp[32] = {0};
     // entiy.SetGetMethod(true);
 
@@ -1349,6 +1351,8 @@ long LSLiveChatRequestLiveChatController::UploadVoice(
 long LSLiveChatRequestLiveChatController::PlayVoice(const string& voiceId, OTHER_SITE_TYPE siteType, const string& filePath)
 {
 	HttpEntiy entiy;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    entiy.SetIsDownLoadFile(true);
 	char temp[2048] = {0};
 
 	// delete file
@@ -1601,6 +1605,8 @@ long LSLiveChatRequestLiveChatController::GetVideoPhoto(
 		const string& filePath
 		) {
 	HttpEntiy entiy;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    entiy.SetIsDownLoadFile(true);
 	char temp[32] = {0};
 
 	// delete file
@@ -1765,7 +1771,7 @@ long LSLiveChatRequestLiveChatController::UploadManPhoto(const string& file) {
     
     string url = LC_UPLOADMANPHOTO_PATH;
     
-    FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::GetLeftCredit"
+    FileLevelLog("httprequest", KLog::LOG_WARNING, "LSLiveChatRequestLiveChatController::UploadManPhoto"
                  "(url:%s, "
                  "file:%s )",
                  url.c_str(),

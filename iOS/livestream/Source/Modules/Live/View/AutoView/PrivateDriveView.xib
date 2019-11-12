@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PrivateDriveView">
+            <connections>
+                <outlet property="userCar" destination="JMU-Aa-Uvr" id="Oeq-T6-UqK"/>
+                <outlet property="userName" destination="Gms-0e-SPt" id="z5h-N3-59B"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="83" height="83"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JMU-Aa-Uvr">
+                    <rect key="frame" x="0.0" y="16" width="83" height="67"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gms-0e-SPt">
+                    <rect key="frame" x="0.0" y="0.0" width="83" height="10"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="mkg-we-Cck"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="JMU-Aa-Uvr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="0bF-9E-6GM"/>
+                <constraint firstItem="Gms-0e-SPt" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="DUE-92-i2B"/>
+                <constraint firstItem="JMU-Aa-Uvr" firstAttribute="top" secondItem="Gms-0e-SPt" secondAttribute="bottom" constant="6" id="Hd4-Ou-A6E"/>
+                <constraint firstAttribute="trailing" secondItem="JMU-Aa-Uvr" secondAttribute="trailing" id="TeY-x2-KWh"/>
+                <constraint firstAttribute="bottom" secondItem="JMU-Aa-Uvr" secondAttribute="bottom" id="UoU-0R-OsQ"/>
+                <constraint firstItem="Gms-0e-SPt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="kW6-We-MDm"/>
+                <constraint firstAttribute="trailing" secondItem="Gms-0e-SPt" secondAttribute="trailing" id="uq6-jF-GKd"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-12.318840579710146" y="57.254464285714285"/>
+        </view>
+    </objects>
+</document>

@@ -16,12 +16,7 @@
 
 // 请求参数定义
 #define ZBIIU_USERID_PARAM                "userid"
-
-// 返回
-#define ZBIIU_INVITATIONID_PARAM               "invite_id"
-#define ZBIIU_ROOMID_PARAM                     "roomid"
-#define ZBIIU_TIMEOUT_PARAM                    "timeout"
-
+#define ZBIIU_DEVICETYPE_PARAM            "device_type"
 
 
 ZBSendPrivateLiveInviteTask::ZBSendPrivateLiveInviteTask(void)
@@ -33,10 +28,12 @@ ZBSendPrivateLiveInviteTask::ZBSendPrivateLiveInviteTask(void)
 	m_errMsg = "";
     
     m_userId = "";
+    m_devideType = IMDEVICETYPE_UNKNOW;
     
     m_inviteId = "";
     m_roomId = "";
     m_timeOut = 0;
+    
 }
 
 ZBSendPrivateLiveInviteTask::~ZBSendPrivateLiveInviteTask(void)
@@ -64,24 +61,13 @@ bool ZBSendPrivateLiveInviteTask::Handle(const ZBTransportProtocol& tp)
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
 
+    ZBIMSendInviteInfoItem infoItem;
     // 协议解析
     if (tp.m_isRespond) {
         result = (ZBLCC_ERR_PROTOCOLFAIL != tp.m_errno);
         m_errType = (ZBLCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[ZBIIU_INVITATIONID_PARAM].isString()) {
-            m_inviteId = tp.m_data[ZBIIU_INVITATIONID_PARAM].asString();
-        }
-        
-        
-        if (tp.m_data[ZBIIU_ROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[ZBIIU_ROOMID_PARAM].asString();
-        }
-        
-        if (tp.m_data[ZBIIU_TIMEOUT_PARAM].isIntegral()) {
-            m_timeOut = tp.m_data[ZBIIU_TIMEOUT_PARAM].asInt();
-        }
-
+        infoItem.Parse(tp.m_data);
         
     }
     
@@ -96,7 +82,7 @@ bool ZBSendPrivateLiveInviteTask::Handle(const ZBTransportProtocol& tp)
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == ZBLCC_ERR_SUCCESS);
-        m_listener->OnZBSendPrivateLiveInvite(GetSeq(), success, m_errType, m_errMsg, m_inviteId,  m_timeOut, m_roomId);
+        m_listener->OnZBSendPrivateLiveInvite(GetSeq(), success, m_errType, m_errMsg, infoItem);
 		FileLog("ImClient", "ZBSendPrivateLiveInviteTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -115,6 +101,7 @@ bool ZBSendPrivateLiveInviteTask::GetSendData(Json::Value& data)
         // 构造json协议
         Json::Value value;
         value[ZBIIU_USERID_PARAM] = m_userId;
+        value[ZBIIU_DEVICETYPE_PARAM] = GetIntWithIMDeviceType(m_devideType);
         data = value;
     }
 
@@ -157,11 +144,12 @@ void ZBSendPrivateLiveInviteTask::GetHandleResult(ZBLCC_ERR_TYPE& errType, strin
 }
 
 // 初始化参数
-bool ZBSendPrivateLiveInviteTask::InitParam(const string& userId)
+bool ZBSendPrivateLiveInviteTask::InitParam(const string& userId, IMDeviceType devideType)
 {
 	bool result = false;
     if (!userId.empty()) {
         m_userId = userId;
+        m_devideType = devideType;
         result = true;
         
     }
@@ -173,6 +161,7 @@ bool ZBSendPrivateLiveInviteTask::InitParam(const string& userId)
 void ZBSendPrivateLiveInviteTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnZBSendPrivateLiveInvite(GetSeq(), false, ZBLCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, "", 0, "");
+        ZBIMSendInviteInfoItem infoItem;
+        m_listener->OnZBSendPrivateLiveInvite(GetSeq(), false, ZBLCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, infoItem);
     }
 }

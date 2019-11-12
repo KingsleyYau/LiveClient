@@ -109,6 +109,9 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	InsertJObjectClassToMap(env, IM_LOGIN_ROOM_ITEM_CLASS);
 
 	InsertJObjectClassToMap(env, IM_ROOMIN_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_CURRENTPUSHINFO_ITEM_CLASS);
+
+	InsertJObjectClassToMap(env, IM_SENDINVITEINFO_ITEM_CLASS);
 
 	InsertJObjectClassToMap(env, IM_HANGOUT_GIFTNUM_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_HANGOUT_RECVGIFT_ITEM_CLASS);

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="LSCreditView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKc-6o-KHn">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="XQG-JJ-LRx" appends="YES" id="72k-wT-8Zv"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yoS-cJ-GYv">
+                    <rect key="frame" x="20" y="225" width="335" height="217"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are running out of credits. Please buy more credits to continue watching." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vl6-Di-O7g">
+                            <rect key="frame" x="20" y="30" width="295" height="60"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="1ab-Xp-0tc"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nd0-5N-T7I">
+                            <rect key="frame" x="20" y="115" width="295" height="44"/>
+                            <color key="backgroundColor" red="1" green="0.44313725490196076" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="tLp-wr-J5t"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="Add Credits"/>
+                            <connections>
+                                <action selector="addBtnDid:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="uhc-jM-gev"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N0B-8w-dq2">
+                            <rect key="frame" x="129" y="164" width="77" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="BhX-GU-a67"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="No,Thanks">
+                                <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="closeBtnDid:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="FmQ-yb-BUI"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Vl6-Di-O7g" firstAttribute="leading" secondItem="yoS-cJ-GYv" secondAttribute="leading" constant="20" id="T2B-pv-Mef"/>
+                        <constraint firstAttribute="trailing" secondItem="Nd0-5N-T7I" secondAttribute="trailing" constant="20" id="XRx-RM-Cef"/>
+                        <constraint firstAttribute="trailing" secondItem="Vl6-Di-O7g" secondAttribute="trailing" constant="20" id="nJH-Tn-bCd"/>
+                        <constraint firstItem="Nd0-5N-T7I" firstAttribute="leading" secondItem="yoS-cJ-GYv" secondAttribute="leading" constant="20" id="qKK-mG-wI6"/>
+                        <constraint firstItem="Nd0-5N-T7I" firstAttribute="top" secondItem="Vl6-Di-O7g" secondAttribute="bottom" constant="25" id="rHU-oQ-LYJ"/>
+                        <constraint firstItem="Vl6-Di-O7g" firstAttribute="top" secondItem="yoS-cJ-GYv" secondAttribute="top" constant="30" id="sel-vg-slN"/>
+                        <constraint firstItem="N0B-8w-dq2" firstAttribute="top" secondItem="Nd0-5N-T7I" secondAttribute="bottom" constant="5" id="tem-ZM-N2c"/>
+                        <constraint firstItem="N0B-8w-dq2" firstAttribute="centerX" secondItem="yoS-cJ-GYv" secondAttribute="centerX" id="vP4-eS-3UA"/>
+                        <constraint firstAttribute="height" constant="217" id="wid-ne-NML"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="yoS-cJ-GYv" secondAttribute="trailing" constant="20" id="7Ps-BQ-Mcc"/>
+                <constraint firstItem="yoS-cJ-GYv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="8gx-9A-bI5"/>
+                <constraint firstItem="yoS-cJ-GYv" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Cz4-Mp-REn"/>
+                <constraint firstItem="nKc-6o-KHn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="QcC-HY-W0n"/>
+                <constraint firstAttribute="trailing" secondItem="nKc-6o-KHn" secondAttribute="trailing" id="Z3m-km-46M"/>
+                <constraint firstItem="yoS-cJ-GYv" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="fuE-RI-38R"/>
+                <constraint firstItem="nKc-6o-KHn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="iAC-4U-ge3"/>
+                <constraint firstAttribute="bottom" secondItem="nKc-6o-KHn" secondAttribute="bottom" id="kdC-vg-UR2"/>
+            </constraints>
+            <connections>
+                <outlet property="addBtn" destination="Nd0-5N-T7I" id="LnJ-gz-a16"/>
+                <outlet property="closeBtn" destination="N0B-8w-dq2" id="VhZ-gj-v0d"/>
+                <outlet property="contentView" destination="yoS-cJ-GYv" id="cUV-8h-qkn"/>
+                <outlet property="tipLabel" destination="Vl6-Di-O7g" id="RnJ-k5-35X"/>
+            </connections>
+            <point key="canvasLocation" x="79.200000000000003" y="48.125937031484263"/>
+        </view>
+        <tapGestureRecognizer id="XQG-JJ-LRx">
+            <connections>
+                <action selector="tapBG:" destination="i5M-Pr-FkT" id="CaP-Ve-1VF"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+</document>

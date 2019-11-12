@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -105,5 +106,19 @@ public class SystemUtils {
 			versionName = pi.versionName;
 		}
 		return versionName;
+	}
+
+	/**
+	 * 取设备名（蓝牙列表中可见的名称）
+	 * @param context
+	 * @return
+	 */
+	static public String getDeviceName(Context context) {
+		String deviceName = "Phone";
+		deviceName = Settings.Secure.getString(context.getContentResolver(),"bluetooth_name");
+		if(TextUtils.isEmpty(deviceName)){
+			deviceName = android.os.Build.MODEL;
+		}
+		return deviceName;
 	}
 }

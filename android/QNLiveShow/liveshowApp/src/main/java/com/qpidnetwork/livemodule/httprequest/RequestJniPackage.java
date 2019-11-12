@@ -48,4 +48,13 @@ public class RequestJniPackage {
 	 * @return
 	 */
 	static public native long GetVoucherAvailableInfo(OnGetVoucherAvailableInfoCallback callback);
+
+	/**
+	 * 5.7.获取LiveChat聊天试用券列表
+	 * @param start                         起始，用于分页，表示从第几个元素开始获取
+	 * @param step                          步长，用于分页，表示本次请求获取多少个元素
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetChatVoucherList(int start, int step, OnGetChatVoucherListCallback callback);
 }

@@ -22,7 +22,6 @@ package com.dou361.dialogui.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -34,9 +33,7 @@ import android.os.Message;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -167,7 +164,7 @@ public class WheelView extends View {
     private TextPaint itemsPaint;
     private TextPaint valuePaint;
 
-    // Layouts(StaticLayout是自动换行的Layout)
+    // Layouts
     private StaticLayout itemsLayout;
     private StaticLayout labelLayout;
     private StaticLayout valueLayout;
@@ -571,7 +568,6 @@ public class WheelView extends View {
             }
         }
 
-//        Log.i("Jagger" , "buildText:" + itemsText.toString());
         return itemsText.toString();
     }
 
@@ -596,7 +592,6 @@ public class WheelView extends View {
         for (int i = Math.max(currentItem - addItems, 0); i < Math.min(
                 currentItem + visibleItems, adapter.getItemsCount()); i++) {
             String text = adapter.getItem(i);
-//            Log.i("Jagger" , "getMaxTextLength:" + text);
             if (text != null
                     && (maxText == null || maxText.length() < text.length())) {
                 maxText = text;
@@ -636,7 +631,6 @@ public class WheelView extends View {
         int width = widthSize;
 
         int maxLength = getMaxTextLength();
-//        Log.i("Jagger" , "calculateLayoutWidth --> maxLength:" + maxLength);
         if (maxLength > 0) {
             double textWidth = Math.ceil(Layout.getDesiredWidth("0", itemsPaint));
             itemsWidth = (int) (maxLength * textWidth);
@@ -690,9 +684,6 @@ public class WheelView extends View {
         if (itemsWidth > 0) {
             createLayouts(itemsWidth, labelWidth);
         }
-
-//        Log.i("Jagger" , "lable:" + label + ",itemsWidth:" + itemsWidth + ",labelWidth:" + labelWidth);
-
         return width;
     }
 
@@ -706,12 +697,9 @@ public class WheelView extends View {
         if (itemsLayout == null || itemsLayout.getWidth() > widthItems) {
             itemsLayout = new StaticLayout(buildText(isScrollingPerformed),
                     itemsPaint, widthItems,
-//                    widthLabel > 0 ? Layout.Alignment.ALIGN_OPPOSITE
-//                            : Layout.Alignment.ALIGN_CENTER,
-                    Layout.Alignment.ALIGN_CENTER,
-                    1,
+                    widthLabel > 0 ? Layout.Alignment.ALIGN_OPPOSITE
+                            : Layout.Alignment.ALIGN_CENTER, 1,
                     ADDITIONAL_ITEM_HEIGHT, false);
-//            Log.i("Jagger" , "createLayouts:itemsLayout");
         } else {
             itemsLayout.increaseWidthTo(widthItems);
         }
@@ -722,10 +710,8 @@ public class WheelView extends View {
                     currentItem) : null;
             valueLayout = new StaticLayout(text != null ? text : "",
                     valuePaint, widthItems,
-//                    widthLabel > 0 ? Layout.Alignment.ALIGN_OPPOSITE
-//                            : Layout.Alignment.ALIGN_CENTER,
-                    Layout.Alignment.ALIGN_CENTER,
-                    1,
+                    widthLabel > 0 ? Layout.Alignment.ALIGN_OPPOSITE
+                            : Layout.Alignment.ALIGN_CENTER, 1,
                     ADDITIONAL_ITEM_HEIGHT, false);
         } else if (isScrollingPerformed) {
             valueLayout = null;
@@ -736,9 +722,7 @@ public class WheelView extends View {
         if (widthLabel > 0) {
             if (labelLayout == null || labelLayout.getWidth() > widthLabel) {
                 labelLayout = new StaticLayout(label, valuePaint, widthLabel,
-//                        Layout.Alignment.ALIGN_NORMAL,
-                        Layout.Alignment.ALIGN_CENTER,
-                        1,
+                        Layout.Alignment.ALIGN_NORMAL, 1,
                         ADDITIONAL_ITEM_HEIGHT, false);
             } else {
                 labelLayout.increaseWidthTo(widthLabel);
@@ -785,14 +769,8 @@ public class WheelView extends View {
             canvas.save();
             // Skip padding space and hide a part of top and bottom items
             /** 位移  6等分时除以2,3等分是除以4 */
-//            canvas.translate(this.getWidth() / START_OFFSET, -ITEM_OFFSET);   //原来的
-            canvas.translate((itemsWidth-labelWidth)/4, -ITEM_OFFSET);  //Jagger 画的时候偏中间
-
-//            Log.i("Jagger" , "itemsLayout.getText():" + itemsLayout.getText());
-//            float textWidth = (float) Math.ceil(Layout.getDesiredWidth(itemsLayout.getText().toString(), itemsPaint));
-//            canvas.translate((itemsWidth-labelWidth - textWidth)/2, -ITEM_OFFSET);  //Jagger 画的时候偏中间
-
-//            canvas.translate(0, -ITEM_OFFSET);
+//            canvas.translate(this.getWidth() / START_OFFSET, -ITEM_OFFSET);
+            canvas.translate((itemsWidth-labelWidth)/2, -ITEM_OFFSET);
             drawItems(canvas);
             drawValue(canvas);
             canvas.restore();

@@ -99,6 +99,13 @@
  */
 - (void)openURL:(NSURL *)url;
 
+/**
+ 跟踪自定义事件
+ 
+ @param userProperty 自定义事件名称
+ @param keyName 自定事件key
+ */
+- (void)reportUserProperty:(NSString *)userProperty forkeyName:(NSString *)keyName;
 @end
 
 #endif

@@ -2,12 +2,18 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
+//    compileSdkVersion 27
 //    buildToolsVersion '27.0.3'
+    compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
+    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
+
     defaultConfig {
 //        applicationId "com.qpidnetwork.livemodule"
-        minSdkVersion 16
-        targetSdkVersion 26
+//        minSdkVersion 16
+//        targetSdkVersion 26
+        minSdkVersion ANDROID_BUILD_MIN_SDK_VERSION as int
+        targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
+
         versionCode 1
         versionName "1.0a"
         //testInstrumentationRunner "android.support.test.runner.Android  JUnitRunner"
@@ -66,7 +72,6 @@ android {
 
 dependencies {
     //    compile fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:support-v4:27.1.1'
     compile fileTree(include: ['*.jar'], excludes: ['bolts-tasks-1.4.0.jar',
                                                     'haha-2.0.3.jar',
                                                     'leakcanary-watcher-1.5.4.jar',
@@ -108,7 +113,7 @@ dependencies {
     //头尾RecyclerView
     compile(name: 'hf-recyclerview-0.0.2', ext: 'aar')
     //cardview
-    compile(name: 'cardview-v7-27.1.1', ext: 'aar')
+//    compile(name: 'cardview-v7-27.1.1', ext: 'aar')
     //未读红点制件
     compile(name: 'badgeview-1.1.0', ext: 'aar')
 
@@ -125,17 +130,34 @@ dependencies {
 //    androidTestCompile 'com.android.support:multidex:1.0.3'
 //    androidTestCompile 'com.android.support:multidex-instrumentation:1.0.3'
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+//    implementation 'com.android.support:appcompat-v7:27.1.1'
+//    implementation 'com.android.support:design:27.1.1'
+//    implementation 'com.android.support:support-v4:27.1.1'
+    implementation "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:design:$ANDROID_SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:support-v4:$ANDROID_SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:cardview-v7:$ANDROID_SUPPORT_LIBRARY_VERSION"
 
     compile project(':Customdialog')
     implementation 'org.jetbrains:annotations-java5:15.0'
+
 
 //    引导 2019-2-3
 //    def nav_version = "1.0.0-alpha11"
     def nav_version = "1.0.0-beta02"
     implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
     implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
+
+
+    // 2019/6/6 Oscar 图片手势放大缩小
+//    implementation 'xyz.zpayh:hdimageview:2.1.2'
+    compile(name: 'hdimageview-2.1.2', ext: 'aar')
+
+    /*
+        上下拉刷新
+        https://github.com/scwang90/SmartRefreshLayout
+     */
+    compile(name: 'SmartRefreshLayout-1.1.0-alpha-32', ext: 'aar')
 }
 
 /*
@@ -147,7 +169,10 @@ dependencies {
 */
 configurations.all {
     resolutionStrategy.eachDependency {
-        DependencyResolveDetails details ->
+            //  2019/8/29 Hardy
+            //  https://stackoverflow.com/questions/54665874/why-dependencyresolvedetails-is-highlight-in-red
+//        DependencyResolveDetails details ->
+            details ->
             def requested = details.requested
             if (requested.group == 'com.android.support') {
                 if (!requested.name.startsWith("multidex")) {
@@ -158,35 +183,40 @@ configurations.all {
     }
 }
 
-tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn ndkBuild
-}
-
-task ndkBuild(type: Exec) {
-    workingDir file('src/main')
-    commandLine getNdkBuildCmd()
-}
-
-task cleanNative(type: Exec) {
-    workingDir file('src/main/jni')
-    commandLine getNdkBuildCmd(), 'clean'
-}
-
-clean.dependsOn cleanNative
-
-def getNdkDir() {
-    if (System.env.ANDROID_NDK_ROOT != null)
-        return System.env.ANDROID_NDK_ROOT
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkdir = properties.getProperty('ndk.dir', null)
-    if (ndkdir == null)
-        throw new GradleException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
-    return ndkdir
-}
-
-def getNdkBuildCmd() {
-    def ndkbuild = getNdkDir() + "/ndk-build"
+//tasks.withType(JavaCompile) {
+//    compileTask -> compileTask.dependsOn ndkBuild
+//}
+//
+//task ndkBuild(type: Exec) {
+//    workingDir file('src/main')
+//    commandLine getNdkBuildCmd()
+//}
+//
+//task cleanNative(type: Exec) {
+//    workingDir file('src/main/jni')
+//    commandLine getNdkBuildCmd(), 'clean'
+//}
+//
+//clean.dependsOn cleanNative
+//
+//def getNdkDir() {
+//    if (System.env.ANDROID_NDK_ROOT != null)
+//        return System.env.ANDROID_NDK_ROOT
+//    Properties properties = new Properties()
+//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//    def ndkdir = properties.getProperty('ndk.dir', null)
+//    if (ndkdir == null)
+//    //      throw new GradleException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
+////      2019/8/29 Hardy
+////      https://stackoverflow.com/questions/39330535/cannot-resolve-symbol-tools-and-gradleexception
+//    throw new FileNotFoundException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
+//
+//    return ndkdir
+//}
+//
+//def getNdkBuildCmd() {
+//    def ndkbuild = getNdkDir() + "/ndk-build"
 //    ndkbuild += ".cmd"
-    return ndkbuild
-}
+//    return ndkbuild
+//}
+

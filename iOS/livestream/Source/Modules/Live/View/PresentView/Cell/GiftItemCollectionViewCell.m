@@ -74,7 +74,7 @@
     // 能否发送状态
     BOOL bCanSend = [item canSend:lovelLevel userLevel:manLevel];
     // 锁
-    self.giftLockImageView.hidden = bCanSend;
+    self.giftLockImageView.hidden = !bCanSend;
     
     // 大礼物
     if (item.infoItem.type == GIFTTYPE_Heigh) {
@@ -112,8 +112,8 @@
             // 礼物价格
             self.giftCreditLabel.hidden = YES;
             // 能发送, 显示礼物数量
-            self.giftCountView.hidden = !bCanSend;
-            self.giftCountLabel.hidden = !bCanSend;
+            self.giftCountView.hidden = bCanSend;
+            self.giftCountLabel.hidden = bCanSend;
             if (item.backpackTotal > 99) {
                 self.giftCountLabel.text = [NSString stringWithFormat:@"99+"];
             } else {

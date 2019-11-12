@@ -41,6 +41,7 @@
  */
 - (void)webViewdecidePolicyForNavigationCloseUrl;
 
+- (void)liveWebView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
 /**
  url重定向 打开新的webview界面
 
@@ -88,6 +89,8 @@
  *  这个只有主播详情使用，从主播详情进入节目标志位， 因为根据url判断从详情进节目就导航栏过去, 设置isFirstProgram为false防止多次点击，等到了主播详情出现节目，再设置为true；
  */
 @property (nonatomic, assign) BOOL isFirstProgram;
+/** 重定向url */
+@property (nonatomic, copy) NSString *restrictUrl;
 
 // 清理所有cookies
 - (void)clearAllCookies;

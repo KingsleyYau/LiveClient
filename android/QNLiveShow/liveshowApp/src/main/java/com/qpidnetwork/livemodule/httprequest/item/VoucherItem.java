@@ -15,6 +15,11 @@ public class VoucherItem {
 		SpecialAnchor,		//指定主播
 		NeverLive			//没看过直播的主播
 	}
+
+	public enum VoucherType {
+		Broadcast,			// 直播间试聊劵
+		Livechat			// livechat试聊劵
+	}
 	
 	public VoucherItem(){
 		
@@ -44,22 +49,24 @@ public class VoucherItem {
 					String anchorId,
 					String anchorNickname,
 					String anchorPhotoUrl,
-					int grantedDate,
-					int startValidDate,
-					int expDate,
-					boolean isRead){
+					long grantedDate,
+					long startValidDate,
+					long expDate,
+					boolean isRead,
+					int offsetMin,
+					int voucherType){
 		this.voucherId = voucherId;
 		this.voucherPhotoUrl = voucherPhotoUrl;
 		this.voucherPhotoUrlMobile = voucherPhotoUrlMobile;
 		this.voucherDesc = voucherDesc;
 		
-		if( useScheme < 0 || useScheme >= EmotionTag.values().length ) {
+		if( useScheme < 0 || useScheme >= VoucherUseSchemeType.values().length ) {
 			this.useScheme = VoucherUseSchemeType.Any;
 		} else {
 			this.useScheme = VoucherUseSchemeType.values()[useScheme];
 		}
 		
-		if( useRole < 0 || useRole >= EmotionTag.values().length ) {
+		if( useRole < 0 || useRole >= VoucherUseRoleType.values().length ) {
 			this.useRole = VoucherUseRoleType.Any;
 		} else {
 			this.useRole = VoucherUseRoleType.values()[useRole];
@@ -72,8 +79,17 @@ public class VoucherItem {
 		this.startValidDate = startValidDate;
 		this.expDate = expDate;
 		this.isRead = isRead;
+		this.offsetMin = offsetMin;
+
+		if( voucherType < 0 || voucherType >= VoucherType.values().length ) {
+			this.voucherType = VoucherType.Broadcast;
+		} else {
+			this.voucherType = VoucherType.values()[voucherType];
+		}
+
 	}
-	
+
+	public VoucherType voucherType;
 	public String voucherId;
 	public String voucherPhotoUrl;
 	public String voucherPhotoUrlMobile;
@@ -83,8 +99,9 @@ public class VoucherItem {
 	public String anchorId;
 	public String anchorNickname;
 	public String anchorPhotoUrl;
-	public int grantedDate;
-	public int startValidDate;
-	public int expDate;
+	public long grantedDate;
+	public long startValidDate;
+	public long expDate;
 	public boolean isRead;
+	public int offsetMin;
 }

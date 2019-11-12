@@ -97,10 +97,6 @@ public class SheetHolder extends SuperHolder {
             tvTitle.setText(bean.title);
         }
 
-        if(bean.titleTxtSize>0){
-            tvTitle.setTextSize(bean.titleTxtSize);
-        }
-
         if (bean.isVertical) {
             rView.setLayoutManager(new LinearLayoutManager(bean.mContext));
             rView.addItemDecoration(new DialogUIDividerItemDecoration(bean.mContext));

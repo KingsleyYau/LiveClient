@@ -21,6 +21,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dou361.dialogui.DialogUIUtils;
+import com.dou361.dialogui.listener.DialogUIListener;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
@@ -30,6 +32,7 @@ import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.utils.EToast2;
 import com.qpidnetwork.livemodule.view.FlatToast;
 import com.qpidnetwork.livemodule.view.MaterialProgressDialog;
+import com.qpidnetwork.livemodule.view.NormalProgressDialog;
 import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
 import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionResetManager;
@@ -51,7 +54,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
     protected Activity mContext;
     protected FlatToast mToast;
     protected MaterialProgressDialog progressDialog;
-    protected MaterialProgressDialog progressDialogTranslucent;
+    protected NormalProgressDialog progressDialogTranslucent;
     protected int mProgressDialogCount = 0;
 
     private boolean isActivityVisible = false;//判断activity是否可见，用于处理异步Dialog显示 windowToken异常
@@ -85,7 +88,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
         mProgressDialogCount = 0;
         progressDialog = new MaterialProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialogTranslucent = new MaterialProgressDialog(this, R.style.themeDialog);
+        progressDialogTranslucent = new NormalProgressDialog(this, R.style.themeDialog);
         progressDialogTranslucent.setCanceledOnTouchOutside(false);
 
         customToast = new Toast(this);
@@ -130,6 +133,9 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+
+        //关闭软键盘，防止软件盘未关闭问题
+        hideSoftInput();
     }
 
     @Override
@@ -153,6 +159,10 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
 
         //清除所有消息通知
         mHandler.removeCallbacksAndMessages(null);
+
+        //销毁，避免：app:id/ll_customToast} has already been added to the window manager.的问题
+        customToast = null;
+        customShowTimeToast = null;
     }
 
     /**
@@ -265,8 +275,36 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
      * @param tips 提示文字
      */
     public void showProgressDialog(String tips) {
-        mProgressDialogCount++;
+//        mProgressDialogCount++;
+
         if (!progressDialog.isShowing() && isActivityVisible) {
+            /*
+                // 2019/8/26 Hardy
+                待真正展示弹窗后，才自增 1
+                防止外面加 1 后，但没有真正 show dialog，并且后面若再次有 show dialog 的操作后，
+                mProgressDialogCount 会大于 1，导致 hide dialog 不消失.
+             */
+            mProgressDialogCount++;
+
+            progressDialog.setMessage(tips);
+            progressDialog.show();
+        }
+    }
+
+    /**
+     * 2019/8/23 Hardy
+     * 这里不检测 isActivityVisible ，例如在调用系统裁剪图片 act 界面时，onPause 设置为 false
+     * 但在 onActivityResult 接受数据时，比 onResume 更早回调，若此时调用 showProgressDialog，会无效。
+     * 并且现在 progressDialog 内部已做 show 或者 hide 的 Activity 安全检测，故提供该方法解决上述存在问题。
+     * @param tips
+     */
+    public void showProgressDialogNoCheckActivityVisible(String tips) {
+//        mProgressDialogCount++;
+
+        if (!progressDialog.isShowing()) {
+            // 2019/8/26 Hardy
+            mProgressDialogCount++;
+
             progressDialog.setMessage(tips);
             progressDialog.show();
         }

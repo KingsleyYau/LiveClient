@@ -189,7 +189,10 @@ bool LSLCUserItem::InsertSortMsgList(LSLCMessageItem* item)
 
    // isSamePhotoId(item);
 	// 插入消息
-	m_msgList.push_back(item);
+    if (NULL != item) {
+        m_msgList.push_back(item);
+    }
+	
     
     // 更新以前没有inviteId的信息
     for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
@@ -201,8 +204,11 @@ bool LSLCUserItem::InsertSortMsgList(LSLCMessageItem* item)
     
     // 排序
 	m_msgList.sort(LSLCMessageItem::Sort);
-	// 改变消息的用户
-	item->SetUserItem(this);
+    if (NULL != item) {
+        // 改变消息的用户
+        item->SetUserItem(this);
+    }
+
 
 	UnlockMsgList();
 
@@ -445,7 +451,7 @@ bool LSLCUserItem::GetOtherUserLastRecvMessage(LSLCMessageItem& messageItem) {
              iter++)
         {
             
-            if ((*iter)->m_sendType == SendType_Recv)
+            if ((*iter)->m_sendType == SendType_Recv && !((*iter)->m_isFalseLadyInvite))
             {
                 messageItem.InitWithMessageItem(*iter);
                 result = true;

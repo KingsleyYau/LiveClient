@@ -121,6 +121,8 @@ namespace Json {
       typedef ValueConstIterator const_iterator;
       typedef Json::UInt UInt;
       typedef Json::Int Int;
+      // 定义整形64位的赋值，因为时间戳超过2147483647（2038/1/19 11:14:7）时，使用asInt为负值 alex，2019-09-18
+      typedef Json::Long Long;
       typedef UInt ArrayIndex;
 
       static const Value null;
@@ -184,6 +186,8 @@ namespace Json {
       Value( ValueType type = nullValue );
       Value( Int value );
       Value( UInt value );
+      // 定义整形64位的赋值，因为时间戳超过2147483647（2038/1/19 11:14:7）时，使用asInt为负值 alex，2019-09-18
+      Value( Long value );
       Value( double value );
       Value( const char *value );
       Value( const char *beginValue, const char *endValue );
@@ -233,6 +237,8 @@ namespace Json {
       UInt asUInt() const;
       double asDouble() const;
       bool asBool() const;
+      // 定义整形64位的赋值，因为时间戳超过2147483647（2038/1/19 11:14:7）时，使用asInt为负值 alex，2019-09-18
+      Long asLong() const;
 
       bool isNull() const;
       bool isBool() const;
@@ -244,6 +250,7 @@ namespace Json {
       bool isString() const;
       bool isArray() const;
       bool isObject() const;
+    
 
       bool isConvertibleTo( ValueType other ) const;
 
@@ -429,6 +436,8 @@ namespace Json {
          double real_;
          bool bool_;
          char *string_;
+        // 定义整形64位的赋值，因为时间戳超过2147483647（2038/1/19 11:14:7）时，使用asInt为负值 alex，2019-09-18
+         Long long_;
 # ifdef JSON_VALUE_USE_INTERNAL_MAP
          ValueInternalArray *array_;
          ValueInternalMap *map_;

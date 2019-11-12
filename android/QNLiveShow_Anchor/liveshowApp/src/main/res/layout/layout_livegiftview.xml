@@ -1,86 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- android:layout_width="match_parent" 这个跟进入动画相关，不能乱改 -->
+<!-- paddingTop,paddingBottom 可理解为礼物间距 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_giftItemParentView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/iv_giftAnimBg"
+    <LinearLayout
+        android:id="@+id/ll_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter"/>
-
-    <RelativeLayout
-        android:id="@+id/rl_giftAnimContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="40dp">
+        android:background="@drawable/bg_multiclick_stroke_shape"
+        android:gravity="center_vertical"
+        android:minHeight="40dp"
+        android:orientation="horizontal">
         <!-- 外部填充 -->
         <LinearLayout
             android:id="@+id/childView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_margin="2dp"
             android:orientation="horizontal">
 
         </LinearLayout>
 
-        <!-- 显示连击数 -->
+        <!-- 显示连击数
+        TODO:确认连击动画数字样式-->
         <RelativeLayout
             android:id="@+id/llayout_num"
             android:layout_width="wrap_content"
-            android:layout_height="26dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/childView">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/img_x"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="16dp"
+                android:layout_height="26dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="6dp"
-                android:src="@drawable/ic_live_gift_anim_number_x"
-                android:scaleType="fitCenter"/>
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_live_gift_anim_number_x" />
 
             <ImageView
                 android:id="@+id/img_0"
-                android:layout_toRightOf="@id/img_x"
-                android:layout_centerVertical="true"
                 android:layout_width="16dp"
                 android:layout_height="23dp"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="1dp"
-                android:scaleType="fitCenter"/>
+                android:layout_toRightOf="@id/img_x"
+                android:scaleType="fitCenter" />
 
             <ImageView
                 android:id="@+id/img_1"
-                android:layout_toRightOf="@id/img_0"
-                android:layout_centerVertical="true"
                 android:layout_width="16dp"
                 android:layout_height="23dp"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="1dp"
-                android:scaleType="fitCenter"/>
+                android:layout_toRightOf="@id/img_0"
+                android:scaleType="fitCenter" />
 
             <ImageView
                 android:id="@+id/img_2"
-                android:layout_toRightOf="@id/img_1"
-                android:layout_centerVertical="true"
                 android:layout_width="16dp"
                 android:layout_height="23dp"
-                android:scaleType="fitCenter"
-                android:layout_marginRight="1dp"/>
+                android:layout_centerVertical="true"
+                android:layout_marginRight="1dp"
+                android:layout_toRightOf="@id/img_1"
+                android:scaleType="fitCenter" />
 
             <ImageView
                 android:id="@+id/img_3"
-                android:layout_toRightOf="@id/img_2"
-                android:layout_centerVertical="true"
                 android:layout_width="16dp"
                 android:layout_height="23dp"
-                android:scaleType="fitCenter"
-                android:layout_marginRight="1dp"/>
+                android:layout_centerVertical="true"
+                android:layout_marginRight="1dp"
+                android:layout_toRightOf="@id/img_2"
+                android:scaleType="fitCenter" />
         </RelativeLayout>
-    </RelativeLayout>
-</FrameLayout>
+    </LinearLayout>
 
 
+</LinearLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/live_size_40dp"
+    android:paddingTop="@dimen/live_size_60dp"
+    android:paddingRight="@dimen/live_size_40dp"
+    android:paddingBottom="@dimen/live_size_60dp">
+
+    <TextView
+        android:id="@+id/tv_anchor_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="TextViewTitle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--
+            android:paddingBottom="@dimen/live_size_30dp"
+            是为了让 TextView(id=tv_man_name) 跟随 ScrollView 底部，
+            不重叠 tv_note_content 的底部文本信息
+         -->
+        <ScrollView
+            android:id="@+id/act_text_content_change_sv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/live_size_30dp"
+            android:scrollbars="none">
+
+            <!--
+                android:paddingBottom="46dp"
+                是为了让内容文本底部的文字可以完整显示出来，具体数值可调整.
+            -->
+            <TextView
+                android:id="@+id/tv_note_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="@dimen/live_size_22sp"
+                android:paddingBottom="46dp"
+                android:textSize="@dimen/live_size_22sp"
+                android:textStyle="italic"
+                tools:text="text" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tv_man_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/act_text_content_change_sv"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/live_size_16sp"
+            tools:text="TextViewName" />
+    </RelativeLayout>
+</LinearLayout>

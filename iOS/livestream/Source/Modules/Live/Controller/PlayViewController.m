@@ -522,12 +522,12 @@
 #pragma mark - 请求账号余额
 - (void)getLeftCreditRequest {
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit, int coupon, double postStamp) {
-        NSLog(@"PlayViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon : %d, postStamp : %f)", success, (long)errnum, errmsg, credit, coupon, postStamp);
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSLeftCreditItemObject *_Nonnull item) {
+        NSLog(@"PlayViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon : %d, postStamp : %f, livechatCount : %d)", success, (long)errnum, errmsg, item.credit, item.coupon, item.postStamp, item.liveChatCount);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.creditView userCreditChange:credit];
-                [self.creditRebateManager setCredit:credit];
+                [self.creditView userCreditChange:item.credit];
+                [self.creditRebateManager setCredit:item.credit];
             } else {
             }
         });
@@ -703,9 +703,10 @@
 
         }
         completion:^(BOOL finished) {
+            WeakObject(self, weakSelf);
             [self.roomUserInfoManager getLiverInfo:self.loginManager.loginItem.userId
                                          finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                             [self.creditView updateUserBalanceCredit:self.creditRebateManager.mCredit userInfo:item];
+                                             [weakSelf.creditView updateUserBalanceCredit:weakSelf.creditRebateManager.mCredit userInfo:item];
                                          }];
         }];
 }

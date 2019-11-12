@@ -23,9 +23,11 @@
 #import "LSSendSayHiViewController.h"
 #import "SetFavoriteRequest.h"
 #import "DialogTip.h"
+#import "QNRiskControlManager.h"
+#import "LSShadowView.h"
 #define PageSize 10
 
-@interface LSFollowingViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate>
+@interface LSFollowingViewController () <UIScrollViewRefreshDelegate, LSHomeCollectionViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *items;
 
@@ -45,6 +47,10 @@
  是否第一次登录
  */
 @property (nonatomic, assign) BOOL isFirstLogin;
+// 正在下拉
+@property (nonatomic, assign) BOOL pullDowning;
+// 正在上拉
+@property (nonatomic, assign) BOOL pullUping;
 @end
 
 @implementation LSFollowingViewController
@@ -55,8 +61,10 @@
     // 初始化主播列表
     [self setupTableView];
 
-    self.viewHotBtn.layer.cornerRadius = 18.0f;
+    self.viewHotBtn.layer.cornerRadius = 8.0f;
     self.viewHotBtn.layer.masksToBounds = YES;
+    LSShadowView * view = [[LSShadowView alloc]init];
+    [view showShadowAddView:self.viewHotBtn];
 }
 
 - (void)initCustomParam {
@@ -80,10 +88,14 @@
     self.isFirstLogin = NO;
     // 是否刷新数据
     self.isLoadData = NO;
+    
+    self.pullDowning = NO;
+    
+    self.pullUping = NO;
 }
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.collectionView unSetupPullRefresh];
 }
 
 - (void)setupContainView {
@@ -106,6 +118,15 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    if (self.pullDowning) {
+        [self.collectionView finishLSPullDown:NO];
+        self.pullDowning = NO;
+    }
+    if (self.pullUping) {
+        [self.collectionView finishLSPullUp:NO];
+        self.pullUping = NO;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -117,7 +138,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [HomeVouchersManager manager].item = item;
-                [self.tableView reloadData];
+                [self.collectionView reloadData];
             }
         });
     }];
@@ -125,13 +146,9 @@
 
 - (void)setupTableView {
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
-
-    self.tableView.backgroundView = nil;
-    self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.showsVerticalScrollIndicator = NO;
-    self.tableView.showsHorizontalScrollIndicator = NO;
-    self.tableView.tableViewDelegate = self;
+    [self.collectionView setupPullRefresh:self pullDown:YES pullUp:YES];
+    self.collectionView.pullScrollEnabled = YES;
+    self.collectionView.collectionViewDelegate = self;
 }
 
 #pragma mark banner点击事件
@@ -169,8 +186,8 @@
 - (void)reloadData:(BOOL)isReloadView {
     // 数据填充
     if (isReloadView) {
-        self.tableView.items = self.items;
-        [self.tableView reloadData];
+        self.collectionView.items = self.items;
+        [self.collectionView reloadData];
     }
 }
 
@@ -188,7 +205,7 @@
     if (self.isFirstLogin || isSwitchSite || self.isLoadData) {
         // 界面是否显示
         if (self.viewDidAppearEver) {
-            [self.tableView startPullDown:YES];
+            [self.collectionView startLSPullDown:YES];
             self.isFirstLogin = NO;
         }
     }
@@ -199,17 +216,21 @@
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
-    self.view.userInteractionEnabled = NO;
-    [self getListRequest:NO];
+    if (!self.pullUping && !self.pullDowning) {
+        [self getListRequest:NO];
+    }
+    self.pullDowning = YES;
 }
 
 - (void)pullUpRefresh {
     // 没有数据取消上拉操作
     if (self.items.count > 0) {
-        self.view.userInteractionEnabled = NO;
-        [self getListRequest:YES];
+        if (!self.pullDowning && !self.pullUping) {
+            [self getListRequest:YES];
+        }
+        self.pullUping = YES;
     } else {
-        [self.tableView finishPullUp:YES];
+        [self.collectionView finishLSPullUp:YES];
     }
 }
 
@@ -258,15 +279,19 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         NSLog(@"LSFollowingViewController::getVouchersData(请求试聊券:[%@])", BOOL2SUCCESS(success));
                         self.failView.hidden = YES;
+                        if (self.pullDowning) {
+                            [self.collectionView finishLSPullDown:YES];
+                            self.pullDowning = NO;
+                        }
+                        if (self.pullUping) {
+                            [self.collectionView finishLSPullUp:YES];
+                            self.pullUping = NO;
+                        }
+                        
                         if (!loadMore) {
-                            // 停止头部
-                            [self.tableView finishPullDown:YES];
                             // 清空列表
                             [self.items removeAllObjects];
                             self.isLoadData = NO;
-                        } else {
-                            // 停止底部
-                            [self.tableView finishPullUp:YES];
                         }
 
                         for (FollowItemObject *item in array) {
@@ -299,38 +324,40 @@
                             if (self.items.count > 0) {
                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                                     // 拉到最顶
-                                    [self.tableView scrollsToTop];
+                                    [self.collectionView scrollsToTop];
                                 });
                             }
                         } else {
-                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                                if (self.items.count > PageSize) {
-                                    // 拉到下一页
-                                    UITableViewCell *cell = [self.tableView visibleCells].firstObject;
-                                    NSIndexPath *index = [self.tableView indexPathForCell:cell];
-                                    NSInteger row = index.row;
-                                    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
-                                    [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                                }
-                            });
+//                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//                                if (self.items.count > PageSize) {
+//                                    // 拉到下一页
+//                                    UITableViewCell *cell = [self.tableView visibleCells].firstObject;
+//                                    NSIndexPath *index = [self.tableView indexPathForCell:cell];
+//                                    NSInteger row = index.row;
+//                                    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
+//                                    [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//                                }
+//                            });
                         }
                     });
                 }];
             } else {
                 if (!loadMore) {
-                    // 停止头部
-                    [self.tableView finishPullDown:NO];
                     [self.items removeAllObjects];
                     [self showFailTipsContent];
                     self.isLoadData = YES;
-                } else {
-                    // 停止底部
-                    [self.tableView finishPullUp:YES];
                 }
+                if (self.pullDowning) {
+                    [self.collectionView finishLSPullDown:NO];
+                    self.pullDowning = NO;
+                }
+                if (self.pullUping) {
+                    [self.collectionView finishLSPullUp:YES];
+                    self.pullUping = NO;
+                }
+                
                 [self reloadData:YES];
             }
-
-            self.view.userInteractionEnabled = YES;
         });
 
     };
@@ -360,7 +387,7 @@
 - (IBAction)reloadBtnClick:(id)sender {
     self.failView.hidden = YES;
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    [self.tableView startPullDown:YES];
+    [self.collectionView startLSPullDown:YES];
 }
 
 - (void)BrowseToHotAction:(id)sender {
@@ -373,58 +400,39 @@
     [self getListRequest:NO];
 }
 
-#pragma mark - 免费公开直播间
-/** 免费的公开直播间 */
-- (void)tableView:(HotTableView *)tableView didPublicViewFreeBroadcast:(NSInteger)index {
-
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-    // TODO:点击立即免费公开
-    [[LiveModule module].analyticsManager reportActionEvent:EnterPublicBroadcast eventCategory:EventCategoryenterBroadcast];
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    liveRoom.roomType = LiveRoomType_Public;
-
-    liveRoom.httpLiveRoom = item;
-    vc.liveRoom = liveRoom;
-    // 继承导航栏控制器
-    [self navgationControllerPresent:vc];
+#pragma mark - 瀑布流点击回调
+//进入女士详情页
+- (void)waterfallView:(UICollectionView *)waterfallView didSelectItem:(LiveRoomInfoItemObject *)item {
+    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
+    listViewController.anchorId = item.userId;
+    listViewController.enterRoom = 1;
+    [self.navigationController pushViewController:listViewController animated:YES];
 }
 
 /** 付费的公开直播间 */
-- (void)tableView:(HotTableView *)tableView didPublicViewVipFeeBroadcast:(NSInteger)index {
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellWatchNowBtnDid:(LiveRoomInfoItemObject *)item {
     // TODO:点击立即付费公开
     [[LiveModule module].analyticsManager reportActionEvent:EnterVipBroadcast eventCategory:EventCategoryenterBroadcast];
     PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    liveRoom.roomType = LiveRoomType_Public_VIP;
+    if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM) {
+        liveRoom.roomType = LiveRoomType_Public;
+    }else {
+        liveRoom.roomType = LiveRoomType_Public_VIP;
+    }
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
     // 继承导航栏控制器
     [self navgationControllerPresent:vc];
 }
 
-/** 普通的私密直播间 */
-- (void)tableView:(HotTableView *)tableView didPrivateStartBroadcast:(NSInteger)index {
-    // TODO:点击立即付费私密
-    [[LiveModule module].analyticsManager reportActionEvent:EnterPrivateBroadcast eventCategory:EventCategoryenterBroadcast];
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    liveRoom.roomType = LiveRoomType_Private;
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-    liveRoom.httpLiveRoom = item;
-    vc.liveRoom = liveRoom;
-    // 继承导航栏控制器
-    [self navgationControllerPresent:vc];
-}
 /** 豪华的私密直播间 */
-- (void)tableView:(HotTableView *)tableView didStartVipPrivteBroadcast:(NSInteger)index {
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellInviteBtnDid:(LiveRoomInfoItemObject *)item {
     // TODO:点击立即付费豪华私密
     [[LiveModule module].analyticsManager reportActionEvent:EnterVipPrivateBroadcast eventCategory:EventCategoryenterBroadcast];
     PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.roomType = LiveRoomType_Private_VIP;
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
     // 继承导航栏控制器
@@ -436,36 +444,25 @@
 }
 
 /** 预约的私密直播间 */
-- (void)tableView:(HotTableView *)tableView didBookPrivateBroadcast:(NSInteger)index {
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellBookingBtnDid:(LiveRoomInfoItemObject *)item {
     // TODO:预约的私密直播间
     [[LiveModule module].analyticsManager reportActionEvent:SendRequestBooking eventCategory:EventCategoryenterBroadcast];
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
     vc.userId = item.userId;
     vc.userName = item.nickName;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-/** 点击女士 */
-- (void)tableView:(HotTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
-
-    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
-    listViewController.anchorId = item.userId;
-    listViewController.enterRoom = 1;
-    [self.navigationController pushViewController:listViewController animated:YES];
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellChatNowBtnDid:(LiveRoomInfoItemObject *)item {
+    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:self]) {
+        QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
+        vc.womanId = item.userId;
+        vc.firstName = item.nickName;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
-- (void)tableView:(HotTableView *)tableView didChatNowWithAnchor:(NSInteger)index {
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-    QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
-    vc.womanId = item.userId;
-    vc.firstName = item.nickName;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-
-- (void)tableView:(HotTableView *)tableView diddidSendMailToAnchor:(NSInteger)index {
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellSendMailBtnDid:(LiveRoomInfoItemObject *)item {
     LSSendMailViewController *vc = [[LSSendMailViewController alloc] initWithNibName:nil bundle:nil];
     vc.anchorId = item.userId;
     vc.anchorName = item.nickName;
@@ -473,8 +470,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)tableView:(HotTableView *)tableView didFocusBtn:(NSInteger)index {
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellFocusBtnDid:(LiveRoomInfoItemObject *)item{
     SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
     request.userId = item.userId;
     request.isFav = !item.isFollow;
@@ -483,7 +479,7 @@
             NSLog(@"LSFollowingViewController::didFocusBtn( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
             if (success) {
                 item.isFollow = !item.isFollow;
-                [self.tableView reloadData];
+                [self.collectionView reloadData];
             } else {
                 [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
             }
@@ -492,11 +488,11 @@
     [self.sessionManager sendRequest:request];
 }
 
-- (void)tableView:(HotTableView *)tableView didSayHiBtn:(NSInteger)index {
-     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
+- (void)waterfallView:(UICollectionView *)waterfallView homeListCellSayHiBtnDid:(LiveRoomInfoItemObject *)item {
     LSSendSayHiViewController * vc = [[LSSendSayHiViewController alloc]initWithNibName:nil bundle:nil];
     vc.anchorId = item.userId;
     vc.anchorName = item.nickName;
     [self.navigationController pushViewController:vc animated:YES];
 }
+
 @end

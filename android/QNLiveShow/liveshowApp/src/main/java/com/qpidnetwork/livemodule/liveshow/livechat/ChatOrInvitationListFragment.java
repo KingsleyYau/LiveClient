@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.livechat.contact.ContactBean;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
-import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
@@ -80,7 +82,7 @@ public class ChatOrInvitationListFragment extends BaseListFragment {
     }
 
     protected void onItemClickEvent(int position, ContactBean item) {
-        String urlChatActivity = URL2ActivityManager.createLiveChatActivityUrl(item.userId, item.userName, item.photoURL);
+        String urlChatActivity = LiveUrlBuilder.createLiveChatActivityUrl(item.userId, item.userName, item.photoURL);
         new AppUrlHandler(getActivity()).urlHandle(urlChatActivity);
     }
 
@@ -105,12 +107,20 @@ public class ChatOrInvitationListFragment extends BaseListFragment {
                 break;
         }
 
+        // 2019/10/17 根据公开直播间是否有权限来显示或隐藏与否
+        View mLLPublicBroadcast = view.findViewById(R.id.llEmptyPublicBroadcast);
+        LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+        if (loginItem != null && loginItem.userPriv != null) {
+            mLLPublicBroadcast.setVisibility(loginItem.userPriv.isPublicRoomPriv ? View.VISIBLE : View.GONE);
+        } else {
+            mLLPublicBroadcast.setVisibility(View.GONE);
+        }
+
         Button buttonRaised = view.findViewById(R.id.btnGuide);
         buttonRaised.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //点击空页引导，跳转回主页
-//                MainFragmentActivity.launchActivityWithListType(getActivity(), 0);
                 MainFragmentActivity.launchActivityWithListType(getActivity(), MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_DISCOVER);
             }
         });

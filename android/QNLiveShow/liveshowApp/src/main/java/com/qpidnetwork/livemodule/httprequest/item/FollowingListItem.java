@@ -9,12 +9,12 @@ import java.util.List;
  * @author Hunter Mun
  *
  */
-public class FollowingListItem {
-	
+public class FollowingListItem extends LiveRoomListItem{
+
 	public FollowingListItem(){
-		
+
 	}
-	
+
 	/**
 	 * 关注的主播列表Item
 	 * @param userId			主播ID
@@ -40,57 +40,65 @@ public class FollowingListItem {
 							int anchorType,
 							ProgramInfoItem showInfo,
 							HttpAuthorityItem priv,
-							int chatOnlineStatus){
-		this.userId = userId;
-		this.nickName = nickName;
-		this.photoUrl = photoUrl;
-		
-		if( onlienStatus < 0 || onlienStatus >= AnchorOnlineStatus.values().length ) {
-			this.onlineStatus = AnchorOnlineStatus.Unknown;
-		} else {
-			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
-		}
-		
-		this.roomPhotoUrl = roomPhotoUrl;
-		this.loveLevel = loveLevel;
-		
-		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
-			this.roomType = LiveRoomType.Unknown;
-		} else {
-			this.roomType = LiveRoomType.values()[roomType];
-		}
-		
-		this.addDate = addDate;
+							int chatOnlineStatus,
+							 boolean isFollow){
+//		this.userId = userId;
+//		this.nickName = nickName;
+//		this.photoUrl = photoUrl;
+//
+//		if( onlienStatus < 0 || onlienStatus >= AnchorOnlineStatus.values().length ) {
+//			this.onlineStatus = AnchorOnlineStatus.Unknown;
+//		} else {
+//			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
+//		}
+//
+//		this.roomPhotoUrl = roomPhotoUrl;
+//		this.loveLevel = loveLevel;
+//
+//		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
+//			this.roomType = LiveRoomType.Unknown;
+//		} else {
+//			this.roomType = LiveRoomType.values()[roomType];
+//		}
+//
+//		this.addDate = addDate;
+//
+//		//兴趣爱好
+//		this.interests = IntToEnumUtils.intArrayToInterestTypeList(interests);
+//
+//		if( anchorType < 0 || anchorType >= AnchorLevelType.values().length ) {
+//			this.anchorType = AnchorLevelType.Unknown;
+//		} else {
+//			this.anchorType = AnchorLevelType.values()[anchorType];
+//		}
+//		this.showInfo = showInfo;
+//		this.priv = priv;
+//		if( chatOnlineStatus < 0 || chatOnlineStatus >= IMClientListener.IMChatOnlineStatus.values().length ) {
+//			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.Unknown;
+//		} else {
+//			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.values()[chatOnlineStatus];
+//		}
 
-		//兴趣爱好
-		this.interests = IntToEnumUtils.intArrayToInterestTypeList(interests);
-		
-		if( anchorType < 0 || anchorType >= AnchorLevelType.values().length ) {
-			this.anchorType = AnchorLevelType.Unknown;
-		} else {
-			this.anchorType = AnchorLevelType.values()[anchorType];
-		}
-		this.showInfo = showInfo;
-		this.priv = priv;
-		if( chatOnlineStatus < 0 || chatOnlineStatus >= IMClientListener.IMChatOnlineStatus.values().length ) {
-			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.Unknown;
-		} else {
-			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.values()[chatOnlineStatus];
-		}
+		super(userId, nickName, photoUrl, onlienStatus, roomPhotoUrl, roomType, interests, anchorType, showInfo, priv, chatOnlineStatus, isFollow);
+		this.loveLevel = loveLevel;
+		this.addDate = addDate;
 	}
 	
 	
-	public String userId;
-	public String nickName;
-	public String photoUrl;
-	public AnchorOnlineStatus onlineStatus;
-	public String roomPhotoUrl;
-	public LiveRoomType roomType;
+//	public String userId;
+//	public String nickName;
+//	public String photoUrl;
+//	public AnchorOnlineStatus onlineStatus;
+//	public String roomPhotoUrl;
+//	public LiveRoomType roomType;
+//	public int loveLevel;
+//	public int addDate;
+//	public List<InterestType> interests;
+//	public AnchorLevelType anchorType;
+//	public ProgramInfoItem showInfo;
+//	public HttpAuthorityItem priv;
+//	public IMClientListener.IMChatOnlineStatus chatOnlineStatus;
+
 	public int loveLevel;
 	public int addDate;
-	public List<InterestType> interests;
-	public AnchorLevelType anchorType;
-	public ProgramInfoItem showInfo;
-	public HttpAuthorityItem priv;
-	public IMClientListener.IMChatOnlineStatus chatOnlineStatus;
 }

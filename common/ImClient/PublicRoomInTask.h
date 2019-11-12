@@ -42,7 +42,7 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(const string& userId);
+	bool InitParam(const string& userId, bool isFree);
 
 private:
 	IImClientListener*	m_listener;
@@ -50,6 +50,8 @@ private:
 	SEQ_T           m_seq;		// seq
     
     string          m_userId;   // 主播ID
+    
+    bool           m_isFree;   // 是否前3秒免费
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

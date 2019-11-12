@@ -170,6 +170,9 @@
     return UIStatusBarStyleDefault;
 }
 
+- (UIModalPresentationStyle)modalPresentationStyle {
+    return UIModalPresentationFullScreen;
+} 
 #pragma mark - 横屏切换
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations.
@@ -318,7 +321,7 @@
         UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
         BOOL result = self.navigationController.navigationBar.isTranslucent;
         if (result) {
-            if (backgroundImageView != nil && backgroundImageView.image != nil) {
+            if ([[backgroundImageView class] isKindOfClass:[UIImageView class]] && backgroundImageView != nil && backgroundImageView.image != nil) {
                 barBackgroundView.alpha = alpha;
             } else {
                 NSArray *subViews = [barBackgroundView subviews];

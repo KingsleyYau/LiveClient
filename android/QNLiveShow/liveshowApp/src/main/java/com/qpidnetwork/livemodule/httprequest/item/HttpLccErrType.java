@@ -94,5 +94,52 @@ public enum HttpLccErrType {
 //    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOSTAMP_NOCREDIT,          // 购买视频使用信用点支付时，信用点不足，且邮票不足(17221)(调用13.7.购买信件附件接口)
 //    HTTP_LCC_ERR_LETTER_VIDEO_OVERTIME,                                // 视频已过期(17222)(调用13.7.购买信件附件接口)
 //    HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP,                         // 信用点或者邮票不足(17208):(调用13.4.信件详情接口, 调用13.5.发送信件接口)
-    HTTP_LCC_ERR_EXIST_HANGOUT                                        // 当前会员已在hangout直播间（调用8.11.获取当前会员Hangout直播状态接口） 18003
+    HTTP_LCC_ERR_EXIST_HANGOUT,                                        // 当前会员已在hangout直播间（调用8.11.获取当前会员Hangout直播状态接口） 18003
+
+    /* SayHi */
+    HTTP_LCC_ERR_SAYHI_MAN_NO_PRIV,                     // 男士无权限(17401)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_LADY_NO_PRIV,                    // 女士无权限(174012)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_ANCHOR_ALREADY_SEND_LOI,         // 主播发过意向信（返回值补充"errdata":{"id":"意向信ID"}）(17403)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_MAN_ALREADY_SEND_SAYHI,          // 男士发过SayHi（返回值补充"errdata":{"id":"sayHi ID"}）(17404)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_ALREADY_CONTACT,                 // 男士主播已建立联系(17405)(调用14.4.发送SayHi接口)
+
+    HTTP_LCC_ERR_SAYHI_MAN_LIMIT_NUM_DAY,               // 男士每日数量限制(17406)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_REPLY,    // 男士总数量限制-有主播回复(17407)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_MAN_LIMIT_TOTAL_ANCHOR_UNREPLY,  // 男士总数量限制-无主播回复(17408)(调用14.4.发送SayHi接口)
+    HTTP_LCC_ERR_SAYHI_NO_EXIST,                        // sayHi不存在（17409）（调用14.8.获取SayHi回复详情）
+    HTTP_LCC_ERR_SAYHI_RESPONSE_NO_EXIST,               // sayHi回复不存在（17410）（调用14.8.获取SayHi回复详情）
+
+    HTTP_LCC_ERR_SAYHI_READ_NO_CREDIT,                  // sayHi购买阅读信用点或邮票不足（17411）（调用14.8.获取SayHi回复详情）
+    //HTTP_LCC_ERR_INVITATION_IS_INVLID,                  // 主播发送私密邀请ID无效（10057）（调用4.7.观众处理立即私密邀请）
+    //HTTP_LCC_ERR_INVITATION_HAS_EXPIRED,                // 主播发送私密邀请过期（10058）（调用4.7.观众处理立即私密邀请）
+    //HTTP_LCC_ERR_INVITATION_HAS_CANCELED,               // 主播发送私密邀请被取消了（10070）（调用4.7.观众处理立即私密邀请）
+    //HTTP_LCC_ERR_SHOW_HAS_ENDED,                        // 节目已经结束了（13017）（调用9.5.获取可进入的节目信息）
+
+    //HTTP_LCC_ERR_SHOW_HAS_CANCELLED,                    // 节目已经取消了（13024）（调用9.5.获取可进入的节目信息）
+    //HTTP_LCC_ERR_ANCHOR_NOCOME_SHOW_HAS_CLOSE,          // 主播没有来关闭节目（13010）（调用9.5.获取可进入的节目信息）
+    //HTTP_LCC_ERR_NO_BUY_SHOW_HAS_CANCELLED,             // 对于没买票用户节目取消了（13023）（调用9.5.获取可进入的节目信息）
+    //HTTP_LCC_ERR_HANGOUT_EXIST_COUNTDOWN_PRIVITEROOM,   // 多人视频流程 主播存在开始倒数私密直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10114)）
+    //HTTP_LCC_ERR_HANGOUT_EXIST_COUNTDOWN_HANGOUTROOM,   // 多人视频流程 主播存在开始倒数多人视频直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10115)）
+
+    //HTTP_LCC_ERR_HANGOUT_EXIST_FOUR_MIN_SHOW,           // 多人视频流程 主播存在4分钟内开始的预约（Sorry, the broadcaster is busy at the moment. Please try again later.(10116)）
+    //HTTP_LCC_ERR_KNOCK_EXIST_ROOM,                      // 男士同意敲门请求，主播存在在线的直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10136)）
+    //HTTP_LCC_ERR_INVITE_FAIL_SHOWING,                   // 发送立即邀请失败 主播正在节目中（Sorry, the broadcaster is busy at the moment. Please try again later.(13020)）
+    //HTTP_LCC_ERR_INVITE_FAIL_BUSY,                      // 发送立即邀请 用户收到主播繁忙通知（Sorry, the broadcaster is busy at the moment. Please try again later.(13021)）
+    //HTTP_LCC_ERR_SEND_RECOMMEND_HAS_SHOWING,            // 主播发送推荐好友请求：好友4分钟后有节目开播（Sorry, the broadcaster is busy at the moment. Please try again later.(16318)）
+
+    //HTTP_LCC_ERR_SEND_RECOMMEND_EXIT_HANGOUTROOM,       // 主播发送推荐好友请求：好友跟其他男士hangout中（Sorry, the broadcaster is busy at the moment. Please try again later.(16320)）
+    /*鲜花礼品*/
+    HTTP_LCC_ERR_MAN_NO_FLOWERGIFT_PRIV,                // 男士无鲜花礼品权限（21111）Sorry, we can not process your request at the moment. Please try again later.（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
+    HTTP_LCC_ERR_EMPTY_CART,                            // 购物车为空（22112）Empty cart（ 用于15.11.Checkout商品 15.12.生成订单）
+    HTTP_LCC_ERR_FULL_CART,                             // 当前购物车内准备赠送给该主播的礼品种类已满（达到10），不可再添加（弹层引导如下，与上述不同，该处按钮为Later/Checkout） （22113）Your cart is full. Please proceed to checkout before adding more!（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+    HTTP_LCC_ERR_NO_EXIST_CART,                         // 购物车商品不存在（22114）'Sorry, this item does not exist. Please remove it or try again later.（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+
+    HTTP_LCC_ERR_NO_SUPPOSE_DELIVERY,                   // 主播国家不配送（22115）Sorry, this item is out of stock in the broadcaster's country.（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+    HTTP_LCC_ERR_NO_AVAILABLE_CART,                     // 购物车的商品不可用（22116）'Sorry, some of the items you chose have been removed from the list. Please choose other items.'（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.11.Checkout商品 15.12.生成订单）
+    HTTP_LCC_ERR_ONLY_GREETING_CARD,                    // 添加屬於賀卡的礼品，但當前主播購物車內無其他非賀卡礼品（22117）Please add a gift item to the cart before adding a greeting card!（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单
+    HTTP_LCC_ERR_FLOWERGIFT_ANCHORID_INVALID,           // 主播不存在（22118）'ID invalid'（用于15.8.添加购物车商品 15.9.修改购物车商品数量
+    HTTP_LCC_ERR_NO_RECEPTION_FLOWERGIFT,               // 主播无接收礼物权限（22119）Sorry, this broadcaster does not wish to receive gifts, or gift delivery service does not cover this broadcaster's area.（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+
+    HTTP_LCC_ERR_GREETINGMESSAGE_TOO_LONG,              // 订单备注太长（22120）Sorry, the greeting message can not exceed 250 characters.'（15.12.生成订单）
+    HTTP_LCC_ERR_ITEM_TOO_MUCH                          // 当前购物车内准备赠送给该主播的该礼品数量已满（达到99），不可再添加（22121）ou can only add 1-99 items.（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
 }

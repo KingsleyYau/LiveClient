@@ -6,7 +6,10 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -14,12 +17,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.MultiAutoCompleteTextView;
 
 import com.qpidnetwork.qnbridgemodule.R;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,12 +50,13 @@ public class CircularEditText extends ConstraintLayout {
     //
     private float txt_size = 16.00f;
     private int colorEditText, colorLine;
+    private List<String> mTempMailboxPostfixList; //邮箱提示（根据输入内容而改变的）
     //
     private Context mContext;
     private Local mLocal = Local.Middle;
     private int normalBgResId, errorBgResId;
     private ConstraintLayout mRoot;
-    private EditText mEditText;
+    private AutoCompleteTextView mEditText;
     private View mViewLine;
     private LinearLayout mLyLeft, mLyRight;
     private List<OnCircularEditTextEventListener> onCircularEditTextEventListeners = new ArrayList<>();
@@ -199,7 +206,7 @@ public class CircularEditText extends ConstraintLayout {
         }
     }
 
-    //------------------- 对用户使用方法 -----------------
+    //------------------- 对用户使用方法 start -----------------
     public void resetUI(){
         mStatus = Status.Normal;
         setResByLocal();
@@ -221,7 +228,7 @@ public class CircularEditText extends ConstraintLayout {
         }
     }
 
-    public EditText getEditor(){
+    public AutoCompleteTextView getEditor(){
         return mEditText;
     }
 
@@ -247,8 +254,68 @@ public class CircularEditText extends ConstraintLayout {
         getEditor().setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
+    /**
+     * 设为邮箱（并自动补全）
+     */
     public void setEmail(){
         getEditor().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        //邮箱提示（固定）
+        final String[] mMailboxPostfixArray = getResources().getStringArray(R.array.recommend_mail_box);
+        //邮箱提示（根据输入内容而改变的）
+        mTempMailboxPostfixList = new ArrayList<>();
+        //转化 数据源
+        Collections.addAll(mTempMailboxPostfixList, mMailboxPostfixArray);
+        //set Adapter(https://my.oschina.net/u/2471056/blog/779337)
+        final AutoCompleteAdapter adapter = new AutoCompleteAdapter(mContext, mTempMailboxPostfixList);
+        adapter.setTextColor(getEditor().getCurrentTextColor());
+        adapter.setTextSize(mContext.getResources().getDimensionPixelSize(R.dimen.email_associate_text_size));
+        //设置属性
+        getEditor().setAdapter(adapter);
+        getEditor().setThreshold(1);        // 设置触发提示阈值
+        //监听输入内容，改变提示内容
+        getEditor().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                //只取第一个“@”前面的内容
+                String contentInput, emailInput;
+                int index = editable.toString().indexOf("@");
+                if (index < 0) {
+                    contentInput = editable.toString();
+                    emailInput = "";
+                }else{
+                    contentInput = editable.toString().substring(0, index);
+                    emailInput = editable.toString().substring(index);
+                }
+
+                mTempMailboxPostfixList.clear();
+                if(contentInput.length() > 0){
+                    for(int i = 0; i < mMailboxPostfixArray.length; ++i){
+                        if(TextUtils.isEmpty(emailInput)){
+                            //用户没有输入邮箱
+                            mTempMailboxPostfixList.add(contentInput + mMailboxPostfixArray[i]);
+                        }else{
+                            //用户输入了@xxx
+                            if(mMailboxPostfixArray[i].contains(emailInput)){
+                                mTempMailboxPostfixList.add(contentInput + mMailboxPostfixArray[i]);
+                            }
+                        }
+
+                    }
+                    adapter.notifyDataSetChanged();
+                    getEditor().showDropDown();
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+        });
     }
 
     public void setNoPredition(){

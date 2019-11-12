@@ -256,7 +256,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
                 self.unreadModel.emfNoreadNum = userInfoItem.emfUnreadNum;
                 self.unreadModel.messageNoreadNum = userInfoItem.privateMessageUnreadNum;
                 self.unreadModel.bookingNoreadNum = userInfoItem.bookingUnreadNum;
-                self.unreadModel.backpackNoreadNum = userInfoItem.backpackUnreadNum;
+                self.unreadModel.backpackNoreadNum = userInfoItem.backpackUnreadNum + userInfoItem.livechatVocherUnreadNum;
                 self.unreadModel.sayHiNoreadNum = userInfoItem.sayHiResponseUnreadNum;
             }
             finshHandler(success, self.unreadModel);

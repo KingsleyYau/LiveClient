@@ -30,7 +30,8 @@ public class WebsiteChangeTask {
                 super.handleMessage(msg);
                 switch (msg.what){
                     case GET_TOKEN_CALLBACK:{
-                        onGetToken((String)msg.obj);
+                        TokenBean tokenBean = (TokenBean)msg.obj;
+                        onGetToken(tokenBean.token, tokenBean.userId);
                     }break;
                 }
             }
@@ -49,16 +50,16 @@ public class WebsiteChangeTask {
         if(module != null && module.isModuleLogined()){
             module.getWebSiteToken(mTargetSite, new OnGetTokenCallback() {
                 @Override
-                public void onGetToken(String token) {
+                public void onGetToken(String token, String userId) {
                     Message msg = Message.obtain();
                     msg.what = GET_TOKEN_CALLBACK;
-                    msg.obj = token;
+                    msg.obj = new TokenBean(token, userId);
                     mHanler.sendMessage(msg);
                 }
             });
         }else{
             //无需获取token
-            onGetToken("");
+            onGetToken("", "");
         }
     }
 
@@ -66,17 +67,27 @@ public class WebsiteChangeTask {
      * 获取token返回处理
      * @param token
      */
-    private void onGetToken(String token){
+    private void onGetToken(String token, String userId){
         IModule sourceModule = WebSiteConfigManager.getInstance().getWebSiteModuleByType(mSourceSite);
         sourceModule.logout();
         if(mOnChangeWebsiteCallback != null){
-            mOnChangeWebsiteCallback.OnWebsiteChange(mTargetSite, token);
+            mOnChangeWebsiteCallback.OnWebsiteChange(mTargetSite, token, userId);
         }
     }
 
 
     public interface OnWebsiteChangeTaskCallback{
-        public void OnWebsiteChange(WebSiteType webSiteType, String token);
+        public void OnWebsiteChange(WebSiteType webSiteType, String token, String userId);
+    }
+
+    private class TokenBean{
+        public String token = "";
+        public String userId = "";
+
+        public TokenBean(String token, String userId){
+            this.token = token;
+            this.userId = userId;
+        }
     }
 
 }

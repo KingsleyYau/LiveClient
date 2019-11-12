@@ -59,6 +59,12 @@
     // Initialization code
 }
 
+- (IBAction)contentImageTap:(UITapGestureRecognizer *)sender {
+    if ([self.cellDelegate respondsToSelector:@selector(sayHiReadReplyCellContentImageTap)]) {
+        [self.cellDelegate sayHiReadReplyCellContentImageTap];
+    }
+}
+
 - (IBAction)replyBtnDid:(id)sender {
     if ([self.cellDelegate respondsToSelector:@selector(sayHiReadReplyCellReplyBtnDid)]) {
         [self.cellDelegate sayHiReadReplyCellReplyBtnDid];

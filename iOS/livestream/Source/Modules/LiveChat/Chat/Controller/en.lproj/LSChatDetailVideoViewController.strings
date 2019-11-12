@@ -1,6 +1,6 @@
 
 /* Class = "UILabel"; text = "You will be charged 2.5 credits to play this video. View videos will remain free for 3 days."; ObjectID = "2V1-2N-V89"; */
-"2V1-2N-V89.text" = "You will be charged 2.5 credits to play this video. View videos will remain free for 3 days.";
+"2V1-2N-V89.text" = "2.5 credits per video";
 
 /* Class = "UILabel"; text = "Trouble loading full video"; ObjectID = "6Vs-AX-cjx"; */
 "6Vs-AX-cjx.text" = "Trouble loading full video";

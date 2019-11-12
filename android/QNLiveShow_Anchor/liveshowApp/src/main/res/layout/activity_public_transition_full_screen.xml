@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_vedioBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BFBFBF"
+        android:scaleType="centerCrop" />
+
+    <android.opengl.GLSurfaceView
+        android:id="@+id/sv_push"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
+<!--    <include-->
+<!--        android:id="@+id/v_top_opera"-->
+<!--        layout="@layout/view_liveroom_vedio_opera" />-->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/v_top_opera"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@drawable/bg_live_room_header_gradient"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_q"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_q"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/public_tran_autoinvi"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/iv_autoinvit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/selector_public_trans_autoinvit_indicator"
+                android:minWidth="40dp"
+                android:minHeight="20dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_public_trans_close"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_switchCamera"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_public_trans_switch_camera"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_close"
+            app:layout_constraintEnd_toStartOf="@+id/iv_close"
+            app:layout_constraintTop_toTopOf="@+id/iv_close" />
+
+        <ImageView
+            android:id="@+id/iv_beauty"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_public_trans_beauty"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_switchCamera"
+            app:layout_constraintEnd_toStartOf="@+id/iv_switchCamera"
+            app:layout_constraintTop_toTopOf="@+id/iv_switchCamera" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="13dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginRight="13dp"-->
+<!--            android:lineSpacingExtra="4dp"-->
+<!--            android:text="@string/public_tran_autoinvi_tips"-->
+<!--            android:textColor="@color/public_tran_tips_color"-->
+<!--            android:textSize="12sp" />-->
+
+        <Button
+            android:id="@+id/btn_startPublicLive"
+            android:layout_width="240dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_btn_start_public"
+            android:text="@string/public_tran_startlive"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent_0"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="13dp"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/public_tran_startlive_tips"
+                android:textColor="@color/public_tran_tips_color"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>

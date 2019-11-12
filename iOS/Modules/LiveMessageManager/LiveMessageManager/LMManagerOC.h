@@ -45,7 +45,6 @@
  *
  *  @param delegate 委托
  *
- *  @return 是否成功
  */
 - (void)setHttpRequestDelegate:(id<LMHandleHttpListenerDelegate> _Nonnull)delegate;
 

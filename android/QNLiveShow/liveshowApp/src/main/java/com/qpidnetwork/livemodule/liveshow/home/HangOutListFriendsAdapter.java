@@ -94,9 +94,9 @@ public class HangOutListFriendsAdapter extends BaseRecyclerViewAdapter<HangoutAn
             //压缩、裁剪图片
             int bgSize = mContext.getResources().getDimensionPixelSize(R.dimen.live_size_60dp);  //DisplayUtil.getScreenWidth(mContext);
 
-            //对齐方式(左上角对齐)
+            //对齐方式(中上对齐)
             PointF focusPoint = new PointF();
-            focusPoint.x = 0f;
+            focusPoint.x = 0.5f;
             focusPoint.y = 0f;
 
             //占位图，拉伸方式

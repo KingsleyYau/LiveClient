@@ -14,6 +14,8 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.qnbridgemodule.view.camera.AlbumDataHolderManager;
 import com.qpidnetwork.qnbridgemodule.view.camera.ImageBean;
+import com.qpidnetwork.qnbridgemodule.view.camera.observer.SystemPhotoChangeListener;
+import com.qpidnetwork.qnbridgemodule.view.camera.observer.SystemPhotoChangeManager;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ import java.util.List;
  * 本地图库—— 3 列
  */
 //public class PictureSelectActivity extends BaseFragmentActivity {
-public class PictureSelectActivity extends BaseActionBarFragmentActivity {
+public class PictureSelectActivity extends BaseActionBarFragmentActivity implements SystemPhotoChangeListener {
 
     public static final String SELECT_PICTURE_PATH = "picturePath";
     private static final String SELECT_PICTURE_TYPE_KEY = "picSelectType";
@@ -54,7 +56,30 @@ public class PictureSelectActivity extends BaseActionBarFragmentActivity {
         setImmersionBarArtts(R.color.transparent_7);
 
         initViews();
+
+        registerSysImageChange();
+
         initData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unRegisterSysImageChange();
+    }
+
+    private void registerSysImageChange() {
+        SystemPhotoChangeManager.getInstance(mContext).registerListener(this);
+    }
+
+    private void unRegisterSysImageChange() {
+        SystemPhotoChangeManager.getInstance(mContext).unregisterListener(this);
+    }
+
+    @Override
+    public void onSystemPhotoChange(List<ImageBean> list) {
+        mAdapter.setData(list);
     }
 
     private void initViews() {
@@ -152,4 +177,6 @@ public class PictureSelectActivity extends BaseActionBarFragmentActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+
+
 }

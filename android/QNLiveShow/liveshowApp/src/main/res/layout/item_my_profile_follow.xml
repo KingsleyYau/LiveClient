@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/live_size_30dp"
-    android:layout_marginTop="@dimen/live_size_10dp">
+    android:layout_marginTop="@dimen/live_size_10dp"
+    android:layout_marginBottom="@dimen/live_size_30dp">
 
     <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
         android:id="@+id/item_my_profile_follow_iv_userIcon"
@@ -22,15 +22,18 @@
         android:layout_height="10dp"
         android:layout_gravity="right|bottom"
         android:layout_marginRight="6dp"
-        android:src="@drawable/anchor_status_online"
+        android:background="@drawable/bg_green_online"
         android:visibility="gone"
-        tools:visibility="visible"
-        />
+        tools:visibility="visible" />
+        <!--android:src="@drawable/anchor_status_online"-->
 
     <ImageView
         android:id="@+id/item_my_profile_follow_iv_living"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginLeft="@dimen/live_size_4dp"
+        android:layout_marginRight="@dimen/live_size_4dp"
+        android:src="@drawable/anim_room_broadcasting_1"
         android:visibility="gone" />
 </FrameLayout>

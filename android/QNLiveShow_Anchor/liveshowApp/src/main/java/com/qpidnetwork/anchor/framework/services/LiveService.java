@@ -25,6 +25,7 @@ import com.qpidnetwork.anchor.liveshow.datacache.file.downloader.FileDownloadMan
 import com.qpidnetwork.anchor.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.anchor.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.anchor.liveshow.login.LiveLoginActivity;
+import com.qpidnetwork.anchor.liveshow.manager.ChangeVideoPushManager;
 import com.qpidnetwork.anchor.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.anchor.liveshow.pushmanager.PushManager;
 import com.qpidnetwork.anchor.utils.Log;
@@ -136,6 +137,9 @@ public class LiveService {
         //初始化IMManager
         IMManager imManager = IMManager.newInstance(mApplicationContext);
         loginManager.addListener(imManager);
+
+        //初始化推流转换器
+        ChangeVideoPushManager.newInstance();
 
         //Fresco库初始化--忽略所有https证书验证
         ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)

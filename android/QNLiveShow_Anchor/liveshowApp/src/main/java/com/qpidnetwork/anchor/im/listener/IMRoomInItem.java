@@ -55,6 +55,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param pullRtmpUrls      男士视频流url(可无，无或空表示男士没有启动视频互动)
 	 * @param isHasOneOnOneAuth 是否有私密直播开播权限
 	 * @param isHasBookingAuth 是否有预约私密直播开播权限
+	 * @param currentPush		当前推流状态
 	 */	
 	public IMRoomInItem(String anchorId,
 						String roomId,
@@ -66,7 +67,8 @@ public class IMRoomInItem implements Serializable{
 						int status,
 						int liveShowType,
 						boolean isHasOneOnOneAuth,
-						boolean isHasBookingAuth){
+						boolean isHasBookingAuth,
+						IMCurrentPushInfoItem currentPush){
 		this.anchorId = anchorId;
 		this.roomId = roomId;
 		if( roomType < 0 || roomType >= IMLiveRoomType.values().length ) {
@@ -90,6 +92,7 @@ public class IMRoomInItem implements Serializable{
 		}
 		this.isHasOneOnOneAuth = isHasOneOnOneAuth;
 		this.isHasBookingAuth = isHasBookingAuth;
+		this.currentPush = currentPush;
 	}
 
 	public String anchorId;
@@ -103,6 +106,7 @@ public class IMRoomInItem implements Serializable{
 	public IMPublicRoomType liveShowType;
 	public boolean isHasOneOnOneAuth;
 	public boolean isHasBookingAuth;
+	public IMCurrentPushInfoItem currentPush;
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("IMRoomInItem[");

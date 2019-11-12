@@ -30,13 +30,10 @@
 
 
 + (NSString *)cellIdentifier;
-+ (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString;
-+ (NSString *)textPreDetail;
 
-- (void)setTextBackgroundViewColor:(RoomStyleItem *)item;
+- (void)updataChatMessage:(MsgItem *)item styleItem:(RoomStyleItem *)styleItem;
 
-- (void)changeMessageLabelWidth:(CGFloat)width;
-
-- (void)updataChatMessage:(MsgItem *)item;
+/** 新私密直播间用 */
+- (void)setupChatMessage:(MsgItem *)item styleItem:(RoomStyleItem *)styleItem;
 
 @end

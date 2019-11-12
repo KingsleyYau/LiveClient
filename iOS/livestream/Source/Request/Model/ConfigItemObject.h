@@ -28,6 +28,7 @@
  * pmStartNotice              背包邮票页URL
  * httpSvrMobileUrl           http mobile服务器的URL（包括mobile.charmlive.com或demo-mobile.charmlive.com）
  * sendLetter                 发送信件页URL
+ * flowersGift                鲜花礼品的优惠价
  */
 @property (nonatomic, copy) NSString *_Nonnull imSvrUrl;
 @property (nonatomic, copy) NSString *_Nonnull httpSvrUrl;
@@ -46,6 +47,7 @@
 @property (nonatomic, copy) NSString *_Nonnull postStampUrl;
 @property (nonatomic, copy) NSString *_Nonnull httpSvrMobileUrl;
 @property (nonatomic, copy) NSString *_Nonnull sendLetter;
+@property (nonatomic, assign) int flowersGift;
 
 /*
      test QNLiveChat

@@ -10,9 +10,12 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetAudienceDetailInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetAudienceListCallback;
+import com.qpidnetwork.livemodule.httprequest.OnGetUserInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.im.IMHangoutEventListener;
 import com.qpidnetwork.livemodule.im.IMInviteLaunchEventListener;
 import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
@@ -42,7 +45,7 @@ import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownlo
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.OnRoomRebateCountTimeEndListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
-import com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout;
+import com.qpidnetwork.livemodule.view.LiveAnchorInfoDialog;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
@@ -54,7 +57,7 @@ import com.qpidnetwork.qnbridgemodule.util.Log;
  */
 
 public class BaseImplLiveRoomActivity extends BaseFragmentActivity
-        implements View.OnClickListener, SoftKeyboradListenFrameLayout.InputWindowListener,
+        implements View.OnClickListener,
         IFileDownloadedListener, IMInviteLaunchEventListener,IMLiveRoomEventListener,
         IMOtherEventListener, TariffPromptManager.OnGetRoomTariffInfoListener,
         OnGetAudienceListCallback, OnGetAudienceDetailInfoCallback, IMLoginStatusListener,
@@ -71,6 +74,10 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
 
     //管理房间信用点及返点
     public LiveRoomCreditRebateManager mLiveRoomCreditRebateManager;
+
+    //增加用户资料dialog处理
+    private UserInfoItem mUserInfoItem;     //存放dialog信息相关
+    private LiveAnchorInfoDialog mLiveAnchorInfoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,9 +146,9 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     public void GetCredit(){
         LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance, int coupon) {
-                if(isSuccess){
-                    mLiveRoomCreditRebateManager.setCredit(balance);
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg,  LSLeftCreditItem creditItem) {
+                if(isSuccess && creditItem != null){
+                    mLiveRoomCreditRebateManager.setCredit(creditItem.balance);
                     //通知信用点刷新
                     onCreditUpdate();
                 }
@@ -156,6 +163,51 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         if(!TextUtils.isEmpty(mRoomInId)){
             mIMRoomInItem = mIMManager.getRoomInItem(mRoomInId);
             Log.d(TAG,"getRoomInItem:"+ mRoomInId);
+
+            //更新主播信息
+            getAnchorInfo();
+        }
+    }
+
+    /**
+     * 显示主播信息dialog
+     */
+    protected void showAnchorInfoDialog(){
+        if(mIMRoomInItem != null){
+            if(mLiveAnchorInfoDialog == null){
+                mLiveAnchorInfoDialog = new LiveAnchorInfoDialog(this);
+                if(mUserInfoItem == null){
+                    mUserInfoItem = new UserInfoItem(mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl);
+                }
+                mLiveAnchorInfoDialog.setDialogData(mUserInfoItem, mIMRoomInItem.isFavorite, mIMRoomInItem.roomId);
+            }
+            if(!mLiveAnchorInfoDialog.isShowing()){
+                mLiveAnchorInfoDialog.show();
+            }
+        }
+    }
+
+    /**
+     * 刷新主播信息
+     */
+    private void getAnchorInfo(){
+        if(mIMRoomInItem != null && !TextUtils.isEmpty(mIMRoomInItem.userId)){
+            LiveRequestOperator.getInstance().GetUserInfo(mIMRoomInItem.userId, new OnGetUserInfoCallback() {
+                @Override
+                public void onGetUserInfo(boolean isSuccess, int errCode, String errMsg, final UserInfoItem userItem) {
+                    if(isSuccess && userItem != null){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mUserInfoItem = userItem;
+                                if(mLiveAnchorInfoDialog != null){
+                                    mLiveAnchorInfoDialog.refreshData(mUserInfoItem);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 
@@ -226,17 +278,6 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     //------------------点击事件-------------------------------
     @Override
     public void onClick(View v) {
-
-    }
-
-    //------------------软键盘监听、视图高度发生变化--------------
-    @Override
-    public void onSoftKeyboardShow() {
-
-    }
-
-    @Override
-    public void onSoftKeyboardHide() {
 
     }
 
@@ -533,7 +574,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
+    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, IMClientListener.LCC_ERR_TYPE err) {
         if(!isCurrentRoom(roomId)){
             return;
         }

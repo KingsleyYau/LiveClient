@@ -10,6 +10,7 @@
 #import "GetAllGiftListRequest.h"
 #import "LSGiftManagerItem.h"
 #import "LSGetHangoutGiftListRequest.h"
+#import "LSGetGiftTypeListRequest.h"
 #import "GiftItem.h"
 
 @class LSGiftManagerDelegate;
@@ -22,7 +23,7 @@
 @class LSGiftManager;
 typedef void (^GetGiftFinshtHandler)(BOOL success, NSArray<LSGiftManagerItem *> *giftList);
 typedef void (^GetHangoutGiftFinshHandler)(BOOL success, NSArray<LSGiftManagerItem *> *buyforList, NSArray<LSGiftManagerItem *> *normalList, NSArray<LSGiftManagerItem *> *celebrationList);
-
+typedef void (^GetGiftTypeListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSGiftTypeItemObject *> *array);
 @interface LSGiftManager : NSObject
 #pragma mark - 属性
 /**
@@ -72,6 +73,15 @@ typedef void (^GetHangoutGiftFinshHandler)(BOOL success, NSArray<LSGiftManagerIt
  */
 - (void)getRoomBackpackGiftList:(NSString *)roomId finshHandler:(GetGiftFinshtHandler)finshHandler;
 
+
+/**
+ 获取私密直播间可显示的背包礼物列表
+
+ @param roomId 房间Id
+ @param finshHandler 完成回调
+ */
+- (void)getPraviteRoomBackpackGiftList:(NSString *)roomId finshHandler:(GetGiftFinshtHandler)finshHandler;
+
 /**
  获取多人互动直播间可发送礼物列表
 
@@ -81,8 +91,22 @@ typedef void (^GetHangoutGiftFinshHandler)(BOOL success, NSArray<LSGiftManagerIt
 - (void)getHangoutGiftList:(NSString *)roomId finshHandler:(GetHangoutGiftFinshHandler)finshHandler;
 
 /**
- 获取指定礼物
+ 获取虚拟礼物分类列表
+ 
+ @param roomType 房间类型 1为公开 2为私密
+ @param finshHandler 完成回调
+ */
+- (void)getGiftTypeList:(NSInteger)roomType finshHandler:(GetGiftTypeListFinishHandler)finshHandler;
 
+/**
+ 根据礼物类型获取礼物列表
+ @param roomId 房间id
+ @param typeId 类型id
+ @param finshHandler 完成回调
+ */
+- (void)getGiftTypeContent:(NSString *)roomId typeID:(NSString *)typeId finshHandler:(GetGiftFinshtHandler)finshHandler;
+/**
+ 获取指定礼物
  @param giftId 礼物Id
  @return 礼物实例
  */

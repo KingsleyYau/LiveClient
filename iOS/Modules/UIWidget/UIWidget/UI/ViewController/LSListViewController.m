@@ -9,8 +9,9 @@
 #import "LSListViewController.h"
 #import "LSUIWidgetBundle.h"
 
-#define List_Reload @"Reload"
-#define List_FailTips @"Failed to load"
+#define List_Reload @"Retry"
+#define List_FailTips @"Fail to load this page. Please try again later."
+
 
 @interface LSListViewController()
 @end
@@ -38,6 +39,7 @@
     // Do any additional setup after loading the view.
   
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -77,44 +79,49 @@
         UIImage *image = [UIImage imageNamed:imgStr];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
         CGFloat iconCenter = CGRectGetMidX([UIScreen mainScreen].bounds);
-        imageView.frame = CGRectMake(0, 80, 80, 80);
+        CGFloat originY = 173;
+        if ([UIScreen mainScreen].bounds.size.width == 320) {
+            originY = 120;
+        }
+        imageView.frame = CGRectMake(0, originY, 98, 98);
         CGPoint imageVCenter = imageView.center;
         imageVCenter.x = iconCenter;
         imageView.center = imageVCenter;
+        self.failIcon = imageView;
         [self.failView addSubview:imageView];
         
-        CGFloat failTipsY = CGRectGetMaxY(imageView.frame) + 24.0f;
+        CGFloat failTipsY = CGRectGetMaxY(imageView.frame) + 20.0f;
         
-        self.failTips = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 24)];
+        self.failTips = [[UILabel alloc] initWithFrame:CGRectMake(0, failTipsY, 312, 24)];
         CGPoint failTipsCenter = self.failTips.center;
         failTipsCenter.x = iconCenter;
-        failTipsCenter.y = failTipsY;
         self.failTips.center = failTipsCenter;
-        self.failTips.text = self.failTipsText;
+        self.failTips.text = List_FailTips;
         self.failTips.textAlignment = NSTextAlignmentCenter;
-        self.failTips.textColor = [UIColor colorWithRed:194.0 / 255.0 green:194.0 / 255.0 blue:194.0 / 255.0 alpha:1];
+        self.failTips.font = [UIFont systemFontOfSize:15];
+        self.failTips.textColor = [UIColor colorWithRed:153.0 / 255.0 green:153.0 / 255.0 blue:153.0 / 255.0 alpha:1];
         [self.failView addSubview:self.failTips];
-        
-        CGFloat failBtnY = CGRectGetMaxY(self.failTips.frame) + 44.0f;
+    
+        CGFloat failBtnY = failTipsY + self.failTips.frame.size.height + 30.0f;
 
         self.failBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        [self.failBtn setFrame:CGRectMake(0, 0, 180, 36)];
+        [self.failBtn setFrame:CGRectMake(0, failBtnY, 200, 44)];
         [self.failBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//        [self.failBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         CGPoint failBtnCenter = self.failBtn.center;
         failBtnCenter.x = iconCenter;
-        failBtnCenter.y = failBtnY;
         self.failBtn.center = failBtnCenter;
-        [self.failBtn setTitle:self.failBtnText forState:UIControlStateNormal];
+        [self.failBtn setTitle:List_Reload forState:UIControlStateNormal];
         self.failBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.failBtn.layer.cornerRadius = 18.0f;
+        self.failBtn.layer.cornerRadius = 6.0f;
         self.failBtn.layer.masksToBounds = YES;
         
         self.failBtn.backgroundColor = [UIColor colorWithRed:41.0 / 255.0 green:122.0 / 255.0 blue:243.0 / 255.0 alpha:1];
         
         [self.failBtn addTarget:self.listDelegate action:@selector(btnActionClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.failView addSubview:self.failBtn];
         
+        [self.failView addSubview:self.failBtn];
+    
+
         [self.view addSubview:self.failView];
         self.failView.hidden = YES;
     }
@@ -156,4 +163,38 @@
     
 }
 
+
+- (void)showNoDataView {
+
+    NSString *imgStr = [[[LSUIWidgetBundle resourceBundle] bundlePath] stringByAppendingPathComponent:@"NoDataIcon.png"];
+    UIImage *image = [UIImage imageNamed:imgStr];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    CGFloat iconCenter = CGRectGetMidX([UIScreen mainScreen].bounds);
+    imageView.frame = CGRectMake(0, 173, 98, 98);
+    CGPoint imageVCenter = imageView.center;
+    imageVCenter.x = iconCenter;
+    imageView.center = imageVCenter;
+    self.noDataIcon = imageView;
+    [self.view addSubview:imageView];
+    
+    CGFloat failTipsY = CGRectGetMaxY(imageView.frame) + 20.0f;
+    
+    self.noDataTip = [[UILabel alloc] initWithFrame:CGRectMake(0, failTipsY, 312, 24)];
+    CGPoint failTipsCenter = self.noDataTip.center;
+    failTipsCenter.x = iconCenter;
+    self.noDataTip.center = failTipsCenter;
+    self.noDataTip.textAlignment = NSTextAlignmentCenter;
+    self.failTips.font = [UIFont systemFontOfSize:16];
+    self.noDataTip.textColor = [UIColor colorWithRed:153.0 / 255.0 green:153.0 / 255.0 blue:153.0 / 255.0 alpha:1];
+    [self.failTips sizeToFit];
+    [self.view addSubview:self.noDataTip];
+    
+}
+
+
+- (void)hideNoDataView {
+    [self.noDataIcon removeFromSuperview];
+    [self.noDataTip removeFromSuperview];
+    
+}
 @end

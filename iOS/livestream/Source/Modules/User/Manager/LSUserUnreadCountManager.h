@@ -20,6 +20,7 @@ typedef enum LSUnreadType {
     LSUnreadType_Ticket = 5,
     LSUnreadType_Booking = 6,
     LSUnreadType_Backpack = 7,
+    LSUnreadType_MyContacts = 8
 } LSUnreadType;
 
 @protocol LSUserUnreadCountManagerDelegate <NSObject>

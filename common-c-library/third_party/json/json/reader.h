@@ -124,6 +124,8 @@ namespace Json {
       bool decodeString( Token &token );
       bool decodeString( Token &token, std::string &decoded );
       bool decodeDouble( Token &token );
+      // 在decodeNumber的判断中，如果超过uint的最大值而且有没有double的符号（.,e）,就调用decodeLong（之前是调用decodeDouble）alex，2019-09-18
+      bool decodeLong( Token &token );
       bool decodeUnicodeCodePoint( Token &token, 
                                    Location &current, 
                                    Location end, 

@@ -13,6 +13,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.livechat.LCMagicIconManager.LCMagicIconManagerCallback;
 import com.qpidnetwork.livemodule.livechat.LCMessageItem.MessageType;
@@ -51,13 +52,12 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatTalkUserListItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserCamStatus;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserStatus;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJni;
-import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoModeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoSizeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.ServiceType;
-import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.ToFlagType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.VideoPhotoType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.VideoToFlagType;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livechathttprequest.OnCheckCouponCallCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetMagicIconConfigCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetPhotoCallback;
@@ -1169,9 +1169,9 @@ public class LiveChatManager
 		final double minMoney = LoginManager.getInstance().getSynConfig().minChat;
 		long reuqestId = LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
 			@Override
-			public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, double balance, int coupon) {
+			public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, LSLeftCreditItem creditItem) {
 				if (isSuccess) {
-					if (balance >= minMoney) {
+					if (creditItem != null && creditItem.balance >= minMoney) {
 						// 若当前状态为Other，则标记为ManInvite(男士邀请)状态
 //								LCUserItem userItem = mUserMgr.getUserItem(userId);
 //								if (null != userItem) {
@@ -1261,7 +1261,7 @@ public class LiveChatManager
 	 * @return
 	 */
 	public boolean CheckCoupon(String userId) {
-		long requestId = LCRequestJniLiveChat.CheckCoupon(userId, ServiceType.LiveChat, new OnCheckCouponCallCallback() {
+		long requestId = LivechatRequestOperator.getInstance().CheckCoupon(userId, ServiceType.LiveChat, new OnCheckCouponCallCallback() {
 
 			@Override
 			public void OnCheckCoupon(long requestId, boolean isSuccess, String errno, String errmsg,
@@ -1278,21 +1278,21 @@ public class LiveChatManager
 	 * @param userItem	对方用户
 	 * @return
 	 */
-	private boolean CheckCouponProc(LCUserItem userItem) {
+	private boolean CheckCouponProc(final LCUserItem userItem) {
 		// 执行尝试使用试聊券流程
 		Log.i("LiveChatManager", "CheckCouponProc userId: " + userItem.userId);
 		if (!userItem.tryingSend) {
 			userItem.tryingSend = true;
-			long requestId = LCRequestJniLiveChat.CheckCoupon(userItem.userId, ServiceType.LiveChat, new OnCheckCouponCallCallback() {
+			long requestId = LivechatRequestOperator.getInstance().CheckCoupon(userItem.userId, ServiceType.LiveChat, new OnCheckCouponCallCallback() {
 
 				@Override
 				public void OnCheckCoupon(long requestId, boolean isSuccess, String errno, String errmsg,
 						Coupon item) {
 					// TODO Auto-generated method stub
-					Log.i("LiveChatManager", "OnCheckCoupon userId: " + item.userId + " CouponStatus: " + item.status.ordinal());
 					if (isSuccess && (item.status == CouponStatus.Yes
 							|| item.status == CouponStatus.Started))
 					{
+						Log.i("LiveChatManager", "OnCheckCoupon userId: " + item.userId + " CouponStatus: " + item.status.ordinal());
 						// 尝试使用试聊券
 						Message msg = Message.obtain();
 						msg.what = LiveChatRequestOptType.TryUseTicket.ordinal();
@@ -1303,7 +1303,7 @@ public class LiveChatManager
 						// 检测是否有点
 						Message msg = Message.obtain();
 						msg.what = LiveChatRequestOptType.CheckMoneyOrAutoCharge.ordinal();
-						msg.obj = item.userId;
+						msg.obj = userItem.userId;
 						mHandler.sendMessage(msg);
 					}
 				}
@@ -1324,7 +1324,7 @@ public class LiveChatManager
 		boolean result = false;
 		Log.i("LiveChatManager", "UseTryTicket userId: " + userId);
 		if (!userId.isEmpty()) {
-			long requestId = LCRequestJniLiveChat.UseCoupon(userId, ServiceType.LiveChat, new OnLCUseCouponCallback() {
+			long requestId = LivechatRequestOperator.getInstance().UseCoupon(userId, ServiceType.LiveChat, new OnLCUseCouponCallback() {
 
 				@Override
 				public void OnLCUseCoupon(long requestId, boolean isSuccess, String errno, String errmsg, String userId, String couponid) {
@@ -1412,7 +1412,7 @@ public class LiveChatManager
 			}
 			else if (!userItem.inviteId.isEmpty())
 			{
-				long requestId = LCRequestJniLiveChat.QueryChatRecord(userItem.inviteId, new OnQueryChatRecordCallback() {
+				long requestId = LivechatRequestOperator.getInstance().QueryChatRecord(userItem.inviteId, new OnQueryChatRecordCallback() {
 
 					@Override
 					public void OnQueryChatRecord(boolean isSuccess, String errno,
@@ -1426,10 +1426,12 @@ public class LiveChatManager
 						// 插入聊天记录
 						LCUserItem userItem = mUserMgr.getUserItemWithInviteId(inviteId);
 						if (isSuccess && userItem != null) {
+							//过滤无用的购买通知类历史消息，防止合并完成有多余购买通知嘞消息，无法删除
+							Record[] fiterRecordList = fiterInvalidRecord(recordList);
 							// 清除已完成的记录（保留未完成发送的记录）
 							userItem.clearFinishedMsgList();
 							// 插入历史记录
-							for (int i = 0; i < recordList.length; i++)
+							for (int i = 0; i < fiterRecordList.length; i++)
 							{
 								LCMessageItem item = new LCMessageItem();
 								if (item.InitWithRecord(
@@ -1437,7 +1439,7 @@ public class LiveChatManager
 										mUserId,
 										userItem.userId,
 										userItem.inviteId,
-										recordList[i],
+										fiterRecordList[i],
 										mEmotionMgr,
 										mVoiceMgr,
 										mPhotoMgr,
@@ -1486,7 +1488,7 @@ public class LiveChatManager
 		if (inviteIds.size() > 0) {
 			String[] inviteArray = new String[inviteIds.size()];
 			inviteIds.toArray(inviteArray);
-			mGetUsersHistoryMsgRequestId = LCRequestJniLiveChat.QueryChatRecordMutiple(inviteArray, new OnQueryChatRecordMutipleCallback() {
+			mGetUsersHistoryMsgRequestId = LivechatRequestOperator.getInstance().QueryChatRecordMutiple(inviteArray, new OnQueryChatRecordMutipleCallback() {
 
 				@Override
 				public void OnQueryChatRecordMutiple(boolean isSuccess, String errno,
@@ -1509,10 +1511,12 @@ public class LiveChatManager
 							if (null != record.recordList
 								&& userItem != null)
 							{
+								//过滤无用的购买通知类历史消息，防止合并完成有多余购买通知嘞消息，无法删除
+								Record[] fiterRecordList = fiterInvalidRecord(record.recordList);
 								// 清除已完成的记录（保留未完成发送的记录）
 								userItem.clearFinishedMsgList();
 								// 服务器返回的历史消息是倒序排列的
-								for (int k = record.recordList.length - 1; k >= 0; k--)
+								for (int k = fiterRecordList.length - 1; k >= 0; k--)
 								{
 									LCMessageItem item = new LCMessageItem();
 									if (item.InitWithRecord(
@@ -1520,7 +1524,7 @@ public class LiveChatManager
 											mUserId,
 											userItem.userId,
 											userItem.inviteId,
-											record.recordList[k],
+											fiterRecordList[k],
 											mEmotionMgr,
 											mVoiceMgr,
 											mPhotoMgr,
@@ -1553,6 +1557,82 @@ public class LiveChatManager
 		}
 
 		return result;
+	}
+
+	/**
+	 * 过滤掉无效的消息（解决由于历史消息有条数限制，导致部分购买通知消息和接受photo或video消息无法形成一一对应，导致合并后出现无用的通知消息）
+	 * @return
+	 */
+	private Record[] fiterInvalidRecord(Record[] recordArray){
+		List<Record> recordList = new ArrayList<Record>();
+		if(recordArray != null){
+			for(int i = 0; i < recordArray.length; i++){
+				boolean filter = false;
+				switch (recordArray[i].messageType){
+					case Photo:{
+						filter = !isValidPhotoNotify(recordArray[i], recordArray);
+					}break;
+					case Video:{
+						filter = !isValidVideoNotify(recordArray[i], recordArray);
+					}break;
+					default:{
+
+					}break;
+				}
+				if(!filter){
+					recordList.add(recordArray[i]);
+				}
+			}
+		}
+		return ((Record[]) recordList.toArray(new Record[recordList.size()]));
+	}
+
+	/**
+	 * 扫描判断已购买的图片通知消息是否有效
+	 * @param record
+	 * @param recordArray
+	 * @return
+	 */
+	private boolean isValidPhotoNotify(Record record, Record[] recordArray){
+		boolean isValid = false;
+		if(!record.photoCharge){
+			isValid = true;
+		}else{
+			for(Record tempRecord : recordArray){
+				if(tempRecord.messageType == Record.MessageType.Photo && tempRecord.toflag == Record.ToFlag.Receive){
+					if(tempRecord.photoId.equals(record.photoId)
+							&& tempRecord.photoSendId.equals(record.photoSendId)){
+						isValid = true;
+						break;
+					}
+				}
+			}
+		}
+		return isValid;
+	}
+
+	/**
+	 * 扫描判断已购买的视频通知消息是否有效
+	 * @param record
+	 * @param recordArray
+	 * @return
+	 */
+	private boolean isValidVideoNotify(Record record, Record[] recordArray){
+		boolean isValid = false;
+		if(!record.videoCharge){
+			isValid = true;
+		}else {
+			for (Record tempRecord : recordArray) {
+				if (tempRecord.messageType == Record.MessageType.Video && tempRecord.toflag == Record.ToFlag.Receive) {
+					if (tempRecord.videoId.equals(record.videoId)
+							&& tempRecord.videoSendId.equals(record.videoSendId)) {
+						isValid = true;
+						break;
+					}
+				}
+			}
+		}
+		return isValid;
 	}
 
 	/**
@@ -2268,6 +2348,7 @@ public class LiveChatManager
 				,""
 				, ""
 				, ""
+				, true
 				, true);
 		photoItem.mClearSrcPhotoInfo = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", photoPath);
 		// 把PhotoItem添加到MessageItem
@@ -2396,7 +2477,7 @@ public class LiveChatManager
 		}
 
 		// 请求付费获取图片
-		long requestId = LCRequestJniLiveChat.PhotoFee(
+		long requestId = LivechatRequestOperator.getInstance().PhotoFee(
 				item.fromId
 				, item.inviteId
 				, mUserId
@@ -2491,18 +2572,16 @@ public class LiveChatManager
 
 		// 请求下载图片
 		final PhotoModeType modeType;
-		ToFlagType toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
+
 		if (item.sendType == SendType.Send) {
 			// 男士发送（直接获取清晰图片）
 			modeType = PhotoModeType.Clear;
-			toFlagType = ToFlagType.ManGetSelf;
 		}
 		else  {
 			// 女士发送（判断是否已购买）
 			modeType = (item.getPhotoItem().charge ? PhotoModeType.Clear : PhotoModeType.Fuzzy);
-			toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
 		}
-		boolean result = mPhotoMgr.getPrivatePhoto(toFlagType
+		boolean result = mPhotoMgr.getPrivatePhoto(item.getPhotoItem().photoUserAttr
 					, item.getUserItem().userId
 					, mUserId
 					, mSid
@@ -2636,7 +2715,7 @@ public class LiveChatManager
 		LCVoiceItem voiceItem = item.getVoiceItem();
 		voiceItem.filePath = mVoiceMgr.getVoicePath(item);
 		int siteType = WebSiteConfigManager.getInstance().getCurrentWebSite().getSiteId();
-		long requestId = LCRequestJniLiveChat.PlayVoice(voiceItem.voiceId, siteType, voiceItem.filePath, new OnLCPlayVoiceCallback() {
+		long requestId = LivechatRequestOperator.getInstance().PlayVoice(voiceItem.voiceId, siteType, voiceItem.filePath, new OnLCPlayVoiceCallback() {
 
 			@Override
 			public void OnLCPlayVoice(long requestId, boolean isSuccess, String errno,
@@ -2705,7 +2784,7 @@ public class LiveChatManager
 			return true;
 		}
 
-		mMagicIconMgr.mGetMagicIconConfigReqId = LCRequestJniLiveChat.GetMagicIconConfig(new OnLCGetMagicIconConfigCallback() {
+		mMagicIconMgr.mGetMagicIconConfigReqId = LivechatRequestOperator.getInstance().GetMagicIconConfig(new OnLCGetMagicIconConfigCallback() {
 
 			@Override
 			public void OnLCGetMagicIconConfig(boolean isSuccess, String errno,
@@ -2944,7 +3023,7 @@ public class LiveChatManager
 		else {
 			// 还没请求下载，现在下载
 			String filePath = mVideoMgr.getVideoPhotoTempPath(userId, videoId, inviteId, type);
-			long requestId = LCRequestJniLiveChat.GetVideoPhoto(mSid, mUserId, userId, videoId, type, filePath, new OnLCRequestFileCallback() {
+			long requestId = LivechatRequestOperator.getInstance().GetVideoPhoto(mSid, mUserId, userId, videoId, type, filePath, new OnLCRequestFileCallback() {
 
 				@Override
 				public void OnLCRequestFile(long requestId, boolean isSuccess, String errno,
@@ -3035,7 +3114,7 @@ public class LiveChatManager
 				result = true;
 			}
 			else {
-				long requestId = LCRequestJniLiveChat.GetVideo(
+				long requestId = LivechatRequestOperator.getInstance().GetVideo(
 										mSid
 										, mUserId
 										, userItem.userId
@@ -3053,6 +3132,7 @@ public class LiveChatManager
 						if (isSuccess) {
 							// 通知LiveChat服务器已经购买视频
 							if(!videoItem.charget) {
+								videoItem.charget = true;
 								LiveChatClient.PlayVideo(
 										userItem.userId
 										, item.inviteId
@@ -3062,7 +3142,6 @@ public class LiveChatManager
 										, videoItem.videoDesc
 										, item.msgId);
 							}
-							videoItem.charget = true;
 							videoItem.videoUrl = url;
 						}
 
@@ -3569,6 +3648,8 @@ public class LiveChatManager
 		LCUserItem userItem = GetUserWithId(userId);
 		if(errType == LiveChatErrType.Success
 				&& item != null){
+			Log.i(TAG, "OnGetSessionInfo inviteId: " + item.inviteId + " targetId: " + item.targetId + " charget: " + item.charget + " freeChat: " + item.freeChat
+			 + " serviceType: " + item.serviceType);
 			userItem.updateChatStatusBySession(item);
 		}
 		mCallbackHandler.OnGetSessionInfo(errType, errmsg, userId, item);
@@ -3726,7 +3807,7 @@ public class LiveChatManager
 				int siteType = WebSiteConfigManager.getInstance().getCurrentWebSite().getSiteId();
 
 				// 请求上传语音文件
-				long requestId = LCRequestJniLiveChat.UploadVoice(
+				long requestId = LivechatRequestOperator.getInstance().UploadVoice(
 										voiceItem.checkCode
 										, userItem.inviteId
 										, mUserId
@@ -4715,7 +4796,7 @@ public class LiveChatManager
 		mCallbackHandler.OnRecvTryTalkEnd(userItem);
 
 		// 插入系统消息
-		String message = mContext.getString(R.string.livechat_msg_trychat_start_end);
+		String message = mContext.getString(R.string.live_chat_msg_trychat_start_end);
 		BuildAndInsertSystemMsg(userId, message);
 	}
 
@@ -4816,7 +4897,8 @@ public class LiveChatManager
 				photoId
 				, sendId
 				, photoDesc
-				, charget);
+				, charget
+				, false);
 		// 把PhotoItem添加到MessageItem
 		item.setPhotoItem(photoItem);
 
@@ -4900,6 +4982,66 @@ public class LiveChatManager
 
 		// callback
 		mCallbackHandler.OnRecvVideo(item);
+	}
+
+	/**
+	 * 发送邀请语
+	 * @param userId
+	 * @param inviteMsg
+	 * @param nickName
+	 */
+	public void sendInviteMessage(String userId, String inviteMsg, String nickName){
+		LiveChatClient.SendInviteMessage(userId, inviteMsg, nickName);
+	}
+
+	@Override
+	public void OnSendInviteMessage(LiveChatErrType errType, String errmsg, String userId, String inviteMsg, String inviteId, String nickName) {
+		//解决会话中发送失败，导致消息丢失
+//		if(errType == LiveChatErrType.Success){
+			//发送邀请语到服务器成功，本地模拟生成女士发送邀请信息
+			// 添加用户到列表中（若列表中用户不存在）
+			LCUserItem userItem = mUserMgr.getUserItem(userId);
+			if (null == userItem) {
+				Log.e("livechat", String.format("%s::%s() getUserItem fail, fromId:%s", "LiveChatManager", "OnRecvMessage", userId));
+				return;
+			}
+			if(!TextUtils.isEmpty(inviteId)) {
+				userItem.inviteId = inviteId;
+			}
+			userItem.userName = nickName;
+			//
+//			if(userItem.chatType == ChatType.Other){
+//				userItem.setChatTypeWithTalkMsgType(false, TalkMsgType.TMT_FREE);
+//			}
+			SetUserOnlineStatus(userItem, UserStatusType.USTATUS_ONLINE);
+
+			// 生成MessageItem
+			LCMessageItem item = new LCMessageItem();
+			item.initByInvite(mMsgIdIndex.getAndIncrement()
+					, SendType.Recv
+					, userId
+					, mUserId
+					, userItem.inviteId
+					, StatusType.Finish
+					, InviteStatusType.INVITE_TYPE_CHAT);
+			//是冒泡生成邀请
+			item.isBubbleSendInvite = true;
+			// 生成TextItem
+			LCTextItem textItem = new LCTextItem();
+			textItem.init(inviteMsg, SendType.Recv);
+			// 把TextItem添加到MessageItem
+			item.setTextItem(textItem);
+			// 添加到用户聊天记录中
+			if (!userItem.insertSortMsgList(item)) {
+				// 添加到用户聊天记录列表不成功
+				item = null;
+			}
+
+			if (null != item) {
+				// callback
+				mCallbackHandler.OnSendInviteMessage(item);
+			}
+//		}
 	}
 	
 	// --------------- 高级表情下载回调 ---------------
@@ -5579,7 +5721,7 @@ public class LiveChatManager
 	public void OnRecvCamHearbeatException(String errMsg, LiveChatErrType errType, String targetId){
 		mCallbackHandler.OnRecvCamHearbeatException(errMsg, errType, targetId);
 	}
-	
+
 	@Override
 	public void OnCamshareUseTryTicket(LiveChatErrType errType,
 			String errmsg, String userId, String ticketId, String inviteId) {

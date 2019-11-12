@@ -52,6 +52,29 @@ public abstract class IMClientListener {
 		LCC_ERR_SEND_GIFT_PARAM_ERR, 				// 发礼物,参数错误(16153)
 		LCC_ERR_PRIVTE_INVITE_AUTHORITY,            // 主播无立即私密邀请权限(17002)
 		LCC_ERR_NO_PUBLIC_LIVE_AUTHORITY,           // 主播无公开开播权限(17004)
+		//    ZBLCC_ERR_ENTER_ROOM_ERR,                    // 进入房间失败 数据库操作失败（添加记录or删除扣费记录）
+		//
+		//    ZBLCC_ERR_COUPON_FAIL = 10028,                       // 扣费信用点失败--扣除优惠券分钟数
+		//    ZBLCC_ERR_ENTER_ROOM_NO_AUTHORIZED,          // 进入私密直播间 不是对应的userid
+		//    ZBLCC_ERR_REPEAT_KICKOFF = 10038,                    // 被挤掉线 同一userid不通socket_id进入同一房间时
+		//    ZBLCC_ERR_ANCHOR_NO_ON_LIVEROOM,             // 改主播不存在公开直播间
+		//    ZBLCC_ERR_INCONSISTENT_CREDIT_FAIL,          // 扣费信用点数值的错误，扣费失败
+		//    ZBLCC_ERR_REPEAT_END_STREAM,                 // 已结结束推流，不能重复操作
+		//    ZBLCC_ERR_REPEAT_BOOKING_KICKOFF,            // 重复立即预约该主播被挤掉线.
+
+		//
+		//
+
+		//    ZBLCC_ERR_SEND_TOAST_NOCAN,                  // 主播不能发送弹幕
+		//    ZBLCC_ERR_ANCHOR_OFFLINE,                    // 立即私密邀请失败 主播不在线 /*important*/
+		//    ZBLCC_ERR_ANCHOR_BUSY,                       // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
+		//    ZBLCC_ERR_ANCHOR_PLAYING,                    // 主播正在私密直播中 /*important*/
+		//    ZBLCC_ERR_NOTCAN_CANCEL_INVITATION,          // 取消立即私密邀请失败 状态不是带确认 /*important*/
+		//    ZBLCC_ERR_NO_FOUND_CRONJOB,                  // cronjob 里找不到对应的定时器函数
+		//    ZBLCC_ERR_REPEAT_INVITEING_TALENT,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
+		//    ZBLCC_ERR_RECV_REGULAR_CLOSE_ROOM8,           // 用户接收正常关闭直播间
+
+		ZBLCC_ERR_HAS_ONEONONE_LIVE,                    // 已经有私密直播间了，不能再开始公开直播间， 3.1.进入公开直播间 和 3.2.主播进入指定直(16405)
 	}
 
 	//邀请答复类型
@@ -82,6 +105,16 @@ public abstract class IMClientListener {
         Start,      //开始
         Close       //关闭
     }
+
+	/**
+	 * 终端类型
+	 */
+    public enum IMDeviceType {
+		Unknown,
+		Pc,		//PC推流设备
+		App		//APP推流设备
+
+	}
 	
 	/**
 	 * 邀请答复类型
@@ -156,6 +189,21 @@ public abstract class IMClientListener {
     }
 
 	/**
+	 * 终端类型
+	 * @param deviceType
+	 * @return
+	 */
+	private IMDeviceType intToIMDeviceType(int deviceType){
+		IMDeviceType type = IMDeviceType.Unknown;
+		if( deviceType < 0 || deviceType >= IMDeviceType.values().length ) {
+			type = IMDeviceType.Unknown;
+		} else {
+			type = IMDeviceType.values()[deviceType];
+		}
+		return type;
+	}
+
+	/**
 	 * 2.1.登录回调
 	 * @param errType
 	 * @param errMsg
@@ -202,6 +250,18 @@ public abstract class IMClientListener {
 	}
 	
 	/**
+	 * 3.11.主播切换推流回调
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 */
+	public abstract void OnAnchorSwitchFlow(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMDeviceType deviceType);
+	public void OnAnchorSwitchFlow(int reqId, boolean success, int errType, String errMsg, String[] pushUrl, int deviceType){
+		OnAnchorSwitchFlow(reqId, success, intToErrType(errType), errMsg, pushUrl, intToIMDeviceType(deviceType));
+	}
+
+	/**
 	 * 3.3.主播退出直播间回调
 	 * @param reqId
 	 * @param success
@@ -242,13 +302,11 @@ public abstract class IMClientListener {
 	 * @param success
 	 * @param errType
 	 * @param errMsg
-	 * @param invitationId
-	 * @param timeout
-	 * @param roomId
+	 * @param inviteInfoItem
 	 */
-	public abstract void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, String invitationId, int timeout, String roomId){
-		OnSendImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, invitationId, timeout, roomId);
+	public abstract void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMSendInviteInfoItem inviteInfoItem);
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, IMSendInviteInfoItem inviteInfoItem){
+		OnSendImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, inviteInfoItem);
 	}
 
 	/**
@@ -631,6 +689,26 @@ public abstract class IMClientListener {
 	public abstract void OnRecvShowMsgNotice(String backgroundUrl, String msg);
 
 
+	/**
+	 * 12.1.多端获取预约邀请未读或代处理数量同步推送
+	 * @param total					以下参数数量总和
+	 * @param pendingNum			待主播处理的数量
+	 * @param confirmedUnreadCount	已接受的未读数量
+	 * @param otherUnreadCount		历史超时、拒绝的未读数量
+	 */
+	public abstract void OnRecvGetScheduleListNReadNum(int total, int pendingNum, int confirmedUnreadCount, int otherUnreadCount);
+
+	/**
+	 * 12.2.多端获取已确认的预约数同步推送
+	 * @param scheduleNum	已确认的预约数量
+	 */
+	public abstract void OnRecvGetScheduledAcceptNum(int scheduleNum);
+
+	/**
+	 * 12.3.多端获取节目未读数同步推送
+	 * @param num	未读数量
+	 */
+	public abstract void OnRecvNoreadShowNum(int num);
 
 
 }

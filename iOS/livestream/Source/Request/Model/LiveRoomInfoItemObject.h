@@ -10,7 +10,7 @@
 #import <httpcontroller/HttpRequestEnum.h>
 #import "LSProgramItemObject.h"
 #import "LSHttpAuthorityItemObject.h"
-
+#import "LSWomanListAdItemObject.h"
 @interface LiveRoomInfoItemObject : NSObject
 {
 
@@ -52,6 +52,8 @@
 
 @property (nonatomic, assign) int loveLevel;
 @property (nonatomic, assign) NSInteger addDate;
+/** 广告 */
+@property (nonatomic, strong) LSWomanListAdItemObject *adItem;
 
 // - (void)SetInterestWithIndex:(InterestType)type index:(int)index;
 

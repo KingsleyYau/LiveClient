@@ -73,6 +73,7 @@
 #include "LSLiveChatSummitLadyCamStatusTask.h"
 #include "LSLiveChatGetSessionInfoWithManTask.h"
 #include "LSLiveChatSummitAutoInviteCamFirstTask.h"
+#include "LSSendInviteMsgTask.h"
 
 CLSLiveChatClient::CLSLiveChatClient()
 {
@@ -88,11 +89,11 @@ CLSLiveChatClient::CLSLiveChatClient()
 
 CLSLiveChatClient::~CLSLiveChatClient()
 {
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::~CLSLiveChatClient()");
+	FileLog("LiveChatClient", "CLSLiveChatClient::~CLSLiveChatClient()");
 	delete m_taskManager;
 	m_taskManager = NULL;
     IAutoLock::ReleaseAutoLock(m_listenerListLock);
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::~CLSLiveChatClient() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::~CLSLiveChatClient() end");
 }
 
 // ------------------------ ILSLiveChatClient接口函数 -------------------------
@@ -155,7 +156,7 @@ bool CLSLiveChatClient::ConnectServer()
 {
 	bool result = false;
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ConnectServer() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ConnectServer() begin");
 
 	if (m_bInit) {
 		if (NULL != m_taskManager) {
@@ -163,11 +164,11 @@ bool CLSLiveChatClient::ConnectServer()
 				m_taskManager->Stop();
 			}
 			result = m_taskManager->Start();
-			FileLog("LSLiveChatClient", "CLSLiveChatClient::ConnectServer() result: %d", result);
+			FileLog("LiveChatClient", "CLSLiveChatClient::ConnectServer() result: %d", result);
 		}
 	}
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ConnectServer() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ConnectServer() end");
 
 	return result;
 }
@@ -177,7 +178,7 @@ bool CLSLiveChatClient::Login(const string& user, const string& password, const 
 {
 	bool result = false;
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::Login() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::Login() begin");
 
 	if (!user.empty()
 		&& !password.empty()
@@ -194,7 +195,7 @@ bool CLSLiveChatClient::Login(const string& user, const string& password, const 
 		result = true;
 	}
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::Login() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::Login() end");
 
 	return result;
 }
@@ -204,10 +205,10 @@ bool CLSLiveChatClient::Logout()
 {
 	bool result = false;
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::Logout() begin, m_taskManager:%p", m_taskManager);
+	FileLog("LiveChatClient", "CLSLiveChatClient::Logout() begin, m_taskManager:%p", m_taskManager);
 
 	if (NULL != m_taskManager) {
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::Logout() m_taskManager->Stop(), m_taskManager:%p", m_taskManager);
+		FileLog("LiveChatClient", "CLSLiveChatClient::Logout() m_taskManager->Stop(), m_taskManager:%p", m_taskManager);
 		result = m_taskManager->Stop();
 
 		if (result) {
@@ -216,7 +217,7 @@ bool CLSLiveChatClient::Logout()
 		}
 	}
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::Logout() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::Logout() end");
 
 	return result;
 }
@@ -225,12 +226,12 @@ bool CLSLiveChatClient::Logout()
 bool CLSLiveChatClient::SetStatus(USER_STATUS_TYPE status)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SetStatus() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SetStatus() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSetStatusTask* task = new LSLiveChatSetStatusTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SetStatus() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SetStatus() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(status);
@@ -241,9 +242,9 @@ bool CLSLiveChatClient::SetStatus(USER_STATUS_TYPE status)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SetStatus() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SetStatus() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SetStatus() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SetStatus() end");
 	return result;
 }
 
@@ -251,12 +252,12 @@ bool CLSLiveChatClient::SetStatus(USER_STATUS_TYPE status)
 bool CLSLiveChatClient::EndTalk(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::EndTalk() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::EndTalk() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatEndTalkTask* task = new LSLiveChatEndTalkTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::EndTalk() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::EndTalk() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -267,9 +268,9 @@ bool CLSLiveChatClient::EndTalk(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::EndTalk() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::EndTalk() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::EndTalk() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::EndTalk() end");
 	return result;
 }
 
@@ -277,12 +278,12 @@ bool CLSLiveChatClient::EndTalk(const string& userId)
 bool CLSLiveChatClient::GetUserStatus(const UserIdList& list)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserStatus() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetUserStatus() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetUserStatusTask* task = new LSLiveChatGetUserStatusTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserStatus() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetUserStatus() task:%p", task);
 		if (NULL != task) {
 			// 转换成对方的性别
 			USER_SEX_TYPE sexType = (m_sexType == USER_SEX_FEMALE ? USER_SEX_MALE : USER_SEX_FEMALE);
@@ -296,9 +297,9 @@ bool CLSLiveChatClient::GetUserStatus(const UserIdList& list)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserStatus() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetUserStatus() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserStatus() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetUserStatus() end");
 	return result;
 }
 
@@ -306,12 +307,12 @@ bool CLSLiveChatClient::GetUserStatus(const UserIdList& list)
 bool CLSLiveChatClient::GetTalkInfo(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkInfo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkInfo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetTalkInfoTask* task = new LSLiveChatGetTalkInfoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkInfo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkInfo() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -322,9 +323,9 @@ bool CLSLiveChatClient::GetTalkInfo(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkInfo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkInfo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkInfo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkInfo() end");
 	return result;
 }
 
@@ -332,12 +333,12 @@ bool CLSLiveChatClient::GetTalkInfo(const string& userId)
 bool CLSLiveChatClient::GetSessionInfo(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetSessionInfoTask* task = new LSLiveChatGetSessionInfoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfo() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -348,9 +349,9 @@ bool CLSLiveChatClient::GetSessionInfo(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfo() end");
 	return result;
 }
 
@@ -361,12 +362,12 @@ bool CLSLiveChatClient::GetSessionInfo(const string& userId)
 bool CLSLiveChatClient::UploadTicket(const string& userId, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadTicket() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadTicket() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatUploadTicketTask* task = new LSLiveChatUploadTicketTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadTicket() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadTicket() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, ticket);
@@ -377,9 +378,9 @@ bool CLSLiveChatClient::UploadTicket(const string& userId, int ticket)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadTicket() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadTicket() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadTicket() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadTicket() end");
 	return result;
 }
 
@@ -387,12 +388,12 @@ bool CLSLiveChatClient::UploadTicket(const string& userId, int ticket)
 bool CLSLiveChatClient::SendLadyEditingMsg(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendLadyEditingMsgTask* task = new LSLiveChatSendLadyEditingMsgTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -403,9 +404,9 @@ bool CLSLiveChatClient::SendLadyEditingMsg(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyEditingMsg() end");
 	return result;
 }
 
@@ -413,12 +414,12 @@ bool CLSLiveChatClient::SendLadyEditingMsg(const string& userId)
 bool CLSLiveChatClient::SendTextMessage(const string& userId, const string& message, bool illegal, int ticket, INVITE_TYPE inviteType)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMessage() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendMessage() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendMsgTask* task = new LSLiveChatSendMsgTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMessage() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendMessage() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, message, illegal, ticket, inviteType);
@@ -429,9 +430,9 @@ bool CLSLiveChatClient::SendTextMessage(const string& userId, const string& mess
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMessage() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendMessage() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMessage() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendMessage() end");
 	return result;
 }
 
@@ -439,12 +440,12 @@ bool CLSLiveChatClient::SendTextMessage(const string& userId, const string& mess
 bool CLSLiveChatClient::SendEmotion(const string& userId, const string& emotionId, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendEmotion() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendEmotion() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendEmotionTask* task = new LSLiveChatSendEmotionTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendEmotion() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendEmotion() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, emotionId, ticket);
@@ -455,9 +456,9 @@ bool CLSLiveChatClient::SendEmotion(const string& userId, const string& emotionI
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendEmotion() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendEmotion() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendEmotion() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendEmotion() end");
 	return result;
 }
 
@@ -465,12 +466,12 @@ bool CLSLiveChatClient::SendEmotion(const string& userId, const string& emotionI
 bool CLSLiveChatClient::SendVGift(const string& userId, const string& giftId, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVGift() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendVGift() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendVGiftTask* task = new LSLiveChatSendVGiftTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVGift() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendVGift() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, giftId, ticket);
@@ -481,9 +482,9 @@ bool CLSLiveChatClient::SendVGift(const string& userId, const string& giftId, in
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVGift() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendVGift() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVGift() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendVGift() end");
 	return result;
 }
 
@@ -491,12 +492,12 @@ bool CLSLiveChatClient::SendVGift(const string& userId, const string& giftId, in
 bool CLSLiveChatClient::GetVoiceCode(const string& userId, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetVoiceCode() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetVoiceCode() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetVoiceCodeTask* task = new LSLiveChatGetVoiceCodeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetVoiceCode() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetVoiceCode() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, ticket);
@@ -507,9 +508,9 @@ bool CLSLiveChatClient::GetVoiceCode(const string& userId, int ticket)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetVoiceCode() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetVoiceCode() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetVoiceCode() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetVoiceCode() end");
 	return result;
 }
 
@@ -517,12 +518,12 @@ bool CLSLiveChatClient::GetVoiceCode(const string& userId, int ticket)
 bool CLSLiveChatClient::GetLadyVoiceCode(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetLadyVoiceCodeTask* task = new LSLiveChatGetLadyVoiceCodeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -533,9 +534,9 @@ bool CLSLiveChatClient::GetLadyVoiceCode(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyVoiceCode() end");
 	return result;
 }
 
@@ -543,12 +544,12 @@ bool CLSLiveChatClient::GetLadyVoiceCode(const string& userId)
 bool CLSLiveChatClient::SendVoice(const string& userId, const string& voiceId, int length, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVoice() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendVoice() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendVoiceTask* task = new LSLiveChatSendVoiceTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVoice() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendVoice() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, voiceId, length, ticket);
@@ -559,9 +560,9 @@ bool CLSLiveChatClient::SendVoice(const string& userId, const string& voiceId, i
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVoice() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendVoice() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendVoice() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendVoice() end");
 	return result;
 }
 
@@ -569,12 +570,12 @@ bool CLSLiveChatClient::SendVoice(const string& userId, const string& voiceId, i
 bool CLSLiveChatClient::UseTryTicket(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UseTryTicket() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UseTryTicket() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatUseTryTicketTask* task = new LSLiveChatUseTryTicketTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UseTryTicket() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UseTryTicket() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -585,9 +586,9 @@ bool CLSLiveChatClient::UseTryTicket(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UseTryTicket() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UseTryTicket() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UseTryTicket() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UseTryTicket() end");
 	return result;
 }
 
@@ -595,12 +596,12 @@ bool CLSLiveChatClient::UseTryTicket(const string& userId)
 bool CLSLiveChatClient::GetTalkList(int listType)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkList() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkList() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetTalkListTask* task = new LSLiveChatGetTalkListTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkList() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkList() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(listType);
@@ -611,9 +612,9 @@ bool CLSLiveChatClient::GetTalkList(int listType)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkList() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkList() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetTalkList() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetTalkList() end");
 	return result;
 }
 
@@ -621,12 +622,12 @@ bool CLSLiveChatClient::GetTalkList(int listType)
 bool CLSLiveChatClient::SendPhoto(const string& userId, const string& inviteId, const string& photoId, const string& sendId, bool charget, const string& photoDesc, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendPhoto() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendPhoto() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendPhotoTask* task = new LSLiveChatSendPhotoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendPhoto() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendPhoto() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteId, photoId, sendId, charget, photoDesc, ticket);
@@ -637,9 +638,9 @@ bool CLSLiveChatClient::SendPhoto(const string& userId, const string& inviteId, 
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendPhoto() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendPhoto() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendPhoto() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendPhoto() end");
 	return result;
 }
 
@@ -647,12 +648,12 @@ bool CLSLiveChatClient::SendPhoto(const string& userId, const string& inviteId, 
 bool CLSLiveChatClient::SendLadyPhoto(const string& userId, const string& inviteId, const string& photoId, const string& sendId, bool charget, const string& photoDesc, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyPhoto() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyPhoto() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendLadyPhotoTask* task = new LSLiveChatSendLadyPhotoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyPhoto() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyPhoto() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteId, photoId, sendId, charget, photoDesc, ticket);
@@ -663,9 +664,9 @@ bool CLSLiveChatClient::SendLadyPhoto(const string& userId, const string& invite
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyPhoto() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyPhoto() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyPhoto() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyPhoto() end");
 	return result;
 }
 
@@ -673,12 +674,12 @@ bool CLSLiveChatClient::SendLadyPhoto(const string& userId, const string& invite
 bool CLSLiveChatClient::ShowPhoto(const string& userId, const string& inviteId, const string& photoId, const string& sendId, bool charget, const string& photoDesc, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ShowPhoto() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ShowPhoto() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatShowPhotoTask* task = new LSLiveChatShowPhotoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ShowPhoto() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ShowPhoto() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteId, photoId, sendId, charget, photoDesc, ticket);
@@ -689,9 +690,9 @@ bool CLSLiveChatClient::ShowPhoto(const string& userId, const string& inviteId, 
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ShowPhoto() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ShowPhoto() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ShowPhoto() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ShowPhoto() end");
 	return result;
 }
 
@@ -700,12 +701,12 @@ int CLSLiveChatClient::GetUserInfo(const string& userId)
 {
 	bool result = false;
     int seq = -1;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserInfo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetUserInfo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetUserInfoTask* task = new LSLiveChatGetUserInfoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserInfo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetUserInfo() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -716,9 +717,9 @@ int CLSLiveChatClient::GetUserInfo(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserInfo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetUserInfo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUserInfo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetUserInfo() end");
 	return seq;
 }
 
@@ -727,12 +728,12 @@ int CLSLiveChatClient::GetUsersInfo(const list<string>& userIdList)
 {
 	int seq = m_seqCounter.GetInvalidValue();
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersInfo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersInfo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetUsersInfoTask* task = new LSLiveChatGetUsersInfoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersInfo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersInfo() task:%p", task);
 		if (NULL != task) {
 			bool result = task->Init(this);
 			result = result && task->InitParam(userIdList);
@@ -743,9 +744,9 @@ int CLSLiveChatClient::GetUsersInfo(const list<string>& userIdList)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersInfo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersInfo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersInfo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersInfo() end");
 
 	return seq;
 }
@@ -754,12 +755,12 @@ int CLSLiveChatClient::GetUsersInfo(const list<string>& userIdList)
 bool CLSLiveChatClient::GetContactList(CONTACT_LIST_TYPE listType)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetContactList() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetContactList() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetContactListTask* task = new LSLiveChatGetContactListTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetContactList() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetContactList() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(listType);
@@ -770,9 +771,9 @@ bool CLSLiveChatClient::GetContactList(CONTACT_LIST_TYPE listType)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetContactList() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetContactList() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetContactList() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetContactList() end");
 	return result;
 }
 
@@ -780,12 +781,12 @@ bool CLSLiveChatClient::GetContactList(CONTACT_LIST_TYPE listType)
 bool CLSLiveChatClient::UploadVer(const string& ver)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadVer() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadVer() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatUploadVerTask* task = new LSLiveChatUploadVerTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadVer() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadVer() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(ver);
@@ -796,9 +797,9 @@ bool CLSLiveChatClient::UploadVer(const string& ver)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadVer() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadVer() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadVer() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadVer() end");
 	return result;
 }
 
@@ -806,12 +807,12 @@ bool CLSLiveChatClient::UploadVer(const string& ver)
 bool CLSLiveChatClient::GetBlockUsers()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetBlockUsers() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetBlockUsers() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetBlockUsersTask* task = new LSLiveChatGetBlockUsersTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetBlockUsers() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetBlockUsers() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -821,9 +822,9 @@ bool CLSLiveChatClient::GetBlockUsers()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetBlockUsers() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetBlockUsers() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetBlockUsers() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetBlockUsers() end");
 	return result;
 }
 
@@ -831,12 +832,12 @@ bool CLSLiveChatClient::GetBlockUsers()
 bool CLSLiveChatClient::GetRecentContactList()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetRecentContactList() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetRecentContactList() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetRecentContactListTask* task = new LSLiveChatGetRecentContactListTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetRecentContactList() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetRecentContactList() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -846,9 +847,9 @@ bool CLSLiveChatClient::GetRecentContactList()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetRecentContactList() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetRecentContactList() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetRecentContactList() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetRecentContactList() end");
 	return result;
 }
 
@@ -856,12 +857,12 @@ bool CLSLiveChatClient::GetRecentContactList()
 bool CLSLiveChatClient::SearchOnlineMan(int beginAge, int endAge)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SearchOnlineMan() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SearchOnlineMan() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSearchOnlineManTask* task = new LSLiveChatSearchOnlineManTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SearchOnlineMan() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SearchOnlineMan() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(beginAge, endAge);
@@ -872,9 +873,9 @@ bool CLSLiveChatClient::SearchOnlineMan(int beginAge, int endAge)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SearchOnlineMan() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SearchOnlineMan() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SearchOnlineMan() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SearchOnlineMan() end");
 	return result;
 }
 
@@ -882,12 +883,12 @@ bool CLSLiveChatClient::SearchOnlineMan(int beginAge, int endAge)
 bool CLSLiveChatClient::ReplyIdentifyCode(string identifyCode)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatReplyIdentifyCodeTask* task = new LSLiveChatReplyIdentifyCodeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(identifyCode);
@@ -898,9 +899,9 @@ bool CLSLiveChatClient::ReplyIdentifyCode(string identifyCode)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ReplyIdentifyCode() end");
 	return result;
 }
 
@@ -908,12 +909,12 @@ bool CLSLiveChatClient::ReplyIdentifyCode(string identifyCode)
 bool CLSLiveChatClient::RefreshIdentifyCode()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatRefreshIdentifyCodeTask* task = new LSLiveChatRefreshIdentifyCodeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -923,9 +924,9 @@ bool CLSLiveChatClient::RefreshIdentifyCode()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::RefreshIdentifyCode() end");
 	return result;
 }
 
@@ -933,12 +934,12 @@ bool CLSLiveChatClient::RefreshIdentifyCode()
 bool CLSLiveChatClient::RefreshInviteTemplate()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatRefreshInviteTemplateTask* task = new LSLiveChatRefreshInviteTemplateTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -948,9 +949,9 @@ bool CLSLiveChatClient::RefreshInviteTemplate()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::RefreshInviteTemplate() end");
 	return result;
 }
 
@@ -958,12 +959,12 @@ bool CLSLiveChatClient::RefreshInviteTemplate()
 bool CLSLiveChatClient::GetFeeRecentContactList()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetFeeRecentContactListTask* task = new LSLiveChatGetFeeRecentContactListTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -973,9 +974,9 @@ bool CLSLiveChatClient::GetFeeRecentContactList()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetFeeRecentContactList() end");
 	return result;
 }
 
@@ -983,12 +984,12 @@ bool CLSLiveChatClient::GetFeeRecentContactList()
 bool CLSLiveChatClient::GetLadyChatInfo()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetLadyChatInfoTask* task = new LSLiveChatGetLadyChatInfoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -998,9 +999,9 @@ bool CLSLiveChatClient::GetLadyChatInfo()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyChatInfo() end");
 	return result;
 }
 
@@ -1008,12 +1009,12 @@ bool CLSLiveChatClient::GetLadyChatInfo()
 bool CLSLiveChatClient::PlayVideo(const string& userId, const string& inviteId, const string& videoId, const string& sendId, bool charget, const string& videoDesc, int ticket)
 {
     bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayVideo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::PlayVideo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatPlayVideoTask* task = new LSLiveChatPlayVideoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayVideo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::PlayVideo() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteId, videoId, sendId, charget, videoDesc, ticket);
@@ -1024,9 +1025,9 @@ bool CLSLiveChatClient::PlayVideo(const string& userId, const string& inviteId, 
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayVideo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::PlayVideo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayVideo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::PlayVideo() end");
 	return result;
 }
 
@@ -1034,12 +1035,12 @@ bool CLSLiveChatClient::PlayVideo(const string& userId, const string& inviteId, 
 bool CLSLiveChatClient::SendLadyVideo(const string& userId, const string& inviteId, const string& videoId, const string& sendId, bool charge, const string& videoDesc, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyVideo() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyVideo() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendLadyVideoTask* task = new LSLiveChatSendLadyVideoTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyVideo() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyVideo() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteId, videoId, sendId, charge, videoDesc, ticket);
@@ -1050,9 +1051,9 @@ bool CLSLiveChatClient::SendLadyVideo(const string& userId, const string& invite
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyVideo() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyVideo() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendLadyVideo() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendLadyVideo() end");
 	return result;
 }
 
@@ -1060,12 +1061,12 @@ bool CLSLiveChatClient::SendLadyVideo(const string& userId, const string& invite
 bool CLSLiveChatClient::GetLadyCondition(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCondition() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCondition() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetLadyConditionTask* task = new LSLiveChatGetLadyConditionTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCondition() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCondition() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -1076,9 +1077,9 @@ bool CLSLiveChatClient::GetLadyCondition(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCondition() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCondition() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCondition() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCondition() end");
 	return result;
 }
 
@@ -1086,12 +1087,12 @@ bool CLSLiveChatClient::GetLadyCondition(const string& userId)
 bool CLSLiveChatClient::GetLadyCustomTemplate(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetLadyCustomTemplateTask* task = new LSLiveChatGetLadyCustomTemplateTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -1102,9 +1103,9 @@ bool CLSLiveChatClient::GetLadyCustomTemplate(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCustomTemplate() end");
 	return result;
 }
 
@@ -1112,12 +1113,12 @@ bool CLSLiveChatClient::GetLadyCustomTemplate(const string& userId)
 bool CLSLiveChatClient::UploadPopLadyAutoInvite(const string& userId, const string& msg, const string& key)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatUploadPopLadyAutoInviteTask* task = new LSLiveChatUploadPopLadyAutoInviteTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, msg, key);
@@ -1128,9 +1129,9 @@ bool CLSLiveChatClient::UploadPopLadyAutoInvite(const string& userId, const stri
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadPopLadyAutoInvite() end");
 	return result;
 }
 
@@ -1138,12 +1139,12 @@ bool CLSLiveChatClient::UploadPopLadyAutoInvite(const string& userId, const stri
 bool CLSLiveChatClient::UploadAutoChargeStatus(bool isCharge)
 {
 	bool result = false;
-//    FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() begin");
+//    FileLog("LiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() begin");
 //    if (NULL != m_taskManager
 //        && m_taskManager->IsStart())
 //    {
 //        LSLiveChatUploadAutoChargeStatusTask* task = new LSLiveChatUploadAutoChargeStatusTask();
-//        FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() task:%p", task);
+//        FileLog("LiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() task:%p", task);
 //        if (NULL != task) {
 //            result = task->Init(this);
 //            result = result && task->InitParam(isCharge);
@@ -1154,9 +1155,9 @@ bool CLSLiveChatClient::UploadAutoChargeStatus(bool isCharge)
 //                result = m_taskManager->HandleRequestTask(task);
 //            }
 //        }
-//        FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() task:%p end", task);
+//        FileLog("LiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() task:%p end", task);
 //    }
-//    FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() end");
+//    FileLog("LiveChatClient", "CLSLiveChatClient::UploadAutoChargeStatus() end");
 	return result;
 }
 
@@ -1164,12 +1165,12 @@ bool CLSLiveChatClient::UploadAutoChargeStatus(bool isCharge)
 bool CLSLiveChatClient::SendMagicIcon(const string& userId, const string& iconId, int ticket)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMagicIcon() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendMagicIcon() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatSendMagicIconTask* task = new LSLiveChatSendMagicIconTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMagicIcon() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendMagicIcon() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, iconId, ticket);
@@ -1180,9 +1181,9 @@ bool CLSLiveChatClient::SendMagicIcon(const string& userId, const string& iconId
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMagicIcon() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendMagicIcon() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendMagicIcon() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendMagicIcon() end");
 	return result;
 }
 
@@ -1190,12 +1191,12 @@ bool CLSLiveChatClient::SendMagicIcon(const string& userId, const string& iconId
 bool CLSLiveChatClient::GetPaidTheme(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetPaidTheme() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetPaidTheme() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetPaidThemeTask* task = new LSLiveChatGetPaidThemeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetPaidTheme() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetPaidTheme() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -1206,9 +1207,9 @@ bool CLSLiveChatClient::GetPaidTheme(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetPaidTheme() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetPaidTheme() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetPaidTheme() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetPaidTheme() end");
 	return result;
 }
 
@@ -1216,12 +1217,12 @@ bool CLSLiveChatClient::GetPaidTheme(const string& userId)
 bool CLSLiveChatClient::GetAllPaidTheme()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatGetAllPaidThemeTask* task = new LSLiveChatGetAllPaidThemeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 
@@ -1231,9 +1232,9 @@ bool CLSLiveChatClient::GetAllPaidTheme()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetAllPaidTheme() end");
 	return result;
 }
 
@@ -1241,12 +1242,12 @@ bool CLSLiveChatClient::GetAllPaidTheme()
 bool CLSLiveChatClient::UploadThemeListVer(int themeVer)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadThemeListVer() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadThemeListVer() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatUploadThemeListVerTask* task = new LSLiveChatUploadThemeListVerTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadThemeListVer() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadThemeListVer() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(themeVer);
@@ -1257,9 +1258,9 @@ bool CLSLiveChatClient::UploadThemeListVer(int themeVer)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadThemeListVer() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::UploadThemeListVer() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::UploadThemeListVer() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::UploadThemeListVer() end");
 	return result;
 }
 
@@ -1267,12 +1268,12 @@ bool CLSLiveChatClient::UploadThemeListVer(int themeVer)
 bool CLSLiveChatClient::ManFeeTheme(const string& userId, const string& themeId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ManFeeTheme() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ManFeeTheme() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatManFeeThemeTask* task = new LSLiveChatManFeeThemeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ManFeeTheme() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ManFeeTheme() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, themeId);
@@ -1283,9 +1284,9 @@ bool CLSLiveChatClient::ManFeeTheme(const string& userId, const string& themeId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ManFeeTheme() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ManFeeTheme() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ManFeeTheme() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ManFeeTheme() end");
 	return result;
 }
 
@@ -1293,12 +1294,12 @@ bool CLSLiveChatClient::ManFeeTheme(const string& userId, const string& themeId)
 bool CLSLiveChatClient::ManApplyTheme(const string& userId, const string& themeId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ManApplyTheme() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ManApplyTheme() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatManApplyThemeTask* task = new LSLiveChatManApplyThemeTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ManApplyTheme() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ManApplyTheme() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, themeId);
@@ -1309,9 +1310,9 @@ bool CLSLiveChatClient::ManApplyTheme(const string& userId, const string& themeI
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ManApplyTheme() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ManApplyTheme() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ManApplyTheme() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ManApplyTheme() end");
 	return result;
 }
 
@@ -1319,12 +1320,12 @@ bool CLSLiveChatClient::ManApplyTheme(const string& userId, const string& themeI
 bool CLSLiveChatClient::PlayThemeMotion(const string& userId, const string& themeId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayThemeMotion() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::PlayThemeMotion() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		LSLiveChatPlayThemeMotionTask* task = new LSLiveChatPlayThemeMotionTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayThemeMotion() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::PlayThemeMotion() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, themeId);
@@ -1335,9 +1336,9 @@ bool CLSLiveChatClient::PlayThemeMotion(const string& userId, const string& them
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayThemeMotion() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::PlayThemeMotion() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::PlayThemeMotion() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::PlayThemeMotion() end");
 	return result;
 }
 
@@ -1345,12 +1346,12 @@ bool CLSLiveChatClient::PlayThemeMotion(const string& userId, const string& them
 bool CLSLiveChatClient:: GetAutoInviteMsgSwitchStatus()
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		 LSLiveChatGetAutoInviteStatusTask* task = new LSLiveChatGetAutoInviteStatusTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			if (result) {
@@ -1359,9 +1360,9 @@ bool CLSLiveChatClient:: GetAutoInviteMsgSwitchStatus()
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetAutoInviteStatus() end");
 	return result;
 }
 
@@ -1369,12 +1370,12 @@ bool CLSLiveChatClient:: GetAutoInviteMsgSwitchStatus()
 bool CLSLiveChatClient::SwitchAutoInviteMsg(bool isOpen)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendAutoInvite() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendAutoInvite() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		 LSLiveChatSendAutoInviteTask* task = new LSLiveChatSendAutoInviteTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendAutoInvite() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendAutoInvite() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(isOpen);
@@ -1384,9 +1385,9 @@ bool CLSLiveChatClient::SwitchAutoInviteMsg(bool isOpen)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendAutoInvite() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendAutoInvite() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendAutoInvite() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendAutoInvite() end");
 	return result;
 }
 
@@ -1394,12 +1395,12 @@ bool CLSLiveChatClient::SwitchAutoInviteMsg(bool isOpen)
 bool CLSLiveChatClient::RecommendThemeToMan(const string& userId, const string& themeId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendThemeRecommend() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendThemeRecommend() begin");
 	if (NULL != m_taskManager
 		&& m_taskManager->IsStart())
 	{
 		 LSLiveChatSendThemeRecommendTask* task = new LSLiveChatSendThemeRecommendTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendThemeRecommend() task:%p", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendThemeRecommend() task:%p", task);
 		if (NULL != task) {
 			result = task->Init(this);
 			result = result && task->InitParam(userId, themeId);
@@ -1409,9 +1410,9 @@ bool CLSLiveChatClient::RecommendThemeToMan(const string& userId, const string& 
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendThemeRecommend() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendThemeRecommend() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendThemeRecommend() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendThemeRecommend() end");
 	return result;
 }
 
@@ -1420,10 +1421,10 @@ int CLSLiveChatClient::GetLadyCamStatus(const string& userId)
 {
 	bool result = false;
     int seq = -1;
-//    FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCamstatus() begin");
+//    FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCamstatus() begin");
 //    if (NULL != m_taskManager && m_taskManager->IsStart()){
 //        LSLiveChatGetLadyCamStatusTask* task = new LSLiveChatGetLadyCamStatusTask();
-//        FileLog("LSLiveChatClient", "CLiveChatClient::GetLadyCamStatus() task:%p begin", task);
+//        FileLog("LiveChatClient", "CLiveChatClient::GetLadyCamStatus() task:%p begin", task);
 //        if (NULL != task) {
 //            result = task->Init(this);
 //            result = result && task->InitParam(userId);
@@ -1434,9 +1435,9 @@ int CLSLiveChatClient::GetLadyCamStatus(const string& userId)
 //                result = m_taskManager->HandleRequestTask(task);
 //            }
 //        }
-//        FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCamStatus() task:%p end", task);
+//        FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCamStatus() task:%p end", task);
 //    }
-//    FileLog("LSLiveChatClient", "CLSLiveChatClient::GetLadyCamStatus() end");
+//    FileLog("LiveChatClient", "CLSLiveChatClient::GetLadyCamStatus() end");
 	return seq;
 }
 
@@ -1444,10 +1445,10 @@ int CLSLiveChatClient::GetLadyCamStatus(const string& userId)
 bool CLSLiveChatClient::SendCamShareInvite(const string& userId, CamshareInviteType inviteType, int sessionId, const string& fromName)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendCamShareInvite() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendCamShareInvite() begin");
 	if(NULL != m_taskManager && m_taskManager->IsStart()){
 		LSLiveChatSendCamShareInviteTask* task = new LSLiveChatSendCamShareInviteTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendCamShareInvite() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendCamShareInvite() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteType, sessionId, fromName);
@@ -1459,10 +1460,10 @@ bool CLSLiveChatClient::SendCamShareInvite(const string& userId, CamshareInviteT
 			}
 		}
 
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SendCamShareInvite() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SendCamShareInvite() task:%p end", task);
 	}
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SendCamShareInvite() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SendCamShareInvite() end");
 	return result;
 }
 
@@ -1470,11 +1471,11 @@ bool CLSLiveChatClient::SendCamShareInvite(const string& userId, CamshareInviteT
 bool CLSLiveChatClient::ApplyCamShare(const string& userId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ApplyCamShare() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ApplyCamShare() begin");
     if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatApplyCamShareTask* task = new LSLiveChatApplyCamShareTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ApplyCamShare() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ApplyCamShare() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(userId);
@@ -1484,9 +1485,9 @@ bool CLSLiveChatClient::ApplyCamShare(const string& userId)
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::ApplyCamShare() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::ApplyCamShare() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::ApplyCamShare() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::ApplyCamShare() end");
 	return result;
 }
 
@@ -1494,11 +1495,11 @@ bool CLSLiveChatClient::ApplyCamShare(const string& userId)
 bool CLSLiveChatClient::LadyAcceptCamInvite(const string& userId, CamshareLadyInviteType inviteType, int sessionId, const string& fromName, bool isOpenCam)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() begin");
     if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatLadyAcceptCamInviteTask* task = new LSLiveChatLadyAcceptCamInviteTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
             result = result && task->InitParam(userId, inviteType, sessionId, fromName, isOpenCam);
@@ -1508,9 +1509,9 @@ bool CLSLiveChatClient::LadyAcceptCamInvite(const string& userId, CamshareLadyIn
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::LadyAcceptCamInvite() end");
 	return result;
 }
 
@@ -1518,11 +1519,11 @@ bool CLSLiveChatClient::LadyAcceptCamInvite(const string& userId, CamshareLadyIn
 bool CLSLiveChatClient::CamShareHearbeat(const string& userId, const string& inviteId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::CamShareHearbeat() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::CamShareHearbeat() begin");
 	if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatCamShareHearbeatTask* task = new LSLiveChatCamShareHearbeatTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::CamShareHearbeat() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::CamShareHearbeat() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(userId, inviteId);
@@ -1532,10 +1533,10 @@ bool CLSLiveChatClient::CamShareHearbeat(const string& userId, const string& inv
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::CamShareHearbeat() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::CamShareHearbeat() task:%p end", task);
 
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::CamShareHearbeat() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::CamShareHearbeat() end");
 	return result;
 }
 
@@ -1543,11 +1544,11 @@ bool CLSLiveChatClient::CamShareHearbeat(const string& userId, const string& inv
 bool CLSLiveChatClient::GetUsersCamStatus(const UserIdList& list)
 {
 	bool result = false;
-//    FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() begin");
+//    FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() begin");
 //    if(NULL != m_taskManager && m_taskManager->IsStart())
 //    {
 //        LSLiveChatGetUsersCamStatusTask* task = new LSLiveChatGetUsersCamStatusTask();
-//        FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() task:%p begin", task);
+//        FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() task:%p begin", task);
 //        if(NULL != task){
 //            result = task->Init(this);
 //            result = result && task->InitParam(list);
@@ -1557,9 +1558,9 @@ bool CLSLiveChatClient::GetUsersCamStatus(const UserIdList& list)
 //                result = m_taskManager->HandleRequestTask(task);
 //            }
 //        }
-//        FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() task:%p end", task);
+//        FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() task:%p end", task);
 //    }
-//    FileLog("LSLiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() end");
+//    FileLog("LiveChatClient", "CLSLiveChatClient::GetUsersCamStatus() end");
 	return result;
 }
 
@@ -1567,11 +1568,11 @@ bool CLSLiveChatClient::GetUsersCamStatus(const UserIdList& list)
 bool CLSLiveChatClient::CamshareUseTryTicket(const string& targetId, const string& ticketId)
 {
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() begin");
 	if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatCamshareUseTryTicketTask* task = new LSLiveChatCamshareUseTryTicketTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(targetId, ticketId);
@@ -1581,19 +1582,19 @@ bool CLSLiveChatClient::CamshareUseTryTicket(const string& targetId, const strin
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::CamshareUseTryTicket() end");
 	return result;
 }
 // 女士端更新Camshare服务状态到服务器
 bool CLSLiveChatClient::SummitLadyCamStatus(CAMSHARE_STATUS_TYPE camStatus){
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() begin");
 	if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatSummitLadyCamStatusTask* task = new LSLiveChatSummitLadyCamStatusTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(camStatus);
@@ -1603,19 +1604,19 @@ bool CLSLiveChatClient::SummitLadyCamStatus(CAMSHARE_STATUS_TYPE camStatus){
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SummitLadyCamStatusTask() end");
 	return result;
 }
 // 女士端获取会话信息
 bool CLSLiveChatClient::GetSessionInfoWithMan(const string& targetId){
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() begin");
 	if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatGetSessionInfoWithManTask* task = new LSLiveChatGetSessionInfoWithManTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(targetId);
@@ -1625,20 +1626,20 @@ bool CLSLiveChatClient::GetSessionInfoWithMan(const string& targetId){
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::GetSessionInfoWithManTask() end");
 	return result;
 }
 
 // 女士端设置小助手Cam优先
 bool CLSLiveChatClient::SummitAutoInviteCamFirst(bool camFirst){
 	bool result = false;
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() begin");
 	if(NULL != m_taskManager && m_taskManager->IsStart())
 	{
 		LSLiveChatSummitAutoInviteCamFirstTask* task = new LSLiveChatSummitAutoInviteCamFirstTask();
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() task:%p begin", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() task:%p begin", task);
 		if(NULL != task){
 			result = task->Init(this);
 			result = result && task->InitParam(camFirst);
@@ -1648,10 +1649,33 @@ bool CLSLiveChatClient::SummitAutoInviteCamFirst(bool camFirst){
 				result = m_taskManager->HandleRequestTask(task);
 			}
 		}
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() task:%p end", task);
+		FileLog("LiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() task:%p end", task);
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::SummitAutoInviteCamFirst() end");
 	return result;
+}
+
+// 发送邀请语
+bool CLSLiveChatClient::SendInviteMessage(const string& inUserId, const string& inMessage, const string& nickName) {
+    bool result = false;
+    FileLog("CLSLiveChatClient", "CLSLiveChatClient::SendInviteMessage(userId :%s, message:%s, nickName:%s) begin", inUserId.c_str(), inMessage.c_str(), nickName.c_str());
+    if(NULL != m_taskManager && m_taskManager->IsStart())
+    {
+        LSSendInviteMsgTask* task = new LSSendInviteMsgTask();
+        FileLog("LiveChatClient", "CLSLiveChatClient::SendInviteMessage() task:%p begin", task);
+        if(NULL != task){
+            result = task->Init(this);
+            result = result && task->InitParam(inUserId, inMessage, nickName);
+            if(result){
+                int seq = m_seqCounter.GetAndIncrement();
+                task->SetSeq(seq);
+                result = m_taskManager->HandleRequestTask(task);
+            }
+        }
+        FileLog("LiveChatClient", "CLSLiveChatClient::SendInviteMessage() task:%p end", task);
+    }
+    FileLog("LiveChatClient", "CLSLiveChatClient::SendInviteMessage() end");
+    return result;
 }
 
 // 获取用户账号
@@ -1667,19 +1691,19 @@ int CLSLiveChatClient::GetSocket() {
 // 连接成功回调
 void CLSLiveChatClient::OnConnect(bool success)
 {
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::OnConnect() success: %d", success);
+	FileLog("LiveChatClient", "CLSLiveChatClient::OnConnect() success: %d", success);
 	if (success) {
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::OnConnect() CheckVersionProc()");
+		FileLog("LiveChatClient", "CLSLiveChatClient::OnConnect() CheckVersionProc()");
 		// 连接服务器成功，检测版本号
 		CheckVersionProc();
 		// 启动发送心跳包线程
 		HearbeatThreadStart();
 	}
 	else {
-		FileLog("LSLiveChatClient", "CLSLiveChatClient::OnConnect() LSLIVECHAT_LCC_ERR_CONNECTFAIL, this:%p", this);
+		FileLog("LiveChatClient", "CLSLiveChatClient::OnConnect() LSLIVECHAT_LCC_ERR_CONNECTFAIL, this:%p", this);
 		this->OnLogin(LSLIVECHAT_LCC_ERR_CONNECTFAIL, "");
 	}
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::OnConnect() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::OnConnect() end");
 }
 
 // 断开连接或连接失败回调（先回调OnDisconnect()再回调OnDisconnect(const TaskList& list)）
@@ -1830,7 +1854,7 @@ TH_RETURN_PARAM CLSLiveChatClient::HearbeatThread(void* arg)
 
 void CLSLiveChatClient::HearbeatProc()
 {
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::HearbeatProc() begin");
+	FileLog("LiveChatClient", "CLSLiveChatClient::HearbeatProc() begin");
 
 	const unsigned long nSleepStep = 200;	// ms
 	const unsigned long nSendStep = 30 * 1000; // ms
@@ -1852,7 +1876,7 @@ void CLSLiveChatClient::HearbeatProc()
 		Sleep(nSleepStep);
 	} while (m_isHearbeatThreadRun);
 
-	FileLog("LSLiveChatClient", "CLSLiveChatClient::HearbeatProc() end");
+	FileLog("LiveChatClient", "CLSLiveChatClient::HearbeatProc() end");
 }
 
 
@@ -2298,6 +2322,16 @@ void CLSLiveChatClient::OnSummitAutoInviteCamFirst(LSLIVECHAT_LCC_ERR_TYPE err, 
     for(LSLiveChatClientListenerList::const_iterator itr = m_listenerList.begin(); itr != m_listenerList.end(); itr++) {
         ILSLiveChatClientListener* callback = *itr;
         callback->OnSummitAutoInviteCamFirst(err, errmsg);
+    }
+    m_listenerListLock->Unlock();
+}
+
+// Alex, 发送邀请语
+void CLSLiveChatClient::OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) {
+    m_listenerListLock->Lock();
+    for(LSLiveChatClientListenerList::const_iterator itr = m_listenerList.begin(); itr != m_listenerList.end(); itr++) {
+        ILSLiveChatClientListener* callback = *itr;
+        callback->OnSendInviteMessage(inUserId, inMessage, err, errmsg, inviteId, nickName);
     }
     m_listenerListLock->Unlock();
 }

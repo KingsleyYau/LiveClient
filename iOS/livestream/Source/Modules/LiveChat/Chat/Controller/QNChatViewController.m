@@ -258,7 +258,24 @@ typedef enum AlertPayType {
             // 检测试聊券
             [self.liveChatManager checkTryTicket:self.womanId];
         }
+        
+        // 如果livechat已经登录,发送跳转女士的邀请
+        if ([LSLoginManager manager].isLivechatLogin || self.liveChatManager.isLogin) {
+            self.titleView.loadingActivity.hidden = YES;
+            self.titleView.loadingActivity.alpha = 0;
+            if (self.ladyInviteMsg.length > 0) {
+                NSLog(@"ladyInviteMsg : %@",self.ladyInviteMsg);
+                [self.liveChatManager sendInviteMessage:self.womanId message:self.ladyInviteMsg nickName:self.firstName];
+            }
+            [self setupEmotionInputView];
+        }else {
+            self.titleView.loadingActivity.hidden = NO;
+            self.titleView.loadingActivity.alpha = 1;
+            
+        }
+        
     }
+    
     // 更新聊天列表未读数
     [[QNContactManager manager] updateReadMsg:self.womanId];
     self.tableView.contentInset = UIEdgeInsetsZero;
@@ -283,6 +300,8 @@ typedef enum AlertPayType {
     [self.voiceImageView removeFromSuperview];
     [self voiceButtonTouchUpOutside];
     [self.audioPlayer stopSound];
+    
+    self.ladyInviteMsg = @"";
 }
 
 - (void)reflashNavigationBar {
@@ -310,7 +329,7 @@ typedef enum AlertPayType {
     // 加载普通表情
     [self reloadEmotion];
     // 加载小高级表情
-    [self reloadSmallEmotion];
+    [self reloadSmallEmotion:[self.liveChatManager getMagicIconConfigItem]];
 
     // 初始化表情缓存
     self.emotionImageCacheDict = [NSMutableDictionary dictionary];
@@ -347,6 +366,7 @@ typedef enum AlertPayType {
     }
 
     self.navigationItem.titleView = self.titleView;
+
 
     UIView *rightcontainVew = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     UIButton *settingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -474,7 +494,7 @@ typedef enum AlertPayType {
         [self.photoView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view.mas_left);
             make.right.equalTo(self.view.mas_right);
-            make.height.equalTo(self.chatEmotionKeyboardView.mas_height);
+            make.height.equalTo(@262);
             make.top.equalTo(self.inputMessageView.mas_bottom).offset(0);
         }];
         self.photoView.hidden = YES;
@@ -972,6 +992,7 @@ typedef enum AlertPayType {
     }
 }
 
+
 #pragma mark - 高表操作内容点击回调
 /*
 - (void)chatLargeEmotionSelfTableViewCell:(QNChatLargeEmotionSelfTableViewCell *)cell DidClickRetryBtn:(UIButton *)retryBtn {
@@ -1048,6 +1069,10 @@ typedef enum AlertPayType {
 
 #pragma mark - 选择私密照回调
 - (void)chatPhotoViewOpenCam {
+    if (!self.liveChatManager.isLogin) {
+        return;
+    }
+    
     // 手机能否打开相机
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         // 查询相机权限
@@ -1055,11 +1080,14 @@ typedef enum AlertPayType {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (granted) {
                     // 点击打开相机
+                    
                     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
                     imagePicker.allowsEditing = NO;
                     imagePicker.delegate = self;
                     imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
                     [self presentViewController:imagePicker animated:YES completion:nil];
+                    
+                
                 } else {
                     // 无权限
                     NSString *cameraAllow = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil)];
@@ -1107,11 +1135,14 @@ typedef enum AlertPayType {
     if (albumPhoto.originalPath.length > 0) { //如果本地有缓存路径，直接发送
         [self sendPhoto:albumPhoto.originalPath];
     } else {
-        
+        PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
+        option.resizeMode = PHImageRequestOptionsResizeModeNone;//控制照片尺寸
+        option.synchronous = YES;//主要是这个设为YES这样才会只走一次
+        option.networkAccessAllowed = YES;
         [[PHImageManager defaultManager] requestImageForAsset:albumPhoto.asset
                                                    targetSize:PHImageManagerMaximumSize
                                                   contentMode:PHImageContentModeAspectFill
-                                                      options:nil
+                                                      options:option
                                                 resultHandler:^(UIImage *result, NSDictionary *info) {
                                                     if (result) {
                                                         
@@ -1281,6 +1312,11 @@ typedef enum AlertPayType {
 }
 
 - (void)sendMsg:(NSString *)text {
+    if (!self.liveChatManager.isLogin) {
+        return;
+    }
+    
+    
     //TODO:发送文本
     if ([self isEmpty:text]) {
         [self.textView setText:@""];
@@ -1318,6 +1354,9 @@ typedef enum AlertPayType {
 }
 
 - (void)sendPhoto:(NSString *)filePath {
+    if (!self.liveChatManager.isLogin) {
+        return;
+    }
     if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
         //发送私密照
         [self closeAllInputView];
@@ -2067,9 +2106,8 @@ typedef enum AlertPayType {
     return imageArray;
 }
 
-- (void)reloadSmallEmotion {
+- (void)reloadSmallEmotion:(LSLCLiveChatMagicIconConfigItemObject *)items {
     // TODO:加载小高表配置和列表
-    LSLCLiveChatMagicIconConfigItemObject *items = [self.liveChatManager getMagicIconConfigItem];
     NSArray<LSLCMagicIconItemObject *> *emotions = items.magicIconList;
     NSMutableArray *array = [NSMutableArray array];
     for (LSLCMagicIconItemObject *emotion in emotions) {
@@ -2092,6 +2130,7 @@ typedef enum AlertPayType {
     NSArray *descs = [NSArray arrayWithObjects:typeDesc, iconIdDesc, nil];
     NSArray *sortArray = [array sortedArrayUsingDescriptors:descs];
     self.smallEmotionListArray = sortArray;
+    self.normalAndSmallEmotionView.smallEmotionArray = self.smallEmotionListArray;
     [self.normalAndSmallEmotionView reloadData];
 
     //下载15张
@@ -2940,6 +2979,18 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
+- (void)onRecvAutoInviteMsg:(LSLCLiveChatMsgItemObject *)msg {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 当前聊天女士才显示
+        if ([msg.fromId isEqualToString:self.womanId]) {
+            NSLog(@"QNChatViewController::onRecvAutoInviteMsg( 接收自动邀请消息回调 fromId : %@, message : %@ )", msg.fromId, msg.textMsg.displayMsg);
+            [[QNContactManager manager] updateReadMsg:self.womanId];
+            [self insertData:msg scrollToEnd:YES animated:YES];
+        }
+    });
+}
+
+
 - (void)onRecvSystemMsg:(LSLCLiveChatMsgItemObject *_Nonnull)msg {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
@@ -3131,6 +3182,13 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 - (void)onGetMagicIconConfig:(bool)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg magicIconConItem:(LSLCLiveChatMagicIconConfigItemObject *_Nonnull)config {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"QNChatViewController::onGetMagicIconConfig( 获取小高级表情消息回调 maxupdatetime : %ld, path : %@ )", (long)config.maxupdatetime, config.path);
+        [self reloadSmallEmotion:config];
+        [self closeAllInputView];
+        [self.normalAndSmallEmotionView removeFromSuperview];
+        self.normalAndSmallEmotionView = nil;
+        [self.chatEmotionKeyboardView removeFromSuperview];
+        self.chatEmotionKeyboardView = nil;
+        [self setupEmotionInputView];
     });
 }
 
@@ -3171,6 +3229,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
+
 #pragma mark - 语音消息回调
 - (void)onGetVoice:(LSLIVECHAT_LCC_ERR_TYPE)errType errNo:(NSString *)errNo errMsg:(NSString *)errMsg msgItem:(LSLCLiveChatMsgItemObject *)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -3205,6 +3264,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         }
     });
 }
+
 
 #pragma mark - 弹窗
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -3304,4 +3364,26 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     LSNavigationController * nav = [[LSNavigationController alloc]initWithRootViewController:vc];
     [self presentViewController:nav animated:NO completion:nil];
 }
+
+
+- (void)onLogin:(LSLIVECHAT_LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg isAutoLogin:(BOOL)isAutoLogin {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"QNChatViewController::onLoginUser %d errMsg : %@",errType,errmsg);
+        if (errType == LSLIVECHAT_LCC_ERR_SUCCESS ) {
+            //livechat断线重连不显示loading
+            self.titleView.loadingActivity.hidden = YES;
+            self.titleView.loadingActivity.alpha = 0;
+            if (![LSLoginManager manager].isLivechatLogin) {
+                [LSLoginManager manager].isLivechatLogin = YES;
+                // livechat登录完成发送跳转女士的邀请
+                if (self.ladyInviteMsg.length > 0) {
+                    NSLog(@"ladyInviteMsg : %@",self.ladyInviteMsg);
+                    [self.liveChatManager sendInviteMessage:self.womanId message:self.ladyInviteMsg nickName:self.firstName];
+                }
+            }
+        }
+    });
+}
+
+
 @end

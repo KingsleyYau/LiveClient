@@ -47,6 +47,7 @@
 #include "HttpAnchorGetProgramListTask.h"
 #include "HttpAnchorCheckIsPlayProgramTask.h"
 #include "HttpAnchorGetShowRoomInfoTask.h"
+#include "HttpGetCurrentRoomInfoTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -76,6 +77,7 @@ public:
      * @param deviceid                      设备唯一标识
      * @param model                         设备型号（格式：设备型号－系统版本号）
      * @param manufacturer                  制造厂商
+     * @param deviceName                    设备名字
      * @param callback                      接口回调
      *
      *  @return                             成功请求Id
@@ -88,6 +90,7 @@ public:
                         const string& deviceid,
                         const string& model,
                         const string& manufacturer,
+                        const string& deviceName,
                         IRequestZBLoginCallback* callback = NULL
                         );
     
@@ -240,6 +243,19 @@ public:
                                   ZBSetPushType status,
                                   IRequestZBSetAutoPushCallback* callback = NULL
                                   );
+    /**
+     * 3.9.获取主播当前直播间信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetCurrentRoomInfo(
+                            HttpRequestManager *pHttpRequestManager,
+                            IRequestGetCurrentRoomInfoCallback* callback = NULL
+                            );
+    
     
     /**
      *  4.1.获取预约邀请列表

@@ -50,7 +50,7 @@ public:
             }
             /* responseTime */
             if (root[LIVEROOM_WAITINGREPLYSAYHILIST_LIST_RESPONSETIME].isNumeric()) {
-                responseTime = root[LIVEROOM_WAITINGREPLYSAYHILIST_LIST_RESPONSETIME].asInt();
+                responseTime = root[LIVEROOM_WAITINGREPLYSAYHILIST_LIST_RESPONSETIME].asLong();
             }
             /* content */
             if (root[LIVEROOM_WAITINGREPLYSAYHILIST_LIST_CONTENT].isString()) {

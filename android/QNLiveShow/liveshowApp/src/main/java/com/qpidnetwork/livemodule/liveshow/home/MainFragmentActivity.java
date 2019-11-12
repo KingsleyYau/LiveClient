@@ -1,8 +1,11 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -27,10 +30,16 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
+import com.qpidnetwork.livemodule.httprequest.LiveDomainRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
+import com.qpidnetwork.livemodule.httprequest.OnGetMyProfileCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
+import com.qpidnetwork.livemodule.httprequest.OnRetrieveBannerCallback;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.httprequest.item.LSOtherVersionCheckItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSProfileItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
@@ -57,11 +66,14 @@ import com.qpidnetwork.livemodule.liveshow.home.menu.DrawerAdapter;
 import com.qpidnetwork.livemodule.liveshow.livechat.LiveChatTalkActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.HangoutTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
+import com.qpidnetwork.livemodule.liveshow.manager.FollowManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.SynConfigerManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.manager.VersionCheckManager;
+import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.SettingsActivity;
+import com.qpidnetwork.livemodule.liveshow.sayhi.SayHiListActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.liveshow.welcome.PeacockActivity;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
@@ -69,8 +81,10 @@ import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
+import com.qpidnetwork.livemodule.view.NormalWebviewDialog;
 import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 import com.qpidnetwork.qnbridgemodule.bean.WebSiteBean;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.BroadcastManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
@@ -100,6 +114,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     private final int UI_LOGIN_SUCCESS = 3001;
     private final int UI_LOGIN_FAIL = 3002;
     private final int UI_LOGOUT = 3003;
+    // 2019/8/22 Hardy
+    private final int GET_PROFILE_CALLBACK = 3004;      // 获取个人信息
 
     //控件
 //    private BottomNavigationViewEx mNavView;
@@ -118,7 +134,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     private RecyclerView mRvDrawer;
     private DrawerAdapter mDrawerAdapter;
     private LinearLayout mLLHeaderRoot;
-//    private CircleImageView mImgDrawerUserPhoto;
+    //    private CircleImageView mImgDrawerUserPhoto;
     private SimpleDraweeView mImgUserPhoto;
     public TextView mTvDrawerUserName;
     public TextView mTvDrawerUserId;
@@ -143,6 +159,12 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 
     //管理信用点及返点
     public LiveRoomCreditRebateManager mLiveRoomCreditRebateManager;
+
+    //存储浮层广告url，防止不可见时无法弹出dialog导致广告丢弃
+    private String mOverviewAdvertHtmlString = "";
+
+    //存储主页浮层广告
+    private NormalWebviewDialog mNormalWebviewDialog;
 
     /**
      * 外部启动Url跳转
@@ -220,6 +242,12 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             }
         });
 
+        //收藏管理器,在UI前初始化
+        FollowManager.newInstance(mContext);
+
+        // 2019/8/22 Hardy
+        initGetUserInfoBroadcast();
+
         initView();
 
         parseIntent(getIntent());
@@ -248,12 +276,50 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         refreshUI();
 
         initData();
+
+        //刷新浮层广告
+        getOverviewAdvert();
     }
+
+    //================  个人中心，修改头像后，通知左侧菜单栏更新头像  ==========================
+    private void initGetUserInfoBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CommonConstant.ACTION_USER_UPLOAD_PHOTO_SUCCESS_LIVE);
+        BroadcastManager.registerReceiver(mContext, getUserInfoBroadcast, intentFilter);
+    }
+
+    BroadcastReceiver getUserInfoBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && !TextUtils.isEmpty(intent.getAction()) &&
+                    CommonConstant.ACTION_USER_UPLOAD_PHOTO_SUCCESS_LIVE.equals(intent.getAction())) {
+                getMyProfile();
+            }
+        }
+    };
+
+    /**
+     * 获取个人信息
+     */
+    private void getMyProfile() {
+        LiveDomainRequestOperator.getInstance().GetMyProfile(new OnGetMyProfileCallback() {
+            @Override
+            public void onGetMyProfile(boolean isSuccess, int errno, String errmsg, LSProfileItem item) {
+                Message msg = Message.obtain();
+                HttpRespObject obj = new HttpRespObject(isSuccess, errno, errmsg, item);
+                msg.what = GET_PROFILE_CALLBACK;
+                msg.obj = obj;
+                sendUiMessage(msg);
+            }
+        });
+    }
+    //================  个人中心，修改头像后，通知左侧菜单栏更新头像  ==========================
+
 
     /**
      *
      */
-    private void initData(){
+    private void initData() {
         //红点未读
         ShowUnreadManager.getInstance().registerUnreadListener(this);
 
@@ -269,7 +335,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         if (!isTaskRoot()) {
             Intent intent = new Intent(CommonConstant.ACTION_ACTIVITY_CLOSE);
 //            sendBroadcast(intent);
-            BroadcastManager.sendBroadcast(mContext,intent);
+            BroadcastManager.sendBroadcast(mContext, intent);
         }
 
         //自动登录
@@ -279,13 +345,13 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     /**
      * 初始化冒泡事件
      */
-    private void initBubble(){
+    private void initBubble() {
         //初始化冒泡manager
-        mBubbleMessageManager =  new BubbleMessageManager(this);
+        mBubbleMessageManager = new BubbleMessageManager(this);
         mBubbleMessageManager.setBubbleMessageManagerListener(this);
 
         List<BubbleMessageBean> dataList = mBubbleMessageManager.getCurrentShowingList();
-        if(dataList.size() > 0){
+        if (dataList.size() > 0) {
             mMsgPopView.addMsg(dataList);
         }
     }
@@ -294,7 +360,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     protected void onResume() {
         super.onResume();
         hasItemClicked = false;
-        Log.d(TAG, "onResume-hasItemClicked:" + hasItemClicked);
+//        Log.d(TAG, "onResume-hasItemClicked:" + hasItemClicked);
         //界面返回，判断有为显示的bubble时，显示冒泡
         if (mIMProgramInfoItem != null) {
             refreshShowUnreadStatus(true);
@@ -309,17 +375,24 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             // 2018/11/20 Hardy
             updateChatUnread();
         }
+
+        //补弹窗overview dialog
+        if(!TextUtils.isEmpty(mOverviewAdvertHtmlString)){
+            showOverviewAdvertDialog(mOverviewAdvertHtmlString);
+            mOverviewAdvertHtmlString = "";
+        }
     }
 
     /**
      * 粗略地监听到 是否有对话框被显示
+     *
      * @param hasFocus
      */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         //改变锁状态(hasFocus == true)即代表当前没对话框显示, 可以显示下一个新的对话框
-        if(hasFocus){
+        if (hasFocus) {
             hasItemClicked = false;
         }
     }
@@ -330,11 +403,13 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     public void updateCredit() {
         LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance, int coupon) {
-                if (isSuccess) {
-                    mLiveRoomCreditRebateManager.setCredit(balance);
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, LSLeftCreditItem creditItem) {
+                if (isSuccess && creditItem != null) {
+                    mLiveRoomCreditRebateManager.setCredit(creditItem.balance);
                     // 2018/9/27 Hardy
-                    mLiveRoomCreditRebateManager.setCoupon(coupon);
+                    mLiveRoomCreditRebateManager.setCoupon(creditItem.coupon);
+
+                    mLiveRoomCreditRebateManager.setLiveChatCount(creditItem.liveChatCount);
 
                     runOnUiThread(new Thread() {
                         @Override
@@ -360,13 +435,20 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         // 2018/11/20 Hardy
         ContactManager.getInstance().unregisterChatUnreadUpdateUpdata(this);
 
+        // 2019/8/22 Hardy
+        if (getUserInfoBroadcast != null) {
+            BroadcastManager.unregisterReceiver(mContext, getUserInfoBroadcast);
+        }
+
         if (mMsgPopView != null) {
             mMsgPopView.onDestroy();
         }
 
-        if(mBubbleMessageManager != null){
+        if (mBubbleMessageManager != null) {
             mBubbleMessageManager.onDestroy();
         }
+
+        FollowManager.getInstance().destroy();
 
         super.onDestroy();
     }
@@ -401,7 +483,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                 Log.i("Jagger", "MainFragmentActivity parseIntent mQnToken:" + mQnToken);
             }
             if (bundle.containsKey(LAUNCH_PARAMS_TABTYPE)) {
-                tabType = (MainFragmentPagerAdapter4Top.TABS)bundle.getSerializable(LAUNCH_PARAMS_TABTYPE);
+                tabType = (MainFragmentPagerAdapter4Top.TABS) bundle.getSerializable(LAUNCH_PARAMS_TABTYPE);
             }
         }
 
@@ -603,8 +685,6 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         });
         mTvCurrCredits = (TextView) findViewById(R.id.tv_currCredits);
 
-
-        // TODO: 2019/3/5 Hardy
         mMsgPopView = findViewById(R.id.view_hang_out_msg_pop);
         mMsgPopView.setVisibility(View.GONE);
         mMsgPopView.setOnHangoutMsgPopListener(new IOnHangoutMsgPopListener() {
@@ -619,7 +699,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                 //通知服务器点击
                 notifyHangoutInviteClick(bean);
                 //点击事件处理
-                if(bean.bubbleMsgType == BubbleMessageType.Hangout){
+                if (bean.bubbleMsgType == BubbleMessageType.Hangout) {
                     //进入hangout过渡页
                     //生成被邀请的主播列表（这里是目标主播一人）
                     ArrayList<IMUserBaseInfoItem> anchorList = new ArrayList<>();
@@ -630,9 +710,10 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                             anchorList,
                             "",
                             "",
-                            "");
+                            "",
+                            false);
                     startActivity(intent);
-                }else if(bean.bubbleMsgType == BubbleMessageType.LiveChat){
+                } else if (bean.bubbleMsgType == BubbleMessageType.LiveChat) {
                     //进入chat聊天页面
                     LiveChatTalkActivity.launchChatActivity(mContext, bean.anchorId, bean.anchorName, bean.anchorPhotoUrl);
                 }
@@ -668,10 +749,11 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 
     /**
      * 通知服务器点击了冒泡hangout邀请
+     *
      * @param bean
      */
-    private void notifyHangoutInviteClick(BubbleMessageBean bean){
-        if(bean != null && bean.bubbleMsgType == BubbleMessageType.Hangout){
+    private void notifyHangoutInviteClick(BubbleMessageBean bean) {
+        if (bean != null && bean.bubbleMsgType == BubbleMessageType.Hangout) {
             LiveRequestOperator.getInstance().AutoInvitationClickLog(bean.anchorId, bean.isAuto, new OnRequestCallback() {
                 @Override
                 public void onRequest(boolean isSuccess, int errCode, String errMsg) {
@@ -743,6 +825,10 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         @Override
         public void itemClick(DrawerAdapter.DrawerItemNormal drawerItemNormal) {
             switch (drawerItemNormal.id) {
+                case DrawerAdapter.ITEM_ID_SAYHI:
+                    //打开SayHi列表
+                    SayHiListActivity.startAct(mContext);
+                    break;
                 case DrawerAdapter.ITEM_ID_CHAT:
                     showChatListActivity();
                     break;
@@ -763,33 +849,39 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                     viewPagerContent.setCurrentItem(mAdapter.tabTypeToIndex(MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_HANGOUT));
                 }
                 break;
+                case DrawerAdapter.ITEM_ID_MY_CONTEACT: {
+                    // 2019/8/9 Hardy   My Contact
+                    showMyContactList();
+                }
+                break;
+                case DrawerAdapter.ITEM_ID_FLOWERS:     //鲜花礼品
+                    if (!hasItemClicked) {
+                        hasItemClicked = true;
+                        String urlMyTickets = LiveUrlBuilder.createGiftFlowersListUrl();
+                        new AppUrlHandler(mContext).urlHandle(urlMyTickets);
+                    }
+                    break;
                 case DrawerAdapter.ITEM_ID_SHOWTICKETS:
                     if (!hasItemClicked) {
                         hasItemClicked = true;
-//                        MyTicketsActivity.launchMyTicketsActivity(MainFragmentActivity.this,0);
-
                         //edit by Jagger 2018-9-21 使用URL方式跳转
-                        String urlMyTickets = URL2ActivityManager.createMyTickets(0);
+                        String urlMyTickets = LiveUrlBuilder.createMyTickets(0);
                         new AppUrlHandler(mContext).urlHandle(urlMyTickets);
                     }
                     break;
                 case DrawerAdapter.ITEM_ID_BOOKS:
                     if (!hasItemClicked) {
                         hasItemClicked = true;
-//                        ScheduleInviteActivity.launchScheduleListActivity(MainFragmentActivity.this,0);
-
                         //edit by Jagger 2018-9-21 使用URL方式跳转
-                        String urlMyBooking = URL2ActivityManager.createScheduleInviteActivity(1);
+                        String urlMyBooking = LiveUrlBuilder.createScheduleInviteActivity(1);
                         new AppUrlHandler(mContext).urlHandle(urlMyBooking);
                     }
                     break;
                 case DrawerAdapter.ITEM_ID_BACKPACK:
                     if (!hasItemClicked) {
                         hasItemClicked = true;
-//                        MyPackageActivity.launchMyPackageActivity(MainFragmentActivity.this,0);
-
                         //edit by Jagger 2018-9-21 使用URL方式跳转
-                        String urlMyBackpack = URL2ActivityManager.createMyBackpackActivity(0);
+                        String urlMyBackpack = LiveUrlBuilder.createMyBackpackActivity(0);
                         new AppUrlHandler(mContext).urlHandle(urlMyBackpack);
                     }
                     break;
@@ -858,7 +950,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         if (!hasItemClicked) {
             hasItemClicked = true;
             //edit by Jagger 2018-9-21 使用URL方式跳转
-            String urlAddCredit = URL2ActivityManager.createAddCreditUrl("", "B30", "");
+            String urlAddCredit = LiveUrlBuilder.createAddCreditUrl("", "B30", "");
             new AppUrlHandler(this).urlHandle(urlAddCredit);
         }
     }
@@ -867,11 +959,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         if (!hasItemClicked) {
             hasItemClicked = true;
             //私信
-//            Intent intent = new Intent(MainFragmentActivity.this, MessageContactListActivity.class);
-//            startActivity(intent);
-
             //edit by Jagger 2018-9-21 使用URL方式跳转
-            String urlMessageList = URL2ActivityManager.createMessageListUrl();
+            String urlMessageList = LiveUrlBuilder.createMessageListUrl();
             new AppUrlHandler(this).urlHandle(urlMessageList);
         }
     }
@@ -881,11 +970,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             hasItemClicked = true;
 
             //edit by Hardy 2018-11-17 使用URL方式跳转
-            String urlMessageList = URL2ActivityManager.createLiveChatListUrl();
+            String urlMessageList = LiveUrlBuilder.createLiveChatListUrl();
             new AppUrlHandler(this).urlHandle(urlMessageList);
-
-            //test
-//            LiveChatTalkActivity.launchChatActivity(mContext, "1" , "name", "");
         }
     }
 
@@ -908,14 +994,8 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     public void showLoiListWebView() {
         if (!hasItemClicked) {
             hasItemClicked = true;
-//            startActivity(WebViewActivity.getIntent(MainFragmentActivity.this,
-//                    getResources().getString(R.string.live_webview_greet_mail_title),
-//                    WebViewActivity.UrlIntent.View_Loi_List,
-//                    null,
-//                    true));
-
             //edit by Jagger 2018-9-21 使用URL方式跳转
-            String urlLoiList = URL2ActivityManager.createGreetMailList();
+            String urlLoiList = LiveUrlBuilder.createGreetMailList();
             new AppUrlHandler(this).urlHandle(urlLoiList);
         }
     }
@@ -926,15 +1006,22 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     public void showEmfListWebView() {
         if (!hasItemClicked) {
             hasItemClicked = true;
-//            startActivity(WebViewActivity.getIntent(MainFragmentActivity.this,
-//                    getResources().getString(R.string.live_webview_mail_title),
-//                    WebViewActivity.UrlIntent.View_Emf_List,
-//                    null,
-//                    true));
-
             //edit by Jagger 2018-9-21 使用URL方式跳转
-            String urlMailList = URL2ActivityManager.createMailList();
+            String urlMailList = LiveUrlBuilder.createMailList();
             new AppUrlHandler(this).urlHandle(urlMailList);
+        }
+    }
+
+    /**
+     * 查看主播来信
+     */
+    public void showMyContactList() {
+        if (!hasItemClicked) {
+            hasItemClicked = true;
+
+            // 2019/8/16 Hardy
+            String urlMyContactList = LiveUrlBuilder.createMyContactListUrl();
+            new AppUrlHandler(this).urlHandle(urlMyContactList);
         }
     }
 
@@ -1152,7 +1239,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         if (LoginManager.getInstance().getLoginStatus() == LoginManager.LoginStatus.Logined) {
             // 2018/9/18 Hardy
             //edit by Jagger 2018-9-28 使用URL方式跳转
-            String urlMyProfileList = URL2ActivityManager.createMyProfile();
+            String urlMyProfileList = LiveUrlBuilder.createMyProfile();
             URL2ActivityManager.getInstance().URL2Activity(mContext, urlMyProfileList);
         } else {
             LoginNewActivity.launchRegisterActivity(mContext, null);
@@ -1168,6 +1255,15 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         delayDismissDrawableLayout();
     }
 
+    private void setIconUrl(String photoUrl){
+        int wh = DisplayUtil.dip2px(mContext, 70);
+        //"http://demo.charmdate.com/man_photo/105/CM68107045.jpg" //头像https+test5149验证不行，但http可以
+        FrescoLoadUtil.loadUrl(mContext, mImgUserPhoto, photoUrl, wh,
+                R.drawable.ic_default_photo_man, true,
+                getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+                ContextCompat.getColor(mContext, R.color.white));
+    }
+
     /**
      * 更新左则菜单个人资料
      *
@@ -1177,12 +1273,14 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         if (isLogin) {
             LoginItem loginItem = LoginManager.getInstance().getLoginItem();
             if (null != loginItem) {
-                int wh = DisplayUtil.dip2px(mContext, 70);
-                //"http://demo.charmdate.com/man_photo/105/CM68107045.jpg" //头像https+test5149验证不行，但http可以
-                FrescoLoadUtil.loadUrl(mContext, mImgUserPhoto, loginItem.photoUrl, wh,
-                        R.drawable.ic_default_photo_man, true,
-                        getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
-                        ContextCompat.getColor(mContext, R.color.white));
+//                int wh = DisplayUtil.dip2px(mContext, 70);
+//                //"http://demo.charmdate.com/man_photo/105/CM68107045.jpg" //头像https+test5149验证不行，但http可以
+//                FrescoLoadUtil.loadUrl(mContext, mImgUserPhoto, loginItem.photoUrl, wh,
+//                        R.drawable.ic_default_photo_man, true,
+//                        getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+//                        ContextCompat.getColor(mContext, R.color.white));
+                // 2019/8/22 Hardy
+                setIconUrl(loginItem.photoUrl);
 
                 //
                 mTvDrawerUserName.setText(loginItem.nickName);
@@ -1205,7 +1303,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             });
             mTvDrawerUserId.setText("");
             mImgDrawerUserLevel.setImageDrawable(null);
-            FrescoLoadUtil.loadRes(mContext, mImgUserPhoto, R.drawable.ic_default_photo_man ,
+            FrescoLoadUtil.loadRes(mContext, mImgUserPhoto, R.drawable.ic_default_photo_man,
                     R.drawable.ic_default_photo_man, true,
                     getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
                     ContextCompat.getColor(mContext, R.color.white));
@@ -1231,43 +1329,68 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 
     /**
      * 更新左则菜单视图
+     *
      * @param isLogin
      */
-    private void doUpdateDrawerView(boolean isLogin){
+    private void doUpdateDrawerView(boolean isLogin) {
         if (isLogin) {
             LoginItem loginItem = LoginManager.getInstance().getLoginItem();
             if (null != loginItem) {
-                if(loginItem.userPriv.hangoutPriv.isHangoutPriv){   //是否有HangOut权限
+                //是否有HangOut权限
+                if (loginItem.userPriv.hangoutPriv.isHangoutPriv) {
                     mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_HANGOUT, true);
-                }else {
+                } else {
                     mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_HANGOUT, false);
                 }
+
+                //是否有SayHi权限
+                if (loginItem.userPriv.isSayHiPriv) {
+                    mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_SAYHI, true);
+                } else {
+                    mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_SAYHI, false);
+                }
+
+                //鲜花礼品 权限
+                if(loginItem.userPriv.isGiftFlowerPriv && loginItem.isGiftFlowerSwitch){
+                    mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_FLOWERS, true);
+                    // OFF信息
+                    int off = SynConfigerManager.getInstance().getConfigItemCache().flowersGift;
+                    if(off > 0 ){
+                        mDrawerAdapter.showPopMsg(DrawerAdapter.ITEM_ID_FLOWERS, getResources().getString(R.string.flowers_memu_pop_msg, off));
+                    }
+                }else{
+                    mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_FLOWERS, false);
+                }
             }
-        }else {
+
+        } else {
             mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_HANGOUT, false);
+            mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_SAYHI, false);
+            mDrawerAdapter.setItemVisible(DrawerAdapter.ITEM_ID_FLOWERS, false);
         }
     }
 
     /**
      * 更新顶部Tab
+     *
      * @param isLogin
      */
-    private void doUpdateTab(boolean isLogin){
+    private void doUpdateTab(boolean isLogin) {
         if (isLogin) {
             LoginItem loginItem = LoginManager.getInstance().getLoginItem();
             //是否有HangOut权限
-            if(loginItem.userPriv != null && loginItem.userPriv.hangoutPriv != null && loginItem.userPriv.hangoutPriv.isHangoutPriv){
+            if (loginItem!= null && loginItem.userPriv != null && loginItem.userPriv.hangoutPriv != null && loginItem.userPriv.hangoutPriv.isHangoutPriv) {
                 //有HangOut权限
                 mAdapter = MainFragmentPagerAdapter4Top.newAdapter4HasHangout(this);
                 viewPagerContent.setAdapter(mAdapter);
                 tabPageIndicator.notifyDataSetChanged();
-            }else {
+            } else {
                 //无HangOut权限
                 mAdapter = MainFragmentPagerAdapter4Top.newAdapter4NoHangout(this);
                 viewPagerContent.setAdapter(mAdapter);
                 tabPageIndicator.notifyDataSetChanged();
             }
-        }else{
+        } else {
             mAdapter = MainFragmentPagerAdapter4Top.newAdapter4NoHangout(this);
             viewPagerContent.setAdapter(mAdapter);
             tabPageIndicator.notifyDataSetChanged();
@@ -1279,12 +1402,26 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         switch (msg.what) {
+            case GET_PROFILE_CALLBACK: {
+                HttpRespObject responseProfile = (HttpRespObject) msg.obj;
+                if (responseProfile.isSuccess) {
+                    LSProfileItem mProfileItem = (LSProfileItem) responseProfile.data;
+                    if (mProfileItem != null) {
+                        setIconUrl(mProfileItem.photoURL);
+                    }
+                }
+            }
+            break;
+
             //登录成功
             case UI_LOGIN_SUCCESS: {
 //                showLoginSuccess();
-                if (mAdapter.getCurrentFragment() instanceof HotListFragment) {
-                    ((HotListFragment) mAdapter.getCurrentFragment()).reloadData();
-                }
+
+                //del by Jagger 2019-7-25 for test
+//                if (mAdapter.getCurrentFragment() instanceof HotListFragment) {
+//                    ((HotListFragment) mAdapter.getCurrentFragment()).reloadData();
+//                }
+
                 //更新头像昵称ID
 //                if(null != mDrawerAdapter){
 //                    mDrawerAdapter.updateHeaderView();
@@ -1296,9 +1433,11 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 
                 //检测更新(因为登录时才会去拿同步配置)
 //                doCheckUpdate();
+                //刷新浮层广告
+                getOverviewAdvert();
             }
             break;
-            case UI_LOGOUT:
+            case UI_LOGOUT: {
 //                showLoginFail();
 
                 //更新头像昵称ID
@@ -1306,7 +1445,12 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
                 doUpdateCreditView(false);
                 doUpdateDrawerView(false);
                 doUpdateTab(false);
-                break;
+
+                //收起正在展示的浮层广告
+                if(mNormalWebviewDialog != null && mNormalWebviewDialog.isShowing()){
+                    mNormalWebviewDialog.dismiss();
+                }
+            }break;
         }
     }
 
@@ -1386,7 +1530,11 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
 //        }else{
 //            setUnReadHide(mQBadgeViewUnReadCalendar);
 //        }
-        tabPageIndicator.updateTabDiginalHint(2, mIsProgramHasUnread, true, 0);
+        int index = 2;
+        if(mAdapter != null) {
+            index = mAdapter.tabTypeToIndex(MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_CALENDAR);
+        }
+        tabPageIndicator.updateTabDiginalHint(index, mIsProgramHasUnread, true, 0);
     }
 
     /************************************  节目开始结束退票事件通知  *******************************************/
@@ -1476,10 +1624,13 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
         mDrawerAdapter.showUnReadNum(DrawerAdapter.ITEM_ID_GREETS, unreadNum);
         unreadNum = ShowUnreadManager.getInstance().getShowTicketUnreadNum();
         mDrawerAdapter.showUnReadNum(DrawerAdapter.ITEM_ID_SHOWTICKETS, unreadNum);
-        unreadNum = ShowUnreadManager.getInstance().getBackpackUnreadNum();
+        //修改背包未读，增加Livechat试聊券未读数目
+        unreadNum = ShowUnreadManager.getInstance().getBackpackUnreadNum() + ShowUnreadManager.getInstance().getLivechatVocherUnreadNum();
         mDrawerAdapter.showUnReadNum(DrawerAdapter.ITEM_ID_BACKPACK, unreadNum);
         unreadNum = ShowUnreadManager.getInstance().getBookingUnReadNum();
         mDrawerAdapter.showUnReadNum(DrawerAdapter.ITEM_ID_BOOKS, unreadNum);
+        unreadNum = ShowUnreadManager.getInstance().getSayHiUnreadNum();
+        mDrawerAdapter.showUnReadNum(DrawerAdapter.ITEM_ID_SAYHI, unreadNum);
 
         // 2018/11/16 Hardy
 //        unreadNum = ShowUnreadManager.getInstance().getBookingUnReadNum();
@@ -1519,6 +1670,54 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
             }
         });
     }
+
+    /**
+     * 刷新浮层广告
+     */
+    private void getOverviewAdvert(){
+        LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
+        LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+        String manId = "";
+        if(loginItem != null){
+            manId = loginItem.userId;
+        }
+        if(loginStatus != null && loginStatus == LoginManager.LoginStatus.Logined && !TextUtils.isEmpty(manId)){
+            //已登陆才刷新
+            LiveRequestOperator.getInstance().RetrieveBanner(manId, false, LSRequestEnum.LSBannerType.Unknow, new OnRetrieveBannerCallback() {
+                @Override
+                public void onRetrieveBanner(boolean isSuccess, int errCode, String errMsg, final String htmlUrl) {
+                    if(isSuccess && !TextUtils.isEmpty(htmlUrl)){
+                        if(isActivityVisible()){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showOverviewAdvertDialog(htmlUrl);
+                                }
+                            });
+                        }else{
+                            mOverviewAdvertHtmlString = htmlUrl;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 弹出浮层dialog
+     * @param htmlData
+     */
+    private void showOverviewAdvertDialog(String htmlData){
+        mNormalWebviewDialog = new NormalWebviewDialog(MainFragmentActivity.this);
+        mNormalWebviewDialog.loadData(htmlData, 0);
+        mNormalWebviewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+            }
+        });
+        mNormalWebviewDialog.show();
+    }
+
     //===================   2018/11/20  Hardy   LiveChat 未读数刷新逻辑 ================
 
     @Override
@@ -1561,7 +1760,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements ViewPa
     }
 
     @Override
-    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
+    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, IMClientListener.LCC_ERR_TYPE err) {
 
     }
 

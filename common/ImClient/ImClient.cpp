@@ -558,18 +558,18 @@ void ImClient::OnRoomOut(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const stri
 }
 
 // 3.13.观众进入公开直播间接口
-bool ImClient::PublicRoomIn(SEQ_T reqId, const string& userId) {
+bool ImClient::PublicRoomIn(SEQ_T reqId, const string& userId, bool isFree) {
     bool result = false;
     m_loginStatusLock->Lock();
     LoginStatus loginStatus = m_loginStatus;
     m_loginStatusLock->Unlock();
-    FileLog("ImClient", "ImClient::PublicRoomIn() begin, m_taskManager:%p userId:%s reqId:%u", m_taskManager, userId.c_str(), reqId);
+    FileLog("ImClient", "ImClient::PublicRoomIn() begin, m_taskManager:%p userId:%s isFree:%d  reqId:%u", m_taskManager, userId.c_str(), isFree, reqId);
     // 若为已登录状态
     if (LOGINED == loginStatus) {
         class PublicRoomInTask* task = new PublicRoomInTask();
         if (NULL != task) {
             task->Init(this);
-            task->InitParam(userId);
+            task->InitParam(userId, isFree);
             
             task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
@@ -1476,14 +1476,14 @@ void ImClient::OnRecvRoomKickoffNotice(const string& roomId, LCC_ERR_TYPE err, c
     m_listenerListLock->Unlock();
 }
 
-void ImClient::OnRecvLackOfCreditNotice(const string& roomId, const string& msg, double credit) {
-    FileLog("ImClient", "ImClient::OnRecvLackOfCreditNotice() begin, ImClient:%p roomId:%s msg:%s credit:%f", this, roomId.c_str(), msg.c_str(), credit);
+void ImClient::OnRecvLackOfCreditNotice(const string& roomId, const string& msg, double credit, LCC_ERR_TYPE err) {
+    FileLog("ImClient", "ImClient::OnRecvLackOfCreditNotice() begin, ImClient:%p roomId:%s msg:%s credit:%f err:%d", this, roomId.c_str(), msg.c_str(), credit, err);
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvLackOfCreditNotice(roomId, msg, credit);
+        callback->OnRecvLackOfCreditNotice(roomId, msg, credit, err);
     }
     FileLog("ImClient", "ImClient::OnRecvLackOfCreditNotice() end, ImClient:%p roomId:%s msg:%s credit:%f", this, roomId.c_str(), msg.c_str(), credit);
     m_listenerListLock->Unlock();
@@ -1548,6 +1548,26 @@ void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const l
     m_listenerListLock->Unlock();
 }
 
+/**
+ *  3.16.接收公开直播间前3秒免费提示通知接口 回调
+ *
+ *  @param roomId         直播间ID
+ *  @param message        文字提示信息
+ *
+ */
+void ImClient::OnRecvPublicRoomFreeMsgNotice(const string& roomId, const string& message)
+{
+    FileLog("ImClient", "ImClient::OnRecvPublicRoomFreeMsgNotice() begin, ImClient:%p roomId:%s message:%s", this, roomId.c_str(), message.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvPublicRoomFreeMsgNotice(roomId, message);
+    }
+    FileLog("ImClient", "ImClient::OnRecvPublicRoomFreeMsgNotice() end, ImClient:%p roomId:%s message:%s", this, roomId.c_str(), message.c_str());
+    m_listenerListLock->Unlock();
+}
 
 // 4.2.接收直播间文本消息通知
 void ImClient::OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) {

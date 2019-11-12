@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSGreetingCardPreviewViewController">
+            <connections>
+                <outlet property="greetingCardDetail" destination="y4a-DC-bBm" id="4zO-Ih-KWe"/>
+                <outlet property="greetingCardOwner" destination="CP4-7Y-856" id="mid-Up-aZ4"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_GreetingCardBg" translatesAutoresizingMaskIntoConstraints="NO" id="J93-kB-t7I">
+                    <rect key="frame" x="0.0" y="62" width="375" height="557"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I was very impressed with your profile and your outlook on life. Let me know if you are interested in beginning a friendship." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y4a-DC-bBm">
+                    <rect key="frame" x="40" y="132" width="295" height="97.5"/>
+                    <fontDescription key="fontDescription" name="TimesNewRomanPS-ItalicMT" family="Times New Roman" pointSize="22"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jack" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CP4-7Y-856">
+                    <rect key="frame" x="40" y="248.5" width="34" height="19.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="imJ-bh-IbO">
+                    <rect key="frame" x="10" y="16" width="24" height="24"/>
+                    <state key="normal" image="LS_Nav_Back_w"/>
+                    <connections>
+                        <action selector="backAction:" destination="-1" eventType="touchUpInside" id="hdz-qS-M1x"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="imJ-bh-IbO" firstAttribute="top" secondItem="Ebu-Zu-L4X" secondAttribute="top" constant="16" id="2a7-66-FMX"/>
+                <constraint firstItem="J93-kB-t7I" firstAttribute="top" secondItem="Ebu-Zu-L4X" secondAttribute="top" constant="62" id="DbX-IU-26W"/>
+                <constraint firstItem="CP4-7Y-856" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="LvX-Uy-YE6"/>
+                <constraint firstAttribute="trailing" secondItem="y4a-DC-bBm" secondAttribute="trailing" constant="40" id="MbV-cu-sSS"/>
+                <constraint firstAttribute="trailing" secondItem="J93-kB-t7I" secondAttribute="trailing" id="WsC-Zq-mCh"/>
+                <constraint firstItem="y4a-DC-bBm" firstAttribute="top" secondItem="J93-kB-t7I" secondAttribute="top" constant="70" id="dc4-eC-UXD"/>
+                <constraint firstItem="CP4-7Y-856" firstAttribute="top" secondItem="y4a-DC-bBm" secondAttribute="bottom" constant="19" id="edk-bS-ZNY"/>
+                <constraint firstItem="J93-kB-t7I" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="jhK-on-xiU"/>
+                <constraint firstItem="y4a-DC-bBm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="ktH-7d-Hhz"/>
+                <constraint firstItem="imJ-bh-IbO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="tcq-GR-MNo"/>
+                <constraint firstItem="Ebu-Zu-L4X" firstAttribute="bottom" secondItem="J93-kB-t7I" secondAttribute="bottom" constant="48" id="x2L-Jc-qA1"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="Ebu-Zu-L4X"/>
+            <point key="canvasLocation" x="139" y="139"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_GreetingCardBg" width="375" height="557"/>
+        <image name="LS_Nav_Back_w" width="24" height="24"/>
+    </resources>
+</document>

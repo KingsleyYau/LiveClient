@@ -21,6 +21,15 @@ public class RequestJniLiveShow {
 		LiveRoom,
 		AnchorPersonal
 	}
+
+	/**
+	 * 场次礼物类型
+	 */
+	public enum GiftRoomType{
+		Unknown,
+		Public,
+		Private
+	}
 	
 	/**
 	 * 3.1.分页获取热播列表
@@ -145,6 +154,37 @@ public class RequestJniLiveShow {
 	static public long GetPromoAnchorList(int number, PromotionCategoryType type, String userId, OnGetPromoAnchorListCallback callback){
 		return GetPromoAnchorList(number, type.ordinal(), userId, callback);
 	}
-	static public native long GetPromoAnchorList(int number, int type, String userId, OnGetPromoAnchorListCallback callback);
-	
+	static protected native long GetPromoAnchorList(int number, int type, String userId, OnGetPromoAnchorListCallback callback);
+
+	/**
+	 * 3.15.获取页面推荐主播列表
+	 * @param callback
+	 * @return
+	 */
+//	static public long GetPageRecommendAnchorList(PromotionCategoryType type, OnGetPromoAnchorListCallback callback){
+//		return GetPageRecommendAnchorList(callback);
+//	}
+	static public native long GetPageRecommendAnchorList(OnGetPageRecommendAnchorListCallback callback);
+
+	/**
+	 * 3.16.获取为的联系人列表
+	 * @param start
+	 * @param step
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetMyContactList(int start, int step, OnGetMyContactListCallback callback);
+
+	/**
+	 * 3.17.获取虚拟礼物分类列表
+	 * @param roomType		场次类型
+	 * @param callback
+	 * @return
+	 */
+	static public long GetGiftTypeList(GiftRoomType roomType, OnGetGiftTypeListCallback callback){
+		return GetGiftTypeList(roomType.ordinal(),  callback);
+	}
+	static protected native long GetGiftTypeList(int roomType, OnGetGiftTypeListCallback callback);
+
+
 }

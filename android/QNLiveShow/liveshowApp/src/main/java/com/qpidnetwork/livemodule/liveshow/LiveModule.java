@@ -24,6 +24,7 @@ import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.livechat.LiveChatManager;
 import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livemessage.LMClient;
 import com.qpidnetwork.livemodule.livemessage.LMManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.DomainManager;
@@ -50,6 +51,7 @@ import com.qpidnetwork.qnbridgemodule.interfaces.IModule;
 import com.qpidnetwork.qnbridgemodule.interfaces.IModuleListener;
 import com.qpidnetwork.qnbridgemodule.interfaces.OnGetTokenCallback;
 import com.qpidnetwork.qnbridgemodule.interfaces.OnGetVerifyCodeCallback;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.websitemanager.WebSiteConfigManager;
@@ -144,10 +146,10 @@ public class LiveModule implements IModule, IAuthorizationListener {
 
         // 初始化GA管理器
         if (mIsDebug) {
-            AnalyticsManager.newInstance().init(context, R.xml.live_tracker_demo);
+            AnalyticsManager.newInstance().init(context, R.xml.live_tracker_demo,true);
         }
         else {
-            AnalyticsManager.newInstance().init(context, R.xml.live_tracker);
+            AnalyticsManager.newInstance().init(context, R.xml.live_tracker,false);
         }
 
         //初始化LoginManager单例
@@ -176,6 +178,7 @@ public class LiveModule implements IModule, IAuthorizationListener {
         //http请求工具类
         LiveRequestOperator.newInstance(context);
         LiveDomainRequestOperator.newInstance(context);
+        LivechatRequestOperator.newInstance(context);
 
         //初始化同步配置
         SynConfigerManager.newInstance(context);
@@ -224,11 +227,16 @@ public class LiveModule implements IModule, IAuthorizationListener {
             LiveRequestOperator.getInstance().GetAuthToken(webSiteBean.getSiteId(), new OnRequestSidCallback() {
                 @Override
                 public void onRequestSid(boolean isSuccess, int errCode, String errMsg, String memberId, String sid) {
-                    callback.onGetToken(sid);
+                    String userId = "";
+                    LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+                    if(loginItem != null && !TextUtils.isEmpty(loginItem.userId)){
+                        userId = loginItem.userId;
+                    }
+                    callback.onGetToken(sid, userId);
                 }
             });
         }else{
-            callback.onGetToken("");
+            callback.onGetToken("", "");
         }
     }
 
@@ -330,7 +338,7 @@ public class LiveModule implements IModule, IAuthorizationListener {
         String moduleName = URL2ActivityManager.getInstance().getModuleNameByUrl(url);
         AnalyticsManager instance = AnalyticsManager.getsInstance();
         if(!TextUtils.isEmpty(moduleName) && (instance != null)){
-            if(moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_LIVE_ROOM)){
+            if(moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_ROOM)){
                 if(!TextUtils.isEmpty(URL2ActivityManager.getInstance().getShowLiveIdByUrl(url))){
                     //节目push点击
                     instance.ReportEvent(mApplication.getResources().getString(R.string.Live_Calendar_Category),
@@ -347,18 +355,18 @@ public class LiveModule implements IModule, IAuthorizationListener {
                             mApplication.getResources().getString(R.string.Live_Global_Action_ClickBookingStart),
                             mApplication.getResources().getString(R.string.Live_Global_Label_ClickBookingStart));
                 }
-            }else if(moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_CHAT_LIST)
-                    || moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_CHAT)){
+            }else if(moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_CHAT_LIST)
+                    || moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_CHAT)){
                 //push点击打开私信
                 instance.ReportEvent(mApplication.getResources().getString(R.string.Live_Message_Category),
                         mApplication.getResources().getString(R.string.Live_Message_Action_Push_Click),
                         mApplication.getResources().getString(R.string.Live_Message_Label_Push_Click));
-            }else if(moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_MAIL_LIST)){
+            }else if(moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_MAIL_LIST)){
                 //push点击打开mail
                 instance.ReportEvent(mApplication.getResources().getString(R.string.Live_Mail_Category),
                         mApplication.getResources().getString(R.string.Live_Mail_Action_Push_Click),
                         mApplication.getResources().getString(R.string.Live_Mail_Label_Push_Click));
-            }else if(moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_LIVE_CHAT)){
+            }else if(moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_CHAT)){
                 //push点击打开Livechat
                 instance.ReportEvent(mApplication.getResources().getString(R.string.Live_LiveChat_Category),
                         mApplication.getResources().getString(R.string.Live_LiveChat_Action_PushClick),
@@ -509,7 +517,7 @@ public class LiveModule implements IModule, IAuthorizationListener {
         if(orderTypeIndex == LSOrderType.stamp.ordinal()){
             LiveBuyStampActivity.lunchActivity(context, orderTypeIndex, params.clickFrom, params.number);
         }else{
-            LiveBuyCreditActivity.lunchActivity(context, orderTypeIndex, params.clickFrom, params.number);
+            LiveBuyCreditActivity.lunchActivity(context, orderTypeIndex, params.clickFrom, params.number, params.orderNo);
         }
     }
 

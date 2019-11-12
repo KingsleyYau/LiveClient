@@ -220,6 +220,7 @@ public class AdvancePngGiftManager {
             sdv_pngAnim.removeCallbacks(pngAnimRunnable);
             sdv_pngAnim.removeCallbacks(pngAnimEndRunnable);
             sdv_pngAnim.removeCallbacks(animAfterPngRunnable);
+            sdv_pngAnim.destroyDrawingCache();
         }
         pngAnimRunnable = null;
         pngAnimEndRunnable = null;

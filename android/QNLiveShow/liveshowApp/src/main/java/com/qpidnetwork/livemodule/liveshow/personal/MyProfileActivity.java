@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -15,14 +16,13 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
-import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.LiveDomainRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetMyProfileCallback;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.httprequest.item.LSProfileItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.adapter.BaseRecyclerViewAdapter;
@@ -34,16 +34,15 @@ import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentPagerAdapter4Top;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
-import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.FrescoLoadUtil;
-import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.UserInfoUtil;
 import com.qpidnetwork.livemodule.view.ProfileItemView;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
@@ -54,7 +53,8 @@ import java.util.List;
  * 个人中心——直播
  * 2018/09/18 Hardy
  */
-public class MyProfileActivity extends BaseFragmentActivity implements IAuthorizationListener {
+//public class MyProfileActivity extends BaseFragmentActivity implements IAuthorizationListener {
+public class MyProfileActivity extends BaseUserIconUploadActivity implements IAuthorizationListener {
 
     private static final int GET_FOLLOWING_CALLBACK = 1;    // 获取个人关注列表
     private static final int GET_PROFILE_CALLBACK = 2;      // 获取个人信息
@@ -62,12 +62,13 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
     private SimpleDraweeView mIvUserIcon;
     private TextView mTvUserName;
     private TextView mTvUserAge;
+    private ImageButton mIvIconUpload;
 
     private RecyclerView mRvFollowView;
     private MyProfileFollowsAdapter mFollowsAdapter;
 
-
     private ProfileItemView mItemFollowView;
+    private ProfileItemView mItemProfileDetails;
     private ProfileItemView mItemCBView;
     private ProfileItemView mItemLVView;
     private ProfileItemView mItemSettingsView;
@@ -119,6 +120,9 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
         mIvUserIcon = findViewById(R.id.my_profile_iv_userIcon);
         mIvUserIcon.setOnClickListener(this);
 
+        mIvIconUpload = findViewById(R.id.my_profile_iv_upload);
+        mIvIconUpload.setOnClickListener(this);
+
         mTvUserName = (TextView) findViewById(R.id.my_profile_tv_userName);
         mTvUserAge = (TextView) findViewById(R.id.my_profile_tv_userAge);
 
@@ -161,11 +165,6 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
                 super.onChanged();
 
                 if (mFollowsAdapter.getItemCount() > 0 && mRvFollowView.getVisibility() == View.GONE) {
-//                    mRvFollowView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-//                    int height = mRvFollowView.getMeasuredHeight();
-//                    Log.logD("info", "height:----->" + height);
-//                    mRvFollowView.setTranslationY(-height);
-
                     mRvFollowView.setAlpha(0);
                     mRvFollowView.setVisibility(View.VISIBLE);
                     mRvFollowView.animate().alpha(1).setDuration(800).start();
@@ -177,19 +176,25 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
         // 信用点
         mItemCBView = (ProfileItemView) findViewById(R.id.my_profile_ll_Credit_Balance);
         mItemCBView.setOnClickListener(this);
-        mItemCBView.setTextLeft("Credit Balance");
+        mItemCBView.setTextLeft(R.string.person_center_credit_balance);
         mItemCBView.setBottomLineLeftMarginDefault();
 
         // 试用卷
         mItemLVView = (ProfileItemView) findViewById(R.id.my_profile_ll_Live_Vouchers);
         mItemLVView.setOnClickListener(this);
-        mItemLVView.setTextLeft("Live Vouchers");
+        mItemLVView.setTextLeft(R.string.person_center_my_vouchers);
 
         // 设置
         mItemSettingsView = (ProfileItemView) findViewById(R.id.my_profile_ll_setting);
         mItemSettingsView.setOnClickListener(this);
-        mItemSettingsView.setTextLeft("Settings");
+        mItemSettingsView.setTextLeft(R.string.person_center_settings);
         mItemSettingsView.setRightIcon2Arrow();
+
+        // ProfileDetails
+        mItemProfileDetails = (ProfileItemView) findViewById(R.id.my_profile_ll_Profile_Details);
+        mItemProfileDetails.setOnClickListener(this);
+        mItemProfileDetails.setTextLeft(R.string.person_center_profile_detail);
+        mItemProfileDetails.setRightIcon2Arrow();
     }
 
     /**
@@ -197,9 +202,21 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
      */
     private void initData() {
         // load from local
-        setUserInfoData();
-        setTextMoneyData(LiveRoomCreditRebateManager.getInstance().getCredit(),
-                LiveRoomCreditRebateManager.getInstance().getCoupon());
+        setUserInfoLocalData();
+
+        //初始化信息
+        double credits = LiveRoomCreditRebateManager.getInstance().getCredit();
+        if(credits > 0){
+            mItemCBView.setTextRight(ApplicationSettingUtil.formatCoinValue(credits));
+        }else{
+            mItemCBView.setTextRight("-");
+        }
+        int vouchers = LiveRoomCreditRebateManager.getInstance().getCoupon() + LiveRoomCreditRebateManager.getInstance().getLiveChatCount();
+        if(vouchers > 0){
+            mItemLVView.setTextRight(vouchers + "");
+        }else{
+            mItemLVView.setTextRight("-");
+        }
 
         // load from net
         getMyProfile();
@@ -230,7 +247,6 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
 
             case GET_PROFILE_CALLBACK:
                 HttpRespObject responseProfile = (HttpRespObject) msg.obj;
-                boolean isGetProfileSuccess = false;
 
                 if (responseProfile.isSuccess) {
                     LSProfileItem mProfileItem = (LSProfileItem) responseProfile.data;
@@ -238,17 +254,12 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
                         // 缓存数据
                         MyProfilePerfenceLive.SaveProfileItem(mContext, mProfileItem);
 
+                        // 设置父类的数据缓存
+                        setLsProfileItem(mProfileItem);
+                        mIvIconUpload.setVisibility(mProfileItem.showUpload() ? View.VISIBLE : View.GONE);
+                        setIconUrl(mProfileItem);
+                        mTvUserAge.setText(mProfileItem.manid);
                         mTvUserName.setText(UserInfoUtil.getUserFullName(mProfileItem.firstname, mProfileItem.lastname));
-
-                        isGetProfileSuccess = true;
-                    }
-                }
-
-                // 如果获取不到，则取 firstName 显示
-                if (!isGetProfileSuccess) {
-                    LoginItem loginItem = LoginManager.getInstance().getLoginItem();
-                    if (loginItem != null) {
-                        mTvUserName.setText(loginItem.nickName);
                     }
                 }
                 break;
@@ -259,6 +270,24 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
         }
     }
 
+
+    //===================== upload  icon    =========================================
+    @Override
+    protected void onUploadIconSuccess() {
+        // 暂时不做任何处理
+    }
+
+    @Override
+    protected void onLoadUserInfo() {
+        getMyProfile();
+    }
+
+    @Override
+    protected boolean isRegisterGetUserInfoBroadcast() {
+        return true;
+    }
+    //===================== upload  icon    =========================================
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -266,31 +295,22 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
         int id = v.getId();
         if (id == R.id.my_profile_buttonCancel) {
             finish();
-        } else if (id == R.id.my_profile_head_ll) {
+        } else if (id == R.id.my_profile_head_ll || id == R.id.my_profile_ll_Profile_Details) {
             // 2018/9/19 跳转到 my profile 资料页
             MyProfileDetailNewLiveActivity.startAct(this);
 
         } else if (id == R.id.my_profile_iv_userIcon) {
-            // TODO: 2018/9/19 头像大图,通知 QN 打开大图
-//        if (mProfileItem == null) return;
-//
-////		if ( mProfileItem.showUpload() || !mProfileItem.showPhoto() ){
-////			onClickImageViewTakePhoto(view);
-////			return;
-////		}
-//
-//        Intent intent = new Intent(this, MyProfilePhotoActivity.class);
-//        if (mProfileItem != null) {
-//            intent.putExtra("profile", mProfileItem);
-////			intent.putExtra(MyProfilePhotoActivity.PHOTO_URL, mProfileItem.photoURL);
-////			intent.putExtra(MyProfilePhotoActivity.TIPS, "")
-//        }
-//
-//        startActivity(intent);
+            // 2018/9/19 头像大图,通知 QN 打开大图
+            openIconAct();
+
+        } else if (id == R.id.my_profile_iv_upload) {
+
+            //  2019/8/13 打开图片选择弹窗
+            showIconUploadDialog();
+
         } else if (id == R.id.my_profile_ll_my_follow) {
             // 2018/9/19 点击my follows列表回到首页并将标签定位至Follow
 
-//            MainFragmentActivity.launchActivityWithListType(mContext, 1);
             MainFragmentActivity.launchActivityWithListType(mContext, MainFragmentPagerAdapter4Top.TABS.TAB_INDEX_FOLLOW);
             finish();
 
@@ -298,7 +318,7 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
             // 2018/9/19  credit blance点击跳转至买点页面，android买点进入信用点订单B
 
             //edit by Jagger 2018-9-21 使用URL方式跳转
-            String urlAddCredit = URL2ActivityManager.createAddCreditUrl("", "B30", "");
+            String urlAddCredit = LiveUrlBuilder.createAddCreditUrl("", "B30", "");
             new AppUrlHandler(mContext).urlHandle(urlAddCredit);
 
         } else if (id == R.id.my_profile_ll_Live_Vouchers) {
@@ -314,27 +334,45 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
 
     }
 
-    private void setUserInfoData() {
+    private void setUserInfoLocalData() {
         LoginItem loginItem = LoginManager.getInstance().getLoginItem();
         if (loginItem != null) {
-//            PicassoLoadUtil.loadUrl(mIvUserIcon, loginItem.photoUrl, R.drawable.ic_default_photo_man);
-            //edit by Jagger 2018-11-9 压缩图片,以免网络慢显示时会黑
-//            Picasso.with(mContext).load(loginItem.photoUrl)
-//                    .resize(DisplayUtil.dip2px(mContext, 100),DisplayUtil.dip2px(mContext, 100))  //imageView是96DP,压缩时比它大一点点
-//                    .centerCrop()
-//                    .error(R.drawable.ic_default_photo_man)
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                    .noPlaceholder()
-//                    .into(mIvUserIcon);
-            int wh = DisplayUtil.dip2px(mContext, 100);
-//            PicassoLoadUtil.loadUrlNoMCache(mIvUserIcon, loginItem.photoUrl, R.drawable.ic_default_photo_man, wh, wh);
-            FrescoLoadUtil.loadUrl(mContext, mIvUserIcon, loginItem.photoUrl, wh,
+            setIconUrl(loginItem.photoUrl);
+
+            mTvUserName.setText(loginItem.nickName);
+            mTvUserAge.setText(loginItem.userId);
+        }
+    }
+
+    private void setIconUrl(String iconUrl) {
+        if (TextUtils.isEmpty(iconUrl)) {
+            return;
+        }
+
+        int wh = DisplayUtil.dip2px(mContext, 100);
+
+        /*
+            2019/8/20 Hardy
+            由于更换头像后，接口返回 url 地址是不变的，防止加载图片读取缓存，
+            导致新图显示不成功，故这里清除该图片的内存缓存和磁盘缓存。
+         */
+        FrescoLoadUtil.cleanUrlCache(iconUrl);
+
+        FrescoLoadUtil.loadUrl(mContext, mIvUserIcon, iconUrl, wh,
+                R.drawable.ic_default_photo_man, true,
+                getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
+                ContextCompat.getColor(mContext, R.color.white));
+    }
+
+    private void setIconUrl(LSProfileItem item) {
+        if (item == null || !item.showPhoto()) {
+            // 加载默认资源图
+            FrescoLoadUtil.loadRes(mContext, mIvUserIcon, R.drawable.ic_default_photo_man,
                     R.drawable.ic_default_photo_man, true,
                     getResources().getDimensionPixelSize(R.dimen.live_size_4dp),
                     ContextCompat.getColor(mContext, R.color.white));
-
-//            mTvUserName.setText(loginItem.nickName);  // 由接口获取全名
-            mTvUserAge.setText(loginItem.userId);
+        } else {
+            setIconUrl(item.photoURL);
         }
     }
 
@@ -370,16 +408,17 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
     private void loadCredits() {
         LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance, final int coupon) {
-                if (isSuccess) {
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final LSLeftCreditItem creditItem) {
+                if (isSuccess && creditItem != null) {
                     // 更新本地信用点
-                    LiveRoomCreditRebateManager.getInstance().setCredit(balance);
-                    LiveRoomCreditRebateManager.getInstance().setCoupon(coupon);
+                    LiveRoomCreditRebateManager.getInstance().setCredit(creditItem.balance);
+                    LiveRoomCreditRebateManager.getInstance().setCoupon(creditItem.coupon);
+                    LiveRoomCreditRebateManager.getInstance().setLiveChatCount(creditItem.liveChatCount);
 
                     runOnUiThread(new Thread() {
                         @Override
                         public void run() {
-                            setTextMoneyData(balance, coupon);
+                            setTextMoneyData(creditItem.balance, creditItem.coupon + creditItem.liveChatCount);
                         }
                     });
                 }
@@ -392,16 +431,12 @@ public class MyProfileActivity extends BaseFragmentActivity implements IAuthoriz
      */
     private void queryFollowingList() {
         int start = 0;
-//        if(isLoadMore){
-//            start = mFollowingList.size();
-//        }
         LiveRequestOperator.getInstance().GetFollowingLiveList(start, 5, new OnGetFollowingListCallback() {
             @Override
             public void onGetFollowingList(boolean isSuccess, int errCode, String errMsg, FollowingListItem[] followingList) {
                 HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, followingList);
                 Message msg = Message.obtain();
                 msg.what = GET_FOLLOWING_CALLBACK;
-//                msg.arg1 = isLoadMore?1:0;
                 msg.obj = response;
                 sendUiMessage(msg);
             }

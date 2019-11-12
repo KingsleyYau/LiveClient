@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -26,7 +28,9 @@ public class LiveGiftItemView extends LinearLayout{
 
     private Context mContext;
     //控件
+    private View ll_giftItemParentView;
     private LinearLayout mLinearLayoutChildView;
+    private LinearLayout ll_bg;
     private RelativeLayout mLinearLayoutNum;
 
     private ImageView mImgx, mImg0, mImg1, mImg2, mImg3;
@@ -41,6 +45,7 @@ public class LiveGiftItemView extends LinearLayout{
     private PlayState mPlayState;
     private AnimatorSet mAnimatorSet;
     private boolean isDetachWindow = false; //是否已删除
+    private int imgXResId = -1, img0ResId = -1, img1ResId = -1, img2ResId = -1, img3ResId = -1, img4ResId = -1, img5ResId = -1, img6ResId = -1, img7ResId = -1, img8ResId = -1, img9ResId = -1; //外部自定义连击数字图片资源ID
 
     enum PlayState{
         preparing,
@@ -64,19 +69,15 @@ public class LiveGiftItemView extends LinearLayout{
         init(context);
     }
 
-    private RelativeLayout rl_giftAnimContent;
-    private ImageView iv_giftAnimBg;
 
     private void init(Context context){
         mContext = context;
         mPlayState = PlayState.preparing;
-
         // 加载布局
         LayoutInflater.from(context).inflate(R.layout.layout_livegiftview, this);
-        rl_giftAnimContent = (RelativeLayout)findViewById(R.id.rl_giftAnimContent);
-        iv_giftAnimBg = (ImageView)findViewById(R.id.iv_giftAnimBg);
-
         mLinearLayoutChildView = (LinearLayout)findViewById(R.id.childView);
+        ll_bg = findViewById(R.id.ll_bg);
+        ll_giftItemParentView = findViewById(R.id.ll_giftItemParentView);
         mLinearLayoutNum = (RelativeLayout)findViewById(R.id.llayout_num);
 
         //数字图片
@@ -92,9 +93,105 @@ public class LiveGiftItemView extends LinearLayout{
         mImgNums.add(mImg3);
     }
 
+    //------------------- 外部使用方法 start -------------------
     public void setLiveGift(LiveGift liveGift){
         mLiveGift = liveGift;
     }
+
+    public void setChildView(View view){
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_height));
+        mLinearLayoutChildView.addView(view,lp);
+    }
+
+    /**
+     * 由于外部定义礼物布局和礼物X数字动画都在礼物背景之上，所以背景不能为外部定义礼物布局，要另外设置
+     * @param background
+     */
+    public void setBg(Drawable background){
+        ll_bg.setBackgroundDrawable(background);
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （X）
+     * @param imgXResId
+     */
+    public void setImgXResId(int imgXResId) {
+        this.imgXResId = imgXResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （0）
+     */
+    public void setImg0ResId(int img0ResId) {
+        this.img0ResId = img0ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （1）
+     */
+    public void setImg1ResId(int img1ResId) {
+        this.img1ResId = img1ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （2）
+     */
+    public void setImg2ResId(int img2ResId) {
+        this.img2ResId = img2ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （3）
+     */
+    public void setImg3ResId(int img3ResId) {
+        this.img3ResId = img3ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （4）
+     */
+    public void setImg4ResId(int img4ResId) {
+        this.img4ResId = img4ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （5）
+     */
+    public void setImg5ResId(int img5ResId) {
+        this.img5ResId = img5ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （6）
+     */
+    public void setImg6ResId(int img6ResId) {
+        this.img6ResId = img6ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （7）
+     */
+    public void setImg7ResId(int img7ResId) {
+        this.img7ResId = img7ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （8）
+     */
+    public void setImg8ResId(int img8ResId) {
+        this.img8ResId = img8ResId;
+    }
+
+    /**
+     * 自定义连击数字图片资源ID （9）
+     */
+    public void setImg9ResId(int img9ResId) {
+        this.img9ResId = img9ResId;
+    }
+
+    //------------------- 外部使用方法 end -------------------
 
     public LiveGift getLiveGift() {
         return mLiveGift;
@@ -106,20 +203,6 @@ public class LiveGiftItemView extends LinearLayout{
 
     public void setOnPlayListener(onPlayListener mOnPlayListener) {
         this.mOnPlayListener = mOnPlayListener;
-    }
-
-    public void setChildView(View view,boolean isGiftAnimShowedInHangOutRoom){
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                isGiftAnimShowedInHangOutRoom ? LayoutParams.WRAP_CONTENT :
-                        mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_width),
-                mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_height));
-        mLinearLayoutChildView.addView(view,lp);
-        FrameLayout.LayoutParams giftAnimContentLP = (FrameLayout.LayoutParams) rl_giftAnimContent.getLayoutParams();
-        FrameLayout.LayoutParams giftAnimBgLP = (FrameLayout.LayoutParams) iv_giftAnimBg.getLayoutParams();
-        giftAnimBgLP.width = giftAnimContentLP.width;
-        giftAnimBgLP.height = giftAnimContentLP.height;
-        iv_giftAnimBg.setImageDrawable(mContext.getResources().getDrawable(
-                isGiftAnimShowedInHangOutRoom ? R.drawable.bg_liveroom_giftanim_hangout : R.drawable.bg_liveroom_giftanim_public));
     }
 
     /**
@@ -148,7 +231,12 @@ public class LiveGiftItemView extends LinearLayout{
         if(mShowNum <= mLiveGift.getRanges().get(mLiveGift.getRanges().size() - 1).getRangeEnd()){
             String number = String.valueOf(mShowNum);
             //x
-            mImgx.setImageResource(R.drawable.ic_live_gift_anim_number_x);
+            if(imgXResId != -1){
+                mImgx.setImageResource(imgXResId);
+            }else{
+                mImgx.setImageResource(R.drawable.ic_live_gift_anim_number_x);
+            }
+
 
             //将对应的数字放入对应的ImageView中
             for (int i = 0; i < number.length(); i++) {
@@ -179,34 +267,74 @@ public class LiveGiftItemView extends LinearLayout{
         int imageResId = -1;
         switch (number) {
             case '0':
-                imageResId = R.drawable.ic_live_gift_anim_number_0;
+                if(img0ResId != -1){
+                    imageResId = img0ResId;
+                }else{
+                    imageResId = R.drawable.ic_live_gift_anim_number_0;
+                }
                 break;
             case '1':
-                imageResId = R.drawable.ic_live_gift_anim_number_1;
+                if(img1ResId != -1){
+                    imageResId = img1ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_1;
+                }
                 break;
             case '2':
-                imageResId = R.drawable.ic_live_gift_anim_number_2;
+                if(img2ResId != -1){
+                    imageResId = img2ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_2;
+                }
                 break;
             case '3':
-                imageResId = R.drawable.ic_live_gift_anim_number_3;
+                if(img3ResId != -1){
+                    imageResId = img3ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_3;
+                }
                 break;
             case '4':
-                imageResId = R.drawable.ic_live_gift_anim_number_4;
+                if(img4ResId != -1){
+                    imageResId = img4ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_4;
+                }
                 break;
             case '5':
-                imageResId = R.drawable.ic_live_gift_anim_number_5;
+                if(img5ResId != -1){
+                    imageResId = img5ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_5;
+                }
                 break;
             case '6':
-                imageResId = R.drawable.ic_live_gift_anim_number_6;
+                if(img6ResId != -1){
+                    imageResId = img6ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_6;
+                }
                 break;
             case '7':
-                imageResId = R.drawable.ic_live_gift_anim_number_7;
+                if(img7ResId != -1){
+                    imageResId = img7ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_7;
+                }
                 break;
             case '8':
-                imageResId = R.drawable.ic_live_gift_anim_number_8;
+                if(img8ResId != -1){
+                    imageResId = img8ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_8;
+                }
                 break;
             case '9':
-                imageResId = R.drawable.ic_live_gift_anim_number_9;
+                if(img9ResId != -1){
+                    imageResId = img9ResId;
+                }else {
+                    imageResId = R.drawable.ic_live_gift_anim_number_9;
+                }
                 break;
         }
         return imageResId;
@@ -317,6 +445,10 @@ public class LiveGiftItemView extends LinearLayout{
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        //可以结束了
+        if(mOnPlayListener != null){
+            mOnPlayListener.onPlayEnd(mLocalInLiveGiftView);
+        }
         isDetachWindow = true;      //标注已被删除不可见
         mOnPlayListener = null;
         if(mAnimatorSet != null){

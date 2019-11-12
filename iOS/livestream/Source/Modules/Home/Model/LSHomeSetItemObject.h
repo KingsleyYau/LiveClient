@@ -12,14 +12,20 @@ typedef enum SettingFirstType {
     SettingFirstTypeMail = 1,
     SettingFirstTypeSayHi = 2,
     SettingFirstTypeGreeting = 3,
-    SettingFirstTypeHangout = 4,
+    SettingFirstTypeStroe = 4,
 } SettingFirstType;
 
 typedef enum SettingSecondType {
-    SettingSecondTypeShow = 0,
-    SettingSecondTypeBooks = 1,
-    SettingSecondTypeBackpack = 2,
+    SettingSecondTypeHangout = 0,
+    SettingSecondTypeMyContacts = 1,
 } SettingSecondType;
+
+typedef enum SettingThirdType {
+    SettingThirdTypeShow = 0,
+    SettingThirdTypeBooks = 1,
+    SettingThirdTypeBackpack = 2,
+} SettingThirdType;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LSHomeSetItemObject : NSObject
@@ -32,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) SettingFirstType firstType;
 /** section2 */
 @property (nonatomic, assign) SettingSecondType secondType;
+
+@property (nonatomic, assign) SettingThirdType thirdType;
 @end
 
 NS_ASSUME_NONNULL_END

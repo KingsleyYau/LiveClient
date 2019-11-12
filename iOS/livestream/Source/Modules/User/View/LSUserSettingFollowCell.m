@@ -85,10 +85,23 @@
         
         if (item.roomType != HTTPROOMTYPE_NOLIVEROOM) {
             if (item.onlineStatus == ONLINE_STATUS_LIVE) {
-                UIImageView * onLiveView = [[UIImageView alloc]initWithFrame:CGRectMake(headView.tx_width/2 - 15, headView.tx_height - 18, 29, 18)];
-                [headView addSubview:onLiveView];
                 
-                NSArray * images = @[[UIImage imageNamed:@"LS_Setting_Follow_Inlive_0"],[UIImage imageNamed:@"LS_Setting_Follow_Inlive_1"],[UIImage imageNamed:@"LS_Setting_Follow_Inlive_2"]];
+                UIView * onlineView = [[UIView alloc]initWithFrame:CGRectMake(w/2 - 48/2, headView.tx_height - 9, 48, 15)];
+                onlineView.backgroundColor = [UIColor redColor];
+                onlineView.layer.cornerRadius = onlineView.tx_height/2;
+                onlineView.layer.masksToBounds = YES;
+                [headView addSubview:onlineView];
+                
+                UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(21, 0, 26, 15)];
+                label.text = @"Live";
+                label.font = [UIFont boldSystemFontOfSize:12];
+                label.textColor = [UIColor whiteColor];
+                [onlineView addSubview:label];
+                
+                UIImageView * onLiveView = [[UIImageView alloc]initWithFrame:CGRectMake(8, 2, 10, 10)];
+                [onlineView addSubview:onLiveView];
+                
+                NSArray * images = @[[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Live1"],[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Live2"],[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Live3"]];
                 
                 onLiveView.animationImages = images;
                 onLiveView.animationRepeatCount = 0;

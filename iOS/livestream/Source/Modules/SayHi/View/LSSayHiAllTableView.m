@@ -73,7 +73,7 @@
         cell.freeIcon.hidden = item.isFree?NO:YES;
         
         NSDate *lastTime = [NSDate dateWithTimeIntervalSince1970:item.sendTime];
-        cell.dateTime.text = [[[LSDateTool alloc] init] showSayHiListTimeTextOfDate:lastTime];
+        cell.dateTime.text = [LSDateTool showSayHiListTimeTextOfDate:lastTime];
         
         [cell cellUpdateIsHasRead:item.unreadNum];
         

@@ -123,29 +123,7 @@
 
 - (void)setNeedsNavigationBackground:(CGFloat)alpha {
     // 导航栏背景透明度设置
-
-    NSArray *views = [self.navigationController.navigationBar subviews];
-    UIView *barBackgroundView = [views objectAtIndex:0];
-    UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
-    BOOL result = self.navigationController.navigationBar.isTranslucent;
-    NSLog(@"navigationBar.isTranslucent %@  barBackgroundView %@", BOOL2SUCCESS(result), [barBackgroundView subviews]);
-    if (result) {
-        if (backgroundImageView != nil && backgroundImageView.image != nil) {
-            barBackgroundView.alpha = alpha;
-        } else {
-            NSArray *subViews = [barBackgroundView subviews];
-            if (subViews.count > 1) {
-                UIView *backgroundEffectView = [subViews objectAtIndex:1];
-                if (backgroundEffectView != nil) {
-                    backgroundEffectView.alpha = alpha;
-                }
-            } else {
-                barBackgroundView.alpha = alpha;
-            }
-        }
-    } else {
-        barBackgroundView.alpha = alpha;
-    }
+    [super setNavigationBackgroundAlpha:alpha];
     self.navTitleLabel.alpha = alpha;
 }
 

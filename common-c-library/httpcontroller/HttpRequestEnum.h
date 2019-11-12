@@ -35,6 +35,7 @@
 #define HTTP_STRING_ERROR_INSERTINFODESCLOG     "MBCE12006"
 #define HTTP_STRING_ERROR_UPDATEINFODESCLOGSETGROUPID             "MBCE12007"
 #define HTTP_STRING_ERROR_APPEXISTLOGS             "MBCE22001"       // (APP安装记录已存在。)
+#define HTTP_STRING_ERROR_TOKENOUTTIME             "MBCE64005"       // (Token过期)
 
 #define PROFILE_WEIGHT_BEGINVALUE    5
 #define PROFILE_HEIGHT_BEGINVALUE    12
@@ -167,6 +168,38 @@ typedef enum {
     HTTP_LCC_ERR_SAYHI_RESPONSE_NO_EXIST = 17410,               // sayHi回复不存在（17410）（调用14.8.获取SayHi回复详情）
     
     HTTP_LCC_ERR_SAYHI_READ_NO_CREDIT = 17411,                  // sayHi购买阅读信用点或邮票不足（17411）（调用14.8.获取SayHi回复详情）
+    HTTP_LCC_ERR_INVITATION_IS_INVLID = 10057,                  // 主播发送私密邀请ID无效（10057）（调用4.7.观众处理立即私密邀请）
+    HTTP_LCC_ERR_INVITATION_HAS_EXPIRED = 10058,                // 主播发送私密邀请过期（10058）（调用4.7.观众处理立即私密邀请）
+    HTTP_LCC_ERR_INVITATION_HAS_CANCELED = 10070,               // 主播发送私密邀请被取消了（10070）（调用4.7.观众处理立即私密邀请）
+    HTTP_LCC_ERR_SHOW_HAS_ENDED = 13017,                        // 节目已经结束了（13017）（调用9.5.获取可进入的节目信息）
+    
+    HTTP_LCC_ERR_SHOW_HAS_CANCELLED = 13024,                    // 节目已经取消了（13024）（调用9.5.获取可进入的节目信息）
+    HTTP_LCC_ERR_ANCHOR_NOCOME_SHOW_HAS_CLOSE = 13010,          // 主播没有来关闭节目（13010）（调用9.5.获取可进入的节目信息）
+    HTTP_LCC_ERR_NO_BUY_SHOW_HAS_CANCELLED = 13023,             // 对于没买票用户节目取消了（13023）（调用9.5.获取可进入的节目信息）
+    HTTP_LCC_ERR_HANGOUT_EXIST_COUNTDOWN_PRIVITEROOM = 10114,   // 多人视频流程 主播存在开始倒数私密直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10114)）
+    HTTP_LCC_ERR_HANGOUT_EXIST_COUNTDOWN_HANGOUTROOM = 10115,   // 多人视频流程 主播存在开始倒数多人视频直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10115)）
+    
+    HTTP_LCC_ERR_HANGOUT_EXIST_FOUR_MIN_SHOW = 10116,           // 多人视频流程 主播存在4分钟内开始的预约（Sorry, the broadcaster is busy at the moment. Please try again later.(10116)）
+    HTTP_LCC_ERR_KNOCK_EXIST_ROOM = 10136,                      // 男士同意敲门请求，主播存在在线的直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10136)）
+    HTTP_LCC_ERR_INVITE_FAIL_SHOWING = 13020,                   // 发送立即邀请失败 主播正在节目中（Sorry, the broadcaster is busy at the moment. Please try again later.(13020)）
+    HTTP_LCC_ERR_INVITE_FAIL_BUSY = 13021,                      // 发送立即邀请 用户收到主播繁忙通知（Sorry, the broadcaster is busy at the moment. Please try again later.(13021)）
+    HTTP_LCC_ERR_SEND_RECOMMEND_HAS_SHOWING = 16318,            // 主播发送推荐好友请求：好友4分钟后有节目开播（Sorry, the broadcaster is busy at the moment. Please try again later.(16318)）
+    
+    HTTP_LCC_ERR_SEND_RECOMMEND_EXIT_HANGOUTROOM = 16320,       // 主播发送推荐好友请求：好友跟其他男士hangout中（Sorry, the broadcaster is busy at the moment. Please try again later.(16320)）
+    /*鲜花礼品*/
+    HTTP_LCC_ERR_MAN_NO_FLOWERGIFT_PRIV = 21111,                // 男士无鲜花礼品权限（21111）Sorry, we can not process your request at the moment. Please try again later.（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
+    HTTP_LCC_ERR_EMPTY_CART = 22112,                            // 购物车为空（22112）Empty cart.（ 用于15.11.Checkout商品 15.12.生成订单）
+    HTTP_LCC_ERR_FULL_CART = 22113,                             // 当前购物车内准备赠送给该主播的礼品种类已满（达到10），不可再添加（弹层引导如下，与上述不同，该处按钮为Later/Checkout） （22113）Your cart is full. Please proceed to checkout before adding more!（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+    HTTP_LCC_ERR_NO_EXIST_CART = 22114,                         // 购物车商品不存在（22114）'Sorry, this item does not exist. Please remove it or try again later.（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+    
+    HTTP_LCC_ERR_NO_SUPPOSE_DELIVERY = 22115,                   // 主播国家不配送（22115）Sorry, this item is out of stock in the broadcaster's country.（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+    HTTP_LCC_ERR_NO_AVAILABLE_CART = 22116,                     // 购物车的商品不可用（22116）'Sorry, some of the items you chose have been removed from the list. Please choose other items.'（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.11.Checkout商品 15.12.生成订单）
+    HTTP_LCC_ERR_ONLY_GREETING_CARD = 22117,                    // 添加屬於賀卡的礼品，但當前主播購物車內無其他非賀卡礼品（22117）Please add a gift item to the cart before adding a greeting card!（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
+    HTTP_LCC_ERR_FLOWERGIFT_ANCHORID_INVALID = 22118,           // 主播不存在（22118）'ID invalid'（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
+    HTTP_LCC_ERR_NO_RECEPTION_FLOWERGIFT = 22119,               // 主播无接收礼物权限（22119）Sorry, this broadcaster does not wish to receive gifts, or gift delivery service does not cover this broadcaster's area.（用于15.8.添加购物车商品 15.9.修改购物车商品数量）
+    
+    HTTP_LCC_ERR_GREETINGMESSAGE_TOO_LONG = 22120,              // 订单备注太长（22120）Sorry, the greeting message can not exceed 250 characters.'（15.12.生成订单）
+    HTTP_LCC_ERR_ITEM_TOO_MUCH = 22121,                         // 当前购物车内准备赠送给该主播的该礼品数量已满（达到99），不可再添加（22121）ou can only add 1-99 items.（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
     
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
@@ -421,6 +454,14 @@ inline UseRoomType GetIntToUseRoomType(int value) {
     return USEROOMTYPE_BEGIN <= value && value <= USEROOMTYPE_END ? (UseRoomType)value : USEROOMTYPE_LIMITLESS;
 }
 
+// 试聊劵类型
+typedef enum {
+    VOUCHERTYPE_BROADCAST = 0,          // 直播试聊劵
+    VOUCHERTYPE_LIVECHAT = 1,           // livechat试聊劵
+    VOUCHERTYPE_BEGIN = VOUCHERTYPE_BROADCAST,
+    VOUCHERTYPE_END =VOUCHERTYPE_LIVECHAT
+}VoucherType;
+
 // 主播类型
 typedef enum {
     ANCHORTYPE_LIMITLESS = 0,                  // 不限
@@ -433,6 +474,24 @@ typedef enum {
 // int 转换 AnchorType
 inline AnchorType GetIntToAnchorType(int value) {
     return ANCHORTYPE_BEGIN <= value && value <= ANCHORTYPE_END ? (AnchorType)value : ANCHORTYPE_LIMITLESS;
+}
+
+inline AnchorType GetIntToLiveChatAnchorType(int value) {
+    AnchorType type = ANCHORTYPE_LIMITLESS;
+    switch (value) {
+        case 0:
+            type = ANCHORTYPE_LIMITLESS;
+            break;
+        case 1:
+            type = ANCHORTYPE_NOSEEANCHOR;
+            break;
+        case 2:
+            type = ANCHORTYPE_APPOINTANCHOR;
+            break;
+        default:
+            break;
+    }
+    return type;
 }
 
 typedef enum {
@@ -791,6 +850,7 @@ typedef enum {
 // 购买产品类型
 typedef enum {
     LSORDERTYPE_CREDIT = 0,    // 信用点
+    LSORDERTYPE_FLOWERGIFT = 1, // 鲜花礼品
     LSORDERTYPE_MONTHFEE = 5,  // 月费服务
     LSORDERTYPE_STAMP = 7,      // 邮票
     LSORDERTYPE_BEGIN = LSORDERTYPE_CREDIT,
@@ -922,6 +982,112 @@ inline int GetLSSayHiDetailTypeWithInt(LSSayHiDetailType type) {
             break;
     }
     return value;
+}
+
+// 付费类型
+typedef enum {
+    LSBUBBLINGINVITETYPE_UNKNOW = 0,
+    LSBUBBLINGINVITETYPE_ONEONONE = 1,
+    LSBUBBLINGINVITETYPE_HANGOUT = 2,
+    LSBUBBLINGINVITETYPE_LIVECHAT = 3,
+    LSBUBBLINGINVITETYPE_BEGIN = LSBUBBLINGINVITETYPE_UNKNOW,
+    LSBUBBLINGINVITETYPE_END = LSBUBBLINGINVITETYPE_LIVECHAT,
+}LSBubblingInviteType;
+
+// 广告类型
+typedef enum {
+    LSBANNERTYPE_UNKNOW = 0,
+    LSBANNERTYPE_NINE_SQUARED = 1,
+    LSBANNERTYPE_ALL_BROADCASTERS = 2,
+    LSBANNERTYPE_FEATURED_BROADCASTERS = 3,
+    LSBANNERTYPE_SAYHI = 4,
+    LSBANNERTYPE_GREETMAIL = 5,
+    LSBANNERTYPE_MAIL = 6,
+    LSBANNERTYPE_CHAT = 7,
+    LSBANNERTYPE_HANGOUT = 8,
+    LSBANNERTYPE_GIFTSFLOWERS = 9,
+    LSBANNERTYPE_BEGIN = LSBANNERTYPE_UNKNOW,
+    LSBANNERTYPE_END = LSBANNERTYPE_GIFTSFLOWERS,
+}LSBannerType;
+
+//场次类型
+typedef enum {
+    LSGIFTROOMTYPE_UNKNOW = 0,
+    LSGIFTROOMTYPE_PUBLIC = 1,
+    LSGIFTROOMTYPE_PRIVATE = 2,
+    LSGIFTROOMTYPE_BEGIN = LSGIFTROOMTYPE_UNKNOW,
+    LSGIFTROOMTYPE_END = LSGIFTROOMTYPE_PRIVATE,
+}LSGiftRoomType;
+
+//场次类型
+typedef enum {
+    LSPRICESHOWTYPE_WEEKDAY = 0,
+    LSPRICESHOWTYPE_HOLIDAY = 1,
+    LSPRICESHOWTYPE_DISCOUNT = 2,
+    LSPRICESHOWTYPE_BEGIN = LSPRICESHOWTYPE_WEEKDAY,
+    LSPRICESHOWTYPE_END = LSPRICESHOWTYPE_DISCOUNT,
+}LSPriceShowType;
+
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline LSPriceShowType GetLSPriceShowType(int value) {
+    return LSPRICESHOWTYPE_BEGIN <= value && value <= LSPRICESHOWTYPE_END ? (LSPriceShowType)value : LSPRICESHOWTYPE_WEEKDAY;
+}
+
+//场次类型
+typedef enum {
+    LSDELIVERYSTATUS_UNKNOW = 0,
+    LSDELIVERYSTATUS_PENDING = 1,
+    LSDELIVERYSTATUS_SHIPPED = 2,
+    LSDELIVERYSTATUS_DELIVERED = 3,
+    LSDELIVERYSTATUS_CANCELLED = 4,
+    LSDELIVERYSTATUS_BEGIN = LSDELIVERYSTATUS_UNKNOW,
+    LSDELIVERYSTATUS_END = LSDELIVERYSTATUS_CANCELLED,
+}LSDeliveryStatus;
+
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline LSDeliveryStatus GetLSDeliveryStatus(int value) {
+    return LSDELIVERYSTATUS_BEGIN <= value && value <= LSDELIVERYSTATUS_END ? (LSDeliveryStatus)value : LSDELIVERYSTATUS_UNKNOW;
+}
+
+// 广告URL打开方式
+typedef enum {
+    LSAD_OT_HIDE = 0,            // 隐藏打开
+    LSAD_OT_SYSTEMBROWER = 1,    // 系统浏览器打开
+    LSAD_OT_APPBROWER = 2,    // app内嵌浏览器打开
+    LSAD_OT_UNKNOW,            // 未知
+    LSAD_OT_BEGIN = LSAD_OT_HIDE,    // 有效起始值
+    LSAD_OT_END = LSAD_OT_UNKNOW,    // 有效结束值
+} LSAdvertOpenType;
+inline LSAdvertOpenType GetLSAdvertOpenTypWithInt(int value) {
+    return (LSAD_OT_BEGIN <= value && value < LSAD_OT_END ? (LSAdvertOpenType)value : LSAD_OT_UNKNOW);
+}
+
+typedef enum {
+    LSAD_SPACE_TYPE_UNKNOW = 0,
+    LSAD_SPACE_TYPE_ANDROID = 1,
+    LSAD_SPACE_TYPE_IOS = 2,
+    LSAD_SPACE_TYPE_BEGIN = LSAD_SPACE_TYPE_UNKNOW,
+    LSAD_SPACE_TYPE_END = LSAD_SPACE_TYPE_IOS,
+} LSAdvertSpaceType;
+
+inline int GetLSAdvertSpaceTypeToInt(LSAdvertSpaceType type) {
+    int result = -1;
+    switch (type) {
+        case LSAD_SPACE_TYPE_ANDROID:
+            result = 8;
+            break;
+        case LSAD_SPACE_TYPE_IOS:
+            result = 9;
+            break;
+            
+        default:
+            break;
+    }
+    return result;
+}
+
+inline LSAdvertSpaceType GetLSAdvertSpaceTypeWithInt(int value) {
+    return (LSAD_SPACE_TYPE_BEGIN <= value && value < LSAD_SPACE_TYPE_END ? (LSAdvertSpaceType)value : LSAD_SPACE_TYPE_UNKNOW);
 }
 
 #endif

@@ -12,7 +12,6 @@
         fresco:placeholderImage="@drawable/bg_interactive_video_default"
         fresco:placeholderImageScaleType="fitXY"
         fresco:failureImage="@drawable/bg_interactive_video_default"
-        android:src="@drawable/bg_interactive_video_default"
         fresco:failureImageScaleType="fitXY"
         />
     <View

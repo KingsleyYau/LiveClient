@@ -7,7 +7,7 @@
 //
 
 #import "LSSayHiDetailHeadView.h"
-
+#import "LSDateTool.h"
 @interface LSSayHiDetailHeadView ()
 
 @end
@@ -45,7 +45,7 @@
     }
 
     if (obj.sendTime > 0) {
-          self.timeLabel.text =[self getTime:obj.sendTime type:@"dd MMM,yyyy"];
+          self.timeLabel.text = [LSDateTool getTime:obj.sendTime];
     }
     else {
      self.timeLabel.text = @"";
@@ -59,6 +59,12 @@
     self.backgroundImageloader = [LSImageViewLoader loader];
     [self.backgroundImageloader loadImageWithImageView:self.bgImage options:0 imageUrl:obj.img placeholderImage:[UIImage imageNamed:@"LS_Sayhi_DetailHeadBG"] finishHandler:^(UIImage *image) {
     }];
+}
+
+- (IBAction)headImageTap:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(sayHiDetailHeadViewDidHeadImage)]) {
+        [self.delegate sayHiDetailHeadViewDidHeadImage];
+    }
 }
 
 

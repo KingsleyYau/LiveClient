@@ -150,8 +150,8 @@ static LiveUrlHandler *gInstance = nil;
         }break;
         case LiveUrlTypeLiveChat: {
             // TODO:进入livechat联系人
-            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenLiveChatLady:anchorName:)]) {
-                [self.parseDelegate liveUrlHandler:self didOpenLiveChatLady:item.anchorId anchorName:item.anchorName];
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenLiveChatLady:anchorName:inviteMsg:)]) {
+                [self.parseDelegate liveUrlHandler:self didOpenLiveChatLady:item.anchorId anchorName:item.anchorName inviteMsg:item.inviteMsg];
             }
         }break;
         case LiveUrlTypeSendMail: {
@@ -188,6 +188,16 @@ static LiveUrlHandler *gInstance = nil;
         case LiveUrlTypeGreetMailDetail: {
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenGreetingMailDetail:)]) {
                 [self.parseDelegate liveUrlHandler:self didOpenGreetingMailDetail:item.loiId];
+            }
+        }break;
+        case LiveUrlTypeGiftFlowerList: {
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:OpenGiftFlowerList:)]) {
+                [self.parseDelegate liveUrlHandler:self OpenGiftFlowerList:item.flowerListType];
+            }
+        }break;
+        case LiveUrlTypeGiftFlowerAnchorStore: {
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openGiftFlowerAnchorStore:)]) {
+                [self.parseDelegate liveUrlHandler:self openGiftFlowerAnchorStore:item.anchorId];
             }
         }break;
         default: {
@@ -260,11 +270,12 @@ static LiveUrlHandler *gInstance = nil;
 #pragma mark - 获取模块URL
 - (NSURL *)createUrlToHangoutByRoomId:(NSString *)roomId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName hangoutAnchorId:(NSString *)hangoutAnchorId hangoutAnchorName:(NSString *)hangoutAnchorName {
     int roomTypeInt = 4;
-    NSString *codeName = nil;
-    if (anchorName.length > 0) {
-        codeName = [self encodeParameter:anchorName];
-    }
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&&roomid=%@&anchorid=%@&anchorname=%@&hangoutAnchorId=%@&hangoutAnchorName=%@&roomtype=%d", roomId, anchorId, codeName, hangoutAnchorId, hangoutAnchorName, roomTypeInt];
+    NSString *codeRoomId = roomId.length > 0 ? roomId : @"";
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *codeHangoutAnchorId = hangoutAnchorId.length > 0 ? hangoutAnchorId : @"";
+    NSString *codeHangoutAnchorName = hangoutAnchorName.length > 0 ? hangoutAnchorName : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&&roomid=%@&anchorid=%@&anchorname=%@&hangoutAnchorId=%@&hangoutAnchorName=%@&roomtype=%d", codeRoomId, codeAnchorId, [self encodeParameter:codeAnchorName], codeHangoutAnchorId, [self encodeParameter:codeHangoutAnchorName], roomTypeInt];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
@@ -275,26 +286,33 @@ static LiveUrlHandler *gInstance = nil;
         roomTypeInt = 1;
     }
 
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&roomid=%@&anchorid=%@&roomtype=%d", roomId, anchorId, roomTypeInt];
+    NSString *codeRoomId = roomId.length > 0 ? roomId : @"";
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&roomid=%@&anchorid=%@&roomtype=%d", codeRoomId, codeAnchorId, roomTypeInt];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
 - (NSURL *)createUrlToShowRoomId:(NSString *)roomId anchorId:(NSString *)anchorId {
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&liveshowid=%@&anchorid=%@&roomtype=0", roomId, anchorId];
+    NSString *codeRoomId = roomId.length > 0 ? roomId : @"";
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&liveshowid=%@&anchorid=%@&roomtype=0", codeRoomId, codeAnchorId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
 - (NSURL *)createUrlToInviteByInviteId:(NSString *)inviteId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    NSString *codeName = [self encodeParameter:anchorName];
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&invitationid=%@&anchorid=%@&anchorname=%@&roomtype=%d", inviteId, anchorId, codeName, 3];
+    NSString *codeInviteId = inviteId.length > 0 ? inviteId : @"";
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&invitationid=%@&anchorid=%@&anchorname=%@&roomtype=%d", codeInviteId, codeAnchorId, [self encodeParameter:codeAnchorName], 3];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
 - (NSURL *)createUrlToAnchorDetail:(NSString *)anchorId {
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=anchordetail&anchorid=%@", anchorId];
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=anchordetail&anchorid=%@", codeAnchorId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
@@ -308,23 +326,31 @@ static LiveUrlHandler *gInstance = nil;
 - (NSString *)encodeParameter:(NSString *)originalPara {
 //    CFStringRef encodeParaCf = CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)originalPara, NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
 //    NSString *encodePara = (__bridge NSString *)(encodeParaCf);
+
+//    NSCharacterSet *allowedCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet];
+//    NSString *encodePara = [originalPara stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters];
     
-    NSCharacterSet *allowedCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet];
-    NSString *encodePara = [originalPara stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters];
+    // 如果字符串中含有字符集里面的字符将不会被编码,参数需全加密,因此参数加密不需要过滤字符集,
+    NSCharacterSet *encodeUrlSet = [[NSCharacterSet alloc] init];
+    NSString *encodePara = [originalPara stringByAddingPercentEncodingWithAllowedCharacters:encodeUrlSet];
     
 //    CFRelease(encodeParaCf);
     return encodePara;
 }
 
 - (NSURL *)createSendmailByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    NSString *encodeName = [self encodeParameter:anchorName];
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendmail&anchorid=%@&anchorname=%@", anchorId, encodeName];
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *encodeName = [self encodeParameter:codeAnchorName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendmail&anchorid=%@&anchorname=%@", codeAnchorId, encodeName];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
 - (NSURL *)createLiveChatByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    NSString * urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site=41&service=live&module=livechat&anchorid=%@&anchorname=%@",anchorId,[self encodeParameter:anchorName]];
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString * urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site=41&service=live&module=livechat&anchorid=%@&anchorname=%@",codeAnchorId,[self encodeParameter:codeAnchorName]];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
@@ -336,16 +362,34 @@ static LiveUrlHandler *gInstance = nil;
 }
 
 - (NSURL *)createSendSayhiByAnchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
-    NSString *encodeName = [self encodeParameter:anchorName];
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendsayhi&anchorid=%@&anchorname=%@",anchorId,encodeName];
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *encodeName = [self encodeParameter:codeAnchorName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendsayhi&anchorid=%@&anchorname=%@",codeAnchorId,encodeName];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
 - (NSURL *)createSayHiDetailBySayhiId:(NSString *)sayhiId {
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sayhi_detail&sayhiid=%@",sayhiId];
+    NSString *codeSayhiId = sayhiId.length > 0 ? sayhiId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sayhi_detail&sayhiid=%@",codeSayhiId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
+
+- (NSURL *)createFlowerGightByAnchorId:(NSString *)anchorId {
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=giftflower_anchor_store&anchorid=%@",codeAnchorId];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+
+- (NSURL *)createFlowerStore:(LiveUrlGiftFlowerListType)type {
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=giftflower_list&listtype=%d",type];;
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
 
 @end
