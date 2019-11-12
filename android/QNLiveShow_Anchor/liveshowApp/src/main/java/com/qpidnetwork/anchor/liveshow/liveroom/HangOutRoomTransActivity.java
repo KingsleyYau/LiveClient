@@ -50,6 +50,8 @@ import com.qpidnetwork.anchor.utils.SystemUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import static com.qpidnetwork.anchor.liveshow.liveroom.BaseImplLiveRoomActivity.HANGOUT_ROOMINFO_ITEM;
+
 /**
  * Description: HangOut直播间过渡页面
  * <p>
@@ -88,7 +90,6 @@ public class HangOutRoomTransActivity extends BaseActionBarFragmentActivity
     private static final String TRANSITION_USER_PHOTOURL = "anchorPhotoUrl";
     private static final String TRANSITION_ROOMID = "roomId";
     private static final String TRANSITION_CATOGERY_TYPE = "categoryType";
-    public static final String HANGOUT_ROOMINFO_ITEM = "hangOutRoomItem";
     private static final String TRANSITION_INVITATION_ID = "invitationId";
 
     //view

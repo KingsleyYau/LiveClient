@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import net.qdating.LSConfig;
 import net.qdating.LSPublisher;
@@ -23,6 +24,7 @@ public class PublisherManager implements ILSPublisherStatusCallback {
     private Activity mActivity;
     private boolean mIsInited = false;
     private boolean mIsImDisconnected = false;
+    private boolean mIsSomeError = false;   //连接过程中是否遇到问题
     //publisher
     private LSPublisher mLSPublisher;
     private int mPublisherReconnectCount = 0;
@@ -131,6 +133,16 @@ public class PublisherManager implements ILSPublisherStatusCallback {
     }
 
     /**
+     * 重新连接
+     */
+    public void reconnect(){
+        if(mLSPublisher != null && mIsSomeError){
+            mLSPublisher.startPreview();
+            mIsSomeError = false;
+        }
+    }
+
+    /**
      * 内部启动尝试链接拉流
      */
     private void startPublisherInternal(){
@@ -192,7 +204,8 @@ public class PublisherManager implements ILSPublisherStatusCallback {
 
     @Override
     public void onVideoCaptureError(LSPublisher lsPublisher, int i) {
-
+        Log.i("Jagger" , "onVideoCaptureError:" + i);
+        mIsSomeError = true;
     }
 
     /**

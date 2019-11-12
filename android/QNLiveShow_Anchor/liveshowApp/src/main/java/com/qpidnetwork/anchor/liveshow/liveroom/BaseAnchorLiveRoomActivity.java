@@ -23,6 +23,7 @@ import com.qpidnetwork.anchor.httprequest.item.HangoutInviteReplyType;
 import com.qpidnetwork.anchor.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.anchor.httprequest.item.LiveRoomType;
 import com.qpidnetwork.anchor.im.listener.IMClientListener;
+import com.qpidnetwork.anchor.im.listener.IMCurrentPushInfoItem;
 import com.qpidnetwork.anchor.im.listener.IMMessageItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem.IMLiveRoomType;
@@ -36,13 +37,11 @@ import com.qpidnetwork.anchor.liveshow.liveroom.announcement.WarningDialog;
 import com.qpidnetwork.anchor.liveshow.liveroom.barrage.IBarrageViewFiller;
 import com.qpidnetwork.anchor.liveshow.liveroom.barrage.BarrageManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.car.CarInfo;
-import com.qpidnetwork.anchor.liveshow.liveroom.car.CarManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.ModuleGiftManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.GiftSendReqManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.GiftSender;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.RoomGiftManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.dialog.LiveGiftDialog;
-import com.qpidnetwork.anchor.liveshow.liveroom.gift.normal.LiveGiftView;
 import com.qpidnetwork.anchor.liveshow.liveroom.vedio.VedioLoadingAnimManager;
 import com.qpidnetwork.anchor.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.anchor.utils.Log;
@@ -64,7 +63,7 @@ import static com.qpidnetwork.anchor.im.listener.IMRoomInItem.IMLiveStatus.Recip
  * Created by Hunter Mun on 2017/6/16.
  */
 
-public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity implements LiveStreamPushManager.ILSPublisherStatusListener {
+public abstract class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity implements LiveStreamPushManager.ILSPublisherStatusListener {
     /**
      * 直播间消息更新
      */
@@ -96,10 +95,10 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
     protected static final int EVENT_TALENT_OVER_TIME_CLOSE= 1007;
 
     public RoomThemeManager roomThemeManager = new RoomThemeManager();
-    protected CarManager carManager;
+//    protected CarManager carManager;
 
     //聊天展示区域
-    protected LiveRoomChatManager liveRoomChatManager;
+    protected FullSrceenLiveRoomChatManager liveRoomChatManager;
     protected boolean isSoftInputOpen = false;
     protected int leavingRoomTimeCount = 30;//30-default
 
@@ -149,12 +148,11 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
         //初始化播放器
         mLiveStreamPushManager = new LiveStreamPushManager(this);
         mLiveStreamPushManager.setILSPublisherStatusListener(this);
-        carManager = new CarManager();
+//        carManager = new CarManager();
         mModuleGiftManager = new ModuleGiftManager(this);
         giftSendReqManager = new GiftSendReqManager();
         giftSendReqManager.executeNextReqTask();
         giftSender = new GiftSender(giftSendReqManager);
-        LiveGiftView.MAX_GIFT_SUM = 2;
     }
 
     /**
@@ -193,8 +191,13 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
         if(null != vedioLoadingAnimManager){
             vedioLoadingAnimManager.showLoadingAnim();
         }
-        if(null != mIMRoomInItem && mIMRoomInItem.pushRtmpUrls!=null && mIMRoomInItem.pushRtmpUrls.length > 0){
-            startAnchorLivePusher(mIMRoomInItem.pushRtmpUrls);
+        if(null != mIMRoomInItem ){
+            //如果是APP推流
+            if(mIMRoomInItem.currentPush.status != IMCurrentPushInfoItem.IMCurrentPushStatus.PcPush){
+                if(mIMRoomInItem.pushRtmpUrls!=null && mIMRoomInItem.pushRtmpUrls.length > 0){
+                    startAnchorLivePusher(mIMRoomInItem.pushRtmpUrls);
+                }
+            }
         }
     }
 
@@ -211,9 +214,9 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
      * @param rootView
      */
     protected void initLiveRoomCar(LinearLayout rootView){
-        carManager.init(this, rootView,
-                roomThemeManager.getRoomCarViewTxtColor(mIMRoomInItem.roomType)
-                , roomThemeManager.getRoomCarViewBgDrawableResId(mIMRoomInItem.roomType));
+//        carManager.init(this, rootView,
+//                roomThemeManager.getRoomCarViewTxtColor(mIMRoomInItem.roomType)
+//                , roomThemeManager.getRoomCarViewBgDrawableResId(mIMRoomInItem.roomType));
     }
 
     /**
@@ -282,6 +285,10 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
                     if (TextUtils.isEmpty(carInfo.riderLocalPath)) {
                         return;
                     }
+                    //外部实现动画
+                    playEnterCarAnim(carInfo);
+
+                    //插入消息
                     boolean localCarImgExists = SystemUtils.fileExists(carInfo.riderLocalPath);
                     Log.d(TAG,"EVENT_MESSAGE_ENTERROOMNOTICE-localCarImgExists:"+localCarImgExists);
                     if (localCarImgExists) {
@@ -293,9 +300,9 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
                         //add Jagger 2018-5-8
                         msgItem.userId = carInfo.userId;
                         sendMessageUpdateEvent(msgItem);
-                        if(null != carManager){
-                            carManager.putLiveRoomCarInfo(carInfo);
-                        }
+//                        if(null != carManager){
+//                            carManager.putLiveRoomCarInfo(carInfo);
+//                        }
                     } else {
                         FileDownloadManager.getInstance().start(carInfo.riderUrl,
                                 carInfo.riderLocalPath,
@@ -333,6 +340,8 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
                 break;
         }
     }
+
+    protected abstract void playEnterCarAnim(CarInfo carInfo);
 
     /**
      * 更新公开直播间在线观众头像数据
@@ -407,8 +416,8 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
         super.onDestroy();
         //回收拉流播放器
         releaseLSPManager();
-        carManager.shutDownAnimQueueServNow();
-        carManager = null;
+//        carManager.shutDownAnimQueueServNow();
+//        carManager = null;
         mModuleGiftManager.onMultiGiftDestroy();
         //清除资源及动画
         if(mBarrageManager != null) {
@@ -504,20 +513,22 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
     }
 
     @Override
-    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, IMClientListener.LCC_ERR_TYPE err, String errMsg) {
+    public void OnRecvLeavingPublicRoomNotice(String roomId,final int leftSeconds, IMClientListener.LCC_ERR_TYPE err, String errMsg) {
         super.OnRecvLeavingPublicRoomNotice(roomId, leftSeconds, err, errMsg);
+
+        Log.d(TAG, "OnRecvLeavingPublicRoomNotice leftSeconds:" + leftSeconds);
         if(!isCurrentRoom(roomId)){
             return;
         }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                onRecvLeavingRoomNotice();
+                onRecvLeavingRoomNotice(leftSeconds);
             }
         });
     }
 
-    public void onRecvLeavingRoomNotice(){
+    public void onRecvLeavingRoomNotice(int leftSeconds){
         hasRoomInClosingStatus = true;
         Log.d(TAG,"onRecvLeavingRoomNotice-hasRoomInClosingStatus:"+hasRoomInClosingStatus+" lastInviteSendSucManNickName:"+lastInviteSendSucManNickName);
         removeUiMessages(EVENT_LEAVING_ROOM_TIMECOUNT);
@@ -602,12 +613,21 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
 
     //******************************** 视频播放组件 ****************************************************************
     /**
-     * 开始拉流
+     * 开始推流
      * @param videoUrls
      */
     protected void startAnchorLivePusher(String[] videoUrls){
         if(mLiveStreamPushManager != null && mLiveStreamPushManager.isInited() && videoUrls.length > 0){
-            mLiveStreamPushManager.setOrChangeManUploadUrls(videoUrls, "", "");
+            mLiveStreamPushManager.setOrChangeUploadUrls(videoUrls, "", "");
+        }
+    }
+
+    /**
+     * 停止推流
+     */
+    protected void stopAnchorLivePusher(){
+        if(mLiveStreamPushManager != null) {
+            mLiveStreamPushManager.stop();
         }
     }
 
@@ -966,7 +986,7 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
             if(null !=mIMRoomInItem &&  mIMRoomInItem.leftSeconds>0
                     && mIMRoomInItem.status==ReciprocalEnd) {
                 leavingRoomTimeCount = mIMRoomInItem.leftSeconds;
-                onRecvLeavingRoomNotice();
+                onRecvLeavingRoomNotice(leavingRoomTimeCount);
             }
         }
     }

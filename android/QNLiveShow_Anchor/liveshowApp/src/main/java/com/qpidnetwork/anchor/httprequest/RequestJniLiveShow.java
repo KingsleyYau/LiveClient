@@ -82,5 +82,12 @@ public class RequestJniLiveShow {
 		return SetAutoPush( status.ordinal(), callback);
 	}
 	static protected native long SetAutoPush(int status, OnRequestCallback callback);
+
+	/**
+	 * 3.9.获取主播当前直播间信息
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetCurrentRoomInfo(OnGetCurrentRoomInfoCallback callback);
 	
 }

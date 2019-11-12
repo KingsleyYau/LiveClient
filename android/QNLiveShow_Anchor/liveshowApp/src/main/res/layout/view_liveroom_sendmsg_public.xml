@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_input_edit_body"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="49dp"
-    android:background="@android:color/white"
+    android:background="@color/transparent_7"
     android:gravity="center"
     android:clickable="true"
     android:visibility="visible"
@@ -24,7 +23,9 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="7dp"
-            android:paddingRight="9dp">
+            android:paddingRight="9dp"
+            android:visibility="gone"
+            tools:visibility="visible">
 
                 <TextView
                     android:id="@+id/tv_audienceNickname"
@@ -57,7 +58,7 @@
             android:ellipsize="end"
             android:hint="@string/txt_hint_input_general"
             android:textColorHint="@color/public_tran_tips_color"
-            android:textColor="@android:color/black"
+            android:textColor="@color/white"
             android:textSize="13sp"
             android:gravity="center_vertical"
             android:imeOptions="actionSend"
@@ -81,4 +82,14 @@
             android:layout_marginLeft="20dp"
             android:src="@drawable/ic_liveroom_buttom_gift_public"
             android:onClick="onClick" />
+        <ImageView
+            android:id="@+id/iv_recommend"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_hangout"
+            android:onClick="onClick"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 </LinearLayout>

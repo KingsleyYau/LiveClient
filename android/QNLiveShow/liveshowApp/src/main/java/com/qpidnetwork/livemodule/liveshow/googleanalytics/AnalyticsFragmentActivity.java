@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.ActionMode;
 
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.SysCompatActivity;
 
 /**
  * 仅用于跟踪统计的FragmentActivity基类（如：GoogleAnalytics）
@@ -16,7 +17,7 @@ import com.qpidnetwork.qnbridgemodule.util.Log;
  * 把 extends FragmentActivity 改为 extends AppCompatActivity, 解决兼容性
  * support v7 AppCompatActivity 兼容2.x模式下使用Fragment和ActionBar，ActionBarActivity
  */
-public class AnalyticsFragmentActivity extends AppCompatActivity
+public class AnalyticsFragmentActivity extends SysCompatActivity
 {
 	private static final String TAG = AnalyticsFragmentActivity.class.getName();
 

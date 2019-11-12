@@ -127,6 +127,9 @@ public:
     // 根据http的接口错误码是token过期回调到上层处理
     virtual void OnTokenOverTimeHandler(const string& errNo, const string& errmsg) = 0;
     
+    // -------- invite listener -----
+    // 为了区分OnRecvMessage,这个使用在Qn冒泡跳转到直播后，发送邀请语成功，如果用OnRecvMessage，直播会再冒泡 (Alex, 2019-07-26)
+    virtual void OnRecvAutoInviteMessage(LSLCMessageItem* msgItem) = 0;
 };
 
 class LSLiveChatHttpRequestManager;
@@ -291,6 +294,8 @@ public:
     virtual bool GetMagicIconThumbImage(const string& magicIconId) = 0;
     //获取小高级表情原图的路径
     virtual string GetMagicIconThumbPath(const string& magicIconId) = 0;
+    // 发送邀请语
+    virtual bool SendInviteMessage(const string& userId, const string& message, const string& nickName) = 0;
     
     // --------- Camshare --------
     // 发送Camshare邀请

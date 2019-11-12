@@ -39,6 +39,7 @@ import com.qpidnetwork.anchor.im.listener.IMHangoutRecommendItem;
 import com.qpidnetwork.anchor.im.listener.IMMessageItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
 import com.qpidnetwork.anchor.im.listener.IMSysNoticeMessageContent;
+import com.qpidnetwork.anchor.liveshow.liveroom.car.CarInfo;
 import com.qpidnetwork.anchor.liveshow.liveroom.recommend.RecommendDialogFragment;
 import com.qpidnetwork.anchor.utils.DisplayUtil;
 import com.qpidnetwork.anchor.utils.Log;
@@ -228,7 +229,7 @@ public class PrivateLiveRoomActivity extends BaseAnchorLiveRoomActivity{
         FrameLayout viewContent = (FrameLayout)findViewById(R.id.flMultiGift);
         viewContent.setOnClickListener(this);
         /*礼物模块*/
-        mModuleGiftManager.initMultiGift(viewContent);
+        mModuleGiftManager.initMultiGift(viewContent, 2);
         ll_bulletScreen = findViewById(R.id.ll_bulletScreen);
         ll_bulletScreen.setOnClickListener(this);
         mModuleGiftManager.showMultiGiftAs(ll_bulletScreen);
@@ -242,7 +243,7 @@ public class PrivateLiveRoomActivity extends BaseAnchorLiveRoomActivity{
      */
     private void initMessageList(){
         if(loginItem != null) {
-            liveRoomChatManager = new LiveRoomChatManager(this, mIMRoomInItem.roomType,
+            liveRoomChatManager = new FullSrceenLiveRoomChatManager(this, mIMRoomInItem.roomType,
                     mIMRoomInItem.anchorId, roomThemeManager);
             View fl_msglist = findViewById(R.id.fl_msglist);
             fl_msglist.setClickable(true);
@@ -624,7 +625,7 @@ public class PrivateLiveRoomActivity extends BaseAnchorLiveRoomActivity{
     }
 
     @Override
-    public void onRecvLeavingRoomNotice() {
+    public void onRecvLeavingRoomNotice(int leftSeconds) {
         fl_vedioTips.setVisibility(View.VISIBLE);
         if(privateLiveInvitedByAnchor && lastSwitchUserBaseInfoItem != null){
             //%1$s has accepted. Broadcast will end in 30s
@@ -650,10 +651,10 @@ public class PrivateLiveRoomActivity extends BaseAnchorLiveRoomActivity{
         }
         tv_vedioTip2.setVisibility(View.GONE);
         tv_vedioTip3.setVisibility(View.VISIBLE);
-        tv_vedioTip3.setText(String.valueOf(30));
+        tv_vedioTip3.setText(String.valueOf(leftSeconds));
         tv_vedioTip4.setVisibility(View.VISIBLE);
         tv_vedioTip4.setText(getResources().getString(R.string.liveroom_leaving_room_time_count_s));
-        super.onRecvLeavingRoomNotice();
+        super.onRecvLeavingRoomNotice(leftSeconds);
     }
 
     @Override
@@ -677,6 +678,11 @@ public class PrivateLiveRoomActivity extends BaseAnchorLiveRoomActivity{
                 }
             }break;
         }
+    }
+
+    @Override
+    protected void playEnterCarAnim(CarInfo carInfo) {
+
     }
 
     @Override

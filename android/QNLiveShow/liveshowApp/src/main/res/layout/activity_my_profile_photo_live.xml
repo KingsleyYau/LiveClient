@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/live_chat_album_image_big"
+    android:orientation="vertical"
+    tools:context=".liveshow.personal.MyProfilePhotoActivity">
+
+    <ImageView
+        android:id="@+id/act_my_profile_photo_live_iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/live_size_14dp"
+        android:minWidth="@dimen/live_size_30dp"
+        android:minHeight="@dimen/live_size_30dp"
+        android:padding="@dimen/live_size_10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_arrow_back_white" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/act_my_profile_photo_live_iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="108dp">
+
+        <TextView
+            android:id="@+id/act_my_profile_photo_live_tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/change_photo_review_tip"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            android:visibility="gone"
+            tools:visibility="gone" />
+
+        <Button
+            android:id="@+id/act_my_profile_photo_live_btn_change"
+            style="@style/blueCircle6dpButton"
+            android:layout_gravity="center"
+            android:text="@string/change_photo"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+</LinearLayout>

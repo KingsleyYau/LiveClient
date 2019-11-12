@@ -14,11 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.qpidnetwork.anchor.framework.livemsglist.interfaces.IListFunction;
 import com.qpidnetwork.anchor.utils.DisplayUtil;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +42,14 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
     private java.util.Timer mHoldingTimer;
     private TimerTask mHoldingTask;
     //是否开启消息停留最长时间计时器
-    private boolean starHolingTimer = false;
+    private boolean starHolingTimer = true;
     private String TAG = MessageRecyclerView.class.getSimpleName();
 
     //半透效果
     private Paint mPaint;
     private LinearGradient linearGradient;
     private int layerId;
+
     /**
      * 顶部渐进色
      */
@@ -56,6 +57,22 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
 
     //设置列表垂直间距
     private int mVerticalSpace = 0;
+
+    /**
+     * 数据显示方向
+     */
+    public enum DisplayDirection{
+        TopToBottom,
+        BottomToTop
+    }
+
+    /**
+     * 列表阅读状态
+     */
+    public enum ReadingStatus{
+        Holding,    //被停在某个位置
+        Playing     //正在播放最新消息
+    }
 
     //未读数接口
     public interface onMsgUnreadListener{
@@ -108,10 +125,8 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
 
         addOnScrollListener(mRecyclerViewScrollDetector);
 
-        //LinearLayoutManager
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setStackFromEnd(true);
-        setLayoutManager(linearLayoutManager);
+        //默认LinearLayoutManager(item从上到下依次添加，并且第一个添加的item始终在最上面)
+        setDisplayDirection(DisplayDirection.TopToBottom);
 
 //        //半透明效果
 //        doTopGradualEffect();
@@ -121,20 +136,20 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
 
         //计时器
         mHoldingTimer = new java.util.Timer(true);
+
     }
 
     public void setGradualColor(int gradualColor){
         this.gradualColor = gradualColor;
         //半透明效果
         doTopGradualEffect();
-
     }
 
     /**顶部半透明效果
      * 参考:http://blog.csdn.net/linyukun6422/article/details/52516022
      */
     private void doTopGradualEffect() {
-        Log.d(TAG,"doTopGradualEffect-gradualColor:"+gradualColor);
+        com.qpidnetwork.qnbridgemodule.util.Log.d(TAG,"doTopGradualEffect-gradualColor:"+gradualColor);
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         final Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
@@ -148,6 +163,8 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
 
                 mPaint.setXfermode(xfermode);
                 mPaint.setShader(linearGradient);
+                Log.i("hunter", "onDrawOver left: " + parent.getLeft() + " right: " + parent.getRight()
+                        + " top: " + parent.getTop() + " bottom: " + parent.getBottom() + "~~~ height: " + parent.getHeight());
                 if(parent.getHeight() >= DisplayUtil.dip2px(mContext, 120)) {
                     canvas.drawRect(0.0f, 0.0f, parent.getRight(), DisplayUtil.dip2px(mContext,6f), mPaint);//200
                 }
@@ -191,8 +208,11 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
 
     @Override
     public void addNewLiveMsg(Object item) {
+        ReadingStatus readingStatus = getReadingStatus();
         boolean isAtBottom = !canScrollVertically(1); //值表示是否能向上滚动，false表示已经滚动到底部
-        if(mLiveMsgManager.addNewMsg(mLiveMsgItems , item , isAtBottom)){
+        boolean isPlaying = (readingStatus == ReadingStatus.Playing);    //两个结果合并为列表是否播放消息中
+
+        if(mLiveMsgManager.addNewMsg(mLiveMsgItems , item , isPlaying)){
             mRecyclerViewAdapter.notifyDataSetChanged();
             //如果当前状态是在底部
             if(isAtBottom){
@@ -200,8 +220,8 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
                 scrollToPosition(mLiveMsgItems.size()-1);
             }
         }
-        //如果不在底部，去取未读数
-        if(!isAtBottom){
+        //如果不是最新消息被看到的情况下，去取未读数
+        if(!isPlaying){
             mUnReadSum = mLiveMsgManager.getUnreadSum();
             if(mUnReadSum > 0){
                 if(this.mOnMsgUnreadListener != null){
@@ -221,12 +241,45 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
         HOLD_TIME = time;
     }
 
+//    @Override
+    public void setDisplayDirection(DisplayDirection displayDirection) {
+        if(displayDirection == MessageRecyclerView.DisplayDirection.TopToBottom){
+            //LinearLayoutManager(item从上到下依次添加，并且第一个添加的item始终在最上面)
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            setLayoutManager(linearLayoutManager);
+        }else if(displayDirection == MessageRecyclerView.DisplayDirection.BottomToTop){
+            //LinearLayoutManager(先添加的item会被顶上去，最新添加的item每次都会显示在最下面)
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            linearLayoutManager.setStackFromEnd(true);
+            setLayoutManager(linearLayoutManager);
+        }
+    }
+
     /**
      * 未读消息响应
      * @param listener
      */
     public void setOnMsgUnreadListener(onMsgUnreadListener listener){
         this.mOnMsgUnreadListener = listener;
+    }
+
+    /**
+     * 列表阅读状态
+     * @return
+     */
+    public ReadingStatus getReadingStatus(){
+        ReadingStatus readingStatus;
+        boolean isAtBottom = !canScrollVertically(1); //值表示是否能向上滚动，false表示已经滚动到底部
+        boolean isVisible = this.getVisibility() != GONE && this.getVisibility() != INVISIBLE;  //列表是否可视
+        boolean isPlaying = isAtBottom && isVisible;    //两个结果合并为列表是否播放消息中
+
+        if(isPlaying){
+            readingStatus = ReadingStatus.Playing;
+        }else {
+            readingStatus = ReadingStatus.Holding;
+        }
+
+        return readingStatus;
     }
 
     /**
@@ -300,5 +353,20 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
             }
         }
         return item;
+    }
+
+    /**
+     * 2019/4/22 Hardy
+     * 停止定时器
+     */
+    public void onDestroy(){
+        if(mHoldingTask != null ){
+            mHoldingTask.cancel();
+            mHoldingTask = null;
+        }
+        if (mHoldingTimer != null) {
+            mHoldingTimer.cancel();
+            mHoldingTimer = null;
+        }
     }
 }

@@ -13,6 +13,8 @@
 
 - (void)settingHeadViewBackDid;
 - (void)settingBackgroundDid;
+- (void)settingHeadImageDid;
+- (void)settingHeadEditDid;
 
 @end
 
@@ -20,7 +22,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
+@property (weak, nonatomic) IBOutlet UIButton *editBtn;
 @property (weak, nonatomic) id<LSUserSettingHeadViewDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIImageView *headBackground;
-
+- (void)reloadHeadImage:(NSString *)photoUrl;
 @end

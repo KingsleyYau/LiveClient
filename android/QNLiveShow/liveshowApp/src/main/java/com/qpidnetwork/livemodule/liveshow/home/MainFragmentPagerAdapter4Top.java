@@ -3,16 +3,11 @@ package com.qpidnetwork.livemodule.liveshow.home;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragment;
-import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyRidesFragment;
-import com.qpidnetwork.livemodule.liveshow.personal.mypackage.ReceivedGiftFragment;
-import com.qpidnetwork.livemodule.liveshow.personal.mypackage.VoucherFragment;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

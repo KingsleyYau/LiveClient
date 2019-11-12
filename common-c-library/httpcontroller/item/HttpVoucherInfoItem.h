@@ -33,7 +33,7 @@ public:
             }
             /* expTime */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_EXPTIME].isNumeric()) {
-                expTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_EXPTIME].asInt();
+                expTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_EXPTIME].asLong();
             }
             
             result = true;
@@ -57,7 +57,7 @@ public:
          */
         string      anchorId;
         UseRoomType useRoomType;
-        long        expTime;
+        long long      expTime;
     };
     
      typedef list<BindAnchorItem> BindAnchorList;
@@ -67,11 +67,11 @@ public:
         if (root.isObject()) {
             /* onlypublicExpTime */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICEXPTIME].isNumeric()) {
-                onlypublicExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICEXPTIME].asInt();
+                onlypublicExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICEXPTIME].asLong();
             }
             /* onlyprivateExpTime */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATEEXPTIME].isNumeric()) {
-                onlyprivateExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATEEXPTIME].asInt();
+                onlyprivateExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATEEXPTIME].asLong();
             }
             
             /* bindAnchor */
@@ -87,11 +87,11 @@ public:
             
             /* onlypublicNewExpTime */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICNEWANCHOREXPTIME].isNumeric()) {
-                onlypublicNewExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICNEWANCHOREXPTIME].asInt();
+                onlypublicNewExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICNEWANCHOREXPTIME].asLong();
             }
             /* onlyprivateNewExpTime */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATENEWANCHOREXPTIME].isNumeric()) {
-                onlyprivateNewExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATENEWANCHOREXPTIME].asInt();
+                onlyprivateNewExpTime = root[LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATENEWANCHOREXPTIME].asLong();
             }
   
             /* watchedAnchor */
@@ -134,11 +134,11 @@ public:
      * onlyprivateNewExpTime		仅私密的新关系试用券到期时间（1970年起的秒数）
      * watchedAnchor                我看过的主播列表
      */
-    long   onlypublicExpTime;
-    long   onlyprivateExpTime;
+    long long  onlypublicExpTime;
+    long long  onlyprivateExpTime;
     BindAnchorList bindAnchor;
-    long   onlypublicNewExpTime;
-    long   onlyprivateNewExpTime;
+    long  long onlypublicNewExpTime;
+    long  long onlyprivateNewExpTime;
     WatchAnchorList watchedAnchor;
 };
 

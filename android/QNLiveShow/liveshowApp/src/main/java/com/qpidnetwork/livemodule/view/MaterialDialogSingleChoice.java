@@ -38,7 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseDialog;
+import com.qpidnetwork.qnbridgemodule.view.BaseDialog;
 
 import java.util.ArrayList;
 

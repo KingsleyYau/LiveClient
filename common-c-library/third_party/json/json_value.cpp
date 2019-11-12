@@ -280,6 +280,7 @@ Value::Value( ValueType type )
    case intValue:
    case uintValue:
       value_.int_ = 0;
+      value_.long_ = 0;
       break;
    case realValue:
       value_.real_ = 0.0;
@@ -318,6 +319,8 @@ Value::Value( Int value )
 #endif
 {
    value_.int_ = value;
+    // 在赋值int时也赋值long，因为不知道时间戳是不是较大，所以在这里也给long赋值 alex，2019-09-18
+   value_.long_ = value;
 }
 
 
@@ -329,6 +332,19 @@ Value::Value( UInt value )
 #endif
 {
    value_.uint_ = value;
+   // 在赋值int时也赋值long，因为不知道时间戳是不是较大，所以在这里也给long赋值 alex，2019-09-18
+   value_.long_ = value;
+}
+
+// 定义整形64位的赋值，因为时间戳超过2147483647（2038/1/19 11:14:7）时，使用asInt为负值 alex，2019-09-18
+Value::Value( Long value )
+    : type_( uintValue )
+    , comments_( 0 )
+# ifdef JSON_VALUE_USE_INTERNAL_MAP
+    , itemIsUsed_( 0 )
+#endif
+{
+      value_.long_ = value;
 }
 
 Value::Value( double value )
@@ -775,6 +791,35 @@ Value::asUInt() const
       break;
    }
    return 0; // unreachable;
+}
+
+// 定义整形64位的赋值，因为时间戳超过2147483647（2038/1/19 11:14:7）时，使用asInt为负值 alex，2019-09-18
+Value::Long
+Value::asLong() const {
+    switch ( type_ )
+    {
+        case nullValue:
+            return 0;
+        case intValue:
+            return value_.long_;
+        case uintValue:
+            JSON_ASSERT_MESSAGE( value_.uint_ < (unsigned)maxInt, "integer out of signed integer range" );
+            return value_.uint_;
+        case realValue:
+            JSON_ASSERT_MESSAGE( value_.real_ >= minInt  &&  value_.real_ <= maxInt, "Real out of signed integer range" );
+            return Int( value_.real_ );
+        case booleanValue:
+            return value_.bool_ ? 1 : 0;
+        case stringValue:
+        case arrayValue:
+        case objectValue:
+            JSON_ASSERT_MESSAGE( false, "Type is not convertible to int" );
+            break;
+        default:
+            JSON_ASSERT_UNREACHABLE;
+            break;
+    }
+    return 0; // unreachable;
 }
 
 double

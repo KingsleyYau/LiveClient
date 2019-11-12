@@ -9,15 +9,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
+import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.view.indicator.CommonStringTabEntity;
-import com.qpidnetwork.livemodule.view.indicator.CommonTabLayout;
-import com.qpidnetwork.livemodule.view.indicator.CustomTabEntity;
-import com.qpidnetwork.livemodule.view.indicator.OnTabSelectListener;
 import com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView;
 
 import java.util.ArrayList;

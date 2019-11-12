@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -51,7 +50,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zca-Lz-t3N">
-                            <rect key="frame" x="29.5" y="233" width="315" height="44"/>
+                            <rect key="frame" x="30" y="233" width="315" height="44"/>
                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="315" id="1K7-na-rjW"/>
@@ -163,7 +162,7 @@
                 <constraint firstItem="BH4-Dz-lI3" firstAttribute="top" secondItem="xVs-dG-rHK" secondAttribute="top" id="D3F-Ib-hhS"/>
                 <constraint firstItem="xVs-dG-rHK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="DHI-gQ-eEq"/>
                 <constraint firstItem="LGX-M2-IPd" firstAttribute="leading" secondItem="xVs-dG-rHK" secondAttribute="leading" id="F6W-cI-fe7"/>
-                <constraint firstAttribute="bottom" secondItem="Mgm-zg-QOo" secondAttribute="bottom" constant="10" id="Juh-Au-Xse"/>
+                <constraint firstItem="Mgm-zg-QOo" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="-10" id="Juh-Au-Xse"/>
                 <constraint firstItem="LGX-M2-IPd" firstAttribute="top" secondItem="xVs-dG-rHK" secondAttribute="top" id="MBh-3A-2kU"/>
                 <constraint firstItem="pgv-X1-NpT" firstAttribute="trailing" secondItem="xVs-dG-rHK" secondAttribute="trailing" id="PEr-GQ-1HU"/>
                 <constraint firstAttribute="trailing" secondItem="Mgm-zg-QOo" secondAttribute="trailing" constant="20" id="QyT-4R-GHe"/>
@@ -179,7 +178,7 @@
                 <constraint firstItem="Mgm-zg-QOo" firstAttribute="leading" secondItem="fxB-W6-mrP" secondAttribute="leading" id="iW0-Wq-O4t"/>
                 <constraint firstItem="pgv-X1-NpT" firstAttribute="bottom" secondItem="xVs-dG-rHK" secondAttribute="bottom" id="mAk-3x-lIn"/>
                 <constraint firstItem="LGX-M2-IPd" firstAttribute="bottom" secondItem="xVs-dG-rHK" secondAttribute="bottom" id="oHF-e4-Y2v"/>
-                <constraint firstAttribute="trailing" secondItem="fxB-W6-mrP" secondAttribute="trailing" constant="20" id="ttW-qZ-CuV"/>
+                <constraint firstItem="fxB-W6-mrP" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-20" id="ttW-qZ-CuV"/>
                 <constraint firstItem="xVs-dG-rHK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="xOd-lW-FNP"/>
             </constraints>
             <connections>
@@ -189,6 +188,7 @@
                 <outlet property="creditsBuyBtn" destination="v3c-Xh-NSD" id="Tg4-UO-eDi"/>
                 <outlet property="expiredView" destination="pgv-X1-NpT" id="ein-wJ-M0y"/>
                 <outlet property="noteLabel" destination="Mgm-zg-QOo" id="VVF-lt-6pl"/>
+                <outlet property="noteLabelBottom" destination="Juh-Au-Xse" id="E1D-Sp-QZ4"/>
                 <outlet property="noteLabelTop" destination="XBI-Pw-qDM" id="jjl-I8-6I7"/>
                 <outlet property="representLabel" destination="fxB-W6-mrP" id="wys-je-UBc"/>
                 <outlet property="stampsBuyBtn" destination="zca-Lz-t3N" id="gJo-iZ-psV"/>

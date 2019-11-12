@@ -115,15 +115,15 @@ bool HttpSendEmfTask::ParseData(const string& url, bool bFlag, const char* buf, 
         Json::Value dataJson;
         Json::Value errDataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson, &errDataJson) ) {
-            if(dataJson.isObject()) {
-                if (dataJson[LETTER_LIST].isArray()) {
-                    for (int i = 0; i < dataJson[LETTER_LIST].size(); i++) {
-                        HttpLetterListItem item;
-                        item.Parse(dataJson[LETTER_LIST].get(i, Json::Value::null), false);
-                        list.push_back(item);
-                    }
-                }
-            }
+//            if(dataJson.isObject()) {
+//                if (dataJson[LETTER_LIST].isArray()) {
+//                    for (int i = 0; i < dataJson[LETTER_LIST].size(); i++) {
+//                        HttpLetterListItem item;
+//                        item.Parse(dataJson[LETTER_LIST].get(i, Json::Value::null), false);
+//                        list.push_back(item);
+//                    }
+//                }
+//            }
             
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);

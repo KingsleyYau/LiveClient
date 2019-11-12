@@ -10,7 +10,7 @@
 #define LSGoogleAnalyticsAction_h
 
 #pragma mark - 登录
-#define LoginUserIdCategory @"userid"
+#define LoginUserIdCategory @"QPID_GA_UID"
 #define LoginUserIdAction @"User Sign In"
 
 #pragma mark - 其他
@@ -28,6 +28,7 @@
 #define EventCategoryCredit @"GetCredit"
 #define EventCategorySendMessage @"message"
 #define EventCategoryLiveChat @"LiveChat"
+#define EventCategorySayHi @"SayHi"
 
 // 广告
 #define LiveChannelCloseAd @"close_Ad"
@@ -146,4 +147,7 @@
 #define ReplyMailClickSendMail @"click_SendMail"
 #define ReplyMailConfirmSendMail @"confirm_SendMail"
 
+//Sayhi
+#define SayHiDetailClickReply @"click_Reply"
+#define SayHiEditClickSendNow @"click_SendNow"
 #endif /* LSGoogleAnalyticsAction_h */

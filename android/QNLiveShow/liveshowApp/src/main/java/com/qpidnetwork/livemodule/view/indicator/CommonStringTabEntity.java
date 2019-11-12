@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.view.indicator;
 
+import com.flyco.tablayout.listener.CustomTabEntity;
+
 /**
  * Created by Hardy on 2019/3/13.
  */

@@ -32,6 +32,8 @@ typedef enum {
     LiveUrlTypeSayHiDetail,
     LiveUrlTypeSendSayHi,
     LiveUrlTypeGreetMailDetail,
+    LiveUrlTypeGiftFlowerList,
+    LiveUrlTypeGiftFlowerAnchorStore,
     LiveUrlTypeUnknow,
 } LiveUrlType;
 
@@ -73,6 +75,12 @@ typedef enum {
     LiveUrlSayHiListTypeResponse,
     LiveUrlSayHiListTypeUnknown,
 } LiveUrlSayHiListType;
+
+typedef enum {
+    LiveUrlGiftFlowerListTypeStore = 1,
+    LiveUrlGiftFlowerListTypeDelivery,
+    LiveUrlGiftFlowerListTypeUnknow,
+} LiveUrlGiftFlowerListType;
 @interface LSUrlParmItem : NSObject
 /**
  根据URL生成实例
@@ -154,6 +162,11 @@ typedef enum {
  sayId
  */
 @property (strong, readonly) NSString *sayhiId;
+#pragma mark - 鲜花礼品参数
+/**
+  鲜花礼品类型
+ */
+@property (assign, readonly) LiveUrlGiftFlowerListType flowerListType;
 #pragma mark - 意向信参数
 /**
  意向信id
@@ -172,6 +185,10 @@ typedef enum {
 @property (strong, readonly) NSString *gascreen;
 @property (strong, readonly) NSString *styletype;
 @property (strong, readonly) NSString *resumecb;
+
+#pragma mark - 链接参数
+@property (strong, readonly) NSString *inviteMsg;
+@property (copy, readonly) NSString *sourceSite;
 
 #pragma mark - 协议解析
 + (int)mainListIndexWithType:(LiveUrlMainListType)type;

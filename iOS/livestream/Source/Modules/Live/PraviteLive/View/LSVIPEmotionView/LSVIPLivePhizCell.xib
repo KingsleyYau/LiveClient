@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="X3I-zw-uIc" customClass="LSVIPLivePhizCell">
+            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_img0" translatesAutoresizingMaskIntoConstraints="NO" id="CLn-QJ-2XS">
+                        <rect key="frame" x="35.5" y="35.5" width="29" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="CLn-QJ-2XS" secondAttribute="height" multiplier="1:1" id="anp-Xu-duD"/>
+                            <constraint firstAttribute="width" constant="29" id="ogF-an-BOe"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="CLn-QJ-2XS" firstAttribute="centerX" secondItem="X3I-zw-uIc" secondAttribute="centerX" id="JH7-jJ-d2h"/>
+                <constraint firstItem="CLn-QJ-2XS" firstAttribute="centerY" secondItem="X3I-zw-uIc" secondAttribute="centerY" id="aFe-Qg-TfD"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="c6D-fA-edK"/>
+            <connections>
+                <outlet property="imageView" destination="CLn-QJ-2XS" id="K6v-hl-0oC"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="131.91964285714286"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="LS_img0" width="24" height="24"/>
+    </resources>
+</document>

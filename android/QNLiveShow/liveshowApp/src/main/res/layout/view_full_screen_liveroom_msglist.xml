@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <!-- 列表展开/关闭箭头 -->
+        <ImageView
+            android:id="@+id/iv_list_arrow"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginBottom="2dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_full_screen_live_room_arrow_down_white"/>
+
+        <!-- 消息列表 -->
+        <com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView
+            android:id="@+id/lvlv_roomMsgList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <!--未读条数-->
+    <!--<TextView-->
+        <!--android:id="@+id/tv_unReadTip"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginEnd="384dp"-->
+        <!--android:layout_marginRight="384dp"-->
+        <!--android:background="@drawable/bg_live_buttom_unreadmsg"-->
+        <!--android:clickable="true"-->
+        <!--android:drawableRight="@drawable/ic_live_buttom_unreadmsg"-->
+        <!--android:drawablePadding="6dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:padding="6dp"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:visibility="invisible" />-->
+
+    <com.qpidnetwork.qnbridgemodule.view.bubble.BubbleLayout
+        android:id="@+id/bl_unReadTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"
+        app:lookAt="bottom"
+        app:lookLength="4dp"
+        app:lookPosition="24dp"
+        app:lookWidth="6dp"
+        app:bubbleRadius="14dp"
+        app:bubblePadding="1dp">
+
+        <TextView
+            android:id="@+id/tv_unReadTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/live_size_4dp"
+            android:text="@string/tip_unReadLiveMsg"
+            android:textSize="12sp"
+            android:textColor="@color/black"/>
+
+    </com.qpidnetwork.qnbridgemodule.view.bubble.BubbleLayout>
+
+</RelativeLayout>

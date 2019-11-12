@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flBody"
     android:layout_width="match_parent"
@@ -42,10 +43,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="13dp">
+
+            <!-- 左上角直播中动图 -->
             <ImageView
                 android:id="@+id/ivLiveType"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/live_size_8dp"/>
+
+            <!-- 右上角是否要付费标志 -->
             <ImageView
                 android:id="@+id/ivPremium"
                 android:layout_width="wrap_content"
@@ -53,6 +59,8 @@
                 android:src="@drawable/list_premium_public"
                 android:layout_alignParentRight="true"
                 android:visibility="gone"/>
+
+            <!-- 右上角兴趣 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,6 +89,33 @@
                     android:layout_marginLeft="8dp"
                     android:src="@drawable/interest_dancing" />
             </LinearLayout>
+
+            <!-- 右上角收藏 SayHi -->
+            <LinearLayout
+                android:id="@+id/ll_opera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:visibility="visible">
+
+                <!-- 收藏 -->
+                <ImageView
+                    android:id="@+id/iv_follow"
+                    android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                    android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                    android:src="@drawable/ic_unfollow"/>
+
+                <!-- SayHi -->
+                <ImageView
+                    android:id="@+id/iv_sayhi"
+                    android:layout_width="@dimen/sayHi_list_opera_btn_size"
+                    android:layout_height="@dimen/sayHi_list_opera_btn_size"
+                    android:layout_marginTop="@dimen/sayHi_list_opera_btn_margin"
+                    android:src="@drawable/ic_list_sayhi"/>
+
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -90,31 +125,51 @@
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="13dp">
-            <LinearLayout
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp">
+                android:layout_marginRight="32dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
                 <!--<ImageView-->
-                    <!--android:id="@+id/ivOnlineStatus"-->
-                    <!--android:layout_width="14dp"-->
-                    <!--android:layout_height="14dp"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:background="@drawable/anchor_status_online"-->
-                    <!--android:visibility="visible"/>-->
+                <!--android:id="@+id/ivOnlineStatus"-->
+                <!--android:layout_width="14dp"-->
+                <!--android:layout_height="14dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:background="@drawable/anchor_status_online"-->
+                <!--android:visibility="visible"/>-->
+
+                <!-- 主播名 -->
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="#FEFEFE"
-                    android:layout_marginLeft="6dp"
-                    android:singleLine="true"
                     android:ellipsize="middle"
-                    android:text="Marry"/>
-            </LinearLayout>
+                    android:maxWidth="220dp"
+                    android:singleLine="true"
+                    android:text="Marry"
+                    android:textColor="#FEFEFE"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/ivOnline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- 在线状态 -->
+                <ImageView
+                    android:id="@+id/ivOnline"
+                    android:layout_width="@dimen/live_size_60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_livetype_room_online"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tvName"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/llProgramDesc"

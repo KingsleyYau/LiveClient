@@ -20,6 +20,8 @@
 #define EMOTION_CATEGORY_ITEM_CLASS 	"com/qpidnetwork/anchor/httprequest/item/EmotionCategory"
 #define EMOTION_ITEM_CLASS 				"com/qpidnetwork/anchor/httprequest/item/EmotionItem"
 #define AUDIENCE_BASE_INFO_ITEM_CLASS 	"com/qpidnetwork/anchor/httprequest/item/AudienceBaseInfoItem"
+#define PUSH_ROOM_INFO_ITEM_CLASS 	    "com/qpidnetwork/anchor/httprequest/item/PushRoomInfoItem"
+#define PUSH_ROOM_AUD_INFO_ITEM_CLASS 	"com/qpidnetwork/anchor/httprequest/item/PushRoomAudienceInfoItem"
 
 /* 4.预约私密     */
 #define BOOK_INVITE_ITEM_CLASS 			"com/qpidnetwork/anchor/httprequest/item/BookInviteItem"

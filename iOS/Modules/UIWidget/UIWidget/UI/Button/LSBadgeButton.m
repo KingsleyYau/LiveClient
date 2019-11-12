@@ -18,7 +18,7 @@
     _badgeValue = newValue;
 
     if (self.badgeValue) {
-        UIFont *labelFont = [UIFont boldSystemFontOfSize:11.0f];
+        UIFont *labelFont = [UIFont boldSystemFontOfSize:10.0f];
 
         if (!badgeView) {
             UIImage *stretchableImage = [self.imageBadge stretchableImageWithLeftCapWidth:floor(self.imageBadge.size.width / 2) - 1 topCapHeight:0];
@@ -50,11 +50,11 @@
         //        badgeLabel.text = self.badgeValue;
 
         // place badgeView on top right corner
-        if (size.width > 12) {
-            frame.size = CGSizeMake(ceil(size.width)+ 12, 12);
-        } else {
-            frame.size = CGSizeMake(12, 12);
-        }
+        //if (size.width > 12) {
+       //     frame.size = CGSizeMake(ceil(size.width)+ 12, 12);
+        //} else {
+            frame.size = CGSizeMake(14, 14);
+        //}
         frame.origin = CGPointMake(self.frame.size.width - floor(frame.size.width / 2), 0);
         badgeView.frame = frame;
 

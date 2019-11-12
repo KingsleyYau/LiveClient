@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--注:blocksDescendants解决RecyclerView初始化后自动滚动到第一个Item -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_full"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <!-- 相片 -->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fresco:backgroundImage="@color/black4" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_50dp"
+        android:background="@drawable/bg_say_hi_list_empty_gradient"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/live_size_10dp"
+        android:layout_marginRight="@dimen/live_size_10dp"
+        android:layout_marginBottom="@dimen/live_size_10dp"
+        android:ellipsize="middle"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_16sp"
+        tools:text="Marry" />
+
+</RelativeLayout>

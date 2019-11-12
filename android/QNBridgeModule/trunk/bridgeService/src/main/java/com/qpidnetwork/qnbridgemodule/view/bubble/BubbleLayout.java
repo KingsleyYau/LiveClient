@@ -237,12 +237,14 @@ public class BubbleLayout extends FrameLayout
     {
         if (event.getAction() == MotionEvent.ACTION_DOWN)
         {
-            RectF r = new RectF();
-            mPath.computeBounds(r, true);
-            mRegion.setPath(mPath, new Region((int) r.left, (int) r.top, (int) r.right, (int) r.bottom));
-            if (!mRegion.contains((int) event.getX(), (int) event.getY()))
-            {
-                mListener.edge();
+            if(mListener != null){
+                RectF r = new RectF();
+                mPath.computeBounds(r, true);
+                mRegion.setPath(mPath, new Region((int) r.left, (int) r.top, (int) r.right, (int) r.bottom));
+                if (!mRegion.contains((int) event.getX(), (int) event.getY()))
+                {
+                    mListener.edge();
+                }
             }
         }
         return super.onTouchEvent(event);

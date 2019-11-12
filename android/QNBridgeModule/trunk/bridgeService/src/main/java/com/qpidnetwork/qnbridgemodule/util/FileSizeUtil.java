@@ -140,22 +140,27 @@ public class FileSizeUtil {
     private static double FormetFileSize(long fileS, int sizeType) {
         DecimalFormat df = new DecimalFormat("#.00");
         double fileSizeLong = 0;
-        switch (sizeType) {
-            case SIZETYPE_B:
-                fileSizeLong = Double.valueOf(df.format((double) fileS));
-                break;
-            case SIZETYPE_KB:
-                fileSizeLong = Double.valueOf(df.format((double) fileS / 1024));
-                break;
-            case SIZETYPE_MB:
-                fileSizeLong = Double.valueOf(df.format((double) fileS / 1048576));
-                break;
-            case SIZETYPE_GB:
-                fileSizeLong = Double.valueOf(df.format((double) fileS / 1073741824));
-                break;
-            default:
-                break;
+        try {
+            switch (sizeType) {
+                case SIZETYPE_B:
+                    fileSizeLong = Double.valueOf(df.format((double) fileS));
+                    break;
+                case SIZETYPE_KB:
+                    fileSizeLong = Double.valueOf(df.format((double) fileS / 1024));
+                    break;
+                case SIZETYPE_MB:
+                    fileSizeLong = Double.valueOf(df.format((double) fileS / 1048576));
+                    break;
+                case SIZETYPE_GB:
+                    fileSizeLong = Double.valueOf(df.format((double) fileS / 1073741824));
+                    break;
+                default:
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return fileSizeLong;
     }
 }

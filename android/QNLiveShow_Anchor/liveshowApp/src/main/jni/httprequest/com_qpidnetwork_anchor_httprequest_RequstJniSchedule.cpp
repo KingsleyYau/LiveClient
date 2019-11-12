@@ -505,7 +505,6 @@ class RequestZBSetRoomCountDownCallback : public IRequestZBSetRoomCountDownCallb
 
 RequestZBSetRoomCountDownCallback gRequestZBSetRoomCountDownCallback;
 /*
-/*
  * Class:     com_qpidnetwork_anchor_httprequest_RequstJniSchedule
  * Method:    SetRoomCountDown
  * Signature: (Ljava/lang/String;ZILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J

@@ -46,10 +46,10 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
 
     private final String TAG = LiveRoomChatManager.class.getSimpleName();
 
-//    private WeakReference<BaseCommonLiveRoomActivity> mActivity;
+    //    private WeakReference<BaseCommonLiveRoomActivity> mActivity;
 // 2019/3/19 Hardy
     private WeakReference<BaseFragmentActivity> mActivity;
-//    private HtmlImageGetter mImageGetter;
+    //    private HtmlImageGetter mImageGetter;
     private CustomerHtmlTagHandler.Builder mBuilder;
     private LiveMessageListView lvlv_roomMsgList;
     private LiveMessageListAdapter lmlAdapter;
@@ -443,8 +443,8 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                     ll_userLevel.setMinHeight(DisplayUtil.dip2px(mActivity.get(),26f));
 
                     ll_msgItemContainer.setBackgroundDrawable(
-                        roomThemeManager.getRoomMsgListGiftItemBgDrawableByHangout(
-                                mContext, currLiveRoomType, msgListItem.imMessageItem.giftMsgContent.isSecretly));
+                            roomThemeManager.getRoomMsgListGiftItemBgDrawableByHangout(
+                                    mContext, currLiveRoomType, msgListItem.imMessageItem.giftMsgContent.isSecretly));
                 }else {
                     ll_msgItemContainer.setBackgroundDrawable(
                             roomThemeManager.getRoomMsgListGiftItemBgDrawable(
@@ -537,7 +537,7 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                     tvAnchorDesc.setText(mContext.getResources().getString(R.string.hangout_dialog_des, hangoutRecommendItem.friendAge, hangoutRecommendItem.friendCountry));
                     IMRoomInItem.IMLiveRoomType roomType = IMManager.getInstance().getRoomType(hangoutRecommendItem.roomId);
                     if(roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
-                        || roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom){
+                            || roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom){
                         tvEventButton.setText(mContext.getResources().getString(R.string.live_common_start_hangout));
                     }else{
                         tvEventButton.setText(mContext.getResources().getString(R.string.live_common_invite_now));

@@ -19,12 +19,26 @@
 @interface QNSementView ()<QNUnreadCountBtnDelegate>
 
 @property (nonatomic, strong) QNUnreadCountBtn *lastClickUnreadButton;
+
+@property (nonatomic, strong) UIColor * textSelectedColor;
+
+@property (nonatomic, strong) UIColor * textNormalColor;
+
+@property (nonatomic, strong) UIColor * lineNormalColor;
+
+@property (nonatomic, strong) UIColor * lineSelectedColor;
+
 @end
 
 @implementation QNSementView
 
 - (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<QNSementViewDelegate>)delegate isSymmetry:(BOOL)isSymmetry isShowbottomLine:(BOOL)isBottom{
     if (self = [super initWithFrame:frame]) {
+        _textSelectedColor = kTextSelectedColor;
+        _textNormalColor = kNormalColor;
+        
+        _lineSelectedColor = kSelectedColor;
+        _lineNormalColor = kLineNormalColor;
         // 设置代理
         self.delegate = delegate;
         NSMutableArray * array = [NSMutableArray array];
@@ -58,6 +72,8 @@
                 // 保留为上次选择中的button
                 _lastClickUnreadButton = button;
             }
+            button.backgroundColor = [UIColor clearColor];
+            [button updateUnreadCount:@"0"];
             // 设置对应的tag
             button.tag = i + 88;
             button.unreadNameText.text = titles[i];
@@ -75,6 +91,85 @@
     }
     
     return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.titleArray = [NSArray array];
+        
+        _textSelectedColor = kTextSelectedColor;
+        _textNormalColor = kNormalColor;
+        
+        _lineSelectedColor = kSelectedColor;
+        _lineNormalColor = kLineNormalColor;
+        
+    }
+    return self;
+}
+
+- (void)setTextNormalColor:(UIColor *)textNormalColor andSelectedColor:(UIColor *)textSelectedColor {
+    _textNormalColor = textNormalColor;
+    _textSelectedColor = textSelectedColor;
+}
+
+- (void)setLineNormalColor:(UIColor *)lineNormalColor andelectedColor:(UIColor *)lineSelectedColor {
+    _lineNormalColor = lineNormalColor;
+    _lineSelectedColor = lineSelectedColor;
+}
+
+- (void)newTitleBtnIsSymmetry:(BOOL)isSymmetry {
+    
+     NSMutableArray * array = [NSMutableArray array];
+      [array addObject:[NSNumber numberWithFloat:0]];
+      for (int i = 0; i < self.titleArray.count; i++) {
+          CGFloat w = [[self.titleArray objectAtIndex:i] sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}].width + (kSpacing);
+          [array addObject:[NSNumber numberWithFloat:ceil(w)]];
+      }
+      
+      CGFloat oldW = 0;
+      CGFloat symmetryW =  self.frame.size.width/self.titleArray.count;
+      for (int i = 0; i < self.titleArray.count; i ++) {
+          CGFloat x = [array[i] floatValue] + oldW;
+          oldW = x;
+          
+          QNUnreadCountBtn *button = nil;
+          
+          if (isSymmetry) {
+              button = [[QNUnreadCountBtn alloc] initWithFrame:CGRectMake(i*symmetryW, 0, symmetryW, self.frame.size.height)];;
+          }
+          else
+          {
+              button = [[QNUnreadCountBtn alloc] initWithFrame:CGRectMake(x, 0, [array[i+1] floatValue], self.frame.size.height)];;
+          }
+          
+          button.unreadNameText.font = [UIFont systemFontOfSize:17];
+          button.lineView.backgroundColor = self.lineNormalColor;
+          button.unreadNameText.textColor = self.textNormalColor;
+          button.backgroundColor = [UIColor clearColor];
+          [button updateUnreadCount:@"0"];
+          // 设置对应的tag
+          button.tag = i + 88;
+          button.unreadNameText.text = self.titleArray[i];
+          button.delegate = self;
+          [self addSubview:button];
+          
+          // 默认选中第一个 设置状态
+          if (i == 0) {
+              button.unreadNameText.textColor = self.textSelectedColor;
+              button.lineView.backgroundColor = self.lineSelectedColor;
+              // 保留为上次选择中的button
+              _lastClickUnreadButton = button;
+          }
+
+      }
+      
+      if (self.isShowbottomLine) {
+          CGFloat bottom = self.frame.origin.y + self.frame.size.height;
+          UIView * bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, bottom, self.frame.size.width, 1)];
+          bottomView.backgroundColor = [UIColor grayColor];
+          [self addSubview:bottomView];
+      }
 }
 
 - (void)selectButtonTag:(NSInteger)tag
@@ -96,10 +191,10 @@
 - (void)unreadCountBtnDidTap:(QNUnreadCountBtn *)btn {
     if (_lastClickUnreadButton != btn) {
         // 设置状态
-        btn.unreadNameText.textColor = kTextSelectedColor;
-        btn.lineView.backgroundColor = kSelectedColor;
-        _lastClickUnreadButton.unreadNameText.textColor = kNormalColor;
-        _lastClickUnreadButton.lineView.backgroundColor = kLineNormalColor;
+        btn.unreadNameText.textColor = self.textSelectedColor;
+        btn.lineView.backgroundColor = self.lineSelectedColor;
+        _lastClickUnreadButton.unreadNameText.textColor = self.textNormalColor;
+        _lastClickUnreadButton.lineView.backgroundColor = self.lineNormalColor;
         _lastClickUnreadButton = btn;
         // 回调 可用block
         if ([self.delegate respondsToSelector:@selector(segmentControlSelectedTag:)]) {

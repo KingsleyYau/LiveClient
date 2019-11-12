@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.livechat;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -33,6 +34,7 @@ import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.livechat.downloader.LivechatVoiceDownloader;
 import com.qpidnetwork.livemodule.liveshow.livechat.downloader.MagicIconImageDownloader;
 import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.utils.ButtonUtils;
 import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
@@ -486,10 +488,13 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                         recvPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearLargePhotoInfo.photoPath);
                         //显示描述
                         recvPhotoViewHolder.tv_des.setText(bean.getPhotoItem().photoDesc);
-                        recvPhotoViewHolder.tv_des.setVisibility(View.VISIBLE);
+                        recvPhotoViewHolder.cl_des.setVisibility(View.VISIBLE);
                     }else if(bean.getPhotoItem().mClearLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Failed){
                         //显示错误
                         recvPhotoViewHolder.showErrorView();
+                        //显示描述
+                        recvPhotoViewHolder.tv_des.setText(bean.getPhotoItem().photoDesc);
+                        recvPhotoViewHolder.cl_des.setVisibility(View.VISIBLE);
                     }
                 }else{
                     //未付费
@@ -509,10 +514,13 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                         recvPhotoViewHolder.showPhoto(bean.getPhotoItem().mFuzzyLargePhotoInfo.photoPath);
                         //显示描述
                         recvPhotoViewHolder.tv_des.setText(bean.getPhotoItem().photoDesc);
-                        recvPhotoViewHolder.tv_des.setVisibility(View.VISIBLE);
+                        recvPhotoViewHolder.cl_des.setVisibility(View.VISIBLE);
                     }else if(bean.getPhotoItem().mFuzzyLargePhotoInfo.statusType == LCPhotoInfoItem.StatusType.Failed){
                         //显示错误
                         recvPhotoViewHolder.showErrorView();
+                        //显示描述
+                        recvPhotoViewHolder.tv_des.setText(bean.getPhotoItem().photoDesc);
+                        recvPhotoViewHolder.cl_des.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -522,7 +530,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             recvPhotoViewHolder.rl_lock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPhotoClick(bean);
+                    if(!ButtonUtils.isFastDoubleClick(view.getId())) {
+                        listener.onPhotoClick(bean);
+                    }
                 }
             });
 
@@ -530,7 +540,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             recvPhotoViewHolder.iv_photo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onPhotoClick(bean);
+                    if(!ButtonUtils.isFastDoubleClick(view.getId())) {
+                        listener.onPhotoClick(bean);
+                    }
                 }
             });
         }else if(holder instanceof SendPhotoViewHolder){
@@ -543,19 +555,19 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                     //历史下载大图
                     //download
                     LiveChatManager.getInstance().GetPhoto(bean.toId, bean.msgId, LCRequestJniLiveChat.PhotoSizeType.Large);
-                    //显示下载
-                    sendPhotoViewHolder.showLoadingView();
-                }else if(bean.getPhotoItem().mClearSrcPhotoInfo != null){
-                    //优先显示原图
-                    sendPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearSrcPhotoInfo.photoPath);
                 }else if(bean.getPhotoItem().mClearLargePhotoInfo != null){
-                    //历史显示大图
+                    //优先显示大图 BUG#18560
                     if(!TextUtils.isEmpty(bean.getPhotoItem().mClearLargePhotoInfo.photoPath) && (new File(bean.getPhotoItem().mClearLargePhotoInfo.photoPath).exists())){
                         sendPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearLargePhotoInfo.photoPath);
+                    }else{
+                        sendPhotoViewHolder.showErrorView();
                     }
+                }else if(bean.getPhotoItem().mClearSrcPhotoInfo != null){
+                    //发送时显示原图
+                    sendPhotoViewHolder.showPhoto(bean.getPhotoItem().mClearSrcPhotoInfo.photoPath);
                 }
 
-                //决定是否显示相应控件
+                //根据上传状态决定是否显示相应控件
                 if (bean.statusType == LCMessageItem.StatusType.Fail){
                     //发送失败
                     sendPhotoViewHolder.hideLoadingView();
@@ -579,7 +591,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             sendPhotoViewHolder.iv_photo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onVideoClick(bean);
+                    if(!ButtonUtils.isFastDoubleClick(view.getId())) {
+                        listener.onPhotoClick(bean);
+                    }
                 }
             });
 
@@ -587,7 +601,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             sendPhotoViewHolder.btnError.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onErrorClicked(bean);
+                    if(!ButtonUtils.isFastDoubleClick(view.getId())) {
+                        listener.onErrorClicked(bean);
+                    }
                 }
             });
 
@@ -620,10 +636,13 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
                     recvVideoViewHolder.showVideoPhoto(bean.getVideoItem().bigPhotoFilePath);
                     //显示描述
                     recvVideoViewHolder.tv_des.setText(bean.getVideoItem().videoDesc);
-                    recvVideoViewHolder.tv_des.setVisibility(View.VISIBLE);
+                    recvVideoViewHolder.cl_des.setVisibility(View.VISIBLE);
                 }else if(bean.getVideoItem().mBigPhotoDownloadStatus == LCVideoItem.VideoPhotoDownloadStatus.Failed){
                     //显示错误
                     recvVideoViewHolder.showErrorView();
+                    //显示描述
+                    recvVideoViewHolder.tv_des.setText(bean.getVideoItem().videoDesc);
+                    recvVideoViewHolder.cl_des.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -631,7 +650,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             recvVideoViewHolder.rl_lock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onVideoClick(bean);
+                    if(!ButtonUtils.isFastDoubleClick(view.getId())) {
+                        listener.onVideoClick(bean);
+                    }
                 }
             });
 
@@ -639,7 +660,9 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             recvVideoViewHolder.rl_pay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onVideoClick(bean);
+                    if(!ButtonUtils.isFastDoubleClick(view.getId())) {
+                        listener.onVideoClick(bean);
+                    }
                 }
             });
         }else if(holder instanceof SendVideoViewHolder){
@@ -897,6 +920,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         public MaterialProgressBar pbDownload;
         public SimpleDraweeView iv_photo;
         public RelativeLayout rl_lock, rl_fail;
+        public ConstraintLayout cl_des;
         public TextView tv_des;
         private boolean isLoadedPic = false;
         private String tempPath = "";
@@ -906,6 +930,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             pbDownload = itemView.findViewById(R.id.pbDownload);
             iv_photo = itemView.findViewById(R.id.iv_photo);
             rl_lock = itemView.findViewById(R.id.rl_lock);
+            cl_des  = itemView.findViewById(R.id.cl_des);
             tv_des = itemView.findViewById(R.id.tv_des);
             rl_fail = itemView.findViewById(R.id.rl_fail);
         }
@@ -913,7 +938,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         public void showLoadingView(){
             pbDownload.setVisibility(View.VISIBLE);
             rl_fail.setVisibility(View.GONE);
-            tv_des.setVisibility(View.INVISIBLE);
+            cl_des.setVisibility(View.INVISIBLE);
             hideLockView();
             resetImageView();
             tempPath = "";
@@ -949,7 +974,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         public void showErrorView(){
             pbDownload.setVisibility(View.GONE);
             rl_fail.setVisibility(View.VISIBLE);
-            tv_des.setVisibility(View.INVISIBLE);
+            cl_des.setVisibility(View.INVISIBLE);
             hideLockView();
         }
 
@@ -975,6 +1000,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         public MaterialProgressBar pbDownload;
         public ImageButton btnError;
         public SimpleDraweeView iv_photo;
+        public RelativeLayout rl_fail;
         private boolean isLoadedPic = false;
         private String tempPath = "";
 
@@ -983,11 +1009,13 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             pbDownload = itemView.findViewById(R.id.pbDownload);
             btnError = itemView.findViewById(R.id.btnError);
             iv_photo = itemView.findViewById(R.id.iv_photo);
+            rl_fail = itemView.findViewById(R.id.rl_fail);
         }
 
         public void showLoadingView(){
             pbDownload.setVisibility(View.VISIBLE);
             btnError.setVisibility(View.GONE);
+            rl_fail.setVisibility(View.GONE);
         }
 
         public void hideLoadingView(){
@@ -998,6 +1026,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             //收起菊花
             pbDownload.setVisibility(View.GONE);
             btnError.setVisibility(View.GONE);
+            rl_fail.setVisibility(View.GONE);
 
             if(!tempPath.equals(path)){
                 //是否已加载过此图片
@@ -1030,6 +1059,13 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
 
             FrescoLoadUtil.loadRes(iv_photo, R.color.black4);
         }
+
+        public void showErrorView(){
+            //
+            resetImageView();
+            //
+            rl_fail.setVisibility(View.VISIBLE);
+        }
     }
 
     //视频接收样式 ok
@@ -1037,6 +1073,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
         public MaterialProgressBar pbDownload;
         public SimpleDraweeView iv_video;
         public RelativeLayout rl_lock, rl_pay, rl_fail;
+        public ConstraintLayout cl_des;
         public TextView tv_des;
         private boolean isLoadedPic = false;
         private String tempPath = "";
@@ -1048,13 +1085,14 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
             rl_lock = itemView.findViewById(R.id.rl_lock);
             rl_pay = itemView.findViewById(R.id.rl_pay);
             rl_fail = itemView.findViewById(R.id.rl_fail);
+            cl_des  = itemView.findViewById(R.id.cl_des);
             tv_des = itemView.findViewById(R.id.tv_des);
         }
 
         public void showLoadingView(){
             pbDownload.setVisibility(View.VISIBLE);
             rl_fail.setVisibility(View.GONE);
-            tv_des.setVisibility(View.INVISIBLE);
+            cl_des.setVisibility(View.INVISIBLE);
             hideLockView();
             rl_pay.setVisibility(View.GONE);
             resetImageView();
@@ -1093,7 +1131,7 @@ public class LiveChatTalkAdapter extends RecyclerView.Adapter<LiveChatTalkAdapte
 
         public void showErrorView(){
             rl_fail.setVisibility(View.VISIBLE);
-            tv_des.setVisibility(View.INVISIBLE);
+            cl_des.setVisibility(View.INVISIBLE);
             pbDownload.setVisibility(View.GONE);
             hideLockView();
             rl_pay.setVisibility(View.GONE);

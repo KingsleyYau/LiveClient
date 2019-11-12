@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
@@ -47,6 +48,19 @@ public class DisplayUtil {
         return (int) (spValue * scale + 0.5f);
     }
 
+    /**
+     * 获取屏幕的长宽属性
+     *
+     * @param context
+     * @return
+     */
+    public static DisplayMetrics getDisplayMetrics(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(dm);
+        return dm;
+    }
+
 
     private static final String TAG = DisplayUtil.class.getSimpleName();
 
@@ -85,7 +99,8 @@ public class DisplayUtil {
 
     /**
      * 获取屏幕高度
-     *
+     * 实际显示区域指定包含系统装饰的内容的显示部分 ： getRealSize（Point），getRealMetrics（DisplayMetrics）。
+     * 应用程序显示区域指定可能包含应用程序窗口的显示部分，不包括系统装饰。 应用程序显示区域可以小于实际显示区域，因为系统减去诸如状态栏之类的装饰元素所需的空间。 使用以下方法查询应用程序显示区域：getSize（Point），getRectSize（Rect）和getMetrics（DisplayMetrics）。
      * @param context
      * @return
      */
@@ -98,6 +113,17 @@ public class DisplayUtil {
         }else{
             ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         }
+        return dm.heightPixels;
+    }
+
+    /**
+     * 应用程序显示区域指定可能包含应用程序窗口的显示部分，不包括系统装饰。 应用程序显示区域可以小于实际显示区域，因为系统减去诸如状态栏之类的装饰元素所需的空间。 使用以下方法查询应用程序显示区域：getSize（Point），getRectSize（Rect）和getMetrics（DisplayMetrics）。
+     * @param context
+     * @return
+     */
+    public static int getActivityHeight(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels;
     }
 

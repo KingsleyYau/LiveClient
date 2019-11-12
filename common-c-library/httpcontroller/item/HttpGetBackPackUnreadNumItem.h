@@ -40,6 +40,10 @@ public:
                 rideUnreadNum = root[LIVEROOM_GETBACKPACKUNREADNUM_RIDEUNREADNUM].asInt();
             }
 
+            /* livechatVoucherUnreadNum */
+            if (root[LIVEROOM_GETBACKPACKUNREADNUM_LIVECHARVOUCHERUNREADNUM].isNumeric()) {
+                livechatVoucherUnreadNum = root[LIVEROOM_GETBACKPACKUNREADNUM_LIVECHARVOUCHERUNREADNUM].asInt();
+            }
         }
 
         if (total > 0) {
@@ -53,6 +57,7 @@ public:
         voucherUnreadNum = 0;
         giftUnreadNum = 0;
         rideUnreadNum = 0;
+        livechatVoucherUnreadNum = 0;
 
     }
     
@@ -66,11 +71,13 @@ public:
      * voucherUnreadNum      试用劵未读的数量
      * giftUnreadNum         背包礼物的未读数量
      * rideUnreadNum         座驾的未读数量
+     * livechatVoucherUnreadNum live试用劵未读的数量
      */
     int total;
     int voucherUnreadNum;
     int giftUnreadNum;
     int rideUnreadNum;
+    int livechatVoucherUnreadNum;
 };
 
 #endif /* HTTPGETBACKPACKUNREADNUMITEM_H_*/

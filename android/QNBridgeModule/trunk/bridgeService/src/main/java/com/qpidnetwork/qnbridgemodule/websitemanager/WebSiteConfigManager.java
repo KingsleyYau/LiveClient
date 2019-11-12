@@ -105,7 +105,11 @@ public class WebSiteConfigManager {
      * @return
      */
     public WebSiteBean getCurrentWebSite() {
-        return getWebsiteByWebType(mCurrentWebSiteType);
+        WebSiteBean bean = null;
+        if(mCurrentWebSiteType != null){
+            bean = getWebsiteByWebType(mCurrentWebSiteType);
+        }
+        return bean;
     }
 
     /**

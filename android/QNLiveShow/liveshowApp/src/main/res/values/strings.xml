@@ -1,4 +1,20 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+<!--    tools:locale="es"-->
+
+    <!-- 特殊符号转化 -->
+    <!--    &#32;   Space -->
+    <!--  ! &#33;   惊叹号Exclamation mark-->
+    <!--  " &#34;&quot;   双引号Quotation mark-->
+    <!--  # &#35;   数字标志Number sign-->
+    <!--  $ &#36;   美元标志Dollar sign-->
+    <!--  % &#37;   百分号Percent sign-->
+    <!--  & &#38;&amp;   Ampersand-->
+    <!--  ' &#39;   单引号Apostrophe-->
+    <!--  ( &#40;   小括号左边部分Left parenthesis-->
+    <!--  ) &#41;   小括号右边部分Right parenthesis-->
+
     <string name="app_name">Qpid Dating</string>
 
     <!--peacockActivity-->
@@ -12,6 +28,7 @@
     <string name="txt_continue">Continue</string>
     <string name="txt_almost_done">Almost Done!</string>
     <string name="txt_done">Done</string>
+    <string name="txt_quo">\"</string>
 
     <string name="tip_emoji_unusable">You need to have an Intimacy Level of at least 10 to use advanced emoticions</string>
     <string name="tip_roomGiftCredit">Credit rebate: %1$s</string>
@@ -53,71 +70,26 @@
     <string name="hot_follow_program_desc_tips">%1$s · %2$s</string>
     <string name="live_main_drawer_menu_Message">Message</string>
     <string name="live_main_drawer_menu_Mail">Mail</string>
+    <string name="live_main_drawer_menu_Flowers">Gifts &#38; Flowers</string>
     <string name="live_main_drawer_menu_GreetMail">Greeting Mail</string>
     <string name="live_main_drawer_menu_showtickets">My Show Tickets</string>
     <string name="live_main_drawer_menu_books">My Booking</string>
     <string name="live_main_drawer_menu_backpack">My Backpack</string>
     <string name="live_main_drawer_menu_hangout">Hang-out</string>
+    <string name="live_main_drawer_menu_my_contact">My Contact</string>
+    <string name="live_main_drawer_menu_services">Services</string>
+    <string name="live_main_drawer_menu_broadcaster">Broadcasters</string>
+    <string name="live_main_drawer_menu_others">Others</string>
     <string name="live_main_drawer_menu_changewebsize">Switch to our family sites</string>
     <string name="live_main_tab_discover">DISCOVER</string>
     <string name="live_main_tab_hangout">HANG-OUT</string>
     <string name="live_main_tab_follow">FOLLOW</string>
     <string name="live_main_tab_calendar">CALENDAR</string>
-
-    <!--font标签只实现了两个属性 color和face，如要控制字体大小，可以通过small和big来粗略区分，
-    具体参考源码android.text.HtmlToSpannedConverter#startFont/android.text.HtmlToSpannedConverter#handleEndTag-->
-
-    <!--2018改版后的直播间消息列表样式,勋章功能去掉-->
-    <!--入场-->
-    <!--公开直播间，有座驾入场-->
-    <string name="enterlive_withrider">&#160;Joined with \"%1$s\"</string>
-    <string name="enterlive_norider">&#160;Joined</string>
-    <string name="livemsg_temp_roomin_public"><![CDATA[
-        <jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FF8700\">%2$s</font>
-    ]]></string>
-    <string name="livemsg_temp_roomin_public_self"><![CDATA[
-        <jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FF8700\"> %2$s</font>
-    ]]></string>
-
-    <!--私密直播间入场-->
-    <string name="livemsg_temp_roomin_private_self"><![CDATA[
-        <jimg src=\"ticket\"/><font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FF6D00\"> %2$s</font>
-    ]]></string>
-
-    <!--文本/弹幕-->
-    <!--公开直播间-->
-    <string name="livemsg_temp_normal_public_anchor"><![CDATA[
-                <jimg src=\"anchor1\"></jimg><font color=\"#009927\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#000000\">%2$s</font>
-        ]]></string>
-    <string name="livemsg_temp_normal_public_self"><![CDATA[
-                <jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#000000\">%2$s</font>
-        ]]></string>
-    <!--私密直播间-->
-    <string name="livemsg_temp_normal_private_anchor"><![CDATA[
-                <jimg src=\"anchor2\"/><font color=\"#5DDE7E\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>
-        ]]></string>
-    <string name="livemsg_temp_normal_private_self"><![CDATA[
-                <jimg src=\"ticket\"/><font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>
-        ]]></string>
-
-    <!--送礼-->
-    <!--公开直播间-->
-    <string name="livemsg_temp_gift_public_self"><![CDATA[
-                <jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s</xliff:g></font><b><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font><b>
-        ]]></string>
-    <string name="livemsg_temp_gift_public_anchor"><![CDATA[
-                <jimg src=\"anchor1\"/><font color=\"#009927\"><xliff:g id="message_username">&#160;%1$s</xliff:g></font><b><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
-        ]]></string>
-    <string name="livemsg_temp_gift_public"><![CDATA[
-                <jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g></font><b><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
-        ]]></string>
-    <!--私密直播间-送礼-->
-    <string name="livemsg_temp_gift_private_self"><![CDATA[
-                <jimg src=\"ticket\"/><font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s</xliff:g></font><b><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
-        ]]></string>
-    <string name="livemsg_temp_gift_private_anchor"><![CDATA[
-                <jimg src=\"anchor2\"/><font color=\"#5DDE7E\"><xliff:g id="message_username">&#160;%1$s</xliff:g></font><b><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font></b>
-        ]]></string>
+    <string name="live_main_room_list_public">Watch Now</string>
+    <string name="live_main_room_list_private">Invite One-on-One</string>
+    <string name="live_main_room_list_chat">Chat Now</string>
+    <string name="live_main_room_list_mail">Send Mail</string>
+    <string name="live_main_room_list_book">Book One-on-One</string>
 
     <string name="live_room_host_nickname_tips">%1$s\'s</string>
     <string name="live_room_public_flag">Premium Public</string>
@@ -127,7 +99,8 @@
     <!--直播间发弹幕消息提示-->
     <string name="txt_hint_input_barrage">%1$s credit per pop-up msg</string>
     <string name="liveroom_message_gift_x">x %1$d</string>
-    <string name="tip_unReadLiveMsg">%d unread messages</string>
+    <string name="tip_unReadLiveMsg">%d new messages</string>
+    <string name="full_screen_live_room_input_hint">Type Your Message...</string>
 
     <string name="txt_send_msg">Send</string>
 
@@ -139,32 +112,32 @@
     <string name="liveroom_entrancecar_joined">%1$s Joined</string>
     <string name="liveroom_vipguest">Viewers</string>
     <string name="liveroom_header_vipguestdata">(%1$s/%2$s)</string>
-    <string name="liveroom_close_room_notify">Are you sure to leave the broadcast room?</string>
+    <string name="liveroom_close_room_notify">Are you sure to leave the current broadcast room?</string>
     <string name="liveroom_publish_no_permission_tips">Please allow CharmLive to access your camera to use this feature.</string>
     <!--ListView-->
     <string name="common_empty_text">No content yet.</string>
     <string name="common_btn_tap_to_retry">Reload</string>
-    <string name="followinglist_empty_text">No following broadcasters.</string>
+
+    <!--<string name="followinglist_empty_text">No following broadcasters.</string>-->
+    <string name="followinglist_empty_text">You have not followed anyone yet.</string>
+    <string name="followinglist_empty_text_bottom">Add your favorite broadcasters here to discover fun now.</string>
+
     <string name="followinglist_logout_text">Login and view my following broadcasters.</string>
     <string name="live_common_noenough_money_tips">You don\'t have enough credits, please buy more.</string>
+    <string name="live_common_noenough_money_for_2ways_tips">You don\'t have enough credits to start 2-way video, please buy more.</string>
     <string name="hangout_list_empty_text">No Hang-out circles are online at the moment.Please check back later.</string>
 
     <!--room transition-->
-    <string name="liveroom_transition_anchor_private_broadcast_exception">The broadcaster is in a One-on-One broadcast. Do you still wish to send the invitation?</string>
-    <string name="liveroom_transition_waiting_anchor_start_tips">Waiting for the broadcaster to start broadcast...</string>
+    <string name="liveroom_transition_waiting_anchor_start_tips">Waiting for the broadcaster to start broadcast.</string>
     <string name="liveroom_transition_invite_enterroom_countdown_tips">The broadcaster has accepted your invitation.One-on-One Broadcast will start in</string>
     <string name="liveroom_transition_anchorinvite_enterroom_countdown_tips">You have accepted the invitation. One-on-One broadcast will start in:</string>
-    <string name="liveroom_transition_enterroom_countdown_tips">The broadcaster is getting prepared. One-on-One broadcast will start in</string>
+    <string name="liveroom_transition_enterroom_countdown_tips"><![CDATA[The broadcaster is getting prepared. One-on-One broadcast will start in <b><font color=\"#FF8500\"><xliff:g id="left_seconds">%1$ss</xliff:g></font></b>]]></string>
     <string name="liveroom_transition_invite_deny_without_message">The broadcaster is not responding. Please try again later</string>
-    <string name="liveroom_transition_invite_deny_with_message">Sorry, the broadcaster has declined your invitation and left you a message as below: %1$s</string>
+    <string name="liveroom_transition_invite_deny_with_message"><![CDATA[Sorry, the broadcaster has declined your invitation and left you a message as below:<br/>%1$s]]></string>
     <string name="liveroom_noenough_money_tips_watching">You are running out of credits. Please buy more credits to continue watching.</string>
     <string name="liveroom_noenough_money_tips_watch_end">You don\'t have enough credits to continue watching this broadcast.</string>
-    <string name="liveroom_transition_anchor_offline">The broadcaster offline, please check back later.</string>
-    <string name="liveroom_transition_enterroom_full">Broadcast room is full. Please check back later.</string>
     <string name="liveroom_transition_broadcast_ended">Broadcast has ended. Please check back later.</string>
     <string name="liveroom_transition_anchor_invite_network_error">Failed to accept the invitation. Please try again.</string>
-    <string name="liveroom_transition_audience_invite_network_error">Trouble connecting to the server, please try again later.</string>
-    <string name="liveroom_transition_enterroom_network_error">Failed to enter the broadcast room, please try again later.</string>
     <string name="liveroom_transition_unknown_error_default_tips">A problem occur while communicating with the server.</string>
     <string name="liveroom_transition_invite_overtime_default_tips">Failed to connect. Please try again later.</string>
     <string name="liveroom_transition_enterroom_overtime_default_tips">Failed to enter the broadcast room, please try again later.</string>
@@ -173,17 +146,20 @@
     <string name="liveroom_leaving_room_time_count">%1$ss</string>
     <string name="liveroom_transition_recommand_tips">Recommended Broadcasters</string>
     <string name="liveroom_transition_countdown_unit">S</string>
+    <string name="liveroom_transition_anchor_name_and_id"><![CDATA[<b><font color=\"#FFFFFF\"><xliff:g id="anchor_name">%1$s</xliff:g></font></b><font color=\"#999999\"><xliff:g id="anchor_id">(ID:%2$s)</xliff:g></font>]]></string>
 
     <string name="common_btn_ok">Ok</string>
     <string name="common_btn_cancel">Cancel</string>
     <string name="common_btn_sure">Sure</string>
-    <string name="live_common_btn_add_credit">Add Credit</string>
+    <string name="live_common_btn_add_credit">Add Credits</string>
     <string name="live_common_btn_yes">Yes</string>
     <string name="live_common_btn_no">No</string>
     <string name="live_common_btn_search">Search</string>
     <string name="live_common_btn_close">Close</string>
     <string name="live_common_btn_retry">Retry</string>
     <string name="live_common_start_oneonone">Start one-on-one</string>
+    <string name="live_common_view_hotlist">View Hot Broadcasts</string>
+    <string name="live_common_btn_nothanks">No,Thanks</string>
     <string name="common_connect_error_description">Trouble connecting to the server. Please try again later.</string>
 
     <string name="liveroom_my_balance">My Balance</string>
@@ -236,14 +212,20 @@
     <string name="scheduled_empty_tips">No scheduled bookings. Go to request a booking now.</string>
     <string name="history_empty_tips">No booking history. Go to browse live broadcasts now.</string>
     <!--背包-->
-    <string name="my_package_voucher_default_desc">Premium session Voucher</string>
-    <string name="my_package_voucher_nolimit_session">No limit sessions</string>
-    <string name="my_package_voucher_private_session">Only in One-on-One</string>
-    <string name="my_package_voucher_public_session">Only in Public sessions</string>
-    <string name="my_package_voucher_new_performer">New broadcaster</string>
-    <string name="my_package_voucher_special_performer">Only with broadcaster:</string>
-    <string name="my_package_voucher_nolimit_performer">No limit broadcasters</string>
-    <string name="my_package_voucher_expired_desc">Valid Time : %1$s</string>
+    <string name="my_package_voucher_live_type_private">One-on-One Voucher</string>
+    <string name="my_package_voucher_live_type_public">Public Broadcast Voucher</string>
+    <string name="my_package_voucher_live_type_normal">Broadcast Voucher</string>
+    <string name="my_package_voucher_livechat_type_normal">Chat Voucher</string>
+    <string name="my_package_voucher_live_use_forall">For watching all broadcasters.</string>
+    <string name="my_package_voucher_live_use_nowatch">For broadcasters never watched.</string>
+    <string name="my_package_voucher_live_use_forsomeone">For broadcaster:</string>
+    <string name="my_package_voucher_livechat_use_forall">For chatting with all broadcasters.</string>
+    <string name="my_package_voucher_livechat_use_nochat">For broadcasters never chatted with.</string>
+    <string name="my_package_voucher_livechat_use_forsomeone">For chatting with:</string>
+    <string name="my_package_voucher_expired_desc">Exp: %1$s</string>
+    <string name="my_package_voucher_valid_time_duration">Valid : %1$s to %2$s</string>
+    <string name="my_package_voucher_duration_union">MIN</string>
+    <string name="my_package_voucher_expire_comingsoon">soon</string>
 
     <string name="my_package_gift_expired_desc">Valid Time : %1$s</string>
     <string name="my_package_gift_maxnum">x 999+</string>
@@ -252,7 +234,7 @@
     <string name="my_package_rider_riding">Riding</string>
     <string name="my_package_rider_ride">Ride</string>
 
-    <string name="my_package_voucher_empty_tips">No Vouchers</string>
+    <string name="my_package_voucher_empty_tips">No Vouchers available.</string>
     <string name="my_package_gift_empty_tips">No Gifts</string>
     <string name="my_package_rider_empty_tips">No Rides</string>
 
@@ -289,7 +271,7 @@
 
     <!-- giff -->
     <string name="live_gift_send_failed">Failed to send %1$s. Please try again.</string>
-    <string name="live_gift_send_failed_numnoenough">You don\'t have enough %1$s to send.</string>
+    <string name="live_gift_send_failed_numnoenough">You don\'t have enough credits to send this gift.Please buy more!</string>
 
     <!-- 才艺 -->
     <string name="live_talent_rewarded_credits">Credits rebate:&#160;</string>
@@ -408,8 +390,8 @@
     <string name="live_inter_video_never_show_again">Don\'t show again</string>
     <string name="live_inter_video_yes">Yes</string>
     <string name="live_inter_video_no">No</string>
-    <string name="live_inter_video_failed_open">Could not start 2-way video chat.Please try again later.</string>
-    <string name="live_inter_video_failed_close">Could not terminate 2-way video chat.Please try again later.</string>
+    <string name="live_inter_video_failed_open">Could not start 2-way video chat. Please try again later.</string>
+    <string name="live_inter_video_failed_close">Could not end 2-way video chat. Please try again later.</string>
 
     <!--Notification-->
     <string name="notification_anchor_inite_tips_title">One-on-One with %1$s</string>
@@ -459,7 +441,7 @@
     ]]></string>
 
     <!--节目过度页-->
-    <string name="livemsg_program_transition_reciprocal_tips">Show \"%1$s\" is starting in show is %2$ss.Please wait...</string>
+    <string name="livemsg_program_transition_reciprocal_tips"><![CDATA[Show <font color=\"#FF8500\"><xliff:g id="program_name">\"%1$s\"</xliff:g></font> is starting in %2$ss.Please wait...]]></string>
     <string name="live_program_detail_title">Show</string>
     <string name="live_program_des">Show Calendar are the calendars of specially scheduled broadcasts arranged by broadcasters.</string>
 
@@ -478,7 +460,7 @@
     <string name="discover_top_mail">Mail</string>
     <string name="discover_top_greet">Greetings</string>
     <string name="discover_top_hangout">Hang-out</string>
-    <string name="discover_top_addcredit">Add Credits</string>
+    <string name="discover_top_addcredit">Credits</string>
 
     <string name="left_menu_credits_add">Add</string>
     <string name="left_menu_credits_tips">Qpid Credits</string>
@@ -494,14 +476,19 @@
     <string name="log_out">Log out</string>
     <string name="Private_Messages">Private Messages</string>
     <string name="Mails_from_CharmLive">Mails from CharmLive</string>
+    <string name="New_Say_Hi_Response">New Say Hi Response</string>
     <string name="One_on_One_Invitation">One-on-One Invitation</string>
+    <string name="person_center_profile_detail">Profile Details</string>
+    <string name="person_center_credit_balance">Credit Balance</string>
+    <string name="person_center_my_vouchers">My Vouchers</string>
+    <string name="person_center_settings">Settings</string>
 
     <!-- 找回密码界面  -->
     <string name="Change_Password">Change Password</string>
     <string name="Your_current_password_is_incorrect">Your current password is incorrect.</string>
-    <string name="Your_current_password">Your current password</string>
-    <string name="New_password">New password</string>
-    <string name="Confirm_password">Confirm password</string>
+    <string name="Your_current_password">Your Current Password</string>
+    <string name="New_password">New Password</string>
+    <string name="Confirm_password">Confirm Password</string>
     <string name="Change">Change</string>
     <!-- 找回密码界面  end -->
 
@@ -530,13 +517,17 @@
 
     <!-- liveChat -->
     <string name="Chat">Chat</string>
+    <string name="Chat2">SayHi测试</string>
     <string name="live_chat_camshare_switch_to_livechat_tips">Camshare is going. Do you want to switch to LiveChat?</string>
-    <string name="live_chat_common_risk_control_notify">Sorry, we can not process your request right now, please try later.</string>
+    <string name="live_chat_common_risk_control_notify">Sorry, we can not process your request at the moment.Please try again later.</string>
+
     <string name="chat_list_empty_title">Your Chat List is empty.</string>
-    <string name="chat_list_empty_desc">How to add a member here?\nContact them via our Chat service.</string>
+    <string name="chat_list_empty_desc">How to get along with the broadcasters?\nYou may use any of our services:</string>
     <string name="chat_invitation_empty_title">Your Invitation is empty.</string>
-    <string name="chat_invitation_empty_desc">Why not take the initiative to chat with the\nbroadcasters?</string>
-    <string name="livechat_charge_terms">Live chat billed at 0.5 credit per 5 mins. Billing begins after your first message is sent.</string>
+    <string name="chat_invitation_empty_desc">How to get along with the broadcasters?\nYou may use any of our services:</string>
+
+    <string name="live_chat_charge_terms">Chat billed at 0.5 credit per 5 mins. Billing begins after your first message is sent.</string>
+    <string name="live_chat_msg_trychat_start_end">Your free chat is ended. Chat billed at 0.5 credit per 5 mins.</string>
     <string name="live_chat_emotion_preview_price">%s credits</string>
     <string name="live_chat_download_voice_fail">Voice message loading failed.</string>
     <string name="live_chat_download_magicicon_fail">Premium stickers loading failed.</string>
@@ -547,7 +538,6 @@
     <string name="live_chat_voice_record_payment">0.3 credits for each voice message sent.</string>
     <string name="live_chat_voice_record_speak">Speak</string>
     <string name="live_chat_voice_record_cancel">Release to cancel</string>
-    <string name="live_chat_price_info">Live chat billed at 0.5 credit per 5mins. Billing begins after your first message is sent.</string>
     <string name="live_chat_try_tips">send your first message to start free chat now.</string>
     <string name="live_chat_lady_illeage_message">Your message may contain prohibited information. Your message will not be delivered.</string>
     <string name="live_chat_kickoff_by_sever_update">You have been disconnected due to the server is now under maintenance.</string>
@@ -564,11 +554,14 @@
     <string name="live_common_start_hangout">Start Hang-out</string>
     <string name="live_common_taptoretry">Tap to retry</string>
     <string name="live_common_no_broadcasters">No broadcasters yet.</string>
+
     <string name="Hand_out">Hang-out</string>
     <string name="Chat_now">Chat Now</string>
+    <string name="One_on_One">One-on-One</string>
+
     <string name="hand_out_list_header_title">What is Hang-out?</string>
     <string name="hand_out_list_header_dont_show">&#160;Don\'t show again</string>
-    <string name="hand_out_list_header_tips_long">With Hang-out you can enjoy fully interacting with broadcasters and their friends in the same live video Hang-out room. By clicking \"Start Hang-out\" below, you will first enter the broadcaster\'s Hang-out room. Then, through your or her invitation, friends of her invited will join the Hang-out for a great time together!\n\nHang-out is billed at 0.3 credits per minute per broadcaster.</string>
+    <string name="hand_out_list_header_tips_long">With Hang-out you can enjoy fully interacting with broadcasters and their friends in the same live video Hang-out room. By clicking \"Start Hang-out\" below, you will first enter the broadcaster\'s Hang-out room. Then, through your or her invitation, friends of her invited will join the Hang-out for a great time together!\n\nHang-out is billed at %s credits per minute per broadcaster.</string>
     <string name="hand_out_list_header_btn">I GOT IT!</string>
     <string name="hand_out_list_her_friends">Her Friends</string>
     <string name="hand_out_list_start">Start Hang-out</string>
@@ -609,7 +602,7 @@
     <string name="hand_out_enter_new_room">Start a New Hang-out</string>
     <string name="public_live_sendmsg_manleave_tips">The broadcast room has no viewers or the viewer you @ has left the broadcast room</string>
     <string name="hang_out_my_balance">My Balance:</string>
-    <string name="hangout_invtite_start_tips">Inviting %s to join Hang-out...</string>
+    <string name="hangout_invtite_start_tips">Inviting %s to start Hang-out...</string>
     <string name="hangout_invtite_success_tips">Hang-out will start soon.</string>
     <string name="hangout_anchor_recommand_private_tips">%1$s would like to start Hang-out with you and %2$s.</string>
     <string name="hangout_anchor_recommand_hangout_tips">%1$s Recommended %2$s to join the Hang-out.</string>
@@ -643,32 +636,6 @@
     <string name="hangout_gift_send_no_broadcasters_select">Failed to send "%1$s". Please chose at least one broadcaster.</string>
     <string name="hangout_gift_send_no_credits_tip">You have insufficient credits. Please add more credits and try again.</string>
 
-
-    <!--HangOut直播间入场-->
-    <string name="livemsg_temp_roomin_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> joined </font>]]></string>
-    <string name="livemsg_temp_roomin_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> joined </font>]]></string>
-
-    <string name="livemsg_temp_normal_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
-    <string name="livemsg_temp_normal_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
-
-    <string name="livemsg_temp_gift_hangout_bar_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
-    <string name="livemsg_temp_gift_hangout_bar_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
-    <string name="livemsg_temp_gift_hangout_bar_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
-
-    <string name="livemsg_temp_gift_hangout_giftstore_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
-    <string name="livemsg_temp_gift_hangout_giftstore_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
-    <string name="livemsg_temp_gift_hangout_giftstore_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
-
-    <string name="livemsg_temp_gift_hangout_celeb_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
-    <string name="livemsg_temp_gift_hangout_celeb_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
-
-    <string name="livemsg_temp_hangout_recommend"><![CDATA[
-        <font color=\"#05C775\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> Recommended </font><font color=\"#05C775\">%2$s</xliff:g></font><font color=\"#FF6D00\"> to join the hang-out. </font>
-    ]]></string>
-    <string name="livemsg_temp_private_recommend"><![CDATA[
-        <font color=\"#FF6D00\">You invited </font><font color=\"#FF6D00\">%1$s</font><font color=\"#FF6D00\"> to hang out with </font><font color=\"#FF6D00\">%2$s</xliff:g></font>
-    ]]></string>
-
     <!--LiveChat-->
     <string name="x_credits_will_be_charged_for_each_photo_sent">1.5 credits for each photo sent.</string>
     <string name="credits_per_photo_15">1.5 credits per photo</string>
@@ -680,12 +647,135 @@
     <string name="View_Photo">View Photo</string>
     <string name="livechat_photo_name">This is %1$s’s private photo.</string>
     <string name="livechat_video_name">This is %1$s’s private video.</string>
-
+    <string name="camera_error_tips">Sorry, your camera is being occupied. Please try again later.</string>
 
     <!--聊天历史视频-->
     <string name="live_chat_recent_watched_title">Recent Watched</string>
     <string name="recent_watched_empty_tips">No recent watched video in the last 3 days.</string>
 
+    <!--say hi 相关-->
+    <string name="sayhi">Say Hi</string>
+    <string name="sayhi_dialog_successfully_title">Send Successfully!</string>
+    <string name="sayhi_dialog_successfully_message">Don\'t just be waiting for response. Take the first move and contact her!</string>
+    <string name="sayhi_dialog_item_wechat">Chat with Her Now</string>
+    <string name="sayhi_dialog_item_mail">Send a Mail to Her</string>
+    <string name="sayhi_dialog_item_say_hi">View this Say Hi</string>
+    <string name="sayhi_dialog_item_my_say_hi_responses">View My Say Hi</string>
+    <string name="sayhi_dialog_item_say_hi_responses">View Say Hi Responses</string>
+    <string name="sayhi_dialog_item_one_on_one">Start One-on-One</string>
+    <string name="sayhi_dialog_item_follow">Follow Her and Say Hi Next Time.</string>
+    <string name="sayhi_dialog_fail_title">Cannot send Say Hi to %1s</string>
+    <string name="sayhi_dialog_fail_has_send_message">You cannot send Say Hi to %1s as you have already sent her one.</string>
+    <string name="sayhi_dialog_fail_has_contact_message">You cannot send Say Hi to %1s as you have already established contact with her through the site\'s other services.</string>
+    <string name="sayhi_dialog_fail_day_limit_send_message">Cannot send Say Hi to %1s today because you have already reached the daily quota (2 Say Hi per day).</string>
+    <string name="sayhi_dialog_fail_limit_send_feedback_message">You have already received quite a few Say Hi responses. Please reply some of these responses before you can sending more Say Hi.</string>
+    <string name="sayhi_dialog_fail_limit_send_nofeedback_message">You have sent quite a few Say Hi already. Please wait for the broadcaster\'s responses and reply to their messages first. Then you can continue Say Hi to other broadcasters.</string>
+    <string name="sayhi_dialog_fail_auth_message">Sorry, the service is not available for the moment. You may contact us for help.</string>
+    <string name="sayhi_dialog_fail_sub_title">To make further steps, you may:</string>
 
+    <string name="say_hi_guide_tip1">Say Hi is a quick and easy way to say Hello and let the broadcasters know you are interested.</string>
+    <string name="say_hi_guide_tip2">Just select a simple greeting and a romantic theme to express how you feel.</string>
+    <string name="say_hi_guide_tip3">It\'s FREE to send and read the first response!</string>
+    <string name="say_hi_dialog_tip_three_btn">The first response is FREE to read.\nStarting from the second response, 1\npost stamp or 1 credit will be\ndeducted from your account.</string>
+    <string name="Dont_Ask_Again">Don\'t Ask Again</string>
+    <string name="say_hi_list_all_empty_tip">You haven\'t sent any Say Hi yet.\nWhy not find someone and Say Hi to her?</string>
+    <string name="say_hi_list_response_empty_tip">You haven\'t got any responses yet.\nWhy not find someone and Say Hi to her?</string>
+    <string name="say_hi_list_empty_You_may_be_interested_in">You may be interested in</string>
+    <string name="Search_More">Search More</string>
+    <string name="Unread_First">Unread First</string>
+    <string name="Newest_First">Newest First</string>
+    <string name="sort_by">Sort By:</string>
+
+    <string name="say_hi_detail_title">My Say Hi</string>
+    <string name="say_hi_detail_my_note_btn">My Note</string>
+    <string name="say_hi_detail_free_btn">Free</string>
+    <string name="say_hi_detail_send_info">To: %1$s, %2$d</string>
+    <string name="say_hi_detail_response_info">ID: %1s  %2s</string>
+    <string name="say_hi_edit_title">Say Hi</string>
+    <string name="say_hi_edit_anchor_name">Dear %1$s</string>
+    <string name="say_hi_edit_handle_theme">Select Theme</string>
+    <string name="say_hi_edit_handle_note">Select Note</string>
+    <string name="say_hi_edit_send">Send Now</string>
+    <string name="say_hi_detail_reply_btn">Reply</string>
+    <string name="say_hi_detail_empty_tips">Awaiting %1s’s response.</string>
+    <string name="say_hi_detail_buy_tips_title">Want to know what %1s says?</string>
+    <string name="say_hi_detail_buy_tips_title2">Get Stamps to contiune reading this response now!</string>
+    <string name="say_hi_detail_buy_psot_stamps">Buy Post Stamps</string>
+    <string name="say_hi_detail_error_view_title">Network unavailable at the moment.\nTap to retry.</string>
+    <string name="say_hi_detail_reply_response_title">
+        <Data> <![CDATA[<font color=\'#383838\'>%1s’s response</font> (<font color=\'#FF4747\'>%2d</font>/<font color=\'#383838\'>%3d</font>)]]></Data>
+    </string>
+
+    <string name="say_hi_detail_add_credits_title">
+        <Data> <![CDATA[<font color=\'#383838\'>Or</font> <font color=\'#297AF3\'>Add Credits</font>]]></Data>
+    </string>
+
+    <string name="live_load_error_tip_new">Fail to load this page. Please try again later.</string>
+
+    <string name="Mail">Mail</string>
+    <string name="Public_Broadcast_next_line">Public\nBroadcast</string>
+    <string name="LIVE">LIVE</string>
+
+    <string name="my_contact_list_empty_title">Your Contact List is empty.</string>
+    <string name="my_contact_list_empty_desc">How to add a contact here?\nYou may use any of our services:</string>
+
+    <string name="Take_Photo">Take Photo</string>
+    <string name="Choose_From_Album">Choose From Album</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="change_photo_review_tip">Your profile photo is under review.</string>
+
+    <!--  私密直播间改版  -->
+    <string name="Virtual_Gift_Store">Virtual Gift Store</string>
+    <string name="virtual_gift_store_tip_1">Virtual Gifts is a convenient and romantic way to show your love and care to her in a high definition live video room.</string>
+    <string name="virtual_gift_store_tip_2">Send a Virtual Gift every day and make her feel warm and special as if you\'re by her side.</string>
+    <string name="send_mult_gift">Sent a gift \"%1$s\"</string>
+
+    <!--  鲜花礼品  -->
+    <string name="live_common_btn_later">Later</string>
+    <string name="live_common_btn_checkout">Checkout</string>
+    <string name="flowers_memu_pop_msg">&#36;%1$d OFF</string>
+    <string name="free_greeting_card_tag">&#160;- Free Greeting Card</string>
+    <string name="check_my_selected_items">Check my selected items</string>
+    <string name="checkout">Checkout</string>
+    <string name="continue_shopping">Continue Shopping</string>
+    <string name="go_to_store">Go to Gifts Store</string>
+    <string name="my_cart_title">My Cart</string>
+    <string name="my_cart_price">USD %1$s</string>
+    <string name="my_cart_empty">There is no item in your cart!</string>
+    <string name="my_cart_empty_btn">Choose a Gift</string>
+    <string name="my_cart_num_out_range">You can only add 1&#8211;99 items</string>
+    <string name="live_receiver_send_gift_title">Send this gift to:</string>
+    <string name="live_receiver_enter_profile_ID">Enter member ID</string>
+    <string name="live_receiver_order_now">Order Now</string>
+    <string name="live_receiver_search_by_ID">Search by ID</string>
+    <string name="live_receiver_back">Back</string>
+    <string name="checkout_greeting_card">Greeting Card</string>
+    <string name="checkout_fee">Delivery Fees:</string>
+    <string name="checkout_offer">Holiday special offer:</string>
+    <string name="checkout_greeting_message">1. Greeting Message</string>
+    <string name="checkout_greeting_message_hint">Type your message here</string>
+    <string name="checkout_required">(Required)</string>
+    <string name="checkout_preview">Greetings preview</string>
+    <string name="checkout_special_delivery">2. Special Delivery Request</string>
+    <string name="checkout_special_delivery_hint">Leave us a message here if you have any special request regarding the delivery (such as exact day delivery).</string>
+    <string name="checkout_tips1">* Please review your order carefully before proceeding to checkout. Normally delivery times vary from 2 to 5 business days. You may leave a message in the box below to make an exact delivery day request.</string>
+    <string name="checkout_pay_now">Pay Now</string>
+    <string name="checkout_empty_tips">There is no item to checkout!</string>
+    <string name="checkout_create_error_tip1">Please enter your greeting message</string>
+    <string name="proceed_to_checkout">Proceed to checkout</string>
+    <string name="continue_to_exit">Continue to exit</string>
+    <string name="flowers_gift_item_code">(Item Code: %1$s)</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="money_symbol">$</string>
+    <string name="delivery_empty1">There is no Gift / Flower order history within recent 60 days.</string>
+    <string name="delivery_empty">Why not give your favorite girls a surprise?</string>
+    <string name="delivery_status_tips_title">Status:</string>
+    <string name="delivery_status_tips"><![CDATA[
+        <br/>
+        <b><font color=\"#383838\">Pending:</font></b><font color=\"#383838\">Order received and delivery to  be arranged as soon as possible.</font><br/><br/>
+        <b><font color=\"#383838\">Shipped:</font></b><font color=\"#383838\">Order has been shipped according to the instructions of your order.</font><br/><br/>
+        <b><font color=\"#383838\">Delivered:</font></b><font color=\"#383838\">Order delivery successful.</font><br/><br/>
+        <font color=\"#383838\">Confirmed by express delivery service or affiliated Gifts/Flowers shop.</font><br/><br/>
+        <b><font color=\"#383838\">Cancelled:</font></b><font color=\"#383838\">Order cancelled.</font>
+    ]]></string>
 </resources>
-

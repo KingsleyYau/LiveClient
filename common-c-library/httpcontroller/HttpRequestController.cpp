@@ -726,6 +726,38 @@ long long HttpRequestController::GetValidateCode(
     return requestId;
 }
 
+long long HttpRequestController::UploadUserPhoto(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& photoName,
+                                                 IRequestUploadUserPhotoCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpUploadUserPhotoTask* task = new HttpUploadUserPhotoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(photoName);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::GetAnchorList(
                                                HttpRequestManager *pHttpRequestManager,
                                                int start,
@@ -1185,6 +1217,135 @@ long long HttpRequestController::GetPromoAnchorList(
     return requestId;
 }
 
+long long HttpRequestController::GetLiveEndRecommendAnchorList(
+                                        HttpRequestManager *pHttpRequestManager,
+                                        IRequestGetLiveEndRecommendAnchorListCallback* callback
+                                                               ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetLiveEndRecommendAnchorListTask* task = new HttpGetLiveEndRecommendAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetContactList(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                int start,
+                                                int step,
+                                                IRequestGetContactListCallback* callback
+                                                ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetContactListTask* task = new HttpGetContactListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetGiftTypeList(
+                                                  HttpRequestManager *pHttpRequestManager,
+                                                  LSGiftRoomType roomType,
+                                                  IRequestGetGiftTypeListtCallback* callback
+                                                  ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetGiftTypeListTask* task = new HttpGetGiftTypeListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomType);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetFeaturedAnchorList(
+                                                       HttpRequestManager *pHttpRequestManager,
+                                                       int start,
+                                                       int step,
+                                                       IRequestGetFeaturedAnchorListCallback* callback
+                                                       ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetFeaturedAnchorListTask* task = new HttpGetFeaturedAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::ManHandleBookingList(
                                                       HttpRequestManager *pHttpRequestManager,
                                                       BookingListType type,
@@ -1351,7 +1512,7 @@ long long HttpRequestController::SendBookingRequest(
                              HttpRequestManager *pHttpRequestManager,
                              const string& userId,
                              const string& timeId,
-                             long bookTime,
+                             long long bookTime,
                              const string& giftId,
                              int giftNum,
                              bool needSms,
@@ -1460,6 +1621,7 @@ long long HttpRequestController::VoucherList(
     task->SetParam();
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
+
     
     requestId = (long long)task;
     
@@ -1603,6 +1765,40 @@ long long HttpRequestController::GetVoucherAvailableInfo(
     }
     
     return requestId;
+}
+
+long long HttpRequestController::GetChatVoucherList(
+                             HttpRequestManager *pHttpRequestManager,
+                             int start,
+                             int step,
+                             IRequestGetChatVoucherListCallback* callback
+                             ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetChatVoucherListTask* task = new HttpGetChatVoucherListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+    
 }
 
 long long HttpRequestController::GetConfig(
@@ -2556,13 +2752,14 @@ long long HttpRequestController::MobilePayGoto(
                                                LSOrderType orderType,
                                                const string& clickFrom,
                                                const string& number,
+                                               const string& orderNo,
                                                IRequestMobilePayGotoCallback* callback
                                                ) {
     long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpMobilePayGotoTask* task = new HttpMobilePayGotoTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(url, siteId, orderType, clickFrom, number);
+    task->SetParam(url, siteId, orderType, clickFrom, number, orderNo);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -3147,7 +3344,7 @@ long long HttpRequestController::GetPrivateMsgFriendList(
     
     FileLevelLog(LIVESHOW_HTTP_LOG,
                  KLog::LOG_MSG,
-                 "alextest:HttpRequest::StartRequest( "
+                 "HttpRequest::StartRequest( "
                  "pHttpRequestManager : %p, "
                  "this : %p, "
                  ") \n\n",
@@ -3918,3 +4115,499 @@ long long HttpRequestController::ReadResponse(
     
     return requestId;
 }
+
+long long HttpRequestController::UpQnInviteId(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              const string& manId,
+                                              const string& anchorId,
+                                              const string& inviteId,
+                                              const string& roomId,
+                                              LSBubblingInviteType inviteType,
+                                              IRequestUpQnInviteIdCallback* callback
+                                              ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpUpQnInviteIdTask* task = new HttpUpQnInviteIdTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(manId, anchorId, inviteId, roomId, inviteType);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::RetrieveBanner(
+                         HttpRequestManager *pHttpRequestManager,
+                         string manId,
+                         bool isAnchorPage,
+                         LSBannerType bannerType,
+                         IRequestRetrieveBannerCallback* callback
+                                                ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpRetrieveBannerTask* task = new HttpRetrieveBannerTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(manId, isAnchorPage, bannerType);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetStoreGiftList(
+                                                  HttpRequestManager *pHttpRequestManager,
+                                                  const string& anchorId,
+                                                  IRequestGetStoreGiftListCallback* callback
+                                                  ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetStoreGiftListTask* task = new HttpGetStoreGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetFlowerGiftDetail(
+                                                     HttpRequestManager *pHttpRequestManager,
+                                                     const string& giftId,
+                                                     IRequestGetFlowerGiftDetailCallback* callback
+                                                     ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetFlowerGiftDetailTask* task = new HttpGetFlowerGiftDetailTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(giftId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetRecommendGiftList(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      const string& giftId,
+                                                      const string& anchorId,
+                                                      int number,
+                                                      IRequestGetRecommendGiftListCallback* callback
+                                                      ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetRecommendGiftListTask* task = new HttpGetRecommendGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(giftId, anchorId, number);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetResentRecipientList(
+                                                        HttpRequestManager *pHttpRequestManager,
+                                                        IRequestGetResentRecipientListCallback* callback
+                                                        ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetResentRecipientListTask* task = new HttpGetResentRecipientListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetDeliveryList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 IRequestGetDeliveryListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetDeliveryListTask* task = new HttpGetDeliveryListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetCartGiftTypeNum(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    const string& anchorId,
+                                                    IRequestGetCartGiftTypeNumCallback* callback
+                                                    ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetCartGiftTypeNumTask* task = new HttpGetCartGiftTypeNumTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::GetCartGiftList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 int start,
+                                                 int step,
+                                                 IRequestGetCartGiftListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetCartGiftListTask* task = new HttpGetCartGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::AddCartGift(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             const string& anchorId,
+                                             const string& giftId,
+                                             IRequestAddCartGiftCallback* callback
+                                             ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAddCartGiftTask* task = new HttpAddCartGiftTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId, giftId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::ChangeCartGiftNumber(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      const string& anchorId,
+                                                      const string& giftId,
+                                                      int giftNumber,
+                                                      IRequestChangeCartGiftNumberCallback* callback
+                                                      ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpChangeCartGiftNumberTask* task = new HttpChangeCartGiftNumberTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId, giftId, giftNumber);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::RemoveCartGift(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string& anchorId,
+                                                const string& giftId,
+                                                IRequestRemoveCartGiftCallback* callback
+                                                ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpRemoveCartGiftTask* task = new HttpRemoveCartGiftTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId, giftId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::CheckOutCartGift(
+                                                  HttpRequestManager *pHttpRequestManager,
+                                                  const string& anchorId,
+                                                  IRequestCheckOutCartGiftCallback* callback
+                                                  ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpCheckOutCartGiftTask* task = new HttpCheckOutCartGiftTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::CreateGiftOrder(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& anchorId,
+                                                 const string& greetingMessage,
+                                                 const string& specialDeliveryRequest,
+                                                 IRequestCreateGiftOrderCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpCreateGiftOrderTask* task = new HttpCreateGiftOrderTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId, greetingMessage, specialDeliveryRequest);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::WomanListAdvert(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& deviceId,
+                                                 LSAdvertSpaceType adspaceId,
+                                                 IRequestWomanListAdvertCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpWomanListAdvertTask* task = new HttpWomanListAdvertTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(deviceId, adspaceId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+

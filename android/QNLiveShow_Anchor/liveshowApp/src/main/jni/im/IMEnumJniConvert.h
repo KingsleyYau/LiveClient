@@ -55,6 +55,31 @@ static const int IMErrorTypeArray[] = {
         ZBLCC_ERR_SEND_GIFT_PARAM_ERR,               // 发礼物,参数错误
         ZBLCC_ERR_PRIVTE_INVITE_AUTHORITY,           // 主播无立即私密邀请权限(17002)
         ZBLCC_ERR_NO_PUBLIC_LIVE_AUTHORITY,           // 主播无公开开播权限(17004)
+
+        //    // 其它错误码
+        //    ZBLCC_ERR_ENTER_ROOM_ERR,                    // 进入房间失败 数据库操作失败（添加记录or删除扣费记录）
+        //
+        //    ZBLCC_ERR_COUPON_FAIL = 10028,                       // 扣费信用点失败--扣除优惠券分钟数
+        //    ZBLCC_ERR_ENTER_ROOM_NO_AUTHORIZED,          // 进入私密直播间 不是对应的userid
+        //    ZBLCC_ERR_REPEAT_KICKOFF = 10038,                    // 被挤掉线 同一userid不通socket_id进入同一房间时
+        //    ZBLCC_ERR_ANCHOR_NO_ON_LIVEROOM,             // 改主播不存在公开直播间
+        //    ZBLCC_ERR_INCONSISTENT_CREDIT_FAIL,          // 扣费信用点数值的错误，扣费失败
+        //    ZBLCC_ERR_REPEAT_END_STREAM,                 // 已结结束推流，不能重复操作
+        //    ZBLCC_ERR_REPEAT_BOOKING_KICKOFF,            // 重复立即预约该主播被挤掉线.
+
+        //
+        //
+
+        //    ZBLCC_ERR_SEND_TOAST_NOCAN,                  // 主播不能发送弹幕
+        //    ZBLCC_ERR_ANCHOR_OFFLINE,                    // 立即私密邀请失败 主播不在线 /*important*/
+        //    ZBLCC_ERR_ANCHOR_BUSY,                       // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
+        //    ZBLCC_ERR_ANCHOR_PLAYING,                    // 主播正在私密直播中 /*important*/
+        //    ZBLCC_ERR_NOTCAN_CANCEL_INVITATION,          // 取消立即私密邀请失败 状态不是带确认 /*important*/
+        //    ZBLCC_ERR_NO_FOUND_CRONJOB,                  // cronjob 里找不到对应的定时器函数
+        //    ZBLCC_ERR_REPEAT_INVITEING_TALENT,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
+        //    ZBLCC_ERR_RECV_REGULAR_CLOSE_ROOM8,           // 用户接收正常关闭直播间
+
+            ZBLCC_ERR_HAS_ONEONONE_LIVE                    // 已经有私密直播间了，不能再开始公开直播间， 3.1.进入公开直播间 和 3.2.主播进入指定直播间（16405）
 };
 
 // 底层状态转换JAVA坐标
@@ -218,6 +243,26 @@ static const int IMAnchorProgramStatusArray[] = {
 // 底层状态转换JAVA坐标
 int IMAnchorProgramStatusToInt(IMAnchorProgramStatus type);
 
+/*推流设备*/
+static const int IMDeviceTypeArray[] = {
+        IMDEVICETYPE_UNKNOW,             // 未知推流设备
+        IMDEVICETYPE_PC,                // PC推流设备
+        IMDEVICETYPE_APP                // APP推流设备
+};
+// 底层状态转换JAVA坐标
+int IMDeviceTypeToInt(IMDeviceType type);
+
+IMDeviceType IntToIMDeviceType(int value);
+
+/*当前推流状态*/
+static const int IMCurrentPushStatusArray[] = {
+        IMCURRENTPUSHSTATUS_NOTPUSH,             // 未推流
+        IMCURRENTPUSHSTATUS_PCPUSH,                // PC推流
+        IMCURRENTPUSHSTATUS_APPPUSH                // APP推流
+};
+// 底层状态转换JAVA坐标
+int IMCurrentPushStatusToInt(IMCurrentPushStatus type);
+
 
 jobject getLoginItem(JNIEnv *env, const ZBLoginReturnItem& item);
 
@@ -246,5 +291,7 @@ jobject getLeaveHangoutRoomItem(JNIEnv *env, const IMAnchorRecvLeaveRoomItem& it
 jobject getHangoutGiftItem(JNIEnv *env, const IMAnchorRecvGiftItem& item);
 
 jobject getIMProgramInfoItem(JNIEnv *env, const IMAnchorProgramInfoItem& item);
+
+jobject getIMSendInviteInfoItem(JNIEnv *env, const ZBIMSendInviteInfoItem& item);
 
 #endif

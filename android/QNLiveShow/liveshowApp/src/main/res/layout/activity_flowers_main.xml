@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".liveshow.flowergift.FlowersMainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- 返回 -->
+            <ImageView
+                android:id="@+id/act_flowers_main_iv_back"
+                android:layout_width="@dimen/actionbar_backicon_height"
+                android:layout_height="@dimen/actionbar_backicon_height"
+                android:background="@drawable/touch_feedback_holo_light_circle"
+                android:paddingLeft="13dp"
+                android:paddingRight="18dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_arrow_back" />
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/act_flowers_main_tabPageIndicator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                app:tl_indicator_color="@color/theme_sky_blue"
+                app:tl_indicator_corner_radius="2dp"
+                app:tl_indicator_height="2dp"
+                app:tl_indicator_width="@dimen/live_size_40dp"
+                app:tl_tab_padding="@dimen/live_size_10dp"
+                app:tl_tab_space_equal="true"
+                app:tl_textSelectColor="@color/live_message_textcolor_black"
+                app:tl_textUnselectColor="@color/live_message_textcolor_black"
+                app:tl_textsize="@dimen/live_size_16sp" />
+
+            <!--占位-->
+            <View
+                android:layout_width="@dimen/actionbar_backicon_height"
+                android:layout_height="@dimen/actionbar_backicon_height" />
+        </LinearLayout>
+
+        <!--   分割线     -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@color/theme_default_divider_grey" />
+    </FrameLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/act_flowers_main_viewPagerContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

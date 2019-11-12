@@ -39,68 +39,20 @@ static HomeVouchersManager* homeVouchersManager = nil;
     [self.sessionManager sendRequest:request];
 }
 
-- (BOOL)isShowFreeLive:(NSString *)userId LiveRoomType:(HttpRoomType)type
-{
+- (BOOL)isShowWatchNowFree:(NSString *)userId {
     if (!self.item) {
         return NO;
     }
-    
-    //免费公开直播间，就显示Free图标
-    if (type == HTTPROOMTYPE_FREEPUBLICLIVEROOM ) {
-        return NO;
-    }
-    
     //当前系统时间戳
     NSInteger nowTime = [[NSDate date] timeIntervalSince1970];
-    
-    //付费公开直播间
-    if (type == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
-        if (self.item.onlypublicExpTime > nowTime) {
-            return YES;
-        }
-    }
-    
-    //私密直播间
-    if (type == HTTPROOMTYPE_COMMONPRIVATELIVEROOM ||
-        type == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM ||
-        type == HTTPROOMTYPE_NOLIVEROOM) {
-        if (self.item.onlyprivateExpTime > nowTime) {
-            return YES;
-        }
-    }
-    
     
     //绑定主播列表
     NSArray * anchorList = [self.item.bindAnchor copy];
     if (anchorList.count > 0) {
         for (LSBindAnchorItemObject * obj in anchorList) {
-            
-            UseRoomType roomType = obj.useRoomType;
-            
-            if (obj.useRoomType == USEROOMTYPE_LIMITLESS) {
-                if ([obj.anchorId isEqualToString:userId] ) {
-                    if (obj.expTime > nowTime) {
-                        return YES;
-                    }
-                }
-            }
-            else
-            {
-                if (type == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM ||
-                    type == HTTPROOMTYPE_FREEPUBLICLIVEROOM) {
-                    roomType = USEROOMTYPE_PUBLIC;
-                }
-                
-                if (type == HTTPROOMTYPE_COMMONPRIVATELIVEROOM ||
-                    type == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM ||
-                    type == HTTPROOMTYPE_NOLIVEROOM) {
-                    roomType = USEROOMTYPE_PRIVATE;
-                }
-                
-                if ([obj.anchorId isEqualToString:userId] && obj.useRoomType == roomType) {
-                    if (obj.expTime > nowTime) {
-                        return YES;
-                    }
+            if ([obj.anchorId isEqualToString:userId] && obj.useRoomType != USEROOMTYPE_PRIVATE) {
+                if (obj.expTime > nowTime) {
+                    return YES;
                 }
             }
         }
@@ -108,26 +60,61 @@ static HomeVouchersManager* homeVouchersManager = nil;
     
     //我看过的主播列表
     NSArray * watchedAnchor = [self.item.watchedAnchor copy];
-
-    BOOL isWatched = [watchedAnchor containsObject:userId];
-        
+    if (watchedAnchor.count > 0) {
+        BOOL isWatched = [watchedAnchor containsObject:userId];
         //没看过
         if (!isWatched) {
-            if (type == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
-                if (self.item.onlypublicNewExpTime > nowTime) {
-                     return YES;
-                }
+            if (self.item.onlypublicNewExpTime > nowTime) {
+                return YES;
             }
-            if (type == HTTPROOMTYPE_COMMONPRIVATELIVEROOM ||
-                type == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM||
-                type == HTTPROOMTYPE_NOLIVEROOM) {
-                if (self.item.onlyprivateNewExpTime > nowTime) {
+        }
+    }
+    
+    //公开直播间
+    if (self.item.onlypublicExpTime > nowTime) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)isShowInviteFree:(NSString *)userId {
+    if (!self.item) {
+        return NO;
+    }
+    //当前系统时间戳
+    NSInteger nowTime = [[NSDate date] timeIntervalSince1970];
+    
+    //绑定主播列表
+    NSArray * anchorList = [self.item.bindAnchor copy];
+    if (anchorList.count > 0) {
+        for (LSBindAnchorItemObject * obj in anchorList) {
+            if ([obj.anchorId isEqualToString:userId] && obj.useRoomType != USEROOMTYPE_PUBLIC) {
+                if (obj.expTime > nowTime) {
                     return YES;
                 }
             }
         }
+    }
 
+    //我看过的主播列表
+    NSArray * watchedAnchor = [self.item.watchedAnchor copy];
+    if (watchedAnchor.count > 0) {
+        BOOL isWatched = [watchedAnchor containsObject:userId];
+        //没看过
+        if (!isWatched) {
+            if (self.item.onlyprivateNewExpTime > nowTime) {
+                return YES;
+            }
+        }
+    }
+    
+    //私密直播间
+    if (self.item.onlyprivateExpTime > nowTime) {
+        return YES;
+    }
     
     return NO;
 }
+
 @end

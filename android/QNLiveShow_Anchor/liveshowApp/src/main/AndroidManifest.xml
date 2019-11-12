@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.qpidnetwork.anchor">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,7 +28,11 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_liveshow_anchor_app"
         android:supportsRtl="true"
-        android:theme="@style/CustomTheme.App">
+        android:theme="@style/CustomTheme.App"
+        android:resizeableActivity="false"
+        tools:targetApi="n">
+
+        <!-- resizeableActivity:false表示不支持分屏模式，true表示支持分屏模式。 -->
 
         <!-- 嵌入版 -->
         <!-- <application -->
@@ -35,6 +40,10 @@
         <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
         <!-- android:supportsRtl="true"> -->
 
+        <!-- 适配18:9 和 16:9 屏幕尺寸比例 -->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
 
         <!-- 　拍照功能　buildsdk>=24时报android.os.FileUriExposedException: -->
         <provider
@@ -211,13 +220,13 @@
             android:name=".liveshow.liveroom.LiveRoomEndActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".liveshow.liveroom.PublicLiveRoomActivity"
+            android:name=".liveshow.liveroom.FullScreenLiveRoomActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".liveshow.liveroom.PrivateLiveRoomActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!--多人互动-->
 

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="LSGiftInfoView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udn-if-s0G">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Smi-m1-LPX" appends="YES" id="SgJ-E4-S0T"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K2R-ax-8sZ">
+                    <rect key="frame" x="20" y="240" width="335" height="187"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VIPLive_GiftInfoBG" translatesAutoresizingMaskIntoConstraints="NO" id="QtP-9y-8LP">
+                            <rect key="frame" x="0.0" y="44" width="335" height="143"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VIPLive_PurpleBG" translatesAutoresizingMaskIntoConstraints="NO" id="xqM-bv-MLy">
+                            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="XPj-yF-cpe"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Virtual Gift Store" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxk-u5-LTa">
+                            <rect key="frame" x="122" y="10" width="131" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="131" id="DMd-Bw-XhM"/>
+                                <constraint firstAttribute="height" constant="20" id="vEz-SL-QHb"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="textColor" red="0.98823529409999999" green="0.88235294119999996" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="shadowColor" white="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <size key="shadowOffset" width="1" height="1"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7EC-i1-8hp">
+                            <rect key="frame" x="17" y="52" width="310" height="127"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Virtual Gifts">
+                                    <attributes>
+                                        <color key="NSColor" red="0.99215686274509807" green="0.44705882352941173" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <font key="NSFont" size="15" name="Arial-BoldMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content=" ">
+                                    <attributes>
+                                        <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <font key="NSFont" size="15" name="ArialMT"/>
+                                        <font key="NSOriginalFont" size="15" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="is a convenient and romantic way to show your love and care to her in a high definition live video room.">
+                                    <attributes>
+                                        <color key="NSColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <font key="NSFont" size="15" name="ArialMT"/>
+                                        <font key="NSOriginalFont" size="15" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment>
+                                    <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                    <attributes>
+                                        <color key="NSColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <font key="NSFont" size="15" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="Send a Virtual Gift every day and make her ">
+                                    <attributes>
+                                        <color key="NSColor" red="0.10196" green="0.10196" blue="0.10196" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <font key="NSFont" size="15" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" paragraphSpacingBefore="10" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                            <tabStops>
+                                                <textTab alignment="left" location="28">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="56">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="84">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="112">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="140">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="168">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="196">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="224">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="252">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="280">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="308">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="336">
+                                                    <options/>
+                                                </textTab>
+                                            </tabStops>
+                                        </paragraphStyle>
+                                    </attributes>
+                                </fragment>
+                                <fragment content=" feel warm and special as if you're by her side. ">
+                                    <attributes>
+                                        <color key="NSColor" red="0.10196" green="0.10196" blue="0.10196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <font key="NSFont" size="15" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" paragraphSpacingBefore="10" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                            <tabStops>
+                                                <textTab alignment="left" location="28">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="56">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="84">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="112">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="140">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="168">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="196">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="224">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="252">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="280">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="308">
+                                                    <options/>
+                                                </textTab>
+                                                <textTab alignment="left" location="336">
+                                                    <options/>
+                                                </textTab>
+                                            </tabStops>
+                                        </paragraphStyle>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="QtP-9y-8LP" firstAttribute="leading" secondItem="K2R-ax-8sZ" secondAttribute="leading" id="1d4-ju-j65"/>
+                        <constraint firstAttribute="bottom" secondItem="QtP-9y-8LP" secondAttribute="bottom" id="4al-co-XWV"/>
+                        <constraint firstAttribute="trailing" secondItem="QtP-9y-8LP" secondAttribute="trailing" id="6Eg-hN-icZ"/>
+                        <constraint firstAttribute="trailing" secondItem="xqM-bv-MLy" secondAttribute="trailing" id="Eo9-sd-vti"/>
+                        <constraint firstItem="wxk-u5-LTa" firstAttribute="centerX" secondItem="K2R-ax-8sZ" secondAttribute="centerX" constant="20" id="JQ0-AG-2dI"/>
+                        <constraint firstItem="wxk-u5-LTa" firstAttribute="top" secondItem="K2R-ax-8sZ" secondAttribute="top" constant="10" id="LA2-ot-OgN"/>
+                        <constraint firstAttribute="trailing" secondItem="7EC-i1-8hp" secondAttribute="trailing" constant="8" id="QLt-VE-b2P"/>
+                        <constraint firstAttribute="bottom" secondItem="7EC-i1-8hp" secondAttribute="bottom" constant="8" id="QML-uj-rmM"/>
+                        <constraint firstItem="xqM-bv-MLy" firstAttribute="top" secondItem="K2R-ax-8sZ" secondAttribute="top" id="SPL-79-JZi"/>
+                        <constraint firstItem="7EC-i1-8hp" firstAttribute="leading" secondItem="K2R-ax-8sZ" secondAttribute="leading" constant="17" id="Yuc-gi-mxS"/>
+                        <constraint firstAttribute="height" constant="187" id="dMq-uP-sU0"/>
+                        <constraint firstItem="QtP-9y-8LP" firstAttribute="top" secondItem="xqM-bv-MLy" secondAttribute="bottom" id="gAV-xi-UyV"/>
+                        <constraint firstItem="7EC-i1-8hp" firstAttribute="top" secondItem="xqM-bv-MLy" secondAttribute="bottom" constant="8" id="l9S-4s-4oo"/>
+                        <constraint firstItem="xqM-bv-MLy" firstAttribute="leading" secondItem="K2R-ax-8sZ" secondAttribute="leading" id="sSC-o6-OWO"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MaB-91-e75">
+                    <rect key="frame" x="328" y="217" width="42" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="eAo-nL-1As"/>
+                        <constraint firstAttribute="width" constant="42" id="gCF-BK-S1i"/>
+                    </constraints>
+                    <state key="normal" image="VIPLive_Close"/>
+                    <connections>
+                        <action selector="closeBtnDid:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="951-XA-L1r"/>
+                    </connections>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VIPLive_Virtual Gift" translatesAutoresizingMaskIntoConstraints="NO" id="yA1-XJ-X5c">
+                    <rect key="frame" x="80" y="220" width="53" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="kr5-hj-hLg"/>
+                        <constraint firstAttribute="width" constant="53" id="yi3-CO-zcU"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="K2R-ax-8sZ" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="3rI-gc-aEr"/>
+                <constraint firstItem="MaB-91-e75" firstAttribute="trailing" secondItem="xqM-bv-MLy" secondAttribute="trailing" constant="15" id="4YL-xv-nFT"/>
+                <constraint firstAttribute="trailing" secondItem="K2R-ax-8sZ" secondAttribute="trailing" constant="20" id="80I-aD-ELz"/>
+                <constraint firstItem="Udn-if-s0G" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="A2C-U2-4Uu"/>
+                <constraint firstItem="yA1-XJ-X5c" firstAttribute="bottom" secondItem="wxk-u5-LTa" secondAttribute="bottom" id="O9W-CL-Tdt"/>
+                <constraint firstItem="MaB-91-e75" firstAttribute="bottom" secondItem="xqM-bv-MLy" secondAttribute="bottom" constant="-25" id="QLt-pY-rni"/>
+                <constraint firstItem="wxk-u5-LTa" firstAttribute="leading" secondItem="yA1-XJ-X5c" secondAttribute="trailing" constant="9" id="aop-dd-LXJ"/>
+                <constraint firstItem="K2R-ax-8sZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="jSX-an-nYa"/>
+                <constraint firstAttribute="trailing" secondItem="Udn-if-s0G" secondAttribute="trailing" id="m3D-Fu-kCr"/>
+                <constraint firstItem="K2R-ax-8sZ" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="n8n-RM-Uag"/>
+                <constraint firstItem="Udn-if-s0G" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="tyB-NV-WeF"/>
+                <constraint firstAttribute="bottom" secondItem="Udn-if-s0G" secondAttribute="bottom" id="wh2-Zy-Oyg"/>
+            </constraints>
+            <connections>
+                <outlet property="contentView" destination="K2R-ax-8sZ" id="Ecu-7V-cuE"/>
+                <outlet property="contentViewH" destination="dMq-uP-sU0" id="Cnt-gY-ajK"/>
+            </connections>
+            <point key="canvasLocation" x="138.40000000000001" y="139.880059970015"/>
+        </view>
+        <tapGestureRecognizer id="Smi-m1-LPX">
+            <connections>
+                <action selector="bgTap:" destination="i5M-Pr-FkT" id="brc-li-6Ft"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="VIPLive_Close" width="30" height="30"/>
+        <image name="VIPLive_GiftInfoBG" width="4" height="143"/>
+        <image name="VIPLive_PurpleBG" width="3" height="3"/>
+        <image name="VIPLive_Virtual Gift" width="36" height="36"/>
+    </resources>
+</document>

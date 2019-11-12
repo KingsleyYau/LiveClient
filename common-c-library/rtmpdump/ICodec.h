@@ -33,10 +33,18 @@ namespace coollive {
     
     typedef enum VideoFrameType {
         VFT_UNKNOWN = 0,
+		// VCL NALU
         VFT_NOTIDR = 1,
+		VFT_FUA = 2,
+		VFT_FUB = 3,
+		VFT_FUC = 4,
         VFT_IDR = 5,
+		// NOT VCL NALU
+		VFT_SEI = 6,
         VFT_SPS = 7,
         VFT_PPS = 8,
+		VFT_RTP_PACKET_START = 24,
+		VFT_RTP_PACKET_END = 31
     } VideoFrameType;
     
     typedef enum AudioFrameFormat {

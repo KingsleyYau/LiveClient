@@ -36,6 +36,10 @@
     self.retryBtn.layer.cornerRadius = 5;
     self.retryBtn.layer.masksToBounds = YES;
     
+    if( IS_IPHONE_X ) {
+        self.noteLabelBottom.constant = 44;
+    }
+    
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB(0x2D2D2D).CGColor, (__bridge id)Color(89, 89, 89, 0).CGColor];
     gradientLayer.locations = @[@0.0, @1.0];

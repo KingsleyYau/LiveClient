@@ -1,13 +1,11 @@
 package com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.ViewGroup;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -92,10 +90,10 @@ public class ConfirmedInviteFragment extends BaseListFragment{
             }
         });
         getPullToRefreshListView().setAdapter(mAdapter);
-        ViewGroup.LayoutParams rlvLp = refreshListview.getLayoutParams();
-        rlvLp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        refreshListview.setLayoutParams(rlvLp);
-        setBgColor(Color.parseColor("#f5f5f5"));
+//        ViewGroup.LayoutParams rlvLp = refreshListview.getLayoutParams();
+//        rlvLp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        refreshListview.setLayoutParams(rlvLp);
+//        setBgColor(Color.parseColor("#f5f5f5"));
         //设置分割线
         getPullToRefreshListView().setBackgroundColor(Color.parseColor("#f5f5f5"));
         getPullToRefreshListView().setHeaderDividersEnabled(true);
@@ -170,6 +168,7 @@ public class ConfirmedInviteFragment extends BaseListFragment{
                         showEmptyView();
                     }else{
                         hideNodataPage();
+                        hideErrorPage();
                     }
 
                     //列表刷新成功，需重新计算倒数计时器
@@ -199,8 +198,8 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
         if(null != getActivity()){
             Intent intent = new Intent( getActivity(), MainFragmentActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -216,7 +215,7 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     private void showEmptyView(){
         if(null != getActivity()){
             setDefaultEmptyMessage(getActivity().getResources().getString(R.string.scheduled_empty_tips));
-            setDefaultEmptyButtonText(getActivity().getString(R.string.invite_empty_hot_broadcasters));
+            setEmptyGuideButtonText(getActivity().getString(R.string.invite_empty_hot_broadcasters));
         }
         showNodataPage();
     }

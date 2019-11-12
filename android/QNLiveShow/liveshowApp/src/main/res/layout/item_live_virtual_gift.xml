@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp">
+
+        <ImageView
+            android:id="@+id/item_live_virtual_gift_iv_icon_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_live_virtual_gift_selector" />
+
+        <ImageView
+            android:id="@+id/item_live_virtual_gift_iv_icon"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            tools:src="@drawable/ic_virtual_gift_small" />
+
+        <ImageView
+            android:id="@+id/item_live_virtual_gift_iv_tag_advance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:src="@drawable/ic_live_buttom_gift_advance" />
+
+        <ImageView
+            android:id="@+id/item_live_virtual_gift_iv_tag_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_liveroom_gift_block"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <include
+            android:id="@+id/item_live_virtual_gift_red_circle"
+            layout="@layout/layout_red_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/item_live_virtual_gift_tv_credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/live_credits"
+        android:textSize="@dimen/live_size_11sp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/live_ho_orange_credits"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+</LinearLayout>

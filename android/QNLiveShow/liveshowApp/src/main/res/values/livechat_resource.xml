@@ -9,7 +9,6 @@
     <string name="end_chat_normal_connect_fail_tips">Trouble connecting to the server, please try again later.</string>
     <string name="livechat_msg_no_credit_warning">You don\'t have sufficient credits to continue the action,please </string>
     <string name="livechat_msg_no_credit_warning_link">Add more credits.</string>
-    <string name="livechat_msg_trychat_start_end">Your free chat is ended. Live chat billed at 0.5 credit per 5 mins.</string>
 
     <!--camshare-->
     <string name="camshare_floating_invite_tips">Inviting %1$s to CamShare&#8230;</string>
@@ -23,7 +22,6 @@
 
     <string name="common_risk_control_notify">Sorry, we can not process your request right now, please try later.</string>
     <string name="type_message_here">Type message here</string>
-    <string name="livechat_price_info">Live chat billed at 0.5 credit per 5mins. Billing begins after your first message is sent.</string>
     <string name="livechat_seesion_pause_tips">Your chat (and billing) with %1$s has been paused because you have not interacted for some time. Please send a message to resume chat.</string>
     <string name="trychat_tips">send your first message to start free chat now.</string>
     <string name="livechat_lady_illeage_message">Your message may contain prohibited information which has violated our Terms of Use. Your message will not be delivered.</string>

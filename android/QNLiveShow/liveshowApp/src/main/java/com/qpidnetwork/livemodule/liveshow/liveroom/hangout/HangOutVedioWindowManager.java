@@ -279,7 +279,6 @@ public class HangOutVedioWindowManager implements HangOutVedioWindow.OnInviteEve
      */
     public void startLive(String userId, String[] playUrl){
         if(null != userIdIndexMap && userIdIndexMap.containsKey(userId) && null != playUrl && playUrl.length>0){
-            Log.i(TAG, "开始视频推拉流 userId:" + userId + "\n,地址1：" +  playUrl[0] + "\n,地址2:" + playUrl[1]);
 
             HangOutVedioWindow outVedioWindow = vedioWindowMap.get(userIdIndexMap.get(userId));
             //add by Jagger 2019-3-26 先停再开

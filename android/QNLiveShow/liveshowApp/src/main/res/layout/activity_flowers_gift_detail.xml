@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:overScrollMode="never"
+    android:scrollbars="none"
+    tools:context=".liveshow.flowergift.store.FlowersGiftDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/live_size_20dp"
+        android:paddingRight="@dimen/live_size_20dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/act_flowers_detail_iv_bg"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/live_size_10dp"
+                app:backgroundImage="@color/black4"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/act_flowers_detail_tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/live_size_10dp"
+                android:textColor="@color/live_text_color_black"
+                android:textSize="@dimen/live_size_16sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/act_flowers_detail_iv_bg"
+                tools:text="you of youDream of" />
+
+            <!-- 价钱 -->
+            <TextView
+                android:id="@+id/item_flowers_store_tv_money_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:singleLine="true"
+                android:text="@string/money_symbol"
+                android:layout_marginTop="@dimen/live_size_12dp"
+                android:textColor="@color/red_light"
+                android:textSize="16sp"
+                android:textStyle="italic|bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/act_flowers_detail_btn_add"
+                />
+
+            <TextView
+                android:id="@+id/item_flowers_store_tv_money_red"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:includeFontPadding="false"
+                android:maxWidth="@dimen/live_size_100dp"
+                android:singleLine="true"
+                android:textColor="@color/red_light"
+                android:textSize="20sp"
+                android:textStyle="italic|bold"
+                android:layout_marginTop="@dimen/live_size_12dp"
+                tools:text="189.00$289.00$289.00$289.00$289.00$289.00$289.00"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@+id/item_flowers_store_tv_money_symbol"
+                app:layout_constraintBottom_toBottomOf="@+id/act_flowers_detail_btn_add"
+                />
+
+            <TextView
+                android:id="@+id/item_flowers_store_tv_money_grey"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/live_size_10dp"
+                android:layout_marginRight="@dimen/live_size_10dp"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="@color/text_color_grey_light"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="italic|bold"
+                android:maxWidth="@dimen/live_size_100dp"
+                tools:text="$289.00$289.00$289.00"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toRightOf="@+id/item_flowers_store_tv_money_red"
+                app:layout_constraintBottom_toBottomOf="@+id/act_flowers_detail_btn_add"
+                app:layout_constraintRight_toLeftOf="@+id/act_flowers_detail_btn_add"
+                />
+
+            <Button
+                android:id="@+id/act_flowers_detail_btn_add"
+                style="@style/blueCircle6dpButton"
+                android:background="@drawable/rectangle_radius6_ripple_solid_sky_blue"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:minWidth="@dimen/live_size_120dp"
+                android:minHeight="34dp"
+                android:text="@string/add_to_cart"
+                android:layout_marginTop="@dimen/live_size_12dp"
+                app:layout_constraintTop_toBottomOf="@+id/act_flowers_detail_tv_name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+        </android.support.constraint.ConstraintLayout>
+
+        <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_12dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_flowers_store_tv_money_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:singleLine="true"
+                android:text="@string/money_symbol"
+                android:textColor="@color/red_light"
+                android:textSize="16sp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/item_flowers_store_tv_money_red"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:includeFontPadding="false"
+                android:maxWidth="@dimen/live_size_100dp"
+                android:singleLine="true"
+                android:textColor="@color/red_light"
+                android:textSize="20sp"
+                android:textStyle="italic|bold"
+                tools:text="189.00189.00189.00" />
+
+            <TextView
+                android:id="@+id/item_flowers_store_tv_money_grey"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/live_size_10dp"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:includeFontPadding="false"
+                android:maxWidth="@dimen/live_size_100dp"
+                android:singleLine="true"
+                android:textColor="@color/text_color_grey_light"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="italic|bold"
+                tools:text="$289.00189.00189.00189.00" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/act_flowers_detail_btn_add"
+                style="@style/blueCircle6dpButton"
+                android:background="@drawable/rectangle_radius6_ripple_solid_sky_blue"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:minWidth="@dimen/live_size_120dp"
+                android:minHeight="34dp"
+                android:text="@string/add_to_cart" />
+        </LinearLayout>
+        -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/live_size_12dp"
+            android:layout_marginBottom="@dimen/live_size_10dp"
+            android:background="#ECEEF1" />
+
+        <TextView
+            android:id="@+id/act_flowers_detail_tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/live_size_10dp"
+            android:textColor="@color/live_text_color_black"
+            android:textSize="@dimen/live_size_14sp"
+            tools:text="Send a friend or other loved one sunshine of these gorgeous yellow blooms. Yellow roses represent friendship and joy. This lovely bouquet is sure to bring a smile to your special recipient's face." />
+    </LinearLayout>
+
+</ScrollView>

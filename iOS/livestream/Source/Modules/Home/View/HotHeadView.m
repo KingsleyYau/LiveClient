@@ -12,7 +12,7 @@
 #import "GiftItemLayout.h"
 #import "LSLoginManager.h"
 
-@interface HotHeadView ()<UICollectionViewDelegate, UICollectionViewDataSource,HotHeadViewDelegate>
+@interface HotHeadView ()<UICollectionViewDelegate, UICollectionViewDataSource,HotHeadViewDelegate,HotHeadViewCellDelegate>
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadManager;
 @end
 

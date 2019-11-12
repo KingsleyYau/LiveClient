@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/window_background"
+    tools:context=".liveshow.sayhi.SayHiEditActivity">
+
+    <!-- 编辑内容 -->
+    <FrameLayout
+        android:id="@+id/ll_body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/fl_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- 背景图 -->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="fitXY"
+            fresco:placeholderImage="@color/window_background" />
+
+        <include layout="@layout/layout_say_hi_note_content"/>
+
+        <!-- 抽屉 -->
+        <com.qpidnetwork.qnbridgemodule.view.SlidingDrawerEx
+            android:id="@+id/sd_content"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_gravity="bottom"
+            android:allowSingleTap="false"
+            android:content="@+id/content"
+            android:handle="@+id/handle"
+            android:orientation="vertical">
+
+            <!-- 把手 -->
+            <LinearLayout
+                android:id="@+id/handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Tab 主题 -->
+                <LinearLayout
+                    android:id="@+id/ll_tab_theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/sayHi_edit_handle_height"
+                    android:layout_weight="1"
+                    android:background="@color/sayhi_edit_handler_close_bg"
+                    android:clickable="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_theme"
+                        android:layout_width="@dimen/sayHi_edit_handle_icon_size"
+                        android:layout_height="@dimen/sayHi_edit_handle_icon_size"
+                        android:src="@drawable/ic_sayhi_edit_handler_theme_unselected" />
+
+                    <TextView
+                        android:id="@+id/tv_theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/say_hi_edit_handle_theme"
+                        android:textColor="@color/sayhi_edit_handler_unselected_text_color"
+                        android:textSize="@dimen/live_size_14sp" />
+
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/v_line1"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/sayhi_edit_handler_close_bg">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@color/gray" />
+                </FrameLayout>
+
+                <!-- Tab文字 -->
+                <LinearLayout
+                    android:id="@+id/ll_tab_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/sayHi_edit_handle_height"
+                    android:layout_weight="1"
+                    android:background="@color/sayhi_edit_handler_close_bg"
+                    android:clickable="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_note"
+                        android:layout_width="@dimen/sayHi_edit_handle_icon_size"
+                        android:layout_height="@dimen/sayHi_edit_handle_icon_size"
+                        android:src="@drawable/ic_sayhi_edit_handler_note_unselected" />
+
+                    <TextView
+                        android:id="@+id/tv_note"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/say_hi_edit_handle_note"
+                        android:textColor="@color/sayhi_edit_handler_unselected_text_color"
+                        android:textSize="@dimen/live_size_14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 抽屉内容 -->
+            <FrameLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/sayhi_edit_handler_open_selected_bg"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp">
+                <!-- 主题列表 -->
+                <FrameLayout
+                    android:id="@+id/fl_theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_theme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+
+                <!-- 文字列表 -->
+                <FrameLayout
+                    android:id="@+id/fl_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+
+            </FrameLayout>
+        </com.qpidnetwork.qnbridgemodule.view.SlidingDrawerEx>
+
+    </FrameLayout>
+
+    <!-- 底部 -->
+    <FrameLayout
+        android:id="@+id/fl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/white"
+        android:elevation="@dimen/live_size_8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- 发送按钮　-->
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_book"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_size_50dp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/live_size_16dp"
+            button:background="@color/theme_sky_blue"
+            button:raisebutton_radius="@dimen/live_size_20dp"
+            button:title="@string/say_hi_edit_send"
+            button:title_color="@color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_light" />
+
+        <!-- Free -->
+        <ImageView
+            android:id="@+id/img_free"
+            android:layout_width="@dimen/live_size_50dp"
+            android:layout_height="18dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/live_size_8dp"
+            android:layout_marginRight="@dimen/live_size_20dp"
+            android:elevation="2dp"
+            android:src="@drawable/ic_free" />
+
+    </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -153,6 +153,13 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
         return getItemViewType(position) == BaseRecyclerViewAdapter.FOOTVIEW_TYPE;
     }
 
+    /**
+     * 是否设置指定的 grid item 为整行?
+     */
+    protected boolean isGridItemFullSpan(int position){
+        return false;
+    }
+
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
@@ -165,7 +172,8 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
                 @Override
                 public int getSpanSize(int position) {
                     //                    return (isHeader(position) || isFooter(position)) ? gridManager.getSpanCount() : 1;
-                    return isFooter(position) ? gridManager.getSpanCount() : 1;
+
+                    return isFooter(position) || isGridItemFullSpan(position) ? gridManager.getSpanCount() : 1;
                 }
             });
         }
@@ -179,8 +187,9 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
         ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
         if (lp != null && lp instanceof StaggeredGridLayoutManager.LayoutParams) {
             //                && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
+
             StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-            p.setFullSpan(isFooter(holder.getLayoutPosition()) ? true : false);
+            p.setFullSpan(isFooter(holder.getLayoutPosition()) || isGridItemFullSpan(holder.getLayoutPosition()));
         }
     }
 
@@ -232,6 +241,18 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
     }
 
     /**
+     * add a new data
+     *
+     * @param bean
+     */
+    public void addData(T bean) {
+        if (bean != null) {
+            this.mList.add(this.mList.size(), bean);
+            this.notifyItemInserted(this.mList.size()-1);
+        }
+    }
+
+    /**
      * set ? add ?
      *
      * @param list
@@ -274,6 +295,14 @@ public abstract class BaseRecyclerViewAdapter<T, E extends ViewHolder> extends R
             mList.remove(pos);
             this.notifyItemRemoved(pos);
         }
+    }
+
+    /**
+     * 清空
+     */
+    public void removeAll(){
+        mList.clear();
+        this.notifyDataSetChanged();
     }
 
     /**

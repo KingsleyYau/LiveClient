@@ -19,10 +19,13 @@
 @property (weak, nonatomic) IBOutlet UIImageView *receiveVideoIcon;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *receiveImageIconWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *receiveVideoIconWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *receiveVideoIconLeft;
 @property (nonatomic, strong) LSImageViewLoader* imageViewLoader;
 @property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet UIImageView *followImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *onLineImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *onlineImageViewWidth;
 
 @property (nonatomic, strong) LSDateTool *dateTool;
 
@@ -38,7 +41,6 @@
         NSBundle *bundle = [LiveBundle mainBundle];
         NSArray *nib = [bundle loadNibNamedWithFamily:[MailTableViewCell cellIdentifier] owner:nil options:nil];
         self = [nib objectAtIndex:0];
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
         
     }
     return self;
@@ -77,7 +79,7 @@
     return cell;
 }
 
-- (void)updataMailCell:(LSHttpLetterListItemObject *)obj {
+- (void)updataMailCell:(LSHttpLetterListItemObject *)obj type:(MailType)type {
     // 加载
     [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
@@ -88,23 +90,33 @@
     // 有未读显示文字颜色
     if (obj.hasRead) {
         self.redLabel.hidden = YES;
-        self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
+        self.anchorNameLabel.font = [UIFont systemFontOfSize:16];
         self.anchorNameLabel.textColor = COLOR_WITH_16BAND_RGB(0x8B8B8B);
-    }else {
+        self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
+        self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    } else {
         self.redLabel.hidden = NO;
-        self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x262626);
+        self.anchorNameLabel.font = [UIFont boldSystemFontOfSize:16];
         self.anchorNameLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
+        self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
+        if (type == MAIL_GREETING) {
+            self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xffe5e7);
+        } else {
+            self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdbe9fd);
+        }
     }
     
     self.replyImage.hidden = obj.hasReplied ? NO : YES;
     self.receiveImageIcon.hidden = obj.hasImg ? NO : YES;
     self.receiveVideoIcon.hidden = obj.hasVideo ? NO : YES;
+    self.followImageView.hidden = obj.isFollow ? NO : YES;
+    self.onlineImageViewWidth.constant = obj.onlineStatus ? 40 : 0;
 
-    if (obj.hasImg) {
-        self.receiveImageIconWidth.constant = 12;
+    if (obj.hasVideo) {
+        self.receiveVideoIconWidth.constant = 12;
         self.receiveVideoIconLeft.constant = 5;
     } else {
-        self.receiveImageIconWidth.constant = 0;
+        self.receiveVideoIconWidth.constant = 0;
         self.receiveVideoIconLeft.constant = 0;
     }
     
@@ -113,6 +125,8 @@
 }
 
 - (void)updataOutBoxMailCell:(LSHttpLetterListItemObject *)obj {
+    
+    self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xffffff);
     // 加载
     [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
     }];
@@ -122,18 +136,19 @@
     
     // 有未读显示文字颜色
     self.redLabel.hidden = YES;
-    self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
     self.anchorNameLabel.textColor = COLOR_WITH_16BAND_RGB(0x8B8B8B);
+    self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
     
     self.replyImage.hidden = YES;
     self.receiveImageIcon.hidden = obj.hasImg ? NO : YES;
     self.receiveVideoIcon.hidden = obj.hasVideo ? NO : YES;
+    self.followImageView.hidden = obj.isFollow ? NO : YES;
     
-    if (obj.hasImg) {
-        self.receiveImageIconWidth.constant = 12;
+    if (obj.hasVideo) {
+        self.receiveVideoIconWidth.constant = 12;
         self.receiveVideoIconLeft.constant = 5;
     } else {
-        self.receiveImageIconWidth.constant = 0;
+        self.receiveVideoIconWidth.constant = 0;
         self.receiveVideoIconLeft.constant = 0;
     }
     
@@ -141,15 +156,14 @@
     self.timeLabel.text = [self.dateTool showMailListTimeTextOfDate:date];
 }
 
-
 - (void)setSelected:(BOOL)selected {
     [super setSelected:selected];
-    self.redLabel.backgroundColor = Color(255, 53, 0, 1);
+    self.redLabel.backgroundColor = COLOR_WITH_16BAND_RGB(0x2A7AF3);
 }
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
     [super setHighlighted:highlighted animated:animated];
-    self.redLabel.backgroundColor = Color(255, 53, 0, 1);
+    self.redLabel.backgroundColor = COLOR_WITH_16BAND_RGB(0x2A7AF3);
 }
 
 + (NSString *)cellIdentifier {
@@ -159,7 +173,6 @@
 + (NSInteger)cellHeight {
     return 72;
 }
-
 
 // 防止cell重用图片显示错乱
 - (void)prepareForReuse {

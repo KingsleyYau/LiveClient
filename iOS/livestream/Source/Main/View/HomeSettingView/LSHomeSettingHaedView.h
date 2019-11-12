@@ -13,7 +13,6 @@
 @optional;
 - (void)didChangeSiteClick;
 - (void)didOpenPersonalCenter;
-- (void)didOpenLevelExplain;
 - (void)pushToCreditsVC;
 - (void)pushSettingInfoVC;
 @end
@@ -23,7 +22,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *headView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userIdLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *levelImageView;
 @property (weak, nonatomic) IBOutlet UIButton *changeSiteBtn;
 @property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;

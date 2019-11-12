@@ -770,5 +770,18 @@ public abstract class LiveChatClientListener {
 	public void OnRecvCamHearbeatException(String errMsg, int errType, String targetId) {
 		OnRecvCamHearbeatException(errMsg , LiveChatErrType.values()[errType], targetId);
 	}
+
+	/**
+	 * 发送邀请语回调
+	 * @param errType	处理结果类型
+	 * @param errmsg	处理结果描述
+	 * @param userId	用户ID
+	 * @param inviteMsg	邀请语
+	 * @param nickName		聊天对象昵称
+	 */
+	public abstract void OnSendInviteMessage(LiveChatErrType errType, String errmsg, String userId, String inviteMsg, String inviteId, String nickName);
+	public void OnSendInviteMessage(int errType, String errmsg, String userId, String inviteMsg, String inviteId, String nickName) {
+		OnSendInviteMessage(LiveChatErrType.values()[errType], errmsg, userId, inviteMsg, inviteId, nickName);
+	}
 	
 }

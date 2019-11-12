@@ -21,9 +21,7 @@ package com.dou361.dialogui.adapter;
  * ========================================
  */
 public class StrericWheelAdapter implements WheelAdapter {
-
-	private int MAX_TEXT_LENGHT  = 15;	//Jagger 决定换行的字符长度
-
+	
 	/** The default min value */
 	private String[] strContents;
 	/**
@@ -59,7 +57,7 @@ public class StrericWheelAdapter implements WheelAdapter {
 	 * 设置最大的宽度
 	 */
 	public int getMaximumLength() {
-		int maxLen=MAX_TEXT_LENGHT;
+		int maxLen=7;
 		return maxLen;
 	}
 

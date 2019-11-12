@@ -38,6 +38,7 @@ public:
     void SetConnectTimeout(unsigned int connectTimeout); 
     void SetDownloadTimeout(double downloadTimeout); // downloadTimeout=1.0 is 1 second.
     void SetNoHeader();
+    void SetIsDownLoadFile(bool isDownload);
     
     void SetRawData(string data);
 	void AddContent(string key, string value);
@@ -63,6 +64,8 @@ private:
     double mDownloadTimeout;
     unsigned int mConnectTimeout;
     bool mNoHeader;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    bool mIsDownloadFile;
 };
 
 #endif

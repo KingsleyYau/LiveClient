@@ -185,7 +185,7 @@
     self.sortView.textColor = COLOR_WITH_16BAND_RGB(0xffffff);
     self.sortView.textSelectColor = COLOR_WITH_16BAND_RGB(0xffffff);
     self.sortView.lineHeight = 3;
-    self.sortView.lineImage = [UIImage imageNamed:@"Live_Line_Icon"];
+    self.sortView.lineImage = [UIImage imageNamed:@"Home_hangoutBg"];
     
     [self.giftTypeView addSubview:self.sortView];
 }

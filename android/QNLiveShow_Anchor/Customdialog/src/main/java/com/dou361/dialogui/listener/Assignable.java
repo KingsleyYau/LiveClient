@@ -33,14 +33,6 @@ public interface Assignable {
 
     /**
      * 日期选择器
-     * @param selectDate 默认选中日期
-     * @param maxYear 最大年份
-     * @param minYear 最小年份
-     */
-    BuildBean assignJDatePick(Context context, int gravity, String dateTitle, long selectDate, int maxYear , int minYear , int dateType, int tag, DialogUIDateTimeSaveListener listener);
-
-    /**
-     * 日期选择器
      */
     BuildBean assignDatePick(Context context, int gravity, String dateTitle, long date, int dateType, int tag, DialogUIDateTimeSaveListener listener);
 
@@ -58,6 +50,11 @@ public interface Assignable {
      * md风格弹出框
      */
     BuildBean assignMdAlert(Activity activity, CharSequence title, CharSequence msg, boolean cancleable, boolean outsideTouchable, final DialogUIListener listener);
+
+    /**
+     * md风格弹出框
+     */
+    BuildBean assignMdAlert(Activity activity, CharSequence title, CharSequence msg, CharSequence firstTxt, CharSequence secondTxt, boolean cancelable, boolean outsideTouchable, final DialogUIListener listener);
 
     /**
      * md风格多选框
@@ -83,8 +80,8 @@ public interface Assignable {
     BuildBean assignAlert(Context activity, CharSequence title, CharSequence msg,
                           CharSequence hint1, CharSequence hint2,
                           CharSequence firstTxt, CharSequence secondTxt,
-                          int firstTxtColor , int secondTxtColor ,
-                          boolean isVertical, boolean cancelable, boolean outsideTouchable, final DialogUIListener listener);
+                          int firstTxtColorResId,int secondTxtColorResId,
+                          boolean isVertical, boolean cancleable, boolean outsideTouchable, final DialogUIListener listener);
 
     /**
      * 中间弹出列表
@@ -100,6 +97,12 @@ public interface Assignable {
      * 自定义弹出框
      */
     BuildBean assignCustomAlert(Context context, View contentView, CharSequence firstTxt, CharSequence secondTxt, int gravity, boolean cancleable, boolean outsideTouchable, DialogUIListener btnListener);
+
+    /**
+     * 自定义弹出框
+     */
+    BuildBean assignCustomAlert(Context context, View contentView, CharSequence firstTxt, CharSequence secondTxt, int gravity, boolean cancleable, boolean outsideTouchable, boolean isBgTransparent, DialogUIListener btnListener);
+
 
     /**
      * 自定义底部弹出框

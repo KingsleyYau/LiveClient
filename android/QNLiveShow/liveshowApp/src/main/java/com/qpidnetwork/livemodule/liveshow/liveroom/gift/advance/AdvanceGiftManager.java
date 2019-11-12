@@ -165,6 +165,7 @@ public class AdvanceGiftManager {
         if(mSimpleDraweeView != null){
             mSimpleDraweeView.setVisibility(View.GONE);
             mSimpleDraweeView.removeCallbacks(runnable);
+            mSimpleDraweeView.destroyDrawingCache();
         }
         runnable = null;
         isAnimationRunning = false;

@@ -67,3 +67,9 @@
 "LSGreetingsViewController" = "Live.GreetingsList";
 "LSGreetingDetailViewController" = "Greetings.MailDetail";
 
+"LSSayHiListViewController_0" = "Live.SayHi.AllList";
+"LSSayHiListViewController_1" = "Live.SayHi.ResponseList";
+"LSSayHiDetailViewController" = "SayHiDetail";
+"LSSendSayHiViewController" = "SayHiEdit";
+
+

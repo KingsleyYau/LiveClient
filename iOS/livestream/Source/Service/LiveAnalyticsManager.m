@@ -50,6 +50,7 @@ static LiveAnalyticsManager *liveAnalyticsManager = nil;
     // TODO:提交用户ID
     id<IAnalyticsManager> analyticsManager = [LiveModule module].analyticsManager;
     [analyticsManager reportActionEvent:LoginUserIdAction eventCategory:LoginUserIdCategory label:nil value:nil];
+    [analyticsManager reportUserProperty:userId forkeyName:LoginUserIdCategory];
     [analyticsManager reportActionEvent:nil eventCategory:LoginUserIdCategory label:nil value:nil dimension:userId dimensionIndex:2];
 }
 

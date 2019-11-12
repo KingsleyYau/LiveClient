@@ -1,8 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,8 +9,8 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
-import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.HotItemStyleManager;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 
 /**
@@ -90,13 +88,12 @@ public class MyProfileFollowsAdapter extends BaseRecyclerViewAdapter<FollowingLi
             // Hardy
             // 参照 FollowingListFragment，并简化某些逻辑
             if (data.onlineStatus == AnchorOnlineStatus.Online) {
-                if (data.roomType == LiveRoomType.FreePublicRoom ||
-                        data.roomType == LiveRoomType.PaidPublicRoom) {
+                if (HotItemStyleManager.isLiveIng(data.roomType)) {
 
                     mIvStatus.setVisibility(View.GONE);
                     mIvStatusLiving.setVisibility(View.VISIBLE);
 
-                    setAndStartRoomTypeAnimation(data.roomType);
+                    HotItemStyleManager.setAndStartRoomTypeAnimation(data.roomType, mIvStatusLiving);
                 } else {
                     mIvStatus.setVisibility(View.VISIBLE);
                     mIvStatusLiving.setVisibility(View.GONE);
@@ -106,7 +103,6 @@ public class MyProfileFollowsAdapter extends BaseRecyclerViewAdapter<FollowingLi
                 mIvStatus.setVisibility(View.GONE);
             }
 
-//            PicassoLoadUtil.loadUrl(mIvIcon, data.photoUrl, R.drawable.ic_default_photo_woman);
             PicassoLoadUtil.loadUrl(mIvIcon, data.photoUrl, R.drawable.ic_default_photo_woman, wh, wh);
         }
 
@@ -117,28 +113,6 @@ public class MyProfileFollowsAdapter extends BaseRecyclerViewAdapter<FollowingLi
             itemView.setLayoutParams(params);
         }
 
-
-        /**
-         * 设置启动房间直播间状态
-         *
-         * @param roomType
-         */
-        private void setAndStartRoomTypeAnimation(LiveRoomType roomType) {
-            if (roomType == LiveRoomType.FreePublicRoom || roomType == LiveRoomType.PaidPublicRoom) {
-                mIvStatusLiving.setImageResource(R.drawable.anim_my_profile_broadcasting);
-
-                mIvStatusLiving.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Drawable tempDrawable = mIvStatusLiving.getDrawable();
-                        if ((tempDrawable != null)
-                                && (tempDrawable instanceof AnimationDrawable)) {
-                            ((AnimationDrawable) tempDrawable).start();
-                        }
-                    }
-                }, 200);
-            }
-        }
     }
 }
 

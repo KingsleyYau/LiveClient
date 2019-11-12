@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.httprequest;
 
 
+import com.qpidnetwork.livemodule.httprequest.item.LSAdvertSpaceType;
 import com.qpidnetwork.livemodule.httprequest.item.RegionType;
 import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum;
 import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Children;
@@ -248,5 +249,45 @@ public class RequestJniOther {
 				, double density, int width, int height, String lineNumber, String simOptName, String simOpt, String simCountryIso
 				, String simState, int phoneType, int networkType, String deviceId
 				, OnRequestCallback callback);
+
+
+	/**
+	 *  6.23.qn邀请弹窗更新邀请id
+	 * @param manId					用户ID
+	 * @param anchorId				主播id
+	 * @param inviteId				邀请id
+	 * @param roomId				直播间id
+	 * @param inviteType			邀請類型(LSBUBBLINGINVITETYPE_ONEONONE:one-on-one LSBUBBLINGINVITETYPE_HANGOUT:Hangout LSBUBBLINGINVITETYPE_LIVECHAT:Livechat)
+	 * @param callback
+	 * @return
+	 */
+	static public long UpQnInviteId(String manId, String anchorId, String inviteId, String roomId, LSRequestEnum.LSBubblingInviteType inviteType, OnRequestCallback callback){
+		return UpQnInviteId(manId, anchorId, inviteId, roomId, inviteType.ordinal(), callback);
+	}
+	static private native long UpQnInviteId(String manId, String anchorId, String inviteId, String roomId, int inviteType, OnRequestCallback callback);
+
+	/**
+	 *  6.24.获取直播广告
+	 * @param manId					用户ID
+	 * @param isAnchorPage			是否主播详情页 （是否在主播详情页里，暂时用在主页使用false）
+	 * @param bannerType			广告页类型（主播在那个界面，暂时用在主页显示广告使用Unknow）
+	 * @param callback
+	 * @return
+	 */
+	static public long RetrieveBanner(String manId, boolean isAnchorPage, LSRequestEnum.LSBannerType bannerType, OnRetrieveBannerCallback callback) {
+
+		return RetrieveBanner(manId, isAnchorPage, bannerType.ordinal(), callback);
+	}
+	static private native long RetrieveBanner(String manId, boolean isAnchorPage, int bannerType, OnRetrieveBannerCallback callback);
+
+
+	/**
+	 * 6.25.获取直播主播列表广告
+	 * @param deviceId		设备唯一标识
+	 * @param callback		回调object
+	 * @return
+	 */
+
+	static public native long WomanListAdvert(String deviceId, OnLSAdWomanistAdvertCallback callback);
 
 }

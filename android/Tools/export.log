@@ -1,0 +1,2515 @@
+Version : 2.0.0
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:10: 警告: [deprecation] android.hardware中的Camera已过时
+import android.hardware.Camera;
+                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:11: 警告: [deprecation] android.hardware中的Camera已过时
+import android.hardware.Camera.CameraInfo;
+                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:11: 警告: [deprecation] android.hardware中的Camera已过时
+import android.hardware.Camera.CameraInfo;
+                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:11: 警告: [deprecation] Camera中的CameraInfo已过时
+import android.hardware.Camera.CameraInfo;
+                              ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:12: 警告: [deprecation] android.hardware中的Camera已过时
+import android.hardware.Camera.Size;
+                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:12: 警告: [deprecation] android.hardware中的Camera已过时
+import android.hardware.Camera.Size;
+                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCapture.java:12: 警告: [deprecation] Camera中的Camera.Size已过时
+import android.hardware.Camera.Size;
+                              ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardDecoderFrame.java:134: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420Planar已过时
+			case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar: {
+			                                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardDecoderFrame.java:192: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420SemiPlanar已过时
+			case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar: {
+			                                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardDecoder.java:153: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420Planar已过时
+									if( (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)
+									                                                             ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardDecoder.java:154: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420SemiPlanar已过时
+											|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
+											                                                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardDecoder.java:327: 警告: [deprecation] MediaCodec中的getInputBuffers()已过时
+	        	ByteBuffer[] inputBuffers = videoCodec.getInputBuffers();
+	        	                                      ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardDecoder.java:368: 警告: [deprecation] MediaCodec中的INFO_OUTPUT_BUFFERS_CHANGED已过时
+		        } else if (outputIndex == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
+		                                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardPlayerRenderer.java:107: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420Planar已过时
+				case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar: {
+				                                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSVideoHardPlayerRenderer.java:110: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420SemiPlanar已过时
+				case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar: {
+				                                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoHardEncoder.java:120: 警告: [deprecation] CodecCapabilities中的COLOR_Format32bitARGB8888已过时
+															(caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888)
+															                                                         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoHardEncoder.java:121: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420Planar已过时
+																	|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)
+																	                                                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoHardEncoder.java:122: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420SemiPlanar已过时
+																	|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
+																	                                                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoHardEncoder.java:332: 警告: [deprecation] MediaCodec中的getInputBuffers()已过时
+	        	ByteBuffer[] inputBuffers = videoCodec.getInputBuffers();
+	        	                                      ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoHardEncoder.java:371: 警告: [deprecation] MediaCodec中的INFO_OUTPUT_BUFFERS_CHANGED已过时
+		        } else if (bufferIndex == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
+		                                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoHardEncoder.java:410: 警告: [deprecation] MediaCodec中的getOutputBuffers()已过时
+		        	ByteBuffer[] outputBuffers = videoCodec.getOutputBuffers();
+		        	                                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCaptureRenderer.java:99: 警告: [deprecation] CodecCapabilities中的COLOR_Format32bitARGB8888已过时
+			if( LSVideoHardEncoder.supportHardEncoderFormat(publishConfig) == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888 ) {
+			                                                                                                  ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCaptureRenderer.java:101: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420Planar已过时
+			} else if( LSVideoHardEncoder.supportHardEncoderFormat(publishConfig) == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar ) {
+			                                                                                                         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/LSVideoCaptureRenderer.java:103: 警告: [deprecation] CodecCapabilities中的COLOR_FormatYUV420SemiPlanar已过时
+			} else if( LSVideoHardEncoder.supportHardEncoderFormat(publishConfig) == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar ) {
+			                                                                                                         ^
+24 个警告
+REAL_PATH : /Users/max/Documents/Svn/LiveStream/client/common-c-library/AndroidCommon
+LOCAL_PATH : /Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/AndroidCommon
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/player/Android.mk:lsplayer: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/publisher/Android.mk:lspublisher: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/manrequesthandler/Android.mk:manrequesthandler: LOCAL_LDLIBS is always ignored for static libraries    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/rtmpdump/Android.mk:rtmpdump: LOCAL_LDLIBS is always ignored for static libraries    
+REAL_PATH : /Users/max/Documents/Svn/LiveStream/client/common-c-library/AndroidCommon
+LOCAL_PATH : /Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/AndroidCommon
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/player/Android.mk:lsplayer: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/publisher/Android.mk:lspublisher: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/manrequesthandler/Android.mk:manrequesthandler: LOCAL_LDLIBS is always ignored for static libraries    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/rtmpdump/Android.mk:rtmpdump: LOCAL_LDLIBS is always ignored for static libraries    
+REAL_PATH : /Users/max/Documents/Svn/LiveStream/client/common-c-library/AndroidCommon
+LOCAL_PATH : /Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/AndroidCommon
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/player/Android.mk:lsplayer: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/publisher/Android.mk:lspublisher: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/manrequesthandler/Android.mk:manrequesthandler: LOCAL_LDLIBS is always ignored for static libraries    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/rtmpdump/Android.mk:rtmpdump: LOCAL_LDLIBS is always ignored for static libraries    
+REAL_PATH : /Users/max/Documents/Svn/LiveStream/client/common-c-library/AndroidCommon
+LOCAL_PATH : /Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/AndroidCommon
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/player/Android.mk:lsplayer: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/publisher/Android.mk:lspublisher: non-system libraries in linker flags: -lavfilter -lavformat -lavdevice -lavcodec -lswscale -lavutil -lswresample -lpostproc -lx264 -lfdk-aac    
+Android NDK:     This is likely to result in incorrect builds. Try using LOCAL_STATIC_LIBRARIES    
+Android NDK:     or LOCAL_SHARED_LIBRARIES instead to list the library dependencies of the    
+Android NDK:     current module    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/manrequesthandler/Android.mk:manrequesthandler: LOCAL_LDLIBS is always ignored for static libraries    
+Android NDK: WARNING:/Users/max/Documents/Svn/LiveStream/client/Android/coollive/jni/../../../common-c-library/rtmpdump/Android.mk:rtmpdump: LOCAL_LDLIBS is always ignored for static libraries    
+[armeabi-v7a] Install        : libcrashhandler.so => libs/armeabi-v7a/libcrashhandler.so
+[armeabi-v7a] Compile++ thumb: lsimageutil <= net_qdating_filter_LSImageUtilJni.cpp
+[armeabi-v7a] SharedLibrary  : liblsimageutil.so
+[armeabi-v7a] Install        : liblsimageutil.so => libs/armeabi-v7a/liblsimageutil.so
+[armeabi-v7a] Compile++ thumb: lsplayer <= LSPlayerImp.cpp
+[armeabi-v7a] Compile++ thumb: lsplayer <= net_qdating_player_LSPlayerJni.cpp
+[armeabi-v7a] SharedLibrary  : liblsplayer.so
+[armeabi-v7a] Install        : liblsplayer.so => libs/armeabi-v7a/liblsplayer.so
+[armeabi-v7a] Compile++ thumb: lspublisher <= LSPublisherImp.cpp
+[armeabi-v7a] Compile++ thumb: lspublisher <= net_qdating_publisher_LSPublisherJni.cpp
+[armeabi-v7a] SharedLibrary  : liblspublisher.so
+[armeabi-v7a] Install        : liblspublisher.so => libs/armeabi-v7a/liblspublisher.so
+[armeabi-v7a] Install        : libc++_shared.so => libs/armeabi-v7a/libc++_shared.so
+[arm64-v8a] Install        : libcrashhandler.so => libs/arm64-v8a/libcrashhandler.so
+[arm64-v8a] Compile++      : lsimageutil <= net_qdating_filter_LSImageUtilJni.cpp
+[arm64-v8a] SharedLibrary  : liblsimageutil.so
+[arm64-v8a] Install        : liblsimageutil.so => libs/arm64-v8a/liblsimageutil.so
+[arm64-v8a] Compile++      : lsplayer <= LSPlayerImp.cpp
+[arm64-v8a] Compile++      : lsplayer <= net_qdating_player_LSPlayerJni.cpp
+[arm64-v8a] SharedLibrary  : liblsplayer.so
+[arm64-v8a] Install        : liblsplayer.so => libs/arm64-v8a/liblsplayer.so
+[arm64-v8a] Compile++      : lspublisher <= LSPublisherImp.cpp
+[arm64-v8a] Compile++      : lspublisher <= net_qdating_publisher_LSPublisherJni.cpp
+[arm64-v8a] SharedLibrary  : liblspublisher.so
+[arm64-v8a] Install        : liblspublisher.so => libs/arm64-v8a/liblspublisher.so
+[arm64-v8a] Install        : libc++_shared.so => libs/arm64-v8a/libc++_shared.so
+[x86] Install        : libcrashhandler.so => libs/x86/libcrashhandler.so
+[x86] Compile++      : lsimageutil <= net_qdating_filter_LSImageUtilJni.cpp
+[x86] SharedLibrary  : liblsimageutil.so
+[x86] Install        : liblsimageutil.so => libs/x86/liblsimageutil.so
+[x86] Compile++      : lsplayer <= LSPlayerImp.cpp
+[x86] Compile++      : lsplayer <= net_qdating_player_LSPlayerJni.cpp
+[x86] SharedLibrary  : liblsplayer.so
+[x86] Install        : liblsplayer.so => libs/x86/liblsplayer.so
+[x86] Compile++      : lspublisher <= LSPublisherImp.cpp
+[x86] Compile++      : lspublisher <= net_qdating_publisher_LSPublisherJni.cpp
+[x86] SharedLibrary  : liblspublisher.so
+[x86] Install        : liblspublisher.so => libs/x86/liblspublisher.so
+[x86] Install        : libc++_shared.so => libs/x86/libc++_shared.so
+[x86_64] Install        : libcrashhandler.so => libs/x86_64/libcrashhandler.so
+[x86_64] Compile++      : lsimageutil <= net_qdating_filter_LSImageUtilJni.cpp
+[x86_64] SharedLibrary  : liblsimageutil.so
+[x86_64] Install        : liblsimageutil.so => libs/x86_64/liblsimageutil.so
+[x86_64] Compile++      : lsplayer <= LSPlayerImp.cpp
+[x86_64] Compile++      : lsplayer <= net_qdating_player_LSPlayerJni.cpp
+[x86_64] SharedLibrary  : liblsplayer.so
+[x86_64] Install        : liblsplayer.so => libs/x86_64/liblsplayer.so
+[x86_64] Compile++      : lspublisher <= LSPublisherImp.cpp
+[x86_64] Compile++      : lspublisher <= net_qdating_publisher_LSPublisherJni.cpp
+[x86_64] SharedLibrary  : liblspublisher.so
+[x86_64] Install        : liblspublisher.so => libs/x86_64/liblspublisher.so
+[x86_64] Install        : libc++_shared.so => libs/x86_64/libc++_shared.so
+已添加清单
+正在添加: net/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/LSConfig$DecodeMode.class(输入 = 1151) (输出 = 583)(压缩了 49%)
+正在添加: net/qdating/LSPlayer$2.class(输入 = 990) (输出 = 543)(压缩了 45%)
+正在添加: net/qdating/LSConfig$FillMode.class(输入 = 1155) (输出 = 595)(压缩了 48%)
+正在添加: net/qdating/LSConfig.class(输入 = 1354) (输出 = 749)(压缩了 44%)
+正在添加: net/qdating/publisher/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/publisher/ILSVideoPreviewCallback.class(输入 = 408) (输出 = 259)(压缩了 36%)
+正在添加: net/qdating/publisher/LSPublishConfig$1.class(输入 = 964) (输出 = 525)(压缩了 45%)
+正在添加: net/qdating/publisher/LSVideoHardEncoder.class(输入 = 10445) (输出 = 4962)(压缩了 52%)
+正在添加: net/qdating/publisher/LSVideoHardEncoderFrame.class(输入 = 864) (输出 = 532)(压缩了 38%)
+正在添加: net/qdating/publisher/LSVideoCaptureRenderer.class(输入 = 9226) (输出 = 3974)(压缩了 56%)
+正在添加: net/qdating/publisher/LSVideoCapture.class(输入 = 11929) (输出 = 5353)(压缩了 55%)
+正在添加: net/qdating/publisher/LSVideoCapture$1.class(输入 = 1558) (输出 = 767)(压缩了 50%)
+正在添加: net/qdating/publisher/ILSVideoHardEncoderJni.class(输入 = 395) (输出 = 226)(压缩了 42%)
+正在添加: net/qdating/publisher/ILSVideoCaptureCallback.class(输入 = 249) (输出 = 184)(压缩了 26%)
+正在添加: net/qdating/publisher/ILSPublisherCallback.class(输入 = 230) (输出 = 160)(压缩了 30%)
+正在添加: net/qdating/publisher/ILSPublisherStatusCallback.class(输入 = 291) (输出 = 189)(压缩了 35%)
+正在添加: net/qdating/publisher/LSAudioRecorder.class(输入 = 3832) (输出 = 1704)(压缩了 55%)
+正在添加: net/qdating/publisher/ILSAudioRecorderCallback.class(输入 = 184) (输出 = 146)(压缩了 20%)
+正在添加: net/qdating/publisher/LSAudioRecorder$1.class(输入 = 1557) (输出 = 740)(压缩了 52%)
+正在添加: net/qdating/publisher/LSPublishConfig.class(输入 = 1643) (输出 = 898)(压缩了 45%)
+正在添加: net/qdating/publisher/LSVideoCaptureRenderer$1.class(输入 = 1132) (输出 = 517)(压缩了 54%)
+正在添加: net/qdating/publisher/ILSPublisherCallbackJni.class(输入 = 198) (输出 = 152)(压缩了 23%)
+正在添加: net/qdating/publisher/LSPublisherJni.class(输入 = 3756) (输出 = 1659)(压缩了 55%)
+正在添加: net/qdating/LSPlayer$1.class(输入 = 2108) (输出 = 1082)(压缩了 48%)
+正在添加: net/qdating/utils/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/utils/Log.class(输入 = 4131) (输出 = 2044)(压缩了 50%)
+正在添加: net/qdating/LSPublisher.class(输入 = 9835) (输出 = 4210)(压缩了 57%)
+正在添加: net/qdating/LSPublisher$3.class(输入 = 1362) (输出 = 704)(压缩了 48%)
+正在添加: net/qdating/LSPlayer.class(输入 = 7980) (输出 = 3614)(压缩了 54%)
+正在添加: net/qdating/LSPublisher$1.class(输入 = 2627) (输出 = 1224)(压缩了 53%)
+正在添加: net/qdating/LSPublisher.java(输入 = 13733) (输出 = 3579)(压缩了 73%)
+正在添加: net/qdating/LSPlayer.java(输入 = 9273) (输出 = 2440)(压缩了 73%)
+正在添加: net/qdating/LSPublisher$5.class(输入 = 1067) (输出 = 575)(压缩了 46%)
+正在添加: net/qdating/LSConfig.java(输入 = 2633) (输出 = 939)(压缩了 64%)
+正在添加: net/qdating/LSConfig$EncodeMode.class(输入 = 1151) (输出 = 582)(压缩了 49%)
+正在添加: net/qdating/filter/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/filter/LSImageOutputYuvFilter$1.class(输入 = 894) (输出 = 486)(压缩了 45%)
+正在添加: net/qdating/filter/LSImageRecordFilter.class(输入 = 3606) (输出 = 1883)(压缩了 47%)
+正在添加: net/qdating/filter/LSImageMosaicFilter.class(输入 = 3666) (输出 = 1894)(压缩了 48%)
+正在添加: net/qdating/filter/LSImageRecordYuvFilter$1.class(输入 = 878) (输出 = 493)(压缩了 43%)
+正在添加: net/qdating/filter/LSImageUtil.class(输入 = 4561) (输出 = 2226)(压缩了 51%)
+正在添加: net/qdating/filter/LSImageInputYuvFilter$1.class(输入 = 887) (输出 = 486)(压缩了 45%)
+正在添加: net/qdating/filter/LSImageFlipFilter$FlipType.class(输入 = 1205) (输出 = 579)(压缩了 51%)
+正在添加: net/qdating/filter/LSImageBeautyFilter.class(输入 = 9276) (输出 = 3014)(压缩了 67%)
+正在添加: net/qdating/filter/LSImageVibrateFilter.class(输入 = 4354) (输出 = 2233)(压缩了 48%)
+正在添加: net/qdating/filter/LSImageFilter$ImageSize.class(输入 = 585) (输出 = 333)(压缩了 43%)
+正在添加: net/qdating/filter/LSImageRecordYuvFilter.class(输入 = 10458) (输出 = 3918)(压缩了 62%)
+正在添加: net/qdating/filter/LSImageCropFilter.class(输入 = 1914) (输出 = 980)(压缩了 48%)
+正在添加: net/qdating/filter/LSImageCircleFilter.class(输入 = 2987) (输出 = 1597)(压缩了 46%)
+正在添加: net/qdating/filter/LSImageUtilJni.class(输入 = 849) (输出 = 491)(压缩了 42%)
+正在添加: net/qdating/filter/LSImageBufferFilter.class(输入 = 3671) (输出 = 1819)(压缩了 50%)
+正在添加: net/qdating/filter/LSImageBmpFilter.class(输入 = 1032) (输出 = 579)(压缩了 43%)
+正在添加: net/qdating/filter/beauty/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/filter/beauty/LSImageHefeFilter.class(输入 = 7091) (输出 = 3232)(压缩了 54%)
+正在添加: net/qdating/filter/beauty/LSImageLomoFilter.class(输入 = 5628) (输出 = 2717)(压缩了 51%)
+正在添加: net/qdating/filter/beauty/LSImageBlur2Filter$FlipType.class(输入 = 1262) (输出 = 592)(压缩了 53%)
+正在添加: net/qdating/filter/beauty/LSImageSunsetFilter.class(输入 = 7626) (输出 = 3147)(压缩了 58%)
+正在添加: net/qdating/filter/beauty/LSImageAdjustFilter.class(输入 = 4546) (输出 = 2237)(压缩了 50%)
+正在添加: net/qdating/filter/beauty/LSImageBlur2Filter.class(输入 = 4054) (输出 = 1937)(压缩了 52%)
+正在添加: net/qdating/filter/beauty/LSImageHealthyFilter.class(输入 = 7643) (输出 = 3312)(压缩了 56%)
+正在添加: net/qdating/filter/beauty/LSImageEmeraldFilter.class(输入 = 6883) (输出 = 2942)(压缩了 57%)
+正在添加: net/qdating/filter/beauty/LSImageBlurFilter$FlipType.class(输入 = 1254) (输出 = 590)(压缩了 52%)
+正在添加: net/qdating/filter/beauty/LSImageSakuraFilter.class(输入 = 6613) (输出 = 2893)(压缩了 56%)
+正在添加: net/qdating/filter/beauty/LSImageComplexionFilter.class(输入 = 6372) (输出 = 2916)(压缩了 54%)
+正在添加: net/qdating/filter/beauty/LSImageHighPassFilter.class(输入 = 3522) (输出 = 1792)(压缩了 49%)
+正在添加: net/qdating/filter/beauty/LSImageBlurFilter.class(输入 = 4050) (输出 = 1945)(压缩了 51%)
+正在添加: net/qdating/filter/LSImageGroupFilter.class(输入 = 2715) (输出 = 1303)(压缩了 52%)
+正在添加: net/qdating/filter/LSImageInputYuvFilter$GL_YUV_Format.class(输入 = 1340) (输出 = 612)(压缩了 54%)
+正在添加: net/qdating/filter/LSImageFlipFilter.class(输入 = 1132) (输出 = 565)(压缩了 50%)
+正在添加: net/qdating/filter/LSImageVertex.class(输入 = 692) (输出 = 382)(压缩了 44%)
+正在添加: net/qdating/filter/LSImageGrayFilter.class(输入 = 2561) (输出 = 1399)(压缩了 45%)
+正在添加: net/qdating/filter/LSImageFlipFilter$1.class(输入 = 833) (输出 = 478)(压缩了 42%)
+正在添加: net/qdating/filter/LSImageOutputYuvFilter$GL_YUV_Format.class(输入 = 1348) (输出 = 614)(压缩了 54%)
+正在添加: net/qdating/filter/sample/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautySakuraFilter.class(输入 = 1226) (输出 = 543)(压缩了 55%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyWatermarkFilter.class(输入 = 2209) (输出 = 1053)(压缩了 52%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyBaseFilterEvent.class(输入 = 229) (输出 = 165)(压缩了 27%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautySunsetFilter.class(输入 = 1226) (输出 = 545)(压缩了 55%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyHealthyFilter.class(输入 = 1232) (输出 = 545)(压缩了 55%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyEmeraldFilter.class(输入 = 1232) (输出 = 545)(压缩了 55%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyHefeFilter.class(输入 = 1214) (输出 = 540)(压缩了 55%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyBaseFilter.class(输入 = 3756) (输出 = 1556)(压缩了 58%)
+正在添加: net/qdating/filter/sample/LSImageSampleBeautyLomoFilter.class(输入 = 1214) (输出 = 539)(压缩了 55%)
+正在添加: net/qdating/filter/LSImageInputCameraFilter.class(输入 = 3010) (输出 = 1605)(压缩了 46%)
+正在添加: net/qdating/filter/LSImageRecordFilterCallback.class(输入 = 189) (输出 = 148)(压缩了 21%)
+正在添加: net/qdating/filter/LSImageUtil$ColorFormat.class(输入 = 1248) (输出 = 608)(压缩了 51%)
+正在添加: net/qdating/filter/LSImageColorFilter.class(输入 = 3283) (输出 = 1673)(压缩了 49%)
+正在添加: net/qdating/filter/LSImageOutputYuvFilter.class(输入 = 7340) (输出 = 3547)(压缩了 51%)
+正在添加: net/qdating/filter/LSImageInputYuvFilter.class(输入 = 7374) (输出 = 3560)(压缩了 51%)
+正在添加: net/qdating/filter/LSImageWaterMarkFilter.class(输入 = 3958) (输出 = 2034)(压缩了 48%)
+正在添加: net/qdating/filter/LSImageFilter.class(输入 = 11000) (输出 = 4967)(压缩了 54%)
+正在添加: net/qdating/filter/LSImageOutputFilter.class(输入 = 1803) (输出 = 986)(压缩了 45%)
+正在添加: net/qdating/filter/LSImageShader.class(输入 = 3189) (输出 = 1263)(压缩了 60%)
+正在添加: net/qdating/filter/LSImageInputFilter.class(输入 = 2082) (输出 = 1067)(压缩了 48%)
+正在添加: net/qdating/LSPublisher$2.class(输入 = 2510) (输出 = 1153)(压缩了 54%)
+正在添加: net/qdating/LSConfig$VideoConfigType.class(输入 = 1279) (输出 = 626)(压缩了 51%)
+正在添加: net/qdating/LSPublisher$4.class(输入 = 2131) (输出 = 1086)(压缩了 49%)
+正在添加: net/qdating/player/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: net/qdating/player/LSPlayerJni.class(输入 = 3218) (输出 = 1331)(压缩了 58%)
+正在添加: net/qdating/player/LSVideoHardPlayerRenderer.class(输入 = 4777) (输出 = 2168)(压缩了 54%)
+正在添加: net/qdating/player/LSVideoHardPlayer.class(输入 = 2238) (输出 = 1115)(压缩了 50%)
+正在添加: net/qdating/player/LSAudioPlayer.class(输入 = 4823) (输出 = 2354)(压缩了 51%)
+正在添加: net/qdating/player/LSVideoPlayer.class(输入 = 3154) (输出 = 1590)(压缩了 49%)
+正在添加: net/qdating/player/ILSVideoHardRendererJni.class(输入 = 223) (输出 = 158)(压缩了 29%)
+正在添加: net/qdating/player/LSVideoHardDecoder.class(输入 = 10936) (输出 = 5290)(压缩了 51%)
+正在添加: net/qdating/player/LSAudioPlayer$1.class(输入 = 2278) (输出 = 1107)(压缩了 51%)
+正在添加: net/qdating/player/ILSVideoHardDecoderJni.class(输入 = 426) (输出 = 238)(压缩了 44%)
+正在添加: net/qdating/player/ILSPlayerCallback.class(输入 = 248) (输出 = 177)(压缩了 28%)
+正在添加: net/qdating/player/ILSVideoRendererJni.class(输入 = 176) (输出 = 144)(压缩了 18%)
+正在添加: net/qdating/player/LSPlayerRendererBinder.class(输入 = 2789) (输出 = 1229)(压缩了 55%)
+正在添加: net/qdating/player/ILSPlayerCallbackJni.class(输入 = 222) (输出 = 172)(压缩了 22%)
+正在添加: net/qdating/player/LSVideoHardDecoderFrame.class(输入 = 4921) (输出 = 2575)(压缩了 47%)
+正在添加: net/qdating/player/LSVideoPlayerRenderer.class(输入 = 4281) (输出 = 1960)(压缩了 54%)
+正在添加: net/qdating/player/ILSAudioRendererJni.class(输入 = 198) (输出 = 161)(压缩了 18%)
+正在添加: net/qdating/player/ILSPlayerStatusCallback.class(输入 = 217) (输出 = 160)(压缩了 26%)
+正在加载源文件/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java...
+正在加载源文件/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java...
+正在加载源文件/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java...
+正在加载源文件/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java...
+正在加载源文件/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/ILSPlayerStatusCallback.java...
+正在加载源文件/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/publisher/ILSPublisherStatusCallback.java...
+正在构造 Javadoc 信息...
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:3: 错误: 程序包net.qdating.utils不存在
+import net.qdating.utils.Log;
+                        ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:5: 错误: 程序包android.opengl不存在
+import android.opengl.GLSurfaceView;
+                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:6: 错误: 程序包android.os不存在
+import android.os.Environment;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:7: 错误: 程序包android.os不存在
+import android.os.Handler;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:8: 错误: 程序包android.os不存在
+import android.os.Message;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:11: 错误: 程序包net.qdating.filter不存在
+import net.qdating.filter.LSImageFilter;
+                         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:12: 错误: 找不到符号
+import net.qdating.player.ILSPlayerCallback;
+                         ^
+  符号:   类 ILSPlayerCallback
+  位置: 程序包 net.qdating.player
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:14: 错误: 找不到符号
+import net.qdating.player.LSAudioPlayer;
+                         ^
+  符号:   类 LSAudioPlayer
+  位置: 程序包 net.qdating.player
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:15: 错误: 找不到符号
+import net.qdating.player.LSPlayerJni;
+                         ^
+  符号:   类 LSPlayerJni
+  位置: 程序包 net.qdating.player
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:17: 错误: 找不到符号
+import net.qdating.player.LSVideoHardDecoder;
+                         ^
+  符号:   类 LSVideoHardDecoder
+  位置: 程序包 net.qdating.player
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:18: 错误: 找不到符号
+import net.qdating.player.LSVideoHardPlayer;
+                         ^
+  符号:   类 LSVideoHardPlayer
+  位置: 程序包 net.qdating.player
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:19: 错误: 找不到符号
+import net.qdating.player.LSVideoPlayer;
+                         ^
+  符号:   类 LSVideoPlayer
+  位置: 程序包 net.qdating.player
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:20: 错误: 程序包net.qdating.utils不存在
+import net.qdating.utils.Log;
+                        ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:26: 错误: 找不到符号
+public class LSPlayer implements ILSPlayerCallback {
+                                 ^
+  符号: 类 ILSPlayerCallback
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:30: 错误: 找不到符号
+	private LSPlayerJni player = new LSPlayerJni();
+	        ^
+  符号:   类 LSPlayerJni
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:34: 错误: 找不到符号
+	private LSVideoPlayer videoPlayer = new LSVideoPlayer();
+	        ^
+  符号:   类 LSVideoPlayer
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:38: 错误: 找不到符号
+	private LSAudioPlayer audioPlayer = new LSAudioPlayer();
+	        ^
+  符号:   类 LSAudioPlayer
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:42: 错误: 找不到符号
+	private LSVideoHardDecoder videoHardDecoder = new LSVideoHardDecoder();
+	        ^
+  符号:   类 LSVideoHardDecoder
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:46: 错误: 找不到符号
+	private LSVideoHardPlayer videoHardPlayer = new LSVideoHardPlayer();
+	        ^
+  符号:   类 LSVideoHardPlayer
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:54: 错误: 找不到符号
+	private Handler handler = new Handler();
+	        ^
+  符号:   类 Handler
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:3: 错误: 程序包android.opengl不存在
+import android.opengl.GLSurfaceView;
+                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:6: 错误: 程序包net.qdating.filter不存在
+import net.qdating.filter.LSImageFilter;
+                         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:356: 错误: 找不到符号
+	public void onConnect(LSPlayerJni player) {
+	                      ^
+  符号:   类 LSPlayerJni
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:371: 错误: 找不到符号
+	public void onDisconnect(LSPlayerJni player) {
+	                         ^
+  符号:   类 LSPlayerJni
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:396: 错误: 找不到符号
+	public void onPlayerOnDelayMaxTime(LSPlayerJni player) {
+	                                   ^
+  符号:   类 LSPlayerJni
+  位置: 类 LSPlayer
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:18: 错误: 找不到符号
+    protected GLSurfaceView playerSurfaceView = null;
+              ^
+  符号:   类 GLSurfaceView
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:22: 错误: 找不到符号
+    protected LSVideoHardPlayerRenderer playerHardRenderer = null;
+              ^
+  符号:   类 LSVideoHardPlayerRenderer
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:26: 错误: 找不到符号
+    protected LSVideoPlayerRenderer playerRenderer = null;
+              ^
+  符号:   类 LSVideoPlayerRenderer
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:37: 错误: 找不到符号
+    public LSPlayerRendererBinder(GLSurfaceView surfaceView, LSConfig.FillMode fillMode) {
+                                  ^
+  符号:   类 GLSurfaceView
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:41: 错误: 找不到符号
+    public LSPlayerRendererBinder(GLSurfaceView surfaceView, LSConfig.FillMode fillMode, LSConfig.DecodeMode decodeMode) {
+                                  ^
+  符号:   类 GLSurfaceView
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:45: 错误: 找不到符号
+    private void init(GLSurfaceView surfaceView, LSConfig.FillMode fillMode, LSConfig.DecodeMode decodeMode) {
+                      ^
+  符号:   类 GLSurfaceView
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:81: 错误: 找不到符号
+    public void setCustomFilter(LSImageFilter customFilter) {
+                                ^
+  符号:   类 LSImageFilter
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/player/LSPlayerRendererBinder.java:97: 错误: 找不到符号
+    public LSImageFilter getCustomFilter() {
+           ^
+  符号:   类 LSImageFilter
+  位置: 类 LSPlayerRendererBinder
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:6: 错误: 程序包android.app不存在
+import android.app.ActivityManager;
+                  ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:7: 错误: 程序包android.content不存在
+import android.content.Context;
+                      ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:8: 错误: 程序包android.content.pm不存在
+import android.content.pm.ConfigurationInfo;
+                         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:9: 错误: 程序包android.graphics不存在
+import android.graphics.Bitmap;
+                       ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:10: 错误: 程序包android.opengl不存在
+import android.opengl.GLSurfaceView;
+                     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:11: 错误: 程序包android.os不存在
+import android.os.Environment;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:12: 错误: 程序包android.os不存在
+import android.os.Handler;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:13: 错误: 程序包android.os不存在
+import android.os.Looper;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:14: 错误: 程序包android.os不存在
+import android.os.Message;
+                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:16: 错误: 程序包net.qdating.filter不存在
+import net.qdating.filter.LSImageFilter;
+                         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:17: 错误: 找不到符号
+import net.qdating.publisher.ILSAudioRecorderCallback;
+                            ^
+  符号:   类 ILSAudioRecorderCallback
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:18: 错误: 找不到符号
+import net.qdating.publisher.ILSPublisherCallback;
+                            ^
+  符号:   类 ILSPublisherCallback
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:20: 错误: 找不到符号
+import net.qdating.publisher.ILSVideoCaptureCallback;
+                            ^
+  符号:   类 ILSVideoCaptureCallback
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:21: 错误: 找不到符号
+import net.qdating.publisher.LSAudioRecorder;
+                            ^
+  符号:   类 LSAudioRecorder
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:22: 错误: 找不到符号
+import net.qdating.publisher.LSPublishConfig;
+                            ^
+  符号:   类 LSPublishConfig
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:23: 错误: 找不到符号
+import net.qdating.publisher.LSPublisherJni;
+                            ^
+  符号:   类 LSPublisherJni
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:24: 错误: 找不到符号
+import net.qdating.publisher.LSVideoCapture;
+                            ^
+  符号:   类 LSVideoCapture
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:25: 错误: 找不到符号
+import net.qdating.publisher.LSVideoHardEncoder;
+                            ^
+  符号:   类 LSVideoHardEncoder
+  位置: 程序包 net.qdating.publisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:26: 错误: 程序包net.qdating.utils不存在
+import net.qdating.utils.Log;
+                        ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:28: 错误: 程序包android.content不存在
+import static android.content.Context.ACTIVITY_SERVICE;
+                             ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:28: 错误: 仅从类和接口静态导入
+import static android.content.Context.ACTIVITY_SERVICE;
+^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:38: 错误: 找不到符号
+	private LSPublisherJni publisher = new LSPublisherJni();
+	        ^
+  符号:   类 LSPublisherJni
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:42: 错误: 找不到符号
+	private LSVideoCapture videoCapture = new LSVideoCapture();
+	        ^
+  符号:   类 LSVideoCapture
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:46: 错误: 找不到符号
+	private LSAudioRecorder audioRecorder = new LSAudioRecorder();
+	        ^
+  符号:   类 LSAudioRecorder
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:50: 错误: 找不到符号
+	private LSVideoHardEncoder videoHardEncoder = new LSVideoHardEncoder();
+	        ^
+  符号:   类 LSVideoHardEncoder
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:58: 错误: 找不到符号
+	private Handler handler = new Handler();
+	        ^
+  符号:   类 Handler
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:94: 错误: 找不到符号
+	public static boolean checkDeviceSupport(Context context) {
+	                                         ^
+  符号:   类 Context
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:128: 错误: 找不到符号
+	public boolean init(Context context,
+	                    ^
+  符号:   类 Context
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:129: 错误: 找不到符号
+						GLSurfaceView surfaceView,
+						^
+  符号:   类 GLSurfaceView
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:353: 错误: 找不到符号
+    public void setCustomFilter(LSImageFilter customFilter) {
+                                ^
+  符号:   类 LSImageFilter
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:361: 错误: 找不到符号
+	public LSImageFilter getCustomFilter() {
+	       ^
+  符号:   类 LSImageFilter
+  位置: 类 LSPublisher
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:370: 错误: 找不到符号
+	public void setCaptureBitmap(Bitmap bitmap) {
+	                             ^
+  符号:   类 Bitmap
+  位置: 类 LSPublisher
+标准 Doclet 版本 1.8.0_71
+正在构建所有程序包和类的树...
+正在生成2.0.0/doc/net/qdating/LSConfig.html...
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:79: 错误: 不允许使用自关闭元素
+	 * 解码模式 <br/>
+	        ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:80: 错误: 不允许使用自关闭元素
+	 * DecodeModeAuto 自动选择解码模式 <br/>
+	                           ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:81: 错误: 不允许使用自关闭元素
+	 * DecodeModeSoft 强制选择软解码模式 <br/>
+	                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:82: 错误: 不允许使用自关闭元素
+	 * DecodeModeHard 强制选择硬解码模式 <br/>
+	                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:91: 错误: 不允许使用自关闭元素
+	 * 编码模式 <br/>
+	        ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:92: 错误: 不允许使用自关闭元素
+	 * EncodeModeAuto 自动选择编码模式 <br/>
+	                           ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:93: 错误: 不允许使用自关闭元素
+	 * EncodeModeSoft 强制选择编编码模式 <br/>
+	                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:94: 错误: 不允许使用自关闭元素
+	 * EncodeModeHard 强制选择硬编码模式 <br/>
+	                            ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:68: 错误: 不允许使用自关闭元素
+	 * 渲染模式类型 <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:69: 错误: 不允许使用自关闭元素
+	 * FillModeStretch 			满屏拉伸 <br/>
+	                   			     ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:70: 错误: 不允许使用自关闭元素
+	 * FillModeAspectRatioFit 	保持比例全图显示 <br/>
+	                          	         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:71: 错误: 不允许使用自关闭元素
+	 * FillModeAspectRatioFill 	保持比例全屏显示 <br/>
+	                           	         ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:56: 错误: 不允许使用自关闭元素
+	 * 视频参数模式 <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:57: 错误: 不允许使用自关闭元素
+	 * VideoConfigType240x240 采集480x640, 编码240x240 <br/>
+	                                               ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:58: 错误: 不允许使用自关闭元素
+	 * VideoConfigType240x320 采集480x640, 编码240x320 <br/>
+	                                               ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:59: 错误: 不允许使用自关闭元素
+	 * VideoConfigType320x320 采集480x640, 编码320x320 <br/>
+	                                               ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:29: 错误: 不允许使用自关闭元素
+	 * 设置日志等级 <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:30: 错误: 找不到引用
+	 * {@link android.util.Log#VERBOSE} <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:30: 错误: 不允许使用自关闭元素
+	 * {@link android.util.Log#VERBOSE} <br/>
+	                                    ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:31: 错误: 找不到引用
+	 * {@link android.util.Log#DEBUG} <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:31: 错误: 不允许使用自关闭元素
+	 * {@link android.util.Log#DEBUG} <br/>
+	                                  ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:32: 错误: 找不到引用
+	 * {@link android.util.Log#INFO} <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:32: 错误: 不允许使用自关闭元素
+	 * {@link android.util.Log#INFO} <br/>
+	                                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:33: 错误: 找不到引用
+	 * {@link android.util.Log#WARN} <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:33: 错误: 不允许使用自关闭元素
+	 * {@link android.util.Log#WARN} <br/>
+	                                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:34: 错误: 找不到引用
+	 * {@link android.util.Log#ERROR} <br/>
+	          ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:34: 错误: 不允许使用自关闭元素
+	 * {@link android.util.Log#ERROR} <br/>
+	                                  ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:20: 错误: 不允许使用自关闭元素
+	 * 日志路径 <br/>
+	        ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:21: 错误: 不允许使用自关闭元素
+	 * 如 /sdcard/LOGDIR, 空则不创建目录 <br/>
+	                             ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:42: 错误: 不允许使用自关闭元素
+	 * 初始化解码缓存(播放器参数) <br/>
+	                  ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:43: 错误: 不允许使用自关闭元素
+	 * 总量 = 缓存时间 * FPS <br/>
+	                   ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:47: 错误: 不允许使用自关闭元素
+	 * 最大解码缓存(播放器参数) <br/>
+	                 ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:51: 错误: 不允许使用自关闭元素
+	 * 初始化编码缓存(推流器参数) <br/>
+	                  ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSConfig.java:52: 错误: 不允许使用自关闭元素
+	 * 总量 = 缓存时间 * FPS <br/>
+	                   ^
+正在生成2.0.0/doc/net/qdating/LSConfig.DecodeMode.html...
+正在生成2.0.0/doc/net/qdating/LSConfig.EncodeMode.html...
+正在生成2.0.0/doc/net/qdating/LSConfig.FillMode.html...
+正在生成2.0.0/doc/net/qdating/LSConfig.VideoConfigType.html...
+正在生成2.0.0/doc/net/qdating/LSPlayer.html...
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPlayer.java:340: 警告: @return 没有说明
+	 * @return
+	   ^
+正在生成2.0.0/doc/net/qdating/LSPublisher.html...
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:94: 警告: context没有 @param
+	public static boolean checkDeviceSupport(Context context) {
+	                      ^
+/Users/max/Documents/Svn/LiveStream/client/Android/Tools/../coollive/src/net/qdating/LSPublisher.java:128: 警告: context没有 @param
+	public boolean init(Context context,
+	               ^
+正在生成2.0.0/doc/net/qdating/publisher/ILSPublisherStatusCallback.html...
+正在生成2.0.0/doc/net/qdating/player/ILSPlayerStatusCallback.html...
+正在生成2.0.0/doc/net/qdating/player/LSPlayerRendererBinder.html...
+正在生成2.0.0/doc/overview-frame.html...
+正在生成2.0.0/doc/net/qdating/package-frame.html...
+正在生成2.0.0/doc/net/qdating/package-summary.html...
+正在生成2.0.0/doc/net/qdating/package-tree.html...
+正在生成2.0.0/doc/net/qdating/player/package-frame.html...
+正在生成2.0.0/doc/net/qdating/player/package-summary.html...
+正在生成2.0.0/doc/net/qdating/player/package-tree.html...
+正在生成2.0.0/doc/net/qdating/publisher/package-frame.html...
+正在生成2.0.0/doc/net/qdating/publisher/package-summary.html...
+正在生成2.0.0/doc/net/qdating/publisher/package-tree.html...
+正在生成2.0.0/doc/constant-values.html...
+正在构建所有程序包和类的索引...
+正在生成2.0.0/doc/overview-tree.html...
+正在生成2.0.0/doc/index-all.html...
+正在生成2.0.0/doc/deprecated-list.html...
+正在构建所有类的索引...
+正在生成2.0.0/doc/allclasses-frame.html...
+正在生成2.0.0/doc/allclasses-noframe.html...
+正在生成2.0.0/doc/index.html...
+正在生成2.0.0/doc/overview-summary.html...
+正在生成2.0.0/doc/help-doc.html...
+34 个错误
+68 个警告
+a obj
+a obj/local
+a obj/local/armeabi-v7a
+a obj/local/x86
+a obj/local/arm64-v8a
+a obj/local/x86_64
+a obj/local/x86_64/objs-debug
+a obj/local/x86_64/librtmpdump.a
+a obj/local/x86_64/libz.a
+a obj/local/x86_64/objs
+a obj/local/x86_64/libbreakpad_client.a
+a obj/local/x86_64/libcrashhandler.so
+a obj/local/x86_64/libzip.a
+a obj/local/x86_64/libandroidcommon.a
+a obj/local/x86_64/libc++_shared.so
+a obj/local/x86_64/libsrs_librtmp.a
+a obj/local/x86_64/liblsplayer.so
+a obj/local/x86_64/liblspublisher.so
+a obj/local/x86_64/libcommon.a
+a obj/local/x86_64/liblsimageutil.so
+a obj/local/x86_64/objs/crashhandler
+a obj/local/x86_64/objs/rtmpdump
+a obj/local/x86_64/objs/androidcommon
+a obj/local/x86_64/objs/breakpad_client
+a obj/local/x86_64/objs/lspublisher
+a obj/local/x86_64/objs/z
+a obj/local/x86_64/objs/srs_librtmp
+a obj/local/x86_64/objs/lsplayer
+a obj/local/x86_64/objs/zip
+a obj/local/x86_64/objs/common
+a obj/local/x86_64/objs/lsimageutil
+a obj/local/x86_64/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/x86_64/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/x86_64/objs/common/IAutoLock.o
+a obj/local/x86_64/objs/common/KZip.o
+a obj/local/x86_64/objs/common/KLog.o
+a obj/local/x86_64/objs/common/md5.o.d
+a obj/local/x86_64/objs/common/IPAddress.o
+a obj/local/x86_64/objs/common/KThread.o
+a obj/local/x86_64/objs/common/IAutoLock.o.d
+a obj/local/x86_64/objs/common/KSocket.o
+a obj/local/x86_64/objs/common/command.o.d
+a obj/local/x86_64/objs/common/md5.o
+a obj/local/x86_64/objs/common/KZip.o.d
+a obj/local/x86_64/objs/common/IPAddress.o.d
+a obj/local/x86_64/objs/common/CheckMemoryLeak.o
+a obj/local/x86_64/objs/common/IAutoLockWrapper.o
+a obj/local/x86_64/objs/common/KLogWrapper.o
+a obj/local/x86_64/objs/common/aes.o
+a obj/local/x86_64/objs/common/KLog.o.d
+a obj/local/x86_64/objs/common/CheckMemoryLeak.o.d
+a obj/local/x86_64/objs/common/CheckMemoryList.o
+a obj/local/x86_64/objs/common/Arithmetic.o.d
+a obj/local/x86_64/objs/common/KLogWrapper.o.d
+a obj/local/x86_64/objs/common/KThread.o.d
+a obj/local/x86_64/objs/common/Arithmetic.o
+a obj/local/x86_64/objs/common/command.o
+a obj/local/x86_64/objs/common/aes.o.d
+a obj/local/x86_64/objs/common/CommonFunc.o
+a obj/local/x86_64/objs/common/KSocket.o.d
+a obj/local/x86_64/objs/common/CheckMemoryList.o.d
+a obj/local/x86_64/objs/common/IAutoLockWrapper.o.d
+a obj/local/x86_64/objs/common/CommonFunc.o.d
+a obj/local/x86_64/objs/zip/ioapi.o.d
+a obj/local/x86_64/objs/zip/mztools.o.d
+a obj/local/x86_64/objs/zip/miniunz.o
+a obj/local/x86_64/objs/zip/minizip.o
+a obj/local/x86_64/objs/zip/unzip.o.d
+a obj/local/x86_64/objs/zip/zip.o
+a obj/local/x86_64/objs/zip/unzip.o
+a obj/local/x86_64/objs/zip/minizip.o.d
+a obj/local/x86_64/objs/zip/miniunz.o.d
+a obj/local/x86_64/objs/zip/mztools.o
+a obj/local/x86_64/objs/zip/zip.o.d
+a obj/local/x86_64/objs/zip/ioapi.o
+a obj/local/x86_64/objs/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/x86_64/objs/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/x86_64/objs/lsplayer/LSPlayerImp.o
+a obj/local/x86_64/objs/lsplayer/LSPlayerImp.o.d
+a obj/local/x86_64/objs/srs_librtmp/srs_librtmp.o
+a obj/local/x86_64/objs/srs_librtmp/srs_librtmp.o.d
+a obj/local/x86_64/objs/z/src
+a obj/local/x86_64/objs/z/src/zutil.o
+a obj/local/x86_64/objs/z/src/trees.o.d
+a obj/local/x86_64/objs/z/src/infback.o
+a obj/local/x86_64/objs/z/src/adler32.o.d
+a obj/local/x86_64/objs/z/src/inftrees.o
+a obj/local/x86_64/objs/z/src/infback.o.d
+a obj/local/x86_64/objs/z/src/uncompr.o
+a obj/local/x86_64/objs/z/src/inffast.o.d
+a obj/local/x86_64/objs/z/src/gzlib.o
+a obj/local/x86_64/objs/z/src/inflate.o.d
+a obj/local/x86_64/objs/z/src/deflate.o.d
+a obj/local/x86_64/objs/z/src/gzclose.o
+a obj/local/x86_64/objs/z/src/gzwrite.o
+a obj/local/x86_64/objs/z/src/zutil.o.d
+a obj/local/x86_64/objs/z/src/trees.o
+a obj/local/x86_64/objs/z/src/inffast.o
+a obj/local/x86_64/objs/z/src/adler32.o
+a obj/local/x86_64/objs/z/src/gzlib.o.d
+a obj/local/x86_64/objs/z/src/crc32.o.d
+a obj/local/x86_64/objs/z/src/gzwrite.o.d
+a obj/local/x86_64/objs/z/src/compress.o
+a obj/local/x86_64/objs/z/src/deflate.o
+a obj/local/x86_64/objs/z/src/uncompr.o.d
+a obj/local/x86_64/objs/z/src/inflate.o
+a obj/local/x86_64/objs/z/src/gzclose.o.d
+a obj/local/x86_64/objs/z/src/gzread.o
+a obj/local/x86_64/objs/z/src/inftrees.o.d
+a obj/local/x86_64/objs/z/src/compress.o.d
+a obj/local/x86_64/objs/z/src/crc32.o
+a obj/local/x86_64/objs/z/src/gzread.o.d
+a obj/local/x86_64/objs/lspublisher/LSPublisherImp.o
+a obj/local/x86_64/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/x86_64/objs/lspublisher/LSPublisherImp.o.d
+a obj/local/x86_64/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/x86_64/objs/breakpad_client/src
+a obj/local/x86_64/objs/breakpad_client/src/common
+a obj/local/x86_64/objs/breakpad_client/src/client
+a obj/local/x86_64/objs/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux
+a obj/local/x86_64/objs/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/handler
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/crash_generation
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/log
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/microdump_writer
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/log/log.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/x86_64/objs/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/x86_64/objs/breakpad_client/src/common/md5.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/convert_UTF.o
+a obj/local/x86_64/objs/breakpad_client/src/common/md5.o
+a obj/local/x86_64/objs/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux
+a obj/local/x86_64/objs/breakpad_client/src/common/android
+a obj/local/x86_64/objs/breakpad_client/src/common/string_conversion.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/string_conversion.o
+a obj/local/x86_64/objs/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/elfutils.o
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/x86_64/objs/breakpad_client/src/common/linux/file_id.o
+a obj/local/x86_64/objs/androidcommon/DeviceJniIntToType.o
+a obj/local/x86_64/objs/androidcommon/DeviceJniIntToType.o.d
+a obj/local/x86_64/objs/androidcommon/JniCommonFunc.o
+a obj/local/x86_64/objs/androidcommon/JniCommonFunc.o.d
+a obj/local/x86_64/objs/rtmpdump/RtmpPublisher.o
+a obj/local/x86_64/objs/rtmpdump/RtmpPublisher.o.d
+a obj/local/x86_64/objs/rtmpdump/video
+a obj/local/x86_64/objs/rtmpdump/RtmpPlayer.o.d
+a obj/local/x86_64/objs/rtmpdump/RtmpPlayer.o
+a obj/local/x86_64/objs/rtmpdump/PlayerController.o.d
+a obj/local/x86_64/objs/rtmpdump/util
+a obj/local/x86_64/objs/rtmpdump/PublisherController.o.d
+a obj/local/x86_64/objs/rtmpdump/PublisherController.o
+a obj/local/x86_64/objs/rtmpdump/Statistics.o.d
+a obj/local/x86_64/objs/rtmpdump/RtmpDump.o
+a obj/local/x86_64/objs/rtmpdump/PlayerController.o
+a obj/local/x86_64/objs/rtmpdump/RtmpDump.o.d
+a obj/local/x86_64/objs/rtmpdump/audio
+a obj/local/x86_64/objs/rtmpdump/Statistics.o
+a obj/local/x86_64/objs/rtmpdump/android
+a obj/local/x86_64/objs/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/x86_64/objs/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/x86_64/objs/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/x86_64/objs/rtmpdump/android/VideoRendererImp.o
+a obj/local/x86_64/objs/rtmpdump/android/AudioRendererImp.o
+a obj/local/x86_64/objs/rtmpdump/android/VideoHardEncoder.o
+a obj/local/x86_64/objs/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/x86_64/objs/rtmpdump/android/VideoHardDecoder.o
+a obj/local/x86_64/objs/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/x86_64/objs/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/x86_64/objs/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/x86_64/objs/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/x86_64/objs/rtmpdump/audio/AudioFrame.o.d
+a obj/local/x86_64/objs/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/x86_64/objs/rtmpdump/audio/AudioMuxer.o
+a obj/local/x86_64/objs/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/x86_64/objs/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/x86_64/objs/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/x86_64/objs/rtmpdump/audio/AudioFrame.o
+a obj/local/x86_64/objs/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/x86_64/objs/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/x86_64/objs/rtmpdump/util/FrameBuffer.o
+a obj/local/x86_64/objs/rtmpdump/util/FrameBuffer.o.d
+a obj/local/x86_64/objs/rtmpdump/util/CacheBufferQueue.o
+a obj/local/x86_64/objs/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/x86_64/objs/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoFilters.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoFrame.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoDecoderH264.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoEncoderH264.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoMuxer.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoRotateFilter.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoFormatConverter.o
+a obj/local/x86_64/objs/rtmpdump/video/VideoFilters.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoMuxer.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoFrame.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/x86_64/objs/rtmpdump/video/VideoRecorderH264.o
+a obj/local/x86_64/objs/crashhandler/CrashHandler.o
+a obj/local/x86_64/objs/crashhandler/CrashHandler.o.d
+a obj/local/x86_64/objs-debug/crashhandler
+a obj/local/x86_64/objs-debug/rtmpdump
+a obj/local/x86_64/objs-debug/androidcommon
+a obj/local/x86_64/objs-debug/breakpad_client
+a obj/local/x86_64/objs-debug/lspublisher
+a obj/local/x86_64/objs-debug/z
+a obj/local/x86_64/objs-debug/srs_librtmp
+a obj/local/x86_64/objs-debug/lsplayer
+a obj/local/x86_64/objs-debug/zip
+a obj/local/x86_64/objs-debug/common
+a obj/local/x86_64/objs-debug/lsimageutil
+a obj/local/x86_64/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/x86_64/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/x86_64/objs-debug/common/IAutoLock.o
+a obj/local/x86_64/objs-debug/common/KZip.o
+a obj/local/x86_64/objs-debug/common/KLog.o
+a obj/local/x86_64/objs-debug/common/md5.o.d
+a obj/local/x86_64/objs-debug/common/IPAddress.o
+a obj/local/x86_64/objs-debug/common/KThread.o
+a obj/local/x86_64/objs-debug/common/IAutoLock.o.d
+a obj/local/x86_64/objs-debug/common/KSocket.o
+a obj/local/x86_64/objs-debug/common/command.o.d
+a obj/local/x86_64/objs-debug/common/md5.o
+a obj/local/x86_64/objs-debug/common/KZip.o.d
+a obj/local/x86_64/objs-debug/common/IPAddress.o.d
+a obj/local/x86_64/objs-debug/common/CheckMemoryLeak.o
+a obj/local/x86_64/objs-debug/common/IAutoLockWrapper.o
+a obj/local/x86_64/objs-debug/common/KLogWrapper.o
+a obj/local/x86_64/objs-debug/common/aes.o
+a obj/local/x86_64/objs-debug/common/KLog.o.d
+a obj/local/x86_64/objs-debug/common/CheckMemoryLeak.o.d
+a obj/local/x86_64/objs-debug/common/CheckMemoryList.o
+a obj/local/x86_64/objs-debug/common/Arithmetic.o.d
+a obj/local/x86_64/objs-debug/common/KLogWrapper.o.d
+a obj/local/x86_64/objs-debug/common/KThread.o.d
+a obj/local/x86_64/objs-debug/common/Arithmetic.o
+a obj/local/x86_64/objs-debug/common/command.o
+a obj/local/x86_64/objs-debug/common/aes.o.d
+a obj/local/x86_64/objs-debug/common/CommonFunc.o
+a obj/local/x86_64/objs-debug/common/KSocket.o.d
+a obj/local/x86_64/objs-debug/common/CheckMemoryList.o.d
+a obj/local/x86_64/objs-debug/common/IAutoLockWrapper.o.d
+a obj/local/x86_64/objs-debug/common/CommonFunc.o.d
+a obj/local/x86_64/objs-debug/zip/ioapi.o.d
+a obj/local/x86_64/objs-debug/zip/mztools.o.d
+a obj/local/x86_64/objs-debug/zip/miniunz.o
+a obj/local/x86_64/objs-debug/zip/minizip.o
+a obj/local/x86_64/objs-debug/zip/unzip.o.d
+a obj/local/x86_64/objs-debug/zip/zip.o
+a obj/local/x86_64/objs-debug/zip/unzip.o
+a obj/local/x86_64/objs-debug/zip/minizip.o.d
+a obj/local/x86_64/objs-debug/zip/miniunz.o.d
+a obj/local/x86_64/objs-debug/zip/mztools.o
+a obj/local/x86_64/objs-debug/zip/zip.o.d
+a obj/local/x86_64/objs-debug/zip/ioapi.o
+a obj/local/x86_64/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/x86_64/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/x86_64/objs-debug/lsplayer/LSPlayerImp.o
+a obj/local/x86_64/objs-debug/lsplayer/LSPlayerImp.o.d
+a obj/local/x86_64/objs-debug/srs_librtmp/srs_librtmp.o
+a obj/local/x86_64/objs-debug/srs_librtmp/srs_librtmp.o.d
+a obj/local/x86_64/objs-debug/z/src
+a obj/local/x86_64/objs-debug/z/src/zutil.o
+a obj/local/x86_64/objs-debug/z/src/trees.o.d
+a obj/local/x86_64/objs-debug/z/src/infback.o
+a obj/local/x86_64/objs-debug/z/src/adler32.o.d
+a obj/local/x86_64/objs-debug/z/src/inftrees.o
+a obj/local/x86_64/objs-debug/z/src/infback.o.d
+a obj/local/x86_64/objs-debug/z/src/uncompr.o
+a obj/local/x86_64/objs-debug/z/src/inffast.o.d
+a obj/local/x86_64/objs-debug/z/src/gzlib.o
+a obj/local/x86_64/objs-debug/z/src/inflate.o.d
+a obj/local/x86_64/objs-debug/z/src/deflate.o.d
+a obj/local/x86_64/objs-debug/z/src/gzclose.o
+a obj/local/x86_64/objs-debug/z/src/gzwrite.o
+a obj/local/x86_64/objs-debug/z/src/zutil.o.d
+a obj/local/x86_64/objs-debug/z/src/trees.o
+a obj/local/x86_64/objs-debug/z/src/inffast.o
+a obj/local/x86_64/objs-debug/z/src/adler32.o
+a obj/local/x86_64/objs-debug/z/src/gzlib.o.d
+a obj/local/x86_64/objs-debug/z/src/crc32.o.d
+a obj/local/x86_64/objs-debug/z/src/gzwrite.o.d
+a obj/local/x86_64/objs-debug/z/src/compress.o
+a obj/local/x86_64/objs-debug/z/src/deflate.o
+a obj/local/x86_64/objs-debug/z/src/uncompr.o.d
+a obj/local/x86_64/objs-debug/z/src/inflate.o
+a obj/local/x86_64/objs-debug/z/src/gzclose.o.d
+a obj/local/x86_64/objs-debug/z/src/gzread.o
+a obj/local/x86_64/objs-debug/z/src/inftrees.o.d
+a obj/local/x86_64/objs-debug/z/src/compress.o.d
+a obj/local/x86_64/objs-debug/z/src/crc32.o
+a obj/local/x86_64/objs-debug/z/src/gzread.o.d
+a obj/local/x86_64/objs-debug/lspublisher/LSPublisherImp.o
+a obj/local/x86_64/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/x86_64/objs-debug/lspublisher/LSPublisherImp.o.d
+a obj/local/x86_64/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src
+a obj/local/x86_64/objs-debug/breakpad_client/src/common
+a obj/local/x86_64/objs-debug/breakpad_client/src/client
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/handler
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/crash_generation
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/log
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/microdump_writer
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/log/log.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/md5.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/convert_UTF.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/md5.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/android
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/string_conversion.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/string_conversion.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/elfutils.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/x86_64/objs-debug/breakpad_client/src/common/linux/file_id.o
+a obj/local/x86_64/objs-debug/androidcommon/DeviceJniIntToType.o
+a obj/local/x86_64/objs-debug/androidcommon/DeviceJniIntToType.o.d
+a obj/local/x86_64/objs-debug/androidcommon/JniCommonFunc.o
+a obj/local/x86_64/objs-debug/androidcommon/JniCommonFunc.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/RtmpPublisher.o
+a obj/local/x86_64/objs-debug/rtmpdump/RtmpPublisher.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video
+a obj/local/x86_64/objs-debug/rtmpdump/RtmpPlayer.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/RtmpPlayer.o
+a obj/local/x86_64/objs-debug/rtmpdump/PlayerController.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/util
+a obj/local/x86_64/objs-debug/rtmpdump/PublisherController.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/PublisherController.o
+a obj/local/x86_64/objs-debug/rtmpdump/Statistics.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/RtmpDump.o
+a obj/local/x86_64/objs-debug/rtmpdump/PlayerController.o
+a obj/local/x86_64/objs-debug/rtmpdump/RtmpDump.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/audio
+a obj/local/x86_64/objs-debug/rtmpdump/Statistics.o
+a obj/local/x86_64/objs-debug/rtmpdump/android
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoRendererImp.o
+a obj/local/x86_64/objs-debug/rtmpdump/android/AudioRendererImp.o
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoHardEncoder.o
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoHardDecoder.o
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioFrame.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioMuxer.o
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioFrame.o
+a obj/local/x86_64/objs-debug/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/util/FrameBuffer.o
+a obj/local/x86_64/objs-debug/rtmpdump/util/FrameBuffer.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/util/CacheBufferQueue.o
+a obj/local/x86_64/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/x86_64/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoFilters.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoFrame.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoDecoderH264.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoEncoderH264.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoMuxer.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoRotateFilter.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoFormatConverter.o
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoFilters.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoMuxer.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoFrame.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/x86_64/objs-debug/rtmpdump/video/VideoRecorderH264.o
+a obj/local/x86_64/objs-debug/crashhandler/CrashHandler.o
+a obj/local/x86_64/objs-debug/crashhandler/CrashHandler.o.d
+a obj/local/arm64-v8a/objs-debug
+a obj/local/arm64-v8a/librtmpdump.a
+a obj/local/arm64-v8a/libz.a
+a obj/local/arm64-v8a/objs
+a obj/local/arm64-v8a/libbreakpad_client.a
+a obj/local/arm64-v8a/libcrashhandler.so
+a obj/local/arm64-v8a/libzip.a
+a obj/local/arm64-v8a/libandroidcommon.a
+a obj/local/arm64-v8a/libc++_shared.so
+a obj/local/arm64-v8a/libsrs_librtmp.a
+a obj/local/arm64-v8a/liblsplayer.so
+a obj/local/arm64-v8a/liblspublisher.so
+a obj/local/arm64-v8a/libcommon.a
+a obj/local/arm64-v8a/liblsimageutil.so
+a obj/local/arm64-v8a/objs/crashhandler
+a obj/local/arm64-v8a/objs/rtmpdump
+a obj/local/arm64-v8a/objs/androidcommon
+a obj/local/arm64-v8a/objs/breakpad_client
+a obj/local/arm64-v8a/objs/lspublisher
+a obj/local/arm64-v8a/objs/z
+a obj/local/arm64-v8a/objs/srs_librtmp
+a obj/local/arm64-v8a/objs/lsplayer
+a obj/local/arm64-v8a/objs/zip
+a obj/local/arm64-v8a/objs/common
+a obj/local/arm64-v8a/objs/lsimageutil
+a obj/local/arm64-v8a/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/arm64-v8a/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/arm64-v8a/objs/common/IAutoLock.o
+a obj/local/arm64-v8a/objs/common/KZip.o
+a obj/local/arm64-v8a/objs/common/KLog.o
+a obj/local/arm64-v8a/objs/common/md5.o.d
+a obj/local/arm64-v8a/objs/common/IPAddress.o
+a obj/local/arm64-v8a/objs/common/KThread.o
+a obj/local/arm64-v8a/objs/common/IAutoLock.o.d
+a obj/local/arm64-v8a/objs/common/KSocket.o
+a obj/local/arm64-v8a/objs/common/command.o.d
+a obj/local/arm64-v8a/objs/common/md5.o
+a obj/local/arm64-v8a/objs/common/KZip.o.d
+a obj/local/arm64-v8a/objs/common/IPAddress.o.d
+a obj/local/arm64-v8a/objs/common/CheckMemoryLeak.o
+a obj/local/arm64-v8a/objs/common/IAutoLockWrapper.o
+a obj/local/arm64-v8a/objs/common/KLogWrapper.o
+a obj/local/arm64-v8a/objs/common/aes.o
+a obj/local/arm64-v8a/objs/common/KLog.o.d
+a obj/local/arm64-v8a/objs/common/CheckMemoryLeak.o.d
+a obj/local/arm64-v8a/objs/common/CheckMemoryList.o
+a obj/local/arm64-v8a/objs/common/Arithmetic.o.d
+a obj/local/arm64-v8a/objs/common/KLogWrapper.o.d
+a obj/local/arm64-v8a/objs/common/KThread.o.d
+a obj/local/arm64-v8a/objs/common/Arithmetic.o
+a obj/local/arm64-v8a/objs/common/command.o
+a obj/local/arm64-v8a/objs/common/aes.o.d
+a obj/local/arm64-v8a/objs/common/CommonFunc.o
+a obj/local/arm64-v8a/objs/common/KSocket.o.d
+a obj/local/arm64-v8a/objs/common/CheckMemoryList.o.d
+a obj/local/arm64-v8a/objs/common/IAutoLockWrapper.o.d
+a obj/local/arm64-v8a/objs/common/CommonFunc.o.d
+a obj/local/arm64-v8a/objs/zip/ioapi.o.d
+a obj/local/arm64-v8a/objs/zip/mztools.o.d
+a obj/local/arm64-v8a/objs/zip/miniunz.o
+a obj/local/arm64-v8a/objs/zip/minizip.o
+a obj/local/arm64-v8a/objs/zip/unzip.o.d
+a obj/local/arm64-v8a/objs/zip/zip.o
+a obj/local/arm64-v8a/objs/zip/unzip.o
+a obj/local/arm64-v8a/objs/zip/minizip.o.d
+a obj/local/arm64-v8a/objs/zip/miniunz.o.d
+a obj/local/arm64-v8a/objs/zip/mztools.o
+a obj/local/arm64-v8a/objs/zip/zip.o.d
+a obj/local/arm64-v8a/objs/zip/ioapi.o
+a obj/local/arm64-v8a/objs/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/arm64-v8a/objs/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/arm64-v8a/objs/lsplayer/LSPlayerImp.o
+a obj/local/arm64-v8a/objs/lsplayer/LSPlayerImp.o.d
+a obj/local/arm64-v8a/objs/srs_librtmp/srs_librtmp.o
+a obj/local/arm64-v8a/objs/srs_librtmp/srs_librtmp.o.d
+a obj/local/arm64-v8a/objs/z/src
+a obj/local/arm64-v8a/objs/z/src/zutil.o
+a obj/local/arm64-v8a/objs/z/src/trees.o.d
+a obj/local/arm64-v8a/objs/z/src/infback.o
+a obj/local/arm64-v8a/objs/z/src/adler32.o.d
+a obj/local/arm64-v8a/objs/z/src/inftrees.o
+a obj/local/arm64-v8a/objs/z/src/infback.o.d
+a obj/local/arm64-v8a/objs/z/src/uncompr.o
+a obj/local/arm64-v8a/objs/z/src/inffast.o.d
+a obj/local/arm64-v8a/objs/z/src/gzlib.o
+a obj/local/arm64-v8a/objs/z/src/inflate.o.d
+a obj/local/arm64-v8a/objs/z/src/deflate.o.d
+a obj/local/arm64-v8a/objs/z/src/gzclose.o
+a obj/local/arm64-v8a/objs/z/src/gzwrite.o
+a obj/local/arm64-v8a/objs/z/src/zutil.o.d
+a obj/local/arm64-v8a/objs/z/src/trees.o
+a obj/local/arm64-v8a/objs/z/src/inffast.o
+a obj/local/arm64-v8a/objs/z/src/adler32.o
+a obj/local/arm64-v8a/objs/z/src/gzlib.o.d
+a obj/local/arm64-v8a/objs/z/src/crc32.o.d
+a obj/local/arm64-v8a/objs/z/src/gzwrite.o.d
+a obj/local/arm64-v8a/objs/z/src/compress.o
+a obj/local/arm64-v8a/objs/z/src/deflate.o
+a obj/local/arm64-v8a/objs/z/src/uncompr.o.d
+a obj/local/arm64-v8a/objs/z/src/inflate.o
+a obj/local/arm64-v8a/objs/z/src/gzclose.o.d
+a obj/local/arm64-v8a/objs/z/src/gzread.o
+a obj/local/arm64-v8a/objs/z/src/inftrees.o.d
+a obj/local/arm64-v8a/objs/z/src/compress.o.d
+a obj/local/arm64-v8a/objs/z/src/crc32.o
+a obj/local/arm64-v8a/objs/z/src/gzread.o.d
+a obj/local/arm64-v8a/objs/lspublisher/LSPublisherImp.o
+a obj/local/arm64-v8a/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/arm64-v8a/objs/lspublisher/LSPublisherImp.o.d
+a obj/local/arm64-v8a/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src
+a obj/local/arm64-v8a/objs/breakpad_client/src/common
+a obj/local/arm64-v8a/objs/breakpad_client/src/client
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/handler
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/crash_generation
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/log
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/microdump_writer
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/log/log.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/md5.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/convert_UTF.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/md5.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/android
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/string_conversion.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/string_conversion.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/elfutils.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/arm64-v8a/objs/breakpad_client/src/common/linux/file_id.o
+a obj/local/arm64-v8a/objs/androidcommon/DeviceJniIntToType.o
+a obj/local/arm64-v8a/objs/androidcommon/DeviceJniIntToType.o.d
+a obj/local/arm64-v8a/objs/androidcommon/JniCommonFunc.o
+a obj/local/arm64-v8a/objs/androidcommon/JniCommonFunc.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/RtmpPublisher.o
+a obj/local/arm64-v8a/objs/rtmpdump/RtmpPublisher.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video
+a obj/local/arm64-v8a/objs/rtmpdump/RtmpPlayer.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/RtmpPlayer.o
+a obj/local/arm64-v8a/objs/rtmpdump/PlayerController.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/util
+a obj/local/arm64-v8a/objs/rtmpdump/PublisherController.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/PublisherController.o
+a obj/local/arm64-v8a/objs/rtmpdump/Statistics.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/RtmpDump.o
+a obj/local/arm64-v8a/objs/rtmpdump/PlayerController.o
+a obj/local/arm64-v8a/objs/rtmpdump/RtmpDump.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/audio
+a obj/local/arm64-v8a/objs/rtmpdump/Statistics.o
+a obj/local/arm64-v8a/objs/rtmpdump/android
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoRendererImp.o
+a obj/local/arm64-v8a/objs/rtmpdump/android/AudioRendererImp.o
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoHardEncoder.o
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoHardDecoder.o
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioFrame.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioMuxer.o
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioFrame.o
+a obj/local/arm64-v8a/objs/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/util/FrameBuffer.o
+a obj/local/arm64-v8a/objs/rtmpdump/util/FrameBuffer.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/util/CacheBufferQueue.o
+a obj/local/arm64-v8a/objs/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/arm64-v8a/objs/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoFilters.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoFrame.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoDecoderH264.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoEncoderH264.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoMuxer.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoRotateFilter.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoFormatConverter.o
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoFilters.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoMuxer.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoFrame.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/arm64-v8a/objs/rtmpdump/video/VideoRecorderH264.o
+a obj/local/arm64-v8a/objs/crashhandler/CrashHandler.o
+a obj/local/arm64-v8a/objs/crashhandler/CrashHandler.o.d
+a obj/local/arm64-v8a/objs-debug/crashhandler
+a obj/local/arm64-v8a/objs-debug/rtmpdump
+a obj/local/arm64-v8a/objs-debug/androidcommon
+a obj/local/arm64-v8a/objs-debug/breakpad_client
+a obj/local/arm64-v8a/objs-debug/lspublisher
+a obj/local/arm64-v8a/objs-debug/z
+a obj/local/arm64-v8a/objs-debug/srs_librtmp
+a obj/local/arm64-v8a/objs-debug/lsplayer
+a obj/local/arm64-v8a/objs-debug/zip
+a obj/local/arm64-v8a/objs-debug/common
+a obj/local/arm64-v8a/objs-debug/lsimageutil
+a obj/local/arm64-v8a/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/arm64-v8a/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/arm64-v8a/objs-debug/common/IAutoLock.o
+a obj/local/arm64-v8a/objs-debug/common/KZip.o
+a obj/local/arm64-v8a/objs-debug/common/KLog.o
+a obj/local/arm64-v8a/objs-debug/common/md5.o.d
+a obj/local/arm64-v8a/objs-debug/common/IPAddress.o
+a obj/local/arm64-v8a/objs-debug/common/KThread.o
+a obj/local/arm64-v8a/objs-debug/common/IAutoLock.o.d
+a obj/local/arm64-v8a/objs-debug/common/KSocket.o
+a obj/local/arm64-v8a/objs-debug/common/command.o.d
+a obj/local/arm64-v8a/objs-debug/common/md5.o
+a obj/local/arm64-v8a/objs-debug/common/KZip.o.d
+a obj/local/arm64-v8a/objs-debug/common/IPAddress.o.d
+a obj/local/arm64-v8a/objs-debug/common/CheckMemoryLeak.o
+a obj/local/arm64-v8a/objs-debug/common/IAutoLockWrapper.o
+a obj/local/arm64-v8a/objs-debug/common/KLogWrapper.o
+a obj/local/arm64-v8a/objs-debug/common/aes.o
+a obj/local/arm64-v8a/objs-debug/common/KLog.o.d
+a obj/local/arm64-v8a/objs-debug/common/CheckMemoryLeak.o.d
+a obj/local/arm64-v8a/objs-debug/common/CheckMemoryList.o
+a obj/local/arm64-v8a/objs-debug/common/Arithmetic.o.d
+a obj/local/arm64-v8a/objs-debug/common/KLogWrapper.o.d
+a obj/local/arm64-v8a/objs-debug/common/KThread.o.d
+a obj/local/arm64-v8a/objs-debug/common/Arithmetic.o
+a obj/local/arm64-v8a/objs-debug/common/command.o
+a obj/local/arm64-v8a/objs-debug/common/aes.o.d
+a obj/local/arm64-v8a/objs-debug/common/CommonFunc.o
+a obj/local/arm64-v8a/objs-debug/common/KSocket.o.d
+a obj/local/arm64-v8a/objs-debug/common/CheckMemoryList.o.d
+a obj/local/arm64-v8a/objs-debug/common/IAutoLockWrapper.o.d
+a obj/local/arm64-v8a/objs-debug/common/CommonFunc.o.d
+a obj/local/arm64-v8a/objs-debug/zip/ioapi.o.d
+a obj/local/arm64-v8a/objs-debug/zip/mztools.o.d
+a obj/local/arm64-v8a/objs-debug/zip/miniunz.o
+a obj/local/arm64-v8a/objs-debug/zip/minizip.o
+a obj/local/arm64-v8a/objs-debug/zip/unzip.o.d
+a obj/local/arm64-v8a/objs-debug/zip/zip.o
+a obj/local/arm64-v8a/objs-debug/zip/unzip.o
+a obj/local/arm64-v8a/objs-debug/zip/minizip.o.d
+a obj/local/arm64-v8a/objs-debug/zip/miniunz.o.d
+a obj/local/arm64-v8a/objs-debug/zip/mztools.o
+a obj/local/arm64-v8a/objs-debug/zip/zip.o.d
+a obj/local/arm64-v8a/objs-debug/zip/ioapi.o
+a obj/local/arm64-v8a/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/arm64-v8a/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/arm64-v8a/objs-debug/lsplayer/LSPlayerImp.o
+a obj/local/arm64-v8a/objs-debug/lsplayer/LSPlayerImp.o.d
+a obj/local/arm64-v8a/objs-debug/srs_librtmp/srs_librtmp.o
+a obj/local/arm64-v8a/objs-debug/srs_librtmp/srs_librtmp.o.d
+a obj/local/arm64-v8a/objs-debug/z/src
+a obj/local/arm64-v8a/objs-debug/z/src/zutil.o
+a obj/local/arm64-v8a/objs-debug/z/src/trees.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/infback.o
+a obj/local/arm64-v8a/objs-debug/z/src/adler32.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/inftrees.o
+a obj/local/arm64-v8a/objs-debug/z/src/infback.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/uncompr.o
+a obj/local/arm64-v8a/objs-debug/z/src/inffast.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/gzlib.o
+a obj/local/arm64-v8a/objs-debug/z/src/inflate.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/deflate.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/gzclose.o
+a obj/local/arm64-v8a/objs-debug/z/src/gzwrite.o
+a obj/local/arm64-v8a/objs-debug/z/src/zutil.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/trees.o
+a obj/local/arm64-v8a/objs-debug/z/src/inffast.o
+a obj/local/arm64-v8a/objs-debug/z/src/adler32.o
+a obj/local/arm64-v8a/objs-debug/z/src/gzlib.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/crc32.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/gzwrite.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/compress.o
+a obj/local/arm64-v8a/objs-debug/z/src/deflate.o
+a obj/local/arm64-v8a/objs-debug/z/src/uncompr.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/inflate.o
+a obj/local/arm64-v8a/objs-debug/z/src/gzclose.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/gzread.o
+a obj/local/arm64-v8a/objs-debug/z/src/inftrees.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/compress.o.d
+a obj/local/arm64-v8a/objs-debug/z/src/crc32.o
+a obj/local/arm64-v8a/objs-debug/z/src/gzread.o.d
+a obj/local/arm64-v8a/objs-debug/lspublisher/LSPublisherImp.o
+a obj/local/arm64-v8a/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/arm64-v8a/objs-debug/lspublisher/LSPublisherImp.o.d
+a obj/local/arm64-v8a/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/handler
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/crash_generation
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/log
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/microdump_writer
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/log/log.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/md5.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/convert_UTF.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/md5.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/android
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/string_conversion.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/string_conversion.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/elfutils.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/arm64-v8a/objs-debug/breakpad_client/src/common/linux/file_id.o
+a obj/local/arm64-v8a/objs-debug/androidcommon/DeviceJniIntToType.o
+a obj/local/arm64-v8a/objs-debug/androidcommon/DeviceJniIntToType.o.d
+a obj/local/arm64-v8a/objs-debug/androidcommon/JniCommonFunc.o
+a obj/local/arm64-v8a/objs-debug/androidcommon/JniCommonFunc.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/RtmpPublisher.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/RtmpPublisher.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video
+a obj/local/arm64-v8a/objs-debug/rtmpdump/RtmpPlayer.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/RtmpPlayer.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/PlayerController.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util
+a obj/local/arm64-v8a/objs-debug/rtmpdump/PublisherController.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/PublisherController.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/Statistics.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/RtmpDump.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/PlayerController.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/RtmpDump.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio
+a obj/local/arm64-v8a/objs-debug/rtmpdump/Statistics.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoRendererImp.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/AudioRendererImp.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoHardEncoder.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoHardDecoder.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioFrame.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioMuxer.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioFrame.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util/FrameBuffer.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util/FrameBuffer.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util/CacheBufferQueue.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoFilters.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoFrame.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoDecoderH264.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoEncoderH264.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoMuxer.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoRotateFilter.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoFormatConverter.o
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoFilters.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoMuxer.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoFrame.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/arm64-v8a/objs-debug/rtmpdump/video/VideoRecorderH264.o
+a obj/local/arm64-v8a/objs-debug/crashhandler/CrashHandler.o
+a obj/local/arm64-v8a/objs-debug/crashhandler/CrashHandler.o.d
+a obj/local/x86/objs-debug
+a obj/local/x86/librtmpdump.a
+a obj/local/x86/libz.a
+a obj/local/x86/objs
+a obj/local/x86/libbreakpad_client.a
+a obj/local/x86/libcrashhandler.so
+a obj/local/x86/libzip.a
+a obj/local/x86/libandroidcommon.a
+a obj/local/x86/libc++_shared.so
+a obj/local/x86/libsrs_librtmp.a
+a obj/local/x86/liblsplayer.so
+a obj/local/x86/liblspublisher.so
+a obj/local/x86/libcommon.a
+a obj/local/x86/liblsimageutil.so
+a obj/local/x86/objs/crashhandler
+a obj/local/x86/objs/rtmpdump
+a obj/local/x86/objs/androidcommon
+a obj/local/x86/objs/breakpad_client
+a obj/local/x86/objs/lspublisher
+a obj/local/x86/objs/z
+a obj/local/x86/objs/srs_librtmp
+a obj/local/x86/objs/lsplayer
+a obj/local/x86/objs/zip
+a obj/local/x86/objs/common
+a obj/local/x86/objs/lsimageutil
+a obj/local/x86/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/x86/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/x86/objs/common/IAutoLock.o
+a obj/local/x86/objs/common/KZip.o
+a obj/local/x86/objs/common/KLog.o
+a obj/local/x86/objs/common/md5.o.d
+a obj/local/x86/objs/common/IPAddress.o
+a obj/local/x86/objs/common/KThread.o
+a obj/local/x86/objs/common/IAutoLock.o.d
+a obj/local/x86/objs/common/KSocket.o
+a obj/local/x86/objs/common/command.o.d
+a obj/local/x86/objs/common/md5.o
+a obj/local/x86/objs/common/KZip.o.d
+a obj/local/x86/objs/common/IPAddress.o.d
+a obj/local/x86/objs/common/CheckMemoryLeak.o
+a obj/local/x86/objs/common/IAutoLockWrapper.o
+a obj/local/x86/objs/common/KLogWrapper.o
+a obj/local/x86/objs/common/aes.o
+a obj/local/x86/objs/common/KLog.o.d
+a obj/local/x86/objs/common/CheckMemoryLeak.o.d
+a obj/local/x86/objs/common/CheckMemoryList.o
+a obj/local/x86/objs/common/Arithmetic.o.d
+a obj/local/x86/objs/common/KLogWrapper.o.d
+a obj/local/x86/objs/common/KThread.o.d
+a obj/local/x86/objs/common/Arithmetic.o
+a obj/local/x86/objs/common/command.o
+a obj/local/x86/objs/common/aes.o.d
+a obj/local/x86/objs/common/CommonFunc.o
+a obj/local/x86/objs/common/KSocket.o.d
+a obj/local/x86/objs/common/CheckMemoryList.o.d
+a obj/local/x86/objs/common/IAutoLockWrapper.o.d
+a obj/local/x86/objs/common/CommonFunc.o.d
+a obj/local/x86/objs/zip/ioapi.o.d
+a obj/local/x86/objs/zip/mztools.o.d
+a obj/local/x86/objs/zip/miniunz.o
+a obj/local/x86/objs/zip/minizip.o
+a obj/local/x86/objs/zip/unzip.o.d
+a obj/local/x86/objs/zip/zip.o
+a obj/local/x86/objs/zip/unzip.o
+a obj/local/x86/objs/zip/minizip.o.d
+a obj/local/x86/objs/zip/miniunz.o.d
+a obj/local/x86/objs/zip/mztools.o
+a obj/local/x86/objs/zip/zip.o.d
+a obj/local/x86/objs/zip/ioapi.o
+a obj/local/x86/objs/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/x86/objs/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/x86/objs/lsplayer/LSPlayerImp.o
+a obj/local/x86/objs/lsplayer/LSPlayerImp.o.d
+a obj/local/x86/objs/srs_librtmp/srs_librtmp.o
+a obj/local/x86/objs/srs_librtmp/srs_librtmp.o.d
+a obj/local/x86/objs/z/src
+a obj/local/x86/objs/z/src/zutil.o
+a obj/local/x86/objs/z/src/trees.o.d
+a obj/local/x86/objs/z/src/infback.o
+a obj/local/x86/objs/z/src/adler32.o.d
+a obj/local/x86/objs/z/src/inftrees.o
+a obj/local/x86/objs/z/src/infback.o.d
+a obj/local/x86/objs/z/src/uncompr.o
+a obj/local/x86/objs/z/src/inffast.o.d
+a obj/local/x86/objs/z/src/gzlib.o
+a obj/local/x86/objs/z/src/inflate.o.d
+a obj/local/x86/objs/z/src/deflate.o.d
+a obj/local/x86/objs/z/src/gzclose.o
+a obj/local/x86/objs/z/src/gzwrite.o
+a obj/local/x86/objs/z/src/zutil.o.d
+a obj/local/x86/objs/z/src/trees.o
+a obj/local/x86/objs/z/src/inffast.o
+a obj/local/x86/objs/z/src/adler32.o
+a obj/local/x86/objs/z/src/gzlib.o.d
+a obj/local/x86/objs/z/src/crc32.o.d
+a obj/local/x86/objs/z/src/gzwrite.o.d
+a obj/local/x86/objs/z/src/compress.o
+a obj/local/x86/objs/z/src/deflate.o
+a obj/local/x86/objs/z/src/uncompr.o.d
+a obj/local/x86/objs/z/src/inflate.o
+a obj/local/x86/objs/z/src/gzclose.o.d
+a obj/local/x86/objs/z/src/gzread.o
+a obj/local/x86/objs/z/src/inftrees.o.d
+a obj/local/x86/objs/z/src/compress.o.d
+a obj/local/x86/objs/z/src/crc32.o
+a obj/local/x86/objs/z/src/gzread.o.d
+a obj/local/x86/objs/lspublisher/LSPublisherImp.o
+a obj/local/x86/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/x86/objs/lspublisher/LSPublisherImp.o.d
+a obj/local/x86/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/x86/objs/breakpad_client/src
+a obj/local/x86/objs/breakpad_client/src/common
+a obj/local/x86/objs/breakpad_client/src/client
+a obj/local/x86/objs/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux
+a obj/local/x86/objs/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/handler
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/x86/objs/breakpad_client/src/client/linux/crash_generation
+a obj/local/x86/objs/breakpad_client/src/client/linux/log
+a obj/local/x86/objs/breakpad_client/src/client/linux/microdump_writer
+a obj/local/x86/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/log/log.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/x86/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/x86/objs/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/x86/objs/breakpad_client/src/common/md5.o.d
+a obj/local/x86/objs/breakpad_client/src/common/convert_UTF.o
+a obj/local/x86/objs/breakpad_client/src/common/md5.o
+a obj/local/x86/objs/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux
+a obj/local/x86/objs/breakpad_client/src/common/android
+a obj/local/x86/objs/breakpad_client/src/common/string_conversion.o.d
+a obj/local/x86/objs/breakpad_client/src/common/string_conversion.o
+a obj/local/x86/objs/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/x86/objs/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/x86/objs/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/x86/objs/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/x86/objs/breakpad_client/src/common/linux/elfutils.o
+a obj/local/x86/objs/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/x86/objs/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/x86/objs/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/x86/objs/breakpad_client/src/common/linux/file_id.o
+a obj/local/x86/objs/androidcommon/DeviceJniIntToType.o
+a obj/local/x86/objs/androidcommon/DeviceJniIntToType.o.d
+a obj/local/x86/objs/androidcommon/JniCommonFunc.o
+a obj/local/x86/objs/androidcommon/JniCommonFunc.o.d
+a obj/local/x86/objs/rtmpdump/RtmpPublisher.o
+a obj/local/x86/objs/rtmpdump/RtmpPublisher.o.d
+a obj/local/x86/objs/rtmpdump/video
+a obj/local/x86/objs/rtmpdump/RtmpPlayer.o.d
+a obj/local/x86/objs/rtmpdump/RtmpPlayer.o
+a obj/local/x86/objs/rtmpdump/PlayerController.o.d
+a obj/local/x86/objs/rtmpdump/util
+a obj/local/x86/objs/rtmpdump/PublisherController.o.d
+a obj/local/x86/objs/rtmpdump/PublisherController.o
+a obj/local/x86/objs/rtmpdump/Statistics.o.d
+a obj/local/x86/objs/rtmpdump/RtmpDump.o
+a obj/local/x86/objs/rtmpdump/PlayerController.o
+a obj/local/x86/objs/rtmpdump/RtmpDump.o.d
+a obj/local/x86/objs/rtmpdump/audio
+a obj/local/x86/objs/rtmpdump/Statistics.o
+a obj/local/x86/objs/rtmpdump/android
+a obj/local/x86/objs/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/x86/objs/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/x86/objs/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/x86/objs/rtmpdump/android/VideoRendererImp.o
+a obj/local/x86/objs/rtmpdump/android/AudioRendererImp.o
+a obj/local/x86/objs/rtmpdump/android/VideoHardEncoder.o
+a obj/local/x86/objs/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/x86/objs/rtmpdump/android/VideoHardDecoder.o
+a obj/local/x86/objs/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/x86/objs/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/x86/objs/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/x86/objs/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/x86/objs/rtmpdump/audio/AudioFrame.o.d
+a obj/local/x86/objs/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/x86/objs/rtmpdump/audio/AudioMuxer.o
+a obj/local/x86/objs/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/x86/objs/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/x86/objs/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/x86/objs/rtmpdump/audio/AudioFrame.o
+a obj/local/x86/objs/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/x86/objs/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/x86/objs/rtmpdump/util/FrameBuffer.o
+a obj/local/x86/objs/rtmpdump/util/FrameBuffer.o.d
+a obj/local/x86/objs/rtmpdump/util/CacheBufferQueue.o
+a obj/local/x86/objs/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/x86/objs/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoFilters.o
+a obj/local/x86/objs/rtmpdump/video/VideoFrame.o
+a obj/local/x86/objs/rtmpdump/video/VideoDecoderH264.o
+a obj/local/x86/objs/rtmpdump/video/VideoEncoderH264.o
+a obj/local/x86/objs/rtmpdump/video/VideoMuxer.o
+a obj/local/x86/objs/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoRotateFilter.o
+a obj/local/x86/objs/rtmpdump/video/VideoFormatConverter.o
+a obj/local/x86/objs/rtmpdump/video/VideoFilters.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoMuxer.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoFrame.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/x86/objs/rtmpdump/video/VideoRecorderH264.o
+a obj/local/x86/objs/crashhandler/CrashHandler.o
+a obj/local/x86/objs/crashhandler/CrashHandler.o.d
+a obj/local/x86/objs-debug/crashhandler
+a obj/local/x86/objs-debug/rtmpdump
+a obj/local/x86/objs-debug/androidcommon
+a obj/local/x86/objs-debug/breakpad_client
+a obj/local/x86/objs-debug/lspublisher
+a obj/local/x86/objs-debug/z
+a obj/local/x86/objs-debug/srs_librtmp
+a obj/local/x86/objs-debug/lsplayer
+a obj/local/x86/objs-debug/zip
+a obj/local/x86/objs-debug/common
+a obj/local/x86/objs-debug/lsimageutil
+a obj/local/x86/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/x86/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/x86/objs-debug/common/IAutoLock.o
+a obj/local/x86/objs-debug/common/KZip.o
+a obj/local/x86/objs-debug/common/KLog.o
+a obj/local/x86/objs-debug/common/md5.o.d
+a obj/local/x86/objs-debug/common/IPAddress.o
+a obj/local/x86/objs-debug/common/KThread.o
+a obj/local/x86/objs-debug/common/IAutoLock.o.d
+a obj/local/x86/objs-debug/common/KSocket.o
+a obj/local/x86/objs-debug/common/command.o.d
+a obj/local/x86/objs-debug/common/md5.o
+a obj/local/x86/objs-debug/common/KZip.o.d
+a obj/local/x86/objs-debug/common/IPAddress.o.d
+a obj/local/x86/objs-debug/common/CheckMemoryLeak.o
+a obj/local/x86/objs-debug/common/IAutoLockWrapper.o
+a obj/local/x86/objs-debug/common/KLogWrapper.o
+a obj/local/x86/objs-debug/common/aes.o
+a obj/local/x86/objs-debug/common/KLog.o.d
+a obj/local/x86/objs-debug/common/CheckMemoryLeak.o.d
+a obj/local/x86/objs-debug/common/CheckMemoryList.o
+a obj/local/x86/objs-debug/common/Arithmetic.o.d
+a obj/local/x86/objs-debug/common/KLogWrapper.o.d
+a obj/local/x86/objs-debug/common/KThread.o.d
+a obj/local/x86/objs-debug/common/Arithmetic.o
+a obj/local/x86/objs-debug/common/command.o
+a obj/local/x86/objs-debug/common/aes.o.d
+a obj/local/x86/objs-debug/common/CommonFunc.o
+a obj/local/x86/objs-debug/common/KSocket.o.d
+a obj/local/x86/objs-debug/common/CheckMemoryList.o.d
+a obj/local/x86/objs-debug/common/IAutoLockWrapper.o.d
+a obj/local/x86/objs-debug/common/CommonFunc.o.d
+a obj/local/x86/objs-debug/zip/ioapi.o.d
+a obj/local/x86/objs-debug/zip/mztools.o.d
+a obj/local/x86/objs-debug/zip/miniunz.o
+a obj/local/x86/objs-debug/zip/minizip.o
+a obj/local/x86/objs-debug/zip/unzip.o.d
+a obj/local/x86/objs-debug/zip/zip.o
+a obj/local/x86/objs-debug/zip/unzip.o
+a obj/local/x86/objs-debug/zip/minizip.o.d
+a obj/local/x86/objs-debug/zip/miniunz.o.d
+a obj/local/x86/objs-debug/zip/mztools.o
+a obj/local/x86/objs-debug/zip/zip.o.d
+a obj/local/x86/objs-debug/zip/ioapi.o
+a obj/local/x86/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/x86/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/x86/objs-debug/lsplayer/LSPlayerImp.o
+a obj/local/x86/objs-debug/lsplayer/LSPlayerImp.o.d
+a obj/local/x86/objs-debug/srs_librtmp/srs_librtmp.o
+a obj/local/x86/objs-debug/srs_librtmp/srs_librtmp.o.d
+a obj/local/x86/objs-debug/z/src
+a obj/local/x86/objs-debug/z/src/zutil.o
+a obj/local/x86/objs-debug/z/src/trees.o.d
+a obj/local/x86/objs-debug/z/src/infback.o
+a obj/local/x86/objs-debug/z/src/adler32.o.d
+a obj/local/x86/objs-debug/z/src/inftrees.o
+a obj/local/x86/objs-debug/z/src/infback.o.d
+a obj/local/x86/objs-debug/z/src/uncompr.o
+a obj/local/x86/objs-debug/z/src/inffast.o.d
+a obj/local/x86/objs-debug/z/src/gzlib.o
+a obj/local/x86/objs-debug/z/src/inflate.o.d
+a obj/local/x86/objs-debug/z/src/deflate.o.d
+a obj/local/x86/objs-debug/z/src/gzclose.o
+a obj/local/x86/objs-debug/z/src/gzwrite.o
+a obj/local/x86/objs-debug/z/src/zutil.o.d
+a obj/local/x86/objs-debug/z/src/trees.o
+a obj/local/x86/objs-debug/z/src/inffast.o
+a obj/local/x86/objs-debug/z/src/adler32.o
+a obj/local/x86/objs-debug/z/src/gzlib.o.d
+a obj/local/x86/objs-debug/z/src/crc32.o.d
+a obj/local/x86/objs-debug/z/src/gzwrite.o.d
+a obj/local/x86/objs-debug/z/src/compress.o
+a obj/local/x86/objs-debug/z/src/deflate.o
+a obj/local/x86/objs-debug/z/src/uncompr.o.d
+a obj/local/x86/objs-debug/z/src/inflate.o
+a obj/local/x86/objs-debug/z/src/gzclose.o.d
+a obj/local/x86/objs-debug/z/src/gzread.o
+a obj/local/x86/objs-debug/z/src/inftrees.o.d
+a obj/local/x86/objs-debug/z/src/compress.o.d
+a obj/local/x86/objs-debug/z/src/crc32.o
+a obj/local/x86/objs-debug/z/src/gzread.o.d
+a obj/local/x86/objs-debug/lspublisher/LSPublisherImp.o
+a obj/local/x86/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/x86/objs-debug/lspublisher/LSPublisherImp.o.d
+a obj/local/x86/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/x86/objs-debug/breakpad_client/src
+a obj/local/x86/objs-debug/breakpad_client/src/common
+a obj/local/x86/objs-debug/breakpad_client/src/client
+a obj/local/x86/objs-debug/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux
+a obj/local/x86/objs-debug/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/handler
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/crash_generation
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/log
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/microdump_writer
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/log/log.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/md5.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/convert_UTF.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/md5.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux
+a obj/local/x86/objs-debug/breakpad_client/src/common/android
+a obj/local/x86/objs-debug/breakpad_client/src/common/string_conversion.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/string_conversion.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/elfutils.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/x86/objs-debug/breakpad_client/src/common/linux/file_id.o
+a obj/local/x86/objs-debug/androidcommon/DeviceJniIntToType.o
+a obj/local/x86/objs-debug/androidcommon/DeviceJniIntToType.o.d
+a obj/local/x86/objs-debug/androidcommon/JniCommonFunc.o
+a obj/local/x86/objs-debug/androidcommon/JniCommonFunc.o.d
+a obj/local/x86/objs-debug/rtmpdump/RtmpPublisher.o
+a obj/local/x86/objs-debug/rtmpdump/RtmpPublisher.o.d
+a obj/local/x86/objs-debug/rtmpdump/video
+a obj/local/x86/objs-debug/rtmpdump/RtmpPlayer.o.d
+a obj/local/x86/objs-debug/rtmpdump/RtmpPlayer.o
+a obj/local/x86/objs-debug/rtmpdump/PlayerController.o.d
+a obj/local/x86/objs-debug/rtmpdump/util
+a obj/local/x86/objs-debug/rtmpdump/PublisherController.o.d
+a obj/local/x86/objs-debug/rtmpdump/PublisherController.o
+a obj/local/x86/objs-debug/rtmpdump/Statistics.o.d
+a obj/local/x86/objs-debug/rtmpdump/RtmpDump.o
+a obj/local/x86/objs-debug/rtmpdump/PlayerController.o
+a obj/local/x86/objs-debug/rtmpdump/RtmpDump.o.d
+a obj/local/x86/objs-debug/rtmpdump/audio
+a obj/local/x86/objs-debug/rtmpdump/Statistics.o
+a obj/local/x86/objs-debug/rtmpdump/android
+a obj/local/x86/objs-debug/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/x86/objs-debug/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/x86/objs-debug/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/x86/objs-debug/rtmpdump/android/VideoRendererImp.o
+a obj/local/x86/objs-debug/rtmpdump/android/AudioRendererImp.o
+a obj/local/x86/objs-debug/rtmpdump/android/VideoHardEncoder.o
+a obj/local/x86/objs-debug/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/x86/objs-debug/rtmpdump/android/VideoHardDecoder.o
+a obj/local/x86/objs-debug/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/x86/objs-debug/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioFrame.o.d
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioMuxer.o
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioFrame.o
+a obj/local/x86/objs-debug/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/x86/objs-debug/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/x86/objs-debug/rtmpdump/util/FrameBuffer.o
+a obj/local/x86/objs-debug/rtmpdump/util/FrameBuffer.o.d
+a obj/local/x86/objs-debug/rtmpdump/util/CacheBufferQueue.o
+a obj/local/x86/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/x86/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoFilters.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoFrame.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoDecoderH264.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoEncoderH264.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoMuxer.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoRotateFilter.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoFormatConverter.o
+a obj/local/x86/objs-debug/rtmpdump/video/VideoFilters.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoMuxer.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoFrame.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/x86/objs-debug/rtmpdump/video/VideoRecorderH264.o
+a obj/local/x86/objs-debug/crashhandler/CrashHandler.o
+a obj/local/x86/objs-debug/crashhandler/CrashHandler.o.d
+a obj/local/armeabi-v7a/objs-debug
+a obj/local/armeabi-v7a/librtmpdump.a
+a obj/local/armeabi-v7a/libz.a
+a obj/local/armeabi-v7a/objs
+a obj/local/armeabi-v7a/libbreakpad_client.a
+a obj/local/armeabi-v7a/libcrashhandler.so
+a obj/local/armeabi-v7a/libzip.a
+a obj/local/armeabi-v7a/libandroidcommon.a
+a obj/local/armeabi-v7a/libc++_shared.so
+a obj/local/armeabi-v7a/libsrs_librtmp.a
+a obj/local/armeabi-v7a/liblsplayer.so
+a obj/local/armeabi-v7a/liblspublisher.so
+a obj/local/armeabi-v7a/libcommon.a
+a obj/local/armeabi-v7a/liblsimageutil.so
+a obj/local/armeabi-v7a/objs/crashhandler
+a obj/local/armeabi-v7a/objs/rtmpdump
+a obj/local/armeabi-v7a/objs/androidcommon
+a obj/local/armeabi-v7a/objs/breakpad_client
+a obj/local/armeabi-v7a/objs/lspublisher
+a obj/local/armeabi-v7a/objs/z
+a obj/local/armeabi-v7a/objs/srs_librtmp
+a obj/local/armeabi-v7a/objs/lsplayer
+a obj/local/armeabi-v7a/objs/zip
+a obj/local/armeabi-v7a/objs/common
+a obj/local/armeabi-v7a/objs/lsimageutil
+a obj/local/armeabi-v7a/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/armeabi-v7a/objs/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/armeabi-v7a/objs/common/IAutoLock.o
+a obj/local/armeabi-v7a/objs/common/KZip.o
+a obj/local/armeabi-v7a/objs/common/KLog.o
+a obj/local/armeabi-v7a/objs/common/md5.o.d
+a obj/local/armeabi-v7a/objs/common/IPAddress.o
+a obj/local/armeabi-v7a/objs/common/KThread.o
+a obj/local/armeabi-v7a/objs/common/IAutoLock.o.d
+a obj/local/armeabi-v7a/objs/common/KSocket.o
+a obj/local/armeabi-v7a/objs/common/command.o.d
+a obj/local/armeabi-v7a/objs/common/md5.o
+a obj/local/armeabi-v7a/objs/common/KZip.o.d
+a obj/local/armeabi-v7a/objs/common/IPAddress.o.d
+a obj/local/armeabi-v7a/objs/common/CheckMemoryLeak.o
+a obj/local/armeabi-v7a/objs/common/IAutoLockWrapper.o
+a obj/local/armeabi-v7a/objs/common/KLogWrapper.o
+a obj/local/armeabi-v7a/objs/common/aes.o
+a obj/local/armeabi-v7a/objs/common/KLog.o.d
+a obj/local/armeabi-v7a/objs/common/CheckMemoryLeak.o.d
+a obj/local/armeabi-v7a/objs/common/CheckMemoryList.o
+a obj/local/armeabi-v7a/objs/common/Arithmetic.o.d
+a obj/local/armeabi-v7a/objs/common/KLogWrapper.o.d
+a obj/local/armeabi-v7a/objs/common/KThread.o.d
+a obj/local/armeabi-v7a/objs/common/Arithmetic.o
+a obj/local/armeabi-v7a/objs/common/command.o
+a obj/local/armeabi-v7a/objs/common/aes.o.d
+a obj/local/armeabi-v7a/objs/common/CommonFunc.o
+a obj/local/armeabi-v7a/objs/common/KSocket.o.d
+a obj/local/armeabi-v7a/objs/common/CheckMemoryList.o.d
+a obj/local/armeabi-v7a/objs/common/IAutoLockWrapper.o.d
+a obj/local/armeabi-v7a/objs/common/CommonFunc.o.d
+a obj/local/armeabi-v7a/objs/zip/ioapi.o.d
+a obj/local/armeabi-v7a/objs/zip/mztools.o.d
+a obj/local/armeabi-v7a/objs/zip/miniunz.o
+a obj/local/armeabi-v7a/objs/zip/minizip.o
+a obj/local/armeabi-v7a/objs/zip/unzip.o.d
+a obj/local/armeabi-v7a/objs/zip/zip.o
+a obj/local/armeabi-v7a/objs/zip/unzip.o
+a obj/local/armeabi-v7a/objs/zip/minizip.o.d
+a obj/local/armeabi-v7a/objs/zip/miniunz.o.d
+a obj/local/armeabi-v7a/objs/zip/mztools.o
+a obj/local/armeabi-v7a/objs/zip/zip.o.d
+a obj/local/armeabi-v7a/objs/zip/ioapi.o
+a obj/local/armeabi-v7a/objs/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/armeabi-v7a/objs/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/armeabi-v7a/objs/lsplayer/LSPlayerImp.o
+a obj/local/armeabi-v7a/objs/lsplayer/LSPlayerImp.o.d
+a obj/local/armeabi-v7a/objs/srs_librtmp/srs_librtmp.o
+a obj/local/armeabi-v7a/objs/srs_librtmp/srs_librtmp.o.d
+a obj/local/armeabi-v7a/objs/z/src
+a obj/local/armeabi-v7a/objs/z/src/zutil.o
+a obj/local/armeabi-v7a/objs/z/src/trees.o.d
+a obj/local/armeabi-v7a/objs/z/src/infback.o
+a obj/local/armeabi-v7a/objs/z/src/adler32.o.d
+a obj/local/armeabi-v7a/objs/z/src/inftrees.o
+a obj/local/armeabi-v7a/objs/z/src/infback.o.d
+a obj/local/armeabi-v7a/objs/z/src/uncompr.o
+a obj/local/armeabi-v7a/objs/z/src/inffast.o.d
+a obj/local/armeabi-v7a/objs/z/src/gzlib.o
+a obj/local/armeabi-v7a/objs/z/src/inflate.o.d
+a obj/local/armeabi-v7a/objs/z/src/deflate.o.d
+a obj/local/armeabi-v7a/objs/z/src/gzclose.o
+a obj/local/armeabi-v7a/objs/z/src/gzwrite.o
+a obj/local/armeabi-v7a/objs/z/src/zutil.o.d
+a obj/local/armeabi-v7a/objs/z/src/trees.o
+a obj/local/armeabi-v7a/objs/z/src/inffast.o
+a obj/local/armeabi-v7a/objs/z/src/adler32.o
+a obj/local/armeabi-v7a/objs/z/src/gzlib.o.d
+a obj/local/armeabi-v7a/objs/z/src/crc32.o.d
+a obj/local/armeabi-v7a/objs/z/src/gzwrite.o.d
+a obj/local/armeabi-v7a/objs/z/src/compress.o
+a obj/local/armeabi-v7a/objs/z/src/deflate.o
+a obj/local/armeabi-v7a/objs/z/src/uncompr.o.d
+a obj/local/armeabi-v7a/objs/z/src/inflate.o
+a obj/local/armeabi-v7a/objs/z/src/gzclose.o.d
+a obj/local/armeabi-v7a/objs/z/src/gzread.o
+a obj/local/armeabi-v7a/objs/z/src/inftrees.o.d
+a obj/local/armeabi-v7a/objs/z/src/compress.o.d
+a obj/local/armeabi-v7a/objs/z/src/crc32.o
+a obj/local/armeabi-v7a/objs/z/src/gzread.o.d
+a obj/local/armeabi-v7a/objs/lspublisher/LSPublisherImp.o
+a obj/local/armeabi-v7a/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/armeabi-v7a/objs/lspublisher/LSPublisherImp.o.d
+a obj/local/armeabi-v7a/objs/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/handler
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/crash_generation
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/log
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/microdump_writer
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/log/log.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/md5.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/convert_UTF.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/md5.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/android
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/string_conversion.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/string_conversion.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/elfutils.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/armeabi-v7a/objs/breakpad_client/src/common/linux/file_id.o
+a obj/local/armeabi-v7a/objs/androidcommon/DeviceJniIntToType.o
+a obj/local/armeabi-v7a/objs/androidcommon/DeviceJniIntToType.o.d
+a obj/local/armeabi-v7a/objs/androidcommon/JniCommonFunc.o
+a obj/local/armeabi-v7a/objs/androidcommon/JniCommonFunc.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/RtmpPublisher.o
+a obj/local/armeabi-v7a/objs/rtmpdump/RtmpPublisher.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video
+a obj/local/armeabi-v7a/objs/rtmpdump/RtmpPlayer.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/RtmpPlayer.o
+a obj/local/armeabi-v7a/objs/rtmpdump/PlayerController.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/util
+a obj/local/armeabi-v7a/objs/rtmpdump/PublisherController.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/PublisherController.o
+a obj/local/armeabi-v7a/objs/rtmpdump/Statistics.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/RtmpDump.o
+a obj/local/armeabi-v7a/objs/rtmpdump/PlayerController.o
+a obj/local/armeabi-v7a/objs/rtmpdump/RtmpDump.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/audio
+a obj/local/armeabi-v7a/objs/rtmpdump/Statistics.o
+a obj/local/armeabi-v7a/objs/rtmpdump/android
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoRendererImp.o
+a obj/local/armeabi-v7a/objs/rtmpdump/android/AudioRendererImp.o
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoHardEncoder.o
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoHardDecoder.o
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioFrame.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioMuxer.o
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioFrame.o
+a obj/local/armeabi-v7a/objs/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/util/FrameBuffer.o
+a obj/local/armeabi-v7a/objs/rtmpdump/util/FrameBuffer.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/util/CacheBufferQueue.o
+a obj/local/armeabi-v7a/objs/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/armeabi-v7a/objs/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoFilters.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoFrame.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoDecoderH264.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoEncoderH264.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoMuxer.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoRotateFilter.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoFormatConverter.o
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoFilters.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoMuxer.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoFrame.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/armeabi-v7a/objs/rtmpdump/video/VideoRecorderH264.o
+a obj/local/armeabi-v7a/objs/crashhandler/CrashHandler.o
+a obj/local/armeabi-v7a/objs/crashhandler/CrashHandler.o.d
+a obj/local/armeabi-v7a/objs-debug/crashhandler
+a obj/local/armeabi-v7a/objs-debug/rtmpdump
+a obj/local/armeabi-v7a/objs-debug/androidcommon
+a obj/local/armeabi-v7a/objs-debug/breakpad_client
+a obj/local/armeabi-v7a/objs-debug/lspublisher
+a obj/local/armeabi-v7a/objs-debug/z
+a obj/local/armeabi-v7a/objs-debug/srs_librtmp
+a obj/local/armeabi-v7a/objs-debug/lsplayer
+a obj/local/armeabi-v7a/objs-debug/zip
+a obj/local/armeabi-v7a/objs-debug/common
+a obj/local/armeabi-v7a/objs-debug/lsimageutil
+a obj/local/armeabi-v7a/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o
+a obj/local/armeabi-v7a/objs-debug/lsimageutil/net_qdating_filter_LSImageUtilJni.o.d
+a obj/local/armeabi-v7a/objs-debug/common/IAutoLock.o
+a obj/local/armeabi-v7a/objs-debug/common/KZip.o
+a obj/local/armeabi-v7a/objs-debug/common/KLog.o
+a obj/local/armeabi-v7a/objs-debug/common/md5.o.d
+a obj/local/armeabi-v7a/objs-debug/common/IPAddress.o
+a obj/local/armeabi-v7a/objs-debug/common/KThread.o
+a obj/local/armeabi-v7a/objs-debug/common/IAutoLock.o.d
+a obj/local/armeabi-v7a/objs-debug/common/KSocket.o
+a obj/local/armeabi-v7a/objs-debug/common/command.o.d
+a obj/local/armeabi-v7a/objs-debug/common/md5.o
+a obj/local/armeabi-v7a/objs-debug/common/KZip.o.d
+a obj/local/armeabi-v7a/objs-debug/common/IPAddress.o.d
+a obj/local/armeabi-v7a/objs-debug/common/CheckMemoryLeak.o
+a obj/local/armeabi-v7a/objs-debug/common/IAutoLockWrapper.o
+a obj/local/armeabi-v7a/objs-debug/common/KLogWrapper.o
+a obj/local/armeabi-v7a/objs-debug/common/aes.o
+a obj/local/armeabi-v7a/objs-debug/common/KLog.o.d
+a obj/local/armeabi-v7a/objs-debug/common/CheckMemoryLeak.o.d
+a obj/local/armeabi-v7a/objs-debug/common/CheckMemoryList.o
+a obj/local/armeabi-v7a/objs-debug/common/Arithmetic.o.d
+a obj/local/armeabi-v7a/objs-debug/common/KLogWrapper.o.d
+a obj/local/armeabi-v7a/objs-debug/common/KThread.o.d
+a obj/local/armeabi-v7a/objs-debug/common/Arithmetic.o
+a obj/local/armeabi-v7a/objs-debug/common/command.o
+a obj/local/armeabi-v7a/objs-debug/common/aes.o.d
+a obj/local/armeabi-v7a/objs-debug/common/CommonFunc.o
+a obj/local/armeabi-v7a/objs-debug/common/KSocket.o.d
+a obj/local/armeabi-v7a/objs-debug/common/CheckMemoryList.o.d
+a obj/local/armeabi-v7a/objs-debug/common/IAutoLockWrapper.o.d
+a obj/local/armeabi-v7a/objs-debug/common/CommonFunc.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/ioapi.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/mztools.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/miniunz.o
+a obj/local/armeabi-v7a/objs-debug/zip/minizip.o
+a obj/local/armeabi-v7a/objs-debug/zip/unzip.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/zip.o
+a obj/local/armeabi-v7a/objs-debug/zip/unzip.o
+a obj/local/armeabi-v7a/objs-debug/zip/minizip.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/miniunz.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/mztools.o
+a obj/local/armeabi-v7a/objs-debug/zip/zip.o.d
+a obj/local/armeabi-v7a/objs-debug/zip/ioapi.o
+a obj/local/armeabi-v7a/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o.d
+a obj/local/armeabi-v7a/objs-debug/lsplayer/net_qdating_player_LSPlayerJni.o
+a obj/local/armeabi-v7a/objs-debug/lsplayer/LSPlayerImp.o
+a obj/local/armeabi-v7a/objs-debug/lsplayer/LSPlayerImp.o.d
+a obj/local/armeabi-v7a/objs-debug/srs_librtmp/srs_librtmp.o
+a obj/local/armeabi-v7a/objs-debug/srs_librtmp/srs_librtmp.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src
+a obj/local/armeabi-v7a/objs-debug/z/src/zutil.o
+a obj/local/armeabi-v7a/objs-debug/z/src/trees.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/infback.o
+a obj/local/armeabi-v7a/objs-debug/z/src/adler32.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/inftrees.o
+a obj/local/armeabi-v7a/objs-debug/z/src/infback.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/uncompr.o
+a obj/local/armeabi-v7a/objs-debug/z/src/inffast.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/gzlib.o
+a obj/local/armeabi-v7a/objs-debug/z/src/inflate.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/deflate.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/gzclose.o
+a obj/local/armeabi-v7a/objs-debug/z/src/gzwrite.o
+a obj/local/armeabi-v7a/objs-debug/z/src/zutil.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/trees.o
+a obj/local/armeabi-v7a/objs-debug/z/src/inffast.o
+a obj/local/armeabi-v7a/objs-debug/z/src/adler32.o
+a obj/local/armeabi-v7a/objs-debug/z/src/gzlib.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/crc32.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/gzwrite.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/compress.o
+a obj/local/armeabi-v7a/objs-debug/z/src/deflate.o
+a obj/local/armeabi-v7a/objs-debug/z/src/uncompr.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/inflate.o
+a obj/local/armeabi-v7a/objs-debug/z/src/gzclose.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/gzread.o
+a obj/local/armeabi-v7a/objs-debug/z/src/inftrees.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/compress.o.d
+a obj/local/armeabi-v7a/objs-debug/z/src/crc32.o
+a obj/local/armeabi-v7a/objs-debug/z/src/gzread.o.d
+a obj/local/armeabi-v7a/objs-debug/lspublisher/LSPublisherImp.o
+a obj/local/armeabi-v7a/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o
+a obj/local/armeabi-v7a/objs-debug/lspublisher/LSPublisherImp.o.d
+a obj/local/armeabi-v7a/objs-debug/lspublisher/net_qdating_publisher_LSPublisherJni.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/minidump_file_writer.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/minidump_file_writer.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/handler
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/crash_generation
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/log
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/microdump_writer
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/microdump_writer/microdump_writer.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/log/log.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/log/log.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/crash_generation/crash_generation_client.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/thread_info.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/ucontext_reader.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/dump_writer_common/seccomp_unwinder.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_ptrace_dumper.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer/minidump_writer.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/minidump_writer/linux_dumper.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/handler/minidump_descriptor.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/client/linux/handler/exception_handler.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/md5.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/convert_UTF.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/md5.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/convert_UTF.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/android
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/string_conversion.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/string_conversion.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/android/breakpad_getcontext.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/safe_readlink.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/guid_creator.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/elfutils.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/file_id.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/memory_mapped_file.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/linux_libc_support.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/guid_creator.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/elfutils.o.d
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/safe_readlink.o
+a obj/local/armeabi-v7a/objs-debug/breakpad_client/src/common/linux/file_id.o
+a obj/local/armeabi-v7a/objs-debug/androidcommon/DeviceJniIntToType.o
+a obj/local/armeabi-v7a/objs-debug/androidcommon/DeviceJniIntToType.o.d
+a obj/local/armeabi-v7a/objs-debug/androidcommon/JniCommonFunc.o
+a obj/local/armeabi-v7a/objs-debug/androidcommon/JniCommonFunc.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/RtmpPublisher.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/RtmpPublisher.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/RtmpPlayer.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/RtmpPlayer.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/PlayerController.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/PublisherController.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/PublisherController.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/Statistics.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/RtmpDump.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/PlayerController.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/RtmpDump.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/Statistics.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoHardRendererImp.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoHardDecoder.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/AudioRendererImp.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoRendererImp.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/AudioRendererImp.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoHardEncoder.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoHardEncoder.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoHardDecoder.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoRendererImp.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/android/VideoHardRendererImp.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioDecoderAAC.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioEncoderAAC.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioFrame.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioMuxer.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioMuxer.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioRecorderAAC.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioDecoderAAC.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioEncoderAAC.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioFrame.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/audio/AudioRecorderAAC.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util/CacheBufferQueue.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util/FrameBuffer.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util/FrameBuffer.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util/CacheBufferQueue.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/util/EncodeDecodeBuffer.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoRotateFilter.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoFilters.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoFrame.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoDecoderH264.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoEncoderH264.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoMuxer.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoDecoderH264.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoRecorderH264.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoFormatConverter.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoRotateFilter.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoFormatConverter.o
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoFilters.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoMuxer.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoFrame.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoEncoderH264.o.d
+a obj/local/armeabi-v7a/objs-debug/rtmpdump/video/VideoRecorderH264.o
+a obj/local/armeabi-v7a/objs-debug/crashhandler/CrashHandler.o
+a obj/local/armeabi-v7a/objs-debug/crashhandler/CrashHandler.o.d

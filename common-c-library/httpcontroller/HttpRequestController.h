@@ -127,6 +127,27 @@
 #include "HttpGetResponseSayHiListTask.h"
 #include "HttpSayHiDetailTask.h"
 #include "HttpReadResponseTask.h"
+#include "HttpGetChatVoucherListTask.h"
+#include "HttpGetLiveEndRecommendAnchorListTask.h"
+#include "HttpGetContactListTask.h"
+#include "HttpUpQnInviteIdTask.h"
+#include "HttpRetrieveBannerTask.h"
+#include "HttpUploadUserPhotoTask.h"
+#include "HttpGetGiftTypeListTask.h"
+#include "HttpGetStoreGiftListTask.h"
+#include "HttpGetFlowerGiftDetailTask.h"
+#include "HttpGetRecommendGiftListTask.h"
+#include "HttpGetResentRecipientListTask.h"
+#include "HttpGetDeliveryListTask.h"
+#include "HttpGetCartGiftTypeNumTask.h"
+#include "HttpGetCartGiftListTask.h"
+#include "HttpAddCartGiftTask.h"
+#include "HttpChangeCartGiftNumberTask.h"
+#include "HttpRemoveCartGiftTask.h"
+#include "HttpCheckOutCartGiftTask.h"
+#include "HttpCreateGiftOrderTask.h"
+#include "HttpWomanListAdvertTask.h"
+#include "HttpGetFeaturedAnchorListTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -545,6 +566,21 @@ public:
                          );
     
     /**
+     * 2.23.提交用户头像
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param photoName                     上传头像文件名
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long UploadUserPhoto(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string& photoName,
+                              IRequestUploadUserPhotoCallback* callback = NULL
+                              );
+    
+    /**
      *  3.1.获取Hot列表接口
      *
      * @param pHttpRequestManager           http管理器
@@ -769,6 +805,68 @@ public:
                              );
     
     /**
+     * 3.15.获取页面推荐的主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetLiveEndRecommendAnchorList(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 IRequestGetLiveEndRecommendAnchorListCallback* callback = NULL
+                                 );
+    
+    /**
+     * 3.16.获取页面推荐的主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetContactList(
+                             HttpRequestManager *pHttpRequestManager,
+                             int start,
+                             int step,
+                             IRequestGetContactListCallback* callback = NULL
+                            );
+    
+    /**
+     * 3.17.获取虚拟礼物分类列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param roomType                      场次类型(LSGIFTROOMTYPE_PUBLIC : 公开, LSGIFTROOMTYPE_PRIVATE : 私密)
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetGiftTypeList(
+                             HttpRequestManager *pHttpRequestManager,
+                             LSGiftRoomType roomType,
+                             IRequestGetGiftTypeListtCallback* callback = NULL
+                             );
+    
+    /**
+     * 3.18.Featured欄目的推荐主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetFeaturedAnchorList(
+                                    HttpRequestManager *pHttpRequestManager,
+                                    int start,
+                                    int step,
+                                    IRequestGetFeaturedAnchorListCallback* callback = NULL
+                                    );
+    
+    /**
      *  4.1.观众待处理的预约邀请列表
      *
      * @param pHttpRequestManager           http管理器
@@ -864,7 +962,7 @@ public:
                                  HttpRequestManager *pHttpRequestManager,
                                  const string& userId,
                                  const string& timeId,
-                                 long bookTime,
+                                 long long bookTime,
                                  const string& giftId,
                                  int giftNum,
                                  bool needSms,
@@ -966,6 +1064,23 @@ public:
                                    HttpRequestManager *pHttpRequestManager,
                                    IRequestGetVoucherAvailableInfoCallback* callback = NULL
                                    );
+    
+    /**
+     *  5.7.获取LiveChat聊天试用券列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetChatVoucherList(
+                          HttpRequestManager *pHttpRequestManager,
+                          int start,
+                          int step,
+                          IRequestGetChatVoucherListCallback* callback = NULL
+                          );
     
     /**
      *  6.1.同步配置
@@ -1463,6 +1578,7 @@ public:
      * @param orderType                     购买产品类型（0：信用点，5：月费服务，7：邮票）
      * @param clickFrom                     点击来源（Axx表示不可切换，Bxx表示可切换）（可无，无或空则表示不指定）
      * @param number                        已选中的充值包ID（可无，无或空表示不指定充值包）
+     * @param orderno                       鲜花礼品订单ID
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -1474,6 +1590,7 @@ public:
                             LSOrderType orderType,
                             const string& clickFrom,
                             const string& number,
+                            const string& orderNo,
                            IRequestMobilePayGotoCallback* callback = NULL
                            );
     
@@ -2150,7 +2267,260 @@ public:
                           const string& responseId,
                           IRequestReadResponseCallback* callback = NULL
                           );
+    
+    /**
+     * 6.23.qn邀请弹窗更新邀请id
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param manId                         用户ID
+     * @param anchorId                      主播id
+     * @param inviteId                      邀请id
+     * @param roomId                        直播间id
+     * @param inviteType                    邀請類型(LSBUBBLINGINVITETYPE_ONEONONE:one-on-one LSBUBBLINGINVITETYPE_HANGOUT:Hangout LSBUBBLINGINVITETYPE_LIVECHAT:Livechat)
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long UpQnInviteId(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string& manId,
+                           const string& anchorId,
+                           const string& inviteId,
+                           const string& roomId,
+                           LSBubblingInviteType inviteType,
+                           IRequestUpQnInviteIdCallback* callback = NULL
+                           );
+    
+    /**
+     * 6.24.获取直播广告
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param manId                         用户ID
+     * @param isAnchorPage                  是否是是主播详情页
+     * @param bannerType                    邀請類型(LSBANNERTYPE_NINE_SQUARED:直播站内九宫格 LSBANNERTYPE_ALL_BROADCASTERS:All Broadcasters LSBANNERTYPE_FEATURED_BROADCASTERS:Featured Broadcasters LSBANNERTYPE_SAYHI:Say Hi LSBANNERTYPE_GREETMAIL:Greeting Mail LSBANNERTYPE_MAIL:Mail LSBANNERTYPE_CHAT:Chat LSBANNERTYPE_HANGOUT:Hang-out LSBANNERTYPE_GIFTSFLOWERS:Gifts & Flowers)
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long RetrieveBanner(
+                           HttpRequestManager *pHttpRequestManager,
+                           string manId,
+                           bool isAnchorPage,
+                           LSBannerType bannerType,
+                           IRequestRetrieveBannerCallback* callback = NULL
+                           );
+    
+    
+    /**
+     * 15.1.获取鲜花礼品列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID（可无）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetStoreGiftList(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& anchorId,
+                             IRequestGetStoreGiftListCallback* callback = NULL
+                             );
 
+    /**
+     * 15.2.获取鲜花礼品详情
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param giftId                        礼物ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetFlowerGiftDetail(
+                               HttpRequestManager *pHttpRequestManager,
+                               const string& giftId,
+                               IRequestGetFlowerGiftDetailCallback* callback = NULL
+                               );
+    
+    /**
+     * 15.3.获取推荐鲜花礼品列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param giftId                        礼品ID
+     * @param anchorId                      主播ID
+     * @param number                        数量
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetRecommendGiftList(
+                                  HttpRequestManager *pHttpRequestManager,
+                                  const string& giftId,
+                                  const string& anchorId,
+                                  int number,
+                                  IRequestGetRecommendGiftListCallback* callback = NULL
+                                  );
+  
+    /**
+     * 15.4.获取Resent Recipient主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetResentRecipientList(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   IRequestGetResentRecipientListCallback* callback = NULL
+                                   );
+    
+    /**
+     * 15.5.获取My delivery列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetDeliveryList(
+                              HttpRequestManager *pHttpRequestManager,
+                              IRequestGetDeliveryListCallback* callback = NULL
+                              );
+    
+    /**
+     * 15.6.获取购物车礼品种类数
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID（可无）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetCartGiftTypeNum(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string& anchorId,
+                              IRequestGetCartGiftTypeNumCallback* callback = NULL
+                              );
+    
+    /**
+     * 15.7.获取购物车My cart列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetCartGiftList(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 int start,
+                                 int step,
+                                 IRequestGetCartGiftListCallback* callback = NULL
+                                 );
+    
+    /**
+     * 15.8.添加购物车商品
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param giftId                        礼品ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AddCartGift(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string& anchorId,
+                          const string& giftId,
+                          IRequestAddCartGiftCallback* callback = NULL
+                           );
+    
+    /**
+     * 15.9.修改购物车商品数量
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param giftId                        礼品ID
+     * @param giftNumber                    礼品数量
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ChangeCartGiftNumber(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   const string& anchorId,
+                                   const string& giftId,
+                                   int giftNumber,
+                                   IRequestChangeCartGiftNumberCallback* callback = NULL
+                                   );
+    
+    /**
+     * 15.10.删除购物车商品
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param giftId                        礼品ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long RemoveCartGift(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& anchorId,
+                             const string& giftId,
+                             IRequestRemoveCartGiftCallback* callback = NULL
+                            );
+    
+    /**
+     * 15.11.Checkout商品
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CheckOutCartGift(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& anchorId,
+                             IRequestCheckOutCartGiftCallback* callback = NULL
+                             );
+    
+    /**
+     * 15.12.生成订单
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param greetingMessage               文本信息
+     * @param specialDeliveryRequest        文本信息
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CreateGiftOrder(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& anchorId,
+                             const string& greetingMessage,
+                             const string& specialDeliveryRequest,
+                             IRequestCreateGiftOrderCallback* callback = NULL
+                             );
+    
+    /**
+     * 6.6.25.获取直播主播列表广告
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param deviceId                      设备唯一标识
+     * @param adspaceId                     广告位ID（LSAD_SPACE_TYPE_A : 第10-20位, LSAD_SPACE_TYPE_B : 第40-50位, LSAD_SPACE_TYPE_C : 第80-90位）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long WomanListAdvert(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string& deviceId,
+                              LSAdvertSpaceType adspaceId,
+                              IRequestWomanListAdvertCallback* callback = NULL
+                              );
     
 private:
     void OnTaskFinish(IHttpTask* task);

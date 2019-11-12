@@ -130,7 +130,11 @@ public class CameraViewFragment extends BaseFragment implements CameraView.Photo
                         bitmap.recycle();
                         bitmap = null;
                     }
-                    rotateBitmap = ImageUtil.createRotatedBitmap(getActivity(), tempBitmap, (cameraView.getCurrentCamera() == cameraView.getFrontCamera()) ? -90 : 90);
+//                    rotateBitmap = ImageUtil.createRotatedBitmap(getActivity(), tempBitmap, (cameraView.getCurrentCamera() == cameraView.getFrontCamera()) ? -90 : 90);
+
+                    // 2019/5/22  Hardy
+                    rotateBitmap = ImageUtil.createRotatedBitmap(getActivity(), tempBitmap, cameraView.getImageOrientation());
+
                     tempBitmap.recycle();
                 } else {
                     rotateBitmap = bitmap;
@@ -276,9 +280,10 @@ public class CameraViewFragment extends BaseFragment implements CameraView.Photo
         cameraView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                cameraView.reconnectCamera();
+                openCamera();
             }
         },500);
+
     }
 
     /**
@@ -288,9 +293,7 @@ public class CameraViewFragment extends BaseFragment implements CameraView.Photo
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (cameraView != null) {
-            cameraView.releaseCamera();
-        }
+        releaseCamera();
     }
 
     @Override
@@ -301,6 +304,24 @@ public class CameraViewFragment extends BaseFragment implements CameraView.Photo
 
         if (cameraIndex == cameraView.getBackCamera()) {
             swapCameraButton.setImageResource(R.drawable.ic_camera_rear_white_24dp);
+        }
+    }
+
+    /**
+     * 打开相机
+     */
+    public void openCamera(){
+        if (cameraView != null) {
+            cameraView.reconnectCamera();
+        }
+    }
+
+    /**
+     * 释放相机
+     */
+    public void releaseCamera(){
+        if (cameraView != null) {
+            cameraView.releaseCamera();
         }
     }
 }

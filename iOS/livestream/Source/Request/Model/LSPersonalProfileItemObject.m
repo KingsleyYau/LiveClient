@@ -191,4 +191,13 @@
     }
     return bFlag;
 }
+
+- (BOOL)noPhotoStatus {
+    BOOL bFlag = NO;
+    
+    if( self.photoStatus == None ) {
+        bFlag = YES;
+    }
+    return bFlag;
+}
 @end

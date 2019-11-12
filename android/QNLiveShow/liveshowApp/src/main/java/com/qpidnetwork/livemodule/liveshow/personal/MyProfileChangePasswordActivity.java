@@ -8,6 +8,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
@@ -110,15 +112,51 @@ public class MyProfileChangePasswordActivity extends BaseFragmentActivity implem
 
         editTextCurrentPassword = (MaterialTextField) findViewById(R.id.editTextCurrentPassword);
         editTextCurrentPassword.setPassword();
-        editTextCurrentPassword.setHint("Your current password");
+        editTextCurrentPassword.setHint(getResources().getString(R.string.Your_current_password));
+        CheckBox ivCurrentPasswordVisible = (CheckBox) findViewById(R.id.ivCurrentPasswordVisible);
+        ivCurrentPasswordVisible.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    //当前选中
+                    editTextCurrentPassword.setVisiblePassword();
+                }else{
+                    editTextCurrentPassword.setPassword();
+                }
+            }
+        });
 
         editTextNewPassword = (MaterialTextField) findViewById(R.id.editTextNewPassword);
         editTextNewPassword.setPassword();
-        editTextNewPassword.setHint("New password");
+        editTextNewPassword.setHint(getResources().getString(R.string.New_password));
+        CheckBox ivNewPasswordVisible = (CheckBox) findViewById(R.id.ivNewPasswordVisible);
+        ivNewPasswordVisible.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    //当前选中
+                    editTextNewPassword.setVisiblePassword();
+                }else{
+                    editTextNewPassword.setPassword();
+                }
+            }
+        });
 
         editTextConfirmPassword = (MaterialTextField) findViewById(R.id.editTextConfirmPassword);
         editTextConfirmPassword.setPassword();
-        editTextConfirmPassword.setHint("Confirm Password");
+        editTextConfirmPassword.setHint(getResources().getString(R.string.Confirm_password));
+        CheckBox ivConfirmPasswordVisible = (CheckBox) findViewById(R.id.ivConfirmPasswordVisible);
+        ivConfirmPasswordVisible.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    //当前选中
+                    editTextConfirmPassword.setVisiblePassword();
+                }else{
+                    editTextConfirmPassword.setPassword();
+                }
+            }
+        });
 
         btnChange = (ButtonRaised) findViewById(R.id.btnChange);
         //edit by Jagger 设置为主题颜色

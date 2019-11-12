@@ -7,19 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qpidnetwork.anchor.R;
 import com.qpidnetwork.anchor.framework.livemsglist.interfaces.IListFunction;
-import com.qpidnetwork.anchor.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 可扩展的列表控件
  * Created by Jagger on 2017/6/2.
  */
 
-public class LiveMessageListView extends RelativeLayout implements IListFunction {
+public class LiveMessageListView extends FrameLayout implements IListFunction {
 
     private MessageRecyclerView mMessageRecyclerView;
     private TextView mUnreadTxt ;
@@ -37,7 +38,6 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
                 mUnreadTxt.setText(String.valueOf(unreadSum));
                 mUnreadTxt.setVisibility(View.VISIBLE);
             }
-
         }
 
         @Override
@@ -89,24 +89,35 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
 //        super(context, attrs, defStyleAttr, defStyleRes);
 //    }
 
+
     public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration){
         mMessageRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        //可以取得自己高度
+//        Log.i("Jagger" , "zzzzzzzzz:"+getLayoutParams().height);
     }
 
     private void init(Context context){
         //列表
         mMessageRecyclerView = new MessageRecyclerView(context);
-        LayoutParams listLP = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-        listLP.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        LayoutParams listLP = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        listLP.gravity = Gravity.BOTTOM;                            //for FrameLayout
+//        listLP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);       //for RelativeLayout
         mMessageRecyclerView.setLayoutParams(listLP);
         mMessageRecyclerView.setOnMsgUnreadListener(onMsgUnreadListener);
         //未读提示
         mUnreadTxt = new TextView(context);
         LayoutParams txtLP = new LayoutParams(80,80);
-        txtLP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        listLP.gravity = Gravity.BOTTOM;                            //for FrameLayout
+//        txtLP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);        //for RelativeLayout
         mUnreadTxt.setLayoutParams(txtLP);
         mUnreadTxt.setText("??");
-        mUnreadTxt.setBackgroundResource(R.drawable.livemessagelist_paopao2);
+        mUnreadTxt.setTextColor(getResources().getColor(R.color.text_color_dark));
+        mUnreadTxt.setBackgroundResource(R.drawable.livemessagelist_paopao_default);
         mUnreadTxt.setGravity(Gravity.CENTER);
         mUnreadTxt.setVisibility(View.INVISIBLE);
 
@@ -127,11 +138,6 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         mMessageRecyclerView.setVerticalSpace(space);
     }
 
-    public void setMaxHeight(int height){
-
-    }
-
-
     @Override
     public void addNewLiveMsg(Object item) {
         mMessageRecyclerView.addNewLiveMsg(item);
@@ -149,6 +155,14 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         return item;
     }
 
+    /**
+     * 列表阅读状态
+     * @return
+     */
+    public MessageRecyclerView.ReadingStatus getReadingStatus(){
+        return mMessageRecyclerView.getReadingStatus();
+    }
+
     @Override
     public void setMaxMsgSum(int maxMsgSum) {
         mMessageRecyclerView.setMaxMsgSum(maxMsgSum);
@@ -159,6 +173,11 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         mMessageRecyclerView.setHoldingTime(time);
     }
 
+//    @Override
+    public void setDisplayDirection(MessageRecyclerView.DisplayDirection displayDirection) {
+        mMessageRecyclerView.setDisplayDirection(displayDirection);
+    }
+
     /**
      * 未读数背景图
      * @param drawable
@@ -167,4 +186,20 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         mUnreadTxtBgDrawable = drawable;
     }
 
+
+    /**
+     * 2019/4/22 Hardy
+     */
+    public void onDestroy(){
+        if (mMessageRecyclerView != null) {
+            mMessageRecyclerView.onDestroy();
+        }
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        //可视状态影响是否统计未读数逻辑
+        mMessageRecyclerView.setVisibility(visibility);
+    }
 }

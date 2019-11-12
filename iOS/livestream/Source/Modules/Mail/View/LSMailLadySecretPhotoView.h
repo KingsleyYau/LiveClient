@@ -32,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *noteLabel;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *noteLabelTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *noteLabelBottom;
 
 @property (weak, nonatomic) IBOutlet UILabel *representLabel;
 

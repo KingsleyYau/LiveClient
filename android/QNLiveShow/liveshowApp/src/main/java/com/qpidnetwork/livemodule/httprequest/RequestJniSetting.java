@@ -22,9 +22,10 @@ public class RequestJniSetting {
 	 * 6.3.添加/取消收藏
 	 * @param isPriMsgAppPush		是否接收私信推送通知
 	 * @param isMailAppPush  		是否接收私信推送通知
+	 * @param isSayHiAppPush  		是否接收SayHi推送通知
 	 * @param callback
 	 * @return
 	 */
-	static public native long SetPushConfig(boolean isPriMsgAppPush, boolean isMailAppPush, OnRequestCallback callback);
+	static public native long SetPushConfig(boolean isPriMsgAppPush, boolean isMailAppPush, boolean isSayHiAppPush, OnRequestCallback callback);
 
 }

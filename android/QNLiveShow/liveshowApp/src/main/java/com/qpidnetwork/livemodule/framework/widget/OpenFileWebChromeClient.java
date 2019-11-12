@@ -70,7 +70,7 @@ public class OpenFileWebChromeClient  extends WebChromeClient {
     public void openFileChooser(ValueCallback<Uri> filePathCallback, String acceptType, String capture) {
         Log.d(TAG,"openFileChooser-acceptType:"+acceptType+" capture:"+capture);
         mFilePathCallback = filePathCallback;
-        takeAPicture(acceptType,!TextUtils.isEmpty(capture) && capture.equals("camera"));
+        takeAPicture(acceptType,!TextUtils.isEmpty(capture)); //&& capture.equals("camera") 解决红米note白色回调时*
     }
 
     //  Lollipop 5.0+ 调用这个方法

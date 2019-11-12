@@ -783,3 +783,60 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
 
     return taskId;
 }
+
+/*********************************** 2.23.提交用户头像  ****************************************/
+class RequestUploadUserPhotoCallback : public IRequestUploadUserPhotoCallback {
+    void OnUploadUserPhoto(HttpUploadUserPhotoTask* task, bool success, int errnum, const string& errmsg) {
+        JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUploadUserPhoto( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        /*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+        if(callBackObject != NULL){
+            jclass callBackCls = env->GetObjectClass(callBackObject);
+            string signature = "(ZILjava/lang/String;";
+            signature += ")V";
+            jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+            FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUploadUserPhoto( callback : %p, signature : %s )",
+                    callbackMethod, signature.c_str());
+            if(callbackMethod != NULL){
+                jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+                env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+                env->DeleteLocalRef(jerrmsg);
+            }
+        }
+
+        if(callBackObject != NULL){
+            env->DeleteGlobalRef(callBackObject);
+        }
+
+
+        ReleaseEnv(isAttachThread);
+    }
+};
+
+RequestUploadUserPhotoCallback gRequestUploadUserPhotoCallback;
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    UploadUserPhoto
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_UploadUserPhoto
+        (JNIEnv *env, jclass cls, jstring photoName, jobject callback) {
+
+       FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::UploadUserPhoto(photoName:%d)", JString2String(env, photoName).c_str());
+       jlong taskId = -1;
+       taskId = gHttpRequestController.UploadUserPhoto(&gHttpRequestManager,
+                                                       JString2String(env, photoName),
+                                                       &gRequestUploadUserPhotoCallback);
+
+       jobject obj = env->NewGlobalRef(callback);
+       putCallbackIntoMap(taskId, obj);
+
+       return taskId;
+}

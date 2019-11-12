@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -25,7 +24,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </scrollView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i2E-fo-PKw">
-                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                    <rect key="frame" x="0.0" y="22" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="3Fe-MR-ayH"/>
                         <constraint firstAttribute="width" secondItem="i2E-fo-PKw" secondAttribute="height" multiplier="1:1" id="7RO-hP-Nx4"/>
@@ -42,7 +41,7 @@
                 <constraint firstAttribute="trailing" secondItem="jLA-ey-FdO" secondAttribute="trailing" id="KHV-EH-0xn"/>
                 <constraint firstItem="jLA-ey-FdO" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="SY0-DE-9MK"/>
                 <constraint firstAttribute="bottom" secondItem="jLA-ey-FdO" secondAttribute="bottom" id="aMc-5k-79A"/>
-                <constraint firstItem="i2E-fo-PKw" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hXF-71-XOM"/>
+                <constraint firstItem="i2E-fo-PKw" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="22" id="hXF-71-XOM"/>
                 <constraint firstItem="jLA-ey-FdO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uKZ-vk-sJQ"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

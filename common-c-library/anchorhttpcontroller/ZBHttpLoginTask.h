@@ -39,6 +39,7 @@ public:
      * @param deviceid		    设备唯一标识
      * @param model				设备型号（格式：设备型号－系统版本号）
      * @param manufacturer		制造厂商
+     * @param deviceName        设备名字
      */
     void SetParam(
                   string anchorId,
@@ -46,7 +47,8 @@ public:
                   string code,
                   string deviceid,
                   string model,
-                  string manufacturer
+                  string manufacturer,
+                  string deviceName
                   );
     
     bool ParseData(const string& url, bool bFlag, const char* buf, int size);
@@ -59,6 +61,7 @@ protected:
     string mDeviceId;   // 设备唯一标识
     string mModel;           // 设备型号（格式：设备型号-系统版本号）
     string mManufacturer;    // 制造厂商
+    string mDeviceName;     // 设备名字
 };
 
 #endif /* ZBHttpLoginTask_H_ */

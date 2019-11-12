@@ -5,9 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.qpidnetwork.livemodule.view.RefreshRecyclerView
+    <!--<com.qpidnetwork.livemodule.view.RefreshRecyclerView-->
+    <!--<BallRefreshRecyclerView-->
+        <!--android:id="@+id/refreshRecyclerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+    <include
         android:id="@+id/refreshRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        layout="@layout/refresh_ball_recyclerview"
+        />
 
 </FrameLayout>

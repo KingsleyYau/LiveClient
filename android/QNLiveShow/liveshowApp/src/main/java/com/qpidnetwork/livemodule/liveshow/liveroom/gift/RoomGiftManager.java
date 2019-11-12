@@ -1,6 +1,5 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
-import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetPackageGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetSendableGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
@@ -8,9 +7,7 @@ import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.SendableGiftItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.RoomPackageGiftManager;
-import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,21 +18,26 @@ import java.util.List;
  * Created by Hunter on 18/6/20.
  */
 
-public class RoomGiftManager implements GiftRecommandManager.OnGiftRecommandListener {
+public class RoomGiftManager {
 
     private final String TAG = RoomGiftManager.class.getSimpleName();
     //data
     private IMRoomInItem mIMRoomInItem;                                                 //当前房间Id
     private RoomSendableGiftManager mRoomSendableGiftManager;               //房间可发送礼物列表管理器
     private RoomPackageGiftManager mRoomPackageGiftManager;                 //房间背包礼物管理类
-    //推荐监听器
-    private GiftRecommandManager.OnGiftRecommandListener mOnGiftRecommandListener;
 
     public RoomGiftManager(IMRoomInItem imRoomInItem){
         this.mIMRoomInItem = imRoomInItem;
         mRoomSendableGiftManager = new RoomSendableGiftManager(mIMRoomInItem);
-        mRoomSendableGiftManager.setOnGiftRecommandListener(this);
         mRoomPackageGiftManager = new RoomPackageGiftManager(mRoomSendableGiftManager);
+    }
+
+    /**
+     * 2019/9/4 Hardy
+     * 获取房间信息
+     */
+    public IMRoomInItem getIMRoomInItem() {
+        return mIMRoomInItem;
     }
 
     /**
@@ -59,7 +61,7 @@ public class RoomGiftManager implements GiftRecommandManager.OnGiftRecommandList
      * @return
      */
     public List<GiftItem> getFilterRecommandGiftList(){
-        return  mRoomSendableGiftManager.getFilterRecommandGiftList();
+        return  mRoomSendableGiftManager.getLocalRecommandGiftList();
     }
 
     /**
@@ -109,25 +111,19 @@ public class RoomGiftManager implements GiftRecommandManager.OnGiftRecommandList
         return canSendable;
     }
 
-    /**
-     * 设置推荐监听器
-     * @param listener
-     */
-    public void setOnGiftRecommandListener(GiftRecommandManager.OnGiftRecommandListener listener){
-        mOnGiftRecommandListener = listener;
-    }
-
-    @Override
-    public void onGiftRecommand(GiftItem giftItem) {
-        if(mOnGiftRecommandListener != null){
-            mOnGiftRecommandListener.onGiftRecommand(giftItem);
-        }
-    }
-
     //回收数据
     public void onDestroy(){
         if(mRoomSendableGiftManager != null){
             mRoomSendableGiftManager.onDestroy();
         }
+    }
+
+    //***************************** 2019/9/3    Hardy   ************************************
+
+    public SendableGiftItem getSendableGiftItem(String giftId){
+        if(mRoomSendableGiftManager != null){
+            return mRoomSendableGiftManager.getSendableGiftItem(giftId);
+        }
+        return null;
     }
 }

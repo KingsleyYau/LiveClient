@@ -543,6 +543,17 @@ public class VoiceRecordFragment extends BaseFragment {
 			/*fragment detach 时去调异步处理*/
 			mHandler.removeCallbacks(delayTask);
 		}
+		//重置，解决点击其他区域收起录音区域，导致不执行MotionEvent.ACTION_UP导致录音不停止
+		if(recordView != null){
+			/* 停止录音并发送 */
+			recordView.stopRecording(null);
+		}
+		recordStatus = RecordStatus.DEFAULT;
+		if(backBtnBg != null){
+			backBtnBg.clearAnimation();
+		}
+		mRecordTime = 0;
+		saveFilePath = null;
 	}
 	
 	private void stopPlayVoice(){

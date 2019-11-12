@@ -48,5 +48,14 @@
  @param date 时间数据
  @return 时间字符串
  */
-- (NSString *)showSayHiListTimeTextOfDate:(NSDate *)date;
++ (NSString *)showSayHiListTimeTextOfDate:(NSDate *)date;
+
+
++ (NSString *)showTimeOfDate:(NSDate *)date;
+
++ (NSString *)getTime:(NSInteger)time;
+
+/// 显示具体到分钟的时间格式为 MMM dd,YYYY HH:mm
+/// @param time 时间搓
++ (NSString *)getMinTime:(NSInteger)time;
 @end

@@ -22,9 +22,10 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center">
-        <!-- Message -->
+
+        <!-- SayHi -->
         <LinearLayout
-            android:id="@+id/llMessage"
+            android:id="@+id/llSayHi"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -33,7 +34,7 @@
             android:layout_weight="1">
             <!-- 图标 (宽、高减去padding才是图标大小，预留padding的位置是为了放未读控件，这样不会遮挡到图标) -->
             <FrameLayout
-                android:id="@+id/flImgMessage"
+                android:id="@+id/flImgSayHi"
                 android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
                 android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
                 android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
@@ -41,30 +42,73 @@
                 android:paddingRight="6dp"
                 android:paddingLeft="6dp">
                 <ImageView
-                    android:id="@+id/imgMessageBig"
+                    android:id="@+id/imgSayHiBig"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/selector_discover_top_message_big"/>
+                    android:src="@drawable/selector_discover_top_sayhi_big"/>
 
                 <ImageView
-                    android:id="@+id/imgMessageSmall"
+                    android:id="@+id/imgSayHiSmall"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_discover_top_message_small"/>
+                    android:src="@drawable/ic_discover_top_sayhi_small"/>
             </FrameLayout>
             <!-- 文字 -->
             <TextView
-                android:id="@+id/tvMessage"
+                android:id="@+id/tvSayHi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Chat"
+                android:text="@string/sayhi"
                 android:textSize="13sp"
                 android:textColor="@color/dicover_top_tab_txt_big"
                 android:layout_marginTop="4dp" />
-                <!--android:text="@string/discover_top_message"-->
+            <!--android:text="@string/discover_top_message"-->
+        </LinearLayout>
+
+        <!-- Greetings -->
+        <LinearLayout
+            android:id="@+id/llGreetings"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/selector_discover_top_tab"
+            android:layout_weight="1">
+            <!-- 图标 -->
+            <FrameLayout
+                android:id="@+id/flImgGreetings"
+                android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
+                android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
+                android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
+                android:paddingTop="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp">
+                <ImageView
+                    android:id="@+id/imgGreetingsBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/selector_discover_top_greet_big"/>
+                <ImageView
+                    android:id="@+id/imgGreetingSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:src="@drawable/ic_discover_top_greet_small"/>
+            </FrameLayout>
+            <!-- 文字 -->
+            <TextView
+                android:id="@+id/tvGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_top_greet"
+                android:textSize="13sp"
+                android:textColor="@color/dicover_top_tab_txt_big"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
         <!-- Mail -->
@@ -112,20 +156,18 @@
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Greetings -->
+        <!-- Chat -->
         <LinearLayout
-            android:id="@+id/llGreetings"
-            android:clickable="true"
-            android:focusable="true"
+            android:id="@+id/llMessage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:background="@drawable/selector_discover_top_tab"
             android:layout_weight="1">
-            <!-- 图标 -->
+            <!-- 图标 (宽、高减去padding才是图标大小，预留padding的位置是为了放未读控件，这样不会遮挡到图标) -->
             <FrameLayout
-                android:id="@+id/flImgGreetings"
+                android:id="@+id/flImgMessage"
                 android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
                 android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
                 android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
@@ -133,26 +175,30 @@
                 android:paddingRight="6dp"
                 android:paddingLeft="6dp">
                 <ImageView
-                    android:id="@+id/imgGreetingsBig"
+                    android:id="@+id/imgMessageBig"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/selector_discover_top_greet_big"/>
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/selector_discover_top_message_big"/>
+
                 <ImageView
-                    android:id="@+id/imgGreetingSmall"
+                    android:id="@+id/imgMessageSmall"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0"
-                    android:src="@drawable/ic_discover_top_greet_small"/>
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_discover_top_message_small"/>
             </FrameLayout>
             <!-- 文字 -->
             <TextView
-                android:id="@+id/tvGreeting"
+                android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/discover_top_greet"
+                android:text="@string/Chat"
                 android:textSize="13sp"
                 android:textColor="@color/dicover_top_tab_txt_big"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="4dp" />
+            <!--android:text="@string/discover_top_message"-->
         </LinearLayout>
 
         <!-- HangOut -->
@@ -199,7 +245,7 @@
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- HangOut -->
+        <!-- Credit -->
         <LinearLayout
             android:id="@+id/llAddCredit"
             android:clickable="true"

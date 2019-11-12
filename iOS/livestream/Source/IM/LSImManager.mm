@@ -215,10 +215,12 @@ static LSImManager *imManager = nil;
                     if (success) {
                         // 成功获取到邀请状态
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            for (NSValue *value in self.delegates) {
-                                id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-                                if ([delegate respondsToSelector:@selector(onRecvInviteReply:)]) {
-                                    [delegate onRecvInviteReply:item];
+                            @synchronized (self.delegates) {
+                                for (NSValue *value in self.delegates) {
+                                    id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+                                    if ([delegate respondsToSelector:@selector(onRecvInviteReply:)]) {
+                                        [delegate onRecvInviteReply:item];
+                                    }
                                 }
                             }
                         });
@@ -282,10 +284,12 @@ static LSImManager *imManager = nil;
         if (roomObj.roomId.length > 0) {
             bFlag = YES;
 
-            for (NSValue *value in self.delegates) {
-                id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-                if ([delegate respondsToSelector:@selector(onHandleLoginRoom:userId:userName:)]) {
-                    [delegate onHandleLoginRoom:roomObj.roomId userId:roomObj.anchorId userName:roomObj.nickName];
+            @synchronized (self.delegates) {
+                for (NSValue *value in self.delegates) {
+                    id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+                    if ([delegate respondsToSelector:@selector(onHandleLoginRoom:userId:userName:)]) {
+                        [delegate onHandleLoginRoom:roomObj.roomId userId:roomObj.anchorId userName:roomObj.nickName];
+                    }
                 }
             }
         }
@@ -304,10 +308,12 @@ static LSImManager *imManager = nil;
         if (inviteItem) {
             bFlag = YES;
 
-            for (NSValue *value in self.delegates) {
-                id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-                if ([delegate respondsToSelector:@selector(onHandleLoginInvite:)]) {
-                    [delegate onHandleLoginInvite:inviteItem];
+            @synchronized (self.delegates) {
+                for (NSValue *value in self.delegates) {
+                    id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+                    if ([delegate respondsToSelector:@selector(onHandleLoginInvite:)]) {
+                        [delegate onHandleLoginInvite:inviteItem];
+                    }
                 }
             }
         }
@@ -319,10 +325,12 @@ static LSImManager *imManager = nil;
 - (BOOL)handleLoginScheduleRoomList:(NSArray<ImScheduleRoomObject *> *)scheduleRoomList {
     BOOL bFlag = YES;
 
-    for (NSValue *value in self.delegates) {
-        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(onHandleLoginSchedule:)]) {
-            [delegate onHandleLoginSchedule:scheduleRoomList];
+    @synchronized (self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onHandleLoginSchedule:)]) {
+                [delegate onHandleLoginSchedule:scheduleRoomList];
+            }
         }
     }
 
@@ -332,10 +340,12 @@ static LSImManager *imManager = nil;
 - (BOOL)handleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList {
     BOOL bFlag = YES;
 
-    for (NSValue *value in self.delegates) {
-        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(onHandleLoginOnGingShowList:)]) {
-            [delegate onHandleLoginOnGingShowList:ongoingShowList];
+    @synchronized (self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onHandleLoginOnGingShowList:)]) {
+                [delegate onHandleLoginOnGingShowList:ongoingShowList];
+            }
         }
     }
 
@@ -345,10 +355,12 @@ static LSImManager *imManager = nil;
 - (BOOL)handleRecommendHangoutFriend:(IMRecommendHangoutItemObject *)firendItem {
     BOOL bFlag = YES;
 
-    for (NSValue *value in self.delegates) {
-        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(onHandleRecommendHangoutFriend:)]) {
-            [delegate onHandleRecommendHangoutFriend:firendItem];
+    @synchronized (self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onHandleRecommendHangoutFriend:)]) {
+                [delegate onHandleRecommendHangoutFriend:firendItem];
+            }
         }
     }
 
@@ -358,10 +370,12 @@ static LSImManager *imManager = nil;
 - (BOOL)handleKnockRequest:(IMKnockRequestItemObject *)knockItem {
     BOOL bFlag = YES;
 
-    for (NSValue *value in self.delegates) {
-        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(onHandleKnockRequest:)]) {
-            [delegate onHandleKnockRequest:knockItem];
+    @synchronized (self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onHandleKnockRequest:)]) {
+                [delegate onHandleKnockRequest:knockItem];
+            }
         }
     }
 
@@ -371,10 +385,12 @@ static LSImManager *imManager = nil;
 - (BOOL)handleEnterHangoutCountDown:(NSString *)roomId anchorId:(NSString *)anchorId leftSecond:(int)leftSecond {
     BOOL bFlag = YES;
 
-    for (NSValue *value in self.delegates) {
-        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(onHandleEnterHangoutCountDown:anchorId:leftSecond:)]) {
-            [delegate onHandleEnterHangoutCountDown:roomId anchorId:anchorId leftSecond:leftSecond];
+    @synchronized (self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onHandleEnterHangoutCountDown:anchorId:leftSecond:)]) {
+                [delegate onHandleEnterHangoutCountDown:roomId anchorId:anchorId leftSecond:leftSecond];
+            }
         }
     }
 
@@ -1026,10 +1042,12 @@ static LSImManager *imManager = nil;
 - (void)onRecvHandoutInviteNotice:(IMHangoutInviteItemObject * _Nonnull)item {
     NSLog(@"LSImManager::onRecvHandoutInviteNotice( 接收主播Hang-out邀请通知)");
     
-    for (NSValue *value in self.delegates) {
-        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(onRecvHandoutInviteNotice:)]) {
-            [delegate onRecvHandoutInviteNotice:item];
+    @synchronized (self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvHandoutInviteNotice:)]) {
+                [delegate onRecvHandoutInviteNotice:item];
+            }
         }
     }
 }

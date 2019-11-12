@@ -1,14 +1,10 @@
 package com.qpidnetwork.livemodule.utils;
 
 
-import android.os.Build;
-
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
@@ -18,15 +14,19 @@ import java.util.Locale;
 
 public class DateUtil {
 
-    public static String FORMAT_SHOW_MONTH_DATE =  "MMM dd";
-//    private static String FORMAT_SHOW_TIME_24 =  "H:mm";
-    public static String FORMAT_SHOW_TIME_12 =  "h:mm aa";
-    public static String FORMAT_SHOW_DATE =  "MMM dd|h:mm aa";
-    public static String FORMAT_MMDDhmmaa =  "MMM dd . h:mm aa";
-    public static String FORMAT_MM_DDhmm_24 =  "MM-dd H:mm";
-    public static String FORMAT_MMMDDhmm_24 =  "MMM dd, H:mm";
+    public static String FORMAT_SHOW_MONTH_YEAR_DATE = "MMM dd,yyyy";
+    public static String FORMAT_SHOW_DATE_MONTH_YEAR = "dd MMM,yyyy";
+    public static String FORMAT_SHOW_MONTH_DATE = "MMM dd";
 
-    public enum DateTimeType{
+    //    private static String FORMAT_SHOW_TIME_24 =  "H:mm";
+    public static String FORMAT_SHOW_TIME_12 = "h:mm aa";
+    public static String FORMAT_SHOW_DATE = "MMM dd|h:mm aa";
+    public static String FORMAT_MMDDhmmaa = "MMM dd . h:mm aa";
+    public static String FORMAT_MM_DDhmm_24 = "MM-dd H:mm";
+    public static String FORMAT_MMMDDhmm_24 = "MMM dd, H:mm";
+    public static String FORMAT_MMDDyyyyhhmm_24 = "MMM dd, yyyy HH:mm";
+
+    public enum DateTimeType {
         Default,                //默认
         Today,                  //今天
         Yestoday,               //昨天
@@ -36,40 +36,44 @@ public class DateUtil {
 
     /**
      * 将时间戳转为　小时（9:00 am）
+     *
      * @param dateMillis
      * @return
      */
-    public static String getTimeAMPM(long dateMillis){
-        return getDateStr(dateMillis , FORMAT_SHOW_TIME_12);
+    public static String getTimeAMPM(long dateMillis) {
+        return getDateStr(dateMillis, FORMAT_SHOW_TIME_12);
     }
 
     /**
      * 将时间戳转为　日期（MM-dd）
+     *
      * @param dateMillis
      * @return
      */
-    public static String getDate(long dateMillis){
-        return getDateStr(dateMillis , FORMAT_SHOW_MONTH_DATE);
+    public static String getDate(long dateMillis) {
+        return getDateStr(dateMillis, FORMAT_SHOW_MONTH_DATE);
     }
 
     /**
      * 将时间戳转为　日期（MMM dd|h:mm aa） ,为了拆分为数组
+     *
      * @param dateMillis
      * @return
      */
-    public static String getDateDetail(long dateMillis){
-        return getDateStr(dateMillis , FORMAT_SHOW_DATE);
+    public static String getDateDetail(long dateMillis) {
+        return getDateStr(dateMillis, FORMAT_SHOW_DATE);
     }
 
     /**
      * 将时间戳转为　你喜欢的格式
+     *
      * @param dateMillis 毫秒
      * @return
      */
-    public static String getDateStr(long dateMillis , String format){
+    public static String getDateStr(long dateMillis, String format) {
         String dateStr = "";
 
-        DateFormat dateFormat = new SimpleDateFormat(format , Locale.ENGLISH);
+        DateFormat dateFormat = new SimpleDateFormat(format, Locale.ENGLISH);
         try {
             Date date = new Date(dateMillis);
             //
@@ -82,14 +86,15 @@ public class DateUtil {
 
     /**
      * 获取指定时间所处于的时间段，具体参考enum DateTimeType分段描述
+     *
      * @param time
      * @return
      */
-    public static DateTimeType getDateTimeType(long time){
+    public static DateTimeType getDateTimeType(long time) {
         DateTimeType timeType = DateTimeType.Default;
         //现在时间
         long now = new Date().getTime();
-        long day=(60*60*24)*1000;
+        long day = (60 * 60 * 24) * 1000;
         //时间点比当天零点早
         if (time <= now) {
             Date date = new Date(time);
@@ -118,9 +123,10 @@ public class DateUtil {
 
     /**
      * 获取当天零点unix时间戳
+     *
      * @return
      */
-    private static long getTimesmorning(){
+    private static long getTimesmorning() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.SECOND, 0);
@@ -132,7 +138,7 @@ public class DateUtil {
     /**
      * 获取分秒的时间显示
      *
-     * @param t单位为妙
+     * @param t 单位为妙
      * @return
      */
     public static String getTime(long t) {
@@ -151,4 +157,58 @@ public class DateUtil {
         }
         return time;
     }
+
+    //=========================     Hardy   ============================
+    public static boolean isCurYear(Date timeStamp) {
+        int year = getCurYear(timeStamp);
+        int curYear = getCurYear();
+        return year == curYear;
+    }
+
+    public static int getCurYear(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static int getCurYear() {
+        return Calendar.getInstance().get(Calendar.YEAR);
+    }
+
+
+    public static String getCurYearDateString(long timeStamp) {
+        String val = "";
+        if (timeStamp <= 0) {
+            return val;
+        }
+
+        SimpleDateFormat simpleDateFormat = null;
+        Date timeStampDate = new Date(timeStamp);
+
+        if (isCurYear(timeStampDate)) {
+            simpleDateFormat = new SimpleDateFormat(FORMAT_SHOW_MONTH_DATE, Locale.ENGLISH);
+        } else {
+            simpleDateFormat = new SimpleDateFormat(FORMAT_SHOW_MONTH_YEAR_DATE, Locale.ENGLISH);
+        }
+
+        val = simpleDateFormat.format(timeStampDate);
+
+        return val;
+    }
+
+    public static String getYearDateString(long timeStamp) {
+        String val = "";
+        if (timeStamp <= 0) {
+            return val;
+        }
+
+        Date timeStampDate = new Date(timeStamp);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FORMAT_SHOW_MONTH_YEAR_DATE, Locale.ENGLISH);
+
+        val = simpleDateFormat.format(timeStampDate);
+
+        return val;
+    }
+    //=========================     Hardy   ============================
 }

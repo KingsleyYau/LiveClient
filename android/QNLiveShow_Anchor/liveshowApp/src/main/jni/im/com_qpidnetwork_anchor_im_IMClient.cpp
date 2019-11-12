@@ -413,6 +413,48 @@ public:
         ReleaseEnv(isAttachThread);
     }
 
+    /**
+     *  3.11.主播切换推流通知回调
+     *
+     *  @param pushUrl      推流地址
+     *  @param deviceType   终端类型
+     *
+     */
+    virtual void OnAnchorSwitchFlow(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const list<string> pushUrl, IMDeviceType deviceType) override{
+    		JNIEnv* env = NULL;
+    		bool isAttachThread = false;
+    		GetEnv(&env, &isAttachThread);
+    		FileLog(TAG, "OnAnchorSwitchFlow() callback, env:%p, isAttachThread:%d, reqId:%d, err:%d, errMsg:%s",
+    				env, isAttachThread, reqId, err, errMsg.c_str());
+
+    		//callback 回调
+    		if(NULL != gListener){
+    			jclass jCallbackCls = env->GetObjectClass(gListener);
+    			string signure = "(IZILjava/lang/String;";
+    			        signure += "[Ljava/lang/String;";   //  pushUrl
+    			        signure += "I";                     //  deviceType
+    			        signure += ")V";
+    			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnAnchorSwitchFlow", signure.c_str());
+    			if(NULL != jCallback){
+    				FileLog(TAG, "OnAnchorSwitchFlow() callback now");
+    				int errType = IMErrorTypeToInt(err);
+    				jstring jerrMsg = env->NewStringUTF(errMsg.c_str());
+    				jobjectArray jpushUrl = getJavaStringArray(env, pushUrl);
+    				jint jdeviceType = IMDeviceTypeToInt(deviceType);
+    				env->CallVoidMethod(gListener, jCallback, reqId, success, errType, jerrMsg, jpushUrl, jdeviceType);
+    				env->DeleteLocalRef(jerrMsg);
+    				if(NULL != jpushUrl){
+                        env->DeleteLocalRef(jpushUrl);
+                    }
+    				FileLog(TAG, "OnAnchorSwitchFlow() callback ok");
+    			} else {
+                    FileLog(TAG, "OnAnchorSwitchFlow() callback jCallback:%p, signure:%s", jCallback, signure.c_str());
+                }
+    		}
+
+    		ReleaseEnv(isAttachThread);
+    }
+
 
     // ------------- 直播间处理(消息) -------------
     // 4.1.发送直播间文本消息回调
@@ -714,28 +756,32 @@ public:
     }
 
     //9.1.主播发送立即私密邀请 回调
-    virtual void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId) override{
+    virtual void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const ZBIMSendInviteInfoItem& infoItem) override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
-		FileLog(TAG, "OnSendPrivateLiveInvite() callback, env:%p, isAttachThread:%d, reqId:%d, err:%d, errMsg:%s, invitationId:%s",
-				env, isAttachThread, reqId, err, errMsg.c_str(), invitationId.c_str());
+		FileLog(TAG, "OnSendPrivateLiveInvite() callback, env:%p, isAttachThread:%d, reqId:%d, err:%d, errMsg:%s,",
+				env, isAttachThread, reqId, err, errMsg.c_str());
 
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(IZILjava/lang/String;Ljava/lang/String;ILjava/lang/String;)V";
+			string signure = "(IZILjava/lang/String;";
+			        signure += "L";
+			        signure += IM_SENDINVITEINFO_ITEM_CLASS;
+			        signure += ";";
+			        signure += ")V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnSendImmediatePrivateInvite", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnSendPrivateLiveInvite() callback now");
 				int errType = IMErrorTypeToInt(err);
 				jstring jerrMsg = env->NewStringUTF(errMsg.c_str());
-				jstring jinviteId = env->NewStringUTF(invitationId.c_str());
-				jstring jroomId = env->NewStringUTF(roomId.c_str());
-				env->CallVoidMethod(gListener, jCallback, reqId, success, errType, jerrMsg, jinviteId, timeOut, jroomId);
+				jobject roomInfoItem = getIMSendInviteInfoItem(env, infoItem);
+				env->CallVoidMethod(gListener, jCallback, reqId, success, errType, jerrMsg, roomInfoItem);
 				env->DeleteLocalRef(jerrMsg);
-				env->DeleteLocalRef(jinviteId);
-				env->DeleteLocalRef(jroomId);
+				if(NULL != roomInfoItem){
+                	env->DeleteLocalRef(roomInfoItem);
+                }
 				FileLog(TAG, "OnSendPrivateLiveInvite() callback ok");
 			} else {
                 FileLog(TAG, "OnSendPrivateLiveInvite() callback jCallback:%p, signure:%s", jCallback, signure.c_str());
@@ -1652,7 +1698,90 @@ public:
         ReleaseEnv(isAttachThread);
     }
 
+	// ------------- 多端功能 -------------
+	/**
+     *  12.1.多端获取预约邀请未读或代处理数量同步推送接口 回调
+     *
+     *  @param item         未读信息
+     *
+     */
+    virtual void OnRecvGetScheduleListNReadNum(const ZBIMBookingUnreadUnhandleNumItem& item) override {
+            JNIEnv* env = NULL;
+            bool isAttachThread = false;
+            GetEnv(&env, &isAttachThread);
+            FileLog(TAG, "OnRecvGetScheduleListNReadNum() callback");
 
+            //callback 回调
+            if(NULL != gListener){
+                jclass jCallbackCls = env->GetObjectClass(gListener);
+                string signure = "(I";  // total
+                        signure += "I"; // pendingNum
+                        signure += "I"; // confirmedUnreadCount
+                        signure += "I"; // otherUnreadCount
+                        signure += ")V";
+                jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvGetScheduleListNReadNum", signure.c_str());
+                if(NULL != jCallback){
+                    FileLog(TAG, "OnRecvGetScheduleListNReadNum() callback now");
+                    env->CallVoidMethod(gListener, jCallback, item.totalNoReadNum, item.pendingNoReadNum, item.scheduledNoReadNum, item.historyNoReadNum);
+
+                    FileLog(TAG, "OnRecvGetScheduleListNReadNum() callback ok");
+                }else {
+                    FileLog(TAG, "OnRecvGetScheduleListNReadNum() callback jCallback:%p, signure:%s", jCallback, signure.c_str());
+                }
+            }
+
+            ReleaseEnv(isAttachThread);
+    }
+
+    virtual void OnRecvGetScheduledAcceptNum(int scheduleNum) override {
+            JNIEnv* env = NULL;
+            bool isAttachThread = false;
+            GetEnv(&env, &isAttachThread);
+            FileLog(TAG, "OnRecvGetScheduledAcceptNum() callback scheduleNum:%d", scheduleNum);
+
+            //callback 回调
+            if(NULL != gListener){
+                jclass jCallbackCls = env->GetObjectClass(gListener);
+                string signure = "(I";  // scheduleNum
+                        signure += ")V";
+                jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvGetScheduledAcceptNum", signure.c_str());
+                if(NULL != jCallback){
+                    FileLog(TAG, "OnRecvGetScheduledAcceptNum() callback now");
+                    env->CallVoidMethod(gListener, jCallback, scheduleNum);
+
+                    FileLog(TAG, "OnRecvGetScheduledAcceptNum() callback ok");
+                }else {
+                    FileLog(TAG, "OnRecvGetScheduledAcceptNum() callback jCallback:%p, signure:%s", jCallback, signure.c_str());
+                }
+            }
+
+            ReleaseEnv(isAttachThread);
+    }
+
+    virtual void OnRecvNoreadShowNum(int num) override {
+            JNIEnv* env = NULL;
+            bool isAttachThread = false;
+            GetEnv(&env, &isAttachThread);
+            FileLog(TAG, "OnRecvNoreadShowNum() callback num:%d", num);
+
+            //callback 回调
+            if(NULL != gListener){
+                jclass jCallbackCls = env->GetObjectClass(gListener);
+                string signure = "(I";  // num
+                        signure += ")V";
+                jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvNoreadShowNum", signure.c_str());
+                if(NULL != jCallback){
+                    FileLog(TAG, "OnRecvNoreadShowNum() callback now");
+                    env->CallVoidMethod(gListener, jCallback, num);
+
+                    FileLog(TAG, "OnRecvNoreadShowNum() callback ok");
+                }else {
+                    FileLog(TAG, "OnRecvNoreadShowNum() callback jCallback:%p, signure:%s", jCallback, signure.c_str());
+                }
+            }
+
+            ReleaseEnv(isAttachThread);
+    }
 };
 
 static IMClientListener g_listener;
@@ -1852,6 +1981,23 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_anchor_im_IMClient_RoomOut
 
 /*
  * Class:     com_qpidnetwork_anchor_im_IMClient
+ * Method:    AnchorSwitchFlow
+ * Signature: (ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_anchor_im_IMClient_AnchorSwitchFlow
+  (JNIEnv *env, jclass cls, jint reqId, jstring roomId, jint deviceType) {
+ 	bool result = false;
+ 	if(NULL != g_ImClient){
+ 		string strRoomId = JString2String(env, roomId);
+ 		IMDeviceType jdeviceType = IntToIMDeviceType(deviceType);
+ 		FileLog(TAG, "AnchorSwitchFlow() reqId: %d, roomId:%s, deviceType:%d, jdeviceType:%d", reqId, strRoomId.c_str(), deviceType, jdeviceType);
+ 		result = g_ImClient->ZBAnchorSwitchFlow(reqId, strRoomId, jdeviceType);
+ 	}
+ 	return result;
+ }
+
+/*
+ * Class:     com_qpidnetwork_anchor_im_IMClient
  * Method:    SendRoomMsg
  * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
  */
@@ -1915,7 +2061,7 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_anchor_im_IMClient_SendImmediate
 	if(NULL != g_ImClient){
 		string strUserId = JString2String(env, userId);
         FileLog(TAG, "SendImmediatePrivateInvite() reqId: %d, userId:%s", reqId, strUserId.c_str());
-		result = g_ImClient->ZBSendPrivateLiveInvite(reqId, strUserId);
+		result = g_ImClient->ZBSendPrivateLiveInvite(reqId, strUserId, IMDEVICETYPE_APP);
 	}
 	return result;
 }

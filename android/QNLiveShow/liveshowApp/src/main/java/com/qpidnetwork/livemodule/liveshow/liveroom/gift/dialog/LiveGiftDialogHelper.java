@@ -154,4 +154,24 @@ public class LiveGiftDialogHelper {
             mGiftId = "";
         }
     }
+
+    //==========================    2019/09/04 Hardy ================================
+    private boolean isPackageListSuccess;
+    private boolean isSendableListSuccess;
+
+    public boolean isPackageListSuccess() {
+        return isPackageListSuccess;
+    }
+
+    public void setPackageListSuccess(boolean packageListSuccess) {
+        isPackageListSuccess = packageListSuccess;
+    }
+
+    public boolean isSendableListSuccess() {
+        return isSendableListSuccess;
+    }
+
+    public void setSendableListSuccess(boolean sendableListSuccess) {
+        isSendableListSuccess = sendableListSuccess;
+    }
 }

@@ -96,9 +96,9 @@ public class RoomThemeManager {
         int txtColor = 0;
         if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
                 || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            txtColor = Color.parseColor("#297AF3");
+            txtColor = Color.parseColor("#FFFFFF");
         }else{
-            txtColor = Color.parseColor("#FF6D00");
+            txtColor = Color.parseColor("#FFFFFF");
         }
         return txtColor;
     }
@@ -283,4 +283,122 @@ public class RoomThemeManager {
 
         return drawable;
     }
+
+    //----------------------------- 全屏直播间样式 start -------------------------------
+
+    /**
+     * 全屏直播间--我的相关系统信息--背景
+     * @param context
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getFullScreenRoomMineSysMsgItemBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_mine_sys_msg);
+        }else{
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_mine_sys_msg);
+        }
+        return drawable;
+    }
+
+    /**
+     * 全屏直播间--普通信息--背景
+     * @param context
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getFullScreenRoomNorMsgItemBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_nor_msg);
+        }else{
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_nor_msg);
+        }
+        return drawable;
+    }
+
+    /**
+     * 全屏直播间--警告信息--背景
+     * @param context
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getFullScreenRoomWarningMsgItemBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_warning_msg);
+        }else{
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_warning_msg);
+        }
+        return drawable;
+    }
+
+    /**
+     * 全屏直播间--警告信息--背景
+     * @param context
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getFullScreenRoomNickNameBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType, boolean isAnchor){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            if(isAnchor){
+                drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_art_nick_name_bg);
+            }else{
+                drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_men_nick_name_bg);
+            }
+
+        }else{
+            if(isAnchor){
+                drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_art_nick_name_bg);
+            }else{
+                drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_men_nick_name_bg);
+            }
+        }
+        return drawable;
+    }
+
+    /**
+     * 全屏直播间--消息列表--试聊卷资源id
+     * @param liveRoomType
+     * @return
+     */
+//    public int getFullScreenRoomVoucherMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
+//        int strResId = 0;
+//        if(null != liveRoomType){
+//            if(liveRoomType == IMRoomInItem.IMLiveRoomType.PaidPublicRoom
+//                    || liveRoomType == IMRoomInItem.IMLiveRoomType.FreePublicRoom){
+//                //公开直播间
+//                strResId = R.string.livemsg_voucher_private;
+//            }else{
+//                //私密直播间
+//                strResId = R.string.livemsg_voucher_private;
+//            }
+//        }
+//        return strResId;
+//    }
+
+    /**
+     * 全屏直播间--消息列表--试聊卷背景
+     * @param context
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getFullScreenRoomVoucherMsgItemBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_voucher_msg);
+        }else{
+            drawable=context.getResources().getDrawable(R.drawable.bg_full_screen_item_4_voucher_msg);
+        }
+        return drawable;
+    }
+
+    //----------------------------- 全屏直播间样式 end -------------------------------
 }

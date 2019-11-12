@@ -841,7 +841,7 @@
     self.roomStyleItem.announceStrColor = Color(255, 109, 0, 1);
     self.roomStyleItem.riderStrColor = Color(255, 109, 0, 1);
     self.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
-    self.roomStyleItem.textBackgroundViewColor = Color(191, 191, 191, 0.17);
+    self.roomStyleItem.sendBackgroundViewColor = Color(191, 191, 191, 0.17);
 }
 
 #pragma mark - 初始化多功能按钮
@@ -1264,9 +1264,8 @@
             MsgTableViewCell *msgCell = [tableView dequeueReusableCellWithIdentifier:[MsgTableViewCell cellIdentifier]];
             msgCell.clipsToBounds = YES;
             msgCell.msgDelegate = self;
-            [msgCell setTextBackgroundViewColor:self.roomStyleItem];
-            [msgCell changeMessageLabelWidth:tableView.frame.size.width];
-            [msgCell updataChatMessage:item];
+//            [msgCell changeMessageLabelWidth:tableView.frame.size.width];
+            [msgCell updataChatMessage:item styleItem:self.roomStyleItem];
             cell = msgCell;
         }
         
@@ -1506,6 +1505,14 @@
             obj.anchorId = self.inviteAnchorId;
             obj.nickName = self.inviteAnchorName;
             [liverVC sendHangoutInvite:obj];
+            
+            // 将分配窗口移除空闲队列 并添加进窗口分发字典
+            @synchronized(self.hangoutArray) {
+                [self.hangoutArray removeObjectAtIndex:0];
+            }
+            @synchronized(self.hangoutDic) {
+                [self.hangoutDic setObject:liverVC forKey:obj.anchorId];
+            }
         }
     }
 }
@@ -2161,13 +2168,13 @@
 // 请求账号余额
 - (void)getLeftCreditRequest {
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit, int coupon, double postStamp) {
-        NSLog(@"HangOutViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon:%d, postStamp:%f)", success, (long)errnum, errmsg, credit, coupon, postStamp);
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSLeftCreditItemObject *_Nonnull item){
+        NSLog(@"HangOutViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon:%d, postStamp:%f, livechatCount:%d)", success, (long)errnum, errmsg, item.credit, item.coupon, item.postStamp, item.liveChatCount);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (success) {
-                [self.creditView userCreditChange:credit];
-                [self.creditManager setCredit:credit];
+                [self.creditView userCreditChange:item.credit];
+                [self.creditManager setCredit:item.credit];
             } else {
             }
         });

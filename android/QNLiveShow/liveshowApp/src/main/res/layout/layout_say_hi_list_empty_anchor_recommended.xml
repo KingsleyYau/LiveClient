@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/layout_say_hi_list_empty_iv_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/layout_say_hi_list_empty_iv_online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_10dp"
+        android:layout_marginLeft="@dimen/live_size_10dp"
+        android:src="@drawable/ic_livetype_room_online" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="86dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_say_hi_list_empty_gradient" />
+
+    <TextView
+        android:id="@+id/layout_say_hi_list_empty_iv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="@dimen/live_size_10dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_16sp"
+        tools:text="MaryMaryMaryMaryMaryMary" />
+</FrameLayout>

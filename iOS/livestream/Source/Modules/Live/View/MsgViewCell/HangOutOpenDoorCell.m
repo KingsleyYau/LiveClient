@@ -77,7 +77,7 @@
 }
 
 + (NSString *)cellIdentifier {
-    return @"HangOutOpenDoorCell";
+    return NSStringFromClass([self class]);
 }
 
 @end

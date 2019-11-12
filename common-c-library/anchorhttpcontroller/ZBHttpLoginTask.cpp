@@ -19,6 +19,7 @@ ZBHttpLoginTask::ZBHttpLoginTask() {
     mDeviceId = "";
     mModel = "";
     mManufacturer = "";
+    mDeviceName = "";
 }
 
 ZBHttpLoginTask::~ZBHttpLoginTask() {
@@ -35,7 +36,8 @@ void ZBHttpLoginTask::SetParam(
                                string code,
                                string deviceid,
                                string model,
-                               string manufacturer
+                               string manufacturer,
+                               string deviceName
                                    ) {
     
     //	char temp[16];
@@ -72,16 +74,22 @@ void ZBHttpLoginTask::SetParam(
         mHttpEntiy.AddContent(LADYLOGIN_MANUFACTURER, manufacturer.c_str());
         mManufacturer = manufacturer;
     }
+    
+    if( deviceName.length() > 0 ) {
+        mHttpEntiy.AddContent(LADYLOGIN_DEVICENAME, deviceName.c_str());
+        mDeviceName = deviceName;
+    }
 
 	FileLog(LIVESHOW_HTTP_LOG,
             "ZBHttpLoginTask::SetParam( "
             "task : %p, "
-            "anchorId : %s"
-            "password : %s "
-            "code : %s "
-            "deviceid : %s "
-            "model : %s "
-            "manufacturer : %s "
+            "anchorId : %s, "
+            "password : %s, "
+            "code : %s, "
+            "deviceid : %s, "
+            "model : %s, "
+            "manufacturer : %s, "
+            "deviceName : %s "
             ")",
             this,
             anchorId.c_str(),
@@ -89,7 +97,8 @@ void ZBHttpLoginTask::SetParam(
             code.c_str(),
             deviceid.c_str(),
             model.c_str(),
-            manufacturer.c_str()
+            manufacturer.c_str(),
+            deviceName.c_str()
             );
 }
 

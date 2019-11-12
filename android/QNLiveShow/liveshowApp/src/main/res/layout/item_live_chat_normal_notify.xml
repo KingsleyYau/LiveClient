@@ -17,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:text="@string/live_chat_price_info"
+        android:text="@string/live_chat_charge_terms"
         android:id="@+id/tvNotifyMsg"
         android:textColor="@color/text_color_grey"
         android:textSize="14sp"/>

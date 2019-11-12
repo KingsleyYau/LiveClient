@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:orientation="vertical">
+
+    <!--  头部  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_virtual_gift_store_pink_gradient"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="3" />
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_virtual_gift_small"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/virtual_gift_store_text_yellow"
+            android:textSize="@dimen/live_size_16sp"
+            android:text="@string/Virtual_Gift_Store"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp" />
+
+        <ImageView
+            android:id="@+id/dialog_live_virtual_gift_iv_question"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/ic_virtual_gift_question_pink" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="2" />
+
+        <ImageView
+            android:id="@+id/dialog_live_virtual_gift_iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_virtual_gift_collect_yellow"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
+
+    <!--  Tab 标签  -->
+    <com.flyco.tablayout.SlidingTabLayout
+        android:id="@+id/dialog_live_virtual_gift_tab"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_live_virtual_gift_dialog_yellow_gradient"
+        android:paddingLeft="@dimen/live_size_10dp"
+        android:paddingRight="@dimen/live_size_10dp"
+        app:tl_textBold="BOTH"
+        app:tl_indicator_style="BLOCK"
+        app:tl_indicator_margin_left="2dp"
+        app:tl_indicator_margin_right="2dp"
+        app:tl_indicator_color="@color/virtual_gift_dialog_bg_color"
+        app:tl_textSelectColor="@color/virtual_gift_dialog_tab_un_select_color"
+        app:tl_textUnselectColor="@color/virtual_gift_dialog_bg_color"
+        app:tl_textsize="@dimen/live_size_14sp"
+        />
+
+    <!--  礼物列表  -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/dialog_live_virtual_gift_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="215dp"
+        android:background="@color/virtual_gift_dialog_bg_color"
+        />
+
+</LinearLayout>

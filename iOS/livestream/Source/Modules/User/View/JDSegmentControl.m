@@ -46,7 +46,7 @@
         noNumUnreadlabel.textColor = [UIColor whiteColor];
         noNumUnreadlabel.textAlignment = NSTextAlignmentCenter;
         noNumUnreadlabel.font = [UIFont systemFontOfSize:9];
-        noNumUnreadlabel.layer.cornerRadius = label.frame.size.height/2.0f;
+        noNumUnreadlabel.layer.cornerRadius = noNumUnreadlabel.frame.size.height/2.0f;
         noNumUnreadlabel.layer.masksToBounds = YES;
         noNumUnreadlabel.hidden = YES;
         _noNumUnreadlabel = noNumUnreadlabel;
@@ -65,6 +65,7 @@
 {
     if ([count intValue] == 0) {
         _unreadLabel.hidden = YES;
+        _noNumUnreadlabel.hidden = YES;
     }else if ([count intValue] < 0){
         _noNumUnreadlabel.hidden = NO;
         _noNumUnreadlabel.frame = CGRectMake(self.frame.size.width - 15, 5, 8, 8);

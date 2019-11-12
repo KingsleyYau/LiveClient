@@ -5,6 +5,7 @@
 
 package com.qpidnetwork.qnbridgemodule.view.camera;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.hardware.Camera;
@@ -21,6 +22,8 @@ import com.qpidnetwork.qnbridgemodule.util.Log;
 import java.util.List;
 
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback, PictureCallback {
+
+    private static final String TAG = "CameraView";
 
     private Camera camera;
     private List<Size> supportedPreviewSizes;
@@ -39,6 +42,12 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, P
     // 2019/4/23 Hardy
     private Size pictureSize;       // 后置摄像头的输出图片大小
     private Size frontPictureSize;  // 前置摄像头的输出图片大小
+
+    // 2019/5/22 Hardy  相机的旋转方向
+    private static final int DISPLAY_ORIENTATION_FAILED = -1;
+    private int mBackDisplayOrientation = DISPLAY_ORIENTATION_FAILED;
+    private int mFrontDisplayOrientation = DISPLAY_ORIENTATION_FAILED;
+
 
     public static interface OnCameraChangedListener {
         public void onCameraChanged(int cameraIndex);
@@ -176,7 +185,11 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, P
 
 
         try {
-            camera.setDisplayOrientation(90);
+//            camera.setDisplayOrientation(90);
+            // 2019/5/22 Hardy
+            // 解决华为 6p 前置摄像头上下翻转的问题
+            setCameraDisplayOrientation(currentCamera, camera);
+
             camera.setParameters(param);
             camera.setPreviewDisplay(getHolder());
             camera.startPreview();
@@ -188,10 +201,11 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, P
 
     /**
      * 获取照片的输出大小
+     *
      * @param list
      * @return
      */
-    private Size getCurPictureSize(List<Size> list){
+    private Size getCurPictureSize(List<Size> list) {
         // 获取需求自定义的宽高比例
         Size pictureSize = CameraSizeUtil.getInstance().getPictureSizeForSpecifiedPx(list, 1920);
 
@@ -287,7 +301,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, P
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.i("info","----------surfaceCreated");
+        Log.i("info", "----------surfaceCreated");
         try {
             startCameraPreview();
         } catch (Exception e) {
@@ -297,7 +311,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, P
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.i("info","----------surfaceDestroyed");
+        Log.i("info", "----------surfaceDestroyed");
         releaseCamera();
     }
 
@@ -339,6 +353,49 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, P
         }
         return optimalSize;
     }
+
+
+    //===============   2019/05/22  Hardy   解决摄像头翻转问题=========================================
+    private void setCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {
+        int result;
+
+        if (cameraId == backCamera) {
+            if (mBackDisplayOrientation == DISPLAY_ORIENTATION_FAILED) {
+                mBackDisplayOrientation = CameraUtil.getCameraDisplayOrientation(((Activity) getContext()), cameraId);
+            }
+
+            result = mBackDisplayOrientation;
+        } else {
+            if (mFrontDisplayOrientation == DISPLAY_ORIENTATION_FAILED) {
+                mFrontDisplayOrientation = CameraUtil.getCameraDisplayOrientation(((Activity) getContext()), cameraId);
+            }
+
+            result = mFrontDisplayOrientation;
+        }
+
+        camera.setDisplayOrientation(result);
+    }
+
+    public int getImageOrientation() {
+        int result;
+
+        if (currentCamera == backCamera) {
+            if (mBackDisplayOrientation == DISPLAY_ORIENTATION_FAILED) {
+                mBackDisplayOrientation = CameraUtil.getCameraDisplayOrientation(((Activity) getContext()), currentCamera);
+            }
+
+            result = mBackDisplayOrientation;
+        } else {
+            if (mFrontDisplayOrientation == DISPLAY_ORIENTATION_FAILED) {
+                mFrontDisplayOrientation = CameraUtil.getCameraDisplayOrientation(((Activity) getContext()), currentCamera);
+            }
+
+            result = -mFrontDisplayOrientation;     // 前置摄像头，为负数
+        }
+
+        return result;
+    }
+    //===============   2019/05/22  Hardy   解决摄像头翻转问题=========================================
 
 
 }

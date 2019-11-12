@@ -92,11 +92,6 @@ public class ScheduleInviteManager {
                 Log.d(TAG,"onGetCountOfUnreadAndPendingInvite-isSuccess:"+isSuccess+" errCode:"+errCode
                         +" errMsg:"+errMsg+" total:"+total+" pendingNum:"+pendingNum
                         +" confirmedUnreadCount:"+confirmedUnreadCount+" otherUnreadCount:"+otherUnreadCount);
-                if(isSuccess){
-                    mScheduleInviteUnreadItem = new ScheduleInviteUnreadItem(total, pendingNum,
-                            confirmedUnreadCount, otherUnreadCount);
-                    onScheduleUnreadCallback();
-                }
             }
         });
     }
@@ -110,12 +105,33 @@ public class ScheduleInviteManager {
             public void onGetScheduledAcceptNum(boolean isSuccess, int errCode, String errMsg, int scheduledNum) {
                 Log.d(TAG,"onGetScheduledAcceptNum-isSuccess:"+isSuccess+" errCode:"+errCode
                         +" errMsg:"+errMsg+" scheduledNum:"+ String.valueOf(scheduledNum));
-                if(isSuccess){
-                    mScheduleInviteCount = scheduledNum;
-                    onScheduleUnreadCallback();
-                }
             }
         });
+    }
+
+    /**
+     * 刷新预约邀请未读或待处理数量通知及回调处理
+     * @param total
+     * @param pendingNum
+     * @param confirmedUnreadCount
+     * @param otherUnreadCount
+     */
+    public void onRecvGetScheduleListNReadNumSuccess(int total, int pendingNum, int confirmedUnreadCount, int otherUnreadCount){
+        Log.d(TAG,"onGetCountOfUnreadAndPendingInvite-total:"+total+" pendingNum:"+pendingNum
+                +" confirmedUnreadCount:"+confirmedUnreadCount+" otherUnreadCount:"+otherUnreadCount);
+        mScheduleInviteUnreadItem = new ScheduleInviteUnreadItem(total, pendingNum,
+                confirmedUnreadCount, otherUnreadCount);
+        onScheduleUnreadCallback();
+    }
+
+    /**
+     * 刷新获取已确认预约数处理
+     * @param scheduleNum
+     */
+    public void onRecvGetScheduledAcceptNumSuccess(int scheduleNum) {
+        Log.d(TAG,"onGetScheduledAcceptNum-scheduledNum:"+ String.valueOf(scheduleNum));
+        mScheduleInviteCount = scheduleNum;
+        onScheduleUnreadCallback();
     }
 
     /**

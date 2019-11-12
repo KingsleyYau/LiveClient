@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <!-- 背景不随软键盘切换部分：视频播放view-->
     <com.qpidnetwork.anchor.view.LiveRoomScrollView
         android:id="@+id/lrsv_roomBody"

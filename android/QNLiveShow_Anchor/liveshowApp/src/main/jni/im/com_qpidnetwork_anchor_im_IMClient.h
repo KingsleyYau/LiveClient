@@ -84,6 +84,14 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_anchor_im_IMClient_RoomOut
 
 /*
  * Class:     com_qpidnetwork_anchor_im_IMClient
+ * Method:    AnchorSwitchFlow
+ * Signature: (ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_anchor_im_IMClient_AnchorSwitchFlow
+  (JNIEnv *, jclass, jint, jstring, jint);
+
+/*
+ * Class:     com_qpidnetwork_anchor_im_IMClient
  * Method:    SendRoomMsg
  * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
  */

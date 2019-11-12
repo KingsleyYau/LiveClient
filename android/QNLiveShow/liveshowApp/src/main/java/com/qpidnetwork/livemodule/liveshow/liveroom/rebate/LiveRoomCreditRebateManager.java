@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.rebate;
 
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
@@ -134,18 +135,29 @@ public class LiveRoomCreditRebateManager {
     }
     //=============== 2018/09/27  Hardy   ==========================
 
+    private int liveChatCount;
+
+    public int getLiveChatCount() {
+        return liveChatCount;
+    }
+
+    public void setLiveChatCount(int liveChatCount) {
+        this.liveChatCount = liveChatCount;
+    }
+
     //=============== 2019/04/17  Hardy   ==========================
     public void loadCredits(final OnGetAccountBalanceCallback mCallback) {
         LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance, final int coupon) {
-                if (isSuccess) {
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, LSLeftCreditItem creditItem) {
+                if (isSuccess && creditItem != null) {
                     // 更新本地信用点
-                    setCredit(balance);
-                    setCoupon(coupon);
+                    setCredit(creditItem.balance);
+                    setCoupon(creditItem.coupon);
+                    setLiveChatCount(creditItem.liveChatCount);
 
                     if (mCallback != null) {
-                        mCallback.onGetAccountBalance(isSuccess, errCode, errMsg, balance, coupon);
+                        mCallback.onGetAccountBalance(isSuccess, errCode, errMsg, creditItem);
                     }
                 }
             }

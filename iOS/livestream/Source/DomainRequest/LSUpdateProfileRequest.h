@@ -41,8 +41,8 @@
 @property (nonatomic,assign) int children;
 @property (nonatomic,assign) int smoke;
 @property (nonatomic,assign) int drink;
-@property (nonatomic,strong) NSString * _Nullable resume;
+@property (nonatomic,strong) NSString * resume;
 @property (nonatomic,strong) NSArray *interests;
 @property (nonatomic, assign) int zodiac;
-@property (nonatomic, strong) UpdateProfileFinishHandler _Nullable finishHandler;
+@property (nonatomic, strong) UpdateProfileFinishHandler finishHandler;
 @end

@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by Hunter on 18/6/20.
  */
 
-public class RoomSendableGiftManager implements GiftRecommandManager.OnGiftRecommandListener {
+public class RoomSendableGiftManager{
 
     private final String TAG = RoomSendableGiftManager.class.getSimpleName();
     private static final int EVENT_GET_ALL_GIFT_CONFIG = 0;
@@ -36,16 +37,11 @@ public class RoomSendableGiftManager implements GiftRecommandManager.OnGiftRecom
     private IMRoomInItem mIMRoomInItem;                         //可发送列表所属房间Id
     private Handler mHandler;                       //线程转换
 
-    //直播间推荐启动逻辑，当获取可发送列表成功启动
-    private GiftRecommandManager mGiftRecommandManager;
-    private GiftRecommandManager.OnGiftRecommandListener mOnGiftRecommandListener;
-
+    @SuppressLint("HandlerLeak")
     public RoomSendableGiftManager(IMRoomInItem imRoomInItem){
         this.mIMRoomInItem = imRoomInItem;
         mOnGetSendableGiftListCallbackList = new ArrayList<OnGetSendableGiftListCallback>();
         mSendabelMap = new HashMap<String, SendableGiftItem>();
-        mGiftRecommandManager = new GiftRecommandManager(this);
-        mGiftRecommandManager.setRecommandListener(this);
         mHandler =  new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -75,13 +71,6 @@ public class RoomSendableGiftManager implements GiftRecommandManager.OnGiftRecom
                             }
                             //获取可发送列表成功，检测是否在配置中包含详情，否则同步详情
                             checkGiftDetail(sendableGiftItems);
-
-                            //获取可发送列表成功且不为空且当前直播间为私密直播间, 启动推荐逻辑
-                            if(null != mIMRoomInItem && (mIMRoomInItem.roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
-                                    || mIMRoomInItem.roomType == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom) &&
-                                    mSendableGiftItemArray != null && mSendableGiftItemArray.length > 0){
-                                mGiftRecommandManager.startRecommand();
-                            }
                         }
                         distributeGetAllGiftCallback(response.isSuccess, response.errCode, response.errMsg, sendableGiftItems);
                     }break;
@@ -113,6 +102,27 @@ public class RoomSendableGiftManager implements GiftRecommandManager.OnGiftRecom
             }
         }
         return sendableGiftItems;
+    }
+
+    public List<GiftItem> getLocalRecommandGiftList(){
+        List<GiftItem> giftList = new ArrayList<GiftItem>();
+        NormalGiftManager normalGiftManager = NormalGiftManager.getInstance();
+        if(mSendableGiftItemArray != null && mIMRoomInItem != null && mSendableGiftItemArray.length > 0){
+            for(SendableGiftItem item : mSendableGiftItemArray){
+                if(item != null) {
+                    GiftItem giftItemDetail = normalGiftManager.getLocalGiftDetail(item.giftId);
+                    if (giftItemDetail != null && item.isVisible && item.isPromo && giftItemDetail.lovelevelLimit <= mIMRoomInItem.loveLevel
+                            && giftItemDetail.levelLimit <= mIMRoomInItem.manLevel) {
+                        giftList.add(giftItemDetail);
+                    }
+                }
+                if(giftList.size() >= 5){
+                    //最多只要5个
+                    break;
+                }
+            }
+        }
+        return giftList;
     }
 
     /**
@@ -265,26 +275,17 @@ public class RoomSendableGiftManager implements GiftRecommandManager.OnGiftRecom
         }
     }
 
-    /**
-     * 设置推荐监听器
-     * @param listener
-     */
-    public void setOnGiftRecommandListener(GiftRecommandManager.OnGiftRecommandListener listener){
-        mOnGiftRecommandListener = listener;
-    }
-
-    @Override
-    public void onGiftRecommand(GiftItem giftItem) {
-        if(mOnGiftRecommandListener != null){
-            mOnGiftRecommandListener.onGiftRecommand(giftItem);
-        }
-    }
-
     //回收定时器等数据
     public void onDestroy(){
-        if(null != mGiftRecommandManager){
-            mGiftRecommandManager.setRecommandListener(null);
-            mGiftRecommandManager.stopRecommand();
+
+    }
+
+    //***************************** 2019/9/3    Hardy   ************************************
+
+    public SendableGiftItem getSendableGiftItem(String giftId){
+        if(!TextUtils.isEmpty(giftId) && mSendabelMap.containsKey(giftId)){
+            return mSendabelMap.get(giftId);
         }
+        return null;
     }
 }

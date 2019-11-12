@@ -359,6 +359,14 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChat
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChatClient_CamshareUseTryTicket
   (JNIEnv *, jclass, jstring, jstring);
 
+/*
+ * Class:     com_qpidnetwork_livechat_jni_LiveChatClient
+ * Method:    SendInviteMessage
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChatClient_SendInviteMessage
+  (JNIEnv *, jclass, jstring, jstring, jstring);
+
 #ifdef __cplusplus
 }
 #endif

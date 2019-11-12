@@ -34,6 +34,7 @@
 //        self.liveChatInviteRiskType = [coder decodeIntForKey:@"liveChatInviteRiskType"];
 //        self.mailPriv = [coder decodeObjectForKey:@"mailPriv"];
         self.userPriv = [coder decodeObjectForKey:@"userPriv"];
+        self.isGiftFlowerSwitch = [coder decodeBoolForKey:@"isGiftFlowerSwitch"];
     }
     return self;
 }
@@ -58,6 +59,7 @@
 //    [coder encodeInt:self.liveChatInviteRiskType forKey:@"liveChatInviteRiskType"];
 //    [coder encodeObject:self.mailPriv forKey:@"mailPriv"];
     [coder encodeObject:self.userPriv forKey:@"userPriv"];
+    [coder encodeBool:self.isGiftFlowerSwitch forKey:@"isGiftFlowerSwitch"];
 }
 
 @end

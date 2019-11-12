@@ -25,7 +25,6 @@
         android:paddingRight="13dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:visibility="gone"
         android:layout_gravity="right"
         android:src="@drawable/ic_public_trans_switch_camera"/>
 

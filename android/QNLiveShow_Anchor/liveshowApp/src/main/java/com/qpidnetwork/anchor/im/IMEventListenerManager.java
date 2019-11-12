@@ -16,6 +16,7 @@ import com.qpidnetwork.anchor.im.listener.IMRecvEnterRoomItem;
 import com.qpidnetwork.anchor.im.listener.IMRecvHangoutGiftItem;
 import com.qpidnetwork.anchor.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
+import com.qpidnetwork.anchor.im.listener.IMSendInviteInfoItem;
 import com.qpidnetwork.anchor.utils.Log;
 
 import java.util.ArrayList;
@@ -543,6 +544,16 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
+	public void OnAnchorSwitchFlow(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMClientListener.IMDeviceType deviceType) {
+		synchronized(mIMInviteLaunchListeners){
+			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
+				IMInviteLaunchEventListener listener = iter.next();
+				listener.OnAnchorSwitchFlow(reqId, success, errType, errMsg, pushUrl, deviceType);
+			}
+		}
+	}
+
+	@Override
 	public void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
@@ -553,11 +564,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMSendInviteInfoItem inviteInfoItem) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, invitationId, timeout, roomId);
+				listener.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, inviteInfoItem);
 			}
 		}		
 	}

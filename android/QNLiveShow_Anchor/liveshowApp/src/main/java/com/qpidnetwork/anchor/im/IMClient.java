@@ -83,6 +83,18 @@ public class IMClient {
 	static public native boolean RoomOut(int reqId, String roomId);
 
 	/**
+	 * 3.11. 主播切换推流
+	 * @param reqId			请求序列号
+	 * @param roomId		直播间ID
+	 * @param deviceType	终端类型
+	 * @return
+	 */
+	static public boolean AnchorSwitchFlow(int reqId, String roomId, IMClientListener.IMDeviceType deviceType) {
+		return AnchorSwitchFlow(reqId, roomId, deviceType.ordinal());
+	}
+	static protected native boolean AnchorSwitchFlow(int reqId, String roomId, int deviceType);
+
+	/**
 	 * 4.1. 发送直播间文本消息
 	 * @param reqId
 	 * @param roomId

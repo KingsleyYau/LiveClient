@@ -492,4 +492,11 @@
 
 - (void)onTokenOverTimeHandler:(NSString* _Nonnull)errMsg;
 
+/**
+ *  接收发送邀请语回调
+ *
+ *  @param msg 消息
+ */
+- (void)onRecvAutoInviteMsg:(LSLCLiveChatMsgItemObject *_Nonnull)msg;
+
 @end

@@ -45,8 +45,10 @@
     MailTableViewCell *cell = [MailTableViewCell getUITableViewCell:tableView];
     if (self.mailType == LSEMFTYPE_OUTBOX) {
         [cell updataOutBoxMailCell:item];
-    }else {
-        [cell updataMailCell:item];
+    }else if (self.mailType == LSEMFTYPE_INBOX) {
+        [cell updataMailCell:item type:MAIL_INBOX];
+    } else {
+        [cell updataMailCell:item type:MAIL_GREETING];
     }
 
     tableViewCell = cell;
@@ -55,7 +57,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (self.items.count > 0) {
          LSHttpLetterListItemObject *obj = [self.items objectAtIndex:indexPath.row];
         if ([self.mailDelegate respondsToSelector:@selector(tableView:cellDidSelectRowAtIndexPath:index:)]) {

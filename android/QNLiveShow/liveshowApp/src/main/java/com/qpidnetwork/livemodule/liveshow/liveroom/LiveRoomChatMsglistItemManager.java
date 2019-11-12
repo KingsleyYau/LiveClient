@@ -143,7 +143,6 @@ public class LiveRoomChatMsglistItemManager {
                      * 把 IMMessageItem 转化为 LiveRoomMsgListItem 回调出去
                      * @param imMessageItems
                      * @return
-                     * @throws Exception
                      */
                     @Override
                     public List<LiveRoomMsgListItem> apply(List<IMMessageItem> imMessageItems) throws Exception {
@@ -555,20 +554,20 @@ public class LiveRoomChatMsglistItemManager {
                 final Obj4DownloadRefresh obj4DownloadRefresh = new Obj4DownloadRefresh(msgListItem , htmlStr);
                 //检测礼物小图片存在与否，不存在自动下载，重新生成Spanned
                 NormalGiftManager.getInstance().getGiftImageEx(msgListItem.imMessageItem.giftMsgContent.giftId,
-                    GiftImageType.MsgListIcon, new IFileDownloadedListener() {
+                        GiftImageType.MsgListIcon, new IFileDownloadedListener() {
 
-                        @Override
-                        public void onCompleted(boolean isDownloadSuccess, String localFilePath, String fileUrl) {
-                            if(isDownloadSuccess && obj4DownloadRefresh.mLiveRoomMsgListItem != null){
-                                obj4DownloadRefresh.mLiveRoomMsgListItem.spanned = HtmlSpannedHandler.getLiveRoomMsgHTML(mBuilder ,
-                                        obj4DownloadRefresh.mHtmlStr,true);
+                            @Override
+                            public void onCompleted(boolean isDownloadSuccess, String localFilePath, String fileUrl) {
+                                if(isDownloadSuccess && obj4DownloadRefresh.mLiveRoomMsgListItem != null){
+                                    obj4DownloadRefresh.mLiveRoomMsgListItem.spanned = HtmlSpannedHandler.getLiveRoomMsgHTML(mBuilder ,
+                                            obj4DownloadRefresh.mHtmlStr,true);
 
-                                //add by Jagger 2019-3-28 通知列表刷新
-                                if(mOnMsgItemSpannedListener != null){
-                                    mOnMsgItemSpannedListener.onRefreshList();
+                                    //add by Jagger 2019-3-28 通知列表刷新
+                                    if(mOnMsgItemSpannedListener != null){
+                                        mOnMsgItemSpannedListener.onRefreshList();
+                                    }
                                 }
                             }
-                        }
 
                             @Override
                             public void onProgress(String fileUrl, int progress) {

@@ -1,12 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-    <include layout="@layout/view_gaussian_blur_tran"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#383838">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civPhoto"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_default_photo_woman"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:id="@+id/tvAnchorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_light_white"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:layout_marginTop="12dp"/>
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="16sp"
+                    android:minHeight="36dp"/>
+
+                <!--按钮区域-->
+                <LinearLayout
+                    android:id="@+id/llButtonContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center_horizontal">
+                    <!--book-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnBook"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_room_list_book_stroke_shape"
+                        button:icon="@drawable/ic_list_book"
+                        button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                        button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_main_room_list_book"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--view hotlist-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnViewHot"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_bule_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_view_hotlist"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--Add credit-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/btnAddCredit"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:visibility="gone"
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_orange_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_btn_add_credit"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--推荐区域-->
+            <LinearLayout
+                android:id="@+id/llRecommand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/live_size_28dp">
+                <View
+                    android:layout_width="@dimen/live_size_336dp"
+                    android:layout_height="1dp"
+                    android:background="#ECEEF1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF8500"
+                    android:text="@string/say_hi_list_empty_You_may_be_interested_in"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/live_size_14sp"
+                    android:layout_marginTop="@dimen/live_size_16dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/live_size_194dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="22dp"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:id="@+id/ivLeftArraw"
+                        android:layout_width="@dimen/live_size_24dp"
+                        android:layout_height="@dimen/live_size_24dp"
+                        android:src="@drawable/ic_left_white_arrow"
+                        android:layout_marginLeft="@dimen/live_size_16dp"
+                        android:layout_marginRight="@dimen/live_size_16dp"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycleView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/transparent_full">
+
+                    </android.support.v7.widget.RecyclerView>
+                    <ImageView
+                        android:id="@+id/ivRightArraw"
+                        android:layout_width="@dimen/live_size_24dp"
+                        android:layout_height="@dimen/live_size_24dp"
+                        android:src="@drawable/ic_right_white_arrow"
+                        android:layout_marginLeft="@dimen/live_size_16dp"
+                        android:layout_marginRight="@dimen/live_size_16dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/btnClose"
             android:layout_width="wrap_content"
@@ -14,162 +164,5 @@
             android:src="@drawable/ic_clear_disabled"
             android:layout_alignParentRight="true"
             android:padding="16dp"/>
-
-        <LinearLayout
-            android:id="@+id/llAnchorInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="100dp">
-            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-                android:id="@+id/civPhoto"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/ic_default_photo_woman"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/tvAnchorName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/text_light_white"
-                android:singleLine="true"
-                android:ellipsize="middle"
-                android:layout_marginLeft="48dp"
-                android:layout_marginRight="48dp"
-                android:layout_marginTop="12dp"/>
-            <TextView
-                android:id="@+id/tvDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/text_light_white"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                android:textSize="14sp"
-                android:minHeight="36dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llOperateAera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible"
-            android:gravity="center_horizontal"
-            android:layout_below="@+id/llAnchorInfo"
-            android:layout_marginTop="24dp">
-
-            <!--按钮区域-->
-            <LinearLayout
-                android:id="@+id/llButtonContent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="24dp"
-                android:gravity="center_horizontal">
-                <Button
-                    android:id="@+id/btnBook"
-                    android:layout_width="@dimen/live_size_200dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_book_broadcast"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnViewHot"
-                    android:layout_width="@dimen/live_size_220dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_view_hotlist"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/btnAddCredit"
-                    android:layout_width="@dimen/live_size_140dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_add_credit"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"/>
-
-            </LinearLayout>
-
-            <!--推荐区域-->
-            <LinearLayout
-                android:id="@+id/llRecommand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:singleLine="true"
-                    android:ellipsize="middle"
-                    android:text="@string/liveroom_transition_recommand_tips"
-                    android:textSize="15sp"
-                    android:textColor="@color/white"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="22dp">
-                    <LinearLayout
-                        android:layout_width="62dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal">
-                        <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-                            android:id="@+id/civRecommand1"
-                            android:layout_width="62dp"
-                            android:layout_height="62dp"
-                            android:src="@drawable/ic_default_photo_woman"
-                            android:layout_centerHorizontal="true" />
-                        <TextView
-                            android:id="@+id/tvRecommandName1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:ellipsize="middle"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/llRecommand2"
-                        android:layout_width="62dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:layout_marginLeft="32dp"
-                        android:visibility="gone">
-                        <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-                            android:id="@+id/civRecommand2"
-                            android:layout_width="62dp"
-                            android:layout_height="62dp"
-                            android:src="@drawable/ic_default_photo_woman"
-                            android:layout_centerHorizontal="true" />
-                        <TextView
-                            android:id="@+id/tvRecommandName2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:ellipsize="middle"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-        </LinearLayout>
     </RelativeLayout>
-
-
-
 </FrameLayout>

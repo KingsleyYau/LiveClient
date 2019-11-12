@@ -45,6 +45,7 @@ static const string CMD_RECVCHANGEVIDEOURL = "imShare/changeVideoUrl"; //3.12.�
 static const string CMD_PUBLICROOMIN = "imMan/publicRoomIn"; // 3.13.观众进入公开直播间
 static const string CMD_CONTROLMANPUSH = "imMan/controlManPush"; // 3.14.观众开始／结束视频互动
 static const string CMD_GETINVITEINFO = "imMan/getInviteInfo"; // 3.15.获取指定立即私密邀请信息
+static const string CMD_RECVPUBLICROOMFREEMSGNOTICE = "imMan/publicRoomFreeMsgNotice"; // 3.16.接收公开直播间前3秒免费提示通知
 // -- 文本消息相关命令
 static const string CMD_SENDLIVECHAT = "imShare/sendLiveChat";    // 4.1.发送直播间文本消息
 static const string CMD_RECVSENDCHATNOTICE = "imShare/sendChatNotice";    // 4.2.接收直播间文本消息

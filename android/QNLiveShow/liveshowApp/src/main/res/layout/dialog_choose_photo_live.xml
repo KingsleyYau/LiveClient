@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_rounded_angle_white_bg"
+    android:orientation="vertical"
+    android:paddingTop="16dp">
+
+    <LinearLayout
+        android:id="@+id/masterView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_icon_camera_dialog" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_10dp"
+            android:layout_marginBottom="@dimen/live_size_6dp"
+            android:gravity="center_horizontal"
+            android:text="Photo of yourself only."
+            android:textColor="#009800"
+            android:textSize="@dimen/live_size_16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewTips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="@dimen/live_size_20dp"
+            android:text="Side face, no face, blur, grouppenple,\nwatermark are not allowed."
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/live_size_16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/listview_divider_grey" />
+
+        <TextView
+            android:id="@+id/textViewTakePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/touch_feedback_holo_light"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/Take_Photo"
+            android:textColor="@color/blue_color"
+            android:textSize="@dimen/live_size_16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/listview_divider_grey" />
+
+        <TextView
+            android:id="@+id/textViewSelectExisting"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/touch_feedback_holo_light"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/Choose_From_Album"
+            android:textColor="@color/blue_color"
+            android:textSize="@dimen/live_size_16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/listview_divider_grey" />
+
+        <TextView
+            android:id="@+id/textViewCancel"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/touch_feedback_holo_light"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/common_btn_cancel"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/live_size_16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/listview_divider_grey" />
+    </LinearLayout>
+</LinearLayout>

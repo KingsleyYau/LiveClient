@@ -10,7 +10,7 @@ import java.util.List;
  * @author Hunter Mun
  *
  */
-public class HotListItem {
+public class HotListItem extends LiveRoomListItem{
 
 	public HotListItem(){
 		
@@ -37,53 +37,56 @@ public class HotListItem {
 					int anchorType,
 					ProgramInfoItem showInfo,
 					HttpAuthorityItem priv,
-					int chatOnlineStatus){
-		this.userId = userId;
-		this.nickName = nickName;
-		this.photoUrl = photoUrl;
-		
-		if( onlienStatus < 0 || onlienStatus >= AnchorOnlineStatus.values().length ) {
-			this.onlineStatus = AnchorOnlineStatus.Unknown;
-		} else {
-			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
-		}
-		
-		this.roomPhotoUrl = roomPhotoUrl;
-		
-		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
-			this.roomType = LiveRoomType.Unknown;
-		} else {
-			this.roomType = LiveRoomType.values()[roomType];
-		}
+					int chatOnlineStatus,
+					boolean isFollow){
+//		this.userId = userId;
+//		this.nickName = nickName;
+//		this.photoUrl = photoUrl;
+//
+//		if( onlienStatus < 0 || onlienStatus >= AnchorOnlineStatus.values().length ) {
+//			this.onlineStatus = AnchorOnlineStatus.Unknown;
+//		} else {
+//			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
+//		}
+//
+//		this.roomPhotoUrl = roomPhotoUrl;
+//
+//		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
+//			this.roomType = LiveRoomType.Unknown;
+//		} else {
+//			this.roomType = LiveRoomType.values()[roomType];
+//		}
+//
+//		//兴趣爱好
+//		this.interests = IntToEnumUtils.intArrayToInterestTypeList(interests);
+//
+//		if( anchorType < 0 || anchorType >= AnchorLevelType.values().length ) {
+//			this.anchorType = AnchorLevelType.Unknown;
+//		} else {
+//			this.anchorType = AnchorLevelType.values()[anchorType];
+//		}
+//		this.showInfo = showInfo;
+//		this.priv = priv;
+//		if( chatOnlineStatus < 0 || chatOnlineStatus >= IMClientListener.IMChatOnlineStatus.values().length ) {
+//			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.Unknown;
+//		} else {
+//			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.values()[chatOnlineStatus];
+//		}
 
-		//兴趣爱好
-		this.interests = IntToEnumUtils.intArrayToInterestTypeList(interests);
-		
-		if( anchorType < 0 || anchorType >= AnchorLevelType.values().length ) {
-			this.anchorType = AnchorLevelType.Unknown;
-		} else {
-			this.anchorType = AnchorLevelType.values()[anchorType];
-		}
-		this.showInfo = showInfo;
-		this.priv = priv;
-		if( chatOnlineStatus < 0 || chatOnlineStatus >= IMClientListener.IMChatOnlineStatus.values().length ) {
-			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.Unknown;
-		} else {
-			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.values()[chatOnlineStatus];
-		}
+		super(userId, nickName, photoUrl, onlienStatus, roomPhotoUrl, roomType, interests, anchorType, showInfo, priv, chatOnlineStatus, isFollow);
 	}
 	
-	public String userId;
-	public String nickName;
-	public String photoUrl;
-	public AnchorOnlineStatus onlineStatus;
-	public String roomPhotoUrl;
-	public LiveRoomType roomType;
-	public List<InterestType> interests;
-	public AnchorLevelType anchorType;
-	public ProgramInfoItem showInfo;
-	public boolean isHasPublicVoucherFree;	//是否有公开试聊卷
-	public boolean isHasPrivateVoucherFree;	//是否有私密试聊卷
-	public HttpAuthorityItem priv;
-	public IMClientListener.IMChatOnlineStatus chatOnlineStatus;
+//	public String userId;
+//	public String nickName;
+//	public String photoUrl;
+//	public AnchorOnlineStatus onlineStatus;
+//	public String roomPhotoUrl;
+//	public LiveRoomType roomType;
+//	public List<InterestType> interests;
+//	public AnchorLevelType anchorType;
+//	public ProgramInfoItem showInfo;
+//	public boolean isHasPublicVoucherFree;	//是否有公开试聊卷
+//	public boolean isHasPrivateVoucherFree;	//是否有私密试聊卷
+//	public HttpAuthorityItem priv;
+//	public IMClientListener.IMChatOnlineStatus chatOnlineStatus;
 }

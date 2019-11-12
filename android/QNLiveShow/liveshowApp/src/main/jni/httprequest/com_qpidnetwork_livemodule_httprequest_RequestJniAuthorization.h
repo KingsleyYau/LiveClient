@@ -112,6 +112,14 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_GetValidateCode
         (JNIEnv *, jclass, jint , jobject);
 
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    UploadUserPhoto
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_UploadUserPhoto
+        (JNIEnv *, jclass, jstring, jobject);
+
 #ifdef __cplusplus
 }
 #endif

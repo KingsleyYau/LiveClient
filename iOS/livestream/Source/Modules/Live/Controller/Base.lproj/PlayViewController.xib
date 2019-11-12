@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -118,14 +117,14 @@
                 <constraint firstItem="Hef-sh-jU8" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-5" id="s5I-ml-e8g"/>
                 <constraint firstItem="Hef-sh-jU8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tAB-n9-MQq"/>
             </constraints>
-            <point key="canvasLocation" x="23" y="51"/>
+            <point key="canvasLocation" x="34" y="-73"/>
         </view>
     </objects>
     <resources>
-        <image name="Live_Play_Btn_Gift_Random" width="40" height="40"/>
+        <image name="Live_Play_Btn_Gift_Random" width="40.5" height="40.5"/>
         <image name="Live_Public_Btn_Chat" width="160" height="32"/>
-        <image name="Live_Public_Btn_Gift" width="41" height="45"/>
-        <image name="Live_Publish_Btn_Gift" width="37" height="44"/>
+        <image name="Live_Public_Btn_Gift" width="41.5" height="45"/>
+        <image name="Live_Publish_Btn_Gift" width="44" height="44"/>
         <image name="TalentIcon12" width="40" height="40"/>
     </resources>
 </document>

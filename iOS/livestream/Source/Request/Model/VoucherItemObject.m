@@ -15,6 +15,7 @@
 
 - (id)init {
     if( self = [super init] ) {
+        self.voucherType = VOUCHERTYPE_BROADCAST;
         self.voucherId = @"";
         self.photoUrl = @"";
         self.photoUrlMobile = @"";
@@ -28,12 +29,14 @@
         self.startValidDate = 0;
         self.expDate = 0;
         self.read = NO;
+        self.offsetMin = 0;
     }
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
+        self.voucherType = [coder decodeIntForKey:@"voucherType"];
         self.voucherId = [coder decodeObjectForKey:@"voucherId"];
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
         self.photoUrlMobile = [coder decodeObjectForKey:@"photoUrlMobile"];
@@ -47,11 +50,13 @@
         self.startValidDate = [coder decodeIntegerForKey:@"startValidDate"];
         self.expDate = [coder decodeIntegerForKey:@"expDate"];
         self.read = [coder decodeBoolForKey:@"read"];
+        self.offsetMin = [coder decodeIntForKey:@"offsetMin"];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeInt:self.voucherType forKey:@"voucherType"];
     [coder encodeObject:self.voucherId forKey:@"voucherId"];
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
     [coder encodeObject:self.photoUrlMobile forKey:@"photoUrlMobile"];
@@ -65,6 +70,7 @@
     [coder encodeInteger:self.startValidDate forKey:@"startValidDate"];
     [coder encodeInteger:self.expDate forKey:@"expDate"];
     [coder encodeBool:self.read forKey:@"read"];
+    [coder encodeInt:self.offsetMin forKey:@"offsetMin"];
 }
 
 @end

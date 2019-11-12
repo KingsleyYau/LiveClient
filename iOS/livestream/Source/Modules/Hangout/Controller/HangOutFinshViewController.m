@@ -44,6 +44,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
     
+    self.isShowNavBar = NO;
+    
     self.anchorArray = [[NSMutableArray alloc] init];
 }
 

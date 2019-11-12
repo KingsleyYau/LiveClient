@@ -14,10 +14,12 @@
  * voucherUnreadNum      试用劵未读的数量
  * giftUnreadNum         背包礼物的未读数量
  * rideUnreadNum         座驾的未读数量
+ * livechatVoucherUnreadNum live试用劵未读的数量
  */
 @property (nonatomic, assign) int total;
 @property (nonatomic, assign) int voucherUnreadNum;
 @property (nonatomic, assign) int giftUnreadNum;
 @property (nonatomic, assign) int rideUnreadNum;
+@property (nonatomic, assign) int livechatVoucherUnreadNum;
 
 @end

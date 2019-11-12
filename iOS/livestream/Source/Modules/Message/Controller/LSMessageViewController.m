@@ -24,7 +24,7 @@
 
 - (void)dealloc {
     NSLog(@"LSMessageViewController::dealloc()");
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
     [self.messageManager.client removeDelegate:self];
 }
 
@@ -48,7 +48,7 @@
     [self.messageManager.client addDelegate:self];
     
     [self.tableView setTableFooterView:[UIView new]];
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -101,7 +101,7 @@
 - (void)onUpdateFriendListNotice:(BOOL)success errType:(HTTP_LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
     NSLog(@"LSMessageViewController::onUpdateFriendListNotice([私信联系人列表改动 success : %d, errType : %d, errmsg : %@])", success, errType, errmsg);
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView finishPullDown:YES];
+        [self.tableView finishLSPullDown:YES];
         if (success) {
             [self.messageManager getLocalPrivateMsgFriendList:^(NSArray<LMPrivateMsgContactObject *> * _Nullable list) {
                 self.data = list;

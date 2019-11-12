@@ -15,6 +15,7 @@ import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageVi
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 
@@ -157,7 +158,7 @@ public class HangoutEndActivity extends BaseFragmentActivity {
 
             //打开买点页面
             //edit by Jagger 2018-9-21 使用URL方式跳转
-            String urlAddCredit = URL2ActivityManager.createAddCreditUrl("", "B30", "");
+            String urlAddCredit = LiveUrlBuilder.createAddCreditUrl("", "B30", "");
             new AppUrlHandler(mContext).urlHandle(urlAddCredit);
 
         } else if (id == R.id.act_hangout_end_ll_start_again) {
@@ -171,7 +172,8 @@ public class HangoutEndActivity extends BaseFragmentActivity {
                         tempAnchorList,
                         "",
                         "",
-                        "");
+                        "",
+                        false);
                 startActivity(intent);
             }
             finish();

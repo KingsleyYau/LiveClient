@@ -42,6 +42,8 @@ public class CommonConstant {
 
     //用户上传头像成功
     public static final String ACTION_USER_UPLOAD_PHOTO_SUCCESS = "qn.ACTION_USER_UPLOAD_PHOTO_SUCCESS";
+    //用户上传头像成功——直播(2019/8/13 Hardy)
+    public static final String ACTION_USER_UPLOAD_PHOTO_SUCCESS_LIVE = "live.ACTION_USER_UPLOAD_PHOTO_SUCCESS";
 
     //APP 重启广播
     public static final String ACTION_NOTIFICATION_APP_PERMISSION_RESET = "com.qpidnetwork.action.APP_PERMISSION_RESET";

@@ -113,6 +113,7 @@ public class NewInviteFragment extends BaseListFragment{
                         showEmptyView(R.string.newinvite_empty_tips,R.string.invite_empty_hot_broadcasters);
                     }else{
                         hideNodataPage();
+                        hideErrorPage();
                     }
                 }else{
                     if(mNewInviteList.size()>0){
@@ -183,8 +184,8 @@ public class NewInviteFragment extends BaseListFragment{
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
         if(null != getActivity()){
             Intent intent = new Intent( getActivity(), MainFragmentActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -207,7 +208,7 @@ public class NewInviteFragment extends BaseListFragment{
     private void showEmptyView(int tipsResId, int btnResId){
         if(null != getActivity()){
             setDefaultEmptyMessage(getActivity().getResources().getString(tipsResId));
-            setDefaultEmptyButtonText(getActivity().getResources().getString(btnResId));
+            setEmptyGuideButtonText(getActivity().getResources().getString(btnResId));
         }
         showNodataPage();
     }

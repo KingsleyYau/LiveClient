@@ -33,6 +33,7 @@ import com.qpidnetwork.anchor.im.IMOtherEventListener;
 import com.qpidnetwork.anchor.im.listener.IMClientListener;
 import com.qpidnetwork.anchor.im.listener.IMInviteListItem;
 import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
+import com.qpidnetwork.anchor.im.listener.IMSendInviteInfoItem;
 import com.qpidnetwork.anchor.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.anchor.liveshow.manager.CameraMicroPhoneCheckManager;
 import com.qpidnetwork.anchor.utils.Log;
@@ -40,7 +41,10 @@ import com.qpidnetwork.anchor.utils.SystemUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import static com.qpidnetwork.anchor.liveshow.liveroom.BaseImplLiveRoomActivity.TRANSITION_USER_ID;
+
 /**
+ * 过渡页
  * Created by Hunter Mun on 2018/3/8.
  */
 
@@ -50,17 +54,11 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
     private static final int ROOM_CLOSE_BUTTON_DELAY_TIMESTAMP = 10 * 1000;      //进入界面1o秒后显示可关闭按钮
 
     private static final String TRANSITION_CATOGERY_TYPE = "categoryType";
-    public static final String TRANSITION_USER_ID = "anchorId";
+
     private static final String TRANSITION_USER_NAME = "anchorName";
     private static final String TRANSITION_USER_PHOTOURL = "anchorPhotoUrl";
     private static final String TRANSITION_ROOMID = "roomId";
     private static final String TRANSITION_INVITATION_ID = "invitationId";
-
-    public static final String LIVEROOM_ROOMINFO_ITEM = "roomInItem";
-
-    public static final String LIVEROOM_MAN_PHOTOURL = "manPhotoUrl";
-
-    public static final String LIVEROOM_MAN_NICKNAME = "manNickname";
 
     private static final int EVENT_SHOW_CLOSE_BUTTON = 1;       //显示可关闭按钮
     private static final int EVENT_INVITE_TIMEOUT = 2;          //主播邀请过期通知
@@ -75,7 +73,9 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
     public enum CategoryType{
         Anchor_Invite_Enter_Room,
         Accept_Invite_Enter_Room,
-        Schedule_Invite_Enter_Room
+        Schedule_Invite_Enter_Room,
+        // 2019/11/11 Hardy 一般进入直播间，包括公开/私密
+        Normal_Enter_Room
     }
 
     /**
@@ -163,6 +163,16 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
         intent.putExtra(TRANSITION_USER_PHOTOURL, userPhotoUrl);
         intent.putExtra(TRANSITION_ROOMID, roomId);
         return intent;
+    }
+
+    public static void startNormalLiveRoom(Context context, String roomId, String userId, String userName, String userPhotoUrl) {
+        Intent intent = new Intent(context, LiveRoomTransitionActivity.class);
+        intent.putExtra(TRANSITION_CATOGERY_TYPE, CategoryType.Normal_Enter_Room.ordinal());
+        intent.putExtra(TRANSITION_USER_ID, userId);
+        intent.putExtra(TRANSITION_USER_NAME, userName);
+        intent.putExtra(TRANSITION_USER_PHOTOURL, userPhotoUrl);
+        intent.putExtra(TRANSITION_ROOMID, roomId);
+        context.startActivity(intent);
     }
 
     @Override
@@ -394,6 +404,11 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
                 enterRoom();
             }
             break;
+
+            case Normal_Enter_Room:{
+                enterRoom();
+            }
+            break;
         }
     }
 
@@ -502,22 +517,55 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
      * @param timeout
      * @param roomId
      */
+//    @Override
+//    public void OnSendImmediatePrivateInvite(int reqId, final boolean success, IMClientListener.LCC_ERR_TYPE errType, final String errMsg, final String invitationId, final int timeout, final String roomId) {
+//        //发送立即私密邀请回调
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(success){
+//                    //邀请发送成功
+//                    mInvitationId = invitationId;
+//                    if(!TextUtils.isEmpty(roomId)){
+//                        //转到进入直播间逻辑
+//                        mRoomId = roomId;
+//                        enterRoom();
+//                    }else{
+//                        //邀请中启动超时控制
+//                        sendEmptyUiMessageDelayed(EVENT_INVITE_TIMEOUT, timeout * 1000);
+//                    }
+//                }else{
+//                    //邀请发送失败
+//                    onProcessEventUpdate(ProcessEventType.NormalInviteError, errMsg);
+//                }
+//            }
+//        });
+//    }
+
+    /**
+     * 邀请命令回调（处理是否成功）
+     * @param reqId
+     * @param success
+     * @param errType
+     * @param errMsg
+     * @param inviteInfoItem
+     */
     @Override
-    public void OnSendImmediatePrivateInvite(int reqId, final boolean success, IMClientListener.LCC_ERR_TYPE errType, final String errMsg, final String invitationId, final int timeout, final String roomId) {
+    public void OnSendImmediatePrivateInvite(int reqId, final boolean success, IMClientListener.LCC_ERR_TYPE errType,final String errMsg, final IMSendInviteInfoItem inviteInfoItem) {
         //发送立即私密邀请回调
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(success){
                     //邀请发送成功
-                    mInvitationId = invitationId;
-                    if(!TextUtils.isEmpty(roomId)){
+                    mInvitationId = inviteInfoItem.inviteId;
+                    if(!TextUtils.isEmpty(inviteInfoItem.roomId)){
                         //转到进入直播间逻辑
-                        mRoomId = roomId;
+                        mRoomId = inviteInfoItem.roomId;
                         enterRoom();
                     }else{
                         //邀请中启动超时控制
-                        sendEmptyUiMessageDelayed(EVENT_INVITE_TIMEOUT, timeout * 1000);
+                        sendEmptyUiMessageDelayed(EVENT_INVITE_TIMEOUT, inviteInfoItem.timeOut * 1000);
                     }
                 }else{
                     //邀请发送失败
@@ -611,12 +659,15 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
                         //此处判断错误，成功且受到非当前直播间错误处理异常
                         if (success ) {
                             //进入成功直接调用进入直播间
-                            Intent intent = new Intent(LiveRoomTransitionActivity.this, PrivateLiveRoomActivity.class);
-                            intent.putExtra(LIVEROOM_ROOMINFO_ITEM, roomInfo);
-                            intent.putExtra(LIVEROOM_MAN_PHOTOURL, mUserPhotoUrl);
-                            intent.putExtra(TRANSITION_USER_ID, mUserId);
-                            intent.putExtra(LIVEROOM_MAN_NICKNAME, mUserName);
-                            startActivity(intent);
+//                            Intent intent = new Intent(LiveRoomTransitionActivity.this, PrivateLiveRoomActivity.class);
+//                            intent.putExtra(LIVEROOM_ROOMINFO_ITEM, roomInfo);
+//                            intent.putExtra(LIVEROOM_MAN_PHOTOURL, mUserPhotoUrl);
+//                            intent.putExtra(TRANSITION_USER_ID, mUserId);
+//                            intent.putExtra(LIVEROOM_MAN_NICKNAME, mUserName);
+//                            startActivity(intent);
+
+                            FullScreenLiveRoomActivity.lanchActPrivateLiveRoom(mContext, roomInfo, mUserPhotoUrl, mUserId, mUserName);
+
                             mRoomId = "";
                             //注销事件监听器
                             unRegisterConfictReceiver();
@@ -778,6 +829,11 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
 
     }
 
+    @Override
+    public void OnAnchorSwitchFlow(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String[] pushUrl, IMClientListener.IMDeviceType deviceType) {
+
+    }
+
     /****************************** Camera和RecordAudio权限检测  ************************************/
 
     /**
@@ -843,5 +899,11 @@ public class LiveRoomTransitionActivity extends BaseActionBarFragmentActivity im
         msg.arg1 = 0;
         msg.obj = errMsg;
         sendUiMessage(msg);
+    }
+
+    @Override
+    public void onPcToApp(String manId, String manName, String manPhotoUrl) {
+        //不作处理
+//        super.onPcToApp(manId, manName, manPhotoUrl);
     }
 }

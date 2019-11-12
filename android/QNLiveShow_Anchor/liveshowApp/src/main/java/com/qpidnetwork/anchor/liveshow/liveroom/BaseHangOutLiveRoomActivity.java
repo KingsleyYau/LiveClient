@@ -106,7 +106,6 @@ public class BaseHangOutLiveRoomActivity extends BaseImplLiveRoomActivity {
      */
     private void initRoomManagers(){
         HangOutGiftSendReqManager.getInstance().executeNextReqTask();
-        LiveGiftView.MAX_GIFT_SUM = 1;
     }
 
     /**

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,7 +29,7 @@
                         <rect key="frame" x="71" y="4" width="15" height="15"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l41-v9-vBh" userLabel="Gift Count Label">
-                                <rect key="frame" x="2.5" y="2.5" width="11" height="10"/>
+                                <rect key="frame" x="2" y="2.5" width="11" height="10"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                 <color key="textColor" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -42,14 +45,14 @@
                         <rect key="frame" x="71" y="4" width="15" height="15"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8" userLabel="Gift Image View">
-                        <rect key="frame" x="24" y="8" width="42" height="42.5"/>
+                        <rect key="frame" x="24" y="8" width="42" height="42"/>
                     </imageView>
                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pnr-aC-qID">
-                        <rect key="frame" x="24" y="24" width="42" height="42.5"/>
+                        <rect key="frame" x="24" y="24" width="42" height="42"/>
                         <color key="backgroundColor" white="1" alpha="0.69830907534246578" colorSpace="calibratedWhite"/>
                     </activityIndicatorView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gift Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47x-lT-YTl">
-                        <rect key="frame" x="5" y="55.5" width="80" height="14.5"/>
+                        <rect key="frame" x="5" y="55" width="80" height="15"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="15" id="Dz7-ei-C5c"/>
                         </constraints>
@@ -108,7 +111,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Live_BigGift_Logo" width="16" height="16"/>
-        <image name="Live_NotSend_Icon" width="16" height="16"/>
+        <image name="Live_BigGift_Logo" width="13" height="13"/>
+        <image name="Live_NotSend_Icon" width="11" height="13"/>
     </resources>
 </document>

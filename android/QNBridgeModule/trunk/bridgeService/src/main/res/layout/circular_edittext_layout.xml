@@ -41,13 +41,11 @@
         <!--android:text="testL"/>-->
     </LinearLayout>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/edt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/et_transparent"
         android:singleLine="true"
         android:textColorHint="@color/circle_edittext_hint"
         android:textCursorDrawable="@drawable/circular_cursor"

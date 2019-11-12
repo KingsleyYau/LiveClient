@@ -158,11 +158,22 @@ public class CoreUrlHelper {
      * 生成基础path
      * @return
      */
-    public static String getUrlBasePath(IModule module){
+    public static String getUrlBasePath(){
         return KEY_URL_SCHEME + "://"
                 + KEY_URL_AUTHORITY
                 + KEY_URL_PATH + "?"
                 + CoreUrlHelper.KEY_URL_SITEID + "=" + WebSiteConfigManager.getInstance().getCurrentSiteId();
+    }
+
+    /**
+     * 生成指定站基础path
+     * @return
+     */
+    public static String getUrlBasePath(WebSiteType type){
+        return KEY_URL_SCHEME + "://"
+                + KEY_URL_AUTHORITY
+                + KEY_URL_PATH + "?"
+                + CoreUrlHelper.KEY_URL_SITEID + "=" + WebSiteConfigManager.getInstance().getWebSiteID(type);
     }
 
     /**

@@ -42,7 +42,7 @@ public interface Styleable {
 
     BuildBean setCancelable(boolean cancelable, boolean outsideCancelable);
 
-
+    BuildBean setBgTransparent(boolean isTranslate);
 
 
 

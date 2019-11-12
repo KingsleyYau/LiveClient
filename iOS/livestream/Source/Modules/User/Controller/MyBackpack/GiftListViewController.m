@@ -18,7 +18,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (nonatomic, assign) BOOL isRequstData;
 @property (nonatomic, strong) NSTimer * timer;
-@property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @end
 
 @implementation GiftListViewController
@@ -28,12 +27,12 @@
     
      self.sessionManager = [LSSessionRequestManager manager];
     
-    [self.giftListWaterfallView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.giftListWaterfallView setupPullRefresh:self pullDown:YES pullUp:NO];
 }
 
 
 - (void)dealloc {
-    [self.giftListWaterfallView unInitPullRefresh];
+    [self.giftListWaterfallView unSetupPullRefresh];
     NSLog(@"GiftListViewController dealloc");
 }
 
@@ -85,11 +84,13 @@
 {
     self.infoView.hidden = YES;
     //self.giftListWaterfallView.hidden = NO;
+    [self hideNoDataView];
+    self.failView.hidden = YES;
     GiftListRequest * request = [[GiftListRequest alloc]init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
-                [self.giftListWaterfallView finishPullDown:YES];
+                [self.giftListWaterfallView finishLSPullDown:YES];
                 [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
                 
                 self.giftListWaterfallView.items = array;
@@ -97,13 +98,14 @@
                 if (success) {
 
                     if (self.giftListWaterfallView.items.count == 0) {
-                          [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Gifts") hiddenBtn:YES];
+                        [self showNoDataView];
+                        self.noDataTip.text = NSLocalizedStringFromSelf(@"No Gifts");
                     }
                 }
                 else
                 {
                     if (array.count == 0) {
-                      [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
+                        self.failView.hidden = NO;
                     }
                     else
                     {
@@ -118,23 +120,8 @@
     [self.sessionManager sendRequest:request];
 }
 
-- (void)showInfoViewMsg:(NSString *)msg hiddenBtn:(BOOL)hidden
-{
-    self.infoView.hidden = NO;
-    self.infoBtn.layer.cornerRadius = 5;
-    self.infoBtn.layer.masksToBounds = YES;
-    self.infoLabel.text = msg;
-    self.infoBtn.hidden = hidden;
-    // 是否没有数据
-    if (hidden) {
-        self.noDataIcon.image = [UIImage imageNamed:@"Common_NoDataIcon"];
-    }else {
-        self.noDataIcon.image = [UIImage imageNamed:@"Home_Hot&follow_fail"];
-    }
-    //self.giftListWaterfallView.hidden = YES;
-}
-
-- (IBAction)reloadBtnDid:(UIButton *)sender {
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
+    self.failView.hidden = YES;
     [self showLoading];
     [self getGiftList];
 }

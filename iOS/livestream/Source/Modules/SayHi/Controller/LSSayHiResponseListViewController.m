@@ -50,7 +50,7 @@
 @implementation LSSayHiResponseListViewController
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 
@@ -64,16 +64,7 @@
     self.chooseBtn.layer.cornerRadius = self.chooseBtn.frame.size.height * 0.5f;
     self.chooseBtn.layer.masksToBounds = YES;
     
-    NSString *sortType = [[NSUserDefaults standardUserDefaults] objectForKey:SayHiSortTpye];
-    if (sortType && sortType.length > 0) {
-        if ([sortType isEqualToString:SayHiSortTpyeUnread]) {
-            [self.chooseBtn setTitle:@"Unread First" forState:UIControlStateNormal];
-        }else {
-            [self.chooseBtn setTitle:@"Newest First" forState:UIControlStateNormal];
-        }
-    }else {
-        [self.chooseBtn setTitle:@"Unread First" forState:UIControlStateNormal];
-    }
+
     
     if (IS_IPHONE_X) {
         self.chooseBtnBottom.constant = 55;
@@ -85,7 +76,7 @@
     LSShadowView *shadow = [[LSShadowView alloc] init];
     [shadow showShadowAddView:self.searchBtn];
     
-    self.type = LSSAYHILISTTYPE_UNREAD;
+
     
     self.items = [NSMutableArray array];
     self.sessionRequestManager = [LSSessionRequestManager manager];
@@ -125,7 +116,7 @@
 
 - (void)setupTableView {
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
@@ -144,7 +135,20 @@
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-    [self.tableView startPullDown:YES];
+    NSString *sortType = [[NSUserDefaults standardUserDefaults] objectForKey:SayHiSortTpye];
+    if (sortType && sortType.length > 0) {
+        if ([sortType isEqualToString:SayHiSortTpyeUnread]) {
+            [self.chooseBtn setTitle:@"Unread First" forState:UIControlStateNormal];
+            self.type = LSSAYHILISTTYPE_UNREAD;
+        }else {
+            [self.chooseBtn setTitle:@"Newest First" forState:UIControlStateNormal];
+            self.type = LSSAYHILISTTYPE_LATEST;
+        }
+    }else {
+        [self.chooseBtn setTitle:@"Unread First" forState:UIControlStateNormal];
+        self.type = LSSAYHILISTTYPE_UNREAD;
+    }
+    [self.tableView startLSPullDown:YES];
     
 }
 
@@ -263,13 +267,13 @@
             if (success) {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishLSPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
                     self.page = 1;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                     
                     self.page++;
                 }
@@ -292,12 +296,12 @@
             }else {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:NO];
+                    [self.tableView finishLSPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                 }
                 
                 [self reloadData:YES];
@@ -330,13 +334,13 @@
     self.failView.hidden = YES;
     [self hideNoSayHiTips];
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 
 
 - (void)tableView:(LSSayHiResponseListTableView *)tableView didSelectSayHiDetail:(LSSayHiResponseListItemObject *)item {
-    if (![[NSUserDefaults standardUserDefaults]objectForKey:@"SayHiAgainTip"]) {
+    if (!item.isFree && !item.hasRead && ![[NSUserDefaults standardUserDefaults]objectForKey:@"SayHiAgainTip"]) {
         UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"BUY_TIP") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
               //TODO: 跳转到指定的详情页
@@ -405,7 +409,7 @@
         [self.chooseBtn setTitle:@"Newest First" forState:UIControlStateNormal];
         [[NSUserDefaults standardUserDefaults] setObject:SayHiSortTpyeNew forKey:SayHiSortTpye];
     }
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 - (void)lsSayHiRecommendView:(LSSayHiRecommendView *)view didSelectAchor:(LSSayHiAnchorItemObject *)lady {

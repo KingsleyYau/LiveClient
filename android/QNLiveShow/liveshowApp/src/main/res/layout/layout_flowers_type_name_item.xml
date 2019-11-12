@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.liveshow.flowergift.store.FlowersTypeNameItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flowers_type_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/flowers_type_name_height">
+
+    <!--  顶部分割线  -->
+    <View
+        android:id="@+id/flowers_type_line_top"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/live_size_20dp"
+        android:layout_marginRight="@dimen/live_size_20dp"
+        android:background="@color/theme_default_divider_grey"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <!--  底部分割线  -->
+    <View
+        android:id="@+id/flowers_type_line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/theme_default_divider_grey"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:visibility="visible" />
+
+    <!--  名字  -->
+    <TextView
+        android:id="@+id/flowers_type_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/live_size_20dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:textColor="@color/live_text_color_black"
+        android:textSize="@dimen/live_size_14sp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/flowers_type_tv_free_card"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginRight="@dimen/live_size_20dp"
+        tools:text="free_greeting_cardfree_greeting_cardfree_greeting_card" />
+    <!--        tools:text="free_greeting"-->
+    <!--        tools:text="free_greeting_cardfree_greeting_cardfree_greeting_card" -->
+
+    <!--  标签  -->
+    <TextView
+        android:id="@+id/flowers_type_tv_free_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/live_size_20dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:text="@string/free_greeting_card_tag"
+        android:textColor="@color/live_ho_orange_credits"
+        android:textSize="@dimen/live_size_14sp"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/flowers_type_tv_name"
+        app:layout_constraintRight_toLeftOf="@+id/flowers_type_iv_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <!--  右边 icon  -->
+    <ImageView
+        android:id="@+id/flowers_type_iv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/live_size_20dp"
+        android:contentDescription="@string/app_name"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_live_emoji_pear"
+        tools:visibility="visible" />
+</com.qpidnetwork.livemodule.liveshow.flowergift.store.FlowersTypeNameItemView>

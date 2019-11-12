@@ -36,7 +36,7 @@
                 android:layout_width="89dp"
                 android:layout_height="25dp"
                 android:layout_marginBottom="4dp"
-                android:background="@drawable/rectangle_radius6_connor_solid_white_stroke_sky_blue"
+                android:background="@drawable/rectangle_radius6_ripple_solid_white_stroke_sky_blue"
                 android:text="@string/my_package_rider_ride"
                 android:textSize="12dp"
                 android:textColor="#3c3c3c"

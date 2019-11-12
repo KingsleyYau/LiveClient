@@ -223,19 +223,6 @@ public class HotListVoucherHelper {
     }
 
     /**
-     * 检测试聊券是否有效
-     * @param expTime 单位/秒
-     * @return
-     */
-    private boolean checkVoucherValid(int expTime){
-        boolean isValid = false;
-        if (System.currentTimeMillis() <= expTime * 1000){
-            isValid = true;
-        }
-        return isValid;
-    }
-
-    /**
      * 获取最新试用券可用信息数据
      * @param listener
      */

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmoJiTabIconLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_emoji_tab_icon_rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/theme_default_divider_grey" />
+
+    <FrameLayout
+        android:id="@+id/layout_emoji_tab_icon_fl_list_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/theme_default_divider_grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_40dp"
+        android:orientation="horizontal">
+
+        <!--
+            2019/9/6    Hardy
+            与 iOS 商量，并且按照目前数据返回，客户端只取前面 2 个 tab 数据，若后续需要多个 tab ，超出屏幕宽度，
+            则可将 CommonTabLayout 用 HorizontalScrollView 包裹，实现超出屏幕后的横向滑动效果，
+            目前暂时不嵌套，待需求变更时，再修改客户端
+        -->
+        <com.flyco.tablayout.CommonTabLayout
+            android:id="@+id/layout_emoji_tab_icon_tab_layout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:tl_iconVisible="true"
+            app:tl_iconGravity="LEFT"
+            app:tl_tab_padding="20dp"
+            app:tl_tab_space_equal="false"
+            app:tl_tab_background_select_color="@color/color_D1D1D1"
+            app:tl_tab_background_un_select_color="@color/white" />
+
+        <TextView
+            android:id="@+id/layout_emoji_tab_icon_tv_send"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_virtual_gift_store_pink_gradient"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/live_size_14sp"
+            android:text="@string/txt_send_msg" />
+    </LinearLayout>
+
+</com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmoJiTabIconLayout>

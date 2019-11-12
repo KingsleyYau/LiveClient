@@ -90,16 +90,22 @@ class RequestGetLeftCreditCallback : public IRequestGetLeftCreditCallback{
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
+
+        jobject jItem = getLSLeftCreditItem(env, leftCreditItem);
         int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
-			string signature = "(ZILjava/lang/String;DI)V";
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += OTHER_LSLEFTCREDIT_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetAccountBalance", signature.c_str());
 			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetCredit( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, leftCreditItem.credit, leftCreditItem.coupon);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -1002,12 +1008,206 @@ RequestPhoneInfoCallback gRequestPhoneInfoCallback;
  			jobject obj = env->NewGlobalRef(callback);
             putCallbackIntoMap(taskId, obj);
  		}
- 		FileLog("LIVESHOW_HTTP_LOG", "LShttprequestJNI::PhoneInfo() taskId:%lld, callback:%p, jObj:%p", taskId, callback, jObj);
+ 		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::PhoneInfo() taskId:%lld, callback:%p, jObj:%p", taskId, callback, jObj);
  	}
  	else {
- 		FileLog("LIVESHOW_HTTP_LOG", "LShttprequestJNI::PhoneInfo() fails. "
+ 		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::PhoneInfo() fails. "
  				"taskId:%lld", taskId);
  	}
 
  	return taskId;
+ }
+
+ /*********************************** 6.23.qn邀请弹窗更新邀请id  ****************************************/
+ class RequestUpQnInviteIdCallback : public IRequestUpQnInviteIdCallback {
+ 	void OnUpQnInviteId(HttpUpQnInviteIdTask* task, bool success, int errnum, const string& errmsg) {
+ 		JNIEnv* env = NULL;
+ 		bool isAttachThread = false;
+ 		GetEnv(&env, &isAttachThread);
+
+ 		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUpQnInviteId( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+ 		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+ 		/*callback object*/
+ 		jobject callBackObject = getCallbackObjectByTask((long)task);
+ 		if(callBackObject != NULL){
+ 			jclass callBackCls = env->GetObjectClass(callBackObject);
+ 			string signature = "(ZILjava/lang/String;";
+ 			signature += ")V";
+ 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+ 			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUpQnInviteId( callback : %p, signature : %s )",
+ 					callbackMethod, signature.c_str());
+ 			if(callbackMethod != NULL){
+ 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+ 				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+ 				env->DeleteLocalRef(jerrmsg);
+ 			}
+ 		}
+
+
+ 		if(callBackObject != NULL){
+ 			env->DeleteGlobalRef(callBackObject);
+ 		}
+
+ 		ReleaseEnv(isAttachThread);
+ 	}
+ };
+ RequestUpQnInviteIdCallback gRequestUpQnInviteIdCallback;
+
+  /*
+   * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+   * Method:    UpQnInviteId
+   * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/qpidnetwork/request/OnRequestCallback;)J
+   */
+ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_UpQnInviteId
+            (JNIEnv *env, jclass cls, jstring manid, jstring anchorId, jstring inviteId, jstring roomId, jint inviteType, jobject callback) {
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::UpQnInviteId( manid : %s, anchorId : %s, inviteId : %s, roomId : %s, inviteType : %d)",
+                JString2String(env, manid).c_str(), JString2String(env, anchorId).c_str(), JString2String(env, inviteId).c_str(), JString2String(env, roomId).c_str(), inviteType);
+        jlong taskId = -1;
+        LSBubblingInviteType jInviteType = IntToLSBubblingInviteType(inviteType);
+        taskId = gHttpRequestController.UpQnInviteId(&gHttpRequestManager,
+                                            JString2String(env, manid),
+                                            JString2String(env, anchorId),
+                                            JString2String(env, inviteId),
+                                            JString2String(env, roomId),
+                                            jInviteType,
+                                            &gRequestUpQnInviteIdCallback);
+
+        jobject obj = env->NewGlobalRef(callback);
+        putCallbackIntoMap(taskId, obj);
+
+        return taskId;
+ }
+
+  /*********************************** 6.24.获取直播广告 ****************************************/
+  class RequestRetrieveBannerCallback : public IRequestRetrieveBannerCallback {
+  	void OnRetrieveBanner(HttpRetrieveBannerTask* task, bool success, int errnum, const string& errmsg, const string& url) {
+  		JNIEnv* env = NULL;
+  		bool isAttachThread = false;
+  		GetEnv(&env, &isAttachThread);
+
+  		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnRetrieveBanner( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+  		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+  		/*callback object*/
+  		jobject callBackObject = getCallbackObjectByTask((long)task);
+  		if(callBackObject != NULL){
+  			jclass callBackCls = env->GetObjectClass(callBackObject);
+  			string signature = "(ZILjava/lang/String;Ljava/lang/String;";
+  			signature += ")V";
+  			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRetrieveBanner", signature.c_str());
+  			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUpQnInviteId( callback : %p, signature : %s )",
+  					callbackMethod, signature.c_str());
+  			if(callbackMethod != NULL){
+  				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+  				jstring jurl = env->NewStringUTF(url.c_str());
+  				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jurl);
+  				env->DeleteLocalRef(jerrmsg);
+  				env->DeleteLocalRef(jurl);
+  			}
+  		}
+
+
+  		if(callBackObject != NULL){
+  			env->DeleteGlobalRef(callBackObject);
+  		}
+
+  		ReleaseEnv(isAttachThread);
+  	}
+  };
+  RequestRetrieveBannerCallback gRequestRetrieveBannerCallback;
+
+  /*
+   * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+   * Method:    RetrieveBanner
+   * Signature: (Ljava/lang/String;ZIILcom/qpidnetwork/request/OnRequestCallback;)J
+   */
+ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_RetrieveBanner
+            (JNIEnv *env, jclass cls, jstring manId, jboolean isAnchorPage, jint bannerType, jobject callback) {
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::RetrieveBanner( manId : %s, isAnchorPage : %d, bannerType : %d)",
+                JString2String(env, manId).c_str(), isAnchorPage, bannerType);
+        jlong taskId = -1;
+        LSBannerType jBannerType = IntToLSBannerType(bannerType);
+        taskId = gHttpRequestController.RetrieveBanner(&gHttpRequestManager,
+                                            JString2String(env, manId),
+                                            isAnchorPage,
+                                            jBannerType,
+                                            &gRequestRetrieveBannerCallback);
+
+        jobject obj = env->NewGlobalRef(callback);
+        putCallbackIntoMap(taskId, obj);
+
+        return taskId;
+ }
+
+
+  /*********************************** 6.25.查询女士列表广告 ****************************************/
+  class RequestWomanListAdvertCallback : public IRequestWomanListAdvertCallback {
+  	void OnWomanListAdvert(HttpWomanListAdvertTask* task, bool success, int errnum, const string& errmsg, const HttpAdWomanListAdvertItem& advertItem) {
+  		JNIEnv* env = NULL;
+  		bool isAttachThread = false;
+  		GetEnv(&env, &isAttachThread);
+
+  		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnWomanListAdvert( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+  		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+  		jobject jItem = getAdWomanListAdvertItem(env, advertItem);
+
+  		/*callback object*/
+  		jobject callBackObject = getCallbackObjectByTask((long)task);
+  		if(callBackObject != NULL){
+  			jclass callBackCls = env->GetObjectClass(callBackObject);
+  			string signature = "(ZILjava/lang/String;";
+  				signature += "L";
+            	signature += OTHER_ADWOMANLISTADVERT_ITEM_CLASS;
+            	signature += ";";
+  			signature += ")V";
+  			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onLSAdWomanistAdverte", signature.c_str());
+  			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnWomanListAdvert( callback : %p, signature : %s )",
+  					callbackMethod, signature.c_str());
+  			if(callbackMethod != NULL){
+  				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+  				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
+  				env->DeleteLocalRef(jerrmsg);
+  			}
+  		}
+
+        if(jItem != NULL){
+	        env->DeleteLocalRef(jItem);
+        }
+
+  		if(callBackObject != NULL){
+  			env->DeleteGlobalRef(callBackObject);
+  		}
+
+  		ReleaseEnv(isAttachThread);
+  	}
+  };
+  RequestWomanListAdvertCallback gRequestWomanListAdvertCallback;
+  /*
+   * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+   * Method:    WomanListAdvert
+   * Signature: (Ljava/lang/String;ZIILcom/qpidnetwork/request/OnLSAdWomanListAdvertCallback;)J
+   */
+ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_WomanListAdvert
+            (JNIEnv *env, jclass cls, jstring deviceId, jobject callback) {
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::WomanListAdvert( deviceId : %s)",
+                JString2String(env, deviceId).c_str());
+        jlong taskId = -1;
+        taskId = gHttpRequestController.WomanListAdvert(&gHttpRequestManager,
+                                            JString2String(env, deviceId),
+                                            LSAD_SPACE_TYPE_ANDROID,
+                                            &gRequestWomanListAdvertCallback);
+
+        jobject obj = env->NewGlobalRef(callback);
+        putCallbackIntoMap(taskId, obj);
+
+        return taskId;
+
+
  }

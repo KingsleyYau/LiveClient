@@ -1,0 +1,17 @@
+
+/* Class = "UILabel"; text = "MIN"; ObjectID = "DbV-6e-mUc"; */
+"DbV-6e-mUc.text" = "MIN";
+
+/* Class = "UILabel"; text = "Exp: Apr 29, 2019"; ObjectID = "JuU-ZA-bOH"; */
+"JuU-ZA-bOH.text" = "Exp: Apr 29, 2019";
+
+/* Class = "UILabel"; text = "8"; ObjectID = "Qqb-7x-aO0"; */
+"Qqb-7x-aO0.text" = "8";
+
+/* Class = "UILabel"; text = "For Broadcast never watch"; ObjectID = "b5J-JE-Ipu"; */
+"b5J-JE-Ipu.text" = "For Broadcast never watch";
+
+/* Class = "UILabel"; text = "Broadcast Voucher"; ObjectID = "han-aL-P2h"; */
+"han-aL-P2h.text" = "Broadcast Voucher";
+
+"Only_broadcaster" = "For broadcaster:";

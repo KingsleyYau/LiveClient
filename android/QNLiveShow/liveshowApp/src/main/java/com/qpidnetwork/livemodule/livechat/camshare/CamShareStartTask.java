@@ -3,10 +3,10 @@ package com.qpidnetwork.livemodule.livechat.camshare;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.livechat.LCUserItem;
 import com.qpidnetwork.livemodule.livechat.LiveChatManager;
@@ -18,7 +18,6 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatClient.CamshareInviteType
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClient.CamshareLadyInviteType;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClient.UserStatusProtocol;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClient.UserStatusType;
-import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener.KickOfflineType;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener.LiveChatErrType;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener.TalkEmfNoticeType;
@@ -26,17 +25,16 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatClientListener.TryTicketE
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatSessionInfoItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatTalkUserListItem;
 import com.qpidnetwork.livemodule.livechat.jni.LiveChatUserCamStatus;
-import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.ServiceType;
-import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniOther;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livechathttprequest.OnCheckCouponCallCallback;
-import com.qpidnetwork.livemodule.livechathttprequest.OnLCOtherGetCountCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCUseCouponCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Coupon;
 import com.qpidnetwork.livemodule.livechathttprequest.item.Coupon.CouponStatus;
 import com.qpidnetwork.livemodule.livechathttprequest.item.LCOtherGetCountItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.RequestBaseResponse;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 统一处理CamShare应邀及发起邀请接通逻辑，回调方式处理与界面进行交互
@@ -523,7 +521,7 @@ public class CamShareStartTask implements LiveChatManagerCamShareListener,
 	 * 试聊券检测
 	 */
 	private void CouponCheck() {
-		LCRequestJniLiveChat.CheckCoupon(mTargetId, ServiceType.CamShare,
+		LivechatRequestOperator.getInstance().CheckCoupon(mTargetId, ServiceType.CamShare,
 				new OnCheckCouponCallCallback() {
 					
 					@Override
@@ -542,7 +540,7 @@ public class CamShareStartTask implements LiveChatManagerCamShareListener,
 	 * 使用试聊券
 	 */
 	private void CouponBind(){
-        LCRequestJniLiveChat.UseCoupon(mTargetId, ServiceType.CamShare,
+		LivechatRequestOperator.getInstance().UseCoupon(mTargetId, ServiceType.CamShare,
 				new OnLCUseCouponCallback() {
 					
 					@Override
@@ -577,7 +575,7 @@ public class CamShareStartTask implements LiveChatManagerCamShareListener,
 		Log.i(TAG, "CouponCheck");
 		LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
 			@Override
-			public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, double balance, int coupon) {
+			public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, LSLeftCreditItem creditItem) {
 //					Message msg = Message.obtain();
 //					msg.what = ProcessEvent.MONEY_CHECK_CALLBACK.ordinal();
 //					RequestBaseResponse response = new RequestBaseResponse(

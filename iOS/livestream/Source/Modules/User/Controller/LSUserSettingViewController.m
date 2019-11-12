@@ -21,6 +21,8 @@
 #import "LiveModule.h"
 #import "LSGetMyProfileRequest.h"
 #import "LSLoginManager.h"
+#import "LSProfilePhotoViewController.h"
+#import "LSProfilePhotoActionViewController.h"
 
 @interface LSUserSettingViewController () <LSUserSettingHeadViewDelegate, UITableViewDelegate, UITableViewDataSource, LSUserSettingFollowCellDelegate>
 @property (nonatomic, strong) LSUserSettingHeadView *headView;
@@ -34,6 +36,8 @@
 @property (nonatomic, copy) NSString *creditStr;
 
 @property (nonatomic, copy) NSString *vouchersStr;
+
+@property (nonatomic, strong) LSPersonalProfileItemObject *personalItem;
 @end
 
 @implementation LSUserSettingViewController
@@ -127,6 +131,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 self.headView.nameLabel.text = [NSString stringWithFormat:@"%@ %@", userInfoItem.firstname, userInfoItem.lastname];
+                self.headView.editBtn.hidden = ![userInfoItem canUpdatePhoto];
+                self.personalItem = userInfoItem;
+                [self.headView reloadHeadImage:self.personalItem.photoUrl];
+
                 [self saveUserData:userInfoItem];
             }
         });
@@ -183,7 +191,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 1) {
-        return 2;
+        return 3;
     }
     return 1;
 }
@@ -220,13 +228,19 @@
 
         if (indexPath.section == 1) {
             if (indexPath.row == 0) {
+                cell.titleLabel.text = @"Profile Details";
+              
+            } else if (indexPath.row == 1) {
                 cell.titleLabel.text = @"Credit Balance";
                 cell.numLabel.text = self.creditStr;
-            } else {
-                cell.titleLabel.text = @"Live Vouchers";
-                cell.numLabel.text = self.vouchersStr;
+                cell.arrowIcon.hidden = YES;
             }
-            cell.arrowIcon.hidden = YES;
+            else {
+                cell.titleLabel.text = @"My Vouchers";
+                cell.numLabel.text = self.vouchersStr;
+                cell.arrowIcon.hidden = YES;
+            }
+            
         } else {
             cell.arrowIcon.hidden = NO;
             cell.titleLabel.text = @"Settings";
@@ -245,18 +259,18 @@
         [[LiveUrlHandler shareInstance] handleOpenURL:url];
     } else if (indexPath.section == 1) {
         if (indexPath.row == 0) {
-            // TODO
-            NSLog(@"点击跳转买点界面");
+            [self settingBackgroundDid];
+        } else if (indexPath.row == 1) {
             [[LiveModule module].analyticsManager reportActionEvent:ClickCredit eventCategory:EventCategoryCredit];
             LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:vc animated:YES];
-        } else {
+        }
+        else {
             MyBackpackViewController *vc = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
             vc.curIndex = 1;
             [self.navigationController pushViewController:vc animated:YES];
         }
     } else {
-        // TODO
         LSUserSetUpViewController *vc = [[LSUserSetUpViewController alloc] initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:vc animated:YES];
     }
@@ -272,6 +286,22 @@
 - (void)settingBackgroundDid {
     LSManProfileViewController *vc = [[LSManProfileViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+
+- (void)settingHeadImageDid {
+    if ([self.personalItem noPhotoStatus]) {
+        return;
+    }
+    LSProfilePhotoViewController *vc = [[LSProfilePhotoViewController alloc] initWithNibName:nil bundle:nil];
+    vc.isInReview = ![self.personalItem canUpdatePhoto];
+    vc.headImage = self.headView.headImage;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)settingHeadEditDid {
+    LSProfilePhotoActionViewController *vc = [[LSProfilePhotoActionViewController alloc] initWithNibName:nil bundle:nil];
+    [vc showPhotoAction:self];
 }
 
 // 保存男士资料信息

@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseDialog;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.qnbridgemodule.view.BaseDialog;
 
 public class MaterialProgressDialog extends BaseDialog {
 	

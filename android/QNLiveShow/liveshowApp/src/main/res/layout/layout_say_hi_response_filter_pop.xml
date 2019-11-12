@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/sayHi_list_response_filter_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_say_hi_response_filter_pop_bg"
+    android:orientation="vertical">
+    <!--android:layout_marginRight="@dimen/live_size_20dp"-->
+    <!--android:layout_marginBottom="@dimen/live_size_20dp"-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/live_size_14dp"
+        android:layout_marginTop="@dimen/live_size_10dp"
+        android:layout_marginBottom="7dp"
+        android:text="@string/sort_by"
+        android:textColor="@color/text_color_grey_light"
+        android:textSize="@dimen/live_size_16sp" />
+
+    <LinearLayout
+        android:id="@+id/layout_say_hi_response_filter_pop_ll_unread"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height_46dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@drawable/bg_say_hi_response_filter_pop"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_say_hi_response_filter_unread" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:gravity="center"
+            android:text="@string/Unread_First"
+            android:textColor="@color/live_text_color_black"
+            android:textSize="@dimen/live_size_14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_say_hi_response_filter_pop_ll_newest"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height_46dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="@dimen/live_size_12dp"
+        android:background="@drawable/bg_say_hi_response_filter_pop_bottom_radius"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_say_hi_response_filter_newest" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:gravity="center"
+            android:text="@string/Newest_First"
+            android:textColor="@color/live_text_color_black"
+            android:textSize="@dimen/live_size_14sp" />
+    </LinearLayout>
+</LinearLayout>

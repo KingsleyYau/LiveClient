@@ -19,14 +19,14 @@
 
 #import "GiftComboView.h"
 #import "GiftComboManager.h"
-
+#import "LiveStreamPlayer.h"
 #import "LSImManager.h"
 #import "LSLoginManager.h"
 #import "MsgItem.h"
 #import "LiveRoom.h"
 
 #import "BigGiftAnimationView.h"
-#import "PublicPrativeMsgManager.h"
+#import "PublicLiveMsgManager.h"
 #import "RoomStyleItem.h"
 
 #define PlaceholderFontSize DESGIN_TRANSFORM_3X(14)
@@ -46,6 +46,10 @@
 @end
 
 @interface LiveViewController : LSListViewController
+
+// 流播放组件
+@property (nonatomic, strong) LiveStreamPlayer *player;
+
 #pragma mark - 调试信息
 @property (nonatomic, weak) IBOutlet UILabel *debugLabel;
 
@@ -64,10 +68,7 @@
 #pragma mark - 邀请私密直播控件
 @property (weak, nonatomic) IBOutlet UIView *startOneView;
 @property (weak, nonatomic) IBOutlet UIButton *startOneBtn;
-@property (weak, nonatomic) IBOutlet UIButton *startHangoutBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneViewHeigh;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneBtnX;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *startHangoutBtnX;
 
 #pragma mark - 倒计时关闭直播间控件
 @property (weak, nonatomic) IBOutlet UIView *countdownView;

@@ -14,7 +14,7 @@
 #import "HangoutDialogViewController.h"
 #import "HangOutViewController.h"
 #import "LiveViewController.h"
-
+#import "LSVIPLiveViewController.h"
 #define BACKGROUND_TIMEOUT 60
 
 @class LiveGobalManager;
@@ -93,5 +93,8 @@
 #pragma mark - 开启/关闭直播间声音
 - (void)setupLiveVC:(LiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC;
 - (void)openOrCloseLiveSound:(BOOL)isClose;
+
+
+- (void)setupVIPLiveVC:(LSVIPLiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC;
 
 @end

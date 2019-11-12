@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -33,10 +33,7 @@
                 <outlet property="roomTipLabel" destination="Nwg-z6-Ua0" id="sa5-zS-BgW"/>
                 <outlet property="roomTipView" destination="2oW-ZP-lPX" id="3jy-Jk-sYq"/>
                 <outlet property="showBtn" destination="M65-nw-aCf" id="EiB-Ta-7GQ"/>
-                <outlet property="startHangoutBtn" destination="ktX-Y7-zhf" id="NWr-W2-zOa"/>
-                <outlet property="startHangoutBtnX" destination="KSS-oc-VgT" id="Lk9-YQ-8f9"/>
                 <outlet property="startOneBtn" destination="pJn-wx-siJ" id="rap-uW-mtP"/>
-                <outlet property="startOneBtnX" destination="h7h-hF-PUS" id="nu3-c3-w5i"/>
                 <outlet property="startOneView" destination="STA-J9-cyY" id="00o-ce-Mfo"/>
                 <outlet property="startOneViewHeigh" destination="rQF-Ro-YIC" id="zHL-2X-1RG"/>
                 <outlet property="startVideoBtn" destination="rNF-hb-v5w" id="9g2-Od-R0G"/>
@@ -111,13 +108,13 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2oW-ZP-lPX">
-                    <rect key="frame" x="0.0" y="244.5" width="375" height="37"/>
+                    <rect key="frame" x="0.0" y="253" width="375" height="28.5"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Tip_Black_Backicon" translatesAutoresizingMaskIntoConstraints="NO" id="4hq-1P-ujU" userLabel="Room Tip Background View">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="37"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="28.5"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy is the most handsome" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwg-z6-Ua0" userLabel="Tip Message Label">
-                            <rect key="frame" x="0.0" y="7" width="375" height="23"/>
+                            <rect key="frame" x="0.0" y="7" width="375" height="14.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
@@ -143,38 +140,22 @@
                     <rect key="frame" x="0.0" y="281.5" width="375" height="40"/>
                     <subviews>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pJn-wx-siJ" userLabel="Start One On One Btn">
-                            <rect key="frame" x="37" y="5" width="142" height="30"/>
+                            <rect key="frame" x="116.5" y="5" width="142" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="142" id="FPp-Qm-kT6"/>
                                 <constraint firstAttribute="height" constant="30" id="cYH-Kt-dAN"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <state key="normal" title="Start one-on-one" image="LS_OneOn0ne_icon" backgroundImage="LS_StartOneOnOne_BtnBG"/>
+                            <state key="normal" title="Start one-on-one" image="PreLive_Start_OneonOne_Button" backgroundImage="Home_OneOnOneBg"/>
                             <connections>
                                 <action selector="startOneOnOneAction:" destination="-1" eventType="touchUpInside" id="o0y-em-iMu"/>
-                            </connections>
-                        </button>
-                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ktX-Y7-zhf" userLabel="Start One On One Btn">
-                            <rect key="frame" x="197" y="5" width="142" height="30"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="30" id="PhS-5a-Zhh"/>
-                                <constraint firstAttribute="width" constant="142" id="sqS-Hc-9AC"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <state key="normal" title="Start Hang-out" image="LS_Hangout_icon" backgroundImage="LS_Hangout_BtnBG">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </state>
-                            <connections>
-                                <action selector="startHangoutBtnDid:" destination="-1" eventType="touchUpInside" id="j7a-Dm-YNX"/>
                             </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" red="0.92549019607843142" green="0.92941176470588238" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="pJn-wx-siJ" firstAttribute="centerY" secondItem="STA-J9-cyY" secondAttribute="centerY" id="1tf-qj-oZ6"/>
-                        <constraint firstItem="ktX-Y7-zhf" firstAttribute="centerX" secondItem="STA-J9-cyY" secondAttribute="centerX" constant="80" id="KSS-oc-VgT"/>
-                        <constraint firstItem="ktX-Y7-zhf" firstAttribute="centerY" secondItem="STA-J9-cyY" secondAttribute="centerY" id="NNB-hN-XKw"/>
-                        <constraint firstItem="pJn-wx-siJ" firstAttribute="centerX" secondItem="STA-J9-cyY" secondAttribute="centerX" constant="-80" id="h7h-hF-PUS"/>
+                        <constraint firstItem="pJn-wx-siJ" firstAttribute="centerX" secondItem="STA-J9-cyY" secondAttribute="centerX" id="h7h-hF-PUS"/>
                         <constraint firstAttribute="height" constant="40" id="rQF-Ro-YIC"/>
                     </constraints>
                 </view>
@@ -408,18 +389,17 @@
                     <exclude reference="tt2-7Q-tbf"/>
                 </mask>
             </variation>
+            <point key="canvasLocation" x="132" y="154.27286356821591"/>
         </view>
     </objects>
     <resources>
-        <image name="LS_Hangout_BtnBG" width="277" height="44"/>
-        <image name="LS_Hangout_icon" width="27" height="27"/>
-        <image name="LS_OneOn0ne_icon" width="24" height="24"/>
-        <image name="LS_StartOneOnOne_BtnBG" width="245" height="44"/>
+        <image name="Home_OneOnOneBg" width="3" height="3"/>
         <image name="Live_Msg_UnRead" width="9" height="5"/>
-        <image name="Live_Publish_Btn_Camera_Open_Big" width="28" height="34"/>
+        <image name="Live_Publish_Btn_Camera_Open_Big" width="28.5" height="34"/>
         <image name="Live_Publish_Btn_Camera_Stop" width="19" height="19"/>
-        <image name="Live_Publish_Btn_Mute" width="11" height="16"/>
-        <image name="Live_Tip_Black_Backicon" width="1" height="37"/>
+        <image name="Live_Publish_Btn_Mute" width="11.5" height="16.5"/>
+        <image name="Live_Tip_Black_Backicon" width="1.5" height="37"/>
+        <image name="PreLive_Start_OneonOne_Button" width="28" height="28"/>
         <image name="Two_Video_icon" width="120" height="160"/>
     </resources>
 </document>

@@ -86,12 +86,18 @@ public class ProgramUnreadManager {
         LiveRequestOperator.getInstance().GetNoReadNumProgram(new OnGetNoReadNumProgramCallback() {
             @Override
             public void onGetNoReadNumProgram(boolean isSuccess, int errCode, String errMsg, int num) {
-                if(isSuccess){
-                    mShowNoRead = num;
-                    onShowUnreadCallback(num);
-                }
+
             }
         });
+    }
+
+    /**
+     * 获取节目未读数目成功通知（多端兼容）
+     * @param num
+     */
+    public void onRecvNoreadShowNumSuccess(int num){
+        mShowNoRead = num;
+        onShowUnreadCallback(num);
     }
 
     /**

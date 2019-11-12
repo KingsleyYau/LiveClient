@@ -6,13 +6,9 @@
     <color name="text_input_44">#444444</color>
 
     <color name="text_item_33">#333333</color>
-    <color name="btn_alert">#222222</color>
-
-
-
+    <color name="btn_alert">#006BAF</color>
 
     <color name="line_dd">#dddddd</color>
-
 
     <color name="bg_white">#ffffff</color>
 
@@ -24,11 +20,11 @@
     <color name="color_text_black">#4c4c4c</color>
     <color name="color_tie_bg">#efeff4</color>
 
-
-
     <color name="color_tie_normal">#ffffff</color>
     <color name="color_tie_select">#efeff4</color>
     <color name="dialogui_btn_normal">#ffffff</color>
     <color name="dialogui_btn_pressed">#eeeeee</color>
     <color name="datepick_surance_blue">#3598da</color>
+
+    <color name="transparent_0">#00000000</color>
 </resources>

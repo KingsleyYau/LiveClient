@@ -78,6 +78,7 @@ typedef enum {
 	TCMD_SUMMITCLADYCAMSTATUS  = 262, // 女士端更新Camshare服务状态到服务器
 	TCMD_GETSESSIONINFOWITHMAN = 66,  // 女士端获取会话信息
 	TCMD_SUMMITAUTOINVITECAMFIRST = 290,  // 提交小助手Cam优先标志
+    TCMD_SENDINVITEMSG = 146,  // 提交小助手Cam优先标志
 	// 服务器主动请求命令
 	TCMD_RECVMSG		    = 24,	// 文字聊天信息通知
 	TCMD_RECVEMOTION	    = 101,	// 高级表情聊天信息通知
@@ -180,6 +181,7 @@ inline bool IsRequestCmd(int cmd)
 	case TCMD_SUMMITCLADYCAMSTATUS: //女士端更新Camshare服务状态到服务器
 	case TCMD_GETSESSIONINFOWITHMAN://女士端获取会话信息
 	case TCMD_SUMMITAUTOINVITECAMFIRST://女士提交小助手Cam优先
+    case TCMD_SENDINVITEMSG://发送邀请语
 		result = true;	// 主动请求的命令
 		break;
 	default:

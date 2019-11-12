@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="90"
+        android:startColor="@color/virtual_gift_store_tip_title_pink_light"
+        android:endColor="@color/virtual_gift_store_tip_title_pink_deep"
+        android:type="linear" />
+
+    <corners
+        android:topLeftRadius="@dimen/live_size_4dp"
+        android:topRightRadius="@dimen/live_size_4dp"
+        />
+</shape>

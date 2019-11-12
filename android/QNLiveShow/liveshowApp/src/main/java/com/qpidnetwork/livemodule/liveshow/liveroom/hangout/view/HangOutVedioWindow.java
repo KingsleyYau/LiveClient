@@ -750,9 +750,9 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
             //压缩、裁剪图片
             int bgSize = getContext().getResources().getDimensionPixelSize(R.dimen.live_size_60dp);  //DisplayUtil.getScreenWidth(mContext);
 
-            //对齐方式(左上角对齐)
+            //对齐方式(中上对齐)
             PointF focusPoint = new PointF();
-            focusPoint.x = 0f;
+            focusPoint.x = 0.5f;
             focusPoint.y = 0f;
 
             //占位图，拉伸方式
@@ -1159,7 +1159,8 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
     private void stopGiftAnim(){
         Log.d(TAG,"stopGiftAnim");
         if(null != mModuleGiftManager){
-            mModuleGiftManager.onMultiGiftDestroy();
+            mModuleGiftManager.onMultiGiftStop();
+            mModuleGiftManager.onAdvanceGiftOnStop();
         }
     }
 
@@ -1289,7 +1290,7 @@ public class HangOutVedioWindow extends FrameLayout implements PublisherManager.
         //互斥关系创建新的邀请client
         mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(getContext());
         mHangoutInvitationManager.setClientEventListener(this);
-        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly);
+        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly, false);
     }
 
 

@@ -53,6 +53,11 @@ public:
             if (root[LIVEROOM_GETTOTALNOREADNUM_SAYHIRESPONSEUNREADNUM].isNumeric()) {
                 sayHiResponseUnreadNum = root[LIVEROOM_GETTOTALNOREADNUM_SAYHIRESPONSEUNREADNUM].asInt();
             }
+            
+            /* livechatVocherUnreadNum */
+            if (root[LIVEROOM_GETTOTALNOREADNUM_LIVECHATVOUCHERUNREADNUM].isNumeric()) {
+                livechatVocherUnreadNum = root[LIVEROOM_GETTOTALNOREADNUM_LIVECHATVOUCHERUNREADNUM].asInt();
+            }
         }
 
         result = true;
@@ -68,6 +73,7 @@ public:
         bookingUnreadNum = 0;
         backpackUnreadNum = 0;
         sayHiResponseUnreadNum = 0;
+        livechatVocherUnreadNum = 0;
     }
     
     virtual ~HttpMainNoReadNumItem() {
@@ -82,6 +88,7 @@ public:
      * bookingUnreadNum             预约未读数量
      * backpackUnreadNum            背包未读数量
      * sayHiResponseUnreadNum       sayHi回复未读数量
+     * livechatVocherUnreadNum      livechat试聊劵未读数量
      */
     int showTicketUnreadNum;
     int loiUnreadNum;
@@ -90,6 +97,7 @@ public:
     int bookingUnreadNum;
     int backpackUnreadNum;
     int sayHiResponseUnreadNum;
+    int livechatVocherUnreadNum;
 };
 
 #endif /* HTTPMAINNOREADNUMITEM_H_*/

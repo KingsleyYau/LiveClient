@@ -221,8 +221,10 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                 mContext.getResources().getDimensionPixelSize(R.dimen.live_size_20dp),
                 mContext.getResources().getDimensionPixelSize(R.dimen.live_size_20dp)
         );
-        setDefaultEmptyButtonText("");
-        setDefaultEmptyIconVisible(View.INVISIBLE);
+        setEmptyGuideButtonText("");
+//        setDefaultEmptyIconVisible(View.INVISIBLE);
+        setDefaultEmptyIconVisible(View.GONE);
+        setEmptyPullRefreshable(false);
     }
 
     /**
@@ -250,8 +252,9 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                 mContext.getResources().getDimensionPixelSize(R.dimen.live_size_20dp),
                 mContext.getResources().getDimensionPixelSize(R.dimen.live_size_20dp)
         );
-        setDefaultEmptyButtonText("");
-        setDefaultEmptyIconVisible(View.INVISIBLE);
+        setEmptyGuideButtonText("");
+//        setDefaultEmptyIconVisible(View.INVISIBLE);
+        setDefaultEmptyIconVisible(View.GONE);
     }
 
     /**
@@ -278,8 +281,9 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                 mContext.getResources().getDimensionPixelSize(R.dimen.live_size_20dp),
                 mContext.getResources().getDimensionPixelSize(R.dimen.live_size_20dp)
         );
-        setDefaultEmptyButtonText("");
-        setDefaultEmptyIconVisible(View.INVISIBLE);
+        setEmptyGuideButtonText("");
+//        setDefaultEmptyIconVisible(View.INVISIBLE);
+        setDefaultEmptyIconVisible(View.GONE);
     }
 
     @Override
@@ -330,7 +334,6 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
     @Override
     public void onReloadDataInEmptyView() {
         super.onReloadDataInEmptyView();
-        showLoadingProcess();
         refreshByData(false);
     }
 
@@ -361,8 +364,6 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
         Log.d(TAG,"refreshByData-isMore:"+isMore);
         //标记是否刷新数据, 控制本地是否自动倒计时
         if(!isMore){
-            hideNodataPage();
-            hideErrorPage();
             doCancelUpdateEnterTime();
             if(getActivity() != null && getActivity() instanceof MainFragmentActivity){
                 //calendar tab红点取消
@@ -434,6 +435,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                     ProgramInfoItem[] array = (ProgramInfoItem[])response.data;
 
                     mList.addAll(Arrays.asList(array));
+
                     //排序，StartTime从近到远
                     if(mIsGroupByStartTime){
                         Collections.sort(mList, mComparatorList);
@@ -491,6 +493,10 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                             showEmptyView();
                         }
                     }else{
+                        //有数据 隐藏空页错误页
+                        hideNodataPage();
+                        hideErrorPage();
+
                         //有数据 且 不是更多, 才开始本地倒计时
                         if(msg.arg1 == 0){
                             //add by Jagger 2018-5-24 BUG#11063 刷新后回到顶部
@@ -559,9 +565,11 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
         }
 
         mDisposable = Flowable.interval(STEP_ENTERTIME_COUNTDOWN, TimeUnit.MILLISECONDS)
+            .onBackpressureLatest() //加上背压策略
             .doOnNext(new Consumer<Long>() {
                 @Override
                 public void accept(@NonNull Long aLong) throws Exception {
+                    Log.i("hunter", "CalendarFragment accept STEP_ENTERTIME_COUNTDOWN: " + STEP_ENTERTIME_COUNTDOWN + " current num: " + aLong);
                     synchronized (mList) {
                         mListNeedUpdateItemIndex.clear();
                         //对每项操作
@@ -588,6 +596,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
             .map(new Function<Long, List<Integer>>() {
                 @Override
                 public List<Integer> apply(Long aLong) {
+                    Log.i("hunter", "CalendarFragment Function STEP_ENTERTIME_COUNTDOWN: " + STEP_ENTERTIME_COUNTDOWN + " current num: " + aLong);
                     //因为不能在子线程和主线程同时对mListNeedUpdateItemIndex进行遍历和改动，所以把它拷贝到一个新数组中
                     ArrayList<Integer> listItemIndex = new ArrayList<>();
                     listItemIndex.addAll(mListNeedUpdateItemIndex);

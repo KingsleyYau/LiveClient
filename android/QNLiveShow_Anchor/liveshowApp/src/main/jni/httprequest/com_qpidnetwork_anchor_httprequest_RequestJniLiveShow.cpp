@@ -511,3 +511,60 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniLiveSh
 
     return taskId;
 }
+
+/*********************************** 3.9.获取主播当前直播间信息 ****************************************/
+class RequestGetCurrentRoomInfoCallback : public IRequestGetCurrentRoomInfoCallback {
+    void OnGetCurrentRoomInfo(HttpGetCurrentRoomInfoTask* task, bool success, int errnum, const string& errmsg, ZBHttpCurrentRoomItem roomItem) {
+        JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetCurrentRoomInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        /*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+        int errType = HTTPErrorTypeToInt((ZBHTTP_LCC_ERR_TYPE)errnum);
+        jobject jItem = getCurrentRoomItem(env, roomItem);
+        if(callBackObject != NULL){
+            jclass callBackCls = env->GetObjectClass(callBackObject);
+            string signature = "(ZILjava/lang/String;";
+                    signature += "L";
+                    signature += PUSH_ROOM_INFO_ITEM_CLASS;
+                    signature += ";";
+                   signature += ")V";
+            jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetCurrentRoomInfo", signature.c_str());
+            FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetCurrentRoomInfo( callback : %p, signature : %s )",
+                    callbackMethod, signature.c_str());
+            if(callbackMethod != NULL){
+                jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+                env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
+                env->DeleteLocalRef(jerrmsg);
+            }
+        }
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+        if(callBackObject != NULL){
+            env->DeleteGlobalRef(callBackObject);
+        }
+
+        ReleaseEnv(isAttachThread);
+    }
+};
+
+RequestGetCurrentRoomInfoCallback gRequestGetCurrentRoomInfoCallback;
+
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniLiveShow_GetCurrentRoomInfo
+        (JNIEnv * env, jclass cls, jobject callback) {
+    FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetCurrentRoomInfo()");
+    jlong taskId = -1;
+    taskId = gHttpRequestController.GetCurrentRoomInfo(&gHttpRequestManager,
+                                                  &gRequestGetCurrentRoomInfoCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}

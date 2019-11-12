@@ -45,7 +45,7 @@
 #pragma mark - 对话框回调
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenYesNoDialogTitle:(NSString *)title msg:(NSString *)msg yesTitle:(NSString *)yesTitle noTitle:(NSString *)noTitle yesUrl:(NSString *)yesUrl;
 #pragma mark - 聊天界面回调
-- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenLiveChatLady:(NSString *)anchorId anchorName:(NSString *)anchorName;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenLiveChatLady:(NSString *)anchorId anchorName:(NSString *)anchorName inviteMsg:(NSString *)msg;
 #pragma mark - 聊天列表界面回调
 - (void)liveUrlHandlerOpenLiveChatList:(LiveUrlHandler *)handler;
 #pragma mark - 发信界面回调
@@ -63,6 +63,9 @@
 
 #pragma mark - 意向信详情
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenGreetingMailDetail:(NSString *)loiId;
+#pragma mark - 鲜花礼品
+- (void)liveUrlHandler:(LiveUrlHandler *)handler OpenGiftFlowerList:(LiveUrlGiftFlowerListType)type;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openGiftFlowerAnchorStore:(NSString *)anchorId;
 @end
 
 /**
@@ -218,5 +221,12 @@
  @return URL
  */
 - (NSURL *)createSayHiDetailBySayhiId:(NSString *)sayhiId;
+
+/// 生成指定的鲜花礼品商城
+/// @param anchorId 主播id
+- (NSURL *)createFlowerGightByAnchorId:(NSString *)anchorId;
+
+/// 生成鲜花礼品列表
+- (NSURL *)createFlowerStore:(LiveUrlGiftFlowerListType)type;
 
 @end

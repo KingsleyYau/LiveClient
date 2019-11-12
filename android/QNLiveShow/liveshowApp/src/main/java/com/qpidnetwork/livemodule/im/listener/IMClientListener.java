@@ -78,10 +78,22 @@ public abstract class IMClientListener {
 		LCC_ERR_REPEAT_INVITEING_TALENT, 	// 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/(10052)
 		LCC_ERR_RECV_REGULAR_CLOSE_ROOM,    // 用户接收正常关闭直播间(10088)
 		LCC_ERR_PRIVTE_INVITE_AUTHORITY,    // 主播无立即私密邀请权限(17002)
-
 		LCC_ERR_NO_CREDIT_CLOSE_LIVE,       // 余额不足(10190,用于3.3.接收直播间关闭通知 接口)
-		LCC_ERR_NO_CREDIT_DOUBLE_VIDEO,            // 私密直播间开始双向视频时，信用点不足(10091 用于3.14.观众开始/结束视频互动 接口)
+		LCC_ERR_NO_CREDIT_DOUBLE_VIDEO,            // 私密直播间开始双向视频时，信用点不足(10184 用于3.14.观众开始/结束视频互动 接口)
+
 		LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO,   // Hangout直播间开始双向视频时，信用点不足(10146 用于10.11.多人互动观众开始/结束视频互动 接口)
+		LCC_ERR_NOT_RESPONDING,                   // 预约失败，预约判决女士不在线（3.3.接收直播间关闭通知 接口 16177）
+		LCC_ERR_HANGOUT_EXIST_COUNTDOWN_PRIVITEROOM,   // 多人视频流程 主播存在开始倒数私密直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10114)）
+		LCC_ERR_HANGOUT_EXIST_COUNTDOWN_HANGOUTROOM,   // 多人视频流程 主播存在开始倒数多人视频直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10115)）
+		LCC_ERR_HANGOUT_EXIST_FOUR_MIN_SHOW,           // 多人视频流程 主播存在4分钟内开始的预约（Sorry, the broadcaster is busy at the moment. Please try again later.(10116)）
+
+		LCC_ERR_KNOCK_EXIST_ROOM,                      // 男士同意敲门请求，主播存在在线的直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10136)）
+		LCC_ERR_INVITE_FAIL_SHOWING,                   // 发送立即邀请失败 主播正在节目中（Sorry, the broadcaster is busy at the moment. Please try again later.(13020)）
+		LCC_ERR_INVITE_FAIL_BUSY,                      // 发送立即邀请 用户收到主播繁忙通知（Sorry, the broadcaster is busy at the moment. Please try again later.(13021)）
+		LCC_ERR_SEND_RECOMMEND_HAS_SHOWING,            // 主播发送推荐好友请求：好友4分钟后有节目开播（Sorry, the broadcaster is busy at the moment. Please try again later.(16318)）
+		LCC_ERR_SEND_RECOMMEND_EXIT_HANGOUTROOM,       // 主播发送推荐好友请求：好友跟其他男士hangout中（Sorry, the broadcaster is busy at the moment. Please try again later.(16320)）
+
+		LCC_ERR_NO_CREDIT_DOUBLE_VIDEO_NOTICE,        // 私密直播间开始双向视频时，信用点不足(用于3.9.接收充值通知 接口 10091)
 	}
 
 	//邀请答复类型
@@ -539,8 +551,12 @@ public abstract class IMClientListener {
 	 * @param roomId
 	 * @param message
 	 * @param credit
+	 * @param err  信用点不足原因
 	 */
-	public abstract void OnRecvLackOfCreditNotice(String roomId, String message, double credit);
+	public abstract void OnRecvLackOfCreditNotice(String roomId, String message, double credit, LCC_ERR_TYPE err);
+	public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, int errType){
+		OnRecvLackOfCreditNotice(roomId, message, credit, intToErrType(errType));
+	}
 	
 	/**
 	 * 3.10.接收定时扣费通知

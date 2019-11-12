@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -222,6 +223,24 @@ public class ModuleGiftManager {
             @Override
             public void onSetChileView(LiveGift liveGift , LiveGiftItemView v) {
                 Log.i("Jagger" , "initMultiGift onSetChileView:" + ((IMMessageItem)liveGift.getObj()).msgType.name());
+                if(liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom.ordinal()
+                        || liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom.ordinal()  ) {
+                    //私密直播间样式
+                    v.setBg(ContextCompat.getDrawable(mActivity.get(), R.drawable.mult_gift_bg_4_private_room));
+
+                    // 自定义连击数字图片资源ID
+                    v.setImgXResId(R.drawable.ic_x);
+                    v.setImg0ResId(R.drawable.ic_0);
+                    v.setImg1ResId(R.drawable.ic_1);
+                    v.setImg2ResId(R.drawable.ic_2);
+                    v.setImg3ResId(R.drawable.ic_3);
+                    v.setImg4ResId(R.drawable.ic_4);
+                    v.setImg5ResId(R.drawable.ic_5);
+                    v.setImg6ResId(R.drawable.ic_6);
+                    v.setImg7ResId(R.drawable.ic_7);
+                    v.setImg8ResId(R.drawable.ic_8);
+                    v.setImg9ResId(R.drawable.ic_9);
+                }
                 v.setChildView(getGiftView(liveGift));
             }
         };
@@ -238,61 +257,86 @@ public class ModuleGiftManager {
      */
     private View getGiftView(LiveGift liveGift){
         if(null != mActivity && null != mActivity.get()){
-            LayoutInflater inflater = LayoutInflater.from(mActivity.get());
-            View view = inflater.inflate(R.layout.item_multiclick_gift_anim , null);
-            CircleImageView civ_photo = (CircleImageView)view.findViewById(R.id.civ_photo);
-            LinearLayout ll_gift_info = view.findViewById(R.id.ll_gift_info);
-            TextView tvNickName = (TextView)view.findViewById(R.id.tvNickName);
-            TextView tvGiftName = (TextView)view.findViewById(R.id.tvGiftName);
-            ImageView ivGift = (ImageView)view.findViewById(R.id.ivGift);
-            if(liveGift.getObj() instanceof IMMessageItem){
-                IMMessageItem msgItem = (IMMessageItem)liveGift.getObj();
-                if(msgItem != null){
 
-                    if(liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.HangoutRoom.ordinal()){
-                        //如果是HangOut连击礼物，则隐藏部分控件
-                        ll_gift_info.setVisibility(View.GONE);
-                        civ_photo.setVisibility(View.GONE);
-                    }else{
-                        //如果是普通直播间
+            if(liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom.ordinal()
+                || liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom.ordinal()  ){
+                //私密直播间样式
+
+                LayoutInflater inflater = LayoutInflater.from(mActivity.get());
+                View view = inflater.inflate(R.layout.item_multiclick_gift_anim_4_private_live_room , null);
+                TextView tvNickName = (TextView)view.findViewById(R.id.tvNickName);
+                TextView tvGiftName = (TextView)view.findViewById(R.id.tvGiftName);
+                ImageView ivGift = (ImageView)view.findViewById(R.id.ivGift);
+                if(liveGift.getObj() instanceof IMMessageItem){
+                    IMMessageItem msgItem = (IMMessageItem)liveGift.getObj();
+                    if(msgItem != null){
+
                         tvNickName.setText(msgItem.nickName);
-                        IMUserBaseInfoItem imUserBaseInfoItem = IMManager.getInstance().getUserInfo(msgItem.userId);
-                        if(null != imUserBaseInfoItem && !TextUtils.isEmpty(imUserBaseInfoItem.photoUrl)){
-                            Log.d(TAG,"getGiftView-userId:"+msgItem.userId+" photoUrl:"+imUserBaseInfoItem.photoUrl);
-//                        Picasso.with(mActivity.get())
-//                                .load(imUserBaseInfoItem.photoUrl)
-//                                .placeholder(R.drawable.ic_default_photo_man)
-//                                .error(R.drawable.ic_default_photo_man)
-//                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                                .into(civ_photo);
-                            PicassoLoadUtil.loadUrlNoMCache(civ_photo,imUserBaseInfoItem.photoUrl,R.drawable.ic_default_photo_man);
+                        GiftItem giftItem = NormalGiftManager.getInstance().
+                                getLocalGiftDetail(msgItem.giftMsgContent.giftId);
+                        if(giftItem != null && !TextUtils.isEmpty(giftItem.name)){
+                            tvGiftName.setText(mActivity.get().getResources().getString((R.string.send_mult_gift), giftItem.name));
+                        }else{
+                            tvGiftName.setText(mActivity.get().getResources().getString((R.string.send_mult_gift), msgItem.giftMsgContent.giftId));
+                        }
+                        if(!TextUtils.isEmpty(giftItem.bigImageUrl)){
+                            PicassoLoadUtil.loadUrl(ivGift,giftItem.bigImageUrl,R.drawable.ic_default_gift);
                         }
                     }
+                }
+                return view;
+            }else {
+                //其它直播间样式
+                LayoutInflater inflater = LayoutInflater.from(mActivity.get());
+                View view = inflater.inflate(R.layout.item_multiclick_gift_anim , null);
+                CircleImageView civ_photo = (CircleImageView)view.findViewById(R.id.civ_photo);
+                LinearLayout ll_gift_info = view.findViewById(R.id.ll_gift_info);
+                TextView tvNickName = (TextView)view.findViewById(R.id.tvNickName);
+                TextView tvGiftName = (TextView)view.findViewById(R.id.tvGiftName);
+                ImageView ivGift = (ImageView)view.findViewById(R.id.ivGift);
+                if(liveGift.getObj() instanceof IMMessageItem){
+                    IMMessageItem msgItem = (IMMessageItem)liveGift.getObj();
+                    if(msgItem != null){
 
-                    GiftItem giftItem = NormalGiftManager.getInstance().
-                            getLocalGiftDetail(msgItem.giftMsgContent.giftId);
-                    if(giftItem != null && !TextUtils.isEmpty(giftItem.name)){
-                        tvGiftName.setText(giftItem.name);
-                    }else{
-                        tvGiftName.setText(msgItem.giftMsgContent.giftId);
-                    }
-                    if(!TextUtils.isEmpty(giftItem.bigImageUrl)){
-//                        Picasso.with(mActivity.get())
-//                                .load(giftItem.bigImageUrl)
-//                                .placeholder(R.drawable.ic_default_gift)
-//                                .error(R.drawable.ic_default_gift)
-//                                .into(ivGift);
-                        PicassoLoadUtil.loadUrl(ivGift,giftItem.bigImageUrl,R.drawable.ic_default_gift);
+                        if(liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.HangoutRoom.ordinal()){
+                            //如果是HangOut连击礼物，则隐藏部分控件
+                            ll_gift_info.setVisibility(View.GONE);
+                            civ_photo.setVisibility(View.GONE);
+                        }else{
+                            //如果是普通直播间
+                            tvNickName.setText(msgItem.nickName);
+                            IMUserBaseInfoItem imUserBaseInfoItem = IMManager.getInstance().getUserInfo(msgItem.userId);
+                            if(null != imUserBaseInfoItem && !TextUtils.isEmpty(imUserBaseInfoItem.photoUrl)){
+                                Log.d(TAG,"getGiftView-userId:"+msgItem.userId+" photoUrl:"+imUserBaseInfoItem.photoUrl);
+                                PicassoLoadUtil.loadUrlNoMCache(civ_photo,imUserBaseInfoItem.photoUrl,R.drawable.ic_default_photo_man);
+                            }
+                        }
+
+                        GiftItem giftItem = NormalGiftManager.getInstance().
+                                getLocalGiftDetail(msgItem.giftMsgContent.giftId);
+                        if(giftItem != null && !TextUtils.isEmpty(giftItem.name)){
+                            tvGiftName.setText(giftItem.name);
+                        }else{
+                            tvGiftName.setText(msgItem.giftMsgContent.giftId);
+                        }
+                        if(!TextUtils.isEmpty(giftItem.bigImageUrl)){
+                            PicassoLoadUtil.loadUrl(ivGift,giftItem.bigImageUrl,R.drawable.ic_default_gift);
+                        }
                     }
                 }
+                return view;
             }
-            return view;
+
+
+
         }
         return null;
     }
 
-    public void onMultiGiftOnStop(){
-        //清空大礼物动画队列
+    /**
+     * 清空大礼物动画队列
+     */
+    public void onAdvanceGiftOnStop(){
         if(mAdvanceGiftManager != null){
             mAdvanceGiftManager.onDestroy();
         }
@@ -301,8 +345,7 @@ public class ModuleGiftManager {
     /**
      * 连击动画控件回收
      */
-    public void onMultiGiftDestroy(){
-        onMultiGiftOnStop();
+    public void onMultiGiftStop(){
         //回收资源
         if(mLiveGiftView != null) {
             mLiveGiftView.dismiss();
@@ -313,6 +356,8 @@ public class ModuleGiftManager {
      * 销毁
      */
     public void destroy(){
+        onAdvanceGiftOnStop();
+
         //销毁
         if(mLiveGiftView != null) {
             mLiveGiftView.destroy();

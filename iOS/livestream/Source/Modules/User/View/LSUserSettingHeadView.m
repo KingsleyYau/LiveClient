@@ -39,14 +39,22 @@
     self.userInteractionEnabled = YES;
     self.headImage.userInteractionEnabled = YES;
     self.headBackground.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bgClickAction)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headImageClickAction)];
     UITapGestureRecognizer *tapBg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bgClickAction)];
     [self.headBackground addGestureRecognizer:tapBg];
     [self.headImage addGestureRecognizer:tap];
     
+    
+    
     [[LSImageViewLoader loader] loadImageFromCache:self.headImage options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
     }];
 }
+
+- (void)reloadHeadImage:(NSString *)photoUrl {
+    [[LSImageViewLoader loader] loadImageFromCache:self.headImage options:0 imageUrl:photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"] finishHandler:^(UIImage *image) {
+    }];
+}
+
 
 - (IBAction)backBtnDid:(id)sender {
     if ([self.delegate respondsToSelector:@selector(settingHeadViewBackDid)]) {
@@ -57,6 +65,17 @@
 - (void)bgClickAction {
     if ([self.delegate respondsToSelector:@selector(settingBackgroundDid)]) {
         [self.delegate settingBackgroundDid];
+    }
+}
+
+- (void)headImageClickAction {
+    if ([self.delegate respondsToSelector:@selector(settingHeadImageDid)]) {
+        [self.delegate settingHeadImageDid];
+    }
+}
+- (IBAction)editBtnAction:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(settingHeadEditDid)]) {
+        [self.delegate settingHeadEditDid];
     }
 }
 

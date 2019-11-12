@@ -55,6 +55,14 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPa
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPackage_GetVoucherAvailableInfo
         (JNIEnv *, jclass, jobject);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniPackage
+ * Method:    GetChatVoucherList
+ * Signature: (IILcom/qpidnetwork/livemodule/httprequest/OnGetVouchersListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPackage_GetChatVoucherList
+  (JNIEnv *, jclass, jint, jint, jobject);
+
 #ifdef __cplusplus
 }
 #endif

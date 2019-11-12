@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="94dp"
-    android:layout_height="125dp">
+    android:layout_width="@dimen/live_room_pri_man_video_width"
+    android:layout_height="@dimen/live_room_pri_man_video_height">
 
     <android.opengl.GLSurfaceView
         android:id="@+id/sv_pull"

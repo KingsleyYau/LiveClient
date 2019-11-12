@@ -15,15 +15,15 @@
 
 
 
-    <color name="white">#ffffff</color>
+    <color name="white">#fefefe</color>
     <color name="white_text_70">#b2ffffff</color>
     <color name="white_text_40">#66ffffff</color>
     <color name="white_text_30">#4dffffff</color>
     <color name="white_text_20">#33ffffff</color>
     <color name="white_text_12">#1fffffff</color>
     <color name="black">#000000</color>
-    <color name="black_text_87">#dd000000</color>
-    <color name="black_text_54">#8a000000</color>
+    <color name="black_text_87">#DD000000</color>
+    <color name="black_text_54">#8A000000</color>
     <color name="black_text_26">#42000000</color>
     <color name="black_text_12">#1f000000</color>
 
@@ -55,5 +55,7 @@
     <color name="shadow">#25808080</color>
 
     <color name="live_switch_on_bg">#297af3</color>
+
+
 
 </resources>

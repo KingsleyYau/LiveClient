@@ -6,4 +6,8 @@
     <dimen name="btn_bottom_height_40dp">40dp</dimen>
 
     <dimen name="btn_back_padding_20dp">20dp</dimen>
+
+    <dimen name="email_associate_height">160dp</dimen>
+
+    <dimen name="email_associate_text_size">16sp</dimen>
 </resources>

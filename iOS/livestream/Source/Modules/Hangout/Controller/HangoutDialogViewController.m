@@ -307,7 +307,7 @@
     [[LiveModule module].analyticsManager reportActionEvent:InviteHangOut eventCategory:EventCategoryBroadcast];
     [self dismissView];
     if (self.useUrlHandler) {
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:self.item.anchorId anchorName:self.item.nickName hangoutAnchorId:@"" hangoutAnchorName:@""];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:self.anchorId anchorName:self.item.nickName hangoutAnchorId:@"" hangoutAnchorName:@""];
         [[LiveModule module].serviceManager handleOpenURL:url];
     } else {
         if ([self.dialogDelegate respondsToSelector:@selector(hangoutDialogViewController:didClickHangoutBtn:)]) {

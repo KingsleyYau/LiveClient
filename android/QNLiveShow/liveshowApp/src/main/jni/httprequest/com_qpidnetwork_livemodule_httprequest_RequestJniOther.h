@@ -135,6 +135,30 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_PhoneInfo
            (JNIEnv *, jclass, jstring, jint, jstring, jint, jint, jdouble, jint, jint, jstring, jstring, jstring, jstring, jstring, jint, jint, jstring, jobject);
 
+ /*
+  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+  * Method:    UpQnInviteId
+  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/qpidnetwork/request/OnRequestCallback;)J
+  */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_UpQnInviteId
+           (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jint, jobject);
+
+ /*
+  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+  * Method:    RetrieveBanner
+  * Signature: (Ljava/lang/String;ZIILcom/qpidnetwork/request/OnRequestCallback;)J
+  */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_RetrieveBanner
+           (JNIEnv *, jclass, jstring, jboolean, jint, jobject);
+
+ /*
+  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+  * Method:    WomanListAdvert
+  * Signature: (Ljava/lang/String;ZIILcom/qpidnetwork/request/OnLSAdWomanListAdvertCallback;)J
+  */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_WomanListAdvert
+           (JNIEnv *, jclass, jstring, jobject);
+
 
 #ifdef __cplusplus
 }

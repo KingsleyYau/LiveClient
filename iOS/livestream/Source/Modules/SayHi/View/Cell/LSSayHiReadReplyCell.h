@@ -12,6 +12,7 @@
 @protocol LSSayHiReadReplyCellDelegate <NSObject>
 
 - (void)sayHiReadReplyCellReplyBtnDid;
+- (void)sayHiReadReplyCellContentImageTap;
 @end
 
 @interface LSSayHiReadReplyCell : UITableViewCell

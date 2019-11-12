@@ -24,14 +24,14 @@ class RequestGetPushConfigCallback : public IRequestGetPushConfigCallback{
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;";
-			signature += "ZZ";
+			signature += "ZZZ";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetPushConfig", signature.c_str());
 			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetPushConfig( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, appPushItem.isPriMsgAppPush, appPushItem.isMailAppPush);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, appPushItem.isPriMsgAppPush, appPushItem.isMailAppPush, appPushItem.isSayHiAppPush);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -98,13 +98,13 @@ class RequestSetPushConfigCallback : public IRequestSetPushConfigCallback{
 RequestSetPushConfigCallback gRequestSetPushConfigCallbackk;
 
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniSetting_SetPushConfig
-		(JNIEnv *env, jclass cls, jboolean isPriMsgAppPush, jboolean isMailAppPush, jobject callback) {
-	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetPushConfig(isPriMsgAppPush : %d,  isMailAppPush :%d)", isPriMsgAppPush, isMailAppPush);
+		(JNIEnv *env, jclass cls, jboolean isPriMsgAppPush, jboolean isMailAppPush, jboolean isSayHiAppPush, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetPushConfig(isPriMsgAppPush : %d,  isMailAppPush :%d, isSayHiAppPush : %d)", isPriMsgAppPush, isMailAppPush, isSayHiAppPush);
     jlong taskId = -1;
     taskId = gHttpRequestController.SetPushConfig(&gHttpRequestManager,
                                                   isPriMsgAppPush,
                                                   isMailAppPush,
-                                                  false,
+                                                  isSayHiAppPush,
                                                   &gRequestSetPushConfigCallbackk);
 
     jobject obj = env->NewGlobalRef(callback);

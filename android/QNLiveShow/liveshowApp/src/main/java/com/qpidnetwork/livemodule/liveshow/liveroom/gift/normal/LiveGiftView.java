@@ -118,11 +118,22 @@ public abstract class LiveGiftView implements LiveGiftManager.onGiftStateChangeL
         //中点Y坐标：锚控件TOP/2 - 状态栏高度 计算出可显示的范围的中间Y坐标
 //        int midY = rect.top / 2;
 //        int midY = rect.top - itemHeight;   //按HUNTER需求改为这样子：锚控件TOP - 一个ITEM的高度为中点
+
+        //中点Y坐标: 锚控件1/2高度
+//        int midY ;
+//        if(MAX_GIFT_SUM == 1){
+//            midY = mViewContent.getMeasuredHeight() -  itemHeight/2;   //距离容器底部半个item高度的位置
+//        }else{
+//            midY = mViewContent.getMeasuredHeight() / 2 ;   //容器高度的一半
+//        }
+
+        //edit by Jagger 2019-9-16
+        //中点Y坐标: 锚控件1/2高度再偏下半个item
         int midY ;
         if(MAX_GIFT_SUM == 1){
             midY = mViewContent.getMeasuredHeight() -  itemHeight/2;   //距离容器底部半个item高度的位置
         }else{
-            midY = mViewContent.getMeasuredHeight() / 2 ;   //容器高度的一半
+            midY = (mViewContent.getMeasuredHeight() / 2) + (itemHeight/2);   //容器高度的一半 + 半个item的位置（为了可以看到最顶部的item向上渐隐效果）
         }
 
         //礼物位置

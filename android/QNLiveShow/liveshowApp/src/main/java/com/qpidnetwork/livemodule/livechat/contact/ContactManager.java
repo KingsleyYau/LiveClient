@@ -44,6 +44,7 @@ import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.RequestBaseResponse;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.ListUtils;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationTypeEnum;
@@ -138,7 +139,7 @@ public class ContactManager implements IAuthorizationListener,
                         }
 
                         if(!TextUtils.isEmpty(tips) && item != null){
-                            String url = URL2ActivityManager.createLiveChatActivityUrl(item.getUserItem().userId, item.getUserItem().userName, "");
+                            String url = LiveUrlBuilder.createLiveChatActivityUrl(item.getUserItem().userId, item.getUserItem().userName, "");
                             PushManager.getInstance().ShowNotification(NotificationTypeEnum.LIVE_LIVECHAT_NOTIFICATION,
                                     mContext.getResources().getString(R.string.app_name),
                                     tips,
@@ -1245,6 +1246,11 @@ public class ContactManager implements IAuthorizationListener,
     public void OnRecvMessage(LCMessageItem item) {
         /* 收到聊天信息，更新列表 */
         onReceiveMessage(item);
+    }
+
+    @Override
+    public void OnSendInviteMessage(LCMessageItem item) {
+
     }
 
     @Override

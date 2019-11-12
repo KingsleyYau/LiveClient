@@ -7,3 +7,5 @@
 */
 
 "LOCAL_ERROR_CODE_TIMEOUT" = "Trouble connecting to the server. Please try again later.";
+
+"LIVE_ROOM_BACKGROUND_TIMEOUT" = "Sorry, since you have not viewed broadcast for over 1 minute, you are exited the broadcast room automatically.";

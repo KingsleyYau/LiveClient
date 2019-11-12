@@ -84,7 +84,7 @@
  @param userInfo 用户状态信息
  @return 状态是否改变
  */
-- (BOOL)updateRecentWithUserInfoItem:(LSLCLiveChatUserItemObject *)userInfo;
+- (BOOL)updateRecentWithUserInfoItem:(LSLCLiveChatUserInfoItemObject *)userInfo;
 
 /**
  根据LiveChat消息更新邀请未读

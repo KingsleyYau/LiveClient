@@ -52,6 +52,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
+        //不走onResume()时，才走onReVisible();
         if(mContext != null && !isNeedOnResume){
             if (isVisibleToUser) {
                 onReVisible();
@@ -64,9 +65,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        isNeedOnResume = false;
-        //
-        onReVisible();
+        if(isNeedOnResume){
+            isNeedOnResume = false;
+            // 初始化后，走一次onReVisible()
+            onReVisible();
+        }
         // 从HOME/后台返回
         if(isHomeBack && System.currentTimeMillis() - AppFrontBackHelper.getInstance().getTheTime2Home() > timeIntervalFromHome){
             isHomeBack = false;
@@ -89,7 +92,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         AppFrontBackHelper.getInstance().unRegister(this);
+
+        if (mUiHandler != null) {
+            mUiHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     /*用于Fragment页统计*/

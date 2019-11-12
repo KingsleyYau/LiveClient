@@ -16,7 +16,6 @@ import com.qpidnetwork.livemodule.httprequest.OnGetScheduleInviteListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.RequstJniSchedule;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
-import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
@@ -26,8 +25,6 @@ import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_NOTCAN_CANCEL_INVITATION;
 
 /**
  * 用户发起等待主播处理列表
@@ -95,6 +92,7 @@ public class PendingConfirmFragment extends BaseListFragment{
                 showEmptyView();
             }else{
                 hideNodataPage();
+                hideErrorPage();
             }
         }else{
             if(mNewInviteList.size()>0){
@@ -118,8 +116,8 @@ public class PendingConfirmFragment extends BaseListFragment{
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
         if(null != getActivity()){
             Intent intent = new Intent( getActivity(), MainFragmentActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -135,7 +133,7 @@ public class PendingConfirmFragment extends BaseListFragment{
     private void showEmptyView(){
         if(null != getActivity()){
             setDefaultEmptyMessage(getActivity().getResources().getString(R.string.sent_empty_tips));
-            setDefaultEmptyButtonText(getActivity().getResources().getString(R.string.invite_empty_hot_broadcasters));
+            setEmptyGuideButtonText(getActivity().getResources().getString(R.string.invite_empty_hot_broadcasters));
         }
         showNodataPage();
     }

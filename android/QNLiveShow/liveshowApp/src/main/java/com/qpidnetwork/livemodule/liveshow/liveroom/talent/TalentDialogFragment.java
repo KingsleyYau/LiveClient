@@ -271,6 +271,7 @@ public class TalentDialogFragment extends DialogFragment implements TalentListFr
         }
 
         mDisposable = Flowable.interval(STEP_REFRESH_BLURRINGVIEW, TimeUnit.MILLISECONDS)
+                .onBackpressureLatest() //加上背压策略
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override

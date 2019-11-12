@@ -1,11 +1,11 @@
 package com.dou361.dialogui.bean;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 
 import com.dou361.dialogui.adapter.SuperAdapter;
@@ -51,22 +51,15 @@ public class BuildBean extends Buildable implements Styleable {
      * 构建dialog的类型
      */
     public int type;
-    /**
-     * 标识水平还是垂直布局菜单
-     */
     public boolean isVertical;
 
     public View customView;
 
     public int gravity;
-    //日期选择所需
     public int dateType;
     public long date;
     public String dateTitle;
     public int tag;
-    public int maxYear;
-    public int minYear;
-
 
     public CharSequence title;
     public CharSequence msg;
@@ -78,6 +71,7 @@ public class BuildBean extends Buildable implements Styleable {
     public CharSequence hint1;
     public CharSequence hint2;
 
+    public boolean isBgTransparent = false;
 
     public DialogUIListener listener;
     public DialogUIDateTimeSaveListener dateTimeListener;
@@ -99,10 +93,9 @@ public class BuildBean extends Buildable implements Styleable {
     public Dialog dialog;
     public AlertDialog alertDialog;
 
-    /*
-    dialog高度
-     */
+
     public int viewHeight;
+
 
     //各类对话框特有的参数
     public CharSequence[] wordsMd;
@@ -114,7 +107,9 @@ public class BuildBean extends Buildable implements Styleable {
     public List<TieBean> mLists;
     public int gridColumns = 4;
 
+
     //样式
+
     //三个以下按钮,颜色按此顺序
     @ColorRes
     public int btn1Color = DialogConfig.iosBtnColor;
@@ -136,14 +131,14 @@ public class BuildBean extends Buildable implements Styleable {
     public Map<Integer, Integer> colorOfPosition;//listview 的item的特殊颜色:ColorRes
 
     //字体大小
-    public int btnTxtSize = 15;// in sp
+    public int btnTxtSize = 17;// in sp
     public int titleTxtSize = 14;
     public int msgTxtSize = 14;
     public int itemTxtSize = 14;
     public int inputTxtSize = 14;
 
 
-
+    @SuppressLint("ResourceType")
     @Override
     public BuildBean setBtnColor(@ColorRes int btn1Color, @ColorRes int btn2Color, @ColorRes int btn3Color) {
         if (btn1Color > 0)
@@ -155,6 +150,7 @@ public class BuildBean extends Buildable implements Styleable {
         return this;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public BuildBean setListItemColor(@ColorRes int lvItemTxtColor, Map<Integer, Integer> colorOfPosition) {
         if (lvItemTxtColor > 0)
@@ -165,6 +161,7 @@ public class BuildBean extends Buildable implements Styleable {
         return this;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public BuildBean setTitleColor(@ColorRes int colorRes) {
         if (colorRes > 0) {
@@ -173,6 +170,7 @@ public class BuildBean extends Buildable implements Styleable {
         return this;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public BuildBean setMsgColor(@ColorRes int colorRes) {
         if (colorRes > 0) {
@@ -181,6 +179,7 @@ public class BuildBean extends Buildable implements Styleable {
         return this;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public BuildBean seInputColor(@ColorRes int colorRes) {
         if (colorRes > 0) {
@@ -189,11 +188,6 @@ public class BuildBean extends Buildable implements Styleable {
         return this;
     }
 
-    /**
-     * 设置文本字体大小
-     * 因为TextView.setTextSize(float size)方法源码默认的字体大小单位就是sp
-     * @param sizeInSp
-     */
     @Override
     public BuildBean setTitleSize(int sizeInSp) {
         if (sizeInSp > 0 && sizeInSp < 30) {
@@ -239,11 +233,9 @@ public class BuildBean extends Buildable implements Styleable {
         buildByType(this);
         if (dialog != null && !dialog.isShowing()) {
             ToolUtils.showDialog(dialog);
-            Log.i("Jagger" , "Buildable-->show dialog");
             return dialog;
         } else if (alertDialog != null && !alertDialog.isShowing()) {
             ToolUtils.showDialog(alertDialog);
-            Log.i("Jagger" , "Buildable-->show alertDialog");
             return alertDialog;
         }
         return null;
@@ -275,6 +267,12 @@ public class BuildBean extends Buildable implements Styleable {
     public BuildBean setCancelable(boolean cancelable, boolean outsideCancelable) {
         this.cancelable = cancelable;
         this.outsideTouchable = outsideCancelable;
+        return this;
+    }
+
+    @Override
+    public BuildBean setBgTransparent(boolean bgTransparent) {
+        isBgTransparent = bgTransparent;
         return this;
     }
 

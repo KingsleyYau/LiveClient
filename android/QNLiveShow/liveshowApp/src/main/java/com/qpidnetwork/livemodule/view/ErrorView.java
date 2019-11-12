@@ -40,7 +40,7 @@ public class ErrorView extends LinearLayout {
     private void createView() {
 
         View v = LayoutInflater.from(getContext()).inflate(
-                R.layout.live_layout_error_page, null);
+                R.layout.live_layout_error_page, this,false);
 
         btnRetry = (Button)v.findViewById(R.id.btnRetry);
         btnRetry.setOnClickListener(new OnClickListener() {

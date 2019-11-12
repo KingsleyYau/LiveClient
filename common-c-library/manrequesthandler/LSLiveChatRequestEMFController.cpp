@@ -1191,6 +1191,8 @@ void LSLiveChatRequestEMFController::InboxPhotoFeeCallbackHandle(long requestId,
 long LSLiveChatRequestEMFController::PrivatePhotoView(const string& womanid, const string& photoid, const string& sendid, const string& messageid, const string& filePath, int type, int mode)
 {
 	HttpEntiy entiy;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    entiy.SetIsDownLoadFile(true);
 
 	// delete file
 	string tempPath = GetTempFilePath(filePath);
@@ -1387,6 +1389,8 @@ long LSLiveChatRequestEMFController::GetVideoThumbPhoto(
 	const string& filePath
 	) {
 	HttpEntiy entiy;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    entiy.SetIsDownLoadFile(true);
 	char temp[32] = {0};
 
 	// delete file

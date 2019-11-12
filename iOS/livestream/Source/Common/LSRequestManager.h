@@ -56,6 +56,14 @@
 #import "LSSayHiResponseItemObject.h"
 #import "LSSayHiDetailInfoItemObject.h"
 #import "LSAppPushConfigItemObject.h"
+#import "LSRecommendAnchorItemObject.h"
+#import "LSLeftCreditItemObject.h"
+#import "LSGiftTypeItemObject.h"
+#import "LSStoreFlowerGiftItemObject.h"
+#import "LSDeliveryItemObject.h"
+#import "LSMyCartItemObject.h"
+#import "LSCheckoutItemObject.h"
+#import "LSWomanListAdItemObject.h"
 #include <httpcontroller/HttpRequestEnum.h>
 
 @interface LSRequestManager : NSObject
@@ -484,6 +492,26 @@ typedef void (^GetValidateCodeFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE err
 - (NSInteger)getValidateCode:(LSValidateCodeType)validateCodeType
                finishHandler:(GetValidateCodeFinishHandler)finishHandler;
 
+/**
+ *  2.23.提交用户头像接口回调
+ *
+ *  @param success    成功失败
+ *  @param errnum     错误码
+ *  @param errmsg     错误提示
+ */
+typedef void (^UploadUserPhotoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ *  2.23.提交用户头像接口
+ *
+ *  @param file               上传头像文件名
+ *  @param finishHandler      接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)uploadUserPhoto:(NSString*)file
+               finishHandler:(UploadUserPhotoFinishHandler)finishHandler;
+
 #pragma mark - 直播间模块
 /**
  *  3.1.获取Hot列表接口回调
@@ -793,6 +821,93 @@ typedef void (^GetPromoAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE 
                          userId:(NSString *)userId
                   finishHandler:(GetPromoAnchorListFinishHandler)finishHandler;
 
+/**
+ *  3.15.获取页面推荐的主播列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        推荐主播列表
+ */
+typedef void (^GetLiveEndRecommendAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSRecommendAnchorItemObject *> *array);
+
+/**
+ *  3.15.获取页面推荐的主播列表接口
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLiveEndRecommendAnchorList:(GetLiveEndRecommendAnchorListFinishHandler)finishHandler;
+
+/**
+ *  3.16.获取我的联系人列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        推荐主播列表
+ */
+typedef void (^GetContactListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSRecommendAnchorItemObject *> *array, int totalCount);
+
+/**
+ *  3.16.获取我的联系人列表接口
+ *
+ *  @param start            起始，用于分页，表示从第几个元素开始获取
+ *  @param step             步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getContactList:(int)start
+                       step:(int)step
+              finishHandler:(GetContactListFinishHandler)finishHandler;
+
+/**
+ *  3.17.获取虚拟礼物分类列接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        推荐主播列表
+ */
+typedef void (^GetGiftTypeListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSGiftTypeItemObject *> *array);
+
+/**
+ *  3.17.获取虚拟礼物分类列接口
+ *
+ *  @param roomType         场次类型(LSGIFTROOMTYPE_PUBLIC : 公开, LSGIFTROOMTYPE_PRIVATE : 私密)
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getGiftTypeList:(LSGiftRoomType)roomType
+              finishHandler:(GetGiftTypeListFinishHandler)finishHandler;
+
+/**
+ *  3.18.Featured欄目的推荐主播列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   热门列表
+ */
+typedef void (^GetFeaturedAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LiveRoomInfoItemObject *> *array);
+
+/**
+ *  3.18.Featured欄目的推荐主播列表接口
+ *
+ *  @param start            起始，用于分页，表示从第几个元素开始获取
+ *  @param step             步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getFeaturedAnchorList:(int)start
+                              step:(int)step
+                     finishHandler:(GetFeaturedAnchorListFinishHandler)finishHandler;
+
+
 #pragma mark - 预约私密
 
 /**
@@ -1073,6 +1188,28 @@ typedef void (^GetVoucherAvailableInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_
  */
 - (NSInteger)getVoucherAvailableInfo:(GetVoucherAvailableInfoFinishHandler)finishHandler;
 
+/**
+ *  5.7.获取LiveChat聊天试用券列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array        使用卷列表
+ *  @param totalCount   列表总数
+ */
+typedef void (^GetChatVoucherListFinishHandler)(BOOL success, NSString * errnum, NSString *errmsg, NSArray<VoucherItemObject *> *array, int totalCount);
+
+/**
+ *  5.7.获取LiveChat聊天试用券列表接口
+ *
+ *  @param finishHandler       接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getChatVoucherList:(int)start
+                           step:(int)step
+                  finishHandler:(GetChatVoucherListFinishHandler)finishHandler;
+
 #pragma mark - 其它
 /**
  *  6.1.同步配置接口回调
@@ -1099,11 +1236,9 @@ typedef void (^GetConfigFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, N
  *  @param success  成功失败
  *  @param errnum   错误码
  *  @param errmsg   错误提示
- *  @param credit   余额
- *  @param coupon   试聊劵数量
- *  @param postStamp 可用的邮票数量
+ *  @param item     余额信息
  */
-typedef void (^GetLeftCreditFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, double credit, int coupon, double postStamp);
+typedef void (^GetLeftCreditFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSLeftCreditItemObject *item);
 
 /**
  *  6.2.获取账号余额接口
@@ -1506,10 +1641,38 @@ typedef void (^PremiumMembershipFinishHandler)(BOOL success, NSString *errnum, N
  */
 - (NSInteger)premiumMembership:(PremiumMembershipFinishHandler)finishHandler;
 
+
+/**
+ * 7.7.获取h5买点页面URL 接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param redirtctUrl  h5买点页面URL
+ */
+typedef void (^MobilePayGotoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *redirtctUrl);
+
+/**
+ * 7.7.获取h5买点页面URL 接口
+ *
+ *  @param orderType    购买产品类型（LSORDERTYPE_CREDIT：信用点，LSORDERTYPE_FLOWERGIFT：鲜花礼品, LSORDERTYPE_MONTHFEE：月费服务，LSORDERTYPE_STAMP：邮票）
+ *  @param clickFrom    点击来源（Axx表示不可切换，Bxx表示可切换）（可""，""则表示不指定）
+ *  @param number       已选中的充值包ID（可""，""表示不指定充值包）
+ *  @param orderNo      鲜花礼品订单ID（可无，无或空表示无订单ID）
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)mobilePayGoto:(LSOrderType)orderType
+                 clickFrom:(NSString *)clickFrom
+                    number:(NSString *)number
+                   orderNo:(NSString *)orderNo
+             finishHandler:(MobilePayGotoFinishHandler)finishHandler;
+
 /**
  *  8.1.获取可邀请多人互动的主播列表接口回调（已废弃）
  *
- *  @param success      成功失败
+ *  @param success      成功失败m
  *  @param errnum       错误码
  *  @param errmsg       错误提示
  *  @param array        多人互动的主播列表
@@ -2371,5 +2534,344 @@ typedef void (^ReadResponseFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum
 - (NSInteger)readResponse:(NSString*)sayHiId
                responseId:(NSString*)responseId
             finishHandler:(ReadResponseFinishHandler)finishHandler;
+
+/**
+ *  6.23.qn邀请弹窗更新邀请id接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ */
+typedef void (^UpQnInviteIdFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ *  6.23.qn邀请弹窗更新邀请id接口
+ *
+ *  @param manId                         用户ID
+ *  @param anchorId                      主播id
+ *  @param inviteId                      邀请id
+ *  @param roomId                        直播间id
+ *  @param inviteType                    邀請類型(LSBUBBLINGINVITETYPE_ONEONONE:one-on-one LSBUBBLINGINVITETYPE_HANGOUT:Hangout LSBUBBLINGINVITETYPE_LIVECHAT:Livechat)
+ *  @param finishHandler    接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)upQnInviteId:(NSString*)manId
+                 anchorId:(NSString*)anchorId
+                 inviteId:(NSString*)inviteId
+                   roomId:(NSString*)roomId
+               inviteType:(LSBubblingInviteType)inviteType
+            finishHandler:(UpQnInviteIdFinishHandler)finishHandler;
+
+/**
+ *  6.24.获取直播广告接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param htmUrl           广告url
+ */
+typedef void (^RetrieveBannerFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *htmUrl);
+
+/**
+ *  6.24.获取直播广告接口
+ *
+ * @param manId                         用户ID
+ * @param isAnchorPage                  是否是是主播详情页
+ * @param bannerType                    邀請類型(LSBANNERTYPE_NINE_SQUARED:直播站内九宫格 LSBANNERTYPE_ALL_BROADCASTERS:All Broadcasters LSBANNERTYPE_FEATURED_BROADCASTERS:Featured Broadcasters LSBANNERTYPE_SAYHI:Say Hi LSBANNERTYPE_GREETMAIL:Greeting Mail LSBANNERTYPE_MAIL:Mail LSBANNERTYPE_CHAT:Chat LSBANNERTYPE_HANGOUT:Hang-out LSBANNERTYPE_GIFTSFLOWERS:Gifts & Flowers)
+ *  @param finishHandler    接口回调s
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)retrieveBanner:(NSString*)manId
+               isAnchorPage:(BOOL)isAnchorPage
+                 bannerType:(LSBannerType)bannerType
+              finishHandler:(RetrieveBannerFinishHandler)finishHandler;
+
+#pragma mark - 鲜花礼品
+/**
+ *  15.1.获取鲜花礼品列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            商店的鲜花礼品列表
+ */
+typedef void (^GetStoreGiftListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSStoreFlowerGiftItemObject *> *array);
+
+/**
+ *  15.1.获取鲜花礼品列表接口
+ *
+ * @param anchorId          主播ID（可无）
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getStoreGiftList:(NSString*)anchorId
+                finishHandler:(GetStoreGiftListFinishHandler)finishHandler;
+
+/**
+ *  15.2.获取鲜花礼品详情接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             鲜花礼品详情
+ */
+typedef void (^GetFlowerGiftDetailFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSFlowerGiftItemObject *item);
+
+/**
+ *  15.2.获取鲜花礼品详情接口
+ *
+ *  @param giftId           礼物ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getFlowerGiftDetail:(NSString*)giftId
+                   finishHandler:(GetFlowerGiftDetailFinishHandler)finishHandler;
+
+
+/**
+ *  15.3.获取推荐鲜花礼品列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            推荐鲜花礼品列表
+ */
+typedef void (^GetRecommendGiftListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSFlowerGiftItemObject *> *array);
+
+/**
+ *  15.3.获取推荐鲜花礼品列表接口
+ *
+ *  @param giftId           礼物ID
+ *  @param anchorId         主播ID
+ *  @param number           数量
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getRecommendGiftList:(NSString*)giftId
+                         anchorId:(NSString*)anchorId
+                           number:(int)number
+                    finishHandler:(GetRecommendGiftListFinishHandler)finishHandler;
+
+/**
+ *  15.4.获取Resent Recipient主播列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            Recipient的主播列表
+ */
+typedef void (^GetResentRecipientListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSRecipientAnchorItemObject *> *array);
+
+/**
+ *  15.4.获取Resent Recipient主播列表接口
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getResentRecipientList:(GetResentRecipientListFinishHandler)finishHandler;
+
+/**
+ *  15.5.获取My delivery列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            配送列表
+ */
+typedef void (^GetDeliveryListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSDeliveryItemObject *> *array);
+
+/**
+ *  15.5.获取My delivery列表接口
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getDeliveryList:(GetDeliveryListFinishHandler)finishHandler;
+
+/**
+ *  15.6.获取购物车礼品种类数接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param num              礼品种类数
+ */
+typedef void (^GetCartGiftTypeNumFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int num);
+
+/**
+ *  15.6.获取购物车礼品种类数接口
+ *
+ *  @param anchorId         主播ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getCartGiftTypeNum:(NSString*)anchorId
+                  finishHandler:(GetCartGiftTypeNumFinishHandler)finishHandler;
+
+/**
+ *  15.7.获取购物车My cart列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param total            总数
+ *  @param array            购物车cart列表
+ */
+typedef void (^GetCartGiftListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int total, NSArray<LSMyCartItemObject *> *array);
+
+/**
+ *  15.7.获取购物车My cart列表接口
+ *
+ *  @param start                         起始，用于分页，表示从第几个元素开始获取
+ *  @param step                          步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getCartGiftList:(int)start
+                        step:(int)step
+               finishHandler:(GetCartGiftListFinishHandler)finishHandler;
+
+/**
+ *  15.8.添加购物车商品接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ */
+typedef void (^AddCartGiftFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ *  15.8.添加购物车商品接口
+ *
+ *  @param anchorId         主播ID
+ *  @param giftId           礼品ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)addCartGift:(NSString*)anchorId
+                  giftId:(NSString*)giftId
+           finishHandler:(AddCartGiftFinishHandler)finishHandler;
+
+/**
+ *  15.9.修改购物车商品数量接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ */
+typedef void (^ChangeCartGiftNumberFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ *  15.9.修改购物车商品数量接口
+ *
+ *  @param anchorId         主播ID
+ *  @param giftId           礼品ID
+ *  @param giftNumber       礼品数量
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)changeCartGiftNumber:(NSString*)anchorId
+                           giftId:(NSString*)giftId
+                       giftNumber:(int)giftNumber
+                    finishHandler:(ChangeCartGiftNumberFinishHandler)finishHandler;
+
+/**
+ *  15.10.删除购物车商品接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ */
+typedef void (^RemoveCartGiftFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ *  15.10.删除购物车商品接口
+ *
+ *  @param anchorId         主播ID
+ *  @param giftId           礼品ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)removeCartGift:(NSString*)anchorId
+                     giftId:(NSString*)giftId
+              finishHandler:(RemoveCartGiftFinishHandler)finishHandler;
+
+/**
+ *  15.11.Checkout商品接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             checkout数据
+ */
+typedef void (^CheckOutCartGiftFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSCheckoutItemObject* item);
+
+/**
+ *  15.11.Checkout商品接口
+ *
+ *  @param anchorId         主播ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)checkOutCartGift:(NSString*)anchorId
+                finishHandler:(CheckOutCartGiftFinishHandler)finishHandler;
+
+/**
+ *  15.12.生成订单接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param orderNumber      单号
+ */
+typedef void (^CreateGiftOrderFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *orderNumber);
+
+/**
+ *  15.12.生成订单接口
+ *
+ *  @param anchorId                 主播ID
+ *  @param greetingMessage          文本信息
+ *  @param specialDeliveryRequest   文本信息
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)createGiftOrder:(NSString*)anchorId
+             greetingMessage:(NSString*)greetingMessage
+      specialDeliveryRequest:(NSString*)specialDeliveryRequest
+               finishHandler:(CreateGiftOrderFinishHandler)finishHandler;
+
+
+#pragma mark - 广告模块回调
+
+/**
+ *  9.2.查询女士列表广告接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         女士列表广告信息
+ */
+
+typedef void (^WonmanListAdvertFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *  errmsg, LSWomanListAdItemObject* item);
+/**
+ *  6.25.获取直播主播列表广告接口
+ *
+ *  @param finishHandler    回调
+ */
+- (NSInteger)wonmanListAdvert:(WonmanListAdvertFinishHandler )finishHandler;
 
 @end

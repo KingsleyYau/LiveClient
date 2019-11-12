@@ -10,6 +10,7 @@ import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJni;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoModeType;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.PhotoSizeType;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCGetPhotoCallback;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.qnbridgemodule.util.Arithmetic;
@@ -68,7 +69,7 @@ public class LCPhotoManager {
 		if (item.msgType == MessageType.Photo && null != item.getPhotoItem()
 				&& !item.getPhotoItem().photoId.isEmpty() && !mDirPath.isEmpty()) 
 		{
-			path = getPhotoPath(item.getPhotoItem().photoId, modeType, sizeType);
+			path = getPhotoPath(item.getPhotoItem().photoUserAttr, item.getPhotoItem().photoId, modeType, sizeType);
 		}
 		return path;
 	}
@@ -80,12 +81,14 @@ public class LCPhotoManager {
 	 * @param sizeType	照片尺寸
 	 * @return
 	 */
-	public String getPhotoPath(String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
+	public String getPhotoPath(LCPhotoItem.PhotoUserAttribute photoUserAtt, String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
 		String path = "";
 		if (!photoId.isEmpty()) {
 			path =  getPhotoPathWithMode(photoId, modeType)
 					+ "_"
-					+ sizeType.name();
+					+ sizeType.name()
+					+ "_"
+					+ photoUserAtt.name();
 		}
 		return path;
 	}
@@ -113,11 +116,11 @@ public class LCPhotoManager {
 	 * @param photoId		photoId
 	 * @return
 	 */
-	private String getTempPhotoPath(String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
+	private String getTempPhotoPath(LCPhotoItem.PhotoUserAttribute photoUserAtt, String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
 		String path = "";
 		if (!TextUtils.isEmpty(photoId) && !mDirPath.isEmpty())
 		{
-			path = getPhotoPath(photoId, modeType, sizeType) + "_temp";
+			path = getPhotoPath(photoUserAtt, photoId, modeType, sizeType) + "_temp";
 		}
 		return path;
 	}
@@ -129,11 +132,11 @@ public class LCPhotoManager {
 	 * @param sizeType	图片尺寸
 	 * @return
 	 */
-	private boolean tempToPhoto(String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
+	private boolean tempToPhoto(LCPhotoItem.PhotoUserAttribute photoUserAtt, String photoId, PhotoModeType modeType, PhotoSizeType sizeType) {
 		boolean result = false;
 		if (!TextUtils.isEmpty(photoId)) {
-			String tempPath = getTempPhotoPath(photoId, modeType, sizeType);
-			String path = getPhotoPath(photoId, modeType, sizeType);
+			String tempPath = getTempPhotoPath(photoUserAtt, photoId, modeType, sizeType);
+			String path = getPhotoPath(photoUserAtt, photoId, modeType, sizeType);
 			if (!path.isEmpty()) {
 				boolean renameResult = false; 
 				File tempFile = new File(tempPath);
@@ -158,16 +161,19 @@ public class LCPhotoManager {
 		boolean result = false;
 		File file = new File(srcFilePath);
 		if (file.exists() && file.isFile()) {
-			String desFilePath = getPhotoPath(item.photoId, PhotoModeType.Clear, PhotoSizeType.Original);
+			String desFilePath = getPhotoPath(item.photoUserAttr, item.photoId, PhotoModeType.Clear, PhotoSizeType.Original);
 			String cmd = "cp -f " + srcFilePath + " " + desFilePath;
 			try {
 				Runtime.getRuntime().exec(cmd);
 				
 				// 原图路径
-				item.mClearSrcPhotoInfo = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", desFilePath);
-				
+				if(!TextUtils.isEmpty(desFilePath) && new File(desFilePath).exists()){
+					//已存在，且拷贝成功
+					item.mClearSrcPhotoInfo = new LCPhotoInfoItem(LCPhotoInfoItem.StatusType.Success, "", "", desFilePath);
+				}
+
 				// 显示图路径
-				String showFilePath = getPhotoPath(item.photoId, PhotoModeType.Clear, PhotoSizeType.Large);
+				String showFilePath = getPhotoPath(item.photoUserAttr, item.photoId, PhotoModeType.Clear, PhotoSizeType.Large);
 				if (!showFilePath.isEmpty()) {
 					Bitmap showBitmap = ImageUtil.decodeSampledBitmapFromFile(srcFilePath, 370, 370);
 					if (null != showBitmap
@@ -180,7 +186,7 @@ public class LCPhotoManager {
 				}
 				
 				// 拇指图路径
-				String thumbFilePath = getPhotoPath(item.photoId, PhotoModeType.Clear, PhotoSizeType.Middle);
+				String thumbFilePath = getPhotoPath(item.photoUserAttr, item.photoId, PhotoModeType.Clear, PhotoSizeType.Middle);
 				if (!thumbFilePath.isEmpty()) {
 					Bitmap showBitmap = ImageUtil.decodeSampledBitmapFromFile(srcFilePath, 110, 110);
 					if (null != showBitmap
@@ -407,7 +413,7 @@ public class LCPhotoManager {
 
 	/**
 	 * 下载指定类型私密照
-	 * @param toFlag
+	 * @param photoUserAttr
 	 * @param targetId
 	 * @param userId
 	 * @param sid
@@ -416,7 +422,7 @@ public class LCPhotoManager {
 	 * @param modeType
 	 * @param callback
 	 */
-	public boolean getPrivatePhoto(LCRequestJniLiveChat.ToFlagType toFlag, String targetId, String userId, String sid, final String photoId, final PhotoSizeType sizeType, final PhotoModeType modeType, OnLCGetPhotoCallback callback){
+	public boolean getPrivatePhoto(final LCPhotoItem.PhotoUserAttribute photoUserAttr, String targetId, String userId, String sid, final String photoId, final PhotoSizeType sizeType, final PhotoModeType modeType, OnLCGetPhotoCallback callback){
 		boolean result = true;		//请求是否发送成功
 		boolean isDownloading = false;
 		String uniqueKey = createPrivatePhotoDownloadingUniqueKey(photoId, modeType, sizeType);
@@ -432,24 +438,31 @@ public class LCPhotoManager {
 			callbackList.add(callback);
 		}
 		if(!isDownloading){
-			long requestId = LCRequestJniLiveChat.GetPhoto(
-					toFlag
+			LCRequestJniLiveChat.ToFlagType toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
+			if(photoUserAttr == LCPhotoItem.PhotoUserAttribute.Man){
+				toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetSelf;
+			}else{
+				toFlagType = LCRequestJniLiveChat.ToFlagType.ManGetWoman;
+			}
+			long requestId = LivechatRequestOperator.getInstance().GetPhoto(
+					toFlagType
 					, targetId
 					, userId
 					, sid
 					, photoId
 					, sizeType
 					, modeType
-					, getTempPhotoPath(photoId, modeType, sizeType)
+					, getTempPhotoPath(photoUserAttr, photoId, modeType, sizeType)
 					, new OnLCGetPhotoCallback() {
 
 						@Override
 						public void OnLCGetPhoto(long requestId, boolean isSuccess, String errno,
 												 String errmsg, String filePath) {
+
 							if(isSuccess){
-								tempToPhoto(photoId, modeType, sizeType);
+								tempToPhoto(photoUserAttr, photoId, modeType, sizeType);
 							}
-							onGetPhotoCallback(requestId, isSuccess, errno, errmsg, getPhotoPath(photoId, modeType, sizeType));
+							onGetPhotoCallback(requestId, isSuccess, errno, errmsg, getPhotoPath(photoUserAttr, photoId, modeType, sizeType));
 						}
 					});
 

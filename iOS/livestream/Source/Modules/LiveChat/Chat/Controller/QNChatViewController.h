@@ -36,6 +36,9 @@
  *  头像
  */
 @property (strong) UIImageView *personImageView;
+
+/** 女士邀请消息 */
+@property (nonatomic, copy) NSString *ladyInviteMsg;
 /**
  *  女士信息
  */

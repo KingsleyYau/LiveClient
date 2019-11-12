@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/bg_MainActivity">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_gift"
+        android:layout_width="@dimen/my_cart_flower_img_size"
+        android:layout_height="@dimen/my_cart_flower_img_size"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/live_size_2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/img_gift"
+        android:layout_toLeftOf="@id/ll_sum"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_flower_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textColor="@color/black1"
+            tools:text="G2896 ADSF SAD FSAD F SAF ASDF ASDF SADF SADF ASDF " />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:textSize="14sp"
+            android:textColor="@color/red_light"
+            tools:text="@string/my_cart_price" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_sum"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:id="@+id/img_des"
+            android:layout_width="18dp"
+            android:layout_height="@dimen/live_size_38dp"
+            android:layout_marginRight="4dp"
+            android:src="@drawable/ic_cart_remove" />
+
+        <EditText
+            android:id="@+id/edt_sum"
+            android:layout_width="44dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shopping_sum_edittext_bg_white"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text="1"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:maxLength="2"/>
+
+        <ImageView
+            android:id="@+id/img_inc"
+            android:layout_width="18dp"
+            android:layout_height="@dimen/live_size_38dp"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/ic_cart_add" />
+
+    </LinearLayout>
+
+</RelativeLayout>

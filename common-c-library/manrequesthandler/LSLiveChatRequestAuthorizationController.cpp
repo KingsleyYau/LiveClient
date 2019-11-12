@@ -530,6 +530,8 @@ long LSLiveChatRequestAuthorizationController::Register(
  */
 long LSLiveChatRequestAuthorizationController::GetCheckCode(bool isUseCode) {
 	HttpEntiy entiy;
+    // 接口是否是下载文件（为了如果服务器返回的大小不知道，而curl会按照超时判断断http停止，如果是文件这个已经收到数据了，服务器已经记录完成了）alex,2019-09-21
+    entiy.SetIsDownLoadFile(true);
 	entiy.SetSaveCookie(true);
     
     if(isUseCode) {

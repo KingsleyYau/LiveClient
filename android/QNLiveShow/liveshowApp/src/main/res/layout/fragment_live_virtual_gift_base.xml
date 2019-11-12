@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dialog_live_virtual_gift_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/live_size_10dp"
+        android:paddingRight="@dimen/live_size_10dp"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+    <ImageView
+        android:id="@+id/dialog_live_virtual_gift_iv_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/anim_ball_loading"
+        android:visibility="gone"
+        tools:visibility="gone"
+        />
+
+    <include layout="@layout/layout_live_gift_empty"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <include layout="@layout/layout_live_gift_error_retry"
+        android:visibility="gone"
+        tools:visibility="gone"
+        />
+</FrameLayout>

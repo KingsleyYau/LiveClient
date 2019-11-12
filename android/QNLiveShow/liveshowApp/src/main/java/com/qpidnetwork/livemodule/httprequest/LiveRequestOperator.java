@@ -8,9 +8,11 @@ import android.os.Message;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
+import com.qpidnetwork.livemodule.httprequest.item.ContactItem;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionCategory;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.GiftTypeItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutGiftListItem;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutOnlineAnchorItem;
@@ -20,25 +22,30 @@ import com.qpidnetwork.livemodule.httprequest.item.HttpAuthorityItem;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.ImmediateInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
+import com.qpidnetwork.livemodule.httprequest.item.LSAdWomanListAdvertItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSCheckoutItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSDeliveryItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSFlowerGiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSLeftCreditItem;
+import com.qpidnetwork.livemodule.httprequest.item.LSMyCartItem;
 import com.qpidnetwork.livemodule.httprequest.item.LSOrderType;
-import com.qpidnetwork.livemodule.httprequest.item.LSProfileItem;
 import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Children;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Drink;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Education;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Ethnicity;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Height;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Income;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Profession;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Religion;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Weight;
-import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Zodiac;
+import com.qpidnetwork.livemodule.httprequest.item.LSStoreFlowerGiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.MainUnreadNumItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
+import com.qpidnetwork.livemodule.httprequest.item.PageRecommendItem;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.RegionType;
 import com.qpidnetwork.livemodule.httprequest.item.RideItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiAllListInfoItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiDetailItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiDetailResponseListItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiRecommendAnchorItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiResourceConfigItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiResponseListInfoItem;
+import com.qpidnetwork.livemodule.httprequest.item.SayHiSendInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteConfig;
 import com.qpidnetwork.livemodule.httprequest.item.SendableGiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.TalentInfoItem;
@@ -142,6 +149,46 @@ public class LiveRequestOperator {
     }
 
     /**************************************  模块处理 Authorization ********************************************/
+
+    //模板
+    //    public long X(final x, final X callback){
+//        // 登录状态改变重新调用接口
+//        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+//
+//            @Override
+//            public void onLogout(boolean isMannual) {
+//
+//            }
+//
+//            @Override
+//            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+//                // 公共处理
+//                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+//                if (isSuccess) {
+//                    // 登录成功
+//                    // 再次调用jni接口
+//                    RequestJniGiftFlower.X(x, callback);
+//                } else {
+//                    // 登录不成功, 回调失败
+//                    callback.onX(false, errCode, errMsg, ...);
+//                }
+//            }
+//        };
+//
+//        return RequestJniGiftFlower.X(x, new OnXCallback() {
+//            @Override
+//            public void onX(boolean isSuccess, int errCode, String errMsg, ...) {
+//                // 公共处理VerifySms
+//                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+//                if (bFlag) {
+//                    // 已经匹配处理, 等待回调
+//                } else {
+//                    // 没有匹配处理, 直接回调
+//                    callback.onX(isSuccess, errCode, errMsg, ...);
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 2.3.上传push tokenId
@@ -870,6 +917,153 @@ public class LiveRequestOperator {
     }
 
     /**
+     * 3.15.获取页面推荐主播列表
+     * @param callback
+     * @return
+     */
+    public long GetPageRecommendAnchorList(final OnGetPageRecommendAnchorListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniLiveShow.GetPageRecommendAnchorList(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetPageRecommendAnchorList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniLiveShow.GetPageRecommendAnchorList(new OnGetPageRecommendAnchorListCallback() {
+
+            @Override
+            public void onGetPageRecommendAnchorList(boolean isSuccess, int errCode, String errMsg, PageRecommendItem[] anchorList) {
+
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetPageRecommendAnchorList(isSuccess, errCode, errMsg, anchorList);
+                }
+            }
+        });
+    }
+
+    /**
+     * 3.16.获取为的联系人列表
+     * @param start
+     * @param step
+     * @param callback
+     * @return
+     */
+    public long GetMyContactList(final int start, final int step, final OnGetMyContactListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniLiveShow.GetMyContactList(start, step, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetMyContactList(isSuccess, errCode, errMsg, null, 0);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniLiveShow.GetMyContactList(start, step, new OnGetMyContactListCallback() {
+
+            @Override
+            public void onGetMyContactList(boolean isSuccess, int errCode, String errMsg, ContactItem[] contactList, int tatalCount) {
+
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetMyContactList(isSuccess, errCode, errMsg, contactList, tatalCount);
+                }
+            }
+        });
+    }
+
+    /**
+     * 3.17.获取虚拟礼物分类列表
+     * @param roomType
+     * @param callback
+     * @return
+     */
+    public long GetGiftTypeList(final RequestJniLiveShow.GiftRoomType roomType, final OnGetGiftTypeListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniLiveShow.GetGiftTypeList(roomType, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetGiftTypeList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniLiveShow.GetGiftTypeList(roomType, new OnGetGiftTypeListCallback() {
+
+            @Override
+            public void onGetGiftTypeList(boolean isSuccess, int errCode, String errMsg, GiftTypeItem[] giftTypeList) {
+
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetGiftTypeList(isSuccess, errCode, errMsg, giftTypeList);
+                }
+            }
+        });
+    }
+
+    /**
      * 4.1.获取预约邀请列表
      *
      * @param type
@@ -1449,7 +1643,7 @@ public class LiveRequestOperator {
                     RequestJniPackage.GetPackageUnreadCount(callback);
                 } else {
                     // 登录不成功, 回调失败
-                    callback.onGetPackageUnreadCount(isSuccess, errCode, errMsg, 0, 0, 0, 0);
+                    callback.onGetPackageUnreadCount(isSuccess, errCode, errMsg, null);
                 }
             }
         };
@@ -1457,7 +1651,7 @@ public class LiveRequestOperator {
         return RequestJniPackage.GetPackageUnreadCount(new OnGetPackageUnreadCountCallback() {
 
             @Override
-            public void onGetPackageUnreadCount(boolean isSuccess, int errCode, String errMsg, int total, int voucherNum, int giftNum, int rideNum) {
+            public void onGetPackageUnreadCount(boolean isSuccess, int errCode, String errMsg, PackageUnreadCountItem unreadItem) {
 
                 // 公共处理VerifySms
                 boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
@@ -1465,7 +1659,7 @@ public class LiveRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onGetPackageUnreadCount(isSuccess, errCode, errMsg, total, voucherNum, giftNum, rideNum);
+                    callback.onGetPackageUnreadCount(isSuccess, errCode, errMsg, unreadItem);
                 }
             }
         });
@@ -1521,6 +1715,56 @@ public class LiveRequestOperator {
     }
 
     /**
+     * 5.7.获取LiveChat聊天试用券列表
+     * @param start
+     * @param step
+     * @param callback
+     * @return
+     */
+    public long GetChatVoucherList(final int start, final int step, final OnGetChatVoucherListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniPackage.GetChatVoucherList(start, step, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetChatVoucherList(isSuccess, errCode, errMsg, null, 0);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniPackage.GetChatVoucherList(start, step, new OnGetChatVoucherListCallback() {
+
+            @Override
+            public void onGetChatVoucherList(boolean isSuccess, int errCode, String errMsg, VoucherItem[] voucherList, int totalCount) {
+
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetChatVoucherList(isSuccess, errCode, errMsg, voucherList, totalCount);
+                }
+            }
+        });
+    }
+
+    /**
      * 6.2.获取账号余额
      *
      * @param callback
@@ -1547,7 +1791,7 @@ public class LiveRequestOperator {
                     RequestJniOther.GetAccountBalance(callback);
                 } else {
                     // 登录不成功, 回调失败
-                    callback.onGetAccountBalance(isSuccess, errCode, errMsg, 0, 0);
+                    callback.onGetAccountBalance(isSuccess, errCode, errMsg, null);
                 }
             }
         };
@@ -1555,7 +1799,7 @@ public class LiveRequestOperator {
         return RequestJniOther.GetAccountBalance(new OnGetAccountBalanceCallback() {
 
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, double balance, int coupon) {
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, LSLeftCreditItem creditItem) {
 
                 // 公共处理VerifySms
                 boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
@@ -1563,7 +1807,7 @@ public class LiveRequestOperator {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onGetAccountBalance(isSuccess, errCode, errMsg, balance, coupon);
+                    callback.onGetAccountBalance(isSuccess, errCode, errMsg, creditItem);
                 }
             }
         });
@@ -1965,6 +2209,101 @@ public class LiveRequestOperator {
                 } else {
                     // 没有匹配处理, 直接回调
                     callback.onGetUserInfo(isSuccess, errCode, errMsg, userItem);
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取直播广告
+     * @param manId
+     * @param isAnchorPage
+     * @param bannerType
+     * @param callback
+     * @return
+     */
+    public long RetrieveBanner(final String manId, final boolean isAnchorPage, final LSRequestEnum.LSBannerType bannerType, final OnRetrieveBannerCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniOther.RetrieveBanner(manId, isAnchorPage, bannerType, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRetrieveBanner(isSuccess, errCode, errMsg, "");
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniOther.RetrieveBanner(manId, isAnchorPage, bannerType, new OnRetrieveBannerCallback() {
+
+            @Override
+            public void onRetrieveBanner(boolean isSuccess, int errCode, String errMsg, String htmlUrl) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRetrieveBanner(isSuccess, errCode, errMsg, htmlUrl);
+                }
+            }
+        });
+    }
+
+    /**
+     * 6.25.获取直播主播列表广告
+     * @param deviceId  设备唯一标识
+     * @param callback  回调object
+     * @return
+     */
+    public long GetWomanListAdvert(final String deviceId, final OnLSAdWomanistAdvertCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniOther.WomanListAdvert(deviceId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onLSAdWomanistAdverte(false, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniOther.WomanListAdvert(deviceId, new OnLSAdWomanistAdvertCallback() {
+            @Override
+            public void onLSAdWomanistAdverte(boolean isSuccess, int errCode, String errMsg, LSAdWomanListAdvertItem advert) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onLSAdWomanistAdverte(isSuccess, errCode, errMsg, advert);
                 }
             }
         });
@@ -2563,7 +2902,7 @@ public class LiveRequestOperator {
                     RequestJniSetting.GetPushConfig(callback);
                 } else {
                     // 登录不成功, 回调失败
-                    callback.onGetPushConfig(isSuccess, errCode, errMsg, true, true);
+                    callback.onGetPushConfig(isSuccess, errCode, errMsg, true, true,true);
                 }
             }
         };
@@ -2572,21 +2911,21 @@ public class LiveRequestOperator {
         return RequestJniSetting.GetPushConfig(new OnGetPushConfigCallback() {
 
             @Override
-            public void onGetPushConfig(boolean isSuccess, int errCode, String errMsg, boolean isPriMsgAppPush, boolean isMailAppPush) {
+            public void onGetPushConfig(boolean isSuccess, int errCode, String errMsg, boolean isPriMsgAppPush, boolean isMailAppPush, boolean isSayHiAppPush) {
                 // 公共处理VerifySms
                 boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
                 if (bFlag) {
                     // 已经匹配处理, 等待回调
                 } else {
                     // 没有匹配处理, 直接回调
-                    callback.onGetPushConfig(isSuccess, errCode, errMsg, isPriMsgAppPush, isMailAppPush);
+                    callback.onGetPushConfig(isSuccess, errCode, errMsg, isPriMsgAppPush, isMailAppPush,isSayHiAppPush);
                 }
             }
         });
     }
 
 
-    public long SetPushConfig(final boolean isPriMsgAppPush, final boolean isMailAppPush, final OnRequestCallback callback) {
+    public long SetPushConfig(final boolean isPriMsgAppPush, final boolean isMailAppPush, final boolean isSayHiAppPushfinal,final OnRequestCallback callback) {
         // 登录状态改变重新调用接口
         final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
 
@@ -2603,7 +2942,7 @@ public class LiveRequestOperator {
                 if (isSuccess) {
                     // 登录成功
                     // 再次调用jni接口
-                    RequestJniSetting.SetPushConfig(isPriMsgAppPush, isMailAppPush, callback);
+                    RequestJniSetting.SetPushConfig(isPriMsgAppPush, isMailAppPush, isSayHiAppPushfinal,callback);
                 } else {
                     // 登录不成功, 回调失败
                     callback.onRequest(isSuccess, errCode, errMsg);
@@ -2612,7 +2951,7 @@ public class LiveRequestOperator {
         };
 
         // 调用jni接口
-        return RequestJniSetting.SetPushConfig(isPriMsgAppPush, isMailAppPush, new OnRequestCallback() {
+        return RequestJniSetting.SetPushConfig(isPriMsgAppPush, isMailAppPush, isSayHiAppPushfinal,new OnRequestCallback() {
 
             @Override
             public void onRequest(boolean isSuccess, int errCode, String errMsg) {
@@ -2636,7 +2975,7 @@ public class LiveRequestOperator {
      * @param callback   已选中的充值包ID（可""，""表示不指定充值包）
      * @return
      */
-    public long MobilePayGoto(final LSOrderType orderType, final String clickFrom, final String numberId, final OnMobilePayGotoCallback callback) {
+    public long MobilePayGoto(final LSOrderType orderType, final String clickFrom, final String numberId, final String orderNo, final OnMobilePayGotoCallback callback) {
         // 登录状态改变重新调用接口
         final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
 
@@ -2653,7 +2992,7 @@ public class LiveRequestOperator {
                 if (isSuccess) {
                     // 登录成功
                     // 再次调用jni接口
-                    RequestJniPayment.MobilePayGoto(orderType, clickFrom, numberId, callback);
+                    RequestJniPayment.MobilePayGoto(orderType, clickFrom, numberId, orderNo, callback);
                 } else {
                     // 登录不成功, 回调失败
                     callback.onMobilePayGoto(isSuccess, errCode, errMsg, "");
@@ -2661,7 +3000,7 @@ public class LiveRequestOperator {
             }
         };
 
-        return RequestJniPayment.MobilePayGoto(orderType, clickFrom, numberId, new OnMobilePayGotoCallback() {
+        return RequestJniPayment.MobilePayGoto(orderType, clickFrom, numberId, orderNo, new OnMobilePayGotoCallback() {
             @Override
             public void onMobilePayGoto(boolean isSuccess, int errCode, String errMsg, String redirtctUrl) {
                 // 公共处理VerifySms
@@ -3148,6 +3487,843 @@ public class LiveRequestOperator {
             }
         });
 
+    }
+
+    /**
+     * 14.1.获取发送SayHi的主题和文本信息（用于观众端获取发送SayHi的主题和文本信息）
+     * @param callback
+     * @return
+     */
+    public long GetSayHiResourceConfig(final OnGetSayHiResourceConfigCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.GetSayHiResourceConfig(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetSayHiResourceConfig(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.GetSayHiResourceConfig(new OnGetSayHiResourceConfigCallback() {
+            @Override
+            public void onGetSayHiResourceConfig(boolean isSuccess, int errCode, String errMsg, SayHiResourceConfigItem configItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetSayHiResourceConfig(isSuccess, errCode, errMsg, configItem);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.2.获取可发Say Hi的主播列表
+     * @param callback
+     * @return
+     */
+    public long GetSayHiAnchorList(final OnGetSayHiAnchorListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.GetSayHiAnchorList(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetSayHiAnchorList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.GetSayHiAnchorList(new OnGetSayHiAnchorListCallback() {
+            @Override
+            public void onGetSayHiAnchorList(boolean isSuccess, int errCode, String errMsg, SayHiRecommendAnchorItem[] RecommendList) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetSayHiAnchorList(isSuccess, errCode, errMsg, RecommendList);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.3.检测能否对指定主播发送SayHi（用于检测能否对指定主播发送SayHi）
+     * @param anchorId
+     * @param callback
+     * @return
+     */
+    public long IsCanSendSayHi(final String anchorId, final OnIsCanSendSayHiCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.IsCanSendSayHi(anchorId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onIsCanSendSayHi(isSuccess, errCode, errMsg, false);
+                }
+            }
+        };
+
+        return RequestJniSayHi.IsCanSendSayHi(anchorId, new OnIsCanSendSayHiCallback() {
+            @Override
+            public void onIsCanSendSayHi(boolean isSuccess, int errCode, String errMsg, boolean isCanSend) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onIsCanSendSayHi(isSuccess, errCode, errMsg, isCanSend);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.4.发送sayHi
+     * @param anchorId
+     * @param themeId
+     * @param textId
+     * @param callback
+     * @return
+     */
+    public long SendSayHi(final String anchorId, final String themeId, final String textId, final OnSendSayHiCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.SendSayHi(anchorId, themeId, textId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onSendSayHi(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.SendSayHi(anchorId, themeId, textId, new OnSendSayHiCallback() {
+            @Override
+            public void onSendSayHi(boolean isSuccess, int errCode, String errMsg, SayHiSendInfoItem item) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onSendSayHi(isSuccess, errCode, errMsg, item);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.5.获取Say Hi的All列表
+     * @param start
+     * @param step
+     * @param callback
+     * @return
+     */
+    public long GetAllSayHiList(final int start, final int step, final OnGetAllSayHiListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.GetAllSayHiList(start, step, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetAllSayHiList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.GetAllSayHiList(start, step, new OnGetAllSayHiListCallback() {
+            @Override
+            public void onGetAllSayHiList(boolean isSuccess, int errCode, String errMsg, SayHiAllListInfoItem allItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetAllSayHiList(isSuccess, errCode, errMsg, allItem);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.6.获取SayHi的Response列表
+     * @param start
+     * @param step
+     * @param type
+     * @param callback
+     * @return
+     */
+    public long GetResponseSayHiList(final int start, final int step, final RequestJniSayHi.SayHiListOperateType type, final OnGetResponseSayHiListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.GetResponseSayHiList(start, step, type, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetResponseSayHiList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.GetResponseSayHiList(start, step, type, new OnGetResponseSayHiListCallback() {
+            @Override
+            public void onGetResponseSayHiList(boolean isSuccess, int errCode, String errMsg, SayHiResponseListInfoItem responseItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetResponseSayHiList(isSuccess, errCode, errMsg, responseItem);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.7.获取SayHi详情
+     * @param sayHiId
+     * @param type
+     * @param callback
+     * @return
+     */
+    public long GetSayHiDetail(final String sayHiId, final RequestJniSayHi.SayHiDetailOperateType type, final OnGetSayDetailCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.GetSayHiDetail(sayHiId, type, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetSayDetail(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.GetSayHiDetail(sayHiId, type, new OnGetSayDetailCallback() {
+            @Override
+            public void onGetSayDetail(boolean isSuccess, int errCode, String errMsg, SayHiDetailItem detailItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetSayDetail(isSuccess, errCode, errMsg, detailItem);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 14.8.购买阅读SayHi回复详情 （用于购买阅读SayHi回复）
+     * @param sayHiId
+     * @param responseId
+     * @param callback
+     * @return
+     */
+    public long ReadSayHiResponse(final String sayHiId, final String responseId, final OnReadSayHiResponseCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniSayHi.ReadSayHiResponse(sayHiId, responseId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onReadSayHiResponse(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniSayHi.ReadSayHiResponse(sayHiId, responseId, new OnReadSayHiResponseCallback() {
+            @Override
+            public void onReadSayHiResponse(boolean isSuccess, int errCode, String errMsg, SayHiDetailResponseListItem detailItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onReadSayHiResponse(isSuccess, errCode, errMsg, detailItem);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 15.1.获取鲜花礼品列表
+     * @param anchorId	主播ID（可无）
+     * @param callback
+     * @return
+     */
+    public long GetStoreGiftList(final String anchorId, final OnGetStoreGiftListCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.GetStoreGiftList(anchorId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetStoreGiftList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.GetStoreGiftList(anchorId, new OnGetStoreGiftListCallback() {
+            @Override
+            public void onGetStoreGiftList(boolean isSuccess, int errCode, String errMsg, LSStoreFlowerGiftItem[] flowerGiftList) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetStoreGiftList(isSuccess, errCode, errMsg, flowerGiftList);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.2.获取鲜花礼品详情
+     * @param giftId
+     * @param callback
+     * @return
+     */
+    public long GetFlowerGiftDetail(final String giftId, final OnGetFlowerGiftDetailCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.GetFlowerGiftDetail(giftId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetFlowerGiftDetail(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.GetFlowerGiftDetail(giftId, new OnGetFlowerGiftDetailCallback() {
+            @Override
+            public void onGetFlowerGiftDetail(boolean isSuccess, int errCode, String errMsg, LSFlowerGiftItem glowerGiftItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetFlowerGiftDetail(isSuccess, errCode, errMsg, glowerGiftItem);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.5.获取My delivery列表
+     * @param callback
+     * @return
+     */
+    public long GetDeliveryList(final OnGetDeliveryListCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.GetDeliveryList(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetDeliveryList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.GetDeliveryList(new OnGetDeliveryListCallback() {
+            @Override
+            public void onGetDeliveryList(boolean isSuccess, int errCode, String errMsg, LSDeliveryItem[] DeliveryList) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetDeliveryList(isSuccess, errCode, errMsg, DeliveryList);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 15.6.获取购物车礼品种类数
+     * @param callback
+     * @return
+     */
+    public long GetCartGiftTypeNum(final String anchorId, final OnGetCartGiftTypeNumCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.GetCartGiftTypeNum(anchorId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetCartGiftTypeNum(isSuccess, errCode, errMsg, 0);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.GetCartGiftTypeNum(anchorId, new OnGetCartGiftTypeNumCallback() {
+            @Override
+            public void onGetCartGiftTypeNum(boolean isSuccess, int errCode, String errMsg, int num) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetCartGiftTypeNum(isSuccess, errCode, errMsg, num);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.7.获取购物车My cart列表
+     * @param start
+     * @param step
+     * @param callback
+     * @return
+     */
+    public long GetCartGiftList(final int start, final int step, final OnGetCartGiftListCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.GetCartGiftList(start, step, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetCartGiftList(isSuccess, errCode, errMsg, 0, null);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.GetCartGiftList(start, step, new OnGetCartGiftListCallback() {
+            @Override
+            public void onGetCartGiftList(boolean isSuccess, int errCode, String errMsg, int total, LSMyCartItem[] cartList){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetCartGiftList(isSuccess, errCode, errMsg, total, cartList);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.8.添加购物车商品
+     * @param anchorId
+     * @param giftId
+     * @param callback
+     * @return
+     */
+    public long AddCartGift(final String anchorId, final String giftId, final OnRequestCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.AddCartGift(anchorId, giftId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.AddCartGift(anchorId, giftId, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.9.修改购物车商品数量
+     * @param anchorId
+     * @param giftId
+     * @param giftNumber
+     * @param callback
+     * @return
+     */
+    public long ChangeCartGiftNumber(final String anchorId, final String giftId, final int giftNumber, final OnRequestCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.ChangeCartGiftNumber(anchorId, giftId, giftNumber, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.ChangeCartGiftNumber(anchorId, giftId, giftNumber, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.10.删除购物车商品
+     * @param anchorId
+     * @param giftId
+     * @param callback
+     * @return
+     */
+    public long RemoveCartGift(final String anchorId, final String giftId, final OnRequestCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.RemoveCartGift(anchorId, giftId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.RemoveCartGift(anchorId, giftId, new OnRequestCallback() {
+            @Override
+            public void onRequest(boolean isSuccess, int errCode, String errMsg){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onRequest(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.11.Checkout商品
+     * @param anchorId
+     * @param callback
+     * @return
+     */
+    public long CheckOutCartGift(final String anchorId, final OnCheckOutCartGiftCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.CheckOutCartGift(anchorId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onCheckOutCartGift(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.CheckOutCartGift(anchorId, new OnCheckOutCartGiftCallback() {
+            @Override
+            public void onCheckOutCartGift(boolean isSuccess, int errCode, String errMsg, LSCheckoutItem checkoutItem){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onCheckOutCartGift(isSuccess, errCode, errMsg, checkoutItem);
+                }
+            }
+        });
+    }
+
+    /**
+     * 15.12.生成订单
+     * @param anchorId
+     * @param greetingMessage
+     * @param specialDeliveryRequest
+     * @param callback
+     * @return
+     */
+    public long CreateGiftOrder(final String anchorId, final String greetingMessage, final String specialDeliveryRequest, final OnCreateGiftOrderCallback callback){
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniGiftFlower.CreateGiftOrder(anchorId, greetingMessage, specialDeliveryRequest, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onCreateGiftOrder(isSuccess, errCode, errMsg, "");
+                }
+            }
+        };
+
+        return RequestJniGiftFlower.CreateGiftOrder(anchorId, greetingMessage, specialDeliveryRequest, new OnCreateGiftOrderCallback() {
+            @Override
+            public void onCreateGiftOrder(boolean isSuccess, int errCode, String errMsg, String orderNumber){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onCreateGiftOrder(isSuccess, errCode, errMsg, orderNumber);
+                }
+            }
+        });
     }
 
 }

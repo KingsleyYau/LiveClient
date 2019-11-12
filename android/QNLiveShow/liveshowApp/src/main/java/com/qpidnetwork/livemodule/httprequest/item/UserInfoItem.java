@@ -10,6 +10,20 @@ public class UserInfoItem {
 	public UserInfoItem(){
 		
 	}
+
+	/**
+	 * 构造部分userInfo
+	 * @param userId
+	 * @param nickName
+	 * @param photoUrl
+	 */
+	public UserInfoItem(String userId,
+						String nickName,
+						String photoUrl){
+		this.userId = userId;
+		this.nickName = nickName;
+		this.photoUrl = photoUrl;
+	}
 	
 	/**
 	 * 指定观众/主播信息Item

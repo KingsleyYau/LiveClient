@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -72,15 +73,14 @@
 
         </LinearLayout>
 
+        <!-- 连击礼物区 -->
         <FrameLayout
             android:id="@+id/flMultiGift"
             android:layout_width="match_parent"
-            android:layout_height="98dp"
+            android:layout_height="160dp"
             android:layout_gravity="bottom|left"
-            android:layout_marginBottom="37dp"
-            android:paddingLeft="13dp"
-            android:layout_marginRight="80dp">
-        </FrameLayout>
+            android:layout_marginRight="80dp"
+            android:paddingLeft="13dp" />
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_vedioLoading"
@@ -111,59 +111,93 @@
         android:background="#ECEDF1"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/llPrivateStart"
-            android:layout_width="142dp"
+        <!--<LinearLayout-->
+            <!--android:id="@+id/llPrivateStart"-->
+            <!--android:layout_width="142dp"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:layout_marginTop="6dp"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:background="@drawable/rectangle_rounded_angle_blue_bg"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:visibility="visible">-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:src="@drawable/ic_one_on_one" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/live_size_4dp"-->
+                <!--android:text="@string/live_common_start_oneonone"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="@dimen/live_size_12sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:includeFontPadding="false"/>-->
+        <!--</LinearLayout>-->
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_private"
+            android:layout_width="162dp"
             android:layout_height="28dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:background="@drawable/rectangle_rounded_angle_blue_bg"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="visible">
+            button:background_res="@drawable/btn_room_list_private_stroke_shape"
+            button:icon="@drawable/ic_list_public"
+            button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+            button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+            button:raisebutton_radius="@dimen/live_size_20dp"
+            button:title="@string/live_common_start_oneonone"
+            button:title_color="@color/white"
+            button:title_text_size="@dimen/live_main_room_list_btn_text_size"
+            button:title_text_bold="true"
+            button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_one_on_one" />
+        <!--<LinearLayout-->
+            <!--android:id="@+id/llHangoutStart"-->
+            <!--android:layout_width="142dp"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:layout_marginTop="6dp"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:background="@drawable/btn_hangout_list_stroke_shape"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_marginLeft="@dimen/live_size_12dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/live_size_4dp"
-                android:text="@string/live_common_start_oneonone"
-                android:textColor="@color/white"
-                android:textSize="@dimen/live_size_12sp"
-                android:textStyle="bold"
-                android:includeFontPadding="false"/>
-        </LinearLayout>
+            <!--<ImageView-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:src="@drawable/ic_hang_out" />-->
 
-        <LinearLayout
-            android:id="@+id/llHangoutStart"
-            android:layout_width="142dp"
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/live_size_4dp"-->
+                <!--android:text="@string/hand_out_list_start"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="@dimen/live_size_12sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:includeFontPadding="false"/>-->
+        <!--</LinearLayout>-->
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_hangout"
+            android:layout_width="162dp"
             android:layout_height="28dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:background="@drawable/btn_hangout_list_stroke_shape"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/live_size_12dp">
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            button:background_res="@drawable/btn_hangout_list_stroke_shape"
+            button:icon="@drawable/ic_hang_out"
+            button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+            button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+            button:raisebutton_radius="@dimen/live_size_20dp"
+            button:title="@string/hand_out_list_start"
+            button:title_color="@color/white"
+            button:title_text_size="@dimen/live_main_room_list_btn_text_size"
+            button:title_text_bold="true"
+            button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_hang_out" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/live_size_4dp"
-                android:text="@string/hand_out_list_start"
-                android:textColor="@color/white"
-                android:textSize="@dimen/live_size_12sp"
-                android:textStyle="bold"
-                android:includeFontPadding="false"/>
-        </LinearLayout>
     </LinearLayout>
 
     <FrameLayout

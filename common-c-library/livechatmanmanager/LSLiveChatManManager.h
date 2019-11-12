@@ -313,6 +313,8 @@ public:
     bool GetMagicIconThumbImage(const string& magicIconId) override;
     //获取小高级表情原图的路径
     string GetMagicIconThumbPath(const string& magicIconId) override;
+    // 发送邀请语
+    bool SendInviteMessage(const string& userId, const string& message, const string& nickName) override;
     
     // --------- Camshare --------
     // 发送Camshare邀请
@@ -467,6 +469,7 @@ private:
 	virtual void OnGetLadyChatInfo(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const list<string>& chattingList, const list<string>& chattingInviteIdList, const list<string>& missingList, const list<string>& missingInviteIdList) override;
 	virtual void OnPlayVideo(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, int ticket) override;
     virtual void  OnUploadPopLadyAutoInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& userId, const string& msg, const string& key, const string& inviteId) override;
+    virtual void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) override;
     
 	// 服务器主动请求
 	virtual void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message,INVITE_TYPE inviteType) override;

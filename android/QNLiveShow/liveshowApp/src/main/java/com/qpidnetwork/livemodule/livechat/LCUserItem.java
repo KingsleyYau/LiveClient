@@ -338,7 +338,7 @@ public class LCUserItem implements Serializable{
 			break;
 		case NoMoney:
 		case VideoNoMoney:
-			this.chatType = ChatType.Other;
+			this.chatType = ChatType.InChatPause;
 			break;
 		case TargetNotFound:
 			this.chatType = ChatType.Other;

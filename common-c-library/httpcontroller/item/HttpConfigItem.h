@@ -177,6 +177,11 @@ public:
             if (root[LIVEROOM_SEND_LETTER].isString()) {
                 sendLetter = root[LIVEROOM_SEND_LETTER].asString();
             }
+            
+            /* flowersGift */
+            if (root[LIVEROOM_FLOWERS_GIFT].isNumeric()) {
+                flowersGift = root[LIVEROOM_FLOWERS_GIFT].asInt();
+            }
         }
 
         result = true;
@@ -214,6 +219,7 @@ public:
         minBalanceForChat = 0.0;
         chatVoiceHostUrl = "";
         sendLetter = "";
+        flowersGift = 0;
     }
     
     virtual ~HttpConfigItem() {
@@ -251,6 +257,7 @@ public:
      * minBalanceForChat            使用LiveChat的最少点数
      * chatVoiceHostUrl             LiveChat上传/下载语音的URL
      * sendLetter                   发送信件页URL
+     * flowersGift                  鲜花礼品的优惠价
      */
     string imSvrUrl;
     string httpSvrUrl;
@@ -282,6 +289,7 @@ public:
     double minBalanceForChat;
     string chatVoiceHostUrl;
     string sendLetter;
+    int flowersGift;
 };
 
 #endif /* HTTPCONFIGITEM_H_*/

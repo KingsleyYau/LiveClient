@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.View;
 
+import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnMobilePayGotoCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniPayment;
 import com.qpidnetwork.livemodule.httprequest.item.LSOrderType;
@@ -21,12 +24,14 @@ public class LiveBuyCreditActivity extends BaseWebViewActivity {
     public static String KEY_ORDER_TYPE_INDEX = "KEY_ORDER_TYPE_INDEX";
     public static String KEY_CLICK_FROM = "KEY_CLICK_FROM";
     public static String KEY_NUMBER_ID = "KEY_NUMBER_ID";
+    public static String KEY_ORDER_NO = "KEY_ORDER_NO";
 
     private final int CALLBACK_GET_URL = 101;
 
     private LSOrderType mLSOrderType;
     private String mClickFrom;
     private String mNumberId;
+    private String mOrderNo;
 
     /**
      *
@@ -40,6 +45,23 @@ public class LiveBuyCreditActivity extends BaseWebViewActivity {
         intent.putExtra(KEY_ORDER_TYPE_INDEX, orderType);
         intent.putExtra(KEY_CLICK_FROM, clickFrom);
         intent.putExtra(KEY_NUMBER_ID, numberId);
+        intent.putExtra(WEB_TITLE_BAR_SHOW_LOADSUC, true);
+        context.startActivity(intent);
+    }
+
+    /**
+     *
+     * @param context
+     * @param orderType LSOrderType枚举索引
+     * @param clickFrom
+     * @param numberId
+     */
+    public static void lunchActivity(Context context, int orderType, String clickFrom, String numberId, String orderNo){
+        Intent intent = new Intent(context, LiveBuyCreditActivity.class);
+        intent.putExtra(KEY_ORDER_TYPE_INDEX, orderType);
+        intent.putExtra(KEY_CLICK_FROM, clickFrom);
+        intent.putExtra(KEY_NUMBER_ID, numberId);
+        intent.putExtra(KEY_ORDER_NO, orderNo);
         intent.putExtra(WEB_TITLE_BAR_SHOW_LOADSUC, true);
         context.startActivity(intent);
     }
@@ -71,7 +93,21 @@ public class LiveBuyCreditActivity extends BaseWebViewActivity {
             if(bundle.containsKey(KEY_NUMBER_ID)){
                 mNumberId = bundle.getString(KEY_NUMBER_ID);
             }
+
+            if(bundle.containsKey(KEY_ORDER_NO)){
+                mOrderNo = bundle.getString(KEY_ORDER_NO);
+            }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (R.id.iv_commBack == i){
+            finish();
+            return;
+        }
+        super.onClick(v);
     }
 
     @Override
@@ -95,7 +131,7 @@ public class LiveBuyCreditActivity extends BaseWebViewActivity {
      * 请求接口取买点页URL
      */
     private void doGetURL(){
-        RequestJniPayment.MobilePayGoto(mLSOrderType, mClickFrom, mNumberId, new OnMobilePayGotoCallback() {
+        LiveRequestOperator.getInstance().MobilePayGoto(mLSOrderType, mClickFrom, mNumberId, mOrderNo, new OnMobilePayGotoCallback() {
             @Override
             public void onMobilePayGoto(boolean isSuccess, int errCode, String errMsg, String redirtctUrl) {
                 Message msg = Message.obtain();

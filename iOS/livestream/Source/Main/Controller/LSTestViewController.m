@@ -15,7 +15,7 @@
 #import "LiveModule.h"
 #import "LSConfigManager.h"
 
-#import "LSSayHiDetailViewController.h"
+#import "LSVIPLiveViewController.h"
 @interface LSTestViewController () <LiveModuleDelegate>
 @property (nonatomic, strong) NSString *_Nullable token;
 @property (nonatomic, strong) NSString *_Nullable isShowGuide;
@@ -121,19 +121,18 @@
     if (!_token || _token.length == 0) {
         _token = MAX_TOKEN;
     }
-    _token = MAX_TOKEN;
+    _token = RANDY_TOKEN;
 }
 
 - (void)moduleOnLogin:(LiveModule *)module {
     NSLog(@"LSTestViewController::moduleOnLogin()");
     dispatch_async(dispatch_get_main_queue(), ^{
         self.activityView.hidden = YES;
-        
 
         // 设置模块主界面
         UIViewController *vc = [LiveModule module].mainVC;
 
-        //LSSayHiDetailViewController * vc = [[LSSayHiDetailViewController alloc]initWithNibName:nil bundle:nil];
+        //LSVIPLiveViewController * vc = [[LSVIPLiveViewController alloc]initWithNibName:nil bundle:nil];
         
         // 推进界面
         LSNavigationController *nvc = (LSNavigationController *)self.navigationController;

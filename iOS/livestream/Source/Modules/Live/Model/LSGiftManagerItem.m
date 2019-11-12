@@ -74,10 +74,14 @@
     [self downloadImage:self.infoItem.bigImgUrl];
 }
 
-- (BOOL)canSend:(NSInteger)loveLevel userLevel:(NSInteger)userLevel {
-    BOOL bFlag = NO;
-    bFlag = (self.infoItem.loveLevel <= loveLevel && self.infoItem.level <= userLevel);
-    return bFlag;
+- (GiftSendType)canSend:(NSInteger)loveLevel userLevel:(NSInteger)userLevel {
+    if (self.infoItem.loveLevel > loveLevel) {
+        return GiftSendType_Not_LoveLevel;
+    } else if (self.infoItem.level > userLevel) {
+        return GiftSendType_Not_UserLevel;
+    } else {
+        return GiftSendType_Can_Send;
+    }
 }
 
 #pragma mark - 下载礼物文件

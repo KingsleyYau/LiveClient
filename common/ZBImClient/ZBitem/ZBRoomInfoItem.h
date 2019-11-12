@@ -15,6 +15,7 @@ using namespace std;
 #include <json/json/json.h>
 #include "ZBRebateInfoItem.h"
 #include "ZBAuthorityItem.h"
+#include "ZBCurrentPushInfoItem.h"
 #define ZBRII_ANCHORID_PARAM          "anchor_id"
 #define ZBRII_ROOMID_PARAM            "room_id"
 #define ZBRII_ROOMTYPE_PARAM          "room_type"
@@ -25,6 +26,7 @@ using namespace std;
 #define ZBRII_MAXFANSINUM_PARAM       "max_fansi_num"
 #define ZBRII_PULLURL_PARAM           "pull_url"
 #define ZBRII_PRIV_PARAM              "priv"
+#define ZBRII_CURRENT_PUSH_PARAM      "current_push"
 
 class ZBRoomInfoItem {
 public:
@@ -83,6 +85,10 @@ public:
             if (root[ZBRII_PRIV_PARAM].isObject()) {
                 priv.Parse(root[ZBRII_PRIV_PARAM]);
             }
+            
+            if (root[ZBRII_CURRENT_PUSH_PARAM].isObject()) {
+                currentPush.Parse(root[ZBRII_CURRENT_PUSH_PARAM]);
+            }
 
         }
 
@@ -117,6 +123,7 @@ public:
      * maxFansiNum		        最大人数限制
      * PullUrl                  男士视频流url
      * priv                     权限
+     * currentPush              当前推流状态
      */
     string          anchorId;
     string          roomId;
@@ -128,6 +135,7 @@ public:
     int             maxFansiNum;
     list<string>    pullUrl;
     ZBAuthorityItem priv;
+    ZBCurrentPushInfoItem currentPush;
 };
 
 

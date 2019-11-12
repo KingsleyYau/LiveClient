@@ -207,6 +207,36 @@ int IMAnchorProgramStatusToInt(IMAnchorProgramStatus type) {
 	return value;
 }
 
+int IMDeviceTypeToInt(IMDeviceType type) {
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(IMDeviceTypeArray); i++)
+	{
+		if (type == IMDeviceTypeArray[i]) {
+			value = i ;
+			break;
+		}
+	}
+	return value;
+}
+
+IMDeviceType IntToIMDeviceType(int value) {
+	return (IMDeviceType)(value < _countof(IMDeviceTypeArray) ? IMDeviceTypeArray[value] : IMDeviceTypeArray[0]);
+}
+
+int IMCurrentPushStatusToInt(IMCurrentPushStatus type) {
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(IMCurrentPushStatusArray); i++)
+	{
+		if (type == IMCurrentPushStatusArray[i]) {
+			value = i ;
+			break;
+		}
+	}
+	return value;
+}
+
 jobjectArray getJavaStringArray(JNIEnv *env, const list<string>& sourceList){
 	jobjectArray array = NULL;
 	jclass jItemCls = env->FindClass("java/lang/String");
@@ -249,11 +279,37 @@ jintArray getJavaIntArray(JNIEnv *env, const list<int>& sourceList){
 	return jarray;
 }
 
+jobject getCurrentPushInfoItemm(JNIEnv *env, const ZBCurrentPushInfoItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_CURRENTPUSHINFO_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(ILjava/lang/String;)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+
+        if (NULL != init) {
+            jstring jmessage = env->NewStringUTF(item.message.c_str());
+            int jstatus = IMCurrentPushStatusToInt(item.status);
+            jItem = env->NewObject(jItemCls, init,
+                                   jstatus,
+                                   jmessage
+            );
+            env->DeleteLocalRef(jmessage);
+        }
+
+	}
+	return jItem;
+}
+
+
 jobject getRoomInItem(JNIEnv *env, const ZBRoomInfoItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, IM_ROOMIN_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(Ljava/lang/String;Ljava/lang/String;I[Ljava/lang/String;II[Ljava/lang/String;IIZZ)V";
+		string signature = "(Ljava/lang/String;Ljava/lang/String;I[Ljava/lang/String;II[Ljava/lang/String;IIZZ";
+		       signature += "L";
+		       signature += IM_CURRENTPUSHINFO_ITEM_CLASS; // currentPush
+		       signature += ";";
+		       signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 
         if (NULL != init) {
@@ -264,6 +320,7 @@ jobject getRoomInItem(JNIEnv *env, const ZBRoomInfoItem& item){
             int jroomType = RoomTypeToInt(item.roomType);
             int jstatus = LiveStatusToInt(item.status);
             int jliveShowType = IMAnchorPublicRoomTypeToInt(item.liveShowType);
+            jobject jcurrentPush = getCurrentPushInfoItemm(env, item.currentPush);
             jItem = env->NewObject(jItemCls, init,
                                    janchorId,
                                    jroomId,
@@ -275,7 +332,8 @@ jobject getRoomInItem(JNIEnv *env, const ZBRoomInfoItem& item){
                                    jstatus,
                                    jliveShowType,
                                    item.priv.isHasOneOnOneAuth,
-                                   item.priv.isHasBookingAuth
+                                   item.priv.isHasBookingAuth,
+                                   jcurrentPush
             );
             env->DeleteLocalRef(janchorId);
             env->DeleteLocalRef(jroomId);
@@ -284,6 +342,10 @@ jobject getRoomInItem(JNIEnv *env, const ZBRoomInfoItem& item){
             }
             if(NULL != pullUrlArray){
                 env->DeleteLocalRef(pullUrlArray);
+            }
+
+            if(NULL != jcurrentPush){
+               env->DeleteLocalRef(jcurrentPush);
             }
         }
 
@@ -1078,6 +1140,47 @@ jobject getIMProgramInfoItem(JNIEnv *env, const IMAnchorProgramInfoItem& item) {
             env->DeleteLocalRef(jshowTitle);
             env->DeleteLocalRef(jshowIntroduce);
             env->DeleteLocalRef(jcover);
+        }
+
+	}
+	return jItem;
+}
+
+
+jobject getIMSendInviteInfoItem(JNIEnv *env, const ZBIMSendInviteInfoItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_SENDINVITEINFO_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(Ljava/lang/String;";
+		signature += "Ljava/lang/String;";
+		signature += "I";
+		signature += "I";
+		signature += "Ljava/lang/String;";
+		signature += "Ljava/lang/String;";
+		signature += "Ljava/lang/String;";
+		signature += ")V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+        if (NULL != init) {
+            jstring jinviteId = env->NewStringUTF(item.inviteId.c_str());
+            jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+            jstring juserId = env->NewStringUTF(item.userId.c_str());
+            jstring juserName = env->NewStringUTF(item.userName.c_str());
+            jstring juserPhotoUrl = env->NewStringUTF(item.userPhotoUrl.c_str());
+            jint jdeviceType = IMDeviceTypeToInt(item.deviceType);
+            jItem = env->NewObject(jItemCls, init,
+                                   jinviteId,
+                                   jroomId,
+                                   item.timeOut,
+                                   jdeviceType,
+                                   juserId,
+                                   juserName,
+                                   juserPhotoUrl
+            );
+            env->DeleteLocalRef(jinviteId);
+            env->DeleteLocalRef(jroomId);
+            env->DeleteLocalRef(juserId);
+            env->DeleteLocalRef(juserName);
+            env->DeleteLocalRef(juserPhotoUrl);
         }
 
 	}

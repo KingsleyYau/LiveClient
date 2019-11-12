@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!--直播间头部背景-->
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_roomHeaderBg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+    <!-- layout_marginTop 代码设置留出系统状态栏高度 -->
+    <LinearLayout
+        android:id="@+id/ll_liveRoomHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_live_room_header_gradient"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="7dp"
+            android:paddingLeft="13dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/ll_hostInfoView"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <!--主播头像-->
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civ_hostIcon"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="2dp"
+                    android:src="@drawable/ic_default_photo_woman"
+                    custom:civ_border_color="@color/white"
+                    custom:civ_border_width="1dp"
+                    custom:layout_constraintBottom_toBottomOf="parent"
+                    custom:layout_constraintStart_toStartOf="parent"
+                    custom:layout_constraintTop_toTopOf="parent" />
+
+                <!--主播昵称-->
+                <RelativeLayout
+                    android:id="@+id/rl_acr_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    custom:layout_constraintBottom_toBottomOf="parent"
+                    custom:layout_constraintLeft_toRightOf="@id/civ_hostIcon"
+                    custom:layout_constraintTop_toTopOf="parent">
+
+                    <!--昵称-->
+                    <TextView
+                        android:id="@+id/tv_hostName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:ellipsize="middle"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="@android:color/white"
+                        android:maxWidth="140dp"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="KLASDFKLKALKLSJDGLKSDAJGKLJADGLKJSDALGLSDAJGLSADJGLSDJLGSAJDKLG"/>
+
+                    <!--ID-->
+                    <TextView
+                        android:id="@+id/tv_hostId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_hostName"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/live_room_public_flag"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+                <!-- 房间类型 -->
+                <TextView
+                    android:id="@+id/tv_roomFlag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/bg_private_stroke_shape"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/live_room_private_flag"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    custom:layout_constraintLeft_toRightOf="@id/rl_acr_name"
+                    custom:layout_constraintTop_toTopOf="@+id/rl_acr_name" />
+
+                <!--关注主播-->
+                <!--<ImageView-->
+                <!--android:id="@+id/iv_follow"-->
+                <!--android:layout_width="32dp"-->
+                <!--android:layout_height="32dp"-->
+                <!--android:layout_marginRight="7dp"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:src="@drawable/ic_liveroom_follow"/>-->
+            </android.support.constraint.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/llHeaderHangout"
+                android:layout_width="@dimen/live_size_90dp"
+                android:layout_height="@dimen/live_size_26dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/btn_hangout_list_stroke_shape"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/live_size_12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_hang_out" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_4dp"
+                    android:text="@string/live_common_hangout"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:textStyle="bold"
+                    android:includeFontPadding="false"/>
+            </LinearLayout>
+
+            <!--公开直播间-->
+            <LinearLayout
+                android:id="@+id/ll_publicRoomHeader"
+                android:visibility="visible"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="17dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <!--免费公开直播间观众头像列表-->
+                <LinearLayout
+                    android:id="@+id/ll_freePublic"
+                    android:visibility="visible"
+                    android:orientation="horizontal"
+                    android:gravity="right|center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:id="@+id/rl_roomOnlineNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="9dp"
+                        android:visibility="gone"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+                        <ImageView
+                            android:id="@+id/iv_onlineFlag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_live_room_online"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:id="@+id/tv_onlineNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="9sp"
+                            android:textColor="#f4f4f4"
+                            android:visibility="visible"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_onlineFlag"
+                            android:layout_marginLeft="4dp"
+                            android:gravity="center_vertical"
+                            />
+                    </RelativeLayout>
+
+                    <View android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        android:layout_weight="1"/>
+
+                    <com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView
+                        android:id="@+id/cihsv_onlineFreePublic"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:scrollbars="none"
+                        android:visibility="visible"
+                        custom:horizontSpace = "4dp"
+                        custom:itemWidth="24dp"/>
+                </LinearLayout>
+
+                <!--付费公开直播间-->
+                <RelativeLayout
+                    android:id="@+id/rl_vipPublic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="29dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_gravity="right"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_live_header_online_base">
+
+                    <com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView
+                        android:id="@+id/cihsv_onlineVIPPublic"
+                        android:layout_width="82dp"
+                        android:layout_height="24dp"
+                        android:scrollbars="none"
+                        android:visibility="visible"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@+id/ll_vipGuest"
+                        android:layout_centerVertical="true"
+                        custom:horizontSpace = "5dp"
+                        custom:itemWidth="24dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_vipGuest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="29dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_live_header_online_left"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#ffe674"
+                            android:textSize="8sp"
+                            android:text="@string/liveroom_vipguest"/>
+
+                        <TextView
+                            android:id="@+id/tv_vipGuestData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#ffe674"
+                            android:textSize="8sp"
+                            android:text="@string/liveroom_header_vipguestdata"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--私密直播间-->
+            <LinearLayout
+                android:id="@+id/ll_privateRoomHeader"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/bg_live_header_intimacy"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:visibility="visible">
+
+                        <FrameLayout
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="top|left"
+                            android:layout_marginBottom="4dp">
+
+                            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                                android:id="@+id/civ_prvHostIcon"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_default_photo_woman"/>
+
+                            <ImageView
+                                android:id="@+id/iv_prvHostIconBg"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:visibility="visible"
+                                android:src="@drawable/bg_live_header_intimacy_bg"
+                                android:scaleType="fitCenter"/>
+
+                            <ImageView
+                                android:id="@+id/iv_followPrvHost"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:visibility="gone"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_follow_advanceprv"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginLeft="12dp">
+                            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                                android:id="@+id/civ_prvUserIcon"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_default_photo_man"/>
+
+                            <ImageView
+                                android:id="@+id/iv_prvUserIconBg"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:visibility="visible"
+                                android:src="@drawable/bg_live_header_intimacy_bg"
+                                android:scaleType="fitCenter"/>
+
+                        </FrameLayout>
+
+                    </FrameLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_intimacyPrv"
+                        android:layout_width="38dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:visibility="visible"
+                        android:src="@drawable/ic_liveroom_header_intimacy_1"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--直播间关闭按钮-->
+            <LinearLayout
+                android:id="@+id/ll_closeLiveRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/iv_closeLiveRoom"
+                    android:onClick="onClick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_live_close_private_room"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginLeft="13dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_roomHeader_buttomLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:visibility="gone"
+            android:background="#e5e5e5"
+            />
+
+        <!--四个类型直播间公用的部分-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="29dp">
+
+            <ImageView
+                android:id="@+id/iv_roomFlag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:visibility="visible"
+                android:layout_gravity="bottom|left"
+                android:src="@drawable/ic_live_public_flag"/>
+
+            <com.qpidnetwork.livemodule.view.LiveRoomHeaderBezierView
+                android:id="@+id/lrhbv_flag"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:visibility="gone"
+                android:layout_marginLeft="6dp"
+                custom:bezierXWidth="14dp"
+                custom:controllX1="10dp"
+                custom:controllY1="1dp"
+                custom:controllX2="4dp"
+                custom:controllY2="8dp"
+                custom:useThreeOrderBesselCurve="true"
+                custom:showTestCirclePath="false"
+                custom:fillAndStroke="true"
+                custom:roomHeaderBgColor="#cdb4b9"
+                />
+
+            <include
+                android:id="@+id/ll_rebate"
+                layout="@layout/view_room_rebate_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:visibility="invisible"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="13dp" />
+
+
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

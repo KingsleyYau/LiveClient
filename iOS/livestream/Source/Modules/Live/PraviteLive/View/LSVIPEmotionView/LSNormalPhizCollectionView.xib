@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="82H-6V-avI" customClass="LSNormalPhizCollectionView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="222"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="dmI-Eq-oul" userLabel="Emotion Collection View">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="222"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="zF6-49-aaM">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="82H-6V-avI" id="Tjk-l5-HqS"/>
+                        <outlet property="delegate" destination="82H-6V-avI" id="hxS-gd-edR"/>
+                    </connections>
+                </collectionView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mqh-IZ-ZkF">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="222"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry. To use advanced emoticion, you need to upgrade the intimacy to 10" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGI-OQ-CQU">
+                            <rect key="frame" x="25" y="0.0" width="270" height="222"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="270" id="cU4-A5-y3h"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.76000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="FGI-OQ-CQU" firstAttribute="centerY" secondItem="mqh-IZ-ZkF" secondAttribute="centerY" id="PRu-wk-dts"/>
+                        <constraint firstItem="FGI-OQ-CQU" firstAttribute="centerX" secondItem="mqh-IZ-ZkF" secondAttribute="centerX" id="QCA-yu-xwQ"/>
+                        <constraint firstItem="FGI-OQ-CQU" firstAttribute="top" secondItem="mqh-IZ-ZkF" secondAttribute="top" id="TCI-wB-nom"/>
+                        <constraint firstAttribute="bottom" secondItem="FGI-OQ-CQU" secondAttribute="bottom" id="mh5-D3-F11"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="dmI-Eq-oul" firstAttribute="leading" secondItem="82H-6V-avI" secondAttribute="leading" id="921-bv-qZt"/>
+                <constraint firstItem="dmI-Eq-oul" firstAttribute="width" secondItem="82H-6V-avI" secondAttribute="width" id="A6I-xm-anJ"/>
+                <constraint firstItem="mqh-IZ-ZkF" firstAttribute="top" secondItem="82H-6V-avI" secondAttribute="top" id="INc-Yf-5cG"/>
+                <constraint firstItem="dmI-Eq-oul" firstAttribute="top" secondItem="82H-6V-avI" secondAttribute="top" id="J33-B3-QUD"/>
+                <constraint firstItem="dmI-Eq-oul" firstAttribute="height" secondItem="82H-6V-avI" secondAttribute="height" id="Nk5-HR-UHt"/>
+                <constraint firstAttribute="trailing" secondItem="mqh-IZ-ZkF" secondAttribute="trailing" id="TTH-2O-KYS"/>
+                <constraint firstAttribute="bottom" secondItem="mqh-IZ-ZkF" secondAttribute="bottom" id="lXh-EO-AfV"/>
+                <constraint firstItem="mqh-IZ-ZkF" firstAttribute="leading" secondItem="82H-6V-avI" secondAttribute="leading" id="xSG-TX-dwZ"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="emotionCollectionView" destination="dmI-Eq-oul" id="AaM-Eu-nk7"/>
+                <outlet property="tipLabel" destination="FGI-OQ-CQU" id="SO0-G0-jaU"/>
+                <outlet property="tipView" destination="mqh-IZ-ZkF" id="hPc-3L-TA3"/>
+            </connections>
+            <point key="canvasLocation" x="400" y="341"/>
+        </view>
+    </objects>
+</document>

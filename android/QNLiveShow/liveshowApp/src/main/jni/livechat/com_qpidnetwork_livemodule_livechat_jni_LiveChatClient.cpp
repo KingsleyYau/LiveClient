@@ -2606,6 +2606,43 @@ public:
 		ReleaseEnv(isAttachThread);
 	}
 
+	virtual void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName)override {
+
+			JNIEnv* env = NULL;
+    		bool isAttachThread = false;
+    		GetEnv(&env, &isAttachThread);
+
+    		FileLog("LiveChatClient", "OnSendInviteMessage() callback userId:%s, inviteMsg:%s, err:%d, inviteId:%s, nickName:%s", inUserId.c_str(), inMessage.c_str(), err, inviteId.c_str(), nickName.c_str());
+    		jclass jCallbackCls = env->GetObjectClass(gListener);
+    		string signure = "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+    		jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnSendInviteMessage", signure.c_str());
+    		if (NULL != gListener && NULL != jCallback)
+    		{
+    			FileLog("LiveCatClient", "OnSendInviteMessage() callback now");
+
+    			int errType = LccErrTypeToInt(err);
+    			jstring jUserId = env->NewStringUTF(inUserId.c_str());
+    			jstring jInviteMsg = env->NewStringUTF(inMessage.c_str());
+    			jstring jInviteId = env->NewStringUTF(inviteId.c_str());
+    			jstring jNickName = env->NewStringUTF(nickName.c_str());
+    			jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+
+    			env->CallVoidMethod(gListener, jCallback, errType, jerrmsg, jUserId, jInviteMsg, jInviteId, jNickName);
+
+    			env->DeleteLocalRef(jUserId);
+    			env->DeleteLocalRef(jInviteMsg);
+    			env->DeleteLocalRef(jInviteId);
+    			env->DeleteLocalRef(jerrmsg);
+    			env->DeleteLocalRef(jNickName);
+
+    			FileLog("LiveChatClient", "OnSendInviteMessage() callback ok");
+    		}
+
+    		ReleaseEnv(isAttachThread);
+
+	}
+
+
 };
 static LiveChatClientListener g_listener;
 
@@ -3473,4 +3510,29 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChat
 	string strTicketId = GetJString(env, ticketId);
 
 	return g_liveChatClient->CamshareUseTryTicket(strTargetId, strTicketId);
+}
+
+
+/*
+ * Class:     com_qpidnetwork_livechat_jni_LiveChatClient
+ * Method:    SendInviteMessage
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livechat_jni_LiveChatClient_SendInviteMessage
+  (JNIEnv *env, jclass cls, jstring targetId, jstring inviteMsg, jstring nickName) {
+    jboolean result = false;
+    if (NULL == g_liveChatClient) {
+        FileLog("LiveChatClient", "SendInviteMessage() g_liveChatClient is null");
+        result = false;
+    } else {
+
+        string strTargetId = GetJString(env, targetId);
+        string strInviteMsg = GetJString(env, inviteMsg);
+        string strNickName = GetJString(env, nickName);
+
+        result = g_liveChatClient->SendInviteMessage(strTargetId, strInviteMsg, strNickName);
+
+        FileLog("LiveChatClient", "SendInviteMessage() userId:%s, inviteMsg:%s, result:%d", strTargetId.c_str(), strInviteMsg.c_str(), strNickName.c_str(), result);
+    }
+    return result;
 }

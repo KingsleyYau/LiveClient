@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="16sp"
+        android:textColor="@color/black1"
+        android:text="To:" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv1"
+        android:layout_centerVertical="true"
+        android:textSize="16sp"
+        android:textColor="@color/black1"
+        android:textStyle="bold"
+        android:maxWidth="100dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        tools:text="NameNameNameNameNameNameName" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_anchor"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/tvName"
+        android:layout_marginLeft="7dp"
+        android:layout_margin="@dimen/live_size_2dp" />
+
+    <Button
+        android:id="@+id/btn_checkout"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/rectangle_radius6_ripple_solid_sky_blue"
+        android:text="@string/checkout"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+</RelativeLayout>

@@ -11,9 +11,12 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetHangoutInvitStatusCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.OnSendInvitationHangoutCallback;
+import com.qpidnetwork.livemodule.httprequest.RequestJniOther;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutInviteStatus;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.IMHangoutEventListener;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
@@ -30,8 +33,10 @@ import com.qpidnetwork.livemodule.im.listener.IMRecvEnterRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMRecvKnockRequestItem;
 import com.qpidnetwork.livemodule.im.listener.IMRecvLeaveRoomItem;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.StringUtil;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
@@ -49,6 +54,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     private final int EVENT_CANCEL_INVITATION_CALLBACK = 6;
 
     private final int INVITE_TIMEOUT_INTERVAL = 3 * 60 * 1000;
+    private final int ARCH_NAME_MAX_LENGHT = 8;
 
     private IMManager mIMManager;
     private IMUserBaseInfoItem mAnchorInfo;
@@ -85,6 +91,22 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
                                 //设置邀请超时定时器
                                 mHandler.sendEmptyMessageDelayed(EVENT_INVITE_TIMEOUT, INVITE_TIMEOUT_INTERVAL);
                             }
+
+                            if(msg.arg1 == 1 && item != null && mAnchorInfo != null) {
+                                //冒泡提交统计
+                                LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+                                //冒泡进入，统计事件
+                                String manId = "";
+                                if(loginItem != null){
+                                    manId = loginItem.userId;
+                                }
+                                RequestJniOther.UpQnInviteId(manId, mAnchorInfo.userId, item.inviteId, item.roomId, LSRequestEnum.LSBubblingInviteType.Hangout, new OnRequestCallback() {
+                                    @Override
+                                    public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+
+                                    }
+                                });
+                            }
                         }else{
                             //发送邀请失败
                             onHttpError(respObject.errCode, respObject.errMsg);
@@ -101,7 +123,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
                     case EVENT_INVITE_TIMEOUT:{
                         //邀请等候超时
                         if(isInviting()) {
-                            String message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), mAnchorInfo.nickName);
+                            String message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), StringUtil.truncateName(mAnchorInfo.nickName, ARCH_NAME_MAX_LENGHT));
                             onHangoutInvitationFinish(false, HangoutInvationErrorType.InviteDeny, message, "");
                         }
                     }break;
@@ -155,8 +177,9 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
      * @param roomId   当前所在直播间ID
      * @param recommandId   推荐ID
      * @param createOnly
+     * @param isBubble  是否冒泡发起
      */
-    public void startInvitationSession(final IMUserBaseInfoItem anchorInfo, String roomId, String recommandId, boolean createOnly){
+    public void startInvitationSession(final IMUserBaseInfoItem anchorInfo, String roomId, String recommandId, boolean createOnly, final boolean isBubble){
         if(anchorInfo != null) {
             mAnchorInfo = anchorInfo;
             Log.i(TAG, "startInvitationSession userId: " + anchorInfo.userId + "  nickname: " + anchorInfo.nickName + "  photoUrl: " + anchorInfo.photoUrl + " roomId: " + roomId + "  recommandId: " + recommandId + " createOnly: " + createOnly);
@@ -168,6 +191,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
                     public void onSendInvitationHangout(boolean isSuccess, int errCode, String errMsg, String roomId, String inviteId, int expire) {
                         Message msg = Message.obtain();
                         msg.what = EVENT_SEND_INVITATION_CALLBACK;
+                        msg.arg1 = isBubble?1:0;
                         msg.obj = new HttpRespObject(isSuccess, errCode, errMsg, new InvitationItem(roomId, inviteId, expire, HangoutInviteStatus.Unknown));
                         mHandler.sendMessage(msg);
                     }
@@ -320,7 +344,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
             }break;
             case Reject:
             case OutTime:{
-                message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), mAnchorInfo.nickName);
+                message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), StringUtil.truncateName(mAnchorInfo.nickName, ARCH_NAME_MAX_LENGHT));
                 hangoutInvationErrorType = HangoutInvationErrorType.InviteDeny;
             }break;
             case NoCredit:{
@@ -354,11 +378,11 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
                 break;
                 case OutTime:
                 case Reject:{
-                    message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), mAnchorInfo.nickName);
+                    message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), StringUtil.truncateName(mAnchorInfo.nickName, ARCH_NAME_MAX_LENGHT));
                     hangoutInvationErrorType = HangoutInvationErrorType.InviteDeny;
                 }break;
                 case Cancle: {
-                    message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), mAnchorInfo.nickName);
+                    message = String.format(mContext.getResources().getString(R.string.hangout_transition_reject_or_timeout), StringUtil.truncateName(mAnchorInfo.nickName, ARCH_NAME_MAX_LENGHT));
                     hangoutInvationErrorType = HangoutInvationErrorType.NormalError;
                 }
                 break;
@@ -545,7 +569,7 @@ public class HangoutInvitationManager implements IMHangoutEventListener, IMOther
     }
 
     @Override
-    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
+    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, IMClientListener.LCC_ERR_TYPE err) {
 
     }
 

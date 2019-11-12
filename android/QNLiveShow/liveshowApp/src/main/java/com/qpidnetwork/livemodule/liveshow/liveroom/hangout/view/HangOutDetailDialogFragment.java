@@ -295,9 +295,9 @@ public class HangOutDetailDialogFragment extends DialogFragment implements HangO
                 //压缩、裁剪图片
                 int bgSize = getContext().getResources().getDimensionPixelSize(R.dimen.live_size_60dp);  //DisplayUtil.getScreenWidth(mContext);
 
-                //对齐方式(左上角对齐)
+                //对齐方式(中上对齐)
                 PointF focusPoint = new PointF();
-                focusPoint.x = 0f;
+                focusPoint.x = 0.5f;
                 focusPoint.y = 0f;
 
                 //占位图，拉伸方式
@@ -432,7 +432,7 @@ public class HangOutDetailDialogFragment extends DialogFragment implements HangO
 
             @Override
             public void subscribe(final ObservableEmitter<HttpRespObject> emitter) {
-                RequestJniHangout.GetHangoutFriends(anchorId, new OnGetHangoutFriendsCallback() {
+                LiveRequestOperator.getInstance().GetHangoutFriends(anchorId, new OnGetHangoutFriendsCallback() {
                     @Override
                     public void onGetHangoutFriends(boolean isSuccess, int errCode, String errMsg, HangoutAnchorInfoItem[] audienceList) {
                         HttpRespObject respose = new HttpRespObject(isSuccess, errCode, errMsg, audienceList);

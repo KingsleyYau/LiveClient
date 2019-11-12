@@ -31,10 +31,13 @@
     <item name="live_dialog_custom_view" type="id"/>
 
     <!-- livechat -->
-    <item name="item_position" type="id">false</item>
-    <item name="emo_item_img" type="id">false</item>
-    <item name="emo_item_progress" type="id">false</item>
+    <item name="item_position" type="id"/>
+    <item name="emo_item_img" type="id"/>
+    <item name="emo_item_progress" type="id"/>
 
     <!-- hotlist -->
     <item type="id" name="hotlist_programme_des" />
+
+    <!-- shopping car -->
+    <item name="anim_icon" type="id"/>
 </resources>

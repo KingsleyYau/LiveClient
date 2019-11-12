@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="82dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!--中间内容区域-->
+    <LinearLayout
+        android:id="@+id/item_say_hi_all_and_response_rlItemRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/touch_feedback_holo_light"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/live_size_20dp"
+        android:paddingTop="@dimen/live_size_16dp"
+        android:paddingRight="@dimen/live_size_20dp"
+        android:paddingBottom="@dimen/live_size_16dp">
+
+        <!--主播头像-->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/item_say_hi_all_and_response_iv_icon"
+            android:layout_width="@dimen/live_size_50dp"
+            android:layout_height="@dimen/live_size_50dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            android:orientation="vertical">
+
+            <!--顶部主播名字文案-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <!--主播名字-->
+                    <TextView
+                        android:id="@+id/item_say_hi_all_and_response_tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxWidth="@dimen/live_size_140dp"
+                        android:singleLine="true"
+                        android:textColor="@color/live_text_color_black"
+                        android:textSize="@dimen/live_size_18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/item_say_hi_all_and_response_iv_image_tag"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="JenniferJenniferJennifer" />
+
+                    <!--图片标签-->
+                    <ImageView
+                        android:id="@+id/item_say_hi_all_and_response_iv_image_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/live_size_6dp"
+                        android:src="@drawable/ic_say_hi_list_img"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/item_say_hi_all_and_response_tv_name"
+                        app:layout_constraintLeft_toRightOf="@+id/item_say_hi_all_and_response_tv_name"
+                        app:layout_constraintRight_toLeftOf="@+id/item_say_hi_all_and_response_tv_free_tag"
+                        app:layout_constraintTop_toTopOf="@+id/item_say_hi_all_and_response_tv_name"
+                        tools:visibility="visible" />
+
+                    <!--Free 标签-->
+                    <TextView
+                        android:id="@+id/item_say_hi_all_and_response_tv_free_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/live_size_6dp"
+                        android:background="@drawable/rectangle_radius4_red"
+                        android:ellipsize="end"
+                        android:paddingLeft="@dimen/live_size_4dp"
+                        android:paddingRight="@dimen/live_size_4dp"
+                        android:singleLine="true"
+                        android:text="@string/say_hi_detail_free_btn"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_12sp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/item_say_hi_all_and_response_iv_image_tag"
+                        app:layout_constraintLeft_toRightOf="@+id/item_say_hi_all_and_response_iv_image_tag"
+                        app:layout_constraintTop_toTopOf="@+id/item_say_hi_all_and_response_iv_image_tag"
+                        tools:visibility="visible" />
+                </android.support.constraint.ConstraintLayout>
+
+                <!--时间戳-->
+                <TextView
+                    android:id="@+id/item_say_hi_all_and_response_tv_timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_12dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/live_text_color_black"
+                    android:textSize="@dimen/live_size_14sp"
+                    tools:text="Mar 12" />
+            </LinearLayout>
+
+            <!--底部内容文本-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!--描述-->
+                <TextView
+                    android:id="@+id/item_say_hi_all_and_response_tv_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/live_text_color_black"
+                    android:textSize="@dimen/live_size_16sp"
+                    tools:text="…how are you doing……how are you doing…" />
+
+                <!--未读数-->
+                <TextView
+                    android:id="@+id/item_say_hi_all_and_response_tv_unread"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_12dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/live_main_top_menu_unread_bg"
+                    android:textSize="@dimen/live_size_12sp"
+                    android:visibility="gone"
+                    tools:text="1 unread"
+                    tools:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--分割线-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/live_message_contact_list_background_color" />
+</FrameLayout>

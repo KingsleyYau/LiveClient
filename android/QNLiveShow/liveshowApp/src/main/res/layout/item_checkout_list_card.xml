@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/bg_MainActivity">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_gift"
+        android:layout_width="@dimen/my_cart_flower_img_size"
+        android:layout_height="@dimen/my_cart_flower_img_size"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/live_size_2dp"
+        fresco:backgroundImage="@drawable/ic_greeting_card"
+        fresco:actualImageScaleType="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/img_gift"
+        android:layout_toLeftOf="@id/ll_sum"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_flower_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textColor="@color/black1"
+            android:text="@string/checkout_greeting_card" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:textSize="14sp"
+            android:textColor="@color/red_light"
+            tools:text="@string/my_cart_price" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_sum"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true">
+
+
+        <TextView
+            android:id="@+id/edt_sum"
+            android:layout_width="44dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text="1"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

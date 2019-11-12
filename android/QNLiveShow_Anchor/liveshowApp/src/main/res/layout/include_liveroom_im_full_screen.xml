@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <!-- 顶部菜单 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_live_room_header_gradient">
+
+        <!-- 按钮排列 -->
+        <LinearLayout
+            android:id="@+id/ll_opera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+            <ImageView
+                android:id="@+id/iv_beauty"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_public_trans_beauty"/>
+            <ImageView
+                android:id="@+id/iv_switchCamera"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_public_trans_switch_camera"/>
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_public_trans_close"/>
+        </LinearLayout>
+
+        <!-- 观众列表(公开) 默认隐藏，公开时可视-->
+        <include
+            android:id="@+id/includeOnline"
+            layout="@layout/view_liveshow_online_pic_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/ll_opera"
+            android:visibility="gone"
+            tools:visibility="gone"/>
+
+        <!-- 观众(私密) 默认藏，私密时可视-->
+        <LinearLayout
+            android:id="@+id/ll_pri_man_msg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_room_header_height"
+            android:layout_toLeftOf="@id/ll_opera"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <!-- 男头 -->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_man"
+                android:layout_width="@dimen/live_room_pri_header_man_icon_size"
+                android:layout_height="@dimen/live_room_pri_header_man_icon_size"
+                android:layout_marginLeft="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:text="@string/liveroom_one_on_one" />
+
+            <TextView
+                android:id="@+id/tv_man_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="bbb" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <!--中间的视频加载loading动画、左下角的连送动画、入场动画-->
+    <FrameLayout
+        android:id="@+id/rl_media"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- 弹幕 -->
+        <LinearLayout
+            android:id="@+id/ll_bulletScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:visibility="invisible"
+            android:gravity="center_vertical"
+            android:padding="1dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/rl_bullet1"
+                layout="@layout/view_live_center_bullet_screen"
+                android:layout_width="wrap_content"
+                android:maxWidth="220dp"
+                android:layout_height="@dimen/liveroom_bullet_height"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+        <!-- 座驾 -->
+        <include
+            android:id="@+id/ll_entranceCar"
+            layout="@layout/view_full_screen_liveroom_car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="right"/>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/ll_entranceCar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="top|right"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_marginRight="13dp"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:layout_marginTop="32dp">-->
+
+<!--            <include-->
+<!--                layout="@layout/view_liveroom_car"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"/>-->
+
+<!--        </LinearLayout>-->
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_vedioLoading"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:layout_width="83dp"
+            android:layout_height="83dp"/>
+
+        <!-- 倒计时 -->
+        <include
+            layout="@layout/view_full_screen_liveroom_vedio_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"/>
+
+
+        <!-- 连击礼物区 -->
+        <FrameLayout
+            android:id="@+id/flMultiGift"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_gravity="center_vertical|left"
+            android:layout_marginRight="80dp"
+            android:paddingLeft="13dp" />
+
+        <!-- PC转手机直播 (默认隐藏)-->
+        <LinearLayout
+            android:id="@+id/ll_pc_to_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_pc_to_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="@string/liveroom_on_pc"/>
+
+            <Button
+                android:id="@+id/btn_to_mobile"
+                android:layout_width="200dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:background="@drawable/rectangle_radius6_ripple_solid_sky_blue"
+                android:text="@string/liveroom_to_mobile"
+                android:textAllCaps="false"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- 消息 + 男士视频 -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!--视频上传区域-->
+<!--        <include-->
+<!--            android:id="@+id/includePull"-->
+<!--            layout="@layout/include_liveroom_publish"-->
+<!--            android:layout_width="@dimen/live_room_pri_man_video_width"-->
+<!--            android:layout_height="@dimen/live_room_pri_man_video_height"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_marginBottom="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@id/fl_imMsgContainer"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintVertical_bias="1.0"-->
+<!--            tools:visibility="visible" />-->
+        <FrameLayout
+            android:id="@+id/fl_man_video"
+            android:layout_width="@dimen/live_room_pri_man_video_width"
+            android:layout_height="@dimen/live_room_pri_man_video_height"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/fl_imMsgContainer"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="visible">
+
+<!--            <android.opengl.GLSurfaceView-->
+<!--                android:id="@+id/sv_pull"-->
+<!--                android:visibility="visible"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+
+<!--            <include-->
+<!--                android:id="@+id/view_gaussian_blur_me"-->
+<!--                layout="@layout/view_gaussian_blur_publish"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"/>-->
+
+        </FrameLayout>
+
+        <!-- 消息列表区 layout_height代码设置-->
+        <RelativeLayout
+            android:id="@+id/fl_imMsgContainer"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/live_size_200dp"
+            android:minHeight="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/fl_man_video"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!-- 消息列表 -->
+            <include
+                android:id="@+id/fl_msglist"
+                layout="@layout/view_liveroom_msglist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginBottom="4dp" />
+
+        </RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

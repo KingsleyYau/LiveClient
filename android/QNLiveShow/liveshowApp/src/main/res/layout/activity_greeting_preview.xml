@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#383838"
+    android:fitsSystemWindows="true"
+    tools:context=".liveshow.flowergift.checkout.GreetingPreviewActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height" >
+        <ImageView
+            android:id="@+id/iv_commBack"
+            android:layout_width="@dimen/actionbar_backicon_height"
+            android:layout_height="@dimen/actionbar_backicon_height"
+            android:background="@drawable/touch_feedback_holo_light_circle"
+            android:layout_gravity="center_vertical"
+            android:scaleType="center"
+            android:paddingLeft="13dp"
+            android:paddingRight="18dp"
+            android:src="@drawable/ic_arrow_back_white" />
+    </FrameLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_MainActivity"
+        android:layout_marginTop="@dimen/actionbar_height"
+        android:layout_marginBottom="@dimen/actionbar_height" >
+
+        <!-- 卡背景 -->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img_card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:scrollbars="vertical"
+            android:fontFamily="serif"
+            android:lineSpacingExtra="12sp"
+            android:textSize="@dimen/live_size_22sp"
+            android:textStyle="italic"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@+id/tv_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="ABC ADG DF asdf dsf gfh v fgh dfs df ASFD ASDF ASDF SADF SADF ASDF ASDF SADF ASDF " />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="70dp"
+            android:textSize="@dimen/live_size_16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_content"
+            tools:text="Name" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>

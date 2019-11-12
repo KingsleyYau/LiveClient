@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -1312,7 +1311,10 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
     private void setSizeUnChanageViewParams(){
         int statusBarHeight = DisplayUtil.getStatusBarHeight(mContext);
         if(statusBarHeight > 0){
-            int activityHeight = DisplayUtil.getScreenHeight(mContext) - statusBarHeight;
+//            int activityHeight = DisplayUtil.getActivityHeight(mContext) - statusBarHeight;
+            // 2019/5/25 Hardy  兼容带虚拟导航栏的全面屏手机，需要减去导航栏高度
+            int activityHeight = DisplayUtil.getScreenHeight(mContext) - statusBarHeight - DisplayUtil.getNavigationBarHeight(mContext);
+
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)findViewById(R.id.include_im_body).getLayoutParams();
             params.height = activityHeight;
             FrameLayout.LayoutParams params1 = (FrameLayout.LayoutParams)findViewById(R.id.fl_imMsgContainer).getLayoutParams();

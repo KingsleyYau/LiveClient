@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCSendPhotoCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCUploadManPhotoCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.item.LCSendPhotoItem;
@@ -176,7 +177,7 @@ public class LCPhotoMessagePreSendTask {
 
             @Override
             public void subscribe(final ObservableEmitter<HttpRespObject> emitter) {
-                LCRequestJniLiveChat.UploadManPhoto(filePath, new OnLCUploadManPhotoCallback() {
+                LivechatRequestOperator.getInstance().UploadManPhoto(filePath, new OnLCUploadManPhotoCallback() {
                     @Override
                     public void OnUploadManPhoto(long requestId, boolean isSuccess, int errCode, String errmsg, String photoUrl, String photomd5) {
                         Log.logD(TAG, "OnUploadManPhoto requestId: " + requestId + " isSuccess: " + isSuccess + " errCode: " + errCode + " photoUrl: " + photoUrl);
@@ -218,7 +219,7 @@ public class LCPhotoMessagePreSendTask {
             public void subscribe(final ObservableEmitter<BaseHttpResponseBean> emitter) {
                 LCUserItem userItem = mMessageItem.getUserItem();
                 final LCPhotoItem photoItem = mMessageItem.getPhotoItem();
-                long requestId = LCRequestJniLiveChat.SendPhoto(userItem.userId, userItem.inviteId, mUserId, mSid, photoUrl, new OnLCSendPhotoCallback() {
+                long requestId = LivechatRequestOperator.getInstance().SendPhoto(userItem.userId, userItem.inviteId, mUserId, mSid, photoUrl, new OnLCSendPhotoCallback() {
                     @Override
                     public void OnLCSendPhoto(long requestId, boolean isSuccess, String errno, String errmsg, LCSendPhotoItem item) {
                         Log.logD(TAG, "OnLCSendPhoto isSuccess: " + isSuccess + " errno: " + errno);

@@ -34,7 +34,7 @@
 @implementation LSSayHiAllListViewController
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 
@@ -55,7 +55,7 @@
 
 - (void)setupTableView {
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
@@ -77,7 +77,7 @@
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
     
 }
 
@@ -167,13 +167,13 @@
             if (success) {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishLSPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
                     self.page = 1;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
 
                     self.page++;
                 }
@@ -196,12 +196,12 @@
             }else {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:NO];
+                    [self.tableView finishLSPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
-                    [self.tableView finishPullUp:YES];
+                    [self.tableView finishLSPullUp:YES];
                 }
 
                 [self reloadData:YES];
@@ -233,7 +233,7 @@
     self.failView.hidden = YES;
     [self hideNoSayHiTips];
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 
@@ -260,29 +260,7 @@
 
 
 - (void)tableView:(LSSayHiAllTableView *)tableView didSelectSayHiDetail:(LSSayHiAllListItemObject *)item {
-    
-    if (![[NSUserDefaults standardUserDefaults]objectForKey:@"SayHiAgainTip"]) {
-        UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedStringFromSelf(@"BUY_TIP") preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            //TODO: 跳转到指定的详情页
-            [self pushToSayHiDetail:item];
-        }];
-        UIAlertAction * aginAction = [UIAlertAction actionWithTitle:NSLocalizedStringFromSelf(@"AGAIN_TIP") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"SayHiAgainTip"];
-            [[NSUserDefaults standardUserDefaults]synchronize];
-        }];
-        UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
-        [alertController addAction:okAction];
-        [alertController addAction:aginAction];
-        [alertController addAction:cancelAction];
-        [self presentViewController:alertController animated:YES completion:nil];
-    } else {
-        //TODO: 跳转到指定的详情页
-        [self pushToSayHiDetail:item];
-    }
-}
 
-- (void)pushToSayHiDetail:(LSSayHiAllListItemObject *)item {
     LSSayHiDetailItemObject * detail = [[LSSayHiDetailItemObject alloc]init];
     detail.nickName = item.nickName;
     detail.age = item.age;
@@ -293,7 +271,6 @@
     vc.detail = detail;
     [self.navigationController pushViewController:vc animated:YES];
 }
-
 
 - (void)lsSayHiRecommendView:(LSSayHiRecommendView *)view didSelectAchor:(LSSayHiAnchorItemObject *)lady {
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];

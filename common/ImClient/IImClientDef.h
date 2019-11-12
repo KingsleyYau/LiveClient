@@ -54,48 +54,70 @@ typedef enum {
     LCC_ERR_TOKEN_EXPIRE = 10004,            // Token 过期了
     LCC_ERR_NOT_FOUND_ROOM = 10021,          // 进入房间失败 找不到房间信息or房间关闭
     LCC_ERR_CREDIT_FAIL = 10027,             // 远程扣费接口调用失败
+    
     LCC_ERR_KICKOFF = 10037,                 // 被挤掉线 默认通知内容
     LCC_ERR_NO_AUTHORIZED = 10039,           //10021 不能操作 不是对应的userid
     LCC_ERR_LIVEROOM_NO_EXIST = 16104,       // 直播间不存在
     LCC_ERR_LIVEROOM_CLOSED = 16106,         // 直播间已关闭
     LCC_ERR_ANCHORID_INCONSISTENT = 16108,   // 主播id与直播场次的主播id不合
+    
     LCC_ERR_CLOSELIVE_DATA_FAIL = 16110,     // 关闭直播场次,数据表操作出错
     LCC_ERR_CLOSELIVE_LACK_CODITION = 16122, // 主播立即关闭私密直播间, 不满足关闭条件
     // 其它错误码
     LCC_ERR_ENTER_ROOM_ERR = 10022,                    // 进入房间失败 数据库操作失败（添加记录or删除扣费记录）
     LCC_ERR_NOT_FIND_ANCHOR = 10026,                   // 主播机构信息找不到
     LCC_ERR_COUPON_FAIL = 10028,                       // 扣费信用点失败--扣除优惠券分钟数
+    
     LCC_ERR_ENTER_ROOM_NO_AUTHORIZED = 10033,          // 进入私密直播间 不是对应的userid
     LCC_ERR_REPEAT_KICKOFF = 10038,                    // 被挤掉线 同一userid不通socket_id进入同一房间时
     LCC_ERR_ANCHOR_NO_ON_LIVEROOM = 10055,             // 改主播不存在公开直播间
     LCC_ERR_INCONSISTENT_ROOMTYPE = 10049,             // 赠送礼物失败、开始\结束推流失败 房间类型不符合
     LCC_ERR_INCONSISTENT_CREDIT_FAIL = 10053,          // 扣费信用点数值的错误，扣费失败
+    
     LCC_ERR_REPEAT_END_STREAM = 10054,                 // 已结结束推流，不能重复操作
     LCC_ERR_REPEAT_BOOKING_KICKOFF = 10046,            // 重复立即预约该主播被挤掉线.
     LCC_ERR_NOT_IN_STUDIO = 15002,                     // You are not in the studio
     LCC_ERR_INCONSISTENT_LEVEL = 10047,                // 赠送礼物失败 用户等级不符合
     LCC_ERR_INCONSISTENT_LOVELEVEL = 10048,            // 赠送礼物失败 亲密度不符合
+    
     LCC_ERR_LESS_THAN_GIFT = 10050,                    // 赠送礼物失败 拥有礼物数量不足
     LCC_ERR_SEND_GIFT_FAIL = 16144,                    // 发送礼物出错
     LCC_ERR_SEND_GIFT_LESSTHAN_LEVEL = 16145,          // 发送礼物,男士级别不够
     LCC_ERR_SEND_GIFT_LESSTHAN_LOVELEVEL = 16146,      // 发送礼物,男士主播亲密度不够
     LCC_ERR_SEND_GIFT_NO_EXIST = 16147,                // 发送礼物,礼物不存在或已下架
+    
     LCC_ERR_SEND_GIFT_LEVEL_INCONSISTENT_LIVE = 16148, // 发送礼物,礼物级别限制与直播场次级别不符
     LCC_ERR_SEND_GIFT_BACKPACK_NO_EXIST = 16151,       // 主播发礼物,背包礼物不存在
     LCC_ERR_SEND_GIFT_BACKPACK_LESSTHAN = 16152,       // 主播发礼物,背包礼物数量不足
     LCC_ERR_SEND_GIFT_PARAM_ERR = 16153,               // 发礼物,参数错误
     LCC_ERR_SEND_TOAST_NOCAN = 15001,                  // 主播不能发送弹幕
+    
     LCC_ERR_ANCHOR_OFFLINE = 10034,                    // 立即私密邀请失败 主播不在线 /*important*/
     LCC_ERR_ANCHOR_BUSY = 10035,                       // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
     LCC_ERR_ANCHOR_PLAYING = 10056,                    // 主播正在私密直播中 /*important*/
     LCC_ERR_NOTCAN_CANCEL_INVITATION = 10036,          // 取消立即私密邀请失败 状态不是带确认 /*important*/
     LCC_ERR_NO_FOUND_CRONJOB = 10040,                  // cronjob 里找不到对应的定时器函数
+    
     LCC_ERR_REPEAT_INVITEING_TALENT = 10052,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
     LCC_ERR_RECV_REGULAR_CLOSE_ROOM = 10088,           // 用户接收正常关闭直播间
     LCC_ERR_PRIVTE_INVITE_AUTHORITY = 17002,           // 主播无立即私密邀请权限
     LCC_ERR_NO_CREDIT_CLOSE_LIVE = 10190,              // 余额不足(用于3.3.接收直播间关闭通知 接口)
-    LCC_ERR_NO_CREDIT_DOUBLE_VIDEO = 10091,            // 私密直播间开始双向视频时，信用点不足(用于3.14.观众开始/结束视频互动 接口)
+    LCC_ERR_NO_CREDIT_DOUBLE_VIDEO = 10184,            // 私密直播间开始双向视频时，信用点不足(用于3.14.观众开始/结束视频互动 接口) alex,2019-9-19 之前是10091的，后来变成10184了
+    
     LCC_ERR_NO_CREDIT_HANGOUT_DOUBLE_VIDEO = 10146,   // Hangout直播间开始双向视频时，信用点不足(用于10.11.多人互动观众开始/结束视频互动 接口)
+    LCC_ERR_NOT_RESPONDING = 16177,                   // 预约失败，预约判决女士不在线（3.3.接收直播间关闭通知 接口 16177）
+    LCC_ERR_HANGOUT_EXIST_COUNTDOWN_PRIVITEROOM = 10114,   // 多人视频流程 主播存在开始倒数私密直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10114)）
+    LCC_ERR_HANGOUT_EXIST_COUNTDOWN_HANGOUTROOM = 10115,   // 多人视频流程 主播存在开始倒数多人视频直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10115)）
+    LCC_ERR_HANGOUT_EXIST_FOUR_MIN_SHOW = 10116,           // 多人视频流程 主播存在4分钟内开始的预约（Sorry, the broadcaster is busy at the moment. Please try again later.(10116)）
+    
+    LCC_ERR_KNOCK_EXIST_ROOM = 10136,                      // 男士同意敲门请求，主播存在在线的直播间（Sorry, the broadcaster is busy at the moment. Please try again later.(10136)）
+    LCC_ERR_INVITE_FAIL_SHOWING = 13020,                   // 发送立即邀请失败 主播正在节目中（Sorry, the broadcaster is busy at the moment. Please try again later.(13020)）
+    LCC_ERR_INVITE_FAIL_BUSY = 13021,                      // 发送立即邀请 用户收到主播繁忙通知（Sorry, the broadcaster is busy at the moment. Please try again later.(13021)）
+    LCC_ERR_SEND_RECOMMEND_HAS_SHOWING = 16318,            // 主播发送推荐好友请求：好友4分钟后有节目开播（Sorry, the broadcaster is busy at the moment. Please try again later.(16318)）
+    LCC_ERR_SEND_RECOMMEND_EXIT_HANGOUTROOM = 16320,       // 主播发送推荐好友请求：好友跟其他男士hangout中（Sorry, the broadcaster is busy at the moment. Please try again later.(16320)）
+    
+    LCC_ERR_NO_CREDIT_DOUBLE_VIDEO_NOTICE = 10091,        // 私密直播间开始双向视频时，信用点不足(用于3.9.接收充值通知 接口)
+    
 } LCC_ERR_TYPE;
 
 // 客户端端类型

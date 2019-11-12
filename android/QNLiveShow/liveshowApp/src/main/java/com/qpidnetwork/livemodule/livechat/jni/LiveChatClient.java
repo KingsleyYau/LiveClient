@@ -483,5 +483,14 @@ public class LiveChatClient {
 	 * @return
 	 */
 	static public native boolean CamshareUseTryTicket(String targetId, String ticketId);
+
+	/**
+	 * 发送邀请语
+	 * @param userId		聊天对象ID
+	 * @param InviteMsg		邀请语
+	 * @param nickName		聊天对象昵称
+	 * @return
+	 */
+	static public native boolean SendInviteMessage(String userId, String InviteMsg, String nickName);
 	
 }

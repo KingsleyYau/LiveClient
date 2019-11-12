@@ -19,10 +19,18 @@
 
 @property (nonatomic, weak) id<QNSementViewDelegate> delegate;
 
-@property (nonatomic, strong) UIColor * textSelectedColor;
 
-@property (nonatomic, strong) UIColor * textNormalColor;
+@property (nonatomic, strong) NSArray * titleArray;
 
+@property (nonatomic, assign) BOOL isShowbottomLine;
+
+//设置标题默认颜色和选中颜色
+- (void)setTextNormalColor:(UIColor *)textNormalColor andSelectedColor:(UIColor *)textSelectedColor;
+//设置横线默认颜色和选择颜色
+- (void)setLineNormalColor:(UIColor *)lineNormalColor andelectedColor:(UIColor *)lineSelectedColor;
+
+//生成按钮 是否对称
+- (void)newTitleBtnIsSymmetry:(BOOL)isSymmetry;
 
 + (CGFloat)getSegmentControlW:(NSArray *)titles;
 

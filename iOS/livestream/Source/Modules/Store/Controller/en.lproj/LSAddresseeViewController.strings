@@ -1,0 +1,22 @@
+
+/* Class = "UIButton"; normalTitle = "Proceed to checkout"; ObjectID = "9OU-sk-P83"; */
+"9OU-sk-P83.normalTitle" = "Proceed to checkout";
+
+/* Class = "UILabel"; text = "ID Invalid"; ObjectID = "Dxu-ch-QtK"; */
+"Dxu-ch-QtK.text" = "ID Invalid";
+
+/* Class = "UILabel"; text = " This item has been successfully  added to your cart!"; ObjectID = "HGx-NS-VA9"; */
+"HGx-NS-VA9.text" = " This item has been successfully  added to your cart!";
+
+/* Class = "UIButton"; normalTitle = "Order Now"; ObjectID = "Xny-8L-3Sr"; */
+"Xny-8L-3Sr.normalTitle" = "Order Now";
+
+/* Class = "UILabel"; text = "Send this gift to?"; ObjectID = "dSm-il-1ED"; */
+"dSm-il-1ED.text" = "Send this gift to:";
+
+/* Class = "UIButton"; normalTitle = "Order Now"; ObjectID = "hc5-wt-ZlH"; */
+"hc5-wt-ZlH.normalTitle" = "Order Now";
+
+/* Class = "UITextField"; placeholder = "Search by ID"; ObjectID = "qLl-wd-6qz"; */
+"qLl-wd-6qz.placeholder" = "Enter Member ID";
+

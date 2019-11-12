@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:clipChildren="false"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_virtual_gift_store_yellow_gradient_corner_4dp"
+        android:clipChildren="false"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_virtual_gift_store_pink_gradient_corner_4dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="53dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_virtual_gift_big"
+                android:layout_marginBottom="7dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Virtual_Gift_Store"
+                android:textSize="@dimen/live_size_16sp"
+                android:textColor="@color/virtual_gift_store_text_yellow"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/live_size_10dp"
+                android:layout_gravity="center_vertical" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dialog_virtual_gift_store_tip_tv_format"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:layout_marginRight="@dimen/live_size_16dp"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:textSize="15sp"
+            android:lineSpacingMultiplier="1.1"
+            android:textColor="@color/theme_default_light_black"
+            android:text="@string/virtual_gift_store_tip_1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:layout_marginRight="@dimen/live_size_16dp"
+            android:layout_marginBottom="@dimen/live_size_20dp"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:lineSpacingMultiplier="1.1"
+            android:textColor="@color/theme_default_light_black"
+            android:text="@string/virtual_gift_store_tip_2" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/dialog_virtual_gift_store_tip_iv_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_virtual_gift_dialog_close" />
+</FrameLayout>

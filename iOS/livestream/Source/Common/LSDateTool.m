@@ -110,12 +110,16 @@
     if ([self isToday:date]) {
         // 今天的消息
         NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+        NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [dateFormat setLocale:usLoacal];
         [dateFormat setDateFormat:@"HH:mm"];
         showTimeStr = [dateFormat stringFromDate:date];
         
     } else if ([self isYesterday:date]) {
         
         NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+        NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [dateFormat setLocale:usLoacal];
         [dateFormat setDateFormat:@"HH:mm"];
         NSString *timeStr = [dateFormat stringFromDate:date];
         showTimeStr = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"Yesterday", @"Yesterday"), timeStr];
@@ -123,10 +127,14 @@
     } else if ([self isBeforeYesterday:date] && interval <= kWeekTimeInterval) {
         // 前天
         NSDateFormatter* dayFormat = [[NSDateFormatter alloc] init];
+        NSLocale *dayLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [dayFormat setLocale:dayLoacal];
         [dayFormat setDateFormat:@"cccc"];
         NSString *dayStr = [dayFormat stringFromDate:date];
         
         NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+        NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [dateFormat setLocale:usLoacal];
         [dateFormat setDateFormat:@"HH:mm"];
         NSString *timeStr = [dateFormat stringFromDate:date];
         
@@ -135,6 +143,8 @@
     } else {
         // 最近一周
         NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+        NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [dateFormat setLocale:usLoacal];
         [dateFormat setDateFormat:@"YYYY/MM/dd HH:mm"];
         showTimeStr = [dateFormat stringFromDate:date];
     }
@@ -156,16 +166,25 @@
     [dateFormat setLocale:usLoacal];
     // 判断是否是今年
     if (selfCmps.year == nowCmps.year) {
-        [dateFormat setDateFormat:@"MM dd"];
+        [dateFormat setDateFormat:@"MMM dd"];
     } else {
-        [dateFormat setDateFormat:@"MM dd,YYYY"];
+        [dateFormat setDateFormat:@"MMM dd,YYYY"];
     }
     showTimeStr = [dateFormat stringFromDate:date];
     return showTimeStr;
 }
 
+- (NSString *)showGreetingDetailTimeOfDate:(NSDate *)date {
+    NSString *showTimeStr = nil;
+    NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+    NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormat setLocale:usLoacal];
+    [dateFormat setDateFormat:@"MMM dd,YYYY"];
+    showTimeStr = [dateFormat stringFromDate:date];
+    return showTimeStr;
+}
 
-- (NSString *)showSayHiListTimeTextOfDate:(NSDate *)date {
++ (NSString *)showSayHiListTimeTextOfDate:(NSDate *)date {
     NSString *showTimeStr = nil;
     
     NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -188,13 +207,36 @@
     return showTimeStr;
 }
 
-
-- (NSString *)showGreetingDetailTimeOfDate:(NSDate *)date {
++ (NSString *)showTimeOfDate:(NSDate *)date {
     NSString *showTimeStr = nil;
     NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];
+    NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormat setLocale:usLoacal];
     [dateFormat setDateFormat:@"MMM dd,YYYY"];
     showTimeStr = [dateFormat stringFromDate:date];
     return showTimeStr;
+}
+
++ (NSString *)getTime:(NSInteger)time {
+    NSDateFormatter *stampFormatter = [[NSDateFormatter alloc] init];
+     NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [stampFormatter setLocale:usLoacal];
+    [stampFormatter setDateFormat:@"MMM dd,YYYY"];
+    NSDate *timeDate = [NSDate dateWithTimeIntervalSince1970:time];
+    NSString *timeStr = [stampFormatter stringFromDate:timeDate];
+    
+    return timeStr;
+}
+
++ (NSString *)getMinTime:(NSInteger)time {
+    NSDateFormatter *stampFormatter = [[NSDateFormatter alloc] init];
+     NSLocale *usLoacal = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [stampFormatter setLocale:usLoacal];
+    [stampFormatter setDateFormat:@"MMM dd,YYYY HH:mm"];
+    NSDate *timeDate = [NSDate dateWithTimeIntervalSince1970:time];
+    NSString *timeStr = [stampFormatter stringFromDate:timeDate];
+    
+    return timeStr;
 }
 
 @end

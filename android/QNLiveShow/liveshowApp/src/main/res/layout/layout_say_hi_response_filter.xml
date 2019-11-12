@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.liveshow.sayhi.view.SayHiListResponseFilterView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/sayHi_list_response_filter_width"
+    android:layout_height="@dimen/btn_height_46dp"
+    android:layout_gravity="bottom|right"
+    android:layout_marginRight="@dimen/live_size_20dp"
+    android:layout_marginBottom="@dimen/live_size_20dp">
+
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/layout_say_hi_response_filter_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:background="@color/white"
+        app:elevation="2dp"
+        app:icon="@drawable/ic_say_hi_response_filter"
+        app:raisebutton_radius="@dimen/live_size_20dp"
+        app:title="@string/Unread_First"
+        app:title_color="@color/live_text_color_black"
+        app:title_text_size="@dimen/live_size_14sp"
+        app:touch_feedback="@drawable/touch_feedback_holo_light" />
+</com.qpidnetwork.livemodule.liveshow.sayhi.view.SayHiListResponseFilterView>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,7 +29,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="pU0-M2-QFw">
-                    <rect key="frame" x="138" y="150" width="100" height="110"/>
+                    <rect key="frame" x="137.5" y="150" width="100" height="110"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="110" id="74w-vg-oHg"/>
@@ -75,7 +74,8 @@
                     <rect key="frame" x="20" y="329.5" width="335" height="44"/>
                     <color key="backgroundColor" red="1" green="0.7843137255" blue="0.85490196080000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                    <state key="normal" title="Go to My Hang-out Room" image="Hangout_Go_My_Room" backgroundImage="Live_Line_Icon">
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                    <state key="normal" title="Go to My Hang-out Room" image="Hangout_Go_My_Room" backgroundImage="Home_hangoutBg">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                     <connections>
@@ -86,7 +86,8 @@
                     <rect key="frame" x="20" y="393.5" width="335" height="44"/>
                     <color key="backgroundColor" red="0.63529411759999999" green="0.70588235290000001" blue="0.80784313730000001" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                    <state key="normal" title="Start a New Hang-out" image="Home_hangoutList_Starts" backgroundImage="Live_Line_Icon">
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                    <state key="normal" title="Start a New Hang-out" image="Home_hangoutList_Starts" backgroundImage="Home_hangoutBg">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                     <connections>
@@ -145,8 +146,8 @@
     </objects>
     <resources>
         <image name="Hangout_Go_My_Room" width="34" height="34"/>
+        <image name="Home_hangoutBg" width="3" height="3"/>
         <image name="Home_hangoutList_Starts" width="34" height="34"/>
-        <image name="Live_Line_Icon" width="3" height="3"/>
-        <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
+        <image name="Live_Preview_Btn_Cancel" width="16.5" height="16.5"/>
     </resources>
 </document>

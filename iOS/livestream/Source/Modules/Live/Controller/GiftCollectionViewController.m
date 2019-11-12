@@ -100,17 +100,14 @@
             // 普通礼物
             [self.giftManager getRoomGiftList:self.liveRoom.roomId
                                  finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                                     [weakSelf reloadDataWithArray:success giftList:giftList];
-                                     if ([weakSelf.vcDelegate respondsToSelector:@selector(didChangeGiftList:)]) {
-                                         [weakSelf.vcDelegate didChangeGiftList:self];
-                                     }
+                                     [weakSelf reloadDataWithArray:success isFree:NO giftList:giftList];
                                  }];
         } break;
         case GiftListTypeBackpack: {
             // 背包礼物
             [self.giftManager getRoomBackpackGiftList:self.liveRoom.roomId
                                          finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                                                [weakSelf reloadDataWithArray:success giftList:giftList];
+                                                [weakSelf reloadDataWithArray:success isFree:YES giftList:giftList];
                                          }];
         } break;
         default:
@@ -138,11 +135,22 @@
     [self.collectionView reloadData];
 }
 
-- (void)reloadDataWithArray:(BOOL)success giftList:(NSArray *)giftList {
+- (void)reloadDataWithArray:(BOOL)success isFree:(BOOL)isFree giftList:(NSArray *)giftList {
     if (success) {
         self.requestFailView.hidden = YES;
-        self.giftArray = giftList;
-        if( giftList.count == 0 ) {
+        if (!isFree) {
+            NSMutableArray * array = [NSMutableArray array];
+            for (LSGiftManagerItem * item in giftList) {
+                if (item.roomInfoItem.isShow) {
+                    [array addObject:item];
+                }
+            }
+            self.giftArray = array;
+        }
+        else {
+            self.giftArray = giftList;
+        }
+        if(self.giftArray.count == 0 ) {
             // 没有数据
             self.tipsLabel.hidden = NO;
         } else {

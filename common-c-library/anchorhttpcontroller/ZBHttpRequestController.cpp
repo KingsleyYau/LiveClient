@@ -47,13 +47,14 @@ long long ZBHttpRequestController::ZBLogin(
                                            const string& deviceid,
                                            const string& model,
                                            const string& manufacturer,
+                                           const string& deviceName,
                                            IRequestZBLoginCallback* callback
                                        ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     ZBHttpLoginTask* task = new ZBHttpLoginTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(anchorId, password, code, deviceid, model, manufacturer);
+    task->SetParam(anchorId, password, code, deviceid, model, manufacturer, deviceName);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -393,6 +394,37 @@ long long ZBHttpRequestController::ZBSetAutoPush(
 //        mRequestMap.Unlock();
 //
 //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::GetCurrentRoomInfo(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      IRequestGetCurrentRoomInfoCallback* callback
+                                                      ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetCurrentRoomInfoTask* task = new HttpGetCurrentRoomInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     

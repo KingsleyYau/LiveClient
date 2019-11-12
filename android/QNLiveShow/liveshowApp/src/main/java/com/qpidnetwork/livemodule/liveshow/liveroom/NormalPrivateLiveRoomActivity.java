@@ -17,7 +17,7 @@ import com.qpidnetwork.qnbridgemodule.util.Log;
  * Created by Harry Wei on 2017/6/15.
  */
 
-public class NormalPrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
+public class NormalPrivateLiveRoomActivity extends BaseCommonFullScreenLiveRoomActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class NormalPrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
     private void initNormalPrivateRoomView(){
         ll_privateRoomHeader.setVisibility(View.VISIBLE);
         include_audience_area.setVisibility(View.VISIBLE);
-        ll_buttom_audience.setVisibility(View.VISIBLE);
+//        ll_buttom_audience.setVisibility(View.VISIBLE);
     }
 
     @Override

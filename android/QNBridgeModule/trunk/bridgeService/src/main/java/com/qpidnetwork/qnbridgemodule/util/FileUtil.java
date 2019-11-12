@@ -113,6 +113,44 @@ public class FileUtil {
 
     }
 
+    /**
+     * 文件拷贝
+     * @param srcFilePath
+     * @param desFilePath
+     */
+    public static void copyFile(String srcFilePath, String desFilePath){
+        File file = new File(srcFilePath);
+        if (file.exists() && file.isFile()) {
+            String cmd = "cp -f " + srcFilePath + " " + desFilePath;
+            try {
+                Runtime.getRuntime().exec(cmd);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 文件重命名
+     * @param oldPath 必须是新旧文件的绝对路径
+     * @param newPath 必须是新旧文件的绝对路径
+     */
+    public static void renameFile(String oldPath, String newPath) {
+        if(TextUtils.isEmpty(oldPath)) {
+            return;
+        }
+
+        if(TextUtils.isEmpty(newPath)) {
+            return;
+        }
+        try{
+            File file = new File(oldPath);
+            file.renameTo(new File(newPath));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static boolean isFileExists(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
             return false;

@@ -6,9 +6,9 @@ callbackAppGAEvent:function(params){
     window.webkit.messageHandlers.LiveApp.postMessage(message);
 },
     
-callbackAppCloseWebView:function(){
+callbackCloseWebView:function(){
     var message;
-    message = {'CallBack':"callbackAppCloseWebView"};
+    message = {'CallBack':"callbackCloseWebView"};
     window.webkit.messageHandlers.LiveApp.postMessage(message);
 },
     

@@ -15,7 +15,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *redLabel;
 @property (weak, nonatomic) IBOutlet UIView *unreadView;
 @property (weak, nonatomic) IBOutlet UILabel *unreadLabel;
-
+@property (weak, nonatomic) IBOutlet UIView * offIcon;
+@property (weak, nonatomic) IBOutlet UILabel *offLabel;
 
 + (id)getUITableViewCell:(UITableView*)tableView;
 + (NSString *)cellIdentifier;

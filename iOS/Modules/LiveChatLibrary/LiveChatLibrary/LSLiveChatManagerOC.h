@@ -384,6 +384,17 @@
  */
 - (BOOL)checkPhoto:(NSString *)userId mphotoId:(NSString *)photoId;
 
+/**
+ *  发送邀请语
+ *
+ *  @param userId   用户Id
+ *  @param message  邀请语
+ *  @param nickName 用户昵称
+ *
+ *  @return 处理结果
+ */
+- (BOOL)sendInviteMessage:(NSString *)userId message:(NSString *)message nickName:(NSString *)nickName;
+
 #pragma mark - 高级表情消息处理（大高表）
 /**
  * 发送高级表情

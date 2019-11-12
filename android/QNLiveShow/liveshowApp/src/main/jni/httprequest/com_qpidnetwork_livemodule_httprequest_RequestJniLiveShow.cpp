@@ -941,3 +941,204 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
 
     return taskId;
 }
+
+
+/*********************************** 3.15.获取页面推荐的主播列表  ****************************************/
+
+class RequestGetLiveEndRecommendAnchorListCallback : public IRequestGetLiveEndRecommendAnchorListCallback{
+	void OnGetLiveEndRecommendAnchorList(HttpGetLiveEndRecommendAnchorListTask* task, bool success, int errnum, const string& errmsg, const RecommendAnchorList& listItem) {
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetPageRecommendAnchorList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		jobjectArray jItemArray = getPageRecommendAnchorArray(env, listItem);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += PAGERECOMMEND_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetPageRecommendAnchorList", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetPromoAnchorList( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItemArray != NULL){
+			env->DeleteLocalRef(jItemArray);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetLiveEndRecommendAnchorListCallback gRequestGetLiveEndRecommendAnchorListCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetPageRecommendAnchorList
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPageRecommendAnchorList
+  (JNIEnv *env, jclass cls, jobject callback) {
+  	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetPageRecommendAnchorList()");
+      jlong taskId = -1;
+      taskId = gHttpRequestController.GetLiveEndRecommendAnchorList(&gHttpRequestManager,
+                                          &gRequestGetLiveEndRecommendAnchorListCallback);
+
+      jobject obj = env->NewGlobalRef(callback);
+      putCallbackIntoMap(taskId, obj);
+
+      return taskId;
+
+}
+
+/*********************************** 3.16.获取我的联系人列表  ****************************************/
+
+class RequestGetContactListCallback : public IRequestGetContactListCallback{
+	void OnGetContactList(HttpGetContactListTask* task, bool success, int errnum, const string& errmsg, const RecommendAnchorList& listItem, int totalCount) {
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetPageRecommendAnchorList( success : %s, task : %p, isAttachThread:%d totalCount : %d)", success?"true":"false", task, isAttachThread, totalCount);
+
+		jobjectArray jItemArray = getMyContactArray(env, listItem);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += LSCONTACT_ITEM_CLASS;
+			signature += ";";
+			signature += "I";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetMyContactList", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetPromoAnchorList( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray, totalCount);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItemArray != NULL){
+			env->DeleteLocalRef(jItemArray);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetContactListCallback gRequestGetContactListCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetMyContactList
+ * Signature: (IILcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetMyContactList
+  (JNIEnv *env, jclass cls, jint start, jint step, jobject callback) {
+  	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetMyContactList(start : %d, step : %d)",
+  			start, step);
+      jlong taskId = -1;
+      taskId = gHttpRequestController.GetContactList(&gHttpRequestManager,
+      									start,
+      									step,
+                                        &gRequestGetContactListCallback);
+
+      jobject obj = env->NewGlobalRef(callback);
+      putCallbackIntoMap(taskId, obj);
+
+      return taskId;
+}
+
+/*********************************** 3.17.获取虚拟礼物分类列表  ****************************************/
+
+class RequestGetGiftTypeListtCallback : public IRequestGetGiftTypeListtCallback{
+	void OnGetGiftTypeList(HttpGetGiftTypeListTask* task, bool success, int errnum, const string& errmsg, const GiftTypeList typeList) {
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetGiftTypeList( success : %s, task : %p, isAttachThread:%d)", success?"true":"false", task, isAttachThread);
+
+		jobjectArray jItemArray = getGiftTypeListArray(env, typeList);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += GIFTTYPE_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetGiftTypeList", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetGiftTypeList( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItemArray != NULL){
+			env->DeleteLocalRef(jItemArray);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetGiftTypeListtCallback gRequestGetGiftTypeListtCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetGiftTypeList
+ * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetGiftTypeListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetGiftTypeList
+  (JNIEnv *env, jclass cls, jint roomType, jobject callback) {
+  	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetGiftTypeList(roomType : %d)",
+  			roomType);
+      jlong taskId = -1;
+      LSGiftRoomType jroomType = IntToLSGiftRoomType(roomType);
+      taskId = gHttpRequestController.GetGiftTypeList(&gHttpRequestManager,
+      									jroomType,
+                                        &gRequestGetGiftTypeListtCallback);
+
+      jobject obj = env->NewGlobalRef(callback);
+      putCallbackIntoMap(taskId, obj);
+
+      return taskId;
+}

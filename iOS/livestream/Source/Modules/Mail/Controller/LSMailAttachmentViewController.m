@@ -49,6 +49,11 @@
 @end
 
 @implementation LSMailAttachmentViewController
+- (void)initCustomParam {
+    [super initCustomParam];
+    
+    self.isShowNavBar = NO;
+}
 
 - (void)dealloc {
     NSLog(@"LSMailAttachmentViewController::dealloc()");
@@ -67,7 +72,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
 }
 
 - (BOOL)prefersStatusBarHidden {

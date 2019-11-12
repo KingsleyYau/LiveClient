@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -45,11 +45,20 @@
                         <action selector="backBtnDid:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="VIL-ZH-aSb"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rFA-fk-vyD">
+                    <rect key="frame" x="82" y="121" width="25" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <state key="normal" image="Setting_Head_Cam"/>
+                    <connections>
+                        <action selector="editBtnAction:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="mZ5-fD-k4T"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="ageLabel" destination="oIP-qj-TxC" id="wg1-eM-D0b"/>
+                <outlet property="editBtn" destination="rFA-fk-vyD" id="3nC-6A-eSk"/>
                 <outlet property="headBackground" destination="9ep-ss-LFf" id="6kO-Vw-fgj"/>
                 <outlet property="headImage" destination="m1s-BT-Wc0" id="K0t-ql-cIx"/>
                 <outlet property="nameLabel" destination="ful-mN-paq" id="GiK-qF-kbC"/>
@@ -60,6 +69,7 @@
     <resources>
         <image name="Default_Img_Man_Circyle" width="75" height="75"/>
         <image name="LS_Nav_Back_w" width="24" height="24"/>
+        <image name="Setting_Head_Cam" width="25" height="25"/>
         <image name="Setting_Head_Icon" width="297" height="167"/>
     </resources>
 </document>

@@ -37,7 +37,7 @@
 @implementation LSRecentWatchViewController
 
 - (void)dealloc {
-    [self.collectionView unInitPullRefresh];
+    [self.collectionView unSetupPullRefresh];
 }
 
 - (void)initCustomParam {
@@ -56,7 +56,7 @@
     UINib *nib = [UINib nibWithNibName:[RecentWatchCollectionViewCell cellIdentifier] bundle:[LiveBundle mainBundle]];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:[RecentWatchCollectionViewCell cellIdentifier]];
     
-    [self.collectionView initPullRefresh:self pullDown:YES pullUp:NO];
+    [self.collectionView setupPullRefresh:self pullDown:YES pullUp:NO];
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     self.collectionView.alwaysBounceVertical = YES;
@@ -68,7 +68,7 @@
     [super viewWillAppear:animated];
     // 默认下拉刷新
     if (!self.viewDidAppearEver) {
-        [self.collectionView startPullDown:YES];
+        [self.collectionView startLSPullDown:YES];
     }
 }
 
@@ -105,7 +105,7 @@
         NSLog(@"LSRecentWatchViewController:getRecentWatched([获取最近已看微视频列表] success : %@, errnum : %@, errmsg : %@, count : %lu)",BOOL2SUCCESS(success), errnum, errmsg, (unsigned long)itemArray.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             // 停止头部
-            [weakSelf.collectionView finishPullDown:NO];
+            [weakSelf.collectionView finishLSPullDown:NO];
             
             [weakSelf.videoItems removeAllObjects];
             [weakSelf.msgItems removeAllObjects];

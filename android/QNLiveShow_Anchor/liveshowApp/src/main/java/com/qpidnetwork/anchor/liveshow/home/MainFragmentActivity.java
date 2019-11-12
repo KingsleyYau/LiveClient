@@ -236,6 +236,14 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
     }
 
     /**
+     * 公开直播间预览页
+     * 用于 子 Fragment 的回调
+     */
+    public void publicRoomOpenClick(){
+        mImgViewButtonCam.performClick();
+    }
+
+    /**
      * viewpager与nav之间的事件
      */
     private void initEvent() {

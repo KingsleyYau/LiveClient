@@ -43,6 +43,11 @@
  是否第一次登录
  */
 @property (nonatomic, assign) BOOL isFirstLogin;
+// 正在下拉
+@property (nonatomic, assign) BOOL pullDowning;
+// 正在上拉
+@property (nonatomic, assign) BOOL pullUping;
+
 @end
 
 @implementation ShowListViewController
@@ -50,7 +55,7 @@
 - (void)dealloc {
     [self.timer invalidate];
     self.timer = nil;
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 - (void)initCustomParam {
@@ -62,6 +67,10 @@
     self.isFirstLogin = NO;
     // 是否刷新数据
     self.isLoadData = NO;
+    
+    self.pullDowning = NO;
+    
+    self.pullUping = NO;
 }
 
 - (void)viewDidLoad {
@@ -74,8 +83,8 @@
     self.tableView.estimatedSectionFooterHeight = 0;
 
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
-
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
+    self.tableView.pullScrollEnabled = YES;
     [self.tableView registerNib:[UINib nibWithNibName:@"ShowCell" bundle:[LiveBundle mainBundle]] forCellReuseIdentifier:[ShowCell cellIdentifier]];
 
     self.items = [NSMutableArray array];
@@ -112,6 +121,17 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self.addCreditsView removeFromSuperview];
+    self.addCreditsView = nil;
+    
+    if (self.pullDowning) {
+        [self.tableView finishLSPullDown:NO];
+        self.pullDowning = NO;
+    }
+    if (self.pullUping) {
+        [self.tableView finishLSPullUp:NO];
+        self.pullUping = NO;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -132,7 +152,7 @@
     if (self.isFirstLogin || isSwitchSite || self.isLoadData) {
         // 界面是否显示
         if (self.viewDidAppearEver) {
-            [self.tableView startPullDown:YES];
+            [self.tableView startLSPullDown:YES];
             self.isFirstLogin = NO;
         }
     }
@@ -166,9 +186,16 @@
             NSLog(@"ShowListViewController::getShowList( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
                 self.failView.hidden = YES;
+                if (self.pullDowning) {
+                    [self.tableView finishLSPullDown:YES];
+                    self.pullDowning = NO;
+                }
+                if (self.pullUping) {
+                    [self.tableView finishLSPullUp:YES];
+                    self.pullUping = NO;
+                }
+                
                 if (!loadMore) {
-                    // 停止头部
-                    [self.tableView finishPullDown:YES];
                     // 清空列表
                     [self.dataArray removeAllObjects];
                     [self.items removeAllObjects];
@@ -180,9 +207,6 @@
                     }
                     self.isLoadData = NO;
                 } else {
-                    // 停止底部
-                    [self.tableView finishPullUp:YES];
-
                     self.page++;
                 }
 
@@ -204,19 +228,21 @@
             } else {
                 self.noDataTipView.hidden = YES;
                 if (!loadMore) {
-                    // 停止头部
-                    [self.tableView finishPullDown:NO];
                     [self.dataArray removeAllObjects];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                     self.isLoadData = YES;
-                } else {
-                    // 停止底部
-                    [self.tableView finishPullUp:YES];
+                }
+                if (self.pullDowning) {
+                    [self.tableView finishLSPullDown:NO];
+                    self.pullDowning = NO;
+                }
+                if (self.pullUping) {
+                    [self.tableView finishLSPullUp:YES];
+                    self.pullUping = NO;
                 }
                 [self.tableView reloadData];
             }
-            self.view.userInteractionEnabled = YES;
         });
     };
     [self.sessionManager sendRequest:request];
@@ -230,14 +256,17 @@
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
-    self.view.userInteractionEnabled = NO;
-    [self getShowList:NO];
+    if (!self.pullUping && !self.pullDowning) {
+        [self getShowList:NO];
+    }
+    self.pullDowning = YES;
 }
 
 - (void)pullUpRefresh {
-
-    self.view.userInteractionEnabled = NO;
-    [self getShowList:YES];
+    if (!self.pullDowning && !self.pullUping) {
+        [self getShowList:YES];
+    }
+    self.pullUping = YES;
 }
 
 #pragma mark - PullRefreshView回调
@@ -253,7 +282,7 @@
         [self pullUpRefresh];
     } else {
         // 停止底部
-        [self.tableView finishPullUp:NO];
+        [self.tableView finishLSPullUp:NO];
     }
 }
 
@@ -265,7 +294,7 @@
 - (void)reloadBtnClick:(id)sender {
     self.failView.hidden = YES;
 
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 #pragma mark TableViewDelegateAndDataSource
@@ -318,7 +347,7 @@
         self.addCreditsView = [[ShowAddCreditsView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         self.addCreditsView.delegate = self;
         [self.addCreditsView updateUI:item];
-        [self.view.window addSubview:self.addCreditsView];
+        [self.view addSubview:self.addCreditsView];
     } else {
         [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarClickMyOtherShows eventCategory:EventCategoryShowCalendar];
         AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];

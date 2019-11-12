@@ -19,6 +19,10 @@
 
 @implementation MainNotificaitonView
 
+- (void)dealloc {
+    NSLog(@"MainNotificaitonView::dealloc");
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {

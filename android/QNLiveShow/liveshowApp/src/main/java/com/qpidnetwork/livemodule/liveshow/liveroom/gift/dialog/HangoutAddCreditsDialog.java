@@ -22,6 +22,7 @@ import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.util.UIUtils;
 import com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView;
@@ -152,7 +153,7 @@ public class HangoutAddCreditsDialog extends Dialog implements View.OnClickListe
     public void gotoAddCredits(){
         //2019/3/18  打开买点页面
         //edit by Jagger 2018-9-21 使用URL方式跳转
-        String urlAddCredit = URL2ActivityManager.createAddCreditUrl("", "B30", "");
+        String urlAddCredit = LiveUrlBuilder.createAddCreditUrl("", "B30", "");
         new AppUrlHandler(mContext).urlHandle(urlAddCredit);
     }
 }

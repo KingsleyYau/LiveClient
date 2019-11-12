@@ -33,6 +33,7 @@ LSLCMessageItem::LSLCMessageItem()
 	m_statusType = StatusType_Unprocess;
 	m_msgType = MT_Unknow;
     m_inviteType = INVITE_TYPE_CHAT;
+    m_isFalseLadyInvite = false;
     
 	m_textItem = NULL;
 	m_warningItem = NULL;

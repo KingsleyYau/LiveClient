@@ -73,6 +73,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
     private static final String TRANSITION_ROOMID = "roomId";
     private static final String LIVEROOM_ROOMINFO_ROOMPHOTOURL = "roomPhotoUrl";
     private static final String TRANSITION_RECOMMAND_ID = "recommendId";
+    private static final String TRANSITION_IS_BUBBLE = "isBubble";      //是否冒泡进入
 
     public static final String TRANSITION_EXTRA_ANCHOR_ID = "extraAnchorID";
 
@@ -117,6 +118,8 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
 
     private HangoutInvitationManager mHangoutInvitationManager;     //邀请管理器
 
+    private boolean mIsBubble = false;                              //是否冒泡点击进入
+
     private enum PageType{
         PAGE_LAUNCH_INVITING,
         PAGE_EXIST_HANGOUT_ROOM,
@@ -134,12 +137,13 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
      * @return
      */
     public static Intent getIntent(Context context, ArrayList<IMUserBaseInfoItem> anchorInfo, String roomId,
-                                   String roomPhotoUrl, String recommendId){
+                                   String roomPhotoUrl, String recommendId, boolean isBubble){
         Intent intent = new Intent(context, HangoutTransitionActivity.class);
         intent.putParcelableArrayListExtra(TRANSITION_ANCHOR_INFO, anchorInfo);
         intent.putExtra(TRANSITION_ROOMID, roomId);
         intent.putExtra(LIVEROOM_ROOMINFO_ROOMPHOTOURL, roomPhotoUrl);
         intent.putExtra(TRANSITION_RECOMMAND_ID, recommendId);
+        intent.putExtra(TRANSITION_IS_BUBBLE, isBubble);
         return intent;
     }
 
@@ -229,6 +233,9 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
             if(bundle.containsKey(TRANSITION_RECOMMAND_ID)){
                 mRecommendId = bundle.getString(TRANSITION_RECOMMAND_ID);
                 Log.d(TAG,"initData-TRANSITION_RECOMMAND_ID:" + mRecommendId);
+            }
+            if(bundle.containsKey(TRANSITION_IS_BUBBLE)){
+                mIsBubble = bundle.getBoolean(TRANSITION_IS_BUBBLE);
             }
         }
 
@@ -705,7 +712,7 @@ public class HangoutTransitionActivity extends BaseActionBarFragmentActivity imp
         //互斥关系创建新的邀请client
         mHangoutInvitationManager = HangoutInvitationManager.createInvitationClient(this);
         mHangoutInvitationManager.setClientEventListener(this);
-        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly);
+        mHangoutInvitationManager.startInvitationSession(anchorInfo, roomId, recommandId, createOnly, mIsBubble);
     }
 
     /*************************************************  主逻辑外的分之逻辑   *******************************************************/

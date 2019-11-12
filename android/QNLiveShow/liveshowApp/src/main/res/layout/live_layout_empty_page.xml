@@ -1,25 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/swipeRefreshLayoutEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/ll_empty_root_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivNodata"
+                android:layout_width="@dimen/live_size_88dp"
+                android:layout_height="@dimen/live_size_88dp"
+                android:src="@drawable/icon_data_empty"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:id="@+id/ll_emptyDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/live_size_20dp"
+                android:paddingTop="@dimen/live_size_20dp"
+                android:paddingRight="@dimen/live_size_20dp"
+                android:paddingBottom="@dimen/live_size_30dp">
+
+                <TextView
+                    android:id="@+id/tvEmptyDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/text_color_grey_light"
+                    android:textSize="@dimen/live_size_16sp"
+                    tools:text="You have not followed anyone yet." />
+
+                <TextView
+                    android:id="@+id/tvEmptyDescBottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/live_size_20dp"
+                    android:gravity="center"
+                    android:textColor="@color/live_text_color_black"
+                    android:textSize="@dimen/live_size_16sp"
+                    android:visibility="gone"
+                    tools:text="You have not followed anyone yet."
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGuide"
+                style="@style/blueCircle6dpButton"
+                android:text="@string/common_hotlist_guide"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>
+
+    <!--    Old
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/swipeRefreshLayoutEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_empty_root_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal|top"
-            android:orientation="vertical"
-            android:paddingTop="77dp">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/ivNodata"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_marginTop="77dp"
                 android:layout_marginBottom="12dp"
                 android:src="@drawable/icon_data_empty" />
 
@@ -41,7 +108,6 @@
                     android:lines="3"
                     android:textColor="#C2C2C2"
                     android:textSize="14sp" />
-
             </LinearLayout>
 
             <Button
@@ -55,6 +121,6 @@
                 android:textColor="@color/white"
                 android:textSize="13sp" />
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
-
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </LinearLayout>
+    -->

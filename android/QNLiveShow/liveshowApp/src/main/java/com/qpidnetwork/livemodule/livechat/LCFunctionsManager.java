@@ -7,6 +7,7 @@ import com.qpidnetwork.livemodule.livechat.jni.LiveChatTalkUserListItem.DeviceTy
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJni;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat.FunctionType;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livechathttprequest.OnLCCheckFunctionsCallback;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 
@@ -56,7 +57,7 @@ public class LCFunctionsManager {
 		//获取指定女士功能设置列表
 		LoginItem loginItem = LoginManager.getInstance().getLoginItem();
 		if(loginItem != null){
-			requestId = LCRequestJniLiveChat.CheckFunctions(getCheckFunctionList(), deviceType,
+			requestId = LivechatRequestOperator.getInstance().CheckFunctions(getCheckFunctionList(), deviceType,
 					clientVersion, loginItem.sessionId, loginItem.userId, new OnLCCheckFunctionsCallback() {
 				
 				@Override

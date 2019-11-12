@@ -1,6 +1,6 @@
 
 /* Class = "UILabel"; text = "You have no Say Hi records.\nWhy not find someone and Say Hi to her?"; ObjectID = "NML-jA-VXI"; */
-"NML-jA-VXI.text" = "You have no Say Hi records.\nWhy not find someone and Say Hi to her?";
+"NML-jA-VXI.text" = "You have no Say Hi yet.\nWhy not find someone and Say Hi to her?";
 
 /* Class = "UIButton"; normalTitle = "Search More"; ObjectID = "Xwv-gc-ef6"; */
 "Xwv-gc-ef6.normalTitle" = "Search More";

@@ -11,9 +11,6 @@
 
 @interface MsgTableViewCell ()
 
-@property (nonatomic, strong) YYTextLinePositionSimpleModifier *modifier;
-@property (nonatomic, strong) YYTextContainer *container;
-@property (nonatomic, strong) YYTextLayout *layout;
 @property (nonatomic, strong) UIButton *tapBtn;
 @property (nonatomic, copy) NSString *linkUrl;
 @property (nonatomic, strong) UIView *textBackgroundView;
@@ -22,27 +19,7 @@
 
 @implementation MsgTableViewCell
 + (NSString *)cellIdentifier {
-    return @"MsgTableViewCell";
-}
-
-+ (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString {
-    NSInteger height = 3;
-    
-    if( detailString.length > 0 ) {
-        // 设置换行模式
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        [style setLineBreakMode:NSLineBreakByCharWrapping];
-        NSMutableAttributedString* labelAttributeString = [[NSMutableAttributedString alloc] initWithAttributedString:detailString];
-        [labelAttributeString addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, labelAttributeString.length)];
-        
-        // 计算高度
-        CGRect rect = [labelAttributeString boundingRectWithSize:CGSizeMake(width - 20, MAXFLOAT)
-                                                 options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
-        height += ceil(rect.size.height);
-    }
-    height += 3;
-    
-    return height;
+    return NSStringFromClass([self class]);
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -75,44 +52,17 @@
         
         self.backgroundColor = [UIColor clearColor];
         
-        self.modifier = [[YYTextLinePositionSimpleModifier alloc] init];
-        self.modifier.fixedLineHeight = 19;
+        self.messageLabelWidth = 0;
+        self.messageLabelHeight = 0;
         
-        // 创建文本容器
-        self.container = [[YYTextContainer alloc] init];
-        self.container.linePositionModifier = self.modifier;
-        self.container.size = CGSizeMake(SCREEN_WIDTH - 165, CGFLOAT_MAX);
-        self.container.maximumNumberOfRows = 0;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
 
-- (void)setTextBackgroundViewColor:(RoomStyleItem *)item {
-    self.textBackgroundView.backgroundColor = item.textBackgroundViewColor;
-}
-
-- (void)changeMessageLabelWidth:(CGFloat)width {
+- (void)updataChatMessage:(MsgItem *)item styleItem:(RoomStyleItem *)styleItem {
     
-    self.tableViewWidth = width;
-    CGRect frame = self.messageLabel.frame;
-    frame.size.width = width;
-    self.messageLabel.frame = frame;
-    self.container.size = CGSizeMake(width, CGFLOAT_MAX);
-}
-
-- (void)updataChatMessage:(MsgItem *)item {
-    // 礼物label重算frame值
-//    CGSize size = self.container.size;
-//    if (item.msgType == MsgType_Gift) {
-//        size.width = size.width - 3;
-//    }
-//    self.container.size = size;
-//
-//    // 生成排版结果
-//    self.tapBtn.hidden = YES;
-//    YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
-//    CGRect frame = self.messageLabel.frame;
-//    frame.size = layout.textBoundingSize;
+    self.textBackgroundView.backgroundColor = styleItem.sendBackgroundViewColor;
     
     // 礼物label重算frame值
     CGRect giftFrame = item.labelFrame;
@@ -131,7 +81,7 @@
     self.messageLabel.shadowBlurRadius = 1.0f;
     self.messageLabelWidth = self.messageLabel.frame.size.width;
     self.messageLabelHeight = self.messageLabel.frame.size.height;
-    
+   
     if (item.msgType == MsgType_Link) {
         self.tapBtn.hidden = NO;
         [self.tapBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -144,19 +94,87 @@
     }
 }
 
+- (void)setupChatMessage:(MsgItem *)item styleItem:(RoomStyleItem *)styleItem {
+    
+    self.textBackgroundView.hidden = NO;
+    self.tapBtn.hidden = YES;
+    
+    // 礼物label重算frame值
+    CGRect giftFrame = item.labelFrame;
+    if (item.msgType == MsgType_Gift || item.msgType == MsgType_Chat) {
+        giftFrame.origin.x = 3;
+    } else {
+        giftFrame.origin.x = 8;
+    }
+    
+    self.messageLabel.frame = giftFrame;
+    self.messageLabel.textLayout = item.layout;
+    self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
+    self.messageLabel.shadowOffset = CGSizeMake(0, 0.5);
+    self.messageLabel.shadowBlurRadius = 1.0f;
+    self.messageLabelWidth = self.messageLabel.frame.size.width;
+    self.messageLabelHeight = self.messageLabel.frame.size.height;
+    
+    [self.textBackgroundView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.messageLabel.mas_right).offset(8);
+        make.bottom.equalTo(@(-5));
+    }];
+    
+    switch (item.msgType) {
+        case MsgType_Chat:{
+            self.textBackgroundView.backgroundColor = styleItem.chatBackgroundViewColor;
+        }break;
+            
+        case MsgType_Gift:{
+            self.textBackgroundView.backgroundColor = styleItem.sendBackgroundViewColor;
+        }break;
+            
+        case MsgType_Link:{
+            self.textBackgroundView.backgroundColor = styleItem.announceBackgroundViewColor;
+            self.tapBtn.hidden = NO;
+            [self.tapBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(self.textBackgroundView);
+            }];
+            self.linkUrl = item.linkStr;
+        }break;
+            
+        case MsgType_Announce:{
+            self.textBackgroundView.backgroundColor = styleItem.announceBackgroundViewColor;
+        }break;
+            
+        case MsgType_Join:
+        case MsgType_RiderJoin:{
+            self.textBackgroundView.backgroundColor = styleItem.riderBackgroundViewColor;
+        }break;
+            
+        case MsgType_Warning:{
+            self.textBackgroundView.backgroundColor = styleItem.warningBackgroundViewColor;
+        }break;
+            
+        case MsgType_FirstFree:{
+            self.textBackgroundView.backgroundColor = styleItem.firstFreeBackgroundViewColor;
+        }break;
+            
+        default:{
+            self.textBackgroundView.backgroundColor = [UIColor clearColor];
+        }break;
+    }
+}
+
 - (void)pushGoAction {
     if ([self.msgDelegate respondsToSelector:@selector(msgCellRequestHttp:)]) {
         [self.msgDelegate msgCellRequestHttp:self.linkUrl];
     }
 }
 
-+ (NSString *)textPreDetail {
-    return @"          ";
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.textBackgroundView.layer.cornerRadius = 5;
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    
 }
 
 

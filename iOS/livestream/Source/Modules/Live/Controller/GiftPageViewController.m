@@ -667,7 +667,7 @@
     [self setupButtonBar:item.infoItem.sendNumList];
 
     // 判断点击的礼物是否可以发送
-    if ([item canSend:self.liveRoom.imLiveRoom.loveLevel userLevel:self.liveRoom.imLiveRoom.manLevel]) {
+    if (![item canSend:self.liveRoom.imLiveRoom.loveLevel userLevel:self.liveRoom.imLiveRoom.manLevel]) {
         // 发送按钮可用
         [self sendViewCanUserEnabled];
     } else {

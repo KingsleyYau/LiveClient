@@ -59,6 +59,17 @@
     self.tiltleLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"AKz-xJ-eQ5.text"),self.anchorName];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
 - (void)showDiaLogView:(BOOL)success hasFollow:(BOOL)hasFollow isOnline:(BOOL)isOnline errMsg:(NSString *)errMsg {
     
     if (success) {

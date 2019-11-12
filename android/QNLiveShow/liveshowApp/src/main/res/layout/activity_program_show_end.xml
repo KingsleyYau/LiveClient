@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-    <include layout="@layout/view_gaussian_blur_tran"/>
+    <!--<include layout="@layout/view_gaussian_blur_tran"/>-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ScrollView
+        android:layout_height="match_parent"
+        android:background="#383838">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:scrollbars="none">
+            android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/llAnchorInfo"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="100dp">
+                android:gravity="center">
                 <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
                     android:id="@+id/civPhoto"
                     android:layout_width="96dp"
@@ -43,10 +43,10 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
                     android:layout_marginTop="16dp"
-                    android:textColor="@color/text_light_white"
+                    android:textColor="@color/white"
                     android:gravity="center"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:minHeight="36dp" />
 
                 <!--按钮区域-->
@@ -57,31 +57,76 @@
                     android:orientation="vertical"
                     android:layout_marginTop="24dp"
                     android:gravity="center_horizontal">
-                    <Button
+                    <!--book-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
                         android:id="@+id/btnBook"
-                        android:layout_width="@dimen/live_size_200dp"
-                        android:layout_height="@dimen/live_size_40dp"
-                        android:background="@drawable/button_book_broadcast"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
                         android:visibility="gone"
-                        android:layout_marginBottom="16dp"/>
-                    <Button
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_room_list_book_stroke_shape"
+                        button:icon="@drawable/ic_list_book"
+                        button:icon_width="@dimen/live_main_room_list_btn_icon_size"
+                        button:icon_height="@dimen/live_main_room_list_btn_icon_size"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_main_room_list_book"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--view hotlist-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
                         android:id="@+id/btnViewHot"
-                        android:layout_width="@dimen/live_size_220dp"
-                        android:layout_height="@dimen/live_size_40dp"
-                        android:background="@drawable/button_view_hotlist"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
                         android:visibility="gone"
-                        android:layout_marginBottom="16dp"/>
-                    <Button
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_bule_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_view_hotlist"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                    <!--Add credit-->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
                         android:id="@+id/btnAddCredit"
-                        android:layout_width="@dimen/live_size_140dp"
-                        android:layout_height="@dimen/live_size_40dp"
-                        android:background="@drawable/button_add_credit"
+                        android:layout_width="@dimen/live_size_336dp"
+                        android:layout_height="@dimen/normal_button_height_44dp"
                         android:visibility="gone"
-                        android:layout_marginBottom="16dp"/>
+                        android:layout_marginBottom="16dp"
+                        button:background_res="@drawable/btn_bg_solid_orange_shape"
+                        button:raisebutton_radius="@dimen/live_size_24dp"
+                        button:title="@string/live_common_btn_add_credit"
+                        button:title_color="@color/white"
+                        button:title_text_size="@dimen/live_size_16sp"
+                        button:title_text_bold="true"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
 
                 </LinearLayout>
-
-                <!--推荐区域-->
+            </LinearLayout>
+            <!--推荐区域-->
+            <LinearLayout
+                android:id="@+id/llRecommand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/live_size_16dp"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/live_size_28dp">
+                <View
+                    android:layout_width="@dimen/live_size_336dp"
+                    android:layout_height="1dp"
+                    android:background="#ECEEF1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF8500"
+                    android:text="@string/say_hi_list_empty_You_may_be_interested_in"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/live_size_14sp"
+                    android:layout_marginTop="@dimen/live_size_16dp"/>
                 <include
                     android:id="@+id/includeRecommand"
                     android:layout_width="match_parent"
@@ -89,15 +134,15 @@
                     layout="@layout/recommend_live_calendar"
                     android:layout_marginLeft="@dimen/live_size_16dp"
                     android:layout_marginRight="@dimen/live_size_16dp"
-                    android:layout_marginTop="@dimen/live_size_30dp"
-                    android:visibility="gone"/>
+                    android:layout_marginTop="@dimen/live_size_16dp" />
             </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
         <ImageView
             android:id="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_clear_disabled"
+            android:layout_alignParentRight="true"
             android:padding="16dp" />
     </RelativeLayout>
 

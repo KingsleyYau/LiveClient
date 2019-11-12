@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,7 @@ import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
+import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import static com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL;
@@ -57,9 +59,9 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
     private TextView tvAnchorName;
     private TextView tvDesc;
 
-    private Button btnBook;
-    private Button btnViewHot;
-    private Button btnAddCredit;
+    private ButtonRaised btnBook;
+    private ButtonRaised btnViewHot;
+    private ButtonRaised btnAddCredit;
 
     //高斯模糊背景
     private SimpleDraweeView iv_gaussianBlur;
@@ -102,9 +104,9 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
         tvAnchorName = (TextView)findViewById(R.id.tvAnchorName);
         tvDesc = (TextView)findViewById(R.id.tvDesc);
 
-        btnBook = (Button)findViewById(R.id.btnBook);
-        btnViewHot = (Button)findViewById(R.id.btnViewHot);
-        btnAddCredit = (Button)findViewById(R.id.btnAddCredit);
+        btnBook = (ButtonRaised)findViewById(R.id.btnBook);
+        btnViewHot = (ButtonRaised)findViewById(R.id.btnViewHot);
+        btnAddCredit = (ButtonRaised)findViewById(R.id.btnAddCredit);
 
         //绑定返回按钮事件
         ((ImageView)findViewById(R.id.btnClose)).setOnClickListener(this);
@@ -113,9 +115,9 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
         btnViewHot.setOnClickListener(this);
 
         //高斯模糊背景
-        iv_gaussianBlur = (SimpleDraweeView) findViewById(R.id.iv_gaussianBlur);
-        v_gaussianBlurFloat = findViewById(R.id.v_gaussianBlurFloat);
-        v_gaussianBlurFloat.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#cc000000")));
+//        iv_gaussianBlur = (SimpleDraweeView) findViewById(R.id.iv_gaussianBlur);
+//        v_gaussianBlurFloat = findViewById(R.id.v_gaussianBlurFloat);
+//        v_gaussianBlurFloat.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#cc000000")));
     }
 
     private void initData(){
@@ -164,23 +166,23 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
         }
 
         if(!TextUtils.isEmpty(roomPhotoUrl)) {
-            try {
-                Uri uri = Uri.parse(roomPhotoUrl);
-                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                        .setPostprocessor(new IterativeBoxBlurPostProcessor(
-                                getResources().getInteger(R.integer.gaussian_blur_iterations),
-                                getResources().getInteger(R.integer.gaussian_blur_tran)))
-                        .build();
-                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setOldController(iv_gaussianBlur.getController())
-                        .setImageRequest(request)
-                        .build();
-                iv_gaussianBlur.setController(controller);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Uri uri = Uri.parse(roomPhotoUrl);
+//                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+//                        .setPostprocessor(new IterativeBoxBlurPostProcessor(
+//                                getResources().getInteger(R.integer.gaussian_blur_iterations),
+//                                getResources().getInteger(R.integer.gaussian_blur_tran)))
+//                        .build();
+//                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
+//                        .setOldController(iv_gaussianBlur.getController())
+//                        .setImageRequest(request)
+//                        .build();
+//                iv_gaussianBlur.setController(controller);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
-        tvAnchorName.setText(mAnchorName);
+        tvAnchorName.setText(Html.fromHtml(getResources().getString(R.string.liveroom_transition_anchor_name_and_id, mAnchorName, mAnchorId)));
         Log.i("Jagger" , "节目结束页 initData PAGE_ERROR_LIEV_EDN book:" + (mAuthorityItem == null?"null":mAuthorityItem.isHasBookingAuth));
         switch (errType){
             case PAGE_ERROR_LIEV_EDN:{
@@ -196,6 +198,7 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
                 }
                 //获取推荐列表
                 if(isRecommand) {
+                    findViewById(R.id.llRecommand).setVisibility(View.INVISIBLE);
                     getPromoAnchorList();
                 }
             }break;
@@ -288,7 +291,7 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
         //本地存储推荐数据
         mProgramInfoItem = item;
         //初始化view
-        findViewById(R.id.includeRecommand).setVisibility(View.VISIBLE);
+        findViewById(R.id.llRecommand).setVisibility(View.VISIBLE);
         findViewById(R.id.includeRecommand).setOnClickListener(this);
         findViewById(R.id.viewCalendarDivider).setVisibility(View.GONE);
         findViewById(R.id.rlCalendarButtonArea).setVisibility(View.GONE);

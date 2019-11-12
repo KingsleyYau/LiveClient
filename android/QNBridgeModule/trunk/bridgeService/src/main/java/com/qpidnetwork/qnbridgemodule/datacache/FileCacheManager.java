@@ -37,6 +37,9 @@ public class FileCacheManager {
     private static final String EMF_VIDEO = "emf/video";
     private static final String PICASS_LOCAL_DIR = "picassoLocalCache";
 
+    // 2019/9/30 Hardy QN、直播的公共数据模块
+    private static final String COMMON_DATA = "CommonData";
+
     //直播模块缓存路径
     private final String GIFT = "gift";                //本地礼物图片缓存路径
     private final String CAR = "car";                //本地座驾图片缓存路径
@@ -466,6 +469,18 @@ public class FileCacheManager {
     }
 
     /**
+     * 解决内嵌webview mail服务，连续多次拍照上传失败（Jaywar检查因为部分浏览器清除内存机制问题，导致图片名重名时，会出现收不到photochange导致不上传 SM-N7508V）
+     * @return
+     */
+    public String GetWebviewCompatTempCameraImageUrl() {
+        String temp = "";
+        temp += GetTempPath() + "cameraphoto";
+        temp += "_" +  System.currentTimeMillis();
+        temp += ".jpg";
+        return temp;
+    }
+
+    /**
      * 获取一个临时图片的路径
      * @return
      */
@@ -786,6 +801,36 @@ public class FileCacheManager {
         localPath += getFileNameNoEx(emotionUrl.substring(emotionUrl.lastIndexOf(File.separator),emotionUrl.length()));
         return localPath;
     }
+
+    //***********************   2019/9/30   Hardy   公共模块***********************
+    private String getCommonDataPath(){
+        return getFileCacheHomePath() + COMMON_DATA;
+    }
+
+    /**
+     * QN 三站的小表情的公共路径
+     */
+    private String getQNEmotionImgRootPath(){
+        /* 创建emotion路径 */
+        String path = getCommonDataPath() + File.separator + EMOTION + File.separator;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return path;
+    }
+
+    /**
+     * 解析 QN 三站的小表情的本地路径
+     */
+    public String parseQNEmotionImgLocalPath(String emotionId, String emotionUrl){
+        String localPath = getQNEmotionImgRootPath();
+        localPath += emotionId;
+        //edit by Jagger 2018-5-10
+        localPath += getFileNameNoEx(emotionUrl.substring(emotionUrl.lastIndexOf(File.separator), emotionUrl.length()));
+        return localPath;
+    }
+    //***********************   2019/9/30   Hardy   公共模块***********************
 
     private String getMedalImgRootPath(){
         /* 创建medal路径 */

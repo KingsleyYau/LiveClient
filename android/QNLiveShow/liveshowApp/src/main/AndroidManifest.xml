@@ -21,7 +21,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-
+        <activity android:name=".liveshow.personal.MyProfilePhotoActivity" />
+        <activity android:name=".liveshow.personal.mycontact.MyContactListActivity" />
+        <activity android:name=".liveshow.sayhi.SayHiEditActivity" />
         <activity android:name=".liveshow.liveroom.HangoutEndActivity" /> <!-- 文件下载器进程 -->
         <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
         <service
@@ -122,7 +124,7 @@
             android:name=".liveshow.liveroom.NormalPrivateLiveRoomActivity"
             android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -133,7 +135,8 @@
             android:name=".liveshow.liveroom.AdvancePrivateLiveRoomActivity"
             android:configChanges="locale|layoutDirection|keyboard|screenSize|smallestScreenSize|screenLayout|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" /> <!-- configChanges 配置发生变化的时候，Activity不会关闭并且重启 -->
+            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- windowSoftInputMode 为适配最破的那两台三星,代码中会判断系统，低于5.0把模式改为adjustPan -->
+        <!-- configChanges 配置发生变化的时候，Activity不会关闭并且重启 -->
         <!-- configChanges:locale:区域发生变化——用户选择了一个文本需要显示的新语言 -->
         <!-- configChanges:screenSize|smallestScreenSize|screenLayout|orientation:切换成多屏模式 -->
         <activity
@@ -189,7 +192,6 @@
             android:name=".liveshow.authorization.LoginActivity"
             android:label=""
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -250,13 +252,45 @@
         <activity
             android:name=".liveshow.livechat.LiveChatPhotoAndVideoPreviewActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".liveshow.livechat.LiveChatRecentWatchPreviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".liveshow.livechat.LiveChatRecentWatchActivity"
+            android:screenOrientation="portrait" /> <!-- Say Hi -->
+        <activity
+            android:name=".liveshow.sayhi.SayHiListActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.sayhi.SayHiDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.sayhi.SayHiNoteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.sayhi.SayHiPhotoDetailActivity"
+            android:screenOrientation="portrait" /> <!-- Flowers -->
+        <activity
+            android:name=".liveshow.flowergift.mycart.MyCartListActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".liveshow.flowergift.checkout.CheckOutActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateUnchanged|stateHidden|adjustResize" />
+        <activity
+            android:name=".liveshow.flowergift.store.FlowersGiftDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.flowergift.store.FlowersAnchorShopListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.flowergift.FlowersMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".liveshow.flowergift.checkout.GreetingPreviewActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

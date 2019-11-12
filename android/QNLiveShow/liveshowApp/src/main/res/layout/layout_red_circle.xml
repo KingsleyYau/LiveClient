@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.RedCircleView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/layout_red_circle_tv_red_circle"
+        style="@style/redCircleStyle"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/layout_red_circle_tv_oval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_red_solid_corner_10dp_shape"
+        android:gravity="center"
+        android:paddingBottom="1dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="1dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_10sp"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/layout_red_circle_tv_circle"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/bg_red_solid_circle_shape"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_10sp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="9"
+        />
+</com.qpidnetwork.livemodule.view.RedCircleView>

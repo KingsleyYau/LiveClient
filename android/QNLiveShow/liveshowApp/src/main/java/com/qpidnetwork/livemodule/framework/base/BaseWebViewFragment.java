@@ -46,6 +46,7 @@ import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
 import com.qpidnetwork.livemodule.liveshow.model.js.JSCallbackListener;
 import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.WebviewSSLProcessHelper;
 
 import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_EMPTY_PAGE;
 import static com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity.HTTP_ERROR_CODE_UN_AUTH;
@@ -443,7 +444,8 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Log.d(TAG, "onReceivedSslError");
                 //                super.onReceivedSslError(view, handler, error);
-                handler.proceed();//表示等待证书响应
+//                handler.proceed();//表示等待证书响应
+                WebviewSSLProcessHelper.showWebviewSSLErrorTips(getActivity(), view, handler, error);
                 // handler.cancel//表示挂起连接-默认处理方式
                 // handler.handleMessage(null)//可做其他处理
             }

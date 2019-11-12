@@ -22,6 +22,8 @@
 #import "DialogIconTips.h"
 #import "LSImageViewLoader.h"
 #import "DialogTip.h"
+#import "LSProfilePhotoViewController.h"
+#import "LSProfilePhotoActionViewController.h"
 #define Minimum 100
 #define Maximum 2000
 #define ShowMax 200
@@ -150,6 +152,11 @@ typedef enum {
     self.profilePhoto.layer.masksToBounds = YES;
     self.profilePhoto.layer.borderWidth = 5.0f;
     self.profilePhoto.layer.borderColor = [UIColor whiteColor].CGColor;
+    
+    self.profilePhoto.userInteractionEnabled = YES;
+    UITapGestureRecognizer *photoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoTapAction:)];
+    [self.profilePhoto addGestureRecognizer:photoTap];
+
 
     self.interestContentView.tagDelegate = self;
     self.personalMsg.delegate = self;
@@ -213,8 +220,9 @@ typedef enum {
             self.resumeStatusLabel.hidden = [self.personalItem canUpdateResume];
             [self reloadData:YES];
         }
-        [self getPersonalProfile];
+
     }
+    [self getPersonalProfile];
     [super viewWillAppear:animated];
 }
 
@@ -256,6 +264,7 @@ typedef enum {
 
     // 判断用户头像状态, 是否显示按钮
     self.editBtn.hidden = ![self.personalItem canUpdatePhoto];
+    self.profilePhoto.userInteractionEnabled = ![self.personalItem noPhotoStatus];
 }
 
 - (void)setupSelectInterest {
@@ -531,9 +540,9 @@ typedef enum {
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
     if (content.length > ShowMax && self.personalMsg.editable == NO) {
-        NSString *detail = @" Show more";
+        NSString *detail = @"Show more";
         NSInteger subStringIndex = ShowMax - detail.length;
-        NSString *personalMsg = [NSString stringWithFormat:@"%@ %@", [content substringToIndex:subStringIndex], detail];
+        NSString *personalMsg = [NSString stringWithFormat:@"%@...\n%@", [content substringToIndex:subStringIndex], detail];
         self.personalMsg.attributedText = [LSLinkTextView AllString:personalMsg ChangeString:detail ChangeStrColor:[UIColor colorWithRed:0 green:102 blue:255 alpha:255] StrStyle:NSUnderlineStyleNone font:[UIFont systemFontOfSize:14]];
         self.showMore = YES;
         [self getTextViewHeight:personalMsg];
@@ -573,8 +582,9 @@ typedef enum {
         if (self.showMore) {
             textView.text = [self.personalItem canUpdateResume] ? self.personalItem.resume : self.personalItem.resume_content;
             NSString *content = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSString *detail = @" Show less";
-            NSString *personalMsg = [content stringByAppendingString:detail];
+            NSString *detail = @"Show less";
+            NSString *showless = @"\nShow less";
+            NSString *personalMsg = [content stringByAppendingString:showless];
             //    textView.attributedText = [self parseMessage:textView.text font:[UIFont systemFontOfSize:14] color:[UIColor blackColor]];
             textView.attributedText = [LSLinkTextView AllString:personalMsg ChangeString:detail ChangeStrColor:[UIColor colorWithRed:0 green:102 blue:255 alpha:255] StrStyle:NSUnderlineStyleNone font:[UIFont systemFontOfSize:13]];
             [self getTextViewHeight:content];
@@ -889,4 +899,17 @@ typedef enum {
     return item;
 }
 
+
+- (IBAction)editPhotoAction:(id)sender {
+    LSProfilePhotoActionViewController *vc = [[LSProfilePhotoActionViewController alloc] initWithNibName:nil bundle:nil];
+    [vc showPhotoAction:self];
+}
+
+
+- (void)photoTapAction:(UIButton *)sender {
+    LSProfilePhotoViewController *vc = [[LSProfilePhotoViewController alloc] initWithNibName:nil bundle:nil];
+    vc.isInReview = ![self.personalItem canUpdatePhoto];
+    vc.headImage = self.profilePhoto;
+    [self.navigationController pushViewController:vc animated:YES];
+}
 @end

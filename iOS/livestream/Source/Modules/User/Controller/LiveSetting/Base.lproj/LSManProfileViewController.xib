@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,6 +15,7 @@
                 <outlet property="aboutYouPlaceholder" destination="QP6-bZ-iW6" id="R4h-Qc-A2C"/>
                 <outlet property="ageAndLocationLabel" destination="sPf-Mq-6sK" id="F1q-fr-uCW"/>
                 <outlet property="backgroundScrollView" destination="Lop-xw-PwN" id="9VE-aD-ALW"/>
+                <outlet property="editBtn" destination="W6X-pb-sjl" id="SrQ-Hc-Lyz"/>
                 <outlet property="informationLineView" destination="HWF-0a-mJq" id="dji-M4-IOi"/>
                 <outlet property="informationView" destination="oqw-8n-rBJ" id="P9y-eB-ppe"/>
                 <outlet property="interestContentHeight" destination="Nxy-nK-9uj" id="Leo-HD-Cho"/>
@@ -48,14 +47,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="379" height="220"/>
                                 </imageView>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UserMyProfile_personDefault" translatesAutoresizingMaskIntoConstraints="NO" id="EhL-cj-hIw">
-                                    <rect key="frame" x="144" y="66" width="90" height="90"/>
+                                    <rect key="frame" x="144.5" y="66" width="90" height="90"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="90" id="9Jz-fU-yw3"/>
                                         <constraint firstAttribute="height" constant="90" id="RB2-LV-xwG"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tpi-ug-OKc">
-                                    <rect key="frame" x="169" y="162" width="40.5" height="20.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tpi-ug-OKc">
+                                    <rect key="frame" x="30" y="162" width="319" height="20.5"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -76,21 +75,32 @@
                                         <action selector="backAction:" destination="-1" eventType="touchUpInside" id="PZX-V2-FUZ"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W6X-pb-sjl">
+                                    <rect key="frame" x="201" y="124" width="25" height="25"/>
+                                    <state key="normal" image="Setting_Head_Cam"/>
+                                    <connections>
+                                        <action selector="editPhotoAction:" destination="-1" eventType="touchUpInside" id="Clz-lQ-sFl"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <constraints>
+                                <constraint firstAttribute="trailing" secondItem="tpi-ug-OKc" secondAttribute="trailing" constant="30" id="32M-7I-qMJ"/>
                                 <constraint firstItem="gq6-1o-XHe" firstAttribute="leading" secondItem="nHd-cv-FHf" secondAttribute="leading" id="6Xr-Lu-aS1"/>
                                 <constraint firstItem="gq6-1o-XHe" firstAttribute="trailing" secondItem="nHd-cv-FHf" secondAttribute="trailing" id="BM2-RP-vht"/>
                                 <constraint firstItem="sPf-Mq-6sK" firstAttribute="top" secondItem="tpi-ug-OKc" secondAttribute="bottom" constant="3" id="LPv-Gg-i12"/>
                                 <constraint firstItem="EhL-cj-hIw" firstAttribute="centerX" secondItem="gq6-1o-XHe" secondAttribute="centerX" id="Lh6-Cd-fzv"/>
+                                <constraint firstItem="W6X-pb-sjl" firstAttribute="bottom" secondItem="EhL-cj-hIw" secondAttribute="bottom" constant="-7" id="YVN-CC-xVv"/>
                                 <constraint firstItem="tpi-ug-OKc" firstAttribute="top" secondItem="EhL-cj-hIw" secondAttribute="bottom" constant="6" id="agH-l0-u7c"/>
                                 <constraint firstItem="gq6-1o-XHe" firstAttribute="bottom" secondItem="nHd-cv-FHf" secondAttribute="bottom" id="l6s-s0-BLW"/>
                                 <constraint firstItem="EhL-cj-hIw" firstAttribute="top" secondItem="nHd-cv-FHf" secondAttribute="top" constant="66" id="ma8-JD-87m"/>
                                 <constraint firstItem="GmV-Pc-Os6" firstAttribute="top" secondItem="nHd-cv-FHf" secondAttribute="top" constant="32" id="nT8-n9-v9L"/>
                                 <constraint firstItem="gq6-1o-XHe" firstAttribute="top" secondItem="nHd-cv-FHf" secondAttribute="top" id="q4w-qr-cqR"/>
                                 <constraint firstItem="sPf-Mq-6sK" firstAttribute="centerX" secondItem="tpi-ug-OKc" secondAttribute="centerX" id="rOf-Ne-U1g"/>
+                                <constraint firstItem="W6X-pb-sjl" firstAttribute="trailing" secondItem="EhL-cj-hIw" secondAttribute="trailing" constant="-8.5" id="rsE-TP-hG0"/>
                                 <constraint firstAttribute="height" constant="220" id="u61-D0-8v8"/>
                                 <constraint firstItem="tpi-ug-OKc" firstAttribute="centerX" secondItem="EhL-cj-hIw" secondAttribute="centerX" id="use-XF-70N"/>
                                 <constraint firstItem="GmV-Pc-Os6" firstAttribute="leading" secondItem="nHd-cv-FHf" secondAttribute="leading" id="vae-t7-csr"/>
+                                <constraint firstItem="tpi-ug-OKc" firstAttribute="leading" secondItem="nHd-cv-FHf" secondAttribute="leading" constant="30" id="xMV-nA-Oac"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jFv-T7-IAV" userLabel="Your Interests Bg ">
@@ -172,7 +182,7 @@
                                     </constraints>
                                 </view>
                                 <button opaque="NO" alpha="0.60000002384185791" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HPy-mX-HG1" userLabel="aboutYouBtn">
-                                    <rect key="frame" x="347" y="8.5" width="25" height="25"/>
+                                    <rect key="frame" x="347" y="9" width="25" height="25"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="25" id="oaE-Ow-LL6"/>
                                         <constraint firstAttribute="width" constant="25" id="sVq-FS-mRh"/>
@@ -193,7 +203,7 @@
                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                 </textView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Say something about you." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QP6-bZ-iW6">
-                                    <rect key="frame" x="0.0" y="116.5" width="379" height="16"/>
+                                    <rect key="frame" x="0.0" y="116" width="379" height="16"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -302,6 +312,7 @@
     </objects>
     <resources>
         <image name="LS_Nav_Back_w" width="24" height="24"/>
+        <image name="Setting_Head_Cam" width="25" height="25"/>
         <image name="UserMyProfile_background" width="375" height="200"/>
         <image name="UserMyProfile_personDefault" width="77" height="77"/>
         <image name="UserMyProfile_right" width="24" height="24"/>

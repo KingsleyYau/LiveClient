@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -22,6 +23,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.widget.ImageView;
 
 import com.qpidnetwork.anchor.R;
 import com.qpidnetwork.anchor.liveshow.datacache.file.FileCacheManager;
@@ -466,4 +468,25 @@ public class ImageUtil {
         return output;
     }
 
+
+    /**
+     * 给 ImageView 盖上一层灰影
+     *
+     * @param isShow
+     * @param imageView
+     */
+    public static void showImageColorFilter(boolean isShow, ImageView imageView) {
+        showImageColorFilter(isShow, imageView, -1);
+    }
+
+    public static void showImageColorFilter(boolean isShow, ImageView imageView, int color) {
+        if (color == -1) {
+            color = Color.GRAY;
+        }
+        if (isShow) {
+            imageView.setColorFilter(color, PorterDuff.Mode.MULTIPLY);    // 阴影
+        } else {
+            imageView.clearColorFilter();
+        }
+    }
 }

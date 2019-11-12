@@ -299,7 +299,9 @@ static LiveModule *gModule = nil;
         }
         [[LSLiveChatRequestManager manager] setWebSite:configItem.httpSvrUrl appSite:configItem.httpSvrUrl wapSite:@""];
         [[LSLiveChatRequestManager manager] setAuthorization:@"test" password:@"5179"];
+ 
         [[LSLiveChatManagerOC manager] loginUser:configItem.socketHostDomain port:configItem.socketPort webSite:configItem.httpSvrUrl appSite:configItem.httpSvrUrl chatVoiceHostUrl:configItem.chatVoiceHostUrl httpUser:@"test" httpPassword:@"5179" versionCode:[LSRequestManager manager].versionCode appId:appId cachesDirectory:cachesDirectory minChat:configItem.minBalanceForChat user:loginItem.userId userName:loginItem.nickName sid:loginItem.sessionId device:[[LSRequestManager manager] getDeviceId] livechatInvite:(NSInteger)loginItem.userPriv.liveChatPriv.liveChatInviteRiskType isLivechat:isLiveChatRisk isSendPhotoPriv:loginItem.userPriv.liveChatPriv.isSendLiveChatPhotoPriv isLiveChatPriv:loginItem.userPriv.liveChatPriv.isLiveChatPriv isSendVoicePriv:loginItem.userPriv.liveChatPriv.isSendLiveChatVoicePriv];
+        
         if ([self.delegate respondsToSelector:@selector(moduleOnLogin:)]) {
             [self.delegate moduleOnLogin:self];
         }
@@ -437,9 +439,10 @@ static LiveModule *gModule = nil;
     
     UILocalNotification *notification = [[UILocalNotification alloc]init];
     notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"PUSH_INVITE_TIP", nil),nickName];
+    notification.soundName = UILocalNotificationDefaultSoundName;
     notification.userInfo = @{@"jumpurl":url};
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge;
+        UIUserNotificationType type = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
         UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
         notification.repeatInterval = NSCalendarUnitDay;
@@ -448,5 +451,6 @@ static LiveModule *gModule = nil;
     }
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
+
 @end
 

@@ -80,6 +80,14 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniLiveSh
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniLiveShow_SetAutoPush
         (JNIEnv *, jclass, jint, jobject);
 
+/*
+ * Class:     com_qpidnetwork_anchor_httprequest_RequestJniLiveShow
+ * Method:    GetCurrentRoomInfo
+ * Signature: (ILcom/qpidnetwork/anchor/httprequest/OnGetCurrentRoomInfoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_anchor_httprequest_RequestJniLiveShow_GetCurrentRoomInfo
+        (JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif

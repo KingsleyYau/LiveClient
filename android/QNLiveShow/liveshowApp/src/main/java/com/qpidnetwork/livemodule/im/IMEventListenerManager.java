@@ -308,11 +308,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 
 	@Override
 	public void OnRecvLackOfCreditNotice(String roomId, String message,
-			double credit) {
+			double credit, LCC_ERR_TYPE err) {
 		synchronized(mIMOtherListener){
 			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
 				IMOtherEventListener listener = iter.next();
-				listener.OnRecvLackOfCreditNotice(roomId, message, credit);
+				listener.OnRecvLackOfCreditNotice(roomId, message, credit, err);
 			}
 		}		
 	}

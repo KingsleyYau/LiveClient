@@ -118,9 +118,10 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
      */
     private void refreshUnreadCount(PackageUnreadCountItem item){
         if(tabPageIndicator != null && item != null){
-            tabPageIndicator.updateTabDiginalHint(Voucher.ordinal(),item.voucherNum>0,false,item.voucherNum);
-            tabPageIndicator.updateTabDiginalHint(ReceivedGifts.ordinal(),item.giftNum>0,false,item.giftNum);
-            tabPageIndicator.updateTabDiginalHint(MyRides.ordinal(),item.rideNum>0,false,item.rideNum);
+            int voucherCount = item.voucherNum + item.livechatVoucherNum;
+            tabPageIndicator.updateTabDiginalHint(Voucher.ordinal(),voucherCount>0,true,voucherCount);
+            tabPageIndicator.updateTabDiginalHint(ReceivedGifts.ordinal(),item.giftNum>0,true,item.giftNum);
+            tabPageIndicator.updateTabDiginalHint(MyRides.ordinal(),item.rideNum>0,true,item.rideNum);
         }
     }
 

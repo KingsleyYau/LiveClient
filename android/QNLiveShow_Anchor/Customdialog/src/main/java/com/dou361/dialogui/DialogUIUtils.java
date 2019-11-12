@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.ColorRes;
 import android.support.v7.app.AppCompatDialog;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,66 +62,45 @@ public class DialogUIUtils {
      * 关闭弹出框
      */
     public static void dismiss(DialogInterface... dialogs) {
-        try{
-            if (dialogs != null && dialogs.length > 0) {
-                for (DialogInterface dialog : dialogs) {
-                    if (dialog instanceof Dialog) {
-                        Dialog dialog1 = (Dialog) dialog;
-                        if (dialog1.isShowing()) {
-                            dialog1.dismiss();
-                        }
-                    } else if (dialog instanceof AppCompatDialog) {
-                        AppCompatDialog dialog2 = (AppCompatDialog) dialog;
-                        if (dialog2.isShowing()) {
-                            dialog2.dismiss();
-                        }
+        if (dialogs != null && dialogs.length > 0) {
+            for (DialogInterface dialog : dialogs) {
+                if (dialog instanceof Dialog) {
+                    Dialog dialog1 = (Dialog) dialog;
+                    if (dialog1.isShowing()) {
+                        dialog1.dismiss();
+                    }
+                } else if (dialog instanceof AppCompatDialog) {
+                    AppCompatDialog dialog2 = (AppCompatDialog) dialog;
+                    if (dialog2.isShowing()) {
+                        dialog2.dismiss();
                     }
                 }
-
             }
-        }catch (Exception e){}
+
+        }
     }
 
     /**
      * 关闭弹出框
      */
     public static void dismiss(BuildBean buildBean) {
-        try{
-            if (buildBean != null) {
-                if (buildBean.dialog != null && buildBean.dialog.isShowing()) {
-                    buildBean.dialog.dismiss();
-                }
-                if (buildBean.alertDialog != null && buildBean.alertDialog.isShowing()) {
-                    buildBean.alertDialog.dismiss();
-                }
+        if (buildBean != null) {
+            if (buildBean.dialog != null && buildBean.dialog.isShowing()) {
+                buildBean.dialog.dismiss();
             }
-        }catch (Exception e){}
+            if (buildBean.alertDialog != null && buildBean.alertDialog.isShowing()) {
+                buildBean.alertDialog.dismiss();
+            }
+        }
     }
 
     /**
      * 关闭弹出框
      */
     public static void dismiss(Dialog dialog) {
-        try{
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
-        }catch (Exception e){}
-    }
-
-    /***
-     * 弹出日期选择器
-     * 日 月 年 英文版本日期选择器
-     * @param context   上下文
-     * @param gravity   显示位置
-     * @param dateTitle 显示标题
-     * @param dateType  显示日期样式DateSelectorWheelView.TYPE_YYYYMMDD TYPE_YYYYMMDDHHMM TYPE_YYYYMMDDHHMMSS
-     * @param tag       view标记tag 一个页面多个日期选择器是可以加标记区分
-     * @param listener
-     * @return
-     */
-    public static BuildBean showJDatePick(Context context, int gravity, String dateTitle, long selectDate, int maxYear, int minYear, int dateType, int tag, DialogUIDateTimeSaveListener listener) {
-        return DialogAssigner.getInstance().assignJDatePick(context, gravity, dateTitle, selectDate, maxYear , minYear , dateType, tag, listener);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 
     /***
@@ -196,6 +175,39 @@ public class DialogUIUtils {
         return DialogAssigner.getInstance().assignMdAlert(activity, title, msg, cancleable, outsideTouchable, listener);
     }
 
+    /***
+     * md风格弹出框
+     *
+     * @param activity         所在activity
+     * @param title            标题 不传则无标题
+     * @param msg              消息
+     * @param firstTxt          第一个按钮文字
+     * @param cancelable       true为可以取消false为不可取消
+     * @param outsideTouchable true为可以点击空白区域false为不可点击
+     * @param listener         事件监听
+     * @return
+     */
+    public static BuildBean showMdAlert(Activity activity, CharSequence title, CharSequence msg, CharSequence firstTxt, boolean cancelable, boolean outsideTouchable, DialogUIListener listener) {
+        return DialogAssigner.getInstance().assignMdAlert(activity, title, msg, firstTxt, "", cancelable, outsideTouchable, listener);
+    }
+
+    /***
+     * md风格弹出框
+     *
+     * @param activity         所在activity
+     * @param title            标题 不传则无标题
+     * @param msg              消息
+     * @param firstTxt          第一个按钮文字
+     * @param secondTxt         第二个按钮文字
+     * @param cancelable       true为可以取消false为不可取消
+     * @param outsideTouchable true为可以点击空白区域false为不可点击
+     * @param listener         事件监听
+     * @return
+     */
+    public static BuildBean showMdAlert(Activity activity, CharSequence title, CharSequence msg, CharSequence firstTxt, CharSequence secondTxt, boolean cancelable, boolean outsideTouchable, DialogUIListener listener) {
+        return DialogAssigner.getInstance().assignMdAlert(activity, title, msg, firstTxt, secondTxt, cancelable, outsideTouchable, listener);
+    }
+
     /**
      * md风格多选框  默认可取消可点击
      *
@@ -255,9 +267,55 @@ public class DialogUIUtils {
 
     /**
      * 提示弹出框
+     * (一个按钮)
      *
      * @param activity         所在activity
      * @param title            标题 不传则无标题
+     * @param msg              内容
+     * @param firstTxt         第一个按钮文字
+     * @param cancleable       true为可以取消false为不可取消
+     * @param outsideTouchable true为可以点击空白区域false为不可点击
+     * @param listener         事件监听
+     */
+    public static BuildBean showAlert(Activity activity, CharSequence title, CharSequence msg, CharSequence firstTxt, boolean cancleable, boolean outsideTouchable, DialogUIListener listener) {
+        //是否垂直布局
+        boolean isVertical = true;
+        return DialogAssigner.getInstance().assignAlert(activity, title, msg, "", "", firstTxt, "", isVertical, cancleable, outsideTouchable, listener);
+    }
+
+    /**
+     * 提示弹出框
+     * (两个按钮)
+     *
+     * @param activity         所在activity
+     * @param title            标题 不传则无标题
+     * @param msg              内容
+     * @param firstTxt          第一个按钮文字
+     * @param secondTxt         第二个按钮文字
+     * @param firstTxtColorResId 0为使用默认的
+     * @param secondTxtColorResId 0为使用默认的
+     * @param cancleable       true为可以取消false为不可取消
+     * @param outsideTouchable true为可以点击空白区域false为不可点击
+     * @param listener         事件监听
+     */
+    public static BuildBean showAlert(Activity activity, CharSequence title, CharSequence msg, CharSequence firstTxt, CharSequence secondTxt, int firstTxtColorResId,int secondTxtColorResId, boolean cancleable, boolean outsideTouchable, DialogUIListener listener) {
+        //是否垂直布局
+        boolean isVertical = false;
+        if(TextUtils.isEmpty(firstTxt) || TextUtils.isEmpty(secondTxt)){
+            //其中一个按钮文字为空,则认为只有一个按钮,要改用垂直布局
+            isVertical = true;
+        }
+
+        return DialogAssigner.getInstance().assignAlert(activity, title, msg, "", "", firstTxt, secondTxt, firstTxtColorResId , secondTxtColorResId , isVertical, cancleable, outsideTouchable, listener);
+    }
+
+    /**
+     * 提示弹出框
+     *
+     * @param activity         所在activity
+     * @param title            标题 不传则无标题
+     * @param hint1             EditText hint
+     * @param hint2             EditText hint
      * @param cancleable       true为可以取消false为不可取消
      * @param outsideTouchable true为可以点击空白区域false为不可点击
      * @param listener         事件监听
@@ -272,20 +330,22 @@ public class DialogUIUtils {
      *
      * @param activity         所在activity
      * @param title            标题 不传则无标题
+     * @param msg              内容
+     * @param hint1             EditText hint
+     * @param hint2             EditText hint
+     * @param firstTxt          第一个按钮文字
+     * @param secondTxt         第二个按钮文字
+     * @param firstTxtColorResId 0为使用默认的
+     * @param secondTxtColorResId 0为使用默认的
+     * @param isVertical       是否垂直布局
      * @param cancleable       true为可以取消false为不可取消
      * @param outsideTouchable true为可以点击空白区域false为不可点击
      * @param listener         事件监听
      */
-    public static BuildBean showAlert(Activity activity, CharSequence title, CharSequence msg,
-                                      CharSequence hint1, CharSequence hint2,
-                                      CharSequence firstTxt, CharSequence secondTxt,
-                                      @ColorRes int firstTxtColor , @ColorRes int secondTxtColor ,
+    public static BuildBean showAlert(Activity activity, CharSequence title, CharSequence msg, CharSequence hint1, CharSequence hint2,
+                                      CharSequence firstTxt, CharSequence secondTxt, int firstTxtColorResId,int secondTxtColorResId,
                                       boolean isVertical, boolean cancleable, boolean outsideTouchable, DialogUIListener listener) {
-        return DialogAssigner.getInstance().assignAlert(activity, title, msg,
-                hint1, hint2,
-                firstTxt, secondTxt,
-                firstTxtColor , secondTxtColor,
-                isVertical, cancleable, outsideTouchable, listener);
+        return DialogAssigner.getInstance().assignAlert(activity, title, msg, hint1, hint2, firstTxt, secondTxt, firstTxtColorResId , secondTxtColorResId , isVertical, cancleable, outsideTouchable, listener);
     }
 
 
@@ -370,6 +430,23 @@ public class DialogUIUtils {
      */
     public static BuildBean showCustomAlert(Context context, View contentView, CharSequence firstTxt, CharSequence secondTxt, int gravity, boolean cancleable, boolean outsideTouchable, DialogUIListener btnListener) {
         return DialogAssigner.getInstance().assignCustomAlert(context, contentView, firstTxt, secondTxt , gravity, cancleable, outsideTouchable, btnListener);
+    }
+
+    /***
+     * 自定义弹出框
+     *
+     * @param context          上下文
+     * @param contentView      自定义view
+     * @param firstTxt         第一个按钮文字，“”则不显示按钮
+     * @param secondTxt        第二个按钮文字，“”则不显示按钮
+     * @param gravity          显示window的位置例如Gravity.center
+     * @param cancleable       true为可以取消false为不可取消
+     * @param isBgTransparent    背景透明（true:不使用默认圆角背景）
+     * @param outsideTouchable true为可以点击空白区域false为不可点击
+     * @return
+     */
+    public static BuildBean showCustomAlert(Context context, View contentView, CharSequence firstTxt, CharSequence secondTxt, int gravity, boolean cancleable, boolean outsideTouchable, boolean isBgTransparent, DialogUIListener btnListener) {
+        return DialogAssigner.getInstance().assignCustomAlert(context, contentView, firstTxt, secondTxt , gravity, cancleable, outsideTouchable, isBgTransparent, btnListener);
     }
 
     /**
@@ -499,7 +576,9 @@ public class DialogUIUtils {
         }
         if (gravity == Gravity.TOP) {
             if (mToastTop == null) {
-                mToastTop = Toast.makeText(appContext, str, showTime);
+//                mToastTop = Toast.makeText(appContext, str, showTime);
+                // 2019/2/22 Hardy
+                mToastTop = Toast.makeText(appContext.getApplicationContext(), str, showTime);
                 LayoutInflater inflate = (LayoutInflater)
                         appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflate.inflate(R.layout.dialogui_toast, null);
@@ -511,7 +590,9 @@ public class DialogUIUtils {
             mToast.show();
         } else if (gravity == Gravity.CENTER) {
             if (mToastCenter == null) {
-                mToastCenter = Toast.makeText(appContext, str, showTime);
+//                mToastCenter = Toast.makeText(appContext, str, showTime);
+                // 2019/2/22 Hardy
+                mToastCenter = Toast.makeText(appContext.getApplicationContext(), str, showTime);
                 LayoutInflater inflate = (LayoutInflater)
                         appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflate.inflate(R.layout.dialogui_toast, null);
@@ -523,7 +604,9 @@ public class DialogUIUtils {
             mToast.show();
         } else if (gravity == Gravity.BOTTOM) {
             if (mToastBottom == null) {
-                mToastBottom = Toast.makeText(appContext, str, showTime);
+//                mToastBottom = Toast.makeText(appContext, str, showTime);
+                // 2019/2/22 Hardy
+                mToastBottom = Toast.makeText(appContext.getApplicationContext(), str, showTime);
                 LayoutInflater inflate = (LayoutInflater)
                         appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflate.inflate(R.layout.dialogui_toast, null);

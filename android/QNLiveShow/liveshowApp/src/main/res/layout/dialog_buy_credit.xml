@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialogui_shape_wihte_round_corner"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/live_size_20dp"
+    android:paddingRight="@dimen/live_size_20dp">
+
+    <TextView
+        android:id="@+id/tvAddCredits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/live_size_30dp"
+        android:layout_marginBottom="@dimen/live_size_30dp"
+        android:gravity="center"
+        android:textColor="@color/live_text_color_black"
+        android:textSize="@dimen/live_size_16sp" />
+
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/btnAddCredit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_button_height_44dp"
+        android:layout_gravity="center"
+        button:background_res="@drawable/rectangle_round_solid_orange_radius6"
+        button:title="@string/live_common_btn_add_credit"
+        button:raisebutton_radius="6dp"
+        button:title_color="@color/white"
+        button:title_text_size="@dimen/live_size_16sp"
+        button:title_text_bold="false"
+        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_button_height_44dp"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:gravity="center"
+        android:text="@string/live_common_btn_nothanks"
+        android:textAllCaps="false"
+        android:textColor="#B3252525"
+        android:textSize="@dimen/live_size_16sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:textStyle="normal"/>
+</LinearLayout>

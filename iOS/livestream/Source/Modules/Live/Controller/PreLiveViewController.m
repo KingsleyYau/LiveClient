@@ -11,15 +11,14 @@
 #import "PublicViewController.h"
 #import "PublicVipViewController.h"
 #import "PrivateViewController.h"
-#import "PrivateVipViewController.h"
+#import "PrivateViewController.h"
 #import "BookPrivateBroadcastViewController.h"
 #import "LiveFinshViewController.h"
 #import "AnchorPersonalViewController.h"
 #import "ShowLiveViewController.h"
 #import "LSAddCreditsViewController.h"
 #import "QNChatViewController.h"
-
-#import "RecommandCollectionViewCell.h"
+#import "LSSendSayHiViewController.h"
 
 #import "LiveModule.h"
 #import "LSImManager.h"
@@ -34,11 +33,15 @@
 
 #import "GetPromoAnchorListRequest.h"
 #import "LSGetUserInfoRequest.h"
+#import "SetFavoriteRequest.h"
+#import "LSUpQnInviteIdRequest.h"
 
-// 180秒后退出界面
-#define INVITE_TIMEOUT 180
+// 183秒后退出界面
+#define INVITE_TIMEOUT 183
 // 10秒后显示退出按钮
 #define CANCEL_BUTTON_TIMEOUT 10
+
+#define RECOMMEND_ITEMS (self.recommandItems.count * 10000)
 
 typedef enum PreLiveStatus {
     PreLiveStatus_None,
@@ -50,7 +53,17 @@ typedef enum PreLiveStatus {
     PreLiveStatus_Error,
 } PreLiveStatus;
 
-@interface PreLiveViewController () <IMLiveRoomManagerDelegate, IMManagerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, LiveGobalManagerDelegate>
+typedef enum ButtonStatus {
+    ButtonStatus_None,
+    ButtonStatus_Book,
+    ButtonStatus_AddCredits,
+    ButtonStatus_Retry,
+    ButtonStatus_ChatNow,
+    ButtonStatus_SendMail,
+    ButtonStatus_Invite,
+} ButtonStatus;
+
+@interface PreLiveViewController () <IMLiveRoomManagerDelegate, IMManagerDelegate, LiveGobalManagerDelegate>
 // 当前状态
 @property (nonatomic, assign) PreLiveStatus status;
 // IM管理器
@@ -79,7 +92,7 @@ typedef enum PreLiveStatus {
 @property (nonatomic, assign) BOOL canShowExitButton;
 
 #pragma mark - 推荐逻辑
-@property (atomic, strong) NSArray *recommandItems;
+@property (nonatomic, strong) NSMutableArray *recommandItems;
 
 #pragma mark - 头像逻辑
 @property (atomic, strong) LSImageViewLoader *imageViewLoader;
@@ -112,6 +125,9 @@ typedef enum PreLiveStatus {
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnTop;
 
 @property (nonatomic, assign) BOOL isOnline;
+
+@property (assign, nonatomic) NSInteger currentItemIndex;
+
 @end
 
 @implementation PreLiveViewController
@@ -144,6 +160,8 @@ typedef enum PreLiveStatus {
 
     self.roomUserInfoManager = [LSRoomUserInfoManager manager];
 
+    self.recommandItems = [[NSMutableArray alloc] init];
+    
     // 注册前后台切换通知
     _isBackground = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -204,47 +222,57 @@ typedef enum PreLiveStatus {
     // 重置参数
     [self reset];
 
-    // 刷新女士名字
-    self.ladyNameLabel.text = @"";
-    // 放大菊花
-    //    self.loadingView.transform = CGAffineTransformMakeScale(2.0, 2.0);
+    self.bookButton.layer.cornerRadius = self.bookButton.tx_height / 2;
+    self.bookButton.layer.masksToBounds = YES;
+    
+    self.vipStartButton.layer.cornerRadius = self.vipStartButton.tx_height / 2;
+    self.vipStartButton.layer.masksToBounds = YES;
+    
+    self.addCreditButton.layer.cornerRadius = self.addCreditButton.tx_height / 2;
+    self.addCreditButton.layer.masksToBounds = YES;
+    
+    self.retryButton.layer.cornerRadius = self.retryButton.tx_height / 2;
+    self.retryButton.layer.masksToBounds = YES;
+    
+    self.chatNowBtn.layer.cornerRadius = self.chatNowBtn.tx_height / 2;
+    self.chatNowBtn.layer.masksToBounds = YES;
+    
+    self.sendMailButton.layer.cornerRadius = self.sendMailButton.tx_height / 2;
+    self.sendMailButton.layer.masksToBounds = YES;
+    
+    self.ladyImageView.layer.cornerRadius = self.ladyImageView.tx_height / 2;
+    self.ladyImageView.layer.masksToBounds = YES;
+    
+    NSMutableArray *array = [NSMutableArray array];
+    for (int i = 1; i <= 7; i++) {
+        [array addObject:[UIImage imageNamed:[NSString stringWithFormat:@"Prelive_Loading%d", i]]];
+    }
+    self.loadingView.animationImages = array;
+    self.loadingView.animationDuration = 0.6;
+    [self.loadingView startAnimating];
 
-    // 刷新女士名字
+    // 刷新女士名称
     if (self.liveRoom.userName.length > 0) {
-        self.ladyNameLabel.text = self.liveRoom.userName;
+        [self setupLiverNameLabel];
     }
-
-    // 刷新背景
-    if (self.liveRoom.roomPhotoUrl.length > 0) {
-        [self.imageViewLoaderBg loadImageWithImageView:self.bgImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:nil finishHandler:nil];
-    }
-
+    
     // 刷新女士头像
     if (self.liveRoom.photoUrl.length > 0) {
-        [self.imageViewLoader loadImageFromCache:self.ladyImageView
-                                         options:SDWebImageRefreshCached
-                                        imageUrl:self.liveRoom.photoUrl
-                                placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
-                                   finishHandler:^(UIImage *image){
-                                   }];
+        [self setupLiverHeadImageView];
     } else {
         // 请求并缓存主播信息
-        [[LSUserInfoManager manager] getUserInfo:self.liveRoom.userId
-                                   finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           // 刷新女士头像
-                                           self.liveRoom.photoUrl = item.photoUrl;
-                                           [self.imageViewLoader loadImageFromCache:self.ladyImageView
-                                                                                options:SDWebImageRefreshCached
-                                                                               imageUrl:self.liveRoom.photoUrl
-                                                                       placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
-                                                                          finishHandler:^(UIImage *image){
-                                                                          }];
-                                           // 刷新女士名字
-                                           self.liveRoom.userName = item.nickName;
-                                           self.ladyNameLabel.text = item.nickName;
-                                       });
-                                   }];
+        [self.roomUserInfoManager getUserInfo:self.liveRoom.userId
+                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        // 刷新女士头像
+                                        self.liveRoom.photoUrl = item.photoUrl;
+                                        [self setupLiverHeadImageView];
+                                        
+                                        // 刷新女士名字
+                                        self.liveRoom.userName = item.nickName;
+                                        [self setupLiverNameLabel];
+                                    });
+                                }];
     }
 
     // 设置不允许显示立即邀请
@@ -257,10 +285,32 @@ typedef enum PreLiveStatus {
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
 
     if (IS_IPHONE_X) {
-        self.closeBtnTop.constant = 39;
+        self.closeBtnTop.constant = 45;
     } else {
-        self.closeBtnTop.constant = 15;
+        self.closeBtnTop.constant = 30;
     }
+}
+
+- (void)setupLiverHeadImageView {
+    [self.imageViewLoader loadImageFromCache:self.ladyImageView
+                                     options:SDWebImageRefreshCached
+                                    imageUrl:self.liveRoom.photoUrl
+                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                               finishHandler:^(UIImage *image){
+                               }];
+}
+
+- (void)setupLiverNameLabel {
+    NSMutableAttributedString *name = [[NSMutableAttributedString alloc] initWithString:self.liveRoom.userName
+                                                                             attributes:@{
+                                                            NSFontAttributeName : [UIFont boldSystemFontOfSize:14],
+                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xffffff)}];
+    
+    NSMutableAttributedString *anchorId = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"(ID:%@)",self.liveRoom.userId] attributes:@{
+                                                            NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0x999999)}];
+    [name appendAttributedString:anchorId];
+    self.ladyNameLabel.attributedText = name;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -275,10 +325,6 @@ typedef enum PreLiveStatus {
     // 第一次进入, 或者进入了买点界面
     if (!self.viewDidAppearEver || self.isAddCredit) {
         self.isAddCredit = NO;
-
-        //        self.liveRoom.roomId = @"1";
-        //        self.liveRoom.roomType = LiveRoomType_Private_VIP;
-        //        [self enterPrivateVipRoom];
         // 开始计时
         [self startHandleTimer];
 
@@ -305,45 +351,6 @@ typedef enum PreLiveStatus {
 
     // 移除退入后台通知
     [[LiveGobalManager manager] removeDelegate:self];
-}
-
-- (void)setupContainView {
-    [super setupContainView];
-
-    // 初始化推荐
-    [self setupRecommandView];
-    // 初始化背景
-    //    [self setupBgImageView];
-    // 初始化主播头像
-    [self setupLadyImageView];
-}
-
-- (void)setupRecommandView {
-    NSBundle *bundle = [LiveBundle mainBundle];
-    UINib *nib = [UINib nibWithNibName:@"RecommandCollectionViewCell" bundle:bundle];
-    [self.recommandCollectionView registerNib:nib forCellWithReuseIdentifier:[RecommandCollectionViewCell cellIdentifier]];
-    self.recommandViewHeight.constant = 0;
-    self.recommandCollectionView.alwaysBounceVertical = NO;
-    self.recommandCollectionView.alwaysBounceHorizontal = NO;
-}
-
-- (void)setupBgImageView {
-    // 设置模糊
-    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    UIVisualEffectView *visualView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    [self.bgImageView addSubview:visualView];
-
-    [visualView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.bgImageView);
-        make.left.equalTo(self.bgImageView);
-        make.width.equalTo(self.bgImageView);
-        make.height.equalTo(self.bgImageView);
-    }];
-}
-
-- (void)setupLadyImageView {
-    self.ladyImageView.layer.cornerRadius = self.ladyImageView.frame.size.width / 2;
-    self.ladyImageView.layer.masksToBounds = YES;
 }
 
 #pragma mark - 数据逻辑
@@ -400,6 +407,7 @@ typedef enum PreLiveStatus {
             self.statusLabel.text = DEBUG_STRING(str);
             self.status = PreLiveStatus_Inviting;
 
+            /*
             self.vipView.hidden = NO;
 
             NSMutableArray *array = [NSMutableArray array];
@@ -413,7 +421,8 @@ typedef enum PreLiveStatus {
             self.talentIcon.animationImages = array;
             self.talentIcon.animationDuration = 0.9;
             [self.talentIcon startAnimating];
-
+             */
+            
             // TODO:发起私密直播邀请
             bFlag = [self.imManager invitePrivateLive:self.liveRoom.userId
                                                 logId:@""
@@ -429,7 +438,9 @@ typedef enum PreLiveStatus {
                                                         NSString *str = [NSString stringWithFormat:@"请求私密邀请成功, 等待对方确认"];
                                                         self.statusLabel.text = DEBUG_STRING(str);
                                                         self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_TIPS_INVITE_SUCCESS");
-
+                                                        
+                                                        [self upQNInviteId:invitationId roomId:roomId anchorId:self.liveRoom.userId];
+                                                        
                                                         if (roomId.length > 0) {
                                                             // 有roomId直接进入
                                                             NSLog(@"PreLiveViewController::startRequest( [请求私密邀请成功, 有roomId直接进入私密直播间], userId : %@, roomId : %@ )", self.liveRoom.userId, roomId);
@@ -466,23 +477,15 @@ typedef enum PreLiveStatus {
     }
 }
 
-- (void)getAdvisementList {
-    // TODO:获取推荐列表
-    GetPromoAnchorListRequest *request = [[GetPromoAnchorListRequest alloc] init];
-    request.number = 2;
-    request.type = PROMOANCHORTYPE_LIVEROOM;
-    request.userId = self.liveRoom.userId;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
-        if (success) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-
-                if (self.status == PreLiveStatus_Error) {
-                    // 刷新推荐列表
-                    self.recommandItems = array;
-                    [self reloadRecommandView];
-                }
-            });
-        }
+- (void)upQNInviteId:(NSString *)inviteId roomId:(NSString *)roomId anchorId:(NSString *)anchorId {
+    LSUpQnInviteIdRequest *request = [[LSUpQnInviteIdRequest alloc] init];
+    request.manId = [LSLoginManager manager].loginItem.userId;
+    request.anchorId = anchorId;
+    request.inviteId = inviteId;
+    request.roomId = roomId;
+    request.inviteType = LSBUBBLINGINVITETYPE_ONEONONE;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+        NSLog(@"PreLiveViewController::upQNInviteId([更新邀请ID %@] errnum : %d, errmsg : %@ , roomId : %@, inviteId : %@)",BOOL2SUCCESS(success),errnum,errmsg,roomId,inviteId);
     };
     [self.sessionManager sendRequest:request];
 }
@@ -490,13 +493,12 @@ typedef enum PreLiveStatus {
 - (void)handleError:(LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg onlineStatus:(IMChatOnlineStatus)onlineStatus {
     // TODO:错误处理
     //    self.statusLabel.text = DEBUG_STRING(@"出错啦");
+    [self stopAllTimer];
     // 改变状态为出错
     self.status = PreLiveStatus_Error;
 
     self.isOnline = onlineStatus == IMCHATONLINESTATUS_ONLINE ? YES : NO;
-    // 隐藏菊花
     self.loadingView.hidden = YES;
-    // 隐藏VIP界面2
     self.vipView.hidden = YES;
     // 清空邀请
     self.inviteId = nil;
@@ -504,96 +506,56 @@ typedef enum PreLiveStatus {
     if (errMsg.length == 0) {
         errMsg = NSLocalizedStringFromSelf(@"SERVER_ERROR_TIP");
     }
-
-    [self stopAllTimer];
+    self.tipsLabel.text = errMsg;
 
     switch (errType) {
         case LCC_ERR_NO_CREDIT: {
-            // TODO:1.没有信用点
-            self.tipsLabel.text = errMsg;
-
-            // 显示充点按钮
-            self.addCreditButtonTop.constant = 15;
-            self.addCreditButtonHeight.constant = 33;
-
+            // 没有信用点
+            [self showErrorButton:ButtonStatus_AddCredits];
         } break;
-        case LCC_ERR_ANCHOR_PLAYING: {
-            // TODO:2.主播正在私密直播中
-            self.tipsLabel.text = errMsg;
-
-            if (self.liveRoom.priv.isHasOneOnOneAuth) {
-                self.inviteButtonTop.constant = 15;
-                self.inviteButtonHeight.constant = 33;
-            }
-
-            // 获取推荐列表
-            [self getAdvisementList];
-
-        } break;
-        case LCC_ERR_ANCHOR_OFFLINE: {
-            // TODO:3.主播不在线
-
-            self.tipsLabel.text = errMsg;
-
-            // 显示预约按钮
-            [self showBook];
-
-        } break;
-        case LCC_ERR_INVITE_NO_RESPOND: {
-            // TODO:4.主播未确认,180秒超时
-            self.tipsLabel.text = errMsg;
-        } break;
+            
+        case LCC_ERR_INVITE_NO_RESPOND:
         case LCC_ERR_INVITATION_EXPIRE:
-        // TODO:5.重连获取主播邀请状态拒绝
-        case LCC_ERR_INVITE_REJECT: {
-            // TODO:6.主播拒绝
-            self.tipsLabel.text = errMsg;
-
-            // 显示预约按钮
-            [self showBook];
-
+        case LCC_ERR_INVITE_REJECT:
+        case LCC_ERR_ROOM_FULL:
+        case LCC_ERR_ANCHOR_OFFLINE:
+        case LCC_ERR_ROOM_CLOSE:
+        case LCC_ERR_NOT_FOUND_ROOM:
+        case LCC_ERR_ANCHOR_NO_ON_LIVEROOM:
+        case LCC_ERR_ANCHOR_BUSY:
+        case LCC_ERR_HANGOUT_EXIST_COUNTDOWN_PRIVITEROOM:
+        case LCC_ERR_HANGOUT_EXIST_COUNTDOWN_HANGOUTROOM:
+        case LCC_ERR_HANGOUT_EXIST_FOUR_MIN_SHOW:
+        case LCC_ERR_KNOCK_EXIST_ROOM:
+        case LCC_ERR_INVITE_FAIL_SHOWING:
+        case LCC_ERR_INVITE_FAIL_BUSY:
+        case LCC_ERR_SEND_RECOMMEND_HAS_SHOWING:
+        case LCC_ERR_SEND_RECOMMEND_EXIT_HANGOUTROOM: {
+            // 主播180s仍未同意、重连获取主播邀请状态拒绝、主播拒绝
+            // 房间满人、主播不在线、预约已过期(找不到房间信息)、该主播不存在公开直播间、主播各种繁忙
+            [self showErrorButton:ButtonStatus_Book];
         } break;
+        
         case LCC_ERR_CONNECTFAIL: {
-            // TODO:7.网络中断
-            self.tipsLabel.text = errMsg;
-
-            // 显示重试
-            [self showRetry];
-
+            // 连接服务器失败
+            [self showErrorButton:ButtonStatus_Retry];
         } break;
-        case LCC_ERR_ROOM_FULL: {
-            // TODO:8.进入付费公开直播间房间满人
-
-            self.tipsLabel.text = errMsg;
-            // 显示立即私密
-            //            self.vipStartButtonTop.constant = 15;
-            //            self.vipStartButtonHeight.constant = 35;
-
-            // 显示预约按钮
-            [self showBook];
-
-        } break;
+            
         case LCC_ERR_PRIVTE_INVITE_AUTHORITY: {
-            //TODO:9.主播无立即私密邀请权限
-
-            self.tipsLabel.text = errMsg;
-
-            self.chatNowBtn.hidden = NO;
-
-            if (self.isOnline) {
-                [self.chatNowBtn setImage:[UIImage imageNamed:@"Home_ChatNow"] forState:UIControlStateNormal];
+            // 主播无立即私密邀请权限
+            if (self.liveRoom.roomId.length > 0) {
+                [self showErrorButton:ButtonStatus_None];
             } else {
-                [self.chatNowBtn setImage:[UIImage imageNamed:@"Home_SendＭail"] forState:UIControlStateNormal];
+                if (self.isOnline) {
+                    [self showErrorButton:ButtonStatus_ChatNow];
+                } else {
+                    [self showErrorButton:ButtonStatus_SendMail];
+                }
             }
-
         } break;
+            
         default: {
-            // TODO:普通错误提示
-            self.tipsLabel.text = errMsg;
-
-            // 显示预约按钮
-            [self showBook];
-
+            [self showErrorButton:ButtonStatus_None];
         } break;
     }
 }
@@ -607,7 +569,7 @@ typedef enum PreLiveStatus {
     // 能否显示退出按钮
     self.canShowExitButton = YES;
     // 是否强制发送邀请
-    self.inviteForce = NO;
+    self.inviteForce = YES;
     // 清空邀请Id
     self.inviteId = nil;
     // 清空roomId
@@ -621,33 +583,16 @@ typedef enum PreLiveStatus {
     self.tipsLabel.text = @"";
     self.statusLabel.text = @"";
     self.handleCountDownLabel.text = @"";
-    self.countDownLabel.text = @"";
     // 显示菊花
     self.loadingView.hidden = NO;
-    // 隐藏退出按钮
-    self.cancelButton.hidden = YES;
-
-    self.chatNowBtn.hidden = YES;
     // 隐藏按钮
-    self.retryButtonHeight.constant = 0;
-
-    self.vipStartButtonTop.constant = 0;
-    self.vipStartButtonHeight.constant = 0;
-
-    self.bookButtonTop.constant = 0;
-    self.bookButtonHeight.constant = 0;
-
-    self.inviteButtonTop.constant = 0;
-    self.inviteButtonHeight.constant = 0;
-
-    self.addCreditButtonTop.constant = 0;
-    self.addCreditButtonHeight.constant = 0;
-
-    self.viewProfileButtonTop.constant = 0;
-    self.viewProfileButtonHeight.constant = 0;
-
-    self.viewBoardcastButtonTop.constant = 0;
-    self.viewBoardcastButtonHeight.constant = 0;
+    self.cancelButton.hidden = YES;
+    self.retryButton.hidden = YES;
+    self.addCreditButton.hidden = YES;
+    self.bookButton.hidden = YES;
+    self.vipStartButton.hidden = YES;
+    self.chatNowBtn.hidden = YES;
+    self.sendMailButton.hidden = YES;
 }
 
 - (void)stopAllTimer {
@@ -655,6 +600,89 @@ typedef enum PreLiveStatus {
     [self stopEnterRoomTimer];
     self.cancelButton.hidden = NO;
     self.handleCountDownLabel.text = @"";
+}
+
+- (void)showStartOneOnOne {
+    if (self.isOnline && self.liveRoom.priv.isHasOneOnOneAuth) {
+        self.vipStartButton.hidden = NO;
+    } else {
+        self.vipStartButton.hidden = YES;
+    }
+}
+
+- (void)showBookOneOnOne {
+    if (self.liveRoom.priv.isHasBookingAuth) {
+        self.bookButton.hidden = NO;
+    } else {
+        self.bookButton.hidden = YES;
+    }
+}
+
+- (void)showErrorButton:(ButtonStatus)Status {
+    switch (Status) {
+        case ButtonStatus_Book:{
+            [self showBookOneOnOne];
+            self.retryButton.hidden = YES;
+            self.addCreditButton.hidden = YES;
+            self.vipStartButton.hidden = YES;
+            self.chatNowBtn.hidden = YES;
+            self.sendMailButton.hidden = YES;
+        }break;
+            
+        case ButtonStatus_Retry:{
+            self.retryButton.hidden = NO;
+            self.addCreditButton.hidden = YES;
+            self.bookButton.hidden = YES;
+            self.vipStartButton.hidden = YES;
+            self.chatNowBtn.hidden = YES;
+            self.sendMailButton.hidden = YES;
+        }break;
+            
+        case ButtonStatus_AddCredits:{
+            self.addCreditButton.hidden = NO;
+            self.retryButton.hidden = YES;
+            self.bookButton.hidden = YES;
+            self.vipStartButton.hidden = YES;
+            self.chatNowBtn.hidden = YES;
+            self.sendMailButton.hidden = YES;
+        }break;
+            
+        case ButtonStatus_ChatNow:{
+            self.chatNowBtn.hidden = NO;
+            self.addCreditButton.hidden = YES;
+            self.retryButton.hidden = YES;
+            self.bookButton.hidden = YES;
+            self.vipStartButton.hidden = YES;
+            self.sendMailButton.hidden = YES;
+        }break;
+            
+        case ButtonStatus_SendMail:{
+            self.sendMailButton.hidden = NO;
+            self.chatNowBtn.hidden = YES;
+            self.addCreditButton.hidden = YES;
+            self.retryButton.hidden = YES;
+            self.bookButton.hidden = YES;
+            self.vipStartButton.hidden = YES;
+        }break;
+            
+        case ButtonStatus_Invite:{
+            [self showStartOneOnOne];
+            self.retryButton.hidden = YES;
+            self.addCreditButton.hidden = YES;
+            self.bookButton.hidden = YES;
+            self.chatNowBtn.hidden = YES;
+            self.sendMailButton.hidden = YES;
+        }break;
+            
+        default:{
+            self.retryButton.hidden = YES;
+            self.addCreditButton.hidden = YES;
+            self.bookButton.hidden = YES;
+            self.vipStartButton.hidden = YES;
+            self.chatNowBtn.hidden = YES;
+            self.sendMailButton.hidden = YES;
+        }break;
+    }
 }
 
 #pragma mark - 界面事件
@@ -809,7 +837,7 @@ typedef enum PreLiveStatus {
 - (void)enterPrivateVipRoom {
     // TODO:进入豪华私密直播间界面
     self.isEnterRoom = YES;
-    PrivateVipViewController *vc = [[PrivateVipViewController alloc] initWithNibName:nil bundle:nil];
+    PrivateViewController *vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
     [self.navigationController popToRootViewControllerAnimated:NO];
@@ -826,169 +854,6 @@ typedef enum PreLiveStatus {
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)reloadRecommandView {
-    // TODO:刷新推荐列表
-    self.recommandViewHeight.constant = (self.recommandItems.count > 0) ? 130 : 0;
-    self.recommandViewWidth.constant = [RecommandCollectionViewCell cellWidth] * self.recommandItems.count + ((self.recommandItems.count - 1) * 20);
-    [self.recommandCollectionView reloadData];
-
-    self.loadingView.hidden = (self.recommandItems.count > 0) ? YES : NO;
-}
-
-- (void)showRetry {
-    // TODO:显示重试按钮
-    self.retryButtonHeight.constant = 33;
-    self.loadingView.hidden = YES;
-}
-
-- (void)showBook {
-    // TODO:显示预约按钮
-    if (self.liveRoom.userId.length > 0 && self.liveRoom.priv.isHasBookingAuth) {
-        self.bookButtonTop.constant = 15;
-        self.bookButtonHeight.constant = 35;
-    }
-}
-
-- (void)showStartOneOnOne {
-    // TODO:显示立即私密按钮
-    if (self.liveRoom.priv.isHasOneOnOneAuth) {
-        // 显示强制邀请按钮
-        self.vipStartButtonTop.constant = 15;
-        self.vipStartButtonHeight.constant = 33;
-    }
-}
-#pragma mark - 点击事件
-- (IBAction)close:(id)sender {
-    // TODO:点击关闭界面
-    NSLog(@"PreLiveViewController::close()");
-
-    //    if (self.liveRoom.roomType == LiveRoomType_Private || self.liveRoom.roomType == LiveRoomType_Private_VIP) {
-    //        // 私密直播, 发出取消请求
-    //        if (self.inviteId.length) {
-    //            if( self.status == PreLiveStatus_Inviting ) {
-    //                self.status = PreLiveStatus_Canceling;
-    //
-    //                if ([self.imManager cancelPrivateLive:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSString *_Nonnull roomId) {
-    //                    dispatch_async(dispatch_get_main_queue(), ^{
-    //                        // 清空邀请
-    //                        self.inviteId = nil;
-    //
-    //                        if (success) {
-    //                            // 取消成功
-    //                            self.statusLabel.text = @"取消邀请成功";
-    //
-    //                            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    //
-    //                        } else {
-    //                            // 取消失败, 弹出错误提示
-    //                            [self handleError:LCC_ERR_FAIL errMsg:@"取消邀请失败"];
-    //                        }
-    //
-    //                    });
-    //                }]) {
-    //                    self.statusLabel.text = @"发送取消邀请中...";
-    //
-    //                } else {
-    //                    // 取消失败, 弹出错误提示
-    //                    [self handleError:LCC_ERR_FAIL errMsg:@"取消邀请失败"];
-    //                }
-    //            } else {
-    //                // 未获得邀请Id, 直接退出
-    //                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    //            }
-    //
-    //        } else {
-    //            // 未获得邀请Id, 直接退出
-    //            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    //        }
-    //
-    //    } else {
-    //        // 公开直播, 直接退出
-    //        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    //    }
-
-    // 公开直播, 直接退出
-    //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismissAnimated:YES completion:nil];
-}
-
-- (IBAction)addCreditAciton:(id)sender {
-    // TODO:点击充值
-    // 重置参数
-    [self reset];
-
-    self.isAddCredit = YES;
-    [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (IBAction)retry:(id)sender {
-    // TODO:点击重试
-    [[LiveModule module].analyticsManager reportActionEvent:BroadcastTransitionClickContinue eventCategory:EventCategoryTransition];
-    // 重置参数
-    [self reset];
-
-    // 开始计时
-    [self stopHandleTimer];
-    [self startHandleTimer];
-
-    // 发起请求
-    [self startRequest];
-}
-
-- (IBAction)book:(id)sender {
-    // TODO:点击预约私密
-    // 重置参数
-    //    [self reset];
-    [[LiveModule module].analyticsManager reportActionEvent:SendRequestBooking eventCategory:EventCategoryenterBroadcast];
-    // 跳转预约
-    BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
-    vc.userId = self.liveRoom.userId;
-    vc.userName = self.liveRoom.userName;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (IBAction)invite:(id)sender {
-    // TODO:点击强制邀请
-    self.recommandView.hidden = YES;
-    // 重置参数
-    [self reset];
-
-    // 开始计时
-    [self stopHandleTimer];
-    [self startHandleTimer];
-
-    self.inviteForce = YES;
-    [self startRequest];
-}
-
-- (IBAction)startVipPrivate:(id)sender {
-    [[LiveModule module].analyticsManager reportActionEvent:BroadcastTransitionClickStartVip eventCategory:EventCategoryTransition];
-    // 重置参数
-    [self reset];
-
-    // 开始计时
-    [self stopHandleTimer];
-    [self startHandleTimer];
-
-    [self startRequest];
-}
-
-- (IBAction)chatNowBtnDid:(id)sender {
-    // TODO:点击进入聊天或者发信
-    if (self.isOnline) {
-        QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
-        vc.womanId = self.liveRoom.userId;
-        vc.photoURL = self.liveRoom.photoUrl;
-        vc.firstName = self.liveRoom.userName;
-        [self.navigationController pushViewController:vc animated:YES];
-    } else {
-        NSURL *url = [[LiveUrlHandler shareInstance] createSendmailByanchorId:self.liveRoom.userId anchorName:self.liveRoom.userName];
-        [[LiveUrlHandler shareInstance] handleOpenURL:url];
-    }
-}
 #pragma mark - 直播间IM通知
 - (void)onRecvWaitStartOverNotice:(ImStartOverRoomObject *_Nonnull)item {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1083,41 +948,34 @@ typedef enum PreLiveStatus {
             // 当前邀请通知
             if ([item.invitationId isEqualToString:self.inviteId]) {
                 if (self.status == PreLiveStatus_Inviting) {
-                    if (item.replyType == HTTPREPLYTYPE_UNCONFIRM) {
-                        // 继续等待
-
-                    } else if (item.replyType == HTTPREPLYTYPE_AGREE) {
-                        // 主播同意, 发起进入直播间请求
-                        self.status = PreLiveStatus_WaitingEnterRoom;
-
-                        self.statusLabel.text = DEBUG_STRING(@"主播同意私密邀请");
-
-                        // 清空邀请
-                        self.inviteId = nil;
-
-                        // 重新发送请求
-                        [self startRequest];
-
-                    } else if (item.replyType == HTTPREPLYTYPE_REJECT) {
-                        // 主播已拒绝
-
-                        // 清空邀请
-                        self.inviteId = nil;
-
-                        // 显示错误提示
-                        [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE") onlineStatus:IMCHATONLINESTATUS_ONLINE];
-
-                    } else if (item.replyType == HTTPREPLYTYPE_CANCEL) {
-                        // 邀请已经取消
-
-                        // 清空邀请
-                        self.inviteId = nil;
-
-                        // 显示错误提示
-                        [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE") onlineStatus:IMCHATONLINESTATUS_ONLINE];
-
-                    } else {
-                        // 继续等待
+                    switch (item.replyType) {
+                        case HTTPREPLYTYPE_AGREE:{
+                            // 主播同意, 发起进入直播间请求
+                            self.statusLabel.text = DEBUG_STRING(@"主播同意私密邀请");
+                            self.status = PreLiveStatus_WaitingEnterRoom;
+                            
+                            self.inviteId = nil;
+                            
+                            if (item.roomId.length > 0) {
+                                self.liveRoom.roomId = item.roomId;
+                            }
+                            [self startRequest];
+                        }break;
+                        
+                        case HTTPREPLYTYPE_REJECT:
+                        case HTTPREPLYTYPE_CANCEL:
+                        case HTTPREPLYTYPE_OUTTIME:
+                        case HTTPREPLYTYPE_ANCHORABSENT:
+                        case HTTPREPLYTYPE_FANSABSENT:{
+                            // 清空邀请
+                            self.inviteId = nil;
+                            
+                            // 显示错误提示
+                            [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE") onlineStatus:IMCHATONLINESTATUS_ONLINE];
+                        }break;
+                            
+                        default:{
+                        }break;
                     }
                 }
             }
@@ -1205,14 +1063,23 @@ typedef enum PreLiveStatus {
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.enterRoomLeftSecond > 0) {
-            self.countDownLabel.text = [NSString stringWithFormat:@"%d s", self.enterRoomLeftSecond];
+            NSMutableAttributedString *tip = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"PRELIVE_TIPS_BOARDCAST_ACCEPT") attributes:@{
+                                                            NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xffffff)}];
+            
+            NSMutableAttributedString *second = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %ds",self.enterRoomLeftSecond] attributes:@{
+                                                            NSFontAttributeName : [UIFont boldSystemFontOfSize:22],
+                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xff8500)}];
+            [tip appendAttributedString:second];
+            self.tipsLabel.attributedText = tip;
         }
     });
 }
 
 - (void)startEnterRoomTimer {
     NSLog(@"PreLiveViewController::startEnterRoomTimer()");
-
+    self.loadingView.hidden = YES;
+    
     WeakObject(self, weakSelf);
     [self.enterRoomTimer startTimer:nil
                        timeInterval:1.0 * NSEC_PER_SEC
@@ -1237,13 +1104,8 @@ typedef enum PreLiveStatus {
             // 倒数完成, 提示超时
             [self stopHandleTimer];
 
-            if (self.liveRoom.roomType == LiveRoomType_Private || self.liveRoom.roomType == LiveRoomType_Private_VIP) {
-                // 主动邀请超时
-                [self handleError:LCC_ERR_INVITE_NO_RESPOND errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE") onlineStatus:IMCHATONLINESTATUS_ONLINE];
-            } else {
-                // 其他超时
-                [self handleError:LCC_ERR_INVITE_NO_RESPOND errMsg:NSLocalizedStringFromSelf(@"RECONNECTION_TIMEOUT") onlineStatus:IMCHATONLINESTATUS_ONLINE];
-            }
+            // 180s超时
+            [self handleError:LCC_ERR_LOCAL_TIMEOUT errMsg:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT") onlineStatus:IMCHATONLINESTATUS_ONLINE];
 
             // 允许显示退出按钮
             self.cancelButton.hidden = NO;
@@ -1285,34 +1147,80 @@ typedef enum PreLiveStatus {
     [self.handleTimer stopTimer];
 }
 
-#pragma mark - 推荐逻辑
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.recommandItems.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    RecommandCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[RecommandCollectionViewCell cellIdentifier] forIndexPath:indexPath];
-    LiveRoomInfoItemObject *item = [self.recommandItems objectAtIndex:indexPath.row];
-
-    [cell.imageViewLoader loadImageFromCache:cell.imageView
-                                         options:SDWebImageRefreshCached
-                                        imageUrl:item.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-                            }];
+#pragma mark - 点击事件
+- (IBAction)close:(id)sender {
+    // TODO:点击关闭界面
+    NSLog(@"PreLiveViewController::close()");
     
-    cell.nameLabel.text = item.nickName;
-    return cell;
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismissAnimated:YES completion:nil];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    //TODO:点击推荐主播
-    [[LiveModule module].analyticsManager reportActionEvent:BroadcastTransitionClickRecommend eventCategory:EventCategoryTransition];
-    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoomInfoItemObject *item = [self.recommandItems objectAtIndex:indexPath.row];
-    listViewController.anchorId = item.userId;
-    listViewController.enterRoom = 0;
-    [self.navigationController pushViewController:listViewController animated:YES];
+- (IBAction)addCreditAciton:(id)sender {
+    // TODO:点击充值
+    // 重置参数
+    [self reset];
+    
+    self.isAddCredit = YES;
+    [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
+
+- (IBAction)retry:(id)sender {
+    // TODO:点击重试
+    [[LiveModule module].analyticsManager reportActionEvent:BroadcastTransitionClickContinue eventCategory:EventCategoryTransition];
+    // 重置参数
+    [self reset];
+    
+    // 开始计时
+    [self stopHandleTimer];
+    [self startHandleTimer];
+    
+    // 发起请求
+    [self startRequest];
+}
+
+- (IBAction)book:(id)sender {
+    // TODO:点击预约私密
+    // 重置参数
+    //    [self reset];
+    [[LiveModule module].analyticsManager reportActionEvent:SendRequestBooking eventCategory:EventCategoryenterBroadcast];
+    // 跳转预约
+    BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
+    vc.userId = self.liveRoom.userId;
+    vc.userName = self.liveRoom.userName;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)invite:(id)sender {
+    // TODO:点击强制邀请
+    // 重置参数
+    [self reset];
+    
+    // 开始计时
+    [self stopHandleTimer];
+    [self startHandleTimer];
+    
+    self.inviteForce = YES;
+    [self startRequest];
+}
+
+- (IBAction)chatNowBtnDid:(id)sender {
+    // TODO:点击进入聊天
+    QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
+    vc.womanId = self.liveRoom.userId;
+    vc.photoURL = self.liveRoom.photoUrl;
+    vc.firstName = self.liveRoom.userName;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)sendMailBtnDid:(id)sender {
+    // TODO:点击进入发信
+    NSURL *url = [[LiveUrlHandler shareInstance] createSendmailByanchorId:self.liveRoom.userId anchorName:self.liveRoom.userName];
+    [[LiveUrlHandler shareInstance] handleOpenURL:url];
+}
+
 #pragma mark - 后台处理
 - (void)willEnterBackground:(NSNotification *)notification {
     if( _isBackground == NO ) {
@@ -1325,7 +1233,6 @@ typedef enum PreLiveStatus {
         } else {
             [LiveGobalManager manager].enterRoomBackgroundTime = nil;
         }
-        
     }
 }
 
@@ -1348,6 +1255,7 @@ typedef enum PreLiveStatus {
                 LiveFinshViewController *finshController = [[LiveFinshViewController alloc] initWithNibName:nil bundle:nil];
                 finshController.liveRoom = self.liveRoom;
                 finshController.errType = LCC_ERR_BACKGROUND_TIMEOUT;
+                finshController.errMsg = NSLocalizedStringFromErrorCode(@"LIVE_ROOM_BACKGROUND_TIMEOUT");
                 
                 [self addChildViewController:finshController];
                 [self.view addSubview:finshController.view];

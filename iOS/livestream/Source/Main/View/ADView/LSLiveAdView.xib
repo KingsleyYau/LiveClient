@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSLiveAdView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4gk-3A-aUl">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="4gk-3A-aUl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="CcM-la-vTa"/>
+                <constraint firstAttribute="bottom" secondItem="4gk-3A-aUl" secondAttribute="bottom" id="E0K-JS-JCD"/>
+                <constraint firstItem="4gk-3A-aUl" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bHG-7o-2pp"/>
+                <constraint firstAttribute="trailing" secondItem="4gk-3A-aUl" secondAttribute="trailing" id="jWR-ag-m6C"/>
+            </constraints>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="cq2-cf-per" appends="YES" id="P1v-mv-wbZ"/>
+            </connections>
+        </view>
+        <tapGestureRecognizer id="cq2-cf-per">
+            <connections>
+                <action selector="closeAction:" destination="iN0-l3-epB" id="LDO-DB-eB4"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+</document>

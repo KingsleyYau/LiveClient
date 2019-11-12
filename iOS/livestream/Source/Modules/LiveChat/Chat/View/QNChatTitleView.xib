@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -31,19 +31,31 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="yRo-cy-eIM">
+                    <rect key="frame" x="145.5" y="12" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="9ta-z0-hwJ"/>
+                    </constraints>
+                    <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="HtX-rm-MUA" firstAttribute="top" secondItem="W7n-R7-vaB" secondAttribute="top" constant="7" id="FUc-un-v7N"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="yRo-cy-eIM" secondAttribute="trailing" priority="750" id="Fc5-Vn-Epy"/>
                 <constraint firstItem="VFJ-JF-Efk" firstAttribute="leading" secondItem="HtX-rm-MUA" secondAttribute="trailing" constant="5" id="Nup-a9-gnC"/>
+                <constraint firstItem="yRo-cy-eIM" firstAttribute="centerY" secondItem="VFJ-JF-Efk" secondAttribute="centerY" id="b8G-ZY-e8L"/>
                 <constraint firstAttribute="bottom" secondItem="HtX-rm-MUA" secondAttribute="bottom" constant="7" id="cW4-uO-yxT"/>
                 <constraint firstAttribute="bottom" secondItem="VFJ-JF-Efk" secondAttribute="bottom" id="gwB-Ts-Tjn"/>
+                <constraint firstItem="yRo-cy-eIM" firstAttribute="leading" secondItem="VFJ-JF-Efk" secondAttribute="trailing" constant="3" id="khN-6Q-SJS"/>
                 <constraint firstItem="VFJ-JF-Efk" firstAttribute="top" secondItem="W7n-R7-vaB" secondAttribute="top" id="l7A-rC-tGh"/>
                 <constraint firstItem="VFJ-JF-Efk" firstAttribute="centerX" secondItem="W7n-R7-vaB" secondAttribute="centerX" constant="15.25" id="lo2-pT-jxc"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="loadingActivity" destination="yRo-cy-eIM" id="ZIY-hg-FDq"/>
+                <outlet property="loadingWidth" destination="9ta-z0-hwJ" id="COq-In-m4j"/>
                 <outlet property="personIcon" destination="HtX-rm-MUA" id="OAl-lR-cPT"/>
                 <outlet property="personName" destination="VFJ-JF-Efk" id="H8s-gw-JJe"/>
             </connections>

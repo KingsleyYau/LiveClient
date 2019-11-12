@@ -230,15 +230,16 @@ typedef enum {
 - (BOOL)getPushConfig {
     LSGetPushConfigRequest *request = [[LSGetPushConfigRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSAppPushConfigItemObject *item) {
-        if (success) {
-            self.isPriMsgAppPush = item.isPriMsgAppPush;
-            self.isMailAppPush = item.isMailAppPush;
-            self.isSayHiAppPush = item.isSayHiAppPush;
-            [self reloadData:YES];
-        }else {
-            [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
-        }
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                self.isPriMsgAppPush = item.isPriMsgAppPush;
+                self.isMailAppPush = item.isMailAppPush;
+                self.isSayHiAppPush = item.isSayHiAppPush;
+                [self reloadData:YES];
+            }else {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
+            }
+        });
     };
     
 

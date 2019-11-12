@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.personal.mypackage;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -20,12 +21,21 @@ public class PostStampFragment extends BaseWebViewFragment {
     @Override
     protected void initViewData() {
         super.initViewData();
-        Log.d(TAG,"initViewData");
+        Log.d(TAG, "initViewData");
         ConfigItem configItem = LoginManager.getInstance().getLocalConfigItem();
-        if(null != configItem && !TextUtils.isEmpty(configItem.postStampUrl)){
+        if (null != configItem && !TextUtils.isEmpty(configItem.postStampUrl)) {
             mUrl = CoreUrlHelper.packageWebviewUrl(getActivity(), configItem.postStampUrl);
         }
-        loadUrl(false,false);
+        loadUrl(false, false);
+    }
+
+    @Override
+    public void onEventClose() {
+        super.onEventClose();
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.finish();
+        }
     }
 
     @Override
@@ -38,7 +48,7 @@ public class PostStampFragment extends BaseWebViewFragment {
     protected void onReVisible() {
         super.onReVisible();
         //切换到当前fragment
-        loadUrl(false,false);
+        loadUrl(false, false);
     }
 
     @Override

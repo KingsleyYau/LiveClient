@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
+import com.qpidnetwork.livemodule.liveshow.manager.SynConfigerManager;
 import com.qpidnetwork.qnbridgemodule.datacache.LocalCorePreferenceManager;
 import com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView;
 
@@ -42,6 +44,14 @@ public class HangOutHeaderViewHelper {
         headerView = LayoutInflater.from(context).inflate(R.layout.view_header_hang_out_list, recyclerView.getHeaderContainer(), false);
 
         txt_des = headerView.findViewById(R.id.txt_des);
+
+        String hangoutCredit = "";
+        ConfigItem configItem = SynConfigerManager.getInstance().getConfigItemCache();
+        if(configItem != null && configItem.hangoutCreditPrice > 0){
+            hangoutCredit = String.valueOf(configItem.hangoutCreditPrice);
+        }
+        txt_des.setText(String.format(mContext.getResources().getString(R.string.hand_out_list_header_tips_long), hangoutCredit));
+
         fl_operation = headerView.findViewById(R.id.fl_operation);
         img_arrow = headerView.findViewById(R.id.img_arrow);
         btn_got = headerView.findViewById(R.id.btn_got);

@@ -212,6 +212,8 @@ void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
                  );
 
 	IZBTask* task = NULL;
+    // 是否是客服端又是服务端的服务端过来的请求（就是接口即可以是客服端接口也可以是服务端接口，这是判断是否是服务端的接口）
+    bool isClientRequestWithServer = false;
 	if (ZBIsRequestCmd(tp.m_cmd)) {
         if (tp.m_isRespond) {
             int waitTime = 0;
@@ -222,6 +224,16 @@ void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
                     break;
                 }
                 else {
+                    // 判断是否task是空，等待时间200后，还是2端接口，满足就是服务端自动调用的alex 2019-11-7
+                    if (NULL == task && waitTime > 1 && ZBIsTowTerminalCmd(tp.m_cmd)) {
+                        task = IZBTask::CreateTaskWithCmd(tp.m_cmd);
+                        if (NULL != task) {
+                            task->SetSeq(tp.m_reqId);
+                            task->Init(m_clientListener);
+                            isClientRequestWithServer = true;
+                            break;
+                        }
+                    }
                     // 没有找到该任务，等待任务添加到队列
                     waitTime++;
                     usleep(100);
@@ -255,7 +267,7 @@ void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
 			m_mgrListener->OnTaskDone(task);
 		}
         
-        // 处理完接收的数据，服务器主动请求增加在发送线程里
+        // 处理完接收的数据，服务器主动请求增加在发送线程里 （注意新加的2端接口一样delete task，不走再发送）alex 2019-11-7
         if (!ZBIsRequestCmd(tp.m_cmd)) {
            HandleRequestTask(task);
         } else {

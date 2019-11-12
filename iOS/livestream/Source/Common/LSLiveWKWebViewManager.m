@@ -49,6 +49,7 @@
  */
 @property (nonatomic, copy) NSString *requestUrl;
 
+
 @end
 
 @implementation LSLiveWKWebViewManager
@@ -68,6 +69,7 @@
         self.sessionManager = [LSSessionRequestManager manager];
         self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
+
     }
     return self;
 }
@@ -123,9 +125,11 @@
         [self.liveWKWebView.configuration.userContentController addUserScript:cookieScript];
 
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+
     }
     NSDictionary *cookieHeaders = [NSHTTPCookie requestHeaderFieldsWithCookies:[NSHTTPCookieStorage sharedHTTPCookieStorage].cookies];
     [request setAllHTTPHeaderFields:cookieHeaders];
+
 
     if (self.liveWKWebView.webViewJSDelegate != nil) {
         self.liveWKWebView.webViewJSDelegate = nil;
@@ -192,6 +196,43 @@
 // 加载完webview (当main frame导航完成时，会回调)
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     NSLog(@"LSLiveWKWebViewManager::didFinishNavigation()");
+//    页面加载完成之后调用需要重新给WKWebView设置Cookie防止因为a标签跳转，导致下一次跳转的时候Cookie丢失。
+    //取出cookie
+    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    //js函数
+    NSString *JSFuncString =
+    @"function setCookie(name,value,expires)\
+    {\
+    var oDate=new Date();\
+    oDate.setDate(oDate.getDate()+expires);\
+    document.cookie=name+'='+value+';expires='+oDate+';path=/'\
+    }\
+    function getCookie(name)\
+    {\
+    var arr = document.cookie.match(new RegExp('(^| )'+name+'=({FNXX==XXFN}*)(;|$)'));\
+    if(arr != null) return unescape(arr[2]); return null;\
+    }\
+    function delCookie(name)\
+    {\
+    var exp = new Date();\
+    exp.setTime(exp.getTime() - 1);\
+    var cval=getCookie(name);\
+    if(cval!=null) document.cookie= name + '='+cval+';expires='+exp.toGMTString();\
+    }";
+
+    //拼凑js字符串
+    NSMutableString *JSCookieString = JSFuncString.mutableCopy;
+    for (NSHTTPCookie *cookie in cookieStorage.cookies) {
+        NSString *excuteJSString = [NSString stringWithFormat:@"setCookie('%@', '%@', 1);", cookie.name, cookie.value];
+        [JSCookieString appendString:excuteJSString];
+    }
+    NSLog(@"JSCookieString %@",JSCookieString);
+    //执行js
+    [webView evaluateJavaScript:JSCookieString completionHandler:^(id obj, NSError * _Nullable error) {
+        NSLog(@"JSCookieString error %@",error);
+    }];
+    
+    
     if ([self.delegate respondsToSelector:@selector(webViewDidFinishNavigation)]) {
         [self.delegate webViewDidFinishNavigation];
     }
@@ -228,15 +269,26 @@
 // 要获取response，通过WKNavigationResponse对象获取
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
     NSLog(@"LSLiveWKWebViewManager::decidePolicyForNavigationResponse()");
-    //    for (NSHTTPCookie *cookie in [self.requestManager getCookies]) {
-    //        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    //    }
+    NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+    NSArray *cookies =[NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+    for (NSHTTPCookie *cookie in cookies) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    }
+//    NSArray *cookies = [self.requestManager getCookies];
+//    for (NSHTTPCookie *cookie in cookies) {
+//        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+//    }
+    
 
     decisionHandler(WKNavigationResponsePolicyAllow);
+
+    
+
 }
 
 // 在收到服务器的响应头，根据response相关信息，决定是否跳转。decisionHandler必须调用，来决定是否跳转，参数WKNavigationActionPolicyCancel取消跳转，WKNavigationActionPolicyAllow允许跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+
     BOOL result = YES;
     // 拦截H5返回按钮事件
     NSString *closeUrl = QpidClose;
@@ -244,7 +296,50 @@
     NSString *qpidLiveJump = QpidLive;
     NSURL *url = navigationAction.request.URL;
     NSString *urlStr = [url absoluteString];
+ 
+    if ([self.delegate respondsToSelector:@selector(liveWebView:decidePolicyForNavigationAction:decisionHandler:)]) {
+        [self.delegate liveWebView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+        return;
+    }
+    
+//    NSMutableURLRequest *request = (NSMutableURLRequest *)navigationAction.request;
+//    NSDictionary *cookieHeaders = request.allHTTPHeaderFields;
+//    NSString *cookie =  request.allHTTPHeaderFields[@"Cookie"];
+//    NSLog(@"url = %@  %@",urlStr,cookie);
+//    if (cookie == nil) {
+//        decisionHandler(WKNavigationActionPolicyCancel);
+//        self.requestUrl = urlStr;
+//        [self requestWebview];
+//        return;
+//    }
+    
+//    if (![self.requestUrl isEqualToString:urlStr]) {
+//         self.requestUrl = urlStr;
+//         [self requestWebview];
+//         decisionHandler(WKNavigationActionPolicyCancel);
+//     }else {
+//         decisionHandler(WKNavigationActionPolicyAllow);
+//     }
+//    NSArray *cookies = [self.requestManager getCookies];
+//    for (NSHTTPCookie *cookie in cookies) {
+//        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+//    }
+//    NSDictionary *cookieHeaders = [NSHTTPCookie requestHeaderFieldsWithCookies:[NSHTTPCookieStorage sharedHTTPCookieStorage].cookies];
+//    [request setAllHTTPHeaderFields:cookieHeaders];
 
+//    if ([urlStr isEqualToString:@"http://demo.qpidnetwork.com/payment/payment_success.php"]) {
+//        if (!self.test) {
+//                  self.test = YES;
+//              decisionHandler(WKNavigationActionPolicyCancel);
+//              self.requestUrl = urlStr;
+//              [self requestWebview];
+//
+//        }else {
+//            decisionHandler(WKNavigationActionPolicyAllow);
+//        }
+//
+//        return;
+//    }
     NSLog(@"LSLiveWKWebViewManager::decidePolicyForNavigationAction( [url : %@] )", urlStr);
 
     if ([urlStr isEqualToString:closeUrl]) {
@@ -295,6 +390,9 @@
             result = NO;
         }
     }
+    
+    
+ 
 
     if (result) {
         if (![self.requestUrl isEqualToString:urlStr]) {
@@ -310,8 +408,8 @@
                 }
             }
         }
-
         decisionHandler(WKNavigationActionPolicyAllow);
+   
     } else {
         decisionHandler(WKNavigationActionPolicyCancel);
     }

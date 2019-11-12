@@ -751,20 +751,24 @@ public class ImageUtil {
         boolean result = false;
 
         // 插入图片文件
-        ContentResolver cr = activity.getContentResolver();
+//        ContentResolver cr = activity.getContentResolver();
         try {
-            String path = MediaStore.Images.Media.insertImage(cr, filePath, "", "");
+            // 2019/6/19 Hardy 注释掉，避免在系统里生成多一张同样的图片.
+//            String path = MediaStore.Images.Media.insertImage(cr, filePath, "", "");
 
-            // 获取插入后的文件路径
-            Uri uri = Uri.parse(path);
-            String[] proj = {MediaStore.Images.Media.DATA};
-            Cursor actualimagecursor = activity.managedQuery(uri, proj, null, null, null);
-            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            actualimagecursor.moveToFirst();
-            String img_path = actualimagecursor.getString(actual_image_column_index);
+////            // 获取插入后的文件路径
+//            Uri uri = Uri.parse(path);
+//            String[] proj = {MediaStore.Images.Media.DATA};
+//            Cursor actualimagecursor = activity.managedQuery(uri, proj, null, null, null);
+//            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//            actualimagecursor.moveToFirst();
+//            String img_path = actualimagecursor.getString(actual_image_column_index);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                MediaScannerConnection.scanFile(activity, new String[]{img_path}, null, null);
+//                MediaScannerConnection.scanFile(activity, new String[]{img_path}, null, null);
+                
+                // 2019/6/19 Hardy  刷新当前路径下的图片即可
+                MediaScannerConnection.scanFile(activity, new String[]{filePath}, null, null);
             } else {
                 activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + filePath)));
             }

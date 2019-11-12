@@ -47,7 +47,7 @@ private:
     string          m_roomId;      // 直播间ID
     string          m_msg;         // 信用点
     double          m_credit;      // 信用点
-
+   LCC_ERR_TYPE    m_errReason;    // 服务器返回的处理结果
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

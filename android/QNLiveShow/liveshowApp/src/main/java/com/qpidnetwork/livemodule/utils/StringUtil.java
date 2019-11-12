@@ -69,7 +69,7 @@ public class StringUtil {
     }
 
     /**
-     * 主播昵称超过@length个字符时从中奖截断，前后显示3个字母
+     * 主播昵称超过@length个字符时从中截断，前后显示3个字母
      * @param name
      * @param length
      * @return

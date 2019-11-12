@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.view.ballRefresh.BallRefreshRecyclerView;
 import com.qpidnetwork.livemodule.view.EmptyView;
 import com.qpidnetwork.livemodule.view.ErrorView;
 import com.qpidnetwork.livemodule.view.RefreshRecyclerView;
@@ -31,7 +32,10 @@ public abstract class BaseImmersedRecyclerViewFragment extends BaseFragment {
 
 	private AppBarLayout appBarLayout;
 	protected Toolbar mToolbar;
-	protected RefreshRecyclerView refreshRecyclerView;
+
+//	protected RefreshRecyclerView refreshRecyclerView;
+	protected BallRefreshRecyclerView refreshRecyclerView;
+
 	protected CoordinatorLayout fl_baseListContainer;
     protected View  viewFoldCustom;
     protected EmptyView mEmptyView;
@@ -45,7 +49,10 @@ public abstract class BaseImmersedRecyclerViewFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_live_base_immersed_pulltorefreshrecyclerview,null);
 		appBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
 		mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-		refreshRecyclerView = (RefreshRecyclerView) view.findViewById(R.id.refreshRecyclerView);
+
+//		refreshRecyclerView = (RefreshRecyclerView) view.findViewById(R.id.refreshRecyclerView);
+		refreshRecyclerView = view.findViewById(R.id.refreshRecyclerView);
+
 		fl_baseListContainer = (CoordinatorLayout) view.findViewById(R.id.cl_baseListContainer);
 		mEmptyView = (EmptyView)view.findViewById(R.id.emptyView);
 		mErrorView = (ErrorView)view.findViewById(R.id.errorView);
@@ -200,7 +207,7 @@ public abstract class BaseImmersedRecyclerViewFragment extends BaseFragment {
 	 * 上拉更多
 	 */
 	protected abstract void onPullUp();
-	
+
 	/*刷新成功*/
 	public void onRefreshComplete(){
 		refreshRecyclerView.onRefreshComplete();
@@ -213,7 +220,7 @@ public abstract class BaseImmersedRecyclerViewFragment extends BaseFragment {
 	public void closePullUpRefresh(boolean closePullUp){
 		refreshRecyclerView.setCanPullUp(!closePullUp);
 	}
-	
+
 	/**
 	 * 关闭下拉刷新功能
 	 */
@@ -236,7 +243,6 @@ public abstract class BaseImmersedRecyclerViewFragment extends BaseFragment {
 		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 			@Override
 			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-
 				//verticalOffset == 0 : 完全展开
 				//Math.abs(verticalOffset) == expansionScrollRange : 完全折叠
 				int expansionScrollRange = appBarLayout.getTotalScrollRange();
@@ -254,4 +260,5 @@ public abstract class BaseImmersedRecyclerViewFragment extends BaseFragment {
 	 * @param scrolledPercent 滑动的百分比(0：完全展开; 1:完全折叠)s
 	 */
 	protected abstract void onAppBarLayoutOffsetChange(int totalScrollRange , float scrolledPercent);
+
 }

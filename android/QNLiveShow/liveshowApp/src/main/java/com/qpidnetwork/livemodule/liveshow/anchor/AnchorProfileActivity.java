@@ -18,6 +18,7 @@ import com.qpidnetwork.livemodule.liveshow.BaseWebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.hangout.view.HangOutFriendsDetailDialog;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.List;
@@ -81,12 +82,12 @@ public class AnchorProfileActivity extends BaseWebViewActivity implements OnLCCo
         //增加GA统计
         String moduleName = URL2ActivityManager.getInstance().getModuleNameByUrl(url);
         if (!TextUtils.isEmpty(moduleName)) {
-            if (moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_NEW_BOOKING)) {
+            if (moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_NEW_BOOKING)) {
                 //点击预约直播按钮
                 onAnalyticsEvent(getResources().getString(R.string.Live_EnterBroadcast_Category),
                         getResources().getString(R.string.Live_EnterBroadcast_Action_RequestBooking),
                         getResources().getString(R.string.Live_EnterBroadcast_Label_RequestBooking));
-            } else if (moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_LIVE_ROOM)) {
+            } else if (moduleName.equals(LiveUrlBuilder.KEY_URL_MODULE_NAME_LIVE_ROOM)) {
                 //点击进入直播间
                 AnchorLevelType anchorType = URL2ActivityManager.getInstance().getAnchorTypeByUrl(url);
                 String roomId = URL2ActivityManager.getInstance().getRoomIdByUrl(url);
@@ -179,12 +180,14 @@ public class AnchorProfileActivity extends BaseWebViewActivity implements OnLCCo
             这里加入延时，是为了解决进来页面时，已有未读消息，但可能由于 webView 还没渲染完成，导致调用
             js 方法不生效，即小红点无显示的问题。
          */
-        mWebView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateUnreadCount();
-            }
-        },800);
+        if(mWebView != null) {
+            mWebView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateUnreadCount();
+                }
+            }, 800);
+        }
 
         // 防止多次注册
         if (!isRegistContactUpdate) {

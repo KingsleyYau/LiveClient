@@ -24,12 +24,11 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionCategory;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionItem;
-import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
-import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.livemodule.view.ScrollLayout;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;

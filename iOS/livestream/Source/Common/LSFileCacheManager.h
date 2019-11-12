@@ -126,7 +126,7 @@
 /**
  获取私密照缓存照片图片
  
- @param sendId 发送的的id
+ @param mailId 发送的的id
  @param photoId 图片的id
  @return 图片缓存路径
  */

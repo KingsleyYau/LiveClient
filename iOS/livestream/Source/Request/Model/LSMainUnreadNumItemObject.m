@@ -22,6 +22,7 @@
         self.bookingUnreadNum = 0;
         self.backpackUnreadNum = 0;
         self.sayHiResponseUnreadNum = 0;
+        self.livechatVocherUnreadNum = 0;
     }
     return self;
 }
@@ -35,6 +36,7 @@
         self.bookingUnreadNum = [coder decodeIntForKey:@"bookingUnreadNum"];
         self.backpackUnreadNum = [coder decodeIntForKey:@"backpackUnreadNum"];
         self.sayHiResponseUnreadNum = [coder decodeIntForKey:@"sayHiResponseUnreadNum"];
+        self.livechatVocherUnreadNum = [coder decodeIntForKey:@"livechatVocherUnreadNum"];
     }
     return self;
 }
@@ -47,6 +49,7 @@
     [coder encodeInt:self.bookingUnreadNum forKey:@"bookingUnreadNum"];
     [coder encodeInt:self.backpackUnreadNum forKey:@"backpackUnreadNum"];
     [coder encodeInt:self.sayHiResponseUnreadNum forKey:@"sayHiResponseUnreadNum"];
+    [coder encodeInt:self.livechatVocherUnreadNum forKey:@"livechatVocherUnreadNum"];
 }
 
 @end

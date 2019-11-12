@@ -2,6 +2,8 @@ package com.qpidnetwork.livemodule.framework.livemsglist.interfaces;
 
 
 import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListAdapter;
+import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView;
+import com.qpidnetwork.livemodule.framework.livemsglist.MessageRecyclerView;
 
 /**
  * Created by Jagger on 2017/6/2.
@@ -32,4 +34,10 @@ public interface IListFunction {
      * @param time 毫秒
      */
     void setHoldingTime(int time);
+
+    /**
+     * 数据显示方向
+     * @param displayDirection
+     */
+    void setDisplayDirection(MessageRecyclerView.DisplayDirection displayDirection);
 }

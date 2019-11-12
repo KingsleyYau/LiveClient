@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
 public class CustomShowTimeToast {
 
     private final String TAG = CustomShowTimeToast.class.getSimpleName();
+    private final long SHORT_DURATION_TIMEOUT = 4000;
 
     private WeakReference<Activity> context;
     private Toast toast;
@@ -75,8 +76,8 @@ public class CustomShowTimeToast {
                 if(null != toast){
                     toast.show();
                 }
-                if(duration>=Toast.LENGTH_SHORT){
-                    handler.postDelayed(checkShowTimeRunnable,Toast.LENGTH_SHORT);
+                if(duration>=SHORT_DURATION_TIMEOUT){
+                    handler.postDelayed(checkShowTimeRunnable,SHORT_DURATION_TIMEOUT);
                 }else{
                     handler.postDelayed(checkShowTimeRunnable,duration);
                 }

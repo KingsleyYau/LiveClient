@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
+import com.qpidnetwork.livemodule.httprequest.RequestJniSayHi;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,6 +47,7 @@ public class LocalPreferenceManager {
             edit.commit();
         }
     }
+
     private void save(String key, int value) {
         if (mSharedPreferences != null) {
             SharedPreferences.Editor edit = mSharedPreferences.edit();
@@ -81,10 +82,11 @@ public class LocalPreferenceManager {
 
     /**
      * 将序列化的对象存储到本地
+     *
      * @param object
      */
-    public void save(String key,Object object) throws Exception {
-        if(object instanceof Serializable && mSharedPreferences != null) {
+    public void save(String key, Object object) throws Exception {
+        if (object instanceof Serializable && mSharedPreferences != null) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -95,29 +97,30 @@ public class LocalPreferenceManager {
                 editor.commit();
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
-                if(baos != null){
+            } finally {
+                if (baos != null) {
                     baos.close();
                 }
-                if(oos != null){
+                if (oos != null) {
                     oos.close();
                 }
             }
-        }else {
+        } else {
             throw new Exception("User must implements Serializable");
         }
     }
 
     /**
      * 读取本地存储的序列化的对象
+     *
      * @param key
      * @return
      */
     public Object getObject(String key) {
         Object obj = null;
-        if(mSharedPreferences != null) {
+        if (mSharedPreferences != null) {
             String temp = mSharedPreferences.getString(key, "");
-            if(TextUtils.isEmpty(temp)){
+            if (TextUtils.isEmpty(temp)) {
                 return obj;
             }
             ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
@@ -125,13 +128,13 @@ public class LocalPreferenceManager {
             try {
                 ois = new ObjectInputStream(bais);
                 obj = ois.readObject();
-            } catch (EOFException eofex){
+            } catch (EOFException eofex) {
                 eofex.printStackTrace();
             } catch (IOException ioex) {
                 ioex.printStackTrace();
             } catch (ClassNotFoundException cnfex) {
                 cnfex.printStackTrace();
-            }finally {
+            } finally {
                 try {
                     if (bais != null) {
                         bais.close();
@@ -139,7 +142,7 @@ public class LocalPreferenceManager {
                     if (ois != null) {
                         ois.close();
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -149,49 +152,55 @@ public class LocalPreferenceManager {
 
     /**
      * 获取初次启动标志位
+     *
      * @return
      */
-    public boolean getFirstLaunchFlags(){
+    public boolean getFirstLaunchFlags() {
         return getBoolean(LocalPreferenceConstant.KEY_FIRST_START);
     }
 
     /**
      * 存储初次启动标志
+     *
      * @param isFirstLaunch
      */
-    public void saveFirstLaunchFlags(boolean isFirstLaunch){
+    public void saveFirstLaunchFlags(boolean isFirstLaunch) {
         save(LocalPreferenceConstant.KEY_FIRST_START, isFirstLaunch);
     }
 
     /**
      * 获取本地存储上次选择国家码
+     *
      * @return
      */
-    public String getDefaultCountryCode(){
+    public String getDefaultCountryCode() {
         return getString(LocalPreferenceConstant.KEY_DEFAULT_COUNTRY_CODE);
     }
 
     /**
      * 本地存储上次选择国家码
+     *
      * @param countryCode
      */
-    public void saveDefaultCountryCode(String countryCode){
+    public void saveDefaultCountryCode(String countryCode) {
         save(LocalPreferenceConstant.KEY_DEFAULT_COUNTRY_CODE, countryCode);
     }
 
     /**
      * 获取状态栏高度
+     *
      * @return
      */
-    public int getStatusBarHeight(){
+    public int getStatusBarHeight() {
         return getInt(LocalPreferenceConstant.KEY_SYSTEM_STATUS_BAR_HEIGHT);
     }
 
     /**
      * 存储状态栏高度
+     *
      * @param statusBarHeight
      */
-    public void saveStatusBarHeight(int statusBarHeight){
+    public void saveStatusBarHeight(int statusBarHeight) {
         save(LocalPreferenceConstant.KEY_SYSTEM_STATUS_BAR_HEIGHT, statusBarHeight);
     }
 
@@ -218,4 +227,66 @@ public class LocalPreferenceManager {
 //        return null;
 //    }
 
+    public void saveHasShowSayHiGuide(boolean hasShow) {
+        save(LocalPreferenceConstant.KEY_HAS_SHOW_SAY_HI_GUIDE_DIALOG, hasShow);
+    }
+
+    public boolean hasShowSayHiGuide() {
+        return getBoolean(LocalPreferenceConstant.KEY_HAS_SHOW_SAY_HI_GUIDE_DIALOG);
+    }
+
+    public void saveHasShowSayHiListResponse(boolean hasShow) {
+        save(LocalPreferenceConstant.KEY_HAS_SHOW_SAY_HI_LIST_RESPONSE_DIALOG, hasShow);
+    }
+
+    public boolean hasShowSayHiListResponse() {
+        return getBoolean(LocalPreferenceConstant.KEY_HAS_SHOW_SAY_HI_LIST_RESPONSE_DIALOG);
+    }
+
+    public void saveSayHiResponseListFilterType(RequestJniSayHi.SayHiListOperateType type) {
+        save(LocalPreferenceConstant.KEY_SAY_HI_LIST_RESPONSE_FILTER_TYPE, type.ordinal());
+    }
+
+    public RequestJniSayHi.SayHiListOperateType getSayHiResponseListFilterType() {
+        int type = getInt(LocalPreferenceConstant.KEY_SAY_HI_LIST_RESPONSE_FILTER_TYPE);
+
+        if (type <= 0) {
+            // getInt 方法返回的默认值是 -1
+            return RequestJniSayHi.SayHiListOperateType.UnRead;
+        }
+
+        return RequestJniSayHi.SayHiListOperateType.values()[type];
+    }
+
+    /**
+     * SayHi 用户发送成功的主题ID
+     * @param themeId
+     */
+    public void saveSayHiThemeSelected(String themeId){
+        save(LocalPreferenceConstant.KEY_SAY_HI_THEME_SELECTED, themeId);
+    }
+
+    /**
+     * 获取SayHi 用户发送成功的主题ID
+     * @return
+     */
+    public String getSayHiThemeIdSelected() {
+        return getString(LocalPreferenceConstant.KEY_SAY_HI_THEME_SELECTED);
+    }
+
+    /**
+     * SayHi 用户发送成功的文字ID
+     * @param noteId
+     */
+    public void saveSayHiNoteSelected(String noteId){
+        save(LocalPreferenceConstant.KEY_SAY_HI_NOTE_SELECTED, noteId);
+    }
+
+    /**
+     * 获取SayHi 用户发送成功的文字ID
+     * @return
+     */
+    public String getSayHiNoteIdSelected() {
+        return getString(LocalPreferenceConstant.KEY_SAY_HI_NOTE_SELECTED);
+    }
 }

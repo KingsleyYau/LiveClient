@@ -2,7 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.personal.mypackage;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,11 @@ import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.view.ballRefresh.ThreeBallHeader;
 import com.qpidnetwork.qnbridgemodule.util.ToastUtil;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +32,9 @@ import java.util.List;
  * Created by Hunter on 17/9/26.
  */
 
-public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ReceivedGiftFragment extends BaseLoadingFragment implements OnRefreshListener {
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SmartRefreshLayout swipeRefreshLayout;
     private GridView mGridView;
     private List<PackageGiftItem> mPackageGifts;
     private PackageGiftsAdapter mAdapter;
@@ -41,8 +45,11 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         setCustomContent(R.layout.fragment_package_gifts);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setRefreshHeader(new ThreeBallHeader(getContext()));
+        swipeRefreshLayout.setEnableAutoLoadMore(false);
+        swipeRefreshLayout.setEnableLoadMore(false);
 
         mGridView = (GridView) view.findViewById(R.id.gridView);
         return view;
@@ -109,6 +116,7 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
                 showEmptyView();
             } else {
                 hideNodataPage();
+                hideErrorPage();
             }
         } else {
             if (mPackageGifts != null && mPackageGifts.size() > 0) {
@@ -157,8 +165,8 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-        super.onDefaultEmptyGuide();
+    protected void onEmptyGuideClicked() {
+        super.onEmptyGuideClicked();
 //        queryPackageGifts();
     }
 
@@ -167,7 +175,7 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
      */
     private void showEmptyView() {
         setDefaultEmptyMessage(getResources().getString(R.string.my_package_gift_empty_tips));
-        setDefaultEmptyButtonText("");
+        setEmptyGuideButtonText("");
         showNodataPage();
     }
 
@@ -190,12 +198,14 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
      * 刷新完成UI
      */
     private void onRefreshComplete() {
-        swipeRefreshLayout.setRefreshing(false);
+//        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.finishRefresh();
         hideLoadingProcess();
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        super.onRefresh(refreshLayout);
         queryPackageGifts();
     }
 

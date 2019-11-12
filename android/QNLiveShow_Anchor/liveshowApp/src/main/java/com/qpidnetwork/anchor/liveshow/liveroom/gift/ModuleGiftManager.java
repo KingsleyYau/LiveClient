@@ -1,6 +1,7 @@
 package com.qpidnetwork.anchor.liveshow.liveroom.gift;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.anchor.httprequest.item.GiftItem;
 import com.qpidnetwork.anchor.im.IMManager;
 import com.qpidnetwork.anchor.im.listener.IMMessageItem;
+import com.qpidnetwork.anchor.im.listener.IMRoomInItem;
 import com.qpidnetwork.anchor.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.anchor.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.advance.BigGiftAnimItem;
@@ -180,21 +182,43 @@ public class ModuleGiftManager {
     }
 
     /***********************************  连击动画  ***********************************/
-    public void initMultiGift(FrameLayout viewContent){
+    public void initMultiGift(FrameLayout viewContent, int giftShowMaxSum){
         //初始化连击礼物控件
         mLiveGiftView = new LiveGiftView(mActivity.get(), viewContent){
             @Override
             public void onSetChileView(LiveGift liveGift , LiveGiftItemView v) {
-                v.setChildView(getGiftView(liveGift),isGiftAnimShowedInHangOutRoom);
+                if(liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom.ordinal()
+                    || liveGift.getViewType() == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom.ordinal() ) {
+                    // 私密直播间礼物样式
+                    v.setBg(ContextCompat.getDrawable(mActivity.get(), R.drawable.mult_gift_bg_4_private_room));
+                }
+
+                if(liveGift.getViewType() != IMRoomInItem.IMLiveRoomType.HangoutRoom.ordinal()) {
+                    // 自定义连击数字图片资源ID
+                    v.setImgXResId(R.drawable.ic_x);
+                    v.setImg0ResId(R.drawable.ic_0);
+                    v.setImg1ResId(R.drawable.ic_1);
+                    v.setImg2ResId(R.drawable.ic_2);
+                    v.setImg3ResId(R.drawable.ic_3);
+                    v.setImg4ResId(R.drawable.ic_4);
+                    v.setImg5ResId(R.drawable.ic_5);
+                    v.setImg6ResId(R.drawable.ic_6);
+                    v.setImg7ResId(R.drawable.ic_7);
+                    v.setImg8ResId(R.drawable.ic_8);
+                    v.setImg9ResId(R.drawable.ic_9);
+                }
+                v.setChildView(getGiftView(liveGift));
             }
         };
         //连击动画速度
         mLiveGiftView.setDuration4NumShow(mActivity.get().getResources().getInteger(R.integer.multiAnimationDuration));
+        //动画最大显示条数
+        mLiveGiftView.setMaxSumShowed(giftShowMaxSum);
     }
 
     public void showMultiGiftAs(View anchorView){
         //绑定锚控件
-        mLiveGiftView.bind(anchorView);
+//        mLiveGiftView.bind(anchorView);
     }
 
     /**

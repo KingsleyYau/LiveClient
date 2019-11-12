@@ -67,10 +67,11 @@ public:
      *  3.13.观众进入公开直播间
      *
      *  @param reqId         请求序列号
-     *  @param anchorId        主播ID
+     *  @param anchorId      主播ID
+     *  @param isFree        是否前3秒免费
      *
      */
-    bool PublicRoomIn(SEQ_T reqId, const string& userId) override;
+    bool PublicRoomIn(SEQ_T reqId, const string& userId, bool isFree = false) override;
     
     /**
      *  3.14.观众开始／结束视频互动
@@ -576,9 +577,10 @@ private:
      *  @param roomId      直播间ID
      *  @param msg         充值提示
      *  @param credit      信用点
+     *  @param err         信用点不足原因
      *
      */
-    void OnRecvLackOfCreditNotice(const string& roomId, const string& msg, double credit) override;
+    void OnRecvLackOfCreditNotice(const string& roomId, const string& msg, double credit, LCC_ERR_TYPE err) override;
     
     /**
      *  3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）回调
@@ -641,6 +643,15 @@ private:
      *
      */
     void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item, const IMAuthorityItem& privItem) override;
+    
+    /**
+     *  3.16.接收公开直播间前3秒免费提示通知接口 回调
+     *
+     *  @param roomId         直播间ID
+     *  @param message        文字提示信息
+     *
+     */
+    void OnRecvPublicRoomFreeMsgNotice(const string& roomId, const string& message) override;
     
     /**
      *  4.2.接收直播间文本消息通知回调

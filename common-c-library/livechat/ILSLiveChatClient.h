@@ -71,6 +71,8 @@ public:
 	virtual void OnCamshareUseTryTicket(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& userId, const string& ticketId, const string& inviteId) {}
 	virtual void OnSummitLadyCamStatus(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg) {}
 	virtual void OnSummitAutoInviteCamFirst(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg) {}
+    // Alex, 发送邀请语
+    virtual void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) {}
 
 	// 服务器主动请求
 	virtual void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message, INVITE_TYPE inviteType) {}
@@ -247,6 +249,8 @@ public:
 	virtual bool GetSessionInfoWithMan(const string& targetId) = 0;
 	// 女士端设置小助手Cam优先
 	virtual bool SummitAutoInviteCamFirst(bool camFirst) = 0;
+    // 发送邀请语
+    virtual bool SendInviteMessage(const string& inUserId, const string& inMessage, const string& nickName) = 0;
 public:
 	// 获取用户账号
 	virtual string GetUser() = 0;

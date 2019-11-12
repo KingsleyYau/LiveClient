@@ -174,9 +174,10 @@
  *  @param roomId      直播间ID
  *  @param msg         充值提示
  *  @param credit      信用点
+ *  @param errType     信用点不足原因
  *
  */
-- (void)onRecvLackOfCreditNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg credit:(double)credit;
+- (void)onRecvLackOfCreditNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg credit:(double)credit errType:(LCC_ERR_TYPE)errType;
 
 /**
  *  3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）回调
@@ -205,6 +206,15 @@
  *
  */
 - (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl userId:(NSString* _Nonnull)userId;
+
+/**
+ *  3.16.接收公开直播间前3秒免费提示通知接口 回调
+ *
+ *  @param roomId       房间ID
+ *  @param message      文字提示信息
+ *
+ */
+- (void)onRecvPublicRoomFreeMsgNotice:(NSString* _Nonnull)roomId message:(NSString* _Nonnull)message;
 
 #pragma mark - 直播间文本消息信息
 /**

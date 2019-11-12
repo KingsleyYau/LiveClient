@@ -151,6 +151,8 @@ public:
 	virtual bool GetSessionInfoWithMan(const string& targetId) override;
 	// 女士端设置小助手Cam优先
 	virtual bool SummitAutoInviteCamFirst(bool camFirst) override;
+    // 发送邀请语
+    virtual bool SendInviteMessage(const string& inUserId, const string& inMessage, const string& nickName) override;
     
 public:
 	// 获取用户账号
@@ -266,6 +268,8 @@ private:
     void OnCamshareUseTryTicket(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& userId, const string& ticketId, const string& inviteId) override;
     void OnSummitLadyCamStatus(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg) override;
     void OnSummitAutoInviteCamFirst(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg) override;
+    // Alex, 发送邀请语
+    void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) override;
     
     // 服务器主动请求
     void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message, INVITE_TYPE inviteType) override;

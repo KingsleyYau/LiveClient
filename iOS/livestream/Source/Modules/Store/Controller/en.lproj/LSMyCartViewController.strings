@@ -1,0 +1,14 @@
+
+/* Class = "UIButton"; normalTitle = "Retry"; ObjectID = "DlF-ZL-6MF"; */
+"DlF-ZL-6MF.normalTitle" = "Retry";
+
+/* Class = "UILabel"; text = "Fail to load this page. Please try again later."; ObjectID = "OyK-44-vDH"; */
+"OyK-44-vDH.text" = "Fail to load this page. Please try again later.";
+
+/* Class = "UILabel"; text = "There is no item in your cart!"; ObjectID = "RKA-ZX-DgW"; */
+"RKA-ZX-DgW.text" = "There is no item in your cart!";
+
+/* Class = "UIButton"; normalTitle = "Choose a Gift"; ObjectID = "lts-Pm-6Tq"; */
+"lts-Pm-6Tq.normalTitle" = "Choose a Gift";
+
+"CHANGE_NUM_ERROR" = "You can only add 1-99 items.";

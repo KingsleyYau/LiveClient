@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetHangoutFriendsCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniHangout;
 import com.qpidnetwork.livemodule.httprequest.item.HangoutAnchorInfoItem;
@@ -261,7 +262,7 @@ public class HangOutAdapter extends BaseRecyclerViewAdapter<HangoutOnlineAnchorI
 
                 @Override
                 public void subscribe(final ObservableEmitter<FriendsResult> emitter) {
-                RequestJniHangout.GetHangoutFriends(anchorId, new OnGetHangoutFriendsCallback() {
+                LiveRequestOperator.getInstance().GetHangoutFriends(anchorId, new OnGetHangoutFriendsCallback() {
                     @Override
                     public void onGetHangoutFriends(boolean isSuccess, int errCode, String errMsg, HangoutAnchorInfoItem[] audienceList) {
                         FriendsResult friendsResult = new FriendsResult();

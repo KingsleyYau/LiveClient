@@ -54,6 +54,7 @@ public class AlertDialogHolder extends SuperHolder {
     protected Button btn3Vertical;
     protected LinearLayout llContainerVertical;
     protected LinearLayout llContainerBody ;
+    protected LinearLayout llContainerRoot ;
 
     public AlertDialogHolder(Context context) {
         super(context);
@@ -78,7 +79,8 @@ public class AlertDialogHolder extends SuperHolder {
         lineBtn3Vertical = (View) rootView.findViewById(R.id.line_btn3_vertical);
         btn3Vertical = (Button) rootView.findViewById(R.id.btn_3_vertical);
         llContainerVertical = (LinearLayout) rootView.findViewById(R.id.ll_container_vertical);
-        llContainerBody = (LinearLayout) rootView.findViewById(R.id.dialogui_llayout_bg);
+        llContainerBody = (LinearLayout) rootView.findViewById(R.id.dialogui_llayout_body);
+        llContainerRoot = (LinearLayout) rootView.findViewById(R.id.dialogui_llayout_root);
     }
 
 
@@ -105,12 +107,12 @@ public class AlertDialogHolder extends SuperHolder {
         btn1.setTextSize(bean.btnTxtSize);
 
         btn1.setTextColor(ToolUtils.getColor(btn1.getContext(), bean.btn1Color));
-        btn2.setTextColor(ToolUtils.getColor(btn1.getContext(), bean.btn2Color));
-        btn3.setTextColor(ToolUtils.getColor(btn1.getContext(), bean.btn3Color));
+        btn2.setTextColor(ToolUtils.getColor(btn2.getContext(), bean.btn2Color));
+        btn3.setTextColor(ToolUtils.getColor(btn3.getContext(), bean.btn3Color));
 
         btn1Vertical.setTextColor(ToolUtils.getColor(btn1.getContext(), bean.btn1Color));
-        btn2Vertical.setTextColor(ToolUtils.getColor(btn1.getContext(), bean.btn2Color));
-        btn3Vertical.setTextColor(ToolUtils.getColor(btn1.getContext(), bean.btn3Color));
+        btn2Vertical.setTextColor(ToolUtils.getColor(btn2.getContext(), bean.btn2Color));
+        btn3Vertical.setTextColor(ToolUtils.getColor(btn3.getContext(), bean.btn3Color));
 
         //隐藏view
         if (bean.isVertical) {
@@ -123,6 +125,10 @@ public class AlertDialogHolder extends SuperHolder {
 
         if(bean.customView != null){
             llContainerBody.addView(bean.customView);
+
+            if(bean.isBgTransparent){
+                llContainerRoot.setBackgroundDrawable(context.getResources().getDrawable(R.color.transparent_0));
+            }
         }
 
         if (TextUtils.isEmpty(bean.title)) {
@@ -196,7 +202,7 @@ public class AlertDialogHolder extends SuperHolder {
             } else {
                 btn2.setVisibility(View.GONE);
                 lineBtn2.setVisibility(View.GONE);
-                btn1.setBackgroundResource(R.drawable.dialogui_selector_all_bottom);
+                btn1.setBackgroundResource(R.drawable.dialogui_selector_right_bottom);
             }
         } else {
             if (bean.isVertical) {
@@ -209,7 +215,6 @@ public class AlertDialogHolder extends SuperHolder {
                 btn2.setText(bean.text2);
             }
         }
-
         if (TextUtils.isEmpty(bean.text1)) {
             line.setVisibility(View.GONE);
             llContainerHorizontal.setVisibility(View.GONE);

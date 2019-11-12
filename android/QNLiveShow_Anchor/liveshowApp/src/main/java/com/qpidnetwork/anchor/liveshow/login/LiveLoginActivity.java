@@ -36,6 +36,8 @@ import com.qpidnetwork.anchor.liveshow.manager.UpdateManager;
 import com.qpidnetwork.anchor.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.anchor.utils.DisplayUtil;
 import com.qpidnetwork.anchor.utils.Log;
+import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.KeyBoardManager;
+import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout;
 
 import static com.qpidnetwork.anchor.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_CONNECTFAIL;
 
@@ -43,7 +45,7 @@ import static com.qpidnetwork.anchor.httprequest.item.HttpLccErrType.HTTP_LCC_ER
  * Created by Hunter Mun on 2018/3/5.
  */
 
-public class LiveLoginActivity extends BaseFragmentActivity implements IAuthorizationListener {
+public class LiveLoginActivity extends BaseFragmentActivity implements IAuthorizationListener, SoftKeyboardSizeWatchLayout.OnResizeListener{
 
     private static final int EVENT_VERIFICATION_CODE = 1;
     private static final int EVENT_LOGIN_CALLBACK = 2;
@@ -60,6 +62,8 @@ public class LiveLoginActivity extends BaseFragmentActivity implements IAuthoriz
     //最小屏幕宽
     private final int MIN_SCREEN_WIDTH = 720;
 
+    //整个view的父，用于解决软键盘等监听
+    private SoftKeyboardSizeWatchLayout flContentBody;
     private EditText etBroadcaterId;
     private EditText etPassword;
     private EditText etVerifyCode;
@@ -122,6 +126,9 @@ public class LiveLoginActivity extends BaseFragmentActivity implements IAuthoriz
     }
 
     private void initView(){
+        //解决软键盘关闭的监听问题
+        flContentBody = findViewById(R.id.flContentBody);
+        flContentBody.addOnResizeListener(this);
         etBroadcaterId = (EditText)findViewById(R.id.etBroadcaterId);
         etPassword = (EditText)findViewById(R.id.etPassword);
         etVerifyCode = (EditText)findViewById(R.id.etVerifyCode);
@@ -392,6 +399,10 @@ public class LiveLoginActivity extends BaseFragmentActivity implements IAuthoriz
     protected void onDestroy() {
         super.onDestroy();
         LoginManager.getInstance().removeListener(this);
+        //解绑监听器，防止泄漏
+        if (flContentBody != null) {
+            flContentBody.removeOnResizeListener(this);
+        }
     }
 
     @Override
@@ -501,6 +512,16 @@ public class LiveLoginActivity extends BaseFragmentActivity implements IAuthoriz
 
     @Override
     public void onLogout(boolean isMannual) {
+
+    }
+
+    @Override
+    public void OnSoftPop(int height) {
+        KeyBoardManager.saveKeyboardHeight(mContext, height);
+    }
+
+    @Override
+    public void OnSoftClose() {
 
     }
 }

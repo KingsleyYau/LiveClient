@@ -23,6 +23,7 @@ HttpEntiy::HttpEntiy() {
     mNoHeader = false;
     mDownloadTimeout = DWONLOAD_TIMEOUT;
     mConnectTimeout = CONNECT_TIMEOUT;
+    mIsDownloadFile = false;
 }
 
 HttpEntiy::~HttpEntiy() {
@@ -72,6 +73,10 @@ void HttpEntiy::SetConnectTimeout(unsigned int connectTimeout) {
 
 void HttpEntiy::SetNoHeader() {
     mNoHeader = true;
+}
+
+void HttpEntiy::SetIsDownLoadFile(bool isDownload) {
+    mIsDownloadFile = isDownload;
 }
 
 void HttpEntiy::SetRawData(string data) {

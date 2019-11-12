@@ -68,11 +68,13 @@
 		FA031FBB209B015E00BC39B2 /* HttpDealKnockRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB4209B015C00BC39B2 /* HttpDealKnockRequestTask.cpp */; };
 		FA031FBC209B015E00BC39B2 /* HttpSendInvitationHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB5209B015D00BC39B2 /* HttpSendInvitationHangoutTask.cpp */; };
 		FA031FBE209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB9209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp */; };
+		FA036195237A4255001CD748 /* HttpGetFeaturedAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA036193237A4255001CD748 /* HttpGetFeaturedAnchorListTask.cpp */; };
 		FA075CCC209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */; };
 		FA0D851821A7ECBD00BF6855 /* HttpPhoneInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA0D851621A7ECBC00BF6855 /* HttpPhoneInfoTask.cpp */; };
 		FA14511E2150854E00D6E75D /* HttpDoLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA14510E2150854C00D6E75D /* HttpDoLoginTask.cpp */; };
 		FA1451212150854E00D6E75D /* HttpGetMyProfileTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA1451132150854D00D6E75D /* HttpGetMyProfileTask.cpp */; };
 		FA1451252150854E00D6E75D /* HttpUpdateProfileTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA14511B2150854E00D6E75D /* HttpUpdateProfileTask.cpp */; };
+		FA16295623151939009E3F1F /* HttpGetGiftTypeListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA16295423151938009E3F1F /* HttpGetGiftTypeListTask.cpp */; };
 		FA164F1420FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA164F1220FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.cpp */; };
 		FA296FA521F1C69E00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA296FA321F1C69D00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp */; };
 		FA2C900822681AF2001F2DCF /* HttpResourceConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C900722681AF2001F2DCF /* HttpResourceConfigTask.cpp */; };
@@ -134,6 +136,17 @@
 		FA77C8B220CFA9B700923619 /* HttpGetPrivateMsgFriendListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA77C8B020CFA9B700923619 /* HttpGetPrivateMsgFriendListTask.cpp */; };
 		FA77C8C020CFEB0D00923619 /* HttpGetFollowPrivateMsgFriendListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA77C8BE20CFEB0C00923619 /* HttpGetFollowPrivateMsgFriendListTask.cpp */; };
 		FA77C8C320CFEF1700923619 /* HttpGetPrivateMsgHistoryByIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA77C8C220CFEF1700923619 /* HttpGetPrivateMsgHistoryByIdTask.cpp */; };
+		FA79333D233D91CE00455539 /* HttpGetFlowerGiftDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA79333B233D91CE00455539 /* HttpGetFlowerGiftDetailTask.cpp */; };
+		FA793340233D938200455539 /* HttpGetRecommendGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA79333F233D938200455539 /* HttpGetRecommendGiftListTask.cpp */; };
+		FA793343233D9B3A00455539 /* HttpGetResentRecipientListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793341233D9B3A00455539 /* HttpGetResentRecipientListTask.cpp */; };
+		FA793346233D9C7900455539 /* HttpGetDeliveryListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793345233D9C7900455539 /* HttpGetDeliveryListTask.cpp */; };
+		FA793349233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793347233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.cpp */; };
+		FA79334C233D9E8D00455539 /* HttpGetCartGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA79334A233D9E8D00455539 /* HttpGetCartGiftListTask.cpp */; };
+		FA79334F233D9FE000455539 /* HttpAddCartGiftTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA79334E233D9FDF00455539 /* HttpAddCartGiftTask.cpp */; };
+		FA793352233DA12000455539 /* HttpChangeCartGiftNumberTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793351233DA12000455539 /* HttpChangeCartGiftNumberTask.cpp */; };
+		FA793355233DA25100455539 /* HttpRemoveCartGiftTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793353233DA25000455539 /* HttpRemoveCartGiftTask.cpp */; };
+		FA793358233DA43B00455539 /* HttpCheckOutCartGiftTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793357233DA43B00455539 /* HttpCheckOutCartGiftTask.cpp */; };
+		FA79335B233DA5FC00455539 /* HttpCreateGiftOrderTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA793359233DA5FC00455539 /* HttpCreateGiftOrderTask.cpp */; };
 		FA7AD29D20A67543005AF56D /* HttpAddAnchorFriendTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD29B20A67543005AF56D /* HttpAddAnchorFriendTask.cpp */; };
 		FA7AD2A020A676A0005AF56D /* HttpGetFriendRelationTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD29E20A676A0005AF56D /* HttpGetFriendRelationTask.cpp */; };
 		FA7C1DBB208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DBA208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp */; };
@@ -160,7 +173,15 @@
 		FAAB2E272091691C0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1C2091691A0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp */; };
 		FAAB2E282091691C0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1D2091691A0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp */; };
 		FAAB2E292091691C0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1E2091691B0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp */; };
+		FAABABE022B1E48100F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAABABDC22B1E48000F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.cpp */; };
+		FAABABE122B1E48100F0FE55 /* HttpGetChatVoucherListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAABABDD22B1E48000F0FE55 /* HttpGetChatVoucherListTask.cpp */; };
+		FAADA3C723544CC7004142BB /* HttpMobilePayGotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAADA3C523544CC7004142BB /* HttpMobilePayGotoTask.cpp */; };
+		FAB3977623741EFF00137887 /* HttpGetCurrentRoomInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB3977423741EFE00137887 /* HttpGetCurrentRoomInfoTask.cpp */; };
+		FAB51590233CC11000B59A15 /* HttpGetStoreGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB5158E233CC10F00B59A15 /* HttpGetStoreGiftListTask.cpp */; };
 		FAB60C92208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C90208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp */; };
+		FAC23143234D75AB000E4DC3 /* HttpWomanListAdvertTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC23141234D75AB000E4DC3 /* HttpWomanListAdvertTask.cpp */; };
+		FAC813F22303BD6E001A2B76 /* HttpUploadUserPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC813F02303BD6D001A2B76 /* HttpUploadUserPhotoTask.cpp */; };
+		FACCF2BF22B7373000BE685A /* HttpGetContactListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACCF2BE22B7373000BE685A /* HttpGetContactListTask.cpp */; };
 		FACE54862044F7CC00CC3B45 /* HttpCloseAdAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */; };
 		FACE54872044F7CC00CC3B45 /* HttpBannerTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACE54842044F7CC00CC3B45 /* HttpBannerTask.cpp */; };
 		FACE54882044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACE54852044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp */; };
@@ -224,6 +245,8 @@
 		FAF25E102159ECF100E50788 /* HttpTokenLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAF25E0F2159ECF100E50788 /* HttpTokenLoginTask.cpp */; };
 		FAF25E13215A01C000E50788 /* HttpPasswordLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAF25E12215A01BF00E50788 /* HttpPasswordLoginTask.cpp */; };
 		FAF25E16215A04EF00E50788 /* HttpGetValidateCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAF25E15215A04EF00E50788 /* HttpGetValidateCodeTask.cpp */; };
+		FAFA900222EF058C0064DB2B /* HttpUpQnInviteIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAFA900122EF05890064DB2B /* HttpUpQnInviteIdTask.cpp */; };
+		FAFDEABC22FBB9DA00B20A0D /* HttpRetrieveBannerTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAFDEABA22FBB9D900B20A0D /* HttpRetrieveBannerTask.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -398,6 +421,8 @@
 		FA031FB8209B015E00BC39B2 /* HttpGetCanHangoutAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCanHangoutAnchorListTask.h; sourceTree = "<group>"; };
 		FA031FB9209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetHangoutInvitStatusTask.cpp; sourceTree = "<group>"; };
 		FA031FBF209B016A00BC39B2 /* HttpHangoutAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpHangoutAnchorItem.h; sourceTree = "<group>"; };
+		FA036193237A4255001CD748 /* HttpGetFeaturedAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetFeaturedAnchorListTask.cpp; sourceTree = "<group>"; };
+		FA036194237A4255001CD748 /* HttpGetFeaturedAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetFeaturedAnchorListTask.h; sourceTree = "<group>"; };
 		FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCancelInviteHangoutTask.cpp; sourceTree = "<group>"; };
 		FA075CCB209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCancelInviteHangoutTask.h; sourceTree = "<group>"; };
 		FA0D851621A7ECBC00BF6855 /* HttpPhoneInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpPhoneInfoTask.cpp; sourceTree = "<group>"; };
@@ -409,6 +434,9 @@
 		FA14510E2150854C00D6E75D /* HttpDoLoginTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpDoLoginTask.cpp; sourceTree = "<group>"; };
 		FA1451132150854D00D6E75D /* HttpGetMyProfileTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetMyProfileTask.cpp; sourceTree = "<group>"; };
 		FA14511B2150854E00D6E75D /* HttpUpdateProfileTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUpdateProfileTask.cpp; sourceTree = "<group>"; };
+		FA16295423151938009E3F1F /* HttpGetGiftTypeListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetGiftTypeListTask.cpp; sourceTree = "<group>"; };
+		FA16295523151939009E3F1F /* HttpGetGiftTypeListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetGiftTypeListTask.h; sourceTree = "<group>"; };
+		FA16295723151C04009E3F1F /* HttpGiftTypeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGiftTypeItem.h; sourceTree = "<group>"; };
 		FA164F1220FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSetPrivateMsgReadedTask.cpp; sourceTree = "<group>"; };
 		FA164F1320FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetPrivateMsgReadedTask.h; sourceTree = "<group>"; };
 		FA296FA321F1C69D00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetHangoutOnlineAnchorTask.cpp; sourceTree = "<group>"; };
@@ -552,6 +580,36 @@
 		FA77C8BF20CFEB0C00923619 /* HttpGetFollowPrivateMsgFriendListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetFollowPrivateMsgFriendListTask.h; sourceTree = "<group>"; };
 		FA77C8C120CFEF1600923619 /* HttpGetPrivateMsgHistoryByIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPrivateMsgHistoryByIdTask.h; sourceTree = "<group>"; };
 		FA77C8C220CFEF1700923619 /* HttpGetPrivateMsgHistoryByIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetPrivateMsgHistoryByIdTask.cpp; sourceTree = "<group>"; };
+		FA79333B233D91CE00455539 /* HttpGetFlowerGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetFlowerGiftDetailTask.cpp; sourceTree = "<group>"; };
+		FA79333C233D91CE00455539 /* HttpGetFlowerGiftDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetFlowerGiftDetailTask.h; sourceTree = "<group>"; };
+		FA79333E233D938200455539 /* HttpGetRecommendGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetRecommendGiftListTask.h; sourceTree = "<group>"; };
+		FA79333F233D938200455539 /* HttpGetRecommendGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetRecommendGiftListTask.cpp; sourceTree = "<group>"; };
+		FA793341233D9B3A00455539 /* HttpGetResentRecipientListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetResentRecipientListTask.cpp; sourceTree = "<group>"; };
+		FA793342233D9B3A00455539 /* HttpGetResentRecipientListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetResentRecipientListTask.h; sourceTree = "<group>"; };
+		FA793344233D9C7900455539 /* HttpGetDeliveryListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetDeliveryListTask.h; sourceTree = "<group>"; };
+		FA793345233D9C7900455539 /* HttpGetDeliveryListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetDeliveryListTask.cpp; sourceTree = "<group>"; };
+		FA793347233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetCartGiftTypeNumTask.cpp; sourceTree = "<group>"; };
+		FA793348233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCartGiftTypeNumTask.h; sourceTree = "<group>"; };
+		FA79334A233D9E8D00455539 /* HttpGetCartGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetCartGiftListTask.cpp; sourceTree = "<group>"; };
+		FA79334B233D9E8D00455539 /* HttpGetCartGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCartGiftListTask.h; sourceTree = "<group>"; };
+		FA79334D233D9FDF00455539 /* HttpAddCartGiftTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAddCartGiftTask.h; sourceTree = "<group>"; };
+		FA79334E233D9FDF00455539 /* HttpAddCartGiftTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAddCartGiftTask.cpp; sourceTree = "<group>"; };
+		FA793350233DA12000455539 /* HttpChangeCartGiftNumberTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpChangeCartGiftNumberTask.h; sourceTree = "<group>"; };
+		FA793351233DA12000455539 /* HttpChangeCartGiftNumberTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpChangeCartGiftNumberTask.cpp; sourceTree = "<group>"; };
+		FA793353233DA25000455539 /* HttpRemoveCartGiftTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRemoveCartGiftTask.cpp; sourceTree = "<group>"; };
+		FA793354233DA25100455539 /* HttpRemoveCartGiftTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRemoveCartGiftTask.h; sourceTree = "<group>"; };
+		FA793356233DA43B00455539 /* HttpCheckOutCartGiftTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCheckOutCartGiftTask.h; sourceTree = "<group>"; };
+		FA793357233DA43B00455539 /* HttpCheckOutCartGiftTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCheckOutCartGiftTask.cpp; sourceTree = "<group>"; };
+		FA793359233DA5FC00455539 /* HttpCreateGiftOrderTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCreateGiftOrderTask.cpp; sourceTree = "<group>"; };
+		FA79335A233DA5FC00455539 /* HttpCreateGiftOrderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCreateGiftOrderTask.h; sourceTree = "<group>"; };
+		FA793360233DF61D00455539 /* HttpFlowerGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpFlowerGiftItem.h; sourceTree = "<group>"; };
+		FA793361233DF8E500455539 /* HttpStoreFlowerGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpStoreFlowerGiftItem.h; sourceTree = "<group>"; };
+		FA793362233E020100455539 /* HttpRecipientAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRecipientAnchorItem.h; sourceTree = "<group>"; };
+		FA793363233E042F00455539 /* HttpDeliveryFlowerGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpDeliveryFlowerGiftItem.h; sourceTree = "<group>"; };
+		FA793364233E070500455539 /* HttpMyDeliveryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpMyDeliveryItem.h; sourceTree = "<group>"; };
+		FA793365233E0C7E00455539 /* HttpMyCartItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpMyCartItem.h; sourceTree = "<group>"; };
+		FA793366233E10F600455539 /* HttpCheckoutItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCheckoutItem.h; sourceTree = "<group>"; };
+		FA793367233E13B300455539 /* HttpCheckoutFlowerGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCheckoutFlowerGiftItem.h; sourceTree = "<group>"; };
 		FA7AD29B20A67543005AF56D /* HttpAddAnchorFriendTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAddAnchorFriendTask.cpp; sourceTree = "<group>"; };
 		FA7AD29C20A67543005AF56D /* HttpAddAnchorFriendTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAddAnchorFriendTask.h; sourceTree = "<group>"; };
 		FA7AD29E20A676A0005AF56D /* HttpGetFriendRelationTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetFriendRelationTask.cpp; sourceTree = "<group>"; };
@@ -633,6 +691,18 @@
 		FAAB2E2C209169260048E8B1 /* HttpAnchorBaseInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorBaseInfoItem.h; sourceTree = "<group>"; };
 		FAAB2E2D209169260048E8B1 /* HttpAnchorHangoutGiftListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorHangoutGiftListItem.h; sourceTree = "<group>"; };
 		FAAB2E2E209169260048E8B1 /* HttpAnchorGiftNumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGiftNumItem.h; sourceTree = "<group>"; };
+		FAABABDC22B1E48000F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveEndRecommendAnchorListTask.cpp; sourceTree = "<group>"; };
+		FAABABDD22B1E48000F0FE55 /* HttpGetChatVoucherListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetChatVoucherListTask.cpp; sourceTree = "<group>"; };
+		FAABABDE22B1E48100F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveEndRecommendAnchorListTask.h; sourceTree = "<group>"; };
+		FAABABDF22B1E48100F0FE55 /* HttpGetChatVoucherListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetChatVoucherListTask.h; sourceTree = "<group>"; };
+		FAABABE222B1E49300F0FE55 /* HttpRecommendAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRecommendAnchorItem.h; sourceTree = "<group>"; };
+		FAADA3C523544CC7004142BB /* HttpMobilePayGotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpMobilePayGotoTask.cpp; sourceTree = "<group>"; };
+		FAADA3C623544CC7004142BB /* HttpMobilePayGotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpMobilePayGotoTask.h; sourceTree = "<group>"; };
+		FAB3977423741EFE00137887 /* HttpGetCurrentRoomInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetCurrentRoomInfoTask.cpp; sourceTree = "<group>"; };
+		FAB3977523741EFE00137887 /* HttpGetCurrentRoomInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCurrentRoomInfoTask.h; sourceTree = "<group>"; };
+		FAB397772374228300137887 /* ZBHttpCurrentRoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpCurrentRoomItem.h; sourceTree = "<group>"; };
+		FAB5158E233CC10F00B59A15 /* HttpGetStoreGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetStoreGiftListTask.cpp; sourceTree = "<group>"; };
+		FAB5158F233CC11000B59A15 /* HttpGetStoreGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetStoreGiftListTask.h; sourceTree = "<group>"; };
 		FAB60C90208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetShowRoomInfoTask.cpp; sourceTree = "<group>"; };
 		FAB60C91208DA9D800901BBD /* HttpGetShowRoomInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetShowRoomInfoTask.h; sourceTree = "<group>"; };
 		FAB6940C1F5E90B0008A64B6 /* HttpGetPromoAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPromoAnchorItem.h; sourceTree = "<group>"; };
@@ -651,7 +721,14 @@
 		FABB26062047A320005EDF51 /* ZBHttpBookingInviteListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpBookingInviteListItem.h; sourceTree = "<group>"; };
 		FABD5AA021BE3DB1006694BA /* HttpAuthorityItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAuthorityItem.h; sourceTree = "<group>"; };
 		FABD5AAA21BE86AC006694BA /* CommonItemDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonItemDef.h; sourceTree = "<group>"; };
+		FAC23140234D6E66000E4DC3 /* HttpAdWomanListAdvertItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAdWomanListAdvertItem.h; sourceTree = "<group>"; };
+		FAC23141234D75AB000E4DC3 /* HttpWomanListAdvertTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpWomanListAdvertTask.cpp; sourceTree = "<group>"; };
+		FAC23142234D75AB000E4DC3 /* HttpWomanListAdvertTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpWomanListAdvertTask.h; sourceTree = "<group>"; };
 		FAC50B62226D8EDB006375FF /* HttpAppPushConfigItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAppPushConfigItem.h; sourceTree = "<group>"; };
+		FAC813F02303BD6D001A2B76 /* HttpUploadUserPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUploadUserPhotoTask.cpp; sourceTree = "<group>"; };
+		FAC813F12303BD6D001A2B76 /* HttpUploadUserPhotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUploadUserPhotoTask.h; sourceTree = "<group>"; };
+		FACCF2BD22B7373000BE685A /* HttpGetContactListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetContactListTask.h; sourceTree = "<group>"; };
+		FACCF2BE22B7373000BE685A /* HttpGetContactListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetContactListTask.cpp; sourceTree = "<group>"; };
 		FACE54812044F7CB00CC3B45 /* HttpBannerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBannerTask.h; sourceTree = "<group>"; };
 		FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCloseAdAnchorListTask.cpp; sourceTree = "<group>"; };
 		FACE54832044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAcceptInstanceInviteTask.h; sourceTree = "<group>"; };
@@ -765,12 +842,14 @@
 		FACE54F22044F7F300CC3B45 /* HttpGetGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetGiftDetailTask.cpp; sourceTree = "<group>"; };
 		FACE54F32044F7F300CC3B45 /* HttpGetShareLinkTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetShareLinkTask.cpp; sourceTree = "<group>"; };
 		FACE54F42044F7F300CC3B45 /* HttpGetGiftListByUserIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetGiftListByUserIdTask.h; sourceTree = "<group>"; };
+		FAD4582223403C7E00B890A4 /* HttpGreetingCardItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGreetingCardItem.h; sourceTree = "<group>"; };
 		FAE9BA9F2124047A0058AE0E /* IAutoLockWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAutoLockWrapper.h; sourceTree = "<group>"; };
 		FAE9BAA02124047A0058AE0E /* IAutoLockWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IAutoLockWrapper.cpp; sourceTree = "<group>"; };
 		FAEB996321F5585C00A0E8D9 /* HttpFriendsInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpFriendsInfoItem.h; sourceTree = "<group>"; };
 		FAEB996421F5585D00A0E8D9 /* HttpHangoutListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpHangoutListItem.h; sourceTree = "<group>"; };
 		FAEB997021F5680E00A0E8D9 /* HttpGetHangoutFriendsTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetHangoutFriendsTask.cpp; sourceTree = "<group>"; };
 		FAEB997121F5680F00A0E8D9 /* HttpGetHangoutFriendsTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetHangoutFriendsTask.h; sourceTree = "<group>"; };
+		FAEEE0292374FBCE0069476B /* ZBHttpUserInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpUserInfoItem.h; sourceTree = "<group>"; };
 		FAF074C01FEE034D009B863F /* HttpManBaseInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpManBaseInfoItem.h; sourceTree = "<group>"; };
 		FAF25E082159DD2A00E50788 /* HttpGetProductListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetProductListTask.h; sourceTree = "<group>"; };
 		FAF25E092159DD2A00E50788 /* HttpGetProductListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetProductListTask.cpp; sourceTree = "<group>"; };
@@ -782,6 +861,10 @@
 		FAF25E12215A01BF00E50788 /* HttpPasswordLoginTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpPasswordLoginTask.cpp; sourceTree = "<group>"; };
 		FAF25E14215A04EE00E50788 /* HttpGetValidateCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetValidateCodeTask.h; sourceTree = "<group>"; };
 		FAF25E15215A04EF00E50788 /* HttpGetValidateCodeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetValidateCodeTask.cpp; sourceTree = "<group>"; };
+		FAFA900022EF05890064DB2B /* HttpUpQnInviteIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUpQnInviteIdTask.h; sourceTree = "<group>"; };
+		FAFA900122EF05890064DB2B /* HttpUpQnInviteIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUpQnInviteIdTask.cpp; sourceTree = "<group>"; };
+		FAFDEABA22FBB9D900B20A0D /* HttpRetrieveBannerTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRetrieveBannerTask.cpp; sourceTree = "<group>"; };
+		FAFDEABB22FBB9DA00B20A0D /* HttpRetrieveBannerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRetrieveBannerTask.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -798,22 +881,50 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
-				FA2C90232268672C001F2DCF /* HttpReadResponseTask.cpp */,
-				FA2C90222268672C001F2DCF /* HttpReadResponseTask.h */,
-				FA2C901F2268572A001F2DCF /* HttpSayHiDetailTask.cpp */,
-				FA2C901E2268572A001F2DCF /* HttpSayHiDetailTask.h */,
-				FA2C901A2268504F001F2DCF /* HttpGetResponseSayHiListTask.cpp */,
-				FA2C901B22685050001F2DCF /* HttpGetResponseSayHiListTask.h */,
-				FA2C9016226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp */,
-				FA2C9017226847F4001F2DCF /* HttpGetAllSayHiListTask.h */,
-				FA2C901422682B46001F2DCF /* HttpSendSayHiTask.cpp */,
-				FA2C901322682B46001F2DCF /* HttpSendSayHiTask.h */,
-				FA2C90112268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp */,
-				FA2C90102268284B001F2DCF /* HttpIsCanSendSayHiTask.h */,
-				FA2C900C226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp */,
-				FA2C900D226822BF001F2DCF /* HttpGetSayHiAnchorListTask.h */,
-				FA2C900722681AF2001F2DCF /* HttpResourceConfigTask.cpp */,
-				FA2C900622681AF1001F2DCF /* HttpResourceConfigTask.h */,
+				FA036193237A4255001CD748 /* HttpGetFeaturedAnchorListTask.cpp */,
+				FA036194237A4255001CD748 /* HttpGetFeaturedAnchorListTask.h */,
+				FAADA3C523544CC7004142BB /* HttpMobilePayGotoTask.cpp */,
+				FAADA3C623544CC7004142BB /* HttpMobilePayGotoTask.h */,
+				FAC23141234D75AB000E4DC3 /* HttpWomanListAdvertTask.cpp */,
+				FAC23142234D75AB000E4DC3 /* HttpWomanListAdvertTask.h */,
+				FA793359233DA5FC00455539 /* HttpCreateGiftOrderTask.cpp */,
+				FA79335A233DA5FC00455539 /* HttpCreateGiftOrderTask.h */,
+				FA793357233DA43B00455539 /* HttpCheckOutCartGiftTask.cpp */,
+				FA793356233DA43B00455539 /* HttpCheckOutCartGiftTask.h */,
+				FA793353233DA25000455539 /* HttpRemoveCartGiftTask.cpp */,
+				FA793354233DA25100455539 /* HttpRemoveCartGiftTask.h */,
+				FA793351233DA12000455539 /* HttpChangeCartGiftNumberTask.cpp */,
+				FA793350233DA12000455539 /* HttpChangeCartGiftNumberTask.h */,
+				FA79334E233D9FDF00455539 /* HttpAddCartGiftTask.cpp */,
+				FA79334D233D9FDF00455539 /* HttpAddCartGiftTask.h */,
+				FA79334A233D9E8D00455539 /* HttpGetCartGiftListTask.cpp */,
+				FA79334B233D9E8D00455539 /* HttpGetCartGiftListTask.h */,
+				FA793347233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.cpp */,
+				FA793348233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.h */,
+				FA793345233D9C7900455539 /* HttpGetDeliveryListTask.cpp */,
+				FA793344233D9C7900455539 /* HttpGetDeliveryListTask.h */,
+				FA793341233D9B3A00455539 /* HttpGetResentRecipientListTask.cpp */,
+				FA793342233D9B3A00455539 /* HttpGetResentRecipientListTask.h */,
+				FA79333F233D938200455539 /* HttpGetRecommendGiftListTask.cpp */,
+				FA79333E233D938200455539 /* HttpGetRecommendGiftListTask.h */,
+				FA79333B233D91CE00455539 /* HttpGetFlowerGiftDetailTask.cpp */,
+				FA79333C233D91CE00455539 /* HttpGetFlowerGiftDetailTask.h */,
+				FAB5158E233CC10F00B59A15 /* HttpGetStoreGiftListTask.cpp */,
+				FAB5158F233CC11000B59A15 /* HttpGetStoreGiftListTask.h */,
+				FA16295423151938009E3F1F /* HttpGetGiftTypeListTask.cpp */,
+				FA16295523151939009E3F1F /* HttpGetGiftTypeListTask.h */,
+				FAC813F02303BD6D001A2B76 /* HttpUploadUserPhotoTask.cpp */,
+				FAC813F12303BD6D001A2B76 /* HttpUploadUserPhotoTask.h */,
+				FAFDEABA22FBB9D900B20A0D /* HttpRetrieveBannerTask.cpp */,
+				FAFDEABB22FBB9DA00B20A0D /* HttpRetrieveBannerTask.h */,
+				FAFA900122EF05890064DB2B /* HttpUpQnInviteIdTask.cpp */,
+				FAFA900022EF05890064DB2B /* HttpUpQnInviteIdTask.h */,
+				FACCF2BE22B7373000BE685A /* HttpGetContactListTask.cpp */,
+				FACCF2BD22B7373000BE685A /* HttpGetContactListTask.h */,
+				FAABABDD22B1E48000F0FE55 /* HttpGetChatVoucherListTask.cpp */,
+				FAABABDF22B1E48100F0FE55 /* HttpGetChatVoucherListTask.h */,
+				FAABABDC22B1E48000F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.cpp */,
+				FAABABDE22B1E48100F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.h */,
 				FACE54852044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp */,
 				FACE54832044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.h */,
 				FA5FDC8A215351E600C6B68B /* HttpAddTokenTask.cpp */,
@@ -825,18 +936,18 @@
 				FACE54842044F7CC00CC3B45 /* HttpBannerTask.cpp */,
 				FACE54812044F7CB00CC3B45 /* HttpBannerTask.h */,
 				5007B1DD1ECAAA5900C2C17F /* HttpBaseTask.cpp */,
-				FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */,
 				5007B1DE1ECAAA5900C2C17F /* HttpBaseTask.h */,
 				FA905E2121C39DAF00A9966E /* HttpBuyPrivatePhotoVideoTask.cpp */,
 				FA905E2221C39DAF00A9966E /* HttpBuyPrivatePhotoVideoTask.h */,
+				FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */,
 				FA6E142020872A79004F8B92 /* HttpBuyProgramTask.h */,
 				FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */,
 				FA075CCB209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.h */,
 				FA62D35621E8872C00C28294 /* HttpCanSendEmfTask.cpp */,
-				FA5FDC932153780700C6B68B /* HttpChangePasswordTask.cpp */,
 				FA62D35521E8872B00C28294 /* HttpCanSendEmfTask.h */,
 				FA6E142220872B15004F8B92 /* HttpChangeFavouriteTask.cpp */,
 				FA6E142320872B15004F8B92 /* HttpChangeFavouriteTask.h */,
+				FA5FDC932153780700C6B68B /* HttpChangePasswordTask.cpp */,
 				FA5FDC942153780700C6B68B /* HttpChangePasswordTask.h */,
 				FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */,
 				FACE54B32044F7E500CC3B45 /* HttpCloseAdAnchorListTask.h */,
@@ -856,6 +967,8 @@
 				FACE549C2044F7DF00CC3B45 /* HttpGetAdAnchorListTask.h */,
 				FACE54DF2044F7EE00CC3B45 /* HttpGetAllGiftListTask.cpp */,
 				FACE54AA2044F7E300CC3B45 /* HttpGetAllGiftListTask.h */,
+				FA2C9016226847F4001F2DCF /* HttpGetAllSayHiListTask.cpp */,
+				FA2C9017226847F4001F2DCF /* HttpGetAllSayHiListTask.h */,
 				FACE54962044F7DE00CC3B45 /* HttpGetAnchorListTask.cpp */,
 				FACE54A32044F7E100CC3B45 /* HttpGetAnchorListTask.h */,
 				FACE54BF2044F7E700CC3B45 /* HttpGetBackpackUnreadNumTask.cpp */,
@@ -922,8 +1035,12 @@
 				FACE54BE2044F7E700CC3B45 /* HttpGetPromoAnchorListTask.h */,
 				FA8B7C02215E1331003B7BD9 /* HttpGetPushConfigTask.cpp */,
 				FA8B7C03215E1332003B7BD9 /* HttpGetPushConfigTask.h */,
+				FA2C901A2268504F001F2DCF /* HttpGetResponseSayHiListTask.cpp */,
+				FA2C901B22685050001F2DCF /* HttpGetResponseSayHiListTask.h */,
 				FACE54A12044F7E100CC3B45 /* HttpGetRoomInfoTask.cpp */,
 				FACE549B2044F7DF00CC3B45 /* HttpGetRoomInfoTask.h */,
+				FA2C900C226822BF001F2DCF /* HttpGetSayHiAnchorListTask.cpp */,
+				FA2C900D226822BF001F2DCF /* HttpGetSayHiAnchorListTask.h */,
 				FA905E2521C3A85B00A9966E /* HttpGetSendMailPriceTask.cpp */,
 				FA905E2621C3A85B00A9966E /* HttpGetSendMailPriceTask.h */,
 				FACE54F32044F7F300CC3B45 /* HttpGetShareLinkTask.cpp */,
@@ -960,6 +1077,8 @@
 				FACE54942044F7DD00CC3B45 /* HttpIOSPayCallTask.h */,
 				FA5FDC962153801E00C6B68B /* HttpIOSPremiumMemberShipTask.cpp */,
 				FA5FDC972153801E00C6B68B /* HttpIOSPremiumMemberShipTask.h */,
+				FA2C90112268284B001F2DCF /* HttpIsCanSendSayHiTask.cpp */,
+				FA2C90102268284B001F2DCF /* HttpIsCanSendSayHiTask.h */,
 				FACE54A42044F7E100CC3B45 /* HttpLiveFansListTask.cpp */,
 				FACE54EC2044F7F100CC3B45 /* HttpLiveFansListTask.h */,
 				FACE54E42044F7EF00CC3B45 /* HttpLoginProtocol.h */,
@@ -987,6 +1106,8 @@
 				FA0D851721A7ECBC00BF6855 /* HttpPhoneInfoTask.h */,
 				FACE54D12044F7EA00CC3B45 /* HttpPremiumMembershipTask.cpp */,
 				FACE548C2044F7DC00CC3B45 /* HttpPremiumMembershipTask.h */,
+				FA2C90232268672C001F2DCF /* HttpReadResponseTask.cpp */,
+				FA2C90222268672C001F2DCF /* HttpReadResponseTask.h */,
 				509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */,
 				509A8DA81ECBE6C1004720CF /* HttpRequestController.h */,
 				FA4647C621524EEB009FF4D0 /* HttpRequestConvertEnum.cpp */,
@@ -995,8 +1116,12 @@
 				FACE54DD2044F7ED00CC3B45 /* HttpRequestEnum.h */,
 				5007B1D91ECAAA3500C2C17F /* HttpRequestTask.cpp */,
 				5007B1DA1ECAAA3500C2C17F /* HttpRequestTask.h */,
+				FA2C900722681AF2001F2DCF /* HttpResourceConfigTask.cpp */,
+				FA2C900622681AF1001F2DCF /* HttpResourceConfigTask.h */,
 				FACE54E82044F7F000CC3B45 /* HttpRideListTask.cpp */,
 				FACE549E2044F7E000CC3B45 /* HttpRideListTask.h */,
+				FA2C901F2268572A001F2DCF /* HttpSayHiDetailTask.cpp */,
+				FA2C901E2268572A001F2DCF /* HttpSayHiDetailTask.h */,
 				FACE54C42044F7E800CC3B45 /* HttpSendBookingRequestTask.cpp */,
 				FACE54E02044F7EE00CC3B45 /* HttpSendBookingRequestTask.h */,
 				FACE548D2044F7DC00CC3B45 /* HttpSendCancelPrivateLiveInviteTask.cpp */,
@@ -1005,6 +1130,8 @@
 				FA905E1821C393A000A9966E /* HttpSendEmfTask.h */,
 				FA031FB5209B015D00BC39B2 /* HttpSendInvitationHangoutTask.cpp */,
 				FA031FB2209B015900BC39B2 /* HttpSendInvitationHangoutTask.h */,
+				FA2C901422682B46001F2DCF /* HttpSendSayHiTask.cpp */,
+				FA2C901322682B46001F2DCF /* HttpSendSayHiTask.h */,
 				FACE54AE2044F7E400CC3B45 /* HttpServerSpeedTask.cpp */,
 				FACE54B02044F7E400CC3B45 /* HttpServerSpeedTask.h */,
 				FACE54922044F7DD00CC3B45 /* HttpSetFavoriteTask.cpp */,
@@ -1051,6 +1178,18 @@
 		5007B1E41ECAB05700C2C17F /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FAC23140234D6E66000E4DC3 /* HttpAdWomanListAdvertItem.h */,
+				FAD4582223403C7E00B890A4 /* HttpGreetingCardItem.h */,
+				FA793367233E13B300455539 /* HttpCheckoutFlowerGiftItem.h */,
+				FA793366233E10F600455539 /* HttpCheckoutItem.h */,
+				FA793365233E0C7E00455539 /* HttpMyCartItem.h */,
+				FA793364233E070500455539 /* HttpMyDeliveryItem.h */,
+				FA793363233E042F00455539 /* HttpDeliveryFlowerGiftItem.h */,
+				FA793362233E020100455539 /* HttpRecipientAnchorItem.h */,
+				FA793361233DF8E500455539 /* HttpStoreFlowerGiftItem.h */,
+				FA793360233DF61D00455539 /* HttpFlowerGiftItem.h */,
+				FA16295723151C04009E3F1F /* HttpGiftTypeItem.h */,
+				FAABABE222B1E49300F0FE55 /* HttpRecommendAnchorItem.h */,
 				FAC50B62226D8EDB006375FF /* HttpAppPushConfigItem.h */,
 				FA2C902122686031001F2DCF /* HttpSayHiDetailItem.h */,
 				FA2C901D226853E7001F2DCF /* HttpResponseSayHiListItem.h */,
@@ -1381,6 +1520,8 @@
 		FABB254B20479DDA005EDF51 /* anchorhttpcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				FAB3977423741EFE00137887 /* HttpGetCurrentRoomInfoTask.cpp */,
+				FAB3977523741EFE00137887 /* HttpGetCurrentRoomInfoTask.h */,
 				FA7AD29B20A67543005AF56D /* HttpAddAnchorFriendTask.cpp */,
 				FA7AD29C20A67543005AF56D /* HttpAddAnchorFriendTask.h */,
 				FAAB2E18209169190048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp */,
@@ -1476,6 +1617,8 @@
 		FABB255120479DDB005EDF51 /* ZBitem */ = {
 			isa = PBXGroup;
 			children = (
+				FAEEE0292374FBCE0069476B /* ZBHttpUserInfoItem.h */,
+				FAB397772374228300137887 /* ZBHttpCurrentRoomItem.h */,
 				FA7AD2A120A67720005AF56D /* HttpAnchorFriendItem.h */,
 				FAAB2E2C209169260048E8B1 /* HttpAnchorBaseInfoItem.h */,
 				FAAB2E2E209169260048E8B1 /* HttpAnchorGiftNumItem.h */,
@@ -1592,10 +1735,12 @@
 				FACE551B2044F7F400CC3B45 /* HttpGetVerificationCodeTask.cpp in Sources */,
 				501BF3B41C7EFF460052C59F /* KSocket.cpp in Sources */,
 				FA620D0621F6A69300F43C8B /* HttpAutoInvitationClickLogTask.cpp in Sources */,
+				FAADA3C723544CC7004142BB /* HttpMobilePayGotoTask.cpp in Sources */,
 				504CD9FD1C7FD6AF00DBB429 /* pngerror.c in Sources */,
 				FA3A97BA2060E1FF0004F85A /* ZBHttpSetAutoPushTask.cpp in Sources */,
 				FACE550F2044F7F400CC3B45 /* HttpGetLeftCreditTask.cpp in Sources */,
 				FA4647C321522900009FF4D0 /* HttpGetValidsiteIdTask.cpp in Sources */,
+				FACCF2BF22B7373000BE685A /* HttpGetContactListTask.cpp in Sources */,
 				FA3A97CE2060E1FF0004F85A /* ZBHttpRejectScheduledInviteTask.cpp in Sources */,
 				FAEB997221F5681100A0E8D9 /* HttpGetHangoutFriendsTask.cpp in Sources */,
 				FACE54F92044F7F400CC3B45 /* HttpSetFavoriteTask.cpp in Sources */,
@@ -1609,15 +1754,21 @@
 				FA5FDC8E215373C700C6B68B /* HttpDestroyTokenTask.cpp in Sources */,
 				FACE54872044F7CC00CC3B45 /* HttpBannerTask.cpp in Sources */,
 				FA3A97CC2060E1FF0004F85A /* ZBHttpGetScheduledAcceptNumTask.cpp in Sources */,
+				FAABABE022B1E48100F0FE55 /* HttpGetLiveEndRecommendAnchorListTask.cpp in Sources */,
 				FA0D851821A7ECBD00BF6855 /* HttpPhoneInfoTask.cpp in Sources */,
 				FACE55272044F7F400CC3B45 /* HttpVoucherListTask.cpp in Sources */,
 				FA3A97C82060E1FF0004F85A /* ZBHttpGetGiftDetailTask.cpp in Sources */,
 				FACE55132044F7F400CC3B45 /* HttpGetTalentListTask.cpp in Sources */,
 				501BF3C81C7F00400052C59F /* miniunz.c in Sources */,
+				FA793349233D9D5F00455539 /* HttpGetCartGiftTypeNumTask.cpp in Sources */,
+				FA793352233DA12000455539 /* HttpChangeCartGiftNumberTask.cpp in Sources */,
 				501BF3C91C7F00400052C59F /* minizip.c in Sources */,
+				FA793340233D938200455539 /* HttpGetRecommendGiftListTask.cpp in Sources */,
 				FACE55212044F7F400CC3B45 /* HttpControlManPushTask.cpp in Sources */,
 				FA031FBB209B015E00BC39B2 /* HttpDealKnockRequestTask.cpp in Sources */,
+				FA79333D233D91CE00455539 /* HttpGetFlowerGiftDetailTask.cpp in Sources */,
 				504CDA1F1C7FD6EE00DBB429 /* json_writer.cpp in Sources */,
+				FAB51590233CC11000B59A15 /* HttpGetStoreGiftListTask.cpp in Sources */,
 				FA3A97D02060E1FF0004F85A /* ZBHttpGiftListTask.cpp in Sources */,
 				504CDA341C7FDA4100DBB429 /* AMF3.cpp in Sources */,
 				FA905E0721C354CB00A9966E /* HttpGetLoiDetailTask.cpp in Sources */,
@@ -1633,6 +1784,7 @@
 				507FFA2A1C9FD76D0083EC06 /* CheckMemoryLeak.cpp in Sources */,
 				FACE54FC2044F7F400CC3B45 /* HttpGetPromoAnchorListTask.cpp in Sources */,
 				FA3A97CA2060E1FF0004F85A /* ZBHttpUpdateTokenIdTask.cpp in Sources */,
+				FA793355233DA25100455539 /* HttpRemoveCartGiftTask.cpp in Sources */,
 				FA164F1420FD7DBD00E41D7D /* HttpSetPrivateMsgReadedTask.cpp in Sources */,
 				FACE55062044F7F400CC3B45 /* HttpLogoutTask.cpp in Sources */,
 				50AE07221F96FCF6005CF8D2 /* LSCommon_C_Library.mm in Sources */,
@@ -1651,14 +1803,17 @@
 				FACE55072044F7F400CC3B45 /* HttpSetRideTask.cpp in Sources */,
 				FACE551D2044F7F400CC3B45 /* HttpOwnRegisterTask.cpp in Sources */,
 				FA905E2321C39DB000A9966E /* HttpBuyPrivatePhotoVideoTask.cpp in Sources */,
+				FAC813F22303BD6E001A2B76 /* HttpUploadUserPhotoTask.cpp in Sources */,
 				FA3A97C12060E1FF0004F85A /* ZBHttpRejectInstanceInviteTask.cpp in Sources */,
 				FACE55122044F7F400CC3B45 /* HttpOwnEmailLoginTask.cpp in Sources */,
 				FACE55162044F7F400CC3B45 /* HttpCrashFileTask.cpp in Sources */,
+				FA79335B233DA5FC00455539 /* HttpCreateGiftOrderTask.cpp in Sources */,
 				FA5FDC9E215388AF00C6B68B /* HttpIOSCheckPayCallTas.cpp in Sources */,
 				FA6E142420872B16004F8B92 /* HttpChangeFavouriteTask.cpp in Sources */,
 				504CDA061C7FD6AF00DBB429 /* pngtrans.c in Sources */,
 				501BF3AF1C7EFF460052C59F /* command.cpp in Sources */,
 				FACE54882044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp in Sources */,
+				FAFA900222EF058C0064DB2B /* HttpUpQnInviteIdTask.cpp in Sources */,
 				FA1451212150854E00D6E75D /* HttpGetMyProfileTask.cpp in Sources */,
 				FACE54F72044F7F400CC3B45 /* HttpGetGiftListByUserIdTask.cpp in Sources */,
 				FA6E141B208726AF004F8B92 /* HttpGetProgramListTask.cpp in Sources */,
@@ -1671,7 +1826,9 @@
 				FA77C8C320CFEF1700923619 /* HttpGetPrivateMsgHistoryByIdTask.cpp in Sources */,
 				FA3A97CB2060E1FF0004F85A /* ZBHttpGetEmoticonListTask.cpp in Sources */,
 				FA905E2021C3994F00A9966E /* HttpUploadLetterPhotoTask.cpp in Sources */,
+				FA79334C233D9E8D00455539 /* HttpGetCartGiftListTask.cpp in Sources */,
 				FA905E2721C3A85C00A9966E /* HttpGetSendMailPriceTask.cpp in Sources */,
+				FAC23143234D75AB000E4DC3 /* HttpWomanListAdvertTask.cpp in Sources */,
 				FA62D35721E8872C00C28294 /* HttpCanSendEmfTask.cpp in Sources */,
 				504CDA051C7FD6AF00DBB429 /* pngset.c in Sources */,
 				504CDA1E1C7FD6EE00DBB429 /* json_value.cpp in Sources */,
@@ -1693,8 +1850,10 @@
 				504CD9FC1C7FD6AF00DBB429 /* png.c in Sources */,
 				504CDA481C7FDB0500DBB429 /* HttpRequest.cpp in Sources */,
 				FA3A97C22060E1FF0004F85A /* ZBHttpCancelInstantInviteUserTask.cpp in Sources */,
+				FAFDEABC22FBB9DA00B20A0D /* HttpRetrieveBannerTask.cpp in Sources */,
 				FACE54FE2044F7F400CC3B45 /* HttpGetPhoneVerifyCodeTask.cpp in Sources */,
 				504CD9FF1C7FD6AF00DBB429 /* pngmem.c in Sources */,
+				FA036195237A4255001CD748 /* HttpGetFeaturedAnchorListTask.cpp in Sources */,
 				FA3A97CD2060E1FF0004F85A /* ZBHttpAcceptScheduledInviteTask.cpp in Sources */,
 				FACE55292044F7F400CC3B45 /* HttpGetShareLinkTask.cpp in Sources */,
 				FACE551C2044F7F400CC3B45 /* HttpIOSPayCallTask.cpp in Sources */,
@@ -1712,6 +1871,7 @@
 				FAB60C92208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp in Sources */,
 				5007B1DB1ECAAA3500C2C17F /* HttpRequestTask.cpp in Sources */,
 				FA3A97CF2060E1FF0004F85A /* ZBHttpCrashFileTask.cpp in Sources */,
+				FA793343233D9B3A00455539 /* HttpGetResentRecipientListTask.cpp in Sources */,
 				FACE55192044F7F400CC3B45 /* HttpGetTalentStatusTask.cpp in Sources */,
 				504CDA021C7FD6AF00DBB429 /* pngrio.c in Sources */,
 				504CDA001C7FD6AF00DBB429 /* pngpread.c in Sources */,
@@ -1720,11 +1880,14 @@
 				FA4647C721524EEB009FF4D0 /* HttpRequestConvertEnum.cpp in Sources */,
 				501BF3B81C7EFF460052C59F /* KZip.cpp in Sources */,
 				FA77C8C020CFEB0D00923619 /* HttpGetFollowPrivateMsgFriendListTask.cpp in Sources */,
+				FAB3977623741EFF00137887 /* HttpGetCurrentRoomInfoTask.cpp in Sources */,
 				FAF25E13215A01C000E50788 /* HttpPasswordLoginTask.cpp in Sources */,
 				FA5FDC922153756C00C6B68B /* HttpFindPasswordTask.cpp in Sources */,
 				FA8B7C04215E1332003B7BD9 /* HttpGetPushConfigTask.cpp in Sources */,
 				FA905E1921C393A100A9966E /* HttpSendEmfTask.cpp in Sources */,
+				FAABABE122B1E48100F0FE55 /* HttpGetChatVoucherListTask.cpp in Sources */,
 				FA3A97C42060E1FF0004F85A /* ZBHttpSetRoomCountDownTask.cpp in Sources */,
+				FA16295623151939009E3F1F /* HttpGetGiftTypeListTask.cpp in Sources */,
 				504CDA091C7FD6AF00DBB429 /* pngwtran.c in Sources */,
 				FA3A97C52060E1FF0004F85A /* ZBHttpRequestController.cpp in Sources */,
 				FA2C90202268572A001F2DCF /* HttpSayHiDetailTask.cpp in Sources */,
@@ -1749,6 +1912,7 @@
 				501BF3CA1C7F00400052C59F /* mztools.c in Sources */,
 				FACE55102044F7F400CC3B45 /* HttpGetCreateBookingInfoTask.cpp in Sources */,
 				FA296FA521F1C69E00C40272 /* HttpGetHangoutOnlineAnchorTask.cpp in Sources */,
+				FA79334F233D9FE000455539 /* HttpAddCartGiftTask.cpp in Sources */,
 				501BF3CB1C7F00400052C59F /* unzip.c in Sources */,
 				501BF3B91C7EFF460052C59F /* md5.c in Sources */,
 				504CDA031C7FD6AF00DBB429 /* pngrtran.c in Sources */,
@@ -1765,6 +1929,7 @@
 				FACE55172044F7F400CC3B45 /* HttpOwnFindPasswordTask.cpp in Sources */,
 				FA14511E2150854E00D6E75D /* HttpDoLoginTask.cpp in Sources */,
 				504CDA2A1C7FDA2D00DBB429 /* tinyxml.cpp in Sources */,
+				FA793358233DA43B00455539 /* HttpCheckOutCartGiftTask.cpp in Sources */,
 				FACE54FD2044F7F400CC3B45 /* HttpSubmitPhoneVerifyCodeTask.cpp in Sources */,
 				504CDA041C7FD6AF00DBB429 /* pngrutil.c in Sources */,
 				FACE55042044F7F400CC3B45 /* HttpGetInviteInfoTask.cpp in Sources */,
@@ -1792,6 +1957,7 @@
 				FA620D0521F6A69300F43C8B /* HttpAutoInvitationHangoutLiveDisplayTask.cpp in Sources */,
 				FA3BD3D1211BD95A00A59F7B /* KLogWrapper.cpp in Sources */,
 				FACE550B2044F7F400CC3B45 /* HttpOwnCheckMailRegistrationTask.cpp in Sources */,
+				FA793346233D9C7900455539 /* HttpGetDeliveryListTask.cpp in Sources */,
 				FACE551F2044F7F400CC3B45 /* HttpGetNewFansBaseInfoTask.cpp in Sources */,
 				FACE550D2044F7F400CC3B45 /* HttpGetBackpackUnreadNumTask.cpp in Sources */,
 				501BF3AB1C7EFF460052C59F /* aes.c in Sources */,

@@ -557,7 +557,7 @@ public class BaseImplHangOutRoomActivity extends BaseFragmentActivity
      * @param credit
      */
     @Override
-    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
+    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, IMClientListener.LCC_ERR_TYPE err) {
         Log.d(TAG,"OnRecvLackOfCreditNotice-roomId:"+roomId+" message:"+message+" credit:"+credit);
         if(!isCurrentRoom(roomId)){
             return;

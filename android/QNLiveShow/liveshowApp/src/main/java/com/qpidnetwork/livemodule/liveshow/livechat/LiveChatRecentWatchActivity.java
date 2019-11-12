@@ -11,6 +11,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.livechathttprequest.LCRequestJniLiveChat;
+import com.qpidnetwork.livemodule.livechathttprequest.LivechatRequestOperator;
 import com.qpidnetwork.livemodule.livechathttprequest.OnQueryRecentVideoListCallback;
 import com.qpidnetwork.livemodule.livechathttprequest.item.LCVideoItem;
 import com.qpidnetwork.livemodule.liveshow.adapter.BaseRecyclerViewAdapter;
@@ -144,7 +145,7 @@ public class LiveChatRecentWatchActivity extends BaseActionBarFragmentActivity
 
     private void loadRecentWatch() {
 
-        LCRequestJniLiveChat.QueryRecentVideo(token, uid, womenId, this);
+        LivechatRequestOperator.getInstance().QueryRecentVideo(token, uid, womenId, this);
 
     }
 

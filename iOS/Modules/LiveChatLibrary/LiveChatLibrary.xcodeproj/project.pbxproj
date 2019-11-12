@@ -204,6 +204,7 @@
 		FAB9F3CD21FE9D9000B12257 /* LSLCAutoInviteInviteManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB9F3CC21FE9D9000B12257 /* LSLCAutoInviteInviteManager.cpp */; };
 		FAB9F3D721FF00B800B12257 /* LSLCNormalInviteManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB9F3D621FF00B800B12257 /* LSLCNormalInviteManager.cpp */; };
 		FAC6F08B2244C969007ED9D2 /* LSLCRecentVideoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC6F08A2244C968007ED9D2 /* LSLCRecentVideoItemObject.m */; };
+		FAE3403722DC27C400A5A54C /* LSSendInviteMsgTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE3403622DC27C400A5A54C /* LSSendInviteMsgTask.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -676,6 +677,8 @@
 		FAB9F3D621FF00B800B12257 /* LSLCNormalInviteManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCNormalInviteManager.cpp; sourceTree = "<group>"; };
 		FAC6F0892244C968007ED9D2 /* LSLCRecentVideoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCRecentVideoItemObject.h; sourceTree = "<group>"; };
 		FAC6F08A2244C968007ED9D2 /* LSLCRecentVideoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCRecentVideoItemObject.m; sourceTree = "<group>"; };
+		FAE3403522DC27C400A5A54C /* LSSendInviteMsgTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSendInviteMsgTask.h; sourceTree = "<group>"; };
+		FAE3403622DC27C400A5A54C /* LSSendInviteMsgTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSSendInviteMsgTask.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -998,6 +1001,8 @@
 		FA85467B219C14B7007B9270 /* livechat */ = {
 			isa = PBXGroup;
 			children = (
+				FAE3403622DC27C400A5A54C /* LSSendInviteMsgTask.cpp */,
+				FAE3403522DC27C400A5A54C /* LSSendInviteMsgTask.h */,
 				FA8547C2219C20BE007B9270 /* ILSLiveChatClient.cpp */,
 				FA8546C0219C14B7007B9270 /* ILSLiveChatClient.h */,
 				FA8547B6219C20B1007B9270 /* ILSLiveChatClientDef.h */,
@@ -1300,6 +1305,7 @@
 				FA8547A5219C14B8007B9270 /* LSLiveChatGetUsersCamStatusTask.cpp in Sources */,
 				FA85485E219C297B007B9270 /* LSLiveChatRecvShowPhotoTask.cpp in Sources */,
 				FA3F948F219D174B001B8B60 /* LSLCPhotoManager.cpp in Sources */,
+				FAE3403722DC27C400A5A54C /* LSSendInviteMsgTask.cpp in Sources */,
 				506143CD219A700300B7631F /* LSLCLiveChatMsgVoiceItem.m in Sources */,
 				FA85485B219C297B007B9270 /* LSLiveChatRecvTryTalkEndTask.cpp in Sources */,
 				FAB9F3CD21FE9D9000B12257 /* LSLCAutoInviteInviteManager.cpp in Sources */,

@@ -54,6 +54,7 @@
 
 #include "RecvEMFNoticeTask.h"
 #include "RecvLoiNoticeTask.h"
+#include "RecvPublicRoomFreeMsgNoticeTask.h"
 
 
 // 根据 cmd 创建 task
@@ -103,6 +104,10 @@ ITask* ITask::CreateTaskWithCmd(const string& cmd)
     else if (cmd == CMD_RECVCHANGEVIDEOURL) {
         //3.12.接收观众／主播切换视频流通知接口
         task = new RecvChangeVideoUrlTask();
+    }
+    else if (cmd == CMD_RECVPUBLICROOMFREEMSGNOTICE) {
+        //3.16.接收公开直播间前3秒免费提示通知接口
+        task = new RecvPublicRoomFreeMsgNoticeTask();
     }
     else if (cmd == CMD_RECVSENDSYSTEMNOTICE) {
         //4.3.接收直播间公告消息

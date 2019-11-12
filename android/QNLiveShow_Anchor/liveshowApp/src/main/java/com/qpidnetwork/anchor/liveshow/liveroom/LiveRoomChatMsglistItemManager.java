@@ -365,7 +365,7 @@ public class LiveRoomChatMsglistItemManager {
                         }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Warning){
                             SpannableString spanString = new SpannableString(msgContent.message);
                             //字体颜色-警告-所有直播间保持一致
-                            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#FF4D4D"));
+                            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#FFFFFF"));
                             spanString.setSpan(foregroundColorSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 //                            tvMsgDescription.setText(spanString);
                             msgListItem.spanned = spanString;

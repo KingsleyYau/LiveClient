@@ -10,7 +10,7 @@
 #import "LSUserInfoModel.h"
 
 @interface LSUserInfoManager : NSObject
-typedef void (^GetUserInfoHandler)(LSUserInfoModel *_Nonnull item);
+typedef void (^GetUserInfoHandler)(LSUserInfoModel * item);
 
 #pragma mark - 获取实例
 /**
@@ -18,7 +18,7 @@ typedef void (^GetUserInfoHandler)(LSUserInfoModel *_Nonnull item);
  *
  *  @return 实例
  */
-+ (instancetype _Nonnull)manager;
++ (instancetype)manager;
 
 /**
  获取用户信息(仅缓存)

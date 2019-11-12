@@ -14,21 +14,25 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.qpidnetwork.anchor.R;
 import com.qpidnetwork.anchor.bean.CommonConstant;
-import com.qpidnetwork.anchor.framework.widget.barlibrary.ImmersionBar;
 import com.qpidnetwork.anchor.liveshow.LoadingDialog;
 import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
 import com.qpidnetwork.anchor.liveshow.googleanalytics.AnalyticsFragmentActivity;
+import com.qpidnetwork.anchor.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.anchor.liveshow.liveroom.gift.CustomShowTimeToast;
 import com.qpidnetwork.anchor.liveshow.login.LiveLoginActivity;
+import com.qpidnetwork.anchor.liveshow.manager.ChangeVideoPushManager;
+import com.qpidnetwork.anchor.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.anchor.utils.EToast2;
 import com.qpidnetwork.anchor.utils.Log;
 import com.qpidnetwork.anchor.view.MaterialProgressDialog;
+import com.qpidnetwork.qnbridgemodule.view.statusBar.ImmersionBar;
 
 import java.lang.ref.WeakReference;
 
@@ -36,7 +40,7 @@ import java.lang.ref.WeakReference;
  * Created by Hunter Mun on 2017/9/4.
  */
 
-public class BaseFragmentActivity extends AnalyticsFragmentActivity implements View.OnClickListener{
+public class BaseFragmentActivity extends AnalyticsFragmentActivity implements View.OnClickListener, ChangeVideoPushManager.OnVideoChangeEvent {
 
     protected String TAG = BaseFragmentActivity.class.getName();
 
@@ -52,6 +56,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
 
     @Override
     protected void onCreate(Bundle arg0) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(arg0);
         mContext = this;
         mProgressDialogCount = 0;
@@ -77,6 +82,8 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
             //关闭自己
             finish();
         }
+
+        ChangeVideoPushManager.getInstance().registerOnVideoChangeEvent(this);
     }
 
     @Override
@@ -105,6 +112,10 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
         if(mKickedOffReceiver != null){
             unregisterReceiver(mKickedOffReceiver);
         }
+        //状态栏:必须调用该方法，防止内存泄漏
+        ImmersionBar.with(this).destroy();
+
+        ChangeVideoPushManager.getInstance().unregisterOnVideoChangeEvent(this);
     }
 
     /**
@@ -227,21 +238,29 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
     }
 
     public void setImmersionBarArtts(int barColorResId){
+//        ImmersionBar.with(this)
+//                .fitsSystemWindows(true)
+//                .statusBarColorTransform(barColorResId)   //状态栏变色后的颜色
+//                .transparentNavigationBar()               //透明导航栏
+//                .statusBarDarkFont(true,0f)                  //状态栏字体是深色
+//                .init();                                  //必须调用方可沉浸式
+
         ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .statusBarColorTransform(barColorResId)   //状态栏变色后的颜色
-                .transparentNavigationBar()               //透明导航栏
-                .statusBarDarkFont(true,0f)                  //状态栏字体是深色
-                .init();                                  //必须调用方可沉浸式
+                .statusBarColor(barColorResId)   //状态栏变色后的颜色
+                .init();
     }
 
     public void setImmersionBarArtts(String barColorStr){
+//        ImmersionBar.with(this)
+//                .fitsSystemWindows(true)
+//                .statusBarColorTransform(barColorStr)   //状态栏变色后的颜色
+//                .transparentNavigationBar()               //透明导航栏
+//                .statusBarDarkFont(true,0f)                  //状态栏字体是深色
+//                .init();                                  //必须调用方可沉浸式
+
         ImmersionBar.with(this)
-                .fitsSystemWindows(true)
                 .statusBarColorTransform(barColorStr)   //状态栏变色后的颜色
-                .transparentNavigationBar()               //透明导航栏
-                .statusBarDarkFont(true,0f)                  //状态栏字体是深色
-                .init();                                  //必须调用方可沉浸式
+                .init();
     }
 
     @SuppressLint("HandlerLeak")
@@ -365,6 +384,20 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
     @Override
     public void onClick(View v) {
         Log.d(TAG,"onClick");
+    }
+
+    /**
+     * 通用处理，接收PC要求APP推流通知相应处理
+     * @param manId
+     * @param manName
+     * @param manPhotoUrl
+     */
+    @Override
+    public void onPcToApp(String manId, String manName, String manPhotoUrl) {
+        if(isActivityVisible()){
+            //跳转到主界面，再以邀请的方式进入过渡页(在过渡页、直播间时不处理)
+            MainFragmentActivity.launchActivityWIthUrl(this, URL2ActivityManager.createInviteUrl(manId, manName, manPhotoUrl));
+        }
     }
 
     //******************************** 通用的提示弹框 ****************************************

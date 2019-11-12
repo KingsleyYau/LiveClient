@@ -56,6 +56,6 @@ public class DialogConfig {
     public static final int TYPE_CUSTOM_ALERT = 15;
     public static final int TYPE_CUSTOM_BOTTOM_ALERT = 16;
     public static final int TYPE_DATEPICK = 19;
-    public static final int TYPE_JDATEPICK = 20;
+
 
 }

@@ -37,7 +37,7 @@
     self = [super init];
 
     if (self) {
-        NSLog(@"LSImageViewLoader::init( self : %@ )", self);
+        //NSLog(@"LSImageViewLoader::init( self : %@ )", self);
 
         self.view = nil;
         self.image = nil;
@@ -47,7 +47,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"LSImageViewLoader::dealloc( self : %@ )", self);
+    //NSLog(@"LSImageViewLoader::dealloc( self : %@ )", self);
 }
 
 - (void)stop {
@@ -65,7 +65,7 @@
 }
 
 - (void)loadImageWithImageView:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(LSImageViewLoaderCallBack)finishHandler {
-    NSLog(@"LSImageViewLoader::loadImageWithImageView( self : %@, url : %@ )", self, url);
+    //NSLog(@"LSImageViewLoader::loadImageWithImageView( self : %@, url : %@ )", self, url);
     
     self.view = view;
     
@@ -91,7 +91,7 @@
                                          completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
                                              dispatch_async(dispatch_get_main_queue(), ^{
                                                  if (error) {
-                                                     NSLog(@"LSImageViewLoader::loadImageWithImageView( imageURL : %@, error : %@ )", imageURL, error);
+                                                     //NSLog(@"LSImageViewLoader::loadImageWithImageView( imageURL : %@, error : %@ )", imageURL, error);
                                                  }
                                                  
                                                  if (image) {
@@ -124,6 +124,9 @@
                                   options:YYWebImageOptionRefreshImageCache
                                completion:^(UIImage *_Nullable image, NSURL *_Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError *_Nullable error) {
                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                       if (error) {
+                                           NSLog(@"LSImageViewLoader::loadImageFromCache( imageURL : %@, error : %@ )", url, error);
+                                       }
                                        if (image) {
                                            [self displayImage:image];
                                        }

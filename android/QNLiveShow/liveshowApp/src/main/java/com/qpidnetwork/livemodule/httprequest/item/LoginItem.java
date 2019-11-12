@@ -48,7 +48,8 @@ public class LoginItem {
             boolean livechat,
             int livechatInvite,
             boolean isHangoutRisk,
-            UserPrivItem userPriv
+            UserPrivItem userPriv,
+            boolean isGiftFlowerSwitch
             ) {
         this.userId = userId;
         this.token = token;
@@ -78,6 +79,7 @@ public class LoginItem {
         this.isHangoutRisk = isHangoutRisk;
 
         this.userPriv = userPriv;
+        this.isGiftFlowerSwitch = isGiftFlowerSwitch;
     }
 
     public String userId;
@@ -104,6 +106,9 @@ public class LoginItem {
 
     // 用户权限相关
     public UserPrivItem userPriv;
+
+    // 是否有鲜花礼品开关
+    public boolean isGiftFlowerSwitch;
 
     //本地默认初始化，解决代码移植问题
     public boolean photosend = false;

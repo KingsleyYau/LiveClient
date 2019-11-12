@@ -56,6 +56,7 @@ import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.qnbridgemodule.bean.NotificationTypeEnum;
+import com.qpidnetwork.qnbridgemodule.urlRouter.LiveUrlBuilder;
 import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
@@ -709,10 +710,11 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 				reqId = IM_INVALID_REQID;
 			}
 		}
-		if(reqId == IM_INVALID_REQID){
-			//未登录或本地调用错误
-			mListenerManager.OnControlManPush(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), null);
-		}
+		//此种设计错误，会导致requestID无法作为一对一判断，因为reqId未更新，此处可能已经回调
+//		if(reqId == IM_INVALID_REQID){
+//			//未登录或本地调用错误
+//			mListenerManager.OnControlManPush(reqId, false, LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL, mContext.getResources().getString(R.string.common_connect_error_description), null);
+//		}
 		return reqId;
 	}
 
@@ -1219,8 +1221,8 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
-		mListenerManager.OnRecvLackOfCreditNotice(roomId, message, credit);
+	public void OnRecvLackOfCreditNotice(String roomId, String message, double credit, LCC_ERR_TYPE err) {
+		mListenerManager.OnRecvLackOfCreditNotice(roomId, message, credit, err);
 	}
 
 	@Override
@@ -1312,7 +1314,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		//生成发送push
 		if(checkAnchorInviteNotify(anchorId)){
 			isAnchorInviteShow = true;
-			String url = URL2ActivityManager.createAnchorInviteUrl(anchorId, anchorName, anchorPhotoUrl, logId);
+			String url = LiveUrlBuilder.createAnchorInviteUrl(anchorId, anchorName, anchorPhotoUrl, logId);
 			PushManager pushManager = PushManager.getInstance();
 			if(pushManager != null) {
 				pushManager.ShowNotification(NotificationTypeEnum.ANCHORINVITE_NOTIFICATION,
@@ -1366,7 +1368,8 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 
 	@Override
 	public void OnRecvTalentPromptNotice(String roomId, String introduction) {
-		mListenerManager.OnRecvTalentPromptNotice(roomId, introduction);
+		//屏蔽才艺公告
+//		mListenerManager.OnRecvTalentPromptNotice(roomId, introduction);
 	}
 
 	@Override
@@ -1659,10 +1662,13 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		//生成系统公告通知
 		String message = "";
 		IMRoomInItem.IMLiveRoomType roomType = getRoomType(item.roomId);
-		if(roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
-			|| roomType == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom){
-			message = mContext.getString(R.string.hangout_anchor_recommand_private_tips , item.nickName , item.friendNickName);
-		}else if(roomType == IMRoomInItem.IMLiveRoomType.HangoutRoom){
+//		if(roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom
+//			|| roomType == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom){
+//			//改到{@link FullScreenLiveRoomChatManager} item中显示，不发送文字信息
+////			message = mContext.getString(R.string.hangout_anchor_recommand_private_tips , item.nickName , item.friendNickName);
+//		}else
+
+		if(roomType == IMRoomInItem.IMLiveRoomType.HangoutRoom){
 			message = mContext.getString(R.string.hangout_anchor_recommand_hangout_tips , item.nickName , item.friendNickName);
 		}
 		if(!TextUtils.isEmpty(message)){

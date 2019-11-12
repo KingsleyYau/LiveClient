@@ -365,4 +365,19 @@ public class NormalGiftManager {
             mHandler.post(runnable);
         }
     }
+
+    /**
+     * 回收数据
+     */
+    public void onDestroy(){
+        synchronized (mAllGiftMap){
+            mAllGiftMap.clear();
+        }
+        synchronized (mOnGetGiftListCallbackList){
+            mOnGetGiftListCallbackList.clear();
+        }
+        mIsGetAllGiftRequesting = false;
+        mAllGiftArray = null;
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

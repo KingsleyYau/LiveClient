@@ -4,8 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
+
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 分栏、分页界面所用到的点点点指示
@@ -25,17 +26,25 @@ public class DotsView extends View {
 
 	public DotsView(Context context) {
 		super(context);
-		mPaint = new Paint();
+		init();
 	}
 
 	public DotsView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mPaint = new Paint();
+		init();
 	}
 
 	public DotsView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		init();
+	}
+
+	/**
+	 * 2019/8/23 Hardy
+	 */
+	private void init(){
 		mPaint = new Paint();
+		mPaint.setAntiAlias(true);		// 抗锯齿，圆滑点
 	}
 
 	public void setDotRadius(float dotRadius) {
@@ -75,11 +84,19 @@ public class DotsView extends View {
 		float top = (height - dotRadius * 2) / 2;
 		canvas.save();
 		for (int i = 0; i < dotCount; i++) {
+			// 2019/8/23 Hardy
 			if (i == currDot) {
-				mPaint.setAlpha(50);
-			} else {
 				mPaint.setAlpha(150);
+			} else {
+				mPaint.setAlpha(50);
 			}
+
+			// old
+//			if (i == currDot) {
+//				mPaint.setAlpha(50);
+//			} else {
+//				mPaint.setAlpha(150);
+//			}
 			canvas.drawCircle(left, top + dotRadius, dotRadius, mPaint);
 			left += (dotRadius * 2 + dotSpace);
 		}

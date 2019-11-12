@@ -32,6 +32,8 @@
 #include "ZBitem/IMAnchorRecvGiftItem.h"
 #include "ZBitem/IMAnchorProgramInfoItem.h"
 #include "ZBitem/IMAnchorRecvHangoutChatItem.h"
+#include "ZBitem/ZBIMBookingUnreadUnhandleNumItem.h"
+#include "ZBitem/ZBIMSendInviteInfoItem.h"
 
 using namespace std;
 
@@ -245,6 +247,15 @@ public:
      *
      */
     virtual void OnRecvAnchorLeaveRoomNotice(const string& roomId, const string& anchorId) {};
+    
+    /**
+     *  3.11.主播切换推流通知回调
+     *
+     *  @param pushUrl      推流地址
+     *  @param deviceType   终端类型
+     *
+     */
+    virtual void OnAnchorSwitchFlow(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const list<string> pushUrl, IMDeviceType deviceType) {};
 
     // ------------- 直播间处理(非消息) -------------
     /**
@@ -351,12 +362,10 @@ public:
      *  @param reqId             请求序列号
      *  @param err               结果类型
      *  @param errMsg            结果描述
-     *  @param invitationId      邀请ID
-     *  @param timeOut           邀请的剩余有效时间
-     *  @param roomId            直播间ID
+     *  @param infoItem         主播邀请返回信息
      *
      */
-    virtual void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId) {};
+    virtual void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const ZBIMSendInviteInfoItem& infoItem) {};
 
     /**
      *  9.2.接收立即私密邀请回复通知 回调
@@ -594,7 +603,29 @@ public:
      */
     virtual void OnRecvAnchorShowMsgNotice(const string& backgroundUrl, const string& msg) {};
 
+    /**
+     *  12.1.多端获取预约邀请未读或代处理数量同步推送接口 回调
+     *
+     *  @param item         未读信息
+     *
+     */
+    virtual void OnRecvGetScheduleListNReadNum(const ZBIMBookingUnreadUnhandleNumItem& item) {};
     
+    /**
+     *  12.2.多端获取已确认的预约数同步推送接口 回调
+     *
+     *  @param scheduleNum         已确认的预约数量
+     *
+     */
+    virtual void OnRecvGetScheduledAcceptNum(int scheduleNum) {};
+    
+    /**
+     *  12.3.多端获取节目未读数同步推送接口 回调
+     *
+     *  @param num         未读数量
+     *
+     */
+    virtual void OnRecvNoreadShowNum(int num) {};
 };
 
 // 主播IM客户端接口类
@@ -661,8 +692,16 @@ public:
      *
      */
     virtual bool ZBRoomOut(SEQ_T reqId, const string& roomId) = 0;
-
-
+    
+    /**
+     *  3.11.主播切换推流
+     *
+     *  @param reqId         请求序列号
+     *  @param roomId        直播间ID
+     *  @param deviceType    终端类型
+     *
+     */
+    virtual bool ZBAnchorSwitchFlow(SEQ_T reqId, const string& roomId, IMDeviceType deviceType) = 0;
     
     // --------- 直播间文本消息 ---------
     /**
@@ -704,7 +743,7 @@ public:
      *  @param userId                主播ID
      *
      */
-    virtual bool ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userId) = 0;
+    virtual bool ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userId, IMDeviceType deviceType) = 0;
     
     
     /**

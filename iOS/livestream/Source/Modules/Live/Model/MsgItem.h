@@ -20,9 +20,10 @@ typedef enum {
     MsgType_Join,
     MsgType_RiderJoin,
     MsgType_Warning,
-    MsgType_Recommend,
-    MsgType_Knock,
-    MsgType_Talent
+    MsgType_Recommend, // 邀请消息
+    MsgType_Knock, // 主播敲门
+    MsgType_Talent,
+    MsgType_FirstFree // 试聊卷
 } MsgType;
 
 typedef enum {

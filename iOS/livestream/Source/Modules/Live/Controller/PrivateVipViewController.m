@@ -54,11 +54,11 @@
     self.vc.vcDelegate = self;
     [self addChildViewController:self.vc];
     
-    self.talentVC = [[TalentOnDemandViewController alloc] initWithNibName:nil bundle:nil];
-    self.talentVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, 300);
-    self.navVC = [[UINavigationController alloc] initWithRootViewController:self.talentVC];
-    self.navVC.navigationBar.barTintColor = [UIColor blackColor];
-    self.navVC.view.frame = CGRectMake(0, SCREEN_HEIGHT - self.talentVC.view.frame.size.height, SCREEN_WIDTH, self.talentVC.view.frame.size.height);
+//    self.talentVC = [[TalentOnDemandViewController alloc] initWithNibName:nil bundle:nil];
+//    self.talentVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, 300);
+//    self.navVC = [[UINavigationController alloc] initWithRootViewController:self.talentVC];
+//    self.navVC.navigationBar.barTintColor = [UIColor blackColor];
+//    self.navVC.view.frame = CGRectMake(0, SCREEN_HEIGHT - self.talentVC.view.frame.size.height, SCREEN_WIDTH, self.talentVC.view.frame.size.height);
 }
 
 - (void)dealloc {
@@ -73,7 +73,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.talentVC getTalentList:self.liveRoom.roomId];
+   // [self.talentVC getTalentList:self.liveRoom.roomId];
     
     self.haveCome = [self.firstManager getThisTypeHaveCome:@"Private_VIP_Join"];
     if (self.haveCome) {
@@ -136,13 +136,13 @@
     }];
     
     [self.view addSubview:self.navVC.view];
-    [self addChildViewController: self.navVC];
-    [self.navVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_bottom);
-        make.left.equalTo(self.view);
-        make.width.equalTo(self.view);
-        make.height.equalTo(@(self.navVC.view.frame.size.height));
-    }];
+//    [self addChildViewController: self.navVC];
+//    [self.navVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view.mas_bottom);
+//        make.left.equalTo(self.view);
+//        make.width.equalTo(self.view);
+//        make.height.equalTo(@(self.navVC.view.frame.size.height));
+//    }];
 }
 
 #pragma mark - PrivateViewControllerDelegate
@@ -164,22 +164,25 @@
     self.vc.playVC.liveVC.roomStyleItem.announceStrColor = Color(255, 109, 0, 1);
     self.vc.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 109, 0, 1);
     self.vc.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
-    self.vc.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(191, 191, 191, 0.17);
+    self.vc.playVC.liveVC.roomStyleItem.sendBackgroundViewColor = Color(191, 191, 191, 0.17);
 }
 
 - (void)onSetupViewController:(PrivateViewController *)vc {
     // 返点界面
-    self.vc.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X644C3B);//Color(61, 51, 44, 1.0);
+    //self.vc.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X644C3B);//Color(61, 51, 44, 1.0);
+    
+    // 礼物按钮
+    //[self.vc.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Gift"] forState:UIControlStateNormal];
+    // 输入栏目
+    //[self.vc.playVC.chatBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Chat"]];
+    
+    
     // 才艺点播
+    /*
     self.vc.playVC.talentBtnWidth.constant = 36;
     self.vc.playVC.talentBtnTailing.constant = -10;
     [self.vc.playVC.talentBtn addTarget:self action:@selector(talentAction:) forControlEvents:UIControlEventTouchUpInside];
-    // 礼物按钮
-    [self.vc.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Gift"] forState:UIControlStateNormal];
-    // 输入栏目
-    [self.vc.playVC.chatBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Chat"]];
-    
-    
+
     self.talentIcon = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 36, 36)];
     self.talentIcon.userInteractionEnabled = YES;
     [self.talentIcon addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(talentAction:)]];
@@ -198,6 +201,7 @@
     self.talentIcon.animationRepeatCount = 5;
     [self.talentIcon startAnimating];
     [self performSelector:@selector(hidenTalentIcon) withObject:self afterDelay:4.5];
+    */
     
     // 房间类型提示
     //    self.vc.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0X5D0E86);
@@ -209,21 +213,21 @@
     //    }];
     
     // 隐藏立即私密邀请控件
-    self.vc.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+    //self.vc.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
     
     // 聊天输入框
-    [self.vc.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Privatevip_Send_Btn"] forState:UIControlStateNormal];
-    self.vc.playVC.liveSendBarView.louderBtnImage = [UIImage imageNamed:@"Privatevip_Pop_Btn"];
-    self.vc.playVC.liveSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB(0x9b7930);
-    self.vc.playVC.liveSendBarView.inputBackGroundImageView.image = [UIImage imageNamed:@"Privatevip_Input_icon"];
-    self.vc.playVC.liveSendBarView.sendBarBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_SendBar_bg"];
-    self.vc.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
-    // 显示表情按钮
-    self.vc.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
+//    [self.vc.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Privatevip_Send_Btn"] forState:UIControlStateNormal];
+//    self.vc.playVC.liveSendBarView.louderBtnImage = [UIImage imageNamed:@"Privatevip_Pop_Btn"];
+//    self.vc.playVC.liveSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB(0x9b7930);
+//    self.vc.playVC.liveSendBarView.inputBackGroundImageView.image = [UIImage imageNamed:@"Privatevip_Input_icon"];
+//    self.vc.playVC.liveSendBarView.sendBarBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_SendBar_bg"];
+//    self.vc.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
+//    // 显示表情按钮
+//    self.vc.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
     
     // 消息列表顶部间隔
     self.vc.playVC.msgSuperTabelTop = 6;
-    self.vc.playVC.liveVC.barrageViewTop.constant = -6;
+   // self.vc.playVC.liveVC.barrageViewTop.constant = -6;
 }
 
 - (void)showHangoutTipView:(PrivateViewController *)vc {
@@ -257,7 +261,7 @@
     [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickTalent eventCategory:EventCategoryBroadcast];
     // 隐藏底部输入框
     [self.vc.playVC hiddenBottomView];
-    [self.talentVC getTalentList:self.liveRoom.roomId];
+    //[self.talentVC getTalentList:self.liveRoom.roomId];
     [self.view layoutIfNeeded];
     [self.navVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_bottom).offset(-self.navVC.view.frame.size.height);

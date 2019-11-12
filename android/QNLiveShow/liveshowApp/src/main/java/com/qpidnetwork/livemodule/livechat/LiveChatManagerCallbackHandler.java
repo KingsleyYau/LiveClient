@@ -986,6 +986,21 @@ public class LiveChatManagerCallbackHandler implements LiveChatManagerOtherListe
 			}
 		}
 	}
+
+	/**
+	 * 发送邀请消息回调
+	 * @param item
+	 */
+	public void OnSendInviteMessage(LCMessageItem item)
+	{
+		synchronized(mMessageListeners)
+		{
+			for (Iterator<LiveChatManagerMessageListener> iter = mMessageListeners.iterator(); iter.hasNext(); ) {
+				LiveChatManagerMessageListener listener = iter.next();
+				listener.OnSendInviteMessage(item);
+			}
+		}
+	}
 	
 	/**
 	 * 接收警告消息回调

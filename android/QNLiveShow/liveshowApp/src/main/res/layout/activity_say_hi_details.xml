@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_say_hi_detail_blue_gradient"
+    android:descendantFocusability="blocksDescendants"
+    tools:context=".liveshow.sayhi.SayHiDetailsActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/mainScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".liveshow.sayhi.SayHiDetailsActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="106dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/backgroundImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="106dp"
+                    android:background="@drawable/say_hi_detail_default_bg" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <!--主播头像-->
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/ladyAvatar"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="21dp"
+                        android:src="@drawable/ic_default_photo_woman_rect" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/live_size_14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:singleLine="true"
+                            android:id="@+id/sendInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/live_size_4dp"
+                            android:textColor="@color/color_383838"
+                            android:textSize="@dimen/live_size_16sp" />
+
+                        <TextView
+                            android:singleLine="true"
+                            android:id="@+id/sayHiDateTx"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/live_size_4dp"
+                            android:textColor="@color/color_383838"
+                            android:textSize="@dimen/live_size_14sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/noteBtn"
+                        android:layout_width="65dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/say_hi_detail_my_note_btn"
+                        android:gravity="center"
+                        android:text="@string/say_hi_detail_my_note_btn"
+                        android:textColor="@color/live_switch_on_bg"
+                        android:textSize="@dimen/live_size_14sp" />
+
+                </LinearLayout>
+
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/act_say_hi_detail_ll_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="6dp"
+                android:orientation="vertical">
+                <!--android:background="@drawable/bg_say_hi_detail_blue_gradient"-->
+
+                <LinearLayout
+                    android:id="@+id/response_detail_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/ladyFromArea"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Response From: "
+                                android:textColor="@color/color_383838"
+                                android:textSize="@dimen/live_size_14sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/ladyName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="@color/live_switch_on_bg"
+                                android:textSize="@dimen/live_size_14sp"
+                                android:textStyle="bold"/>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/ladyInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/responseInfo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:textColor="@color/black3"
+                                android:textSize="@dimen/live_size_12sp" />
+
+                            <TextView
+                                android:id="@+id/freeTip"
+                                android:layout_width="29dp"
+                                android:layout_height="15dp"
+                                android:layout_marginLeft="3dp"
+                                android:background="@drawable/say_hi_detail_free_btn"
+                                android:gravity="center"
+                                android:text="@string/say_hi_detail_free_btn"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/live_size_11sp"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <!-- 按钮 -->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/reply_min_btn"
+                        android:layout_width="84dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/live_size_8dp"
+                        android:layout_marginRight="@dimen/live_size_20dp"
+                        button:background_res="@drawable/btn_sayhi_detail_reply_stroke_shape"
+                        button:elevation="4dp"
+                        button:icon="@drawable/sayhi_reply_arow"
+                        button:icon_height="18dp"
+                        button:icon_width="18dp"
+                        button:raisebutton_radius="@dimen/raise_button_radius"
+                        button:title="@string/say_hi_detail_reply_btn"
+                        button:title_color="@color/white"
+                        button:title_text_bold="false"
+                        button:title_text_size="@dimen/live_size_14sp"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/errorView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_20dp"
+                    android:layout_marginTop="@dimen/live_size_20dp"
+                    android:layout_marginRight="@dimen/live_size_20dp"
+                    android:layout_marginBottom="35dp"
+                    android:background="@drawable/say_hi_detail_tips_tx_bg"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/live_size_30dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="35dp"
+                        android:src="@drawable/say_hi_detail_error_reload_btn" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/live_size_20dp"
+                        android:layout_marginBottom="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="@string/say_hi_detail_error_view_title"
+                        android:textColor="@color/sayhi_edit_error_view_text_color"
+                        android:textSize="@dimen/live_size_14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/emptyTipsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="98dp"
+                    android:layout_marginLeft="@dimen/live_size_20dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginRight="@dimen/live_size_20dp"
+                    android:background="@drawable/say_hi_detail_tips_tx_bg"
+                    android:gravity="center"
+                    android:text="@string/say_hi_detail_empty_tips"
+                    android:textColor="@color/black3"
+                    android:textSize="@dimen/live_size_14sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/buyTipsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_20dp"
+                    android:layout_marginTop="@dimen/live_size_20dp"
+                    android:layout_marginRight="@dimen/live_size_20dp"
+                    android:layout_marginBottom="35dp"
+                    android:background="@drawable/say_hi_detail_tips_tx_bg"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/buy_tis_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/live_size_16dp"
+                        android:gravity="center"
+                        android:text="@string/say_hi_detail_buy_tips_title"
+                        android:textColor="@color/black2"
+                        android:textSize="@dimen/live_size_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:gravity="center"
+                        android:text="@string/say_hi_detail_buy_tips_title2"
+                        android:textColor="@color/color_FF7100"
+                        android:textSize="20sp"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/buy_post_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:layout_marginLeft="@dimen/live_size_20dp"
+                        android:layout_marginTop="@dimen/live_size_20dp"
+                        android:layout_marginRight="@dimen/live_size_20dp"
+                        android:background="@drawable/say_hi_detail_tips_btn_bg"
+                        android:gravity="center"
+                        android:text="@string/say_hi_detail_buy_psot_stamps"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_16sp" />
+
+                    <TextView
+                        android:id="@+id/add_credits_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/live_size_24dp"
+                        android:layout_marginBottom="22dp"
+                        android:gravity="center"
+                        android:textSize="@dimen/live_size_16sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/resContentArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="@dimen/live_size_20dp"
+                        android:layout_marginRight="@dimen/live_size_20dp"
+                        android:background="@color/offline_normal_grey" />
+
+                    <TextView
+                        android:id="@+id/responseContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/live_size_20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="@dimen/live_size_20dp"
+                        android:textColor="@color/custom_dialog_txt_color_simple"
+                        android:textSize="@dimen/live_size_16sp" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/responseImg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="15dp" />
+
+                    <!-- 按钮 -->
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/reply_max_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/normal_button_height_44dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/live_size_20dp"
+                        android:layout_marginTop="28dp"
+                        android:layout_marginRight="@dimen/live_size_20dp"
+                        android:layout_marginBottom="@dimen/live_size_30dp"
+                        button:background_res="@drawable/btn_sayhi_detail_reply_stroke_shape"
+                        button:elevation="4dp"
+                        button:icon="@drawable/sayhi_reply_arow"
+                        button:icon_height="22dp"
+                        button:icon_width="22dp"
+                        button:raisebutton_radius="@dimen/raise_button_radius"
+                        button:title="@string/say_hi_detail_reply_btn"
+                        button:title_color="@color/white"
+                        button:title_text_bold="true"
+                        button:title_text_size="@dimen/live_size_14sp"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark_rect_rounded_arc" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/response_title"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:background="@color/white"
+                android:paddingLeft="@dimen/live_size_20dp"
+                android:paddingTop="35dp"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/say_hi_response_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/thin_grey"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>

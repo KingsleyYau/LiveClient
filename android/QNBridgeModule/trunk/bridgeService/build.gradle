@@ -2,12 +2,18 @@
 apply plugin:'com.android.library'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+//    compileSdkVersion 27
+//    buildToolsVersion '27.0.3'
+    compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
+    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
+
     defaultConfig {
 //        applicationId "com.qpidnetwork.qnbridgemodule"
-        minSdkVersion 15
-        targetSdkVersion 26
+//        minSdkVersion 15
+//        targetSdkVersion 26
+        minSdkVersion ANDROID_BUILD_MIN_SDK_VERSION as int
+        targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
+
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -36,8 +42,12 @@ dependencies {
     })
 
     compile 'com.android.support.constraint:constraint-layout:1.1.3'
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support:design:27.1.1'
+
+//    compile 'com.android.support:appcompat-v7:27.1.1'
+//    compile 'com.android.support:design:27.1.1'
+    compile "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$ANDROID_SUPPORT_LIBRARY_VERSION"
+
     testCompile 'junit:junit:4.12'
 
 //      2018/11/15   Hardy
@@ -47,18 +57,69 @@ dependencies {
     compile(name: 'nicevideoplayer', ext: 'aar')
 
     //================   2019/01/22 Hardy   google sdk ======================
+    /*
+        FireBase SDK 的相关版本更新说明
+        https://firebase.google.com/support/release-notes/android#version_1800
+
+        Google Services 的相关版本更新说明
+        https://developers.google.com/android/guides/releases
+     */
+
     // gcm 单独引入(最新版)(不能单独获取 gaid)
 //    compile "com.google.android.gms:play-services-gcm:16.0.0"
+
     // 单独获取 gaid ——> AdvertisingIdClient 类的库(最新版)
-    // 如果引入 ads 库，则不需单独引入该获取 gaid 的库
-    compile "com.google.android.gms:play-services-ads-identifier:16.0.0"
+    // 如果引入 ads 库，则不需单独引入该获取 gaid 的库.(停留在该版本，除非项目升级到 AndroidX，否则不兼容更高级版本)
+//    implementation "com.google.android.gms:play-services-ads-identifier:16.0.0"
+    compile(name: 'play-services-ads-identifier-16.0.0', ext: 'aar')
+    compile(name: 'play-services-base-16.0.1', ext: 'aar')
+    compile(name: 'play-services-basement-16.2.0', ext: 'aar')
+    compile(name: 'play-services-measurement-16.5.0', ext: 'aar')
+    compile(name: 'play-services-measurement-api-16.5.0', ext: 'aar')
+    compile(name: 'play-services-measurement-base-16.5.0', ext: 'aar')
+    compile(name: 'play-services-measurement-impl-16.5.0', ext: 'aar')
+    compile(name: 'play-services-measurement-sdk-16.5.0', ext: 'aar')
+    compile(name: 'play-services-measurement-sdk-api-16.5.0', ext: 'aar')
+    // Update your app to use Jetpack (AndroidX)
+//    compile "com.google.android.gms:play-services-ads-identifier:17.0.0"
 
-    // Google analytics
-    compile "com.google.android.gms:play-services-analytics:16.0.6"
-
+    // Google analytics.(停留在该版本，除非项目升级到 AndroidX，否则不兼容更高级版本)
+//    implementation "com.google.android.gms:play-services-analytics:16.0.8"
+    compile(name: 'play-services-analytics-16.0.8', ext: 'aar')
+    compile(name: 'play-services-analytics-impl-16.0.8', ext: 'aar')
+    compile(name: 'play-services-tasks-16.0.1', ext: 'aar')
+    compile(name: 'play-services-stats-16.0.1', ext: 'aar')
+//    compile "com.google.android.gms:play-services-analytics:16.0.6"
+    // Update your app to use Jetpack (AndroidX)
+//    compile "com.google.android.gms:play-services-analytics:17.0.0"
 
     // FCM
-    compile 'com.google.firebase:firebase-messaging:17.3.4'
+    // Updated minSdkVersion to API level 16.(停留在该版本，除非项目升级到 AndroidX，否则不兼容更高级版本)
+//    compile 'com.google.firebase:firebase-messaging:18.0.0'
+    compile(name: 'firebase-messaging-18.0.0', ext: 'aar')
+    compile(name: 'firebase-common-17.0.0', ext: 'aar')
+    compile(name: 'firebase-iid-18.0.0', ext: 'aar')
+    compile(name: 'firebase-iid-interop-16.0.1', ext: 'aar')
+    compile(name: 'firebase-measurement-connector-17.0.1', ext: 'aar')
+//    compile 'com.google.firebase:firebase-messaging:17.3.4'
+//    Update your app to use Jetpack (AndroidX)
+//    compile 'com.google.firebase:firebase-messaging:19.0.0'
+
+    // FireBase(包含 Analytics 模块)    (停留在该版本，除非项目升级到 AndroidX，否则不兼容更高级版本)
+//    compile 'com.google.firebase:firebase-core:16.0.9'
+    compile(name: 'firebase-core-16.0.9', ext: 'aar')
+    compile(name: 'firebase-analytics-16.5.0', ext: 'aar')
+    //    Update your app to use Jetpack (AndroidX)
+//    compile 'com.google.firebase:firebase-core:17.0.0'
+
+    // GTM  (停留在该版本，除非项目升级到 AndroidX，否则不兼容更高级版本)
+//    compile 'com.google.android.gms:play-services-tagmanager:16.0.8'
+    compile(name: 'play-services-tagmanager-16.0.8', ext: 'aar')
+    compile(name: 'play-services-tagmanager-api-16.0.8', ext: 'aar')
+    compile(name: 'play-services-tagmanager-v4-impl-16.0.8', ext: 'aar')
+    //    Update your app to use Jetpack (AndroidX)
+//    compile 'com.google.android.gms:play-services-tagmanager:17.0.0'
+
     //================   2019/01/22 Hardy   google sdk ======================
 
 }
@@ -72,7 +133,10 @@ dependencies {
 */
 configurations.all {
     resolutionStrategy.eachDependency {
-        DependencyResolveDetails details ->
+            //  2019/8/29 Hardy
+            //  https://stackoverflow.com/questions/54665874/why-dependencyresolvedetails-is-highlight-in-red
+//        DependencyResolveDetails details ->
+            details ->
             def requested = details.requested
             if (requested.group == 'com.android.support') {
                 if (!requested.name.startsWith("multidex")) {

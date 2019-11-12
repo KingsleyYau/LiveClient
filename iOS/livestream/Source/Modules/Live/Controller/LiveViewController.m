@@ -17,7 +17,7 @@
 
 #import "LiveGobalManager.h"
 #import "LiveStreamPublisher.h"
-#import "LiveStreamPlayer.h"
+
 
 #import "MsgTableViewCell.h"
 #import "TalentMsgCell.h"
@@ -87,8 +87,7 @@
 #pragma mark - 流[播放/推送]管理
 // 流播放地址
 @property (strong) NSString *playUrl;
-// 流播放组件
-@property (strong) LiveStreamPlayer *player;
+
 // 流播放重连次数
 @property (assign) NSUInteger playerReconnectTime;
 // 流推送地址
@@ -139,7 +138,7 @@
 @property (nonatomic, strong) LSChatEmotionManager *emotionManager;
 
 #pragma mark - 消息管理器
-@property (nonatomic, strong) PublicPrativeMsgManager *msgManager;
+@property (nonatomic, strong) PublicLiveMsgManager *msgManager;
 
 #pragma mark - 余额及返点信息管理器
 @property (nonatomic, strong) LiveRoomCreditRebateManager *creditRebateManager;
@@ -251,7 +250,7 @@
     self.emotionManager = [LSChatEmotionManager emotionManager];
 
     // 初始化文字管理器
-    self.msgManager = [[PublicPrativeMsgManager alloc] init];
+    self.msgManager = [[PublicLiveMsgManager alloc] init];
 
     // 初始化余额及返点信息管理器
     self.creditRebateManager = [LiveRoomCreditRebateManager creditRebateManager];
@@ -476,17 +475,10 @@
     self.startOneBtn.layer.cornerRadius = self.startOneBtn.tx_height / 2;
     self.startOneBtn.layer.masksToBounds = YES;
 
-    self.startHangoutBtn.layer.cornerRadius = self.startHangoutBtn.tx_height / 2;
-    self.startHangoutBtn.layer.masksToBounds = YES;
-
     LSShadowView *shadowView = [[LSShadowView alloc] init];
     [shadowView showShadowAddView:self.startOneBtn];
 
-    LSShadowView *shadowView1 = [[LSShadowView alloc] init];
-    [shadowView1 showShadowAddView:self.startHangoutBtn];
-
     self.startOneBtn.hidden = YES;
-    self.startHangoutBtn.hidden = YES;
 }
 
 - (void)showRoomTipView:(NSString *)tip isReject:(BOOL)isReject {
@@ -1082,6 +1074,9 @@
 
 #pragma mark - 消息列表管理
 - (void)setupTableView {
+    
+    self.msgSuperViewBottom.constant = 143;
+    
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     [self.msgTableView setTableFooterView:footerView];
 
@@ -1458,9 +1453,8 @@
                 MsgTableViewCell *msgCell = [tableView dequeueReusableCellWithIdentifier:[MsgTableViewCell cellIdentifier]];
                 msgCell.clipsToBounds = YES;
                 msgCell.msgDelegate = self;
-                [msgCell setTextBackgroundViewColor:self.roomStyleItem];
-                [msgCell changeMessageLabelWidth:tableView.frame.size.width];
-                [msgCell updataChatMessage:item];
+//                [msgCell changeMessageLabelWidth:tableView.frame.size.width];
+                [msgCell updataChatMessage:item styleItem:self.roomStyleItem];
                 cell = msgCell;
             } break;
         }
@@ -1519,9 +1513,9 @@
 
 #pragma mark - HangOutOpenDoorCellDelegate
 - (void)inviteHangoutAnchor:(MsgItem *)item {
-    [[LiveModule module].analyticsManager reportActionEvent:ClickHangOutNow eventCategory:EventCategoryBroadcast];
+    //[[LiveModule module].analyticsManager reportActionEvent:ClickHangOutNow eventCategory:EventCategoryBroadcast];
     // 处理主播推荐好友请求
-    [self inviteAnchorWithHangout:item.recommendItem.recommendId anchorId:item.recommendItem.friendId anchorName:item.recommendItem.friendNickName];
+   // [self inviteAnchorWithHangout:item.recommendItem.recommendId anchorId:item.recommendItem.friendId anchorName:item.recommendItem.friendNickName];
 }
 
 - (void)agreeAnchorKnock:(MsgItem *)item {
@@ -1529,11 +1523,12 @@
 
 #pragma mark - HTTP请求
 // TODO:直播间发送Hangout邀请
+/*
 - (void)inviteAnchorWithHangout:(NSString *)recommendId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
     if (!self.isInvitingHangout) {
         self.isInvitingHangout = YES;
         // 显示提示控件
-        [self showRoomTipView:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITING_HANG_OUT"), self.liveRoom.userName] isReject:NO];
+        //[self showRoomTipView:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITING_HANG_OUT"), self.liveRoom.userName] isReject:NO];
         
         LSSendinvitationHangoutRequest *request = [[LSSendinvitationHangoutRequest alloc] init];
         request.roomId = self.liveRoom.roomId;
@@ -1588,7 +1583,7 @@
                         case IMREPLYINVITETYPE_AGREE: {
                             self.isInvitingHangout = YES;
                             self.isInviteHangout = YES;
-                            [self showRoomTipView:NSLocalizedStringFromSelf(@"INVITE_SUCCESS_HANGOUT") isReject:NO];
+                            //[self showRoomTipView:NSLocalizedStringFromSelf(@"INVITE_SUCCESS_HANGOUT") isReject:NO];
                             if (roomId.length > 0) {
                                 // 拼接push跳转多人互动url
                                 if (self.isRecommend) {
@@ -1619,7 +1614,7 @@
         [self.sessionManager sendRequest:request];
     }
 }
-
+*/
 #pragma mark - IM请求
 - (void)sendRoomToastRequestFromText:(NSString *)text {
     // 发送弹幕
@@ -1640,7 +1635,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.liveRoom.roomId.length) {
                 // 获取Hangout邀请回复状态
-                [self getHangoutInviteStatu];
+                //[self getHangoutInviteStatu];
 
                 [self.imManager enterRoom:self.liveRoom.roomId
                             finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem, ImAuthorityItemObject *_Nonnull priv) {
@@ -1991,8 +1986,8 @@
     });
 }
 
-- (void)onRecvLackOfCreditNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg credit:(double)credit {
-    NSLog(@"LiveViewController::onRecvLackOfCreditNotice( [接收充值通知], roomId : %@ credit:%f", roomId, credit);
+- (void)onRecvLackOfCreditNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg credit:(double)credit errType:(LCC_ERR_TYPE)errType {
+    NSLog(@"LiveViewController::onRecvLackOfCreditNotice( [接收充值通知], roomId : %@ credit:%f errType:%d", roomId, credit, errType);
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 设置余额及返点信息管理器
@@ -2031,16 +2026,16 @@
 - (void)onRecvTalentPromptNotice:(NSString *)roomId introduction:(NSString *)introduction {
     NSLog(@"LiveViewController::onRecvTalentPromptNotice( [接收直播间才艺点播提示公告通知] :%@)", introduction);
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.liveRoom.roomId isEqualToString:roomId]) {
-            MsgItem *msgItem = [[MsgItem alloc] init];
-            msgItem.msgType = MsgType_Talent;
-            msgItem.honorUrl = self.liveRoom.photoUrl;
-            msgItem.toName = self.liveRoom.userName;
-            msgItem.text = introduction;
-            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
-        }
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        if ([self.liveRoom.roomId isEqualToString:roomId]) {
+//            MsgItem *msgItem = [[MsgItem alloc] init];
+//            msgItem.msgType = MsgType_Talent;
+//            msgItem.honorUrl = self.liveRoom.photoUrl;
+//            msgItem.toName = self.liveRoom.userName;
+//            msgItem.text = introduction;
+//            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
+//        }
+//    });
 }
 
 - (void)onRecvSendSystemNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg link:(NSString *_Nonnull)link type:(IMSystemType)type {
@@ -2166,7 +2161,7 @@
     NSLog(@"LiveViewController::onRecvDealInviteHangoutNotice( [接收主播回复观众多人互动邀请通知] invteId : %@, roomId : %@,"
            "anchorId : %@, type : %d, anchorId : %@ )",
           item.inviteId, item.roomId, item.anchorId, item.type, item.anchorId);
-
+/*
     dispatch_async(dispatch_get_main_queue(), ^{
         switch (item.type) {
             case IMREPLYINVITETYPE_AGREE: {
@@ -2198,6 +2193,7 @@
             } break;
         }
     });
+ */
 }
 
 #pragma mark - 倒数关闭直播间
@@ -2269,7 +2265,7 @@
             if (self.liveRoom) {
                 NSLog(@"LiveViewController::willEnterForeground ( [接收后台关闭直播间]  IsTimeOut : %@ )", (self.isTimeOut == YES) ? @"Yes" : @"No");
                 // 弹出直播间关闭界面
-                [self showLiveFinshViewWithErrtype:LCC_ERR_BACKGROUND_TIMEOUT errMsg:nil];
+                [self showLiveFinshViewWithErrtype:LCC_ERR_BACKGROUND_TIMEOUT errMsg:NSLocalizedStringFromErrorCode(@"LIVE_ROOM_BACKGROUND_TIMEOUT")];
             }
         }
     }
