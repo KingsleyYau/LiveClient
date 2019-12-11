@@ -40,7 +40,7 @@
 }
 
 - (void)dealloc {
-    [self.tableView unInitPullRefresh];
+    [self.tableView unSetupPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -58,8 +58,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     if (!self.viewDidAppearEver) {
-        [self.tableView startPullDown:YES];
-        [self.collectionView startPullDown:YES];
+        [self.tableView startLSPullDown:YES];
+        [self.collectionView startLSPullDown:YES];
     }
 
     [super viewDidAppear:animated];
@@ -83,7 +83,7 @@
 
 - (void)setupTableView {
     // 初始化下拉
-    [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -96,7 +96,7 @@
     UINib *nib = [UINib nibWithNibName:@"DoorItemCollectionViewCell" bundle:bundle];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:[DoorItemCollectionViewCell cellIdentifier]];
 
-    [self.collectionView initPullRefresh:self pullDown:YES pullUp:YES];
+    [self.collectionView setupPullRefresh:self pullDown:YES pullUp:YES];
     self.collectionView.backgroundView = nil;
     self.collectionView.backgroundColor = [UIColor clearColor];
 }
@@ -210,13 +210,13 @@
                 if (!loadMore) {
                     // 停止头部
                     //                    [self.tableView finishPullDown:YES];
-                    [self.collectionView finishPullDown:YES];
+                    [self.collectionView finishLSPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
                 } else {
                     // 停止底部
                     //                    [self.tableView finishPullUp:YES];
-                    [self.collectionView finishPullUp:YES];
+                    [self.collectionView finishLSPullUp:YES];
                 }
 
                 for (LiveRoomInfoItemObject *item in array) {
@@ -228,13 +228,13 @@
                 if (!loadMore) {
                     // 停止头部
                     //                    [self.tableView finishPullDown:NO];
-                    [self.collectionView finishPullDown:NO];
+                    [self.collectionView finishLSPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
                 } else {
                     // 停止底部
                     //                    [self.tableView finishPullUp:YES];
-                    [self.collectionView finishPullUp:YES];
+                    [self.collectionView finishLSPullUp:YES];
                 }
 
                 [self reloadData:YES];
@@ -267,7 +267,7 @@
 
 - (void)reloadBtnClick:(id)sender {
     self.failView.hidden = YES;
-    [self.tableView startPullDown:YES];
+    [self.tableView startLSPullDown:YES];
 }
 
 - (void)tableView:(DoorTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
