@@ -7,7 +7,12 @@
 
 *.xcbkptlist
 
-livestream/Project/livestream.xcodeproj/xcuserdata/max.xcuserdatad/xcschemes/xcschememanagement.plist
+iOS/FreeVideo/Project/FreeVideo.xcodeproj/xcuserdata/
+iOS/Modules/Common-C-Library/Common-C-Library.xcodeproj/xcuserdata/
+iOS/Modules/CommonWidget/CommonWidget.xcodeproj/xcuserdata/
+iOS/livestream/Project/livestream.xcodeproj/xcuserdata/
+iOS/Modules/RtmpClient/RtmpClient.xcodeproj/xcuserdata/
+iOS/Modules/UIWidget/UIWidget.xcodeproj/xcuserdata/
 
 android/coollive/.classpath
 
