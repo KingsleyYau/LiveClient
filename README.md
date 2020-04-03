@@ -3,7 +3,6 @@ Catalog
 
    * [流媒体推拉流模块](#流媒体推拉流模块)
    		* [功能](#功能)
-      * [第三方开源](#第三方开源)
       * [滤镜效果](#滤镜效果)
       * [Demo](#Demo)
       * [Demo 安装包](#Demo-安装包)
@@ -12,7 +11,7 @@ Catalog
       * [Demo iOS Snapshot](#Demo-iOS-Snapshot)
       * [Demo Android Project](#Demo-Android-Project)
       * [Demo Android Snapshot](#Demo-Android-Snapshot)
-      
+      * [第三方开源](#第三方开源)
       
 # 流媒体推拉流模块
 ## 功能
@@ -23,19 +22,6 @@ Catalog
 - 支持自定义滤镜,自带简单美颜和抖音效果等滤镜
 - 支持人面识别和自定义挂件(未完成)
 - 支持Linux下RTMP拉流客户端(可以用于压力测试)
-
-
-## 第三方开源
-[FFmpeg](https://ffmpeg.org/)</br>
-[FFmpeg Wiki](https://en.wikipedia.org/wiki/FFmpeg)</br>
-[x264](https://www.videolan.org/developers/x264.html)</br>
-[x264 Wiki](https://en.wikipedia.org/wiki/X264)</br>
-[fdk-aac](https://github.com/mstorsjo/fdk-aac)</br>
-[fdk-aac Wiki](https://en.wikipedia.org/wiki/Fraunhofer_FDK_AAC)</br>
-[srs](https://github.com/ossrs/srs)</br>
-[srs.librtmp](https://github.com/ossrs/srs-librtmp)</br>
-[OpenGL_ES Wiki](https://en.wikipedia.org/wiki/OpenGL_ES)</br>
-[Dlib](http://dlib.net/)</br>
 
 
 ## 滤镜效果
@@ -72,3 +58,14 @@ https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
 -------------
 ![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
 
+## 第三方开源
+[FFmpeg](https://ffmpeg.org/)</br>
+[FFmpeg Wiki](https://en.wikipedia.org/wiki/FFmpeg)</br>
+[x264](https://www.videolan.org/developers/x264.html)</br>
+[x264 Wiki](https://en.wikipedia.org/wiki/X264)</br>
+[fdk-aac](https://github.com/mstorsjo/fdk-aac)</br>
+[fdk-aac Wiki](https://en.wikipedia.org/wiki/Fraunhofer_FDK_AAC)</br>
+[srs](https://github.com/ossrs/srs)</br>
+[srs.librtmp](https://github.com/ossrs/srs-librtmp)</br>
+[OpenGL_ES Wiki](https://en.wikipedia.org/wiki/OpenGL_ES)</br>
+[Dlib](http://dlib.net/)</br>
