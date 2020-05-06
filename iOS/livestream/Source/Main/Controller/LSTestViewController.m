@@ -15,7 +15,10 @@
 #import "LiveModule.h"
 #import "LSConfigManager.h"
 
-#import "LSVIPLiveViewController.h"
+#import "LSChatPrepaidView.h"
+#import "LSPrePaidPickerView.h"
+#import "LSPrePaidManager.h"
+
 @interface LSTestViewController () <LiveModuleDelegate>
 @property (nonatomic, strong) NSString *_Nullable token;
 @property (nonatomic, strong) NSString *_Nullable isShowGuide;
@@ -32,7 +35,7 @@
     [self loadLoginParam];
     self.textField.text = self.token;
 
-    LSConfigManager *config = [LSConfigManager manager];
+    [LSConfigManager manager];
 
 //        config.item.httpSvrUrl = @"http://demo-live.charmdate.com:3007";
 //        config.item.imSvrUrl = @"ws://demo-live.charmdate.com:3006";
@@ -50,6 +53,7 @@
 
     [[LiveModule module] setConfigUrl:@"https://demo.charmlive.com"];
     
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -121,7 +125,7 @@
     if (!_token || _token.length == 0) {
         _token = MAX_TOKEN;
     }
-    _token = RANDY_TOKEN;
+    _token = MAX_TOKEN;
 }
 
 - (void)moduleOnLogin:(LiveModule *)module {
@@ -131,12 +135,14 @@
 
         // 设置模块主界面
         UIViewController *vc = [LiveModule module].mainVC;
-
-        //LSVIPLiveViewController * vc = [[LSVIPLiveViewController alloc]initWithNibName:nil bundle:nil];
-        
+ 
         // 推进界面
         LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
         [nvc pushViewController:vc animated:NO gesture:NO];
+        
+        
+//        LSNavigationController * nvc = [[LSNavigationController alloc]initWithRootViewController:vc];
+//        ((AppDelegate *)[UIApplication sharedApplication].delegate).window.rootViewController = nvc;
 
     });
 }
@@ -160,36 +166,6 @@
     });
 }
 
-/*
-- (void)moduleOnNotification:(LiveModule *)module {
-    NSLog(@"LSTestViewController::moduleOnNotification()");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
 
-        UIViewController *vc = [LiveModule module].notificationVC;
-        CGRect frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 20 + 5, self.view.frame.size.width, vc.view.frame.size.height);
-        self.window = [[UIWindow alloc] initWithFrame:frame];
-        self.window.windowLevel = UIWindowLevelAlert + 1;
-        UIWindow *parentView = self.window;
-        [self.window addSubview:vc.view];
-        [self.window makeKeyAndVisible];
-
-        [vc.view mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(parentView).offset(0);
-            make.left.equalTo(parentView).offset(10);
-            make.right.equalTo(parentView).offset(-10);
-            make.height.equalTo(@(vc.view.frame.size.height));
-        }];
-
-        // Keep the original keyWindow and avoid some unpredictable problems
-        [keyWindow makeKeyWindow];
-    });
-}
-
-- (void)moduleOnNotificationDisappear:(LiveModule *)module {
-    NSLog(@"LSTestViewController::moduleOnNotificationDisappear()");
-    self.window = nil;
-}
- */
 
 @end

@@ -48,7 +48,9 @@
     
     // 注册推送
 //    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
-    
+    if (@available(iOS 13.0, *)) {
+          [[UINavigationBar appearance] setTintColor:[UIColor systemBackgroundColor]];
+      }
     // 为Document目录增加iTunes不同步属性
     NSURL *url = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"]];
     [LSURLFileAttribute addSkipBackupAttribute:url];

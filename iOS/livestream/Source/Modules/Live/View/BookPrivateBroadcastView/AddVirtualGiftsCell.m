@@ -86,7 +86,7 @@
             cell = [[AddVirtualGiftsCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textLabel.font = [UIFont systemFontOfSize:14];
-            cell.textLabel.textColor = [UIColor blackColor];
+            cell.textLabel.textColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
             cell.textLabel.text = NSLocalizedStringFromSelf(@"ADD_CIETUAL_GIFT");
         }
 

@@ -15,7 +15,7 @@
 #import "SetFavoriteRequest.h"
 #import "HomeVouchersManager.h"
 #import "LSUserInfoManager.h"
-
+#import "LiveGobalManager.h"
 @interface LSAnchorDetailCardViewController ()
 @property (strong,nonatomic) LSSessionRequestManager *sessionManager;
 
@@ -29,9 +29,9 @@
     self.contentView.layer.cornerRadius = 7;
     self.contentView.layer.masksToBounds = YES;
     
-    self.bgView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)];
-    [self.bgView addGestureRecognizer:tap];
+//    self.bgView.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)];
+//    [self.bgView addGestureRecognizer:tap];
     
     self.loader = [LSImageViewLoader loader];
     
@@ -59,14 +59,15 @@
     [self hideNavigationBar];
 }
 
-- (void)tapToDismiss:(UITapGestureRecognizer *)gesture {
-
-    [self dismissView];
-}
+//- (void)tapToDismiss:(UITapGestureRecognizer *)gesture {
+//
+//    [self dismissView];
+//}
 
 - (void)dismissView {
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
+    [[LiveGobalManager manager] removeLiveRoomPopup];
     
 }
 
@@ -75,6 +76,7 @@
 }
 
 - (void)loadAchorDetail:(UIViewController *)vc {
+    [[LiveGobalManager manager] showPopupView:self.view withVc:self];
     [vc addChildViewController:self];
     [vc.view addSubview:self.view];
     [self.view mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -99,10 +101,10 @@
     
     if (self.item.imLiveRoom.favorite) {
         self.favouriteBtn.selected = YES;
-        [self.favouriteBtn setImage:[UIImage imageNamed:@"Dialog_Did_Follow"] forState:UIControlStateNormal];
+        [self.favouriteBtn setImage:[UIImage imageNamed:@"LS_Home_Follow"] forState:UIControlStateNormal];
     }else {
         self.favouriteBtn.selected = NO;
-        [self.favouriteBtn setImage:[UIImage imageNamed:@"Dialog_Un_Follow"] forState:UIControlStateNormal];
+        [self.favouriteBtn setImage:[UIImage imageNamed:@"LS_Home_Unfollow"] forState:UIControlStateNormal];
     }
 
     [self getDetailMsg];
@@ -140,10 +142,10 @@
                     [self.anchorDetailDelegate lsAnchorDetailCardViewController:self didAddFavorite:favoriteResult];
                 }
                 if (favoriteResult) {
-                    [self.favouriteBtn setImage:[UIImage imageNamed:@"Dialog_Did_Follow"] forState:UIControlStateNormal];
+                    [self.favouriteBtn setImage:[UIImage imageNamed:@"LS_Home_Follow"] forState:UIControlStateNormal];
                     
                 }else {
-                    [self.favouriteBtn setImage:[UIImage imageNamed:@"Dialog_Un_Follow"] forState:UIControlStateNormal];
+                    [self.favouriteBtn setImage:[UIImage imageNamed:@"LS_Home_Unfollow"] forState:UIControlStateNormal];
 
                 }
             } else {
@@ -165,7 +167,7 @@
 }
 - (IBAction)mailAction:(id)sender {
     [self dismissView];
-    NSURL *url = [[LiveUrlHandler shareInstance] createSendmailByanchorId:self.item.userId anchorName:self.item.userName];
+    NSURL *url = [[LiveUrlHandler shareInstance] createSendmailByanchorId:self.item.userId anchorName:self.item.userName emfiId:@""];
     [[LiveUrlHandler shareInstance] handleOpenURL:url];
 }
 - (IBAction)closeAction:(id)sender {

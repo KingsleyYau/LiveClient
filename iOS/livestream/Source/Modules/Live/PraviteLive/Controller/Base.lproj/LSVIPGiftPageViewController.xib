@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSVIPGiftPageViewController">
             <connections>
+                <outlet property="downGiftViewBtn" destination="N4M-kQ-Te7" id="fkB-Uk-VTV"/>
+                <outlet property="headBgView" destination="hj4-WP-ueG" id="7ea-yO-uFB"/>
                 <outlet property="loading" destination="Hr2-k7-VfP" id="44A-zj-GnQ"/>
                 <outlet property="pagingScrollView" destination="ala-vW-Gk4" id="U0r-nd-31I"/>
                 <outlet property="segmentView" destination="1cP-Gv-R0y" id="mBt-PH-EDG"/>
+                <outlet property="tipViewBtn" destination="KEg-nW-xLc" id="Fcb-C3-drK"/>
                 <outlet property="view" destination="Z2S-NV-32O" id="Izn-I1-ytN"/>
             </connections>
         </placeholder>
@@ -93,7 +94,7 @@
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ala-vW-Gk4" customClass="LSPZPagingScrollView">
                     <rect key="frame" x="0.0" y="69" width="375" height="225"/>
-                    <color key="backgroundColor" red="0.20000000000000001" green="0.015686274510000001" blue="0.20784313730000001" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <connections>
                         <outlet property="pagingViewDelegate" destination="-1" id="e1H-dE-7cq"/>
                     </connections>

@@ -9,6 +9,7 @@
 #import "LSWKWebViewController.h"
 #import "LSLiveWKWebViewManager.h"
 #import "LSWebViewJSManager.h"
+#import "LSMinLiveManager.h"
 #import "LiveModule.h"
 #import "LSAddCreditsViewController.h"
 #import "LSNavWebViewController.h"
@@ -78,6 +79,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self setupRequestWebview];
+    
+    //播放过视频，重新启动直播间声音
+    if (self.isOpenVideo) {
+        self.isOpenVideo = NO;
+        [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+    }
     
     if( !self.viewDidAppearEver ) {
         if (@available(iOS 11, *)) {
@@ -269,6 +276,11 @@
 
 - (void)webViewTransferJSIsResume:(BOOL)isResume {
     self.isResume = isResume;
+}
+
+- (void)webViewOpenVideo {
+    self.isOpenVideo = YES;
+    [[LiveGobalManager manager] openOrCloseLiveSound:YES];
 }
 
 @end

@@ -11,6 +11,7 @@
 #import "LSDeliveryItemObject.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @class LSDeliveryTableView;
 @protocol LSDeliveryTableViewDelegate <NSObject>
 @optional
@@ -19,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)lsDeliveryTableView:(LSDeliveryTableView *)tableView DidClickAchorIcon:(LSDeliveryItemObject *)item;
 @end
 
-@interface LSDeliveryTableView : UITableView<UITableViewDataSource,UITableViewDelegate,LSDeliveryListTableViewCellDelegate>
+@interface LSDeliveryTableView : LSTableView<UITableViewDataSource,UITableViewDelegate,LSDeliveryListTableViewCellDelegate>
 @property (nonatomic, weak)  id <LSDeliveryTableViewDelegate> tableViewDelegate;
 @property (nonatomic, retain) NSArray *items;
 @end

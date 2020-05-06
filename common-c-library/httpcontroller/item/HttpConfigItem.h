@@ -182,6 +182,12 @@ public:
             if (root[LIVEROOM_FLOWERS_GIFT].isNumeric()) {
                 flowersGift = root[LIVEROOM_FLOWERS_GIFT].asInt();
             }
+            
+            /* scheduleSaveUp */
+            if (root[LIVEROOM_SCHEDULE_SAVE_UP].isNumeric()) {
+                scheduleSaveUp = root[LIVEROOM_SCHEDULE_SAVE_UP].asInt();
+            }
+            
         }
 
         result = true;
@@ -220,6 +226,7 @@ public:
         chatVoiceHostUrl = "";
         sendLetter = "";
         flowersGift = 0;
+        scheduleSaveUp = 0;
     }
     
     virtual ~HttpConfigItem() {
@@ -258,6 +265,7 @@ public:
      * chatVoiceHostUrl             LiveChat上传/下载语音的URL
      * sendLetter                   发送信件页URL
      * flowersGift                  鲜花礼品的优惠价
+     * scheduleSaveUp        预付费最大优惠折扣
      */
     string imSvrUrl;
     string httpSvrUrl;
@@ -290,6 +298,7 @@ public:
     string chatVoiceHostUrl;
     string sendLetter;
     int flowersGift;
+    int scheduleSaveUp;
 };
 
 #endif /* HTTPCONFIGITEM_H_*/

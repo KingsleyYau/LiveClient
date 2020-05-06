@@ -19,14 +19,13 @@
 
 // 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
-// 外部跳转邀请主播ID 昵称
+// 外部跳转邀请主播ID 昵称 (带好友推荐时为 推荐主播ID 昵称)
 @property (nonatomic, copy) NSString *inviteAnchorId;
 @property (nonatomic, copy) NSString *inviteAnchorName;
 
 // 窗口底部界面
 @property (weak, nonatomic) IBOutlet UIView *videoBottomView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoBottomViewTop;
-
 
 // 关闭放大窗口
 @property (weak, nonatomic) IBOutlet UIButton *resetBtn;
@@ -51,7 +50,7 @@
 // 聊天框底部阴影
 @property (weak, nonatomic) IBOutlet TableSuperView *tableSuperView;
 // 聊天框
-@property (nonatomic, weak) IBOutlet UITableView *msgTableView;
+@property (nonatomic, weak) IBOutlet  LSTableView *msgTableView;
 // 底部阴影顶部约束
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *msgSuperViewTop;
 // 直播间字体

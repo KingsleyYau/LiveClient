@@ -27,10 +27,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PCz-ew-zQ9" userLabel="Preview Group View 0">
-                    <rect key="frame" x="0.0" y="0.0" width="207" height="207"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lAj-db-Qml" userLabel="Preview View 0" customClass="GPUImageView">
-                            <rect key="frame" x="0.0" y="0.0" width="207" height="207"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="lAj-db-Qml" secondAttribute="height" multiplier="1:1" id="VzH-f5-kv6"/>
@@ -79,10 +79,9 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="InE-UV-TZR" userLabel="Preview Group View 1">
-                    <rect key="frame" x="207" y="0.0" width="207" height="207"/>
+                    <rect key="frame" x="414" y="0.0" width="0.0" height="0.0"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cW-Ak-190" userLabel="Preview View 1" customClass="GPUImageView">
-                            <rect key="frame" x="0.0" y="0.0" width="207" height="207"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="4cW-Ak-190" secondAttribute="height" multiplier="1:1" id="yFR-i9-pRh"/>
@@ -131,7 +130,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CQa-Ah-dxL" userLabel="Preview Group View 2">
-                    <rect key="frame" x="0.0" y="207" width="207" height="207"/>
+                    <rect key="frame" x="0.0" y="414" width="207" height="207"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UGx-Nz-4qN" userLabel="Preview View 2" customClass="GPUImageView">
                             <rect key="frame" x="0.0" y="0.0" width="207" height="207"/>
@@ -183,7 +182,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
-                    <rect key="frame" x="207" y="207" width="207" height="207"/>
+                    <rect key="frame" x="207" y="0.0" width="207" height="207"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="i4D-ha-MOA" secondAttribute="height" multiplier="1:1" id="tMf-nv-u5c"/>
@@ -347,6 +346,7 @@
                 <constraint firstItem="jE1-rt-oIi" firstAttribute="width" secondItem="RM2-Fk-mCo" secondAttribute="width" id="dN4-QN-l8z"/>
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="leading" secondItem="drI-3V-bPu" secondAttribute="trailing" id="eXQ-Oh-AB9"/>
                 <constraint firstItem="l7N-OT-dic" firstAttribute="leading" secondItem="0Gc-rJ-oWd" secondAttribute="trailing" id="f5P-GP-pCg"/>
+                <constraint firstItem="PCz-ew-zQ9" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="fFQ-Il-Efo"/>
                 <constraint firstItem="PCz-ew-zQ9" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" id="fuE-nt-bpI"/>
                 <constraint firstItem="3NY-ve-6GV" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-5" id="g1g-mY-mma"/>
                 <constraint firstItem="InE-UV-TZR" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="hn8-G3-K9n"/>
@@ -369,6 +369,11 @@
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
             <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="2vb-b8-oyy"/>
+                </mask>
+            </variation>
         </view>
     </objects>
 </document>

@@ -35,6 +35,8 @@
 //        self.mailPriv = [coder decodeObjectForKey:@"mailPriv"];
         self.userPriv = [coder decodeObjectForKey:@"userPriv"];
         self.isGiftFlowerSwitch = [coder decodeBoolForKey:@"isGiftFlowerSwitch"];
+        self.isShowStartNotice = [coder decodeBoolForKey:@"isShowStartNotice"];
+        self.isShowWillStartNotice = [coder decodeBoolForKey:@"isShowWillStartNotice"];
     }
     return self;
 }
@@ -60,6 +62,8 @@
 //    [coder encodeObject:self.mailPriv forKey:@"mailPriv"];
     [coder encodeObject:self.userPriv forKey:@"userPriv"];
     [coder encodeBool:self.isGiftFlowerSwitch forKey:@"isGiftFlowerSwitch"];
+    [coder encodeBool:self.isShowStartNotice forKey:@"isShowStartNotice"];
+    [coder encodeBool:self.isShowWillStartNotice forKey:@"isShowWillStartNotice"];
 }
 
 @end

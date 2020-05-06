@@ -18,8 +18,7 @@
 
 #pragma mark - Inital
 
-- (instancetype)initWithIdentifier:(NSString *)identifier
-{
+- (instancetype)initWithIdentifier:(NSString *)identifier {
     if (self = [super init]) {
         self = [self reloadCustomCell];
 //        self = [[[self class] alloc] init];
@@ -36,8 +35,7 @@
  *
  *  @return 检测结果 YES为会碰撞
  */
-- (BOOL)examineColide:(BarrageViewCell *)cell
-{
+- (BOOL)examineColide:(BarrageViewCell *)cell {
     NSTimeInterval t1 = self.duration - self.cellWidth / self.speed - 0.3;
     //如果currentCell现在就开始发送，动画执行完成时的时间
     NSDate *nowDate = [NSDate date];
@@ -56,8 +54,7 @@
 #pragma mark - Public
 
 //优化：让showCells记录每条轨道上最后一个正在执行动画的cell
-- (NSInteger)examineOrbitWithNumbers:(NSInteger)numbers showCells:(NSMutableArray *)showCells
-{
+- (NSInteger)examineOrbitWithNumbers:(NSInteger)numbers showCells:(NSMutableArray *)showCells {
     NSMutableArray<NSNumber *> *orbits = [NSMutableArray array];//记录可用的轨道
     NSMutableArray<NSNumber *> *freeOrbits = [NSMutableArray array];//记录空闲轨道
     //按cell的动画开始时间进行升序排列
@@ -93,41 +90,39 @@
         //从可用轨道中随机一个
         if (freeOrbits.count > 0) {
             int index = arc4random_uniform((u_int32_t)freeOrbits.count);
-            _row      = freeOrbits[index].integerValue;
+            _row = freeOrbits[index].integerValue;
         }else {
             int index = arc4random_uniform((u_int32_t)orbits.count);
-            _row      = orbits[index].integerValue;
+            _row = orbits[index].integerValue;
         }
     }
     return _row;
 }
 
-- (NSTimeInterval)calculateAnimationDurationWithBarrageWidth:(CGFloat)width spacing:(CGFloat)spacing cellWidth:(CGFloat)cellWidth speedBaseVlaue:(CGFloat)vlaue
-{
-    _cellWidth         = cellWidth;
+- (NSTimeInterval)calculateAnimationDurationWithBarrageWidth:(CGFloat)width spacing:(CGFloat)spacing cellWidth:(CGFloat)cellWidth speedBaseVlaue:(CGFloat)vlaue {
+    _cellWidth = cellWidth;
     CGFloat wholeWidth = width + cellWidth + spacing;
-    _speed             = wholeWidth / vlaue;
-    _duration          = (width + spacing) / _speed;
+    _speed = wholeWidth / vlaue;
+    _duration = (width + spacing) / _speed;
     return _duration;
 }
 
-- (void)startBarrageAniamtionTime:(NSDate *)date duration:(NSTimeInterval)duration prepare:(void (^)(void))prepare completion:(void (^)(BOOL))completion
-{
+- (void)startBarrageAniamtionTime:(NSDate *)date duration:(NSTimeInterval)duration prepare:(void (^)(void))prepare completion:(void (^)(BOOL))completion {
     _startTime = date;
     _duration = duration;
     if (prepare) {
         prepare();
     }
-    self.completed           = completion;
-    CABasicAnimation *move   = [CABasicAnimation animation];
-    move.keyPath             = @"position";
-    CGRect frame             = self.frame;
-    CGPoint fromPoint        = CGPointMake(frame.origin.x, frame.origin.y);
-    CGPoint toPoint          = CGPointMake(- CGRectGetWidth(frame), frame.origin.y);
-    move.fromValue           = [NSValue valueWithCGPoint:fromPoint];
-    move.toValue             = [NSValue valueWithCGPoint:toPoint];
-    move.duration            = duration;
-    move.delegate            = self;
+    self.completed = completion;
+    CABasicAnimation *move = [CABasicAnimation animation];
+    move.keyPath = @"position";
+    CGRect frame = self.frame;
+    CGPoint fromPoint = CGPointMake(frame.origin.x, frame.origin.y);
+    CGPoint toPoint = CGPointMake(- CGRectGetWidth(frame), frame.origin.y);
+    move.fromValue = [NSValue valueWithCGPoint:fromPoint];
+    move.toValue = [NSValue valueWithCGPoint:toPoint];
+    move.duration = duration;
+    move.delegate = self;
     move.removedOnCompletion = YES;
     [self.layer addAnimation:move forKey:nil];
     
@@ -136,30 +131,28 @@
     _speed = distance / move.duration;
 }
 
-- (void)pauseLayerAnimation
-{
+- (void)pauseLayerAnimation {
     //记录时间
-    _stopDate                 = [NSDate date];
+    _stopDate = [NSDate date];
     //停止动画
     CFTimeInterval pausedTime = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
-    self.layer.speed          = 0.0;
-    self.layer.timeOffset     = pausedTime;
+    self.layer.speed = 0.0;
+    self.layer.timeOffset = pausedTime;
 }
 
 - (void)resumeLayerAnimation
 {
-    CFTimeInterval pausedTime     = [self.layer timeOffset];
-    self.layer.speed              = 1.0;
-    self.layer.timeOffset         = 0.0;
-    self.layer.beginTime          = 0.0;
+    CFTimeInterval pausedTime = [self.layer timeOffset];
+    self.layer.speed = 1.0;
+    self.layer.timeOffset = 0.0;
+    self.layer.beginTime = 0.0;
     CFTimeInterval timeSincePause = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
-    self.layer.beginTime          = timeSincePause;
+    self.layer.beginTime = timeSincePause;
 }
 
 #pragma mark - CAAnimationDelegate
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
-{
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     if (self.completed) {
         self.completed(flag);
     }
@@ -169,8 +162,7 @@
 
 @implementation BarrageViewCell (ProtectedMethod)
 
-- (instancetype)reloadCustomCell
-{
+- (instancetype)reloadCustomCell {
     return nil;
 }
 

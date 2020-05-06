@@ -25,6 +25,7 @@
 #import "DialogTip.h"
 #import "QNRiskControlManager.h"
 #import "LSShadowView.h"
+#import "LiveUrlHandler.h"
 #define PageSize 10
 
 @interface LSFollowingViewController () <UIScrollViewRefreshDelegate, LSHomeCollectionViewDelegate>
@@ -149,6 +150,7 @@
     [self.collectionView setupPullRefresh:self pullDown:YES pullUp:YES];
     self.collectionView.pullScrollEnabled = YES;
     self.collectionView.collectionViewDelegate = self;
+    self.collectionView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xE7E8EE) orDark:COLOR_WITH_16BAND_RGB(0x666666)];
 }
 
 #pragma mark banner点击事件
@@ -412,31 +414,15 @@
 /** 付费的公开直播间 */
 - (void)waterfallView:(UICollectionView *)waterfallView homeListCellWatchNowBtnDid:(LiveRoomInfoItemObject *)item {
     // TODO:点击立即付费公开
-    [[LiveModule module].analyticsManager reportActionEvent:EnterVipBroadcast eventCategory:EventCategoryenterBroadcast];
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM) {
-        liveRoom.roomType = LiveRoomType_Public;
-    }else {
-        liveRoom.roomType = LiveRoomType_Public_VIP;
-    }
-    liveRoom.httpLiveRoom = item;
-    vc.liveRoom = liveRoom;
-    // 继承导航栏控制器
-    [self navgationControllerPresent:vc];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:item.nickName anchorId:item.userId roomType:LiveRoomType_Public];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 /** 豪华的私密直播间 */
 - (void)waterfallView:(UICollectionView *)waterfallView homeListCellInviteBtnDid:(LiveRoomInfoItemObject *)item {
     // TODO:点击立即付费豪华私密
-    [[LiveModule module].analyticsManager reportActionEvent:EnterVipPrivateBroadcast eventCategory:EventCategoryenterBroadcast];
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    liveRoom.roomType = LiveRoomType_Private_VIP;
-    liveRoom.httpLiveRoom = item;
-    vc.liveRoom = liveRoom;
-    // 继承导航栏控制器
-    [self navgationControllerPresent:vc];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:item.nickName anchorId:item.userId roomType:LiveRoomType_Private];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 - (void)navgationControllerPresent:(UIViewController *)vc {

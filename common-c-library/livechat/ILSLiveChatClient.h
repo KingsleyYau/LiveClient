@@ -73,6 +73,8 @@ public:
 	virtual void OnSummitAutoInviteCamFirst(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg) {}
     // Alex, 发送邀请语
     virtual void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) {}
+    // Alex, 发送预约邀请
+    virtual void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const LSLCScheduleInfoItem& item) {}
 
 	// 服务器主动请求
 	virtual void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message, INVITE_TYPE inviteType) {}
@@ -111,6 +113,8 @@ public:
 	virtual void OnRecvManCamShareStart(const string& manId, const string& womanId, const string& inviteId) {}
 	virtual void OnRecvCamHearbeatException(const string& exceptionName, LSLIVECHAT_LCC_ERR_TYPE err, const string& targetId) {}
 	virtual void OnRecvManJoinOrExitConference(MAN_CONFERENCE_EVENT_TYPE eventType, const string& fromId, const string& toId, const list<string>& userList) {}
+    
+   virtual void OnRecvScheduleInviteNotice(const LSLCScheduleInfoItem& item) {}
 };
 
 // LiveChat客户端接口类
@@ -251,6 +255,8 @@ public:
 	virtual bool SummitAutoInviteCamFirst(bool camFirst) = 0;
     // 发送邀请语
     virtual bool SendInviteMessage(const string& inUserId, const string& inMessage, const string& nickName) = 0;
+    // 发送预约邀请
+    virtual bool SendScheduleInvite(const LSLCScheduleInfoItem& item) = 0;
 public:
 	// 获取用户账号
 	virtual string GetUser() = 0;

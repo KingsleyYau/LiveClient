@@ -20,7 +20,7 @@
 @interface LSHomeSettingViewController : LSListViewController
 
 @property (weak, nonatomic) IBOutlet UIView *bgView;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 /** 代理 */
 @property (nonatomic, weak) id<LSHomeSettingViewControllerDelegate> homeDelegate;
 - (void)showSettingView;

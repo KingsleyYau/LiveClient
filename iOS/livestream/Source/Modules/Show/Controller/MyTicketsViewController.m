@@ -15,11 +15,13 @@
 #import "LiveUrlHandler.h"
 #import "AnchorPersonalViewController.h"
 #import "LSAddCreditsViewController.h"
+#import "LiveModule.h"
+
 #define PageSize 50
 
 @interface MyTicketsViewController () <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, UIScrollViewRefreshDelegate, ShowCellDelegate, ShowAddCreditsViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 @property (nonatomic, strong) NSTimer *timer;
@@ -235,8 +237,8 @@
 - (void)showCellBtnDid:(NSInteger)type fromItem:(LSProgramItemObject *)item {
     if (type == 1) {
         [[LiveModule module].analyticsManager reportActionEvent:ShowEnterShowBroadcast eventCategory:EventCategoryShowCalendar];
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId anchorId:item.anchorId];
-        [[LiveUrlHandler shareInstance] handleOpenURL:url];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId anchorName:item.anchorNickName anchorId:item.anchorId];
+        [[LiveModule module].serviceManager handleOpenURL:url];
     } else if (type == 2) {
         [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarClickGetTicket eventCategory:EventCategoryShowCalendar];
         ShowAddCreditsView *view = [[ShowAddCreditsView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];

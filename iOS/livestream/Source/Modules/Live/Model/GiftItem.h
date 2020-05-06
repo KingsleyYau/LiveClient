@@ -14,6 +14,7 @@
 @property (strong, readonly) NSString* itemId;
 @property (strong) NSString* roomid;             // 直播间ID;
 @property (strong) NSString* nickname;           // 发送方的昵称
+@property (nonatomic, copy) NSString * photoUrl; //发送方的头像
 @property (strong) NSString* giftid;             // 礼物ID
 @property (strong) NSString* giftname;           // 礼物名称
 @property (assign) int giftnum;            // 本次发送礼物的数量（整型）
@@ -98,6 +99,7 @@
 + (instancetype)itemRoomId:(NSString *)roomid
               fromID:(NSString *)fromid
             nickName:(NSString *)nickname
+            photoUrl:(NSString *)photoUrl
               giftID:(NSString *)giftid
             giftName:(NSString *)giftname
              giftNum:(int)giftnum

@@ -44,6 +44,7 @@
     
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"LSStoreListSectionView"];
     
+    self.collectionView.backgroundColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:COLOR_WITH_16BAND_RGB(0x666666)];
 }
 
 - (void)reloadData {

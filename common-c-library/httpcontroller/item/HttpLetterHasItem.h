@@ -42,6 +42,11 @@ public:
             if (root[LETTER_ONLINE_STATUS].isNumeric()) {
                 onlineStatus = root[LETTER_ONLINE_STATUS].asInt() == 0 ? false : true;
             }
+            
+            /* hasSchedule */
+            if (root[LETTER_HAS_SCHEDULE].isNumeric()) {
+                hasSchedule = root[LETTER_HAS_SCHEDULE].asInt() == 0 ? false : true;
+            }
 
         }
         result = true;
@@ -54,6 +59,7 @@ public:
         hasRead = false;
         hasReplied = false;
         onlineStatus = false;
+        hasSchedule = false;
     }
     
     virtual ~HttpLetterHasItem() {
@@ -73,6 +79,7 @@ public:
     bool    hasRead;
     bool    hasReplied;
     bool    onlineStatus;
+    bool    hasSchedule;
 };
 
 

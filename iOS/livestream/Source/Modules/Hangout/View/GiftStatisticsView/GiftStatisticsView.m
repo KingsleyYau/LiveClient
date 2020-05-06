@@ -15,7 +15,7 @@
 
 @interface GiftStatisticsView () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) LSCollectionView *collectionView;
 
 @property (nonatomic, strong) LSGiftManager *giftDownloadManager;
 
@@ -32,7 +32,7 @@
         layout.itemSize = CGSizeMake(32, 32);
         layout.minimumLineSpacing = 4;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        self.collectionView = [[LSCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         self.collectionView.dataSource = self;
         self.collectionView.delegate = self;
         self.collectionView.showsHorizontalScrollIndicator = NO;

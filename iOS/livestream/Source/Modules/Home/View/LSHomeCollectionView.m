@@ -18,13 +18,13 @@
 - (void)initialize {
     self.delegate = self;
     self.dataSource = self;
-    
+
     self.alwaysBounceVertical = YES;
-    
+
     self.cellIdentifierDic = [NSMutableDictionary dictionary];
-    
+
     [self registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HotHeadView"];
-    
+    [self registerNib:[UINib nibWithNibName:@"LSHomeSchedueleCell" bundle:[LiveBundle mainBundle]] forCellWithReuseIdentifier:@"LSHomeSchedueleCell"];
 }
 
 - (void)setIsShowHead:(BOOL)isShowHead {
@@ -38,170 +38,57 @@
 
 #pragma mark - UICollectionViewDataSource method
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.items.count;
+    NSInteger count = 0;
+    if (section == 0) {
+        count = self.noticeItems.count;
+    } else if (section == 1) {
+        count = self.items.count;
+    }
+    return count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSString *identifier = [self.cellIdentifierDic objectForKey:[NSString stringWithFormat:@"CellRow%ld", indexPath.row]];
-    if(identifier == nil){
-           identifier = [NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"CellRow%ld", indexPath.row]];
-           [self.cellIdentifierDic setObject:identifier forKey:[NSString stringWithFormat:@"CellRow%ld", indexPath.row]];
-        //注册cell
-           [self registerNib:[UINib nibWithNibName:@"LSHomeListCell" bundle:[LiveBundle mainBundle]] forCellWithReuseIdentifier:identifier];
-    }
-    LSHomeListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    if(!cell){
-           cell = [[[LiveBundle mainBundle]loadNibNamed:@"LSHomeListCell" owner:self options:nil]lastObject];
-       }
-    cell.cellDelegate = self;
-    // 数据填充
-    LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
-    
-    cell.tag = indexPath.row;
-    if (item.adItem) {
-        cell.watchNowFreeIcon.hidden = YES;
-        cell.inviteFreeIncon.hidden = YES;
-        cell.onlineStatus.hidden = YES;
-        cell.chatNowBtn.hidden = YES;
-        cell.watchNowBtn.hidden = YES;
-        cell.vipPrivateBtn.hidden = YES;
-        cell.liveStatusView.hidden = YES;
-        cell.camIcon.hidden = YES;
-        cell.sendMailBtn.hidden = YES;
-        cell.chatBtn.hidden = YES;
-        cell.focusBtn.hidden = YES;
-        cell.sayhiBtn.hidden = YES;
-        // 广告图片
-        cell.adImageView.hidden = NO;
-        // 创建新的
-        cell.imageViewLoader = [LSImageViewLoader loader];
-        // 加载
-        [cell.imageViewLoader loadHDListImageWithImageView:cell.adImageView options:SDWebImageRefreshCached imageUrl:item.adItem.image placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"] finishHandler:nil];
-    }else {
-        cell.chatBtn.hidden = NO;
-        cell.focusBtn.hidden = NO;
-        cell.sayhiBtn.hidden = NO;
-        // 广告图片
-        cell.adImageView.hidden = YES;
-        // 房间名
-        cell.labelRoomTitle.text = item.nickName;
-        
-        [cell.imageViewLoader stop];
-        [cell.imageViewLoader loadHDListImageWithImageView:cell.imageViewHeader
-                                                   options:0
-                                                  imageUrl:item.roomPhotoUrl
-                                          placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]
-                                             finishHandler:nil];
-        
-        //是否有SayHi权限
-        if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
-            cell.sayhiBtn.hidden = NO;
-            cell.chatBtnX.constant = 0;
-            cell.sayHiFreeIcon.hidden = NO;
-        }else {
-            cell.sayhiBtn.hidden = YES;
-            cell.chatBtnX.constant = -25;
-            cell.sayHiFreeIcon.hidden = YES;
+
+    UICollectionViewCell *baseCell = [[UICollectionViewCell alloc] init];
+
+    if (indexPath.section == 0) {
+        // 数据填充
+        LiveRoomInfoItemObject *item = [self.noticeItems objectAtIndex:indexPath.row];
+        LSHomeSchedueleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"LSHomeSchedueleCell" forIndexPath:indexPath];
+        if (!cell) {
+            cell = [[[LiveBundle mainBundle] loadNibNamed:@"LSHomeSchedueleCell" owner:self options:nil] lastObject];
         }
-        //是否关注主播
-        UIImage * followImage = item.isFollow?[UIImage imageNamed:@"LS_Home_Follow"]:[UIImage imageNamed:@"LS_Home_Unfollow"];
-        [cell.focusBtn setImage:followImage forState:UIControlStateNormal];
-        
-        if (item.onlineStatus == ONLINE_STATUS_LIVE) {
-            cell.sendMailBtn.hidden = YES;
-            cell.chatNowBtn.hidden = YES;
-            cell.watchNowBtn.hidden = YES;
-            cell.liveStatusView.hidden = YES;
-            cell.vipPrivateBtn.hidden = YES;
-            cell.watchNowFreeIcon.hidden = YES;
-            cell.inviteFreeIncon.hidden = YES;
-            cell.camIcon.hidden = YES;
-            cell.onlineStatus.hidden = NO;
-            cell.anchorNameCenterX.constant = -30;
-            cell.anchorNameCenterW.constant = cell.tx_width - cell.onlineStatus.tx_width - 20;
-            cell.watchNowBtnBottom.constant = 6;
-            cell.inviteBtnBottom.constant = 5;
-            
-            if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM || item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
-                // 公开直播间
-                cell.btnType = BottomBtnType_Chat;
-                cell.watchNowBtn.hidden = NO;
-                cell.liveStatusView.hidden = NO;
-                NSMutableArray *animationPublicRTArray = [NSMutableArray array];
-                for (int i = 1; i <= 3; i++) {
-                    NSString *imageName = [NSString stringWithFormat:@"Home_HotAndFollow_ImageView_Live%d", i];
-                    UIImage *image = [UIImage imageNamed:imageName];
-                    [animationPublicRTArray addObject:image];
-                }
-                cell.liveStatus.animationImages = animationPublicRTArray;
-                cell.liveStatus.animationRepeatCount = 0;
-                cell.liveStatus.animationDuration = 0.6;
-                [cell.liveStatus startAnimating];
-                
-                if ([[HomeVouchersManager manager]isShowWatchNowFree:item.userId]) {
-                    cell.watchNowFreeIcon.hidden = NO;
-                }
-                else {
-                    cell.watchNowFreeIcon.hidden = YES;
-                }
-                
-                if (item.priv.isHasOneOnOneAuth) {
-                    cell.vipPrivateBtn.hidden = NO;
-                    if ([[HomeVouchersManager manager] isShowInviteFree:item.userId]) {
-                        //显示Free
-                        cell.inviteFreeIncon.hidden = NO;
-                        
-                    } else {
-                        //不显示Free
-                        cell.inviteFreeIncon.hidden = YES;
-                    }
-                }
-                else {
-                    cell.vipPrivateBtn.hidden = YES;
-                    cell.watchNowBtnBottom.constant = -34;
-                }
-                
-            }else  {
-                // 普通私密和付费私密,没有直播间
-                // 是否有私密邀请的权限权限
-                cell.watchNowBtn.hidden = YES;
-                cell.btnType = BottomBtnType_Mail;
-                if (item.priv.isHasOneOnOneAuth) {
-                    cell.sendMailBtn.hidden = YES;
-                    cell.chatNowBtn.hidden = NO;
-                    cell.vipPrivateBtn.hidden = NO;
-                    cell.camIcon.hidden = NO;
-                    cell.inviteBtnBottom.constant = 45;
-                    if ([[HomeVouchersManager manager] isShowInviteFree:item.userId]) {
-                        //显示Free
-                        cell.inviteFreeIncon.hidden = NO;
-                        
-                    } else {
-                        //不显示Free
-                        cell.inviteFreeIncon.hidden = YES;
-                    }
-                    
-                } else {
-                    // 没有私密邀请权限判断是否livechat在线显示对应按钮
-                    if (item.chatOnlineStatus == IMCHATONLINESTATUS_ONLINE) {
-                        cell.chatNowBtn.hidden = NO;
-                        cell.sendMailBtn.hidden = YES;
-                        cell.vipPrivateBtn.hidden = YES;
-                    } else {
-                        cell.sendMailBtn.hidden = NO;
-                        cell.chatNowBtn.hidden = YES;
-                        cell.vipPrivateBtn.hidden = YES;
-                    }
-                }
-            }
-            
-        }else {
-            // 不在线,只能显示发送邮件的按钮
+        if (item.schedule.type == HomeScheduleNoteTypeStart) {
+            [cell updateUI:ScheduleNoteTypeStart withItem:item];
+        } else {
+            [cell updateUI:ScheduleNoteTypeWillStart withItem:item];
+        }
+        cell.schedueleDelegate = self;
+        cell.tag = indexPath.row;
+        baseCell = cell;
+    } else {
+        // 数据填充
+        LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
+        NSString *identifier = [self.cellIdentifierDic objectForKey:[NSString stringWithFormat:@"CellRow%ld", indexPath.row]];
+        if (identifier == nil) {
+            identifier = [NSString stringWithFormat:@"%@", [NSString stringWithFormat:@"CellRow%ld", indexPath.row]];
+            [self.cellIdentifierDic setObject:identifier forKey:[NSString stringWithFormat:@"CellRow%ld", indexPath.row]];
+            //注册cell
+            [self registerNib:[UINib nibWithNibName:@"LSHomeListCell" bundle:[LiveBundle mainBundle]] forCellWithReuseIdentifier:identifier];
+        }
+        //         LSHomeListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        LSHomeListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        if (!cell) {
+            cell = [[[LiveBundle mainBundle] loadNibNamed:@"LSHomeListCell" owner:self options:nil] lastObject];
+        }
+        cell.cellDelegate = self;
+
+        cell.tag = indexPath.row;
+        if (item.adItem) {
             cell.watchNowFreeIcon.hidden = YES;
             cell.inviteFreeIncon.hidden = YES;
             cell.onlineStatus.hidden = YES;
@@ -210,27 +97,173 @@
             cell.vipPrivateBtn.hidden = YES;
             cell.liveStatusView.hidden = YES;
             cell.camIcon.hidden = YES;
-            cell.sendMailBtn.hidden = NO;
-            cell.anchorNameCenterX.constant = 0;
-            cell.anchorNameCenterW.constant = cell.tx_width - 20;
-            //变成预约按钮
-            cell.btnType = BottomBtnType_Book;
+            cell.sendMailBtn.hidden = YES;
+            cell.chatBtn.hidden = YES;
+            cell.focusBtn.hidden = YES;
+            cell.sayhiBtn.hidden = YES;
+            // 广告图片
+            cell.adImageView.hidden = NO;
+            // 创建新的
+            cell.imageViewLoader = [LSImageViewLoader loader];
+            // 加载
+            [cell.imageViewLoader loadHDListImageWithImageView:cell.adImageView options:SDWebImageRefreshCached imageUrl:item.adItem.image placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"] finishHandler:nil];
+        } else {
+            cell.chatBtn.hidden = NO;
+            cell.focusBtn.hidden = NO;
+            cell.sayhiBtn.hidden = NO;
+            // 广告图片
+            cell.adImageView.hidden = YES;
+            // 房间名
+            cell.labelRoomTitle.text = item.nickName;
+
+            [cell.imageViewLoader stop];
+            [cell.imageViewLoader loadHDListImageWithImageView:cell.imageViewHeader
+                                                       options:0
+                                                      imageUrl:item.roomPhotoUrl
+                                              placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]
+                                                 finishHandler:nil];
+
+            //是否有SayHi权限
+            if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
+                cell.sayhiBtn.hidden = NO;
+                cell.chatBtnX.constant = 0;
+                cell.sayHiFreeIcon.hidden = NO;
+            } else {
+                cell.sayhiBtn.hidden = YES;
+                cell.chatBtnX.constant = -25;
+                cell.sayHiFreeIcon.hidden = YES;
+            }
+            //是否关注主播
+            UIImage *followImage = item.isFollow ? [UIImage imageNamed:@"LS_Home_Follow"] : [UIImage imageNamed:@"LS_Home_Unfollow"];
+            [cell.focusBtn setImage:followImage forState:UIControlStateNormal];
+
+            if (item.onlineStatus == ONLINE_STATUS_LIVE) {
+                cell.sendMailBtn.hidden = YES;
+                cell.chatNowBtn.hidden = YES;
+                cell.watchNowBtn.hidden = YES;
+                cell.liveStatusView.hidden = YES;
+                cell.vipPrivateBtn.hidden = YES;
+                cell.watchNowFreeIcon.hidden = YES;
+                cell.inviteFreeIncon.hidden = YES;
+                cell.camIcon.hidden = YES;
+                cell.onlineStatus.hidden = NO;
+                cell.anchorNameCenterX.constant = -30;
+                cell.anchorNameCenterW.constant = cell.tx_width - cell.onlineStatus.tx_width - 20;
+                cell.watchNowBtnBottom.constant = 6;
+                cell.inviteBtnBottom.constant = 5;
+                cell.chatWidth.constant = 25;
+                cell.chatLeading.constant = 27;
+                cell.chatTrailing.constant = 27;
+                if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM || item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
+                    // 公开直播间
+                    cell.btnType = BottomBtnType_Chat;
+                    cell.watchNowBtn.hidden = NO;
+                    cell.liveStatusView.hidden = NO;
+                    NSMutableArray *animationPublicRTArray = [NSMutableArray array];
+                    for (int i = 1; i <= 3; i++) {
+                        NSString *imageName = [NSString stringWithFormat:@"Home_HotAndFollow_ImageView_Live%d", i];
+                        UIImage *image = [UIImage imageNamed:imageName];
+                        [animationPublicRTArray addObject:image];
+                    }
+                    cell.liveStatus.animationImages = animationPublicRTArray;
+                    cell.liveStatus.animationRepeatCount = 0;
+                    cell.liveStatus.animationDuration = 0.6;
+                    [cell.liveStatus startAnimating];
+
+                    if ([[HomeVouchersManager manager] isShowWatchNowFree:item.userId]) {
+                        cell.watchNowFreeIcon.hidden = NO;
+                    } else {
+                        cell.watchNowFreeIcon.hidden = YES;
+                    }
+
+                    if (item.priv.isHasOneOnOneAuth) {
+                        cell.vipPrivateBtn.hidden = NO;
+                        if ([[HomeVouchersManager manager] isShowInviteFree:item.userId]) {
+                            //显示Free
+                            cell.inviteFreeIncon.hidden = NO;
+
+                        } else {
+                            //不显示Free
+                            cell.inviteFreeIncon.hidden = YES;
+                        }
+                    } else {
+                        cell.vipPrivateBtn.hidden = YES;
+                        cell.watchNowBtnBottom.constant = -34;
+                    }
+
+                } else {
+                    // 普通私密和付费私密,没有直播间
+                    // 是否有私密邀请的权限权限
+                    cell.watchNowBtn.hidden = YES;
+                    cell.btnType = BottomBtnType_Mail;
+                    if (item.priv.isHasOneOnOneAuth) {
+                        cell.sendMailBtn.hidden = YES;
+                        cell.chatNowBtn.hidden = NO;
+                        cell.vipPrivateBtn.hidden = NO;
+                        cell.camIcon.hidden = NO;
+                        cell.inviteBtnBottom.constant = 45;
+                        if ([[HomeVouchersManager manager] isShowInviteFree:item.userId]) {
+                            //显示Free
+                            cell.inviteFreeIncon.hidden = NO;
+
+                        } else {
+                            //不显示Free
+                            cell.inviteFreeIncon.hidden = YES;
+                        }
+
+                    } else {
+                        // 没有私密邀请权限判断是否livechat在线显示对应按钮
+                        if (item.chatOnlineStatus == IMCHATONLINESTATUS_ONLINE) {
+                            cell.chatNowBtn.hidden = NO;
+                            cell.sendMailBtn.hidden = YES;
+                            cell.vipPrivateBtn.hidden = YES;
+                        } else {
+                            cell.sendMailBtn.hidden = NO;
+                            cell.chatNowBtn.hidden = YES;
+                            cell.vipPrivateBtn.hidden = YES;
+                        }
+                    }
+                }
+
+            } else {
+                // 不在线,只能显示发送邮件的按钮
+                cell.watchNowFreeIcon.hidden = YES;
+                cell.inviteFreeIncon.hidden = YES;
+                cell.onlineStatus.hidden = YES;
+                cell.chatNowBtn.hidden = YES;
+                cell.watchNowBtn.hidden = YES;
+                cell.vipPrivateBtn.hidden = YES;
+                cell.liveStatusView.hidden = YES;
+                cell.camIcon.hidden = YES;
+                cell.sendMailBtn.hidden = NO;
+                cell.anchorNameCenterX.constant = 0;
+                cell.anchorNameCenterW.constant = cell.tx_width - 20;
+
+                // 取消预约按钮,调整间距
+                cell.chatWidth.constant = 0;
+                cell.chatLeading.constant = 15;
+                cell.chatTrailing.constant = 15;
+                //变成预约按钮
+                //                 cell.btnType = BottomBtnType_Book;
+            }
         }
-        
+        baseCell = cell;
     }
-    return cell;
+
+    return baseCell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.collectionViewDelegate respondsToSelector:@selector(waterfallView:didSelectItem:)]) {
-        
+
         [self.collectionViewDelegate waterfallView:self didSelectItem:[self.items objectAtIndex:indexPath.row]];
     }
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    
-    if (self.isShowHead) {
-        return CGSizeMake(screenSize.width, 88);
+    if (section == 0) {
+        if (self.isShowHead) {
+            return CGSizeMake(screenSize.width, 88);
+        }
     }
     return CGSizeMake(screenSize.width, 0);
 }
@@ -244,10 +277,9 @@
             self.headView.delagate = self;
             [view addSubview:self.headView];
         }
-        
+
         self.headView.titleArray = self.titleArray;
         self.headView.iconArray = self.iconArray;
-        
     }
     return view;
 }
@@ -258,12 +290,59 @@
     }
 }
 
-
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat proportion =screenSize.width==320?1.85:1.8;
-    CGFloat w = (screenSize.width - 30) / 2.0;
-    CGFloat h = w * proportion;
-    return CGSizeMake(w, h);
+    //    LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
+    CGSize size;
+    //    if (item.schedule) {
+    //        size = CGSizeMake(screenSize.width - 20, 53);
+    //    }else {
+    //        CGFloat proportion =screenSize.width==320?1.85:1.8;
+    //        CGFloat w = (screenSize.width - 30) / 2.0;
+    //        CGFloat h = w * proportion;
+    //        size =  CGSizeMake(w, h);
+    //    }
+
+    if (indexPath.section == 0) {
+        if (self.noticeItems.count > 0) {
+            size = CGSizeMake(screenSize.width, 53);
+        } else {
+            size = CGSizeMake(0, 0);
+        }
+
+        //        size = CGSizeMake(screenSize.width - 20, 53);
+    } else {
+        CGFloat proportion = screenSize.width == 320 ? 1.85 : 1.8;
+        CGFloat w = (screenSize.width - 30) / 2.0;
+        CGFloat h = w * proportion;
+        size = CGSizeMake(w, h);
+    }
+
+    return size;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    if (section == 0) {
+        if (self.noticeItems.count > 0) {
+            return UIEdgeInsetsMake(10, 0, 10, 0);
+        } else {
+            return UIEdgeInsetsMake(0, 0, 0, 0);
+        }
+    }
+    return UIEdgeInsetsMake(10, 10, 10, 10);
+}
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    CGFloat space = 10;
+    if (section == 0) {
+        space = 2;
+    }
+    return space;
+}
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    CGFloat space = 10;
+    if (section == 0) {
+        space = 0;
+    }
+    return space;
 }
 
 #pragma mark - 滚动界面回调 (UIScrollViewDelegate)
@@ -320,4 +399,11 @@
         [self.collectionViewDelegate waterfallView:self homeListCellFocusBtnDid:[self.items objectAtIndex:row]];
     }
 }
+
+- (void)lsHomeSchedueleCellDidRemove:(NSInteger)row {
+    if ([self.collectionViewDelegate respondsToSelector:@selector(waterfallView:homeScheduleDidRemove:)]) {
+        [self.collectionViewDelegate waterfallView:self homeScheduleDidRemove:[self.noticeItems objectAtIndex:row]];
+    }
+}
+
 @end

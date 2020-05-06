@@ -45,8 +45,8 @@
     layout.itemSize = CGSizeMake(height , height);
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView = [[LSCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.scrollEnabled = NO;

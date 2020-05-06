@@ -62,7 +62,8 @@
         self.player.delegate = self;
 
         self.pixelBufferOutput = [[ImageCVPixelBufferOutput alloc] init];
-
+        [self.pixelBufferOutput removeAllTargets];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     }
@@ -107,7 +108,6 @@
 
 - (void)stop {
     NSLog(@"LiveStreamPlayer::stop( self : %p )", self);
-
     [self cancel];
 }
 
@@ -120,12 +120,24 @@
     self.player.mute = mute;
 }
 
-- (void)setPlayView:(GPUImageView *)playView {
-    if (_playView != playView) {
-        _playView = playView;
+//- (void)setPlayView:(GPUImageView *)playView {
+//    if (_playView != playView) {
+//        _playView = playView;
+//
+//        [self.pixelBufferOutput removeAllTargets];
+//        [self.pixelBufferOutput addTarget:_playView];
+//    }
+//}
 
-        [self.pixelBufferOutput removeAllTargets];
-        [self.pixelBufferOutput addTarget:_playView];
+- (void)addPlayView:(GPUImageView *)playView {
+    if (![self.pixelBufferOutput.targets containsObject:playView]) {
+        [self.pixelBufferOutput addTarget:playView];
+    }
+}
+
+- (void)removePlayView:(GPUImageView *)playView {
+    if ([self.pixelBufferOutput.targets containsObject:playView]) {
+        [self.pixelBufferOutput removeTarget:playView];
     }
 }
 

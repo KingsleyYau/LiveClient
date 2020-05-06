@@ -74,7 +74,7 @@ int KLog::LogToFile(const char *fileNamePre, KLog::LogLevel level, const char *l
 	struct tm tTime;
 	localtime_r(&stm, &tTime);
 	int tid = (int)syscall(GET_TID);
-	snprintf(pTimeBuffer, 64, "[ tid: %d, %d-%02d-%02d %02d:%02d:%02d.%03ld ]",
+	snprintf(pTimeBuffer, 64, "[ (Live-C-Log) tid:%d, %d-%02d-%02d %02d:%02d:%02d.%03d ]",
 			tid, tTime.tm_year + 1900, tTime.tm_mon + 1, tTime.tm_mday, tTime.tm_hour, tTime.tm_min, tTime.tm_sec, tNow.tv_usec/1000);
 
     va_list	agList;

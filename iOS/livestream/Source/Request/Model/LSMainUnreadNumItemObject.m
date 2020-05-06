@@ -23,6 +23,9 @@
         self.backpackUnreadNum = 0;
         self.sayHiResponseUnreadNum = 0;
         self.livechatVocherUnreadNum = 0;
+        self.schedulePendingUnreadNum = 0;
+        self.scheduleConfirmedUnreadNum = 0;
+        self.scheduleStatus = LSSCHEDULESTATUS_NOSCHEDULE;
     }
     return self;
 }
@@ -37,6 +40,9 @@
         self.backpackUnreadNum = [coder decodeIntForKey:@"backpackUnreadNum"];
         self.sayHiResponseUnreadNum = [coder decodeIntForKey:@"sayHiResponseUnreadNum"];
         self.livechatVocherUnreadNum = [coder decodeIntForKey:@"livechatVocherUnreadNum"];
+        self.schedulePendingUnreadNum = [coder decodeIntForKey:@"schedulePendingUnreadNum"];
+        self.scheduleConfirmedUnreadNum = [coder decodeIntForKey:@"scheduleConfirmedUnreadNum"];
+        self.scheduleStatus = [coder decodeIntForKey:@"scheduleStatus"];
     }
     return self;
 }
@@ -50,6 +56,9 @@
     [coder encodeInt:self.backpackUnreadNum forKey:@"backpackUnreadNum"];
     [coder encodeInt:self.sayHiResponseUnreadNum forKey:@"sayHiResponseUnreadNum"];
     [coder encodeInt:self.livechatVocherUnreadNum forKey:@"livechatVocherUnreadNum"];
+    [coder encodeInt:self.schedulePendingUnreadNum forKey:@"schedulePendingUnreadNum"];
+    [coder encodeInt:self.scheduleConfirmedUnreadNum forKey:@"scheduleConfirmedUnreadNum"];
+    [coder encodeInt:self.scheduleStatus forKey:@"scheduleStatus"];
 }
 
 @end

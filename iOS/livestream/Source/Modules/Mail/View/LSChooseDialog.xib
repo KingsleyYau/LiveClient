@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSChooseDialog">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EVW-7i-CJq">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RfY-TR-Q6Q">
+                    <rect key="frame" x="20" y="345" width="374" height="216"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you sure you wish to decline this request?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oef-s7-rR2">
+                            <rect key="frame" x="20" y="24" width="334" height="38.5"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="textColor" red="0.99607843137254903" green="0.41176470588235292" blue="0.011764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jjG-iU-brj">
+                            <rect key="frame" x="20" y="152" width="160.5" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="YES, Deceline" backgroundImage="LSCommon_BgGray">
+                                <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="actionOK:" destination="iN0-l3-epB" eventType="touchUpInside" id="mnc-RS-uaA"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n5D-rb-2l7">
+                            <rect key="frame" x="195.5" y="152" width="160.5" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="Not Now" backgroundImage="LSCommon_BgGray">
+                                <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="cancelCancel:" destination="iN0-l3-epB" eventType="touchUpInside" id="wmA-ad-xTW"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please note that once you declined this request, it can not be undone." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMS-2f-bua">
+                            <rect key="frame" x="17" y="82.5" width="339" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="0.99607843137254903" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Oef-s7-rR2" secondAttribute="trailing" constant="20" id="8eL-h8-PB3"/>
+                        <constraint firstItem="CMS-2f-bua" firstAttribute="leading" secondItem="RfY-TR-Q6Q" secondAttribute="leading" constant="17" id="8mF-H5-ZzG"/>
+                        <constraint firstAttribute="trailing" secondItem="n5D-rb-2l7" secondAttribute="trailing" constant="18" id="Dlu-LL-9G5"/>
+                        <constraint firstItem="jjG-iU-brj" firstAttribute="leading" secondItem="RfY-TR-Q6Q" secondAttribute="leading" constant="20" id="Hjd-ni-mBj"/>
+                        <constraint firstItem="CMS-2f-bua" firstAttribute="top" secondItem="Oef-s7-rR2" secondAttribute="bottom" constant="20" id="NOD-3g-jkZ"/>
+                        <constraint firstItem="jjG-iU-brj" firstAttribute="top" secondItem="CMS-2f-bua" secondAttribute="bottom" constant="36" id="NRi-NA-zB3"/>
+                        <constraint firstItem="Oef-s7-rR2" firstAttribute="leading" secondItem="RfY-TR-Q6Q" secondAttribute="leading" constant="20" id="SDR-yx-rf7"/>
+                        <constraint firstAttribute="trailing" secondItem="CMS-2f-bua" secondAttribute="trailing" constant="18" id="TeA-FV-SSD"/>
+                        <constraint firstItem="n5D-rb-2l7" firstAttribute="width" secondItem="jjG-iU-brj" secondAttribute="width" id="i9V-hf-riM"/>
+                        <constraint firstItem="Oef-s7-rR2" firstAttribute="top" secondItem="RfY-TR-Q6Q" secondAttribute="top" constant="24" id="nSS-G5-vgb"/>
+                        <constraint firstItem="n5D-rb-2l7" firstAttribute="leading" secondItem="jjG-iU-brj" secondAttribute="trailing" constant="15" id="vi5-kw-jLX"/>
+                        <constraint firstItem="n5D-rb-2l7" firstAttribute="top" secondItem="jjG-iU-brj" secondAttribute="top" id="wKh-TS-qWg"/>
+                        <constraint firstAttribute="bottom" secondItem="jjG-iU-brj" secondAttribute="bottom" constant="20" id="xo3-Yd-fM2"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFM-iH-R2i">
+                    <rect key="frame" x="364" y="315" width="30" height="30"/>
+                    <state key="normal" image="VIPLive_Close"/>
+                    <connections>
+                        <action selector="cancelCancel:" destination="iN0-l3-epB" eventType="touchUpInside" id="1Hp-aD-nl6"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="RfY-TR-Q6Q" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Hqz-Xl-SBf"/>
+                <constraint firstItem="RfY-TR-Q6Q" firstAttribute="centerX" secondItem="EVW-7i-CJq" secondAttribute="centerX" id="L3r-s6-0ct"/>
+                <constraint firstItem="EVW-7i-CJq" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="VF0-0V-5fB"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="EVW-7i-CJq" secondAttribute="bottom" id="Vmk-l5-Rgv"/>
+                <constraint firstItem="RfY-TR-Q6Q" firstAttribute="top" secondItem="NFM-iH-R2i" secondAttribute="bottom" id="cJL-UY-fn7"/>
+                <constraint firstItem="RfY-TR-Q6Q" firstAttribute="centerY" secondItem="EVW-7i-CJq" secondAttribute="centerY" id="dpk-pG-2t4"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="EVW-7i-CJq" secondAttribute="trailing" id="fv4-UG-jPI"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="RfY-TR-Q6Q" secondAttribute="trailing" constant="20" id="fz3-qh-gZ5"/>
+                <constraint firstItem="EVW-7i-CJq" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="iUd-fP-BKe"/>
+                <constraint firstItem="NFM-iH-R2i" firstAttribute="trailing" secondItem="RfY-TR-Q6Q" secondAttribute="trailing" id="wWj-Ma-Zlh"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="contentView" destination="RfY-TR-Q6Q" id="daM-Q8-Iur"/>
+                <outlet property="noLabel" destination="n5D-rb-2l7" id="fls-5J-xPd"/>
+                <outlet property="yesLabel" destination="jjG-iU-brj" id="DpT-mr-avc"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="90.401785714285708"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LSCommon_BgGray" width="4" height="44"/>
+        <image name="VIPLive_Close" width="30" height="30"/>
+    </resources>
+</document>

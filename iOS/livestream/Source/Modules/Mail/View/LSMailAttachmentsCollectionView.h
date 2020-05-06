@@ -15,7 +15,7 @@
 
 @end
 
-@interface LSMailAttachmentsCollectionView : UICollectionView
+@interface LSMailAttachmentsCollectionView : LSCollectionView
 
 @property (nonatomic, strong) NSArray *items;
 

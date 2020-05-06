@@ -32,6 +32,11 @@ public:
                 anchorNickName = root[LIVEROOM_GETCONTACTLIST_LIST_ANCHORNICKNAME].asString();
             }
             
+            /* anchorAge */
+            if (root[LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORAGE].isNumeric()) {
+                anchorAge = root[LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ISFOLLOW].asInt();
+            }
+            
             /* anchorCover */
             if( root[LIVEROOM_GETCONTACTLIST_LIST_ANCHORCOVERIMG].isString() ) {
                 anchorCover = root[LIVEROOM_GETCONTACTLIST_LIST_ANCHORCOVERIMG].asString();
@@ -87,6 +92,7 @@ public:
 			if( root[LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORNICKNAME].isString() ) {
 				anchorNickName = root[LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORNICKNAME].asString();
 			}
+            
 
 			/* anchorCover */
 			if( root[LIVEROOM_GETPAGERECOMMENDANCHORLIST_LIST_ANCHORCOVER].isString() ) {
@@ -120,6 +126,7 @@ public:
 	HttpRecommendAnchorItem() {
 		anchorId = "";
 		anchorNickName = "";
+        anchorAge = 0;
 		anchorCover = "";
         anchorAvatar = "";
         isFollow = false;
@@ -139,6 +146,7 @@ public:
      * anchorNickName   主播昵称
      * anchorCover		主播封面
      * anchorAvatar		主播头像
+     * anchorAge                    主播年龄
      * isFollow         是否关注（0：不关注，1：关注）
      * onlineStatus		在线状态
      * publicRoomId     公开直播间ID(空值则表示不在公开中)
@@ -146,6 +154,7 @@ public:
      */
     string anchorId;
 	string anchorNickName;
+    int anchorAge;
 	string anchorCover;
     string anchorAvatar;
     bool   isFollow;

@@ -58,7 +58,7 @@
 - (void)setupContent:(LSMyCartItemObject *)model {
     self.cartItem = model;
     self.nameLabel.text = model.anchorItem.anchorNickName;
-    [self.loader loadImageFromCache:self.headImageView options:0 imageUrl:model.anchorItem.anchorAvatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.loader loadImageFromCache:self.headImageView options:0 imageUrl:model.anchorItem.anchorAvatarImg placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
 
     }];
     for (LSFlowerGiftBaseInfoItemObject *obj in model.giftList) {

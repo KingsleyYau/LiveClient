@@ -201,7 +201,7 @@ typedef enum PreLiveStatus {
         [self setupLiverHeadImageView];
     } else {
         // 请求并缓存主播信息
-        [self.roomUserInfoManager getUserInfo:self.liveRoom.userId
+        [self.roomUserInfoManager getLiverInfo:self.liveRoom.userId
                                 finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                     dispatch_async(dispatch_get_main_queue(), ^{
                                         // 刷新女士头像
@@ -226,7 +226,7 @@ typedef enum PreLiveStatus {
     [self.imageViewLoader loadImageFromCache:self.liverHeadImageView
                                      options:SDWebImageRefreshCached
                                     imageUrl:self.liveRoom.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                            placeholderImage:LADYDEFAULTIMG
                                finishHandler:^(UIImage *image){
                                }];
 }
@@ -420,14 +420,12 @@ typedef enum PreLiveStatus {
             if (success) {
                 
                 self.liveRoom.roomId = item.roomId;
-                if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM) {
+                if (item.roomType == HTTPROOMTYPE_FREEPUBLICLIVEROOM || item.roomType == HTTPROOMTYPE_COMMONPRIVATELIVEROOM) {
                     self.liveRoom.roomType = LiveRoomType_Public;
-                } else if (item.roomType == HTTPROOMTYPE_COMMONPRIVATELIVEROOM) {
-                    self.liveRoom.roomType = LiveRoomType_Public_VIP;
-                } else if (item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM) {
+                } else if (item.roomType == HTTPROOMTYPE_CHARGEPUBLICLIVEROOM || item.roomType == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM) {
                     self.liveRoom.roomType = LiveRoomType_Private;
-                } else if (item.roomType == HTTPROOMTYPE_LUXURYPRIVATELIVEROOM) {
-                    self.liveRoom.roomType = LiveRoomType_Private_VIP;
+                }else {
+                    
                 }
                 // 发起请求
                 [self startRequest];
@@ -692,15 +690,20 @@ typedef enum PreLiveStatus {
 }
 
 - (void)showBookOneOnOne {
-    if (self.liveRoom.priv.isHasBookingAuth) {
-        self.vipStartPrivateBtnHeight.constant = 0;
-        self.bookPrivateBtnTop.constant = 0;
-        self.bookPrivateBtn.hidden = NO;
-    } else {
-        self.vipStartPrivateBtnHeight.constant = BUTTONHEIGHT;
-        self.bookPrivateBtnTop.constant = BOOKBTNTOP;
-        self.bookPrivateBtn.hidden = YES;
-    }
+        // 关闭预约,隐藏按钮
+    self.vipStartPrivateBtnHeight.constant = BUTTONHEIGHT;
+    self.bookPrivateBtnTop.constant = BOOKBTNTOP;
+    self.bookPrivateBtn.hidden = YES;
+    
+//    if (self.liveRoom.priv.isHasBookingAuth) {
+//        self.vipStartPrivateBtnHeight.constant = 0;
+//        self.bookPrivateBtnTop.constant = 0;
+//        self.bookPrivateBtn.hidden = NO;
+//    } else {
+//        self.vipStartPrivateBtnHeight.constant = BUTTONHEIGHT;
+//        self.bookPrivateBtnTop.constant = BOOKBTNTOP;
+//        self.bookPrivateBtn.hidden = YES;
+//    }
 }
 
 - (void)enterRoom {
@@ -712,7 +715,7 @@ typedef enum PreLiveStatus {
     } else {
         if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_COMMONPRIVATELIVEROOM || self.liveRoom.imLiveRoom.roomType == ROOMTYPE_LUXURYPRIVATELIVEROOM) {
             // 豪华私密直播间
-            self.liveRoom.roomType = LiveRoomType_Private_VIP;
+            self.liveRoom.roomType = LiveRoomType_Private;
             [self enterPrivateVipRoom];
 
         } else {
@@ -878,7 +881,7 @@ typedef enum PreLiveStatus {
     // 停止所有计时
     [self stopAllTimer];
     
-    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorId:self.liveRoom.userId roomType:LiveRoomType_Private];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:self.liveRoom.userName anchorId:self.liveRoom.userId roomType:LiveRoomType_Private];
     [[LiveUrlHandler shareInstance] handleOpenURL:url];
 }
 
@@ -895,8 +898,8 @@ typedef enum PreLiveStatus {
 #pragma mark - 充值
 - (IBAction)addCreditAction:(id)sender {
     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 #pragma mark - 后台处理

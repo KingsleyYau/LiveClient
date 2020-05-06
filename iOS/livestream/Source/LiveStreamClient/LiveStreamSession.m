@@ -72,7 +72,7 @@ static LiveStreamSession *gSession = nil;
     dispatch_async(self.sessionQueue, ^{
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
         NSError *error = nil;
-        [audioSession setActive:NO error:&error];
+         [audioSession setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
         if (error) {
             NSLog(@"LiveStreamSession::inactiveSession( error : %@ )", error);
         }

@@ -16,6 +16,7 @@
     if( self = [super init] ) {
         self.anchorId = @"";
         self.anchorNickName = @"";
+        self.anchorAge = 0;
         self.anchorCover = @"";
         self.anchorAvatar = @"";
         self.isFollow = NO;
@@ -31,6 +32,7 @@
     if (self = [super init]) {
         self.anchorId = [coder decodeObjectForKey:@"anchorId"];
         self.anchorNickName = [coder decodeObjectForKey:@"anchorNickName"];
+        self.anchorAge = [coder decodeIntForKey:@"anchorAge"];
         self.anchorCover = [coder decodeObjectForKey:@"anchorCover"];
         self.anchorAvatar = [coder decodeObjectForKey:@"anchorAvatar"];
         self.isFollow = [coder decodeBoolForKey:@"isFollow"];
@@ -46,6 +48,7 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.anchorId forKey:@"anchorId"];
     [coder encodeObject:self.anchorNickName forKey:@"anchorNickName"];
+    [coder encodeInt:self.anchorAge forKey:@"anchorAge"];
     [coder encodeObject:self.anchorCover forKey:@"anchorCover"];
     [coder encodeObject:self.anchorAvatar forKey:@"anchorAvatar"];
     [coder encodeBool:self.isFollow forKey:@"isFollow"];

@@ -75,7 +75,7 @@ typedef enum : NSUInteger {
 // 新建文字内容高度
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
 // 内容列表
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 // 内容列表高度
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableViewHeight;
 // 内容列表顶部约束
@@ -189,7 +189,7 @@ typedef enum : NSUInteger {
         [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                options:SDWebImageRefreshCached
                                               imageUrl:self.letterItem.anchorAvatar
-                                      placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                      placeholderImage:LADYDEFAULTIMG
                                          finishHandler:^(UIImage *image){
                                          }];
     }
@@ -546,7 +546,7 @@ typedef enum : NSUInteger {
     } else {
         request.comsumeType = LSLETTERCOMSUMETYPE_CREDIT;
     }
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *emfId) {
         NSLog(@"LSGreetingDetailViewController::sendMail (发送信件 %@ errmsg: %@ errnum: %d)", BOOL2SUCCESS(success), errmsg, errnum);
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideLoading];
@@ -627,7 +627,7 @@ typedef enum : NSUInteger {
                     [[LSImageViewLoader loader] loadImageFromCache:weakSelf.headImageView
                                                            options:SDWebImageRefreshCached
                                                           imageUrl:item.anchorAvatar
-                                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                  placeholderImage:LADYDEFAULTIMG
                                                      finishHandler:^(UIImage *image){
                                                      }];
                 }

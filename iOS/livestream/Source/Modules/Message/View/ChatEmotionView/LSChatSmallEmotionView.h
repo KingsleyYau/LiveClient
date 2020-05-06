@@ -25,7 +25,7 @@
 - (void)reloadData;
 
 /** 小高级表情列表 */
-@property (weak, nonatomic) IBOutlet UICollectionView *emotionCollectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *emotionCollectionView;
 /** 小高级表情页数 */
 @property (weak, nonatomic) IBOutlet UIPageControl *pageView;
 /** 价钱描述 */

@@ -20,7 +20,7 @@
 
 @interface LSRecentWatchViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewRefreshDelegate>
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 @property (weak, nonatomic) IBOutlet UIImageView *noDataImageView;
 

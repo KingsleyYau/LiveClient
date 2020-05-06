@@ -98,6 +98,13 @@
     NSLog(@"LSViewController::viewDidLoad( %@, %p )", NSStringFromClass([self class]), self);
     [self setNeedsStatusBarAppearanceUpdate];
     [self setupLoadingActivityView];
+    if (@available(iOS 13.0, *)) {
+        [self.navigationController.navigationBar setTitleTextAttributes:
+        @{NSFontAttributeName : [UIFont systemFontOfSize:18],
+          NSForegroundColorAttributeName : [UIColor labelColor]}];
+//        self.navigationController.navigationBar.backgroundColor = [UIColor systemBackgroundColor];
+        self.navigationController.navigationBar.tintColor = [UIColor labelColor];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -198,7 +205,7 @@
 }
 
 - (void)setupNavigationBar {
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
+
 }
 
 - (void)setupContainView {
@@ -211,27 +218,38 @@
 - (void)setupLoadingActivityView {
     UIView *loadActivityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:loadActivityView];
-
+    
     loadActivityView.layer.cornerRadius = 5.0f;
     loadActivityView.layer.masksToBounds = YES;
     loadActivityView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
-
+    
     UIActivityIndicatorView *loadingActivity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [loadActivityView addSubview:loadingActivity];
 
     CGFloat centerX = [UIScreen mainScreen].bounds.size.width * 0.5f;
     CGFloat centerY = [UIScreen mainScreen].bounds.size.height * 0.5f;
+    if (self.navigationController != nil && !(self.navigationController.isNavigationBarHidden || self.navigationController.navigationBar.hidden)) {
+        centerY = centerY - 64;
+    }
     loadActivityView.center = CGPointMake(centerX, centerY);
-
+    
     self.loadActivityView = loadActivityView;
     self.loadActivityView.hidden = YES;
-
+    
     loadingActivity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
     [loadingActivity startAnimating];
-
-    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:loadActivityView];
     //    [[UIApplication sharedApplication].keyWindow addSubview:loadActivityView];
 }
+
+- (void)reloadLoadingActivityViewFrame {
+    CGFloat centerX = [UIScreen mainScreen].bounds.size.width * 0.5f;
+    CGFloat centerY = [UIScreen mainScreen].bounds.size.height * 0.5f;
+    if (self.navigationController != nil && !(self.navigationController.isNavigationBarHidden || self.navigationController.navigationBar.hidden)) {
+        centerY = centerY - 64;
+    }
+    self.loadActivityView.center = CGPointMake(centerX, centerY);
+}
+
 
 - (void)showLoading {
     self.loadingCount++;
@@ -318,24 +336,27 @@
     NSArray *views = [self.navigationController.navigationBar subviews];
     if (views.count > 0) {
         UIView *barBackgroundView = [views objectAtIndex:0];
-        UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
+        NSArray * subViewsArray = [barBackgroundView subviews];
         BOOL result = self.navigationController.navigationBar.isTranslucent;
-        if (result) {
-            if ([[backgroundImageView class] isKindOfClass:[UIImageView class]] && backgroundImageView != nil && backgroundImageView.image != nil) {
-                barBackgroundView.alpha = alpha;
-            } else {
-                NSArray *subViews = [barBackgroundView subviews];
-                if (subViews.count > 1) {
-                    UIView *backgroundEffectView = [subViews objectAtIndex:1];
-                    if (backgroundEffectView != nil) {
-                        backgroundEffectView.alpha = alpha;
-                    }
-                } else {
+        if (subViewsArray.count > 0) {
+            UIImageView *backgroundImageView = [subViewsArray objectAtIndex:0];
+            if (result) {
+                if ([[backgroundImageView class] isKindOfClass:[UIImageView class]] && backgroundImageView != nil && backgroundImageView.image != nil) {
                     barBackgroundView.alpha = alpha;
+                } else {
+                    NSArray *subViews = [barBackgroundView subviews];
+                    if (subViews.count > 1) {
+                        UIView *backgroundEffectView = [subViews objectAtIndex:1];
+                        if (backgroundEffectView != nil) {
+                            backgroundEffectView.alpha = alpha;
+                        }
+                    } else {
+                        barBackgroundView.alpha = alpha;
+                    }
                 }
+            } else {
+                barBackgroundView.alpha = alpha;
             }
-        } else {
-            barBackgroundView.alpha = alpha;
         }
     }
 }

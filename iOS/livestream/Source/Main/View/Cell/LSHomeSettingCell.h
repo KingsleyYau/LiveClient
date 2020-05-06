@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "LSImageViewLoader.h"
 @interface LSHomeSettingCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *settingIcon;
@@ -15,13 +15,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *redLabel;
 @property (weak, nonatomic) IBOutlet UIView *unreadView;
 @property (weak, nonatomic) IBOutlet UILabel *unreadLabel;
-@property (weak, nonatomic) IBOutlet UIView * offIcon;
-@property (weak, nonatomic) IBOutlet UILabel *offLabel;
-
+@property (weak, nonatomic) IBOutlet UIImageView * offIcon;
+@property (nonatomic, strong) LSImageViewLoader * imageLoader;
+@property (weak, nonatomic) IBOutlet UIImageView *logoIcon;
 + (id)getUITableViewCell:(UITableView*)tableView;
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;
 - (void)showUnreadNum:(int)num;
 - (void)showUnreadPoint:(int)num;
 - (void)showChatListUnreadNum:(int)num;
+- (void)showWillShowSoon:(BOOL)isSoon;
 @end

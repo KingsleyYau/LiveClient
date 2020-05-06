@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,11 +13,11 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="499.66666666666669"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yAY-Wc-tGz">
-                        <rect key="frame" x="20" y="5" width="335" height="489.66666666666669"/>
+                        <rect key="frame" x="20" y="5" width="335" height="490"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Std-h4-kQ7" customClass="LSUIImageViewTopFit">
                                 <rect key="frame" x="0.0" y="0.0" width="335" height="266"/>
@@ -41,7 +39,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zkb-ny-DU0">
-                                <rect key="frame" x="0.0" y="266" width="335" height="223.66666666666663"/>
+                                <rect key="frame" x="0.0" y="266" width="335" height="224"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Her Friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgM-uN-wKb">
                                         <rect key="frame" x="0.0" y="14" width="335" height="16"/>
@@ -53,10 +51,10 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cLb-Vn-3wn">
-                                        <rect key="frame" x="17.666666666666657" y="39.000000000000007" width="300" height="86.666666666666686"/>
+                                        <rect key="frame" x="17.666666666666657" y="39" width="300" height="87"/>
                                         <subviews>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="1HJ-T0-bah">
-                                                <rect key="frame" x="0.0" y="0.0" width="300" height="86.666666666666671"/>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="1HJ-T0-bah" customClass="LSCollectionView">
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="87"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="LmJ-9p-GnS">
                                                     <size key="itemSize" width="50" height="50"/>
@@ -76,7 +74,7 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="“Hi, come to hang out with me? Hi, come to hang out with me? Hi, come to hang out …”" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XV7-O3-lxh">
-                                        <rect key="frame" x="20" y="128.66666666666669" width="295" height="34"/>
+                                        <rect key="frame" x="20" y="129" width="295" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="height" priority="750" constant="34" id="IUS-3w-dZX"/>
                                         </constraints>
@@ -85,7 +83,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1aN-Xv-Crc">
-                                        <rect key="frame" x="45.666666666666686" y="171.66666666666669" width="244" height="38"/>
+                                        <rect key="frame" x="45.666666666666686" y="172" width="244" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="244" id="V93-Ro-2LM"/>
                                             <constraint firstAttribute="height" priority="750" constant="38" id="qks-9h-BWi"/>
@@ -98,7 +96,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstItem="UgM-uN-wKb" firstAttribute="centerX" secondItem="zkb-ny-DU0" secondAttribute="centerX" id="5kJ-Q5-b0d"/>
                                     <constraint firstItem="XV7-O3-lxh" firstAttribute="top" secondItem="cLb-Vn-3wn" secondAttribute="bottom" constant="3" id="77M-R3-t4n"/>
@@ -117,7 +115,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="WsX-63-dGC" firstAttribute="trailing" secondItem="Std-h4-kQ7" secondAttribute="trailing" id="3Gv-w1-Gin"/>
                             <constraint firstAttribute="bottom" secondItem="zkb-ny-DU0" secondAttribute="bottom" id="P5Z-eP-NBs"/>

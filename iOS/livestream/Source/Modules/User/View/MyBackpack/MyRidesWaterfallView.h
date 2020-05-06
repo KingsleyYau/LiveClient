@@ -16,7 +16,7 @@
 
 @end
 
-@interface MyRidesWaterfallView : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,MyRidesCellDelegate>
+@interface MyRidesWaterfallView : LSCollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,MyRidesCellDelegate>
 
 @property (nonatomic, weak) id<MyRidesWaterfallViewDelegate> delegates;
 @property (nonatomic, strong) NSArray *items;

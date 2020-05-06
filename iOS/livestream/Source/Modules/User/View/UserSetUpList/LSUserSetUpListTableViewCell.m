@@ -14,7 +14,8 @@
     [super awakeFromNib];
     // Initialization code
     
-    
+    self.settingTitle.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x333333) orDark:[UIColor whiteColor]];
+    self.settingDetail.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x666666) orDark:[UIColor whiteColor]];
 }
 
 

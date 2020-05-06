@@ -20,7 +20,8 @@ typedef enum LSUnreadType {
     LSUnreadType_Ticket = 5,
     LSUnreadType_Booking = 6,
     LSUnreadType_Backpack = 7,
-    LSUnreadType_MyContacts = 8
+    LSUnreadType_MyContacts = 8,
+    LSUnreadType_Schedule = 9
 } LSUnreadType;
 
 @protocol LSUserUnreadCountManagerDelegate <NSObject>
@@ -84,4 +85,7 @@ typedef void (^GetTotalNoreadNumHandler)(BOOL success, TotalUnreadNumObject * _N
  @return 未读个数
  */
 - (NSInteger)getAssignLadyUnreadCount:(NSString * _Nonnull)anchorId;
+
+/// 获取s预约状态
+- (LSScheduleStatus)getScheduleStatus;
 @end

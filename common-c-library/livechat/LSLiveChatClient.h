@@ -153,6 +153,8 @@ public:
 	virtual bool SummitAutoInviteCamFirst(bool camFirst) override;
     // 发送邀请语
     virtual bool SendInviteMessage(const string& inUserId, const string& inMessage, const string& nickName) override;
+    // 发送预约邀请
+    virtual bool SendScheduleInvite(const LSLCScheduleInfoItem& item) override;
     
 public:
 	// 获取用户账号
@@ -270,6 +272,8 @@ private:
     void OnSummitAutoInviteCamFirst(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg) override;
     // Alex, 发送邀请语
     void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) override;
+    // Alex, 发送预约邀请
+    void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const LSLCScheduleInfoItem& item) override;
     
     // 服务器主动请求
     void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message, INVITE_TYPE inviteType) override;
@@ -308,5 +312,5 @@ private:
     void OnRecvManCamShareStart(const string& manId, const string& womanId, const string& inviteId) override;
     void OnRecvCamHearbeatException(const string& exceptionName, LSLIVECHAT_LCC_ERR_TYPE err, const string& targetId) override;
     void OnRecvManJoinOrExitConference(MAN_CONFERENCE_EVENT_TYPE eventType, const string& fromId, const string& toId, const list<string>& userList)override;
-    
+    virtual void OnRecvScheduleInviteNotice(const LSLCScheduleInfoItem& item) override;
 };

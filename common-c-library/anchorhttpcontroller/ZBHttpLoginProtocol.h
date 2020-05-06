@@ -203,6 +203,15 @@
 #define GETCURRENTROOMINFO_USERINFO_NICKNAME        "nickname"
 #define GETCURRENTROOMINFO_USERINFO_PHOTOURL        "photourl"
 
+/* 3.10.设置主播公开直播间自动邀请状态 */
+/* 接口路径 */
+#define SETAUTOINVITATIONPUBLIC_PATH             "/broadcast/setAutoInvitationPublic"
+
+/**
+ *  请求
+ */
+#define SETAUTOINVITATIONPUBLIC_STATUS      "status"
+
 
 /* ########################    预约私密 模块  ######################## */
 /* 4.1.观众待处理的预约邀请列表 */

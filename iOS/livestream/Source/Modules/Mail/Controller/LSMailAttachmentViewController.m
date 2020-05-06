@@ -18,6 +18,7 @@
 #import "LSImageViewLoader.h"
 #import "LSVideoPlayManager.h"
 #import "LSFileCacheManager.h"
+#import "LiveGobalManager.h"
 
 #import "LSSessionRequestManager.h"
 #import "LSBuyPrivatePhotoVideoRequest.h"
@@ -58,6 +59,9 @@
 - (void)dealloc {
     NSLog(@"LSMailAttachmentViewController::dealloc()");
     [self.playManager removeNotification];
+    
+    // 如果在直播间中 开启直播间声音
+    [[LiveGobalManager manager] openOrCloseLiveSound:NO];
 }
 
 - (void)viewDidLoad {
@@ -135,10 +139,16 @@
     LSMailAttachmentModel *obj = [self.attachmentsArray objectAtIndex:index];
     switch (obj.attachType) {
         case AttachmentTypeFreePhoto: {
+            // 如果在直播间中 开启直播间声音
+            [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+            
             LSMailFreePhotoView *imageView = [[LSMailFreePhotoView alloc] initWithFrame:CGRectMake(0, 0,  photoSizeWidth, photoSizeHeight)];
             view = imageView;
         }break;
         case AttachmentTypePrivatePhoto: {
+            // 如果在直播间中 开启直播间声音
+            [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+            
             LSMailLadySecretPhotoView *secretPhoto = [[LSMailLadySecretPhotoView alloc] initWithFrame:CGRectMake(0, 0,  photoSizeWidth, photoSizeHeight)];
             view = secretPhoto;
         }break;
@@ -151,6 +161,9 @@
             view = videoView;
         }break;
         case AttachmentTypeSendPhoto:{
+            // 如果在直播间中 开启直播间声音
+            [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+            
             UIImageView *imageV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0,  photoSizeWidth, photoSizeHeight)];
             view = imageV;
         }break;
@@ -457,6 +470,9 @@
     // TODO: 视频播放失败
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 如果在直播间中 开启直播间声音
+        [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+        
         [[DialogTip dialogTip] showDialogTip:weakSelf.view tipText:NSLocalizedStringFromSelf(@"PLAY_VIDEO_FAILED")];
         
         UIView *vc =  [weakSelf pagingScrollView:weakSelf.pageScrollView pageViewForIndex:weakSelf.photoIndex];
@@ -483,10 +499,12 @@
     // TODO: 视频播放完成
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 如果在直播间中 开启直播间声音
+        [[LiveGobalManager manager] openOrCloseLiveSound:NO];
+        
         UIView *vc =  [self pagingScrollView:self.pageScrollView pageViewForIndex:self.photoIndex];
         if ([vc isKindOfClass:[LSMailPrivatePlayView class]]) {
             [weakSelf.privateVideoView showUnlockPlayView];
-            
         } else if([vc isKindOfClass:[LSGreetingVideoPlayView class]]) {
             [weakSelf.greetingVideoView.videoPlayView bringSubviewToFront:weakSelf.greetingVideoView.videoCoverImageView];
             weakSelf.greetingVideoView.endView.hidden = NO;
@@ -505,6 +523,9 @@
     // TODO:缓冲加载中
     WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 如果在直播间中 关闭直播间声音
+        [[LiveGobalManager manager] openOrCloseLiveSound:YES];
+        
         UIView *vc =  [weakSelf pagingScrollView:weakSelf.pageScrollView pageViewForIndex:weakSelf.photoIndex];
         if ([vc isKindOfClass:[LSMailPrivatePlayView class]]) {
             [weakSelf.privateVideoView activiViewIsShow:YES];

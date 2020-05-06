@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LSScheduleTipsCell" rowHeight="200" id="KGk-i7-Jjw" customClass="LSScheduleTipsCell">
+            <rect key="frame" x="0.0" y="0.0" width="369" height="220"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="369" height="220"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What actions can be taken to response this request?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tqM-gi-L4y">
+                        <rect key="frame" x="20" y="30" width="315.5" height="15"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2) Decline request and reply a mail: Decline the request and write a mail to tell her the reason." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fc8-or-J3z">
+                        <rect key="frame" x="20" y="97.5" width="329" height="26.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4) Decline request: You will decline this request." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qe-e1-x4o">
+                        <rect key="frame" x="20" y="172" width="329" height="13.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3) Not decided yet, send a mail first: Choose this if you not decided what to do yet, but want to talk more about the request." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qdb-21-R6A">
+                        <rect key="frame" x="20" y="129" width="329" height="39.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nny-dN-nHD">
+                        <rect key="frame" x="20" y="56" width="329" height="1"/>
+                        <color key="backgroundColor" red="0.77254901960784317" green="0.77254901960784317" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="Aop-cu-fYA"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1) Accept request and reply a mail: Accept the request and write a mail to let her know your decision." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x9l-NQ-7qc">
+                        <rect key="frame" x="20" y="66" width="329" height="26.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="fc8-or-J3z" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="7IA-gS-EuU"/>
+                    <constraint firstItem="Nny-dN-nHD" firstAttribute="top" secondItem="tqM-gi-L4y" secondAttribute="bottom" constant="11" id="A2o-Hc-Rax"/>
+                    <constraint firstItem="Qdb-21-R6A" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="Cvw-3f-mfp"/>
+                    <constraint firstAttribute="trailing" secondItem="Qdb-21-R6A" secondAttribute="trailing" constant="20" id="Gog-6a-afK"/>
+                    <constraint firstItem="x9l-NQ-7qc" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="LkF-EL-QrJ"/>
+                    <constraint firstItem="fc8-or-J3z" firstAttribute="top" secondItem="x9l-NQ-7qc" secondAttribute="bottom" constant="5" id="P2O-uE-CSP"/>
+                    <constraint firstItem="tqM-gi-L4y" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="30" id="SB9-M3-OWA"/>
+                    <constraint firstItem="x9l-NQ-7qc" firstAttribute="top" secondItem="Nny-dN-nHD" secondAttribute="bottom" constant="9" id="SBg-11-RA9"/>
+                    <constraint firstItem="Nny-dN-nHD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="Sp6-yy-RqM"/>
+                    <constraint firstAttribute="trailing" secondItem="fc8-or-J3z" secondAttribute="trailing" constant="20" id="Tyz-OS-Npp"/>
+                    <constraint firstItem="2Qe-e1-x4o" firstAttribute="top" secondItem="Qdb-21-R6A" secondAttribute="bottom" constant="3.5" id="U6v-I5-qjG"/>
+                    <constraint firstItem="2Qe-e1-x4o" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="V5w-rG-nAk"/>
+                    <constraint firstAttribute="trailing" secondItem="x9l-NQ-7qc" secondAttribute="trailing" constant="20" id="Vf3-LK-77O"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="2Qe-e1-x4o" secondAttribute="bottom" constant="15" id="aVX-ZC-Tpr"/>
+                    <constraint firstItem="tqM-gi-L4y" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="iuY-K6-3Ej"/>
+                    <constraint firstAttribute="trailing" secondItem="Nny-dN-nHD" secondAttribute="trailing" constant="20" id="jkn-mO-wCH"/>
+                    <constraint firstItem="Qdb-21-R6A" firstAttribute="top" secondItem="fc8-or-J3z" secondAttribute="bottom" constant="5" id="p6w-6W-5C5"/>
+                    <constraint firstAttribute="trailing" secondItem="2Qe-e1-x4o" secondAttribute="trailing" constant="20" id="zXH-rW-qBV"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
+            <point key="canvasLocation" x="173.18840579710147" y="117.52232142857142"/>
+        </tableViewCell>
+    </objects>
+</document>

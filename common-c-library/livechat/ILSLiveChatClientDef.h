@@ -11,6 +11,7 @@
 #include <list>
 #include <vector>
 #include "ILSLiveChatClientEnumDef.h"
+#include "livechatItem/LSLCScheduleInfoItem.h"
 
 using namespace std;
 

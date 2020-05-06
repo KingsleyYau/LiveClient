@@ -46,7 +46,7 @@
     }
     
     if (imageUrl.length > 0) {
-          [self.imageViewLoader loadImageWithImageView:self.headImage options:0 imageUrl:imageUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+          [self.imageViewLoader loadImageWithImageView:self.headImage options:0 imageUrl:imageUrl placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
              
           }];
     }

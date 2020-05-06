@@ -112,17 +112,13 @@
 
 - (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
     //self.view.userInteractionEnabled = YES;
-    
-    int voucherUnreadCount = item.voucherUnreadNum + item.livechatVoucherUnreadNum > 0 ? -1 : 0;
-     int giftUnreadNum = item.giftUnreadNum > 0 ? -1 : 0;
-     int rideUnreadNum = item.rideUnreadNum > 0 ? -1 : 0;
-    
-    NSArray *count = @[ [NSString stringWithFormat:@"%d", 0], // 邮票
-                        [NSString stringWithFormat:@"%d", voucherUnreadCount],
-                        [NSString stringWithFormat:@"%d", giftUnreadNum],
-                        [NSString stringWithFormat:@"%d", rideUnreadNum] ];
 
-    [self.segment updateBtnUnreadCount:count];
+    NSArray *count = @[ @"0", // 邮票
+                        [NSString stringWithFormat:@"%d",item.voucherUnreadNum + item.livechatVoucherUnreadNum],
+                        [NSString stringWithFormat:@"%d",item.giftUnreadNum],
+                        [NSString stringWithFormat:@"%d",item.rideUnreadNum]];
+
+    [self.segment updateBtnUnreadNum:count];
 }
 
 - (void)didReceiveMemoryWarning {

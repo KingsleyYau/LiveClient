@@ -83,7 +83,7 @@
     [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                            options:SDWebImageRefreshCached
                                           imageUrl:self.letterItem.anchorAvatar
-                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                  placeholderImage:LADYDEFAULTIMG
                                      finishHandler:^(UIImage *image){
                                      }];
     // 姓名
@@ -224,8 +224,12 @@
     [self.sessionManager sendRequest:request];
 }
 
+
+
 - (void)setupMailDetail:(LSHttpLetterDetailItemObject *)item {
     self.nodataView.hidden = YES;
+    
+    [self updateLetterInfo:item];
 
     [self.items removeAllObjects];
 
@@ -262,6 +266,24 @@
         self.attachmentsTip.hidden = YES;
         self.collectionViewHeight.constant = 0;
     }
+}
+
+
+// 发信详情内容
+- (void)updateLetterInfo:(LSHttpLetterDetailItemObject *)item {
+    // 头像
+     [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
+                                            options:SDWebImageRefreshCached
+                                           imageUrl:item.anchorAvatar
+                                   placeholderImage:LADYDEFAULTIMG
+                                      finishHandler:^(UIImage *image){
+                                      }];
+     // 姓名
+     self.nameLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"TO_NAME"), item.anchorNickName];
+     // 发信时间信件ID
+     LSDateTool *tool = [[LSDateTool alloc] init];
+     NSString *time = [tool showGreetingDetailTimeOfDate:[NSDate dateWithTimeIntervalSince1970:item.letterSendTime]];
+     self.sendTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"MAIL_ID"), time, item.letterId];
 }
 
 #pragma mark - WKWebViewDelegate

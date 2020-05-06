@@ -21,11 +21,13 @@
 #pragma mark - 个人详情回调
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openAnchorDetail:(NSString *)anchorId;
 #pragma mark - 直播间回调
-- (void)liveUrlHandler:(LiveUrlHandler *)handler openPreLive:(NSString *)roomId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
-- (void)liveUrlHandler:(LiveUrlHandler *)handler openPublicLive:(NSString *)roomId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openPreLive:(NSString *)roomId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openPrivateLive:(NSString *)roomId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
+#pragma mark - 节目直播间回调
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openShow:(NSString *)showId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
 #pragma mark - 多人互动直播间回调
-- (void)liveUrlHandler:(LiveUrlHandler *)handler openHangout:(NSString *)roomId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName hangoutAnchorId:(NSString *)hangoutAnchorId hangoutAnchorName:(NSString *)hangoutAnchorName;
-- (void)liveUrlHandler:(LiveUrlHandler *)handler openShow:(NSString *)showId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openHangout:(NSString *)roomId inviteAnchorId:(NSString *)inviteAnchorId inviteAnchorName:(NSString *)inviteAnchorName recommendAnchorId:(NSString *)recommendAnchorId recommendAnchorName:(NSString *)recommendAnchorName;
+
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openInvited:(NSString *)anchorName anchorId:(NSString *)anchorId inviteId:(NSString *)inviteId;
 #pragma mark - 预约回调
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBooking:(NSString *)anchorId anchorName:(NSString *)anchorName;
@@ -49,7 +51,7 @@
 #pragma mark - 聊天列表界面回调
 - (void)liveUrlHandlerOpenLiveChatList:(LiveUrlHandler *)handler;
 #pragma mark - 发信界面回调
-- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenSendMail:(NSString *)anchorId anchorName:(NSString *)anchorName;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenSendMail:(NSString *)anchorId anchorName:(NSString *)anchorName emfId:(NSString *)emfId;
 #pragma mark - 多人直播弹窗
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenHangoutDialog:(NSString *)anchorId anchorName:(NSString *)anchorName;
 #pragma mark - 多人直播
@@ -64,8 +66,13 @@
 #pragma mark - 意向信详情
 - (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenGreetingMailDetail:(NSString *)loiId;
 #pragma mark - 鲜花礼品
-- (void)liveUrlHandler:(LiveUrlHandler *)handler OpenGiftFlowerList:(LiveUrlGiftFlowerListType)type;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openGiftFlowerList:(LiveUrlGiftFlowerListType)type;
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openGiftFlowerAnchorStore:(NSString *)anchorId;
+#pragma mark - 预约私密
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openScheduleList:(LiveUrlScheduleListType)type;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openScheduleDetail:(NSString *)inviteId refId:(NSString *)refId anchorId:(NSString *)anchorId;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openScheduleMailDetail:(NSString *)loid anchorName:(NSString *)anchorName type:(LiveUrlScheduleMailDetailType)type;
+
 @end
 
 /**
@@ -126,32 +133,34 @@
  生成跳转HangOut直播间URL
 
  @param roomId 直播间Id
- @param anchorId 主播Id
- @param anchorName 主播名称
- @param hangoutAnchorId (推荐好友 推荐人id)
- @param hangoutAnchorName (推荐好友 推荐人名称)
+ @param inviteAnchorId 邀请主播Id
+ @param inviteAnchorName 邀请主播名称
+ @param recommendAnchorId 推荐主播id
+ @param recommendAnchorName 推荐主播名称
  @return URL
  */
-- (NSURL *)createUrlToHangoutByRoomId:(NSString *)roomId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName hangoutAnchorId:(NSString *)hangoutAnchorId hangoutAnchorName:(NSString *)hangoutAnchorName;
+- (NSURL *)createUrlToHangoutByRoomId:(NSString *)roomId inviteAnchorId:(NSString *)inviteAnchorId inviteAnchorName:(NSString *)inviteAnchorName recommendAnchorId:(NSString *)recommendAnchorId recommendAnchorName:(NSString *)recommendAnchorName;
 
 /**
  生成跳转主动邀请URL
 
  @param roomId 直播间Id
  @param anchorId 主播Id
+ @param anchorName 主播名称
  @param roomType 直播间类型
  @return URL
  */
-- (NSURL *)createUrlToInviteByRoomId:(NSString *)roomId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
+- (NSURL *)createUrlToInviteByRoomId:(NSString *)roomId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType;
 
 /**
  生成跳转节目URL
 
  @param roomId 直播间Id
  @param anchorId 主播Id
+ @param anchorName 主播名称
  @return URL
  */
-- (NSURL *)createUrlToShowRoomId:(NSString *)roomId anchorId:(NSString *)anchorId;
+- (NSURL *)createUrlToShowRoomId:(NSString *)roomId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId;
 
 /**
  生成跳转应邀URL
@@ -184,9 +193,10 @@
  
  @param anchorId 主播Id
  @param anchorName 主播名称
+ @param emfId 信件id
  @return URL
  */
-- (NSURL *)createSendmailByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName;
+- (NSURL *)createSendmailByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName emfiId:(NSString *)emfId;
 
 /**
  生成liveChat聊天室URL
@@ -229,4 +239,21 @@
 /// 生成鲜花礼品列表
 - (NSURL *)createFlowerStore:(LiveUrlGiftFlowerListType)type;
 
+///  生成预约列表
+/// @param type 预约列表类型
+- (NSURL *)createScheduleList:(LiveUrlScheduleListType)type;
+
+///  生成信件预约详情页
+/// @param mailId 信件id
+/// @param anchorName 主播名称
+/// @param type 信件类型
+- (NSURL *)createScheduleMailDetail:(NSString *)mailId anchorName:(NSString *)anchorName type:(LiveUrlScheduleMailDetailType)type;
+
+/// 生成预约详情
+/// @param inviteId 邀请id
+/// @param anchorId 主播id
+/// @param refId 关联id
+- (NSURL *)createScheduleDetail:(NSString *)inviteId anchorId:(NSString *)anchorId refId:(NSString *)refId;
+// 生成买点链接
+- (NSURL *)createBuyCredit;
 @end

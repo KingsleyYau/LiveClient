@@ -28,7 +28,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSArray* data;
 @property (nonatomic, assign) PullMenuStatus status;
 /** tableview */
-@property (nonatomic, strong) UITableView* tableView;
+@property (nonatomic, strong) LSTableView* tableView;
 
 
 //-(void)pullMenuShow;

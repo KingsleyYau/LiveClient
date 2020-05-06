@@ -30,7 +30,7 @@
     self.noNumUnreadView.layer.cornerRadius = self.noNumUnreadView.frame.size.height / 2.0f;
     self.noNumUnreadView.layer.masksToBounds = YES;
     [self setExclusiveTouch:YES];
-    
+    self.titleLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x666666) orDark:[UIColor whiteColor]];
 }
 
 - (void)setUnreadNum:(int)num {

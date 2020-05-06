@@ -10,8 +10,8 @@
 
 #import "LiveModule.h"
 #import "LSImManager.h"
-
-
+#import "LiveStreamSession.h"
+#import "LSMinLiveManager.h"
 static LiveGobalManager *gManager = nil;
 @interface LiveGobalManager () {
     BOOL _canShowInvite;
@@ -30,9 +30,15 @@ static LiveGobalManager *gManager = nil;
 
 // 关闭直播间声音
 @property (nonatomic, weak) HangOutViewController *hangoutVC;
-@property (nonatomic, weak) LiveViewController *liveVC;
 
 @property (nonatomic, weak) LSVIPLiveViewController * vipLiveVC;
+
+// 已经显示的弹层控制器
+@property (nonatomic, strong) UIViewController * popupVc;
+// 已经显示的弹层视图
+@property (nonatomic, strong) UIView * popupView;
+
+@property (nonatomic, assign) BOOL isStartPlay;
 @end
 ;
 
@@ -59,6 +65,10 @@ static LiveGobalManager *gManager = nil;
         _canShowInvite = YES;
 
         _isHangouting = NO;
+        
+        _isStartPlay = NO;
+        
+        _isInMainView = NO;
     }
     return self;
 }
@@ -97,7 +107,7 @@ static LiveGobalManager *gManager = nil;
     if (_canShowInvite) {
         if (self.liveRoom) {
             // 当前存在直播间
-            if (self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP) {
+            if (self.liveRoom.roomType == LiveRoomType_Public) {
                 // 当前是公开直播间, 是否和邀请的主播Id一样
                 if ([self.liveRoom.userId isEqualToString:uesrId]) {
                     bFlag = YES;
@@ -131,7 +141,6 @@ static LiveGobalManager *gManager = nil;
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor], NSForegroundColorAttributeName, nil];
     [nvc.navigationBar setTitleTextAttributes:attributes];
     [nvc.navigationItem setHidesBackButton:YES];
-
     self.liveRoomNVC = nvc;
     [fromVC.navigationController presentViewController:nvc animated:NO completion:nil];
 }
@@ -198,6 +207,7 @@ static LiveGobalManager *gManager = nil;
         }
 
         if (nvc) {
+            nvc.interactivePopGestureRecognizer.enabled = NO;
             [nvc pushViewController:toVC animated:NO];
         }
     });
@@ -236,6 +246,30 @@ static LiveGobalManager *gManager = nil;
 
 - (void)removeDialogVc {
     self.vc = nil;
+}
+
+#pragma mark - 直播间弹层显示
+- (void)showPopupView:(UIView *)view withVc:(UIViewController * _Nullable)vc {
+    if (self.popupVc) {
+        [self.popupVc removeFromParentViewController];
+    }else {
+        if (vc != nil) {
+            self.popupVc = vc;
+        }
+        
+    }
+    
+    if (self.popupView) {
+        [self.popupView removeFromSuperview];
+    }else {
+        self.popupView = view;
+    }
+    
+}
+
+- (void)removeLiveRoomPopup {
+    self.popupVc = nil;
+    self.popupView = nil;
 }
 
 #pragma mark - 后台处理
@@ -310,25 +344,32 @@ static LiveGobalManager *gManager = nil;
     }
 }
 
-- (void)setupLiveVC:(LiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC {
-    self.liveVC = liveVC;
-    self.hangoutVC = hangoutVC;
-}
-
 - (void)setupVIPLiveVC:(LSVIPLiveViewController *)liveVC orHangOutVC:(HangOutViewController *)hangoutVC {
     self.vipLiveVC = liveVC;
     self.hangoutVC = hangoutVC;
 }
 
 - (void)openOrCloseLiveSound:(BOOL)isClose {
-    if (self.liveVC) {
-        [self.liveVC openOrCloseSuond:isClose];
-    }
-    if (self.vipLiveVC) {
+    if (self.vipLiveVC && ![LSMinLiveManager manager].liveVC) {
         [self.vipLiveVC openOrCloseSuond:isClose];
+        // 正在播放视频 增加使用计数 防止音频关闭导致视频被暂停
+        if (isClose && !self.isStartPlay) {
+            [[LiveStreamSession session] startPlay];
+            self.isStartPlay = YES;
+        }
     }
     if (self.hangoutVC) {
         [self.hangoutVC openOrCloseSuond:isClose];
+        // 正在播放视频 增加使用计数 防止音频关闭导致视频被暂停
+        if (isClose && !self.isStartPlay) {
+            [[LiveStreamSession session] startPlay];
+        }
+    }
+    
+    if (!isClose && self.isStartPlay) {
+        // 视频播放完成 减少使用计数
+        [[LiveStreamSession session] stopPlay];
+        self.isStartPlay = NO;
     }
 }
  

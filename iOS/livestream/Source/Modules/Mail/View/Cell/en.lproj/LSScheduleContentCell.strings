@@ -1,0 +1,76 @@
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "1J0-3K-NZj"; */
+"1J0-3K-NZj.text" = "Label";
+
+/* Class = "UILabel"; text = "45 Minutes"; ObjectID = "4t7-Lt-VN1"; */
+"4t7-Lt-VN1.text" = "45 Minutes";
+
+/* Class = "UILabel"; text = "“My Dear, I think I may be pardoned if I do not address the House at any length today, and I hope that any of my friends and colleagues or former colleagues.”"; ObjectID = "C67-yF-095"; */
+"C67-yF-095.text" = "“My Dear, I think I may be pardoned if I do not address the House at any length today, and I hope that any of my friends and colleagues or former colleagues.”";
+
+/* Class = "UILabel"; text = "XXXXXXX"; ObjectID = "CpD-uE-3fc"; */
+"CpD-uE-3fc.text" = "XXXXXXX";
+
+/* Class = "UILabel"; text = "No confirmation time yet."; ObjectID = "DKH-fG-Uct"; */
+"DKH-fG-Uct.text" = "No confirmation time yet.";
+
+/* Class = "UILabel"; text = "Pending her confimation"; ObjectID = "RTC-ep-iCG"; */
+"RTC-ep-iCG.text" = "Pending her confimation";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "SKE-2Z-JDG"; */
+"SKE-2Z-JDG.text" = "Status:";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 (Your local time)"; ObjectID = "aAi-mJ-ySx"; */
+"aAi-mJ-ySx.text" = "Dec 28,13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "Time sent:Dec 22,12:30(GTMT)"; ObjectID = "lO6-cl-VaN"; */
+"lO6-cl-VaN.text" = "Time sent:Dec 22,12:30(GTMT)";
+
+/* Class = "UILabel"; text = "Schedule Information"; ObjectID = "nGA-7G-O51"; */
+"nGA-7G-O51.text" = "Schedule Information";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "phf-A4-IVu"; */
+"phf-A4-IVu.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "Schedule ID:"; ObjectID = "rrj-23-d0X"; */
+"rrj-23-d0X.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "`s meesage"; ObjectID = "uMl-nC-yXk"; */
+"uMl-nC-yXk.text" = "`s meesage";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "xBc-5f-Tg1"; */
+"xBc-5f-Tg1.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "xQE-En-W7N"; */
+"xQE-En-W7N.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
+
+"Confirmed" = "Confirmed";
+
+"Pending_Inbox" = "Pending your confirmation";
+"Pending_Outbox" = "Pending her confirmation";
+
+"Minutes" = "%d Minutes";
+
+"Start_Time" = "%@ %@(GMT %@)";
+
+"Local_Time" = "%@ (Your local time)";
+
+"Canceled" = "Canceled";
+
+"Expired" = "Expired";
+"ExpiredNote" = "Request has expired";
+
+"Completed" = "Completed";
+
+"Declined" = "Declined";
+
+"Missed" = "Missed";
+
+"CanceledByWho" = "canceled by %@";
+
+"NO_CONFIMATION" = "No confirmation time yet.";
+"TIME_DECLINED" = "Time Declined: %@ (GMT)";
+"TIME_CONFIRMED" = "Time Confirmed: %@ (GMT)";
+"TIME_CANCELED" = "Time Canceled: %@ (GMT)";
+"TIME_COMPLETED" = "Time Completed: %@ (GMT)";
+"TIME_MISSED" = "Time Missed: %@ (GMT)";

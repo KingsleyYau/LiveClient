@@ -33,5 +33,7 @@
 #import "Model/ImInviteReplyItemObject.h"
 #import "Model/ImInviteErrItemObject.h"
 #import "Model/IMHangoutInviteItemObject.h"
+#import "Model/ImScheduleRoomInfoObject.h"
+#import "Model/ImScheduleStartInfoObject.h"
 
 #endif /* ImHeader_h */

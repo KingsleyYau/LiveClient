@@ -11,19 +11,17 @@
 #import "LSVIPGiftPageViewController.h"
 #import "LSVIPLiveViewController.h"
 
+#import "LSLiveTextView.h"
+#import "LSPhizPageView.h"
+#import "LSTopGiftView.h"
+#import "LSCheckButton.h"
+
 #import "LSGiftManager.h"
 #import "LSImManager.h"
 
-#import "CountTimeButton.h"
-#import "LSLiveTextView.h"
-#import "LSPhizPageView.h"
- 
 #import "LiveRoom.h"
-#import "CreditView.h"
-#import "LSCheckButton.h"
 #import "LiveRoomGiftModel.h"
-
-#import "LSTopGiftView.h"
+#import "RoomStyleItem.h"
 
 @class LSVIPInputViewController;
 @protocol InputViewControllerDelegate <NSObject>
@@ -43,6 +41,9 @@
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
 
+// 直播间字体
+@property (nonatomic, strong) RoomStyleItem *roomStyleItem;
+
 // 直播间界面
 @property (nonatomic, strong) LSVIPLiveViewController *liveVC;
 
@@ -56,16 +57,29 @@
 
 /** 发送按钮 **/
 @property (nonatomic, weak) IBOutlet UIButton *sendBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *sendBtnWidth;
+
+@property (weak, nonatomic) IBOutlet UIImageView *inviteFreeImage;
+
+@property (weak, nonatomic) IBOutlet LSHighlightedButton *inviteBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *inviteBtnWidth;
 
 @property (nonatomic, weak) IBOutlet UIView * inputView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewRight;
+
 /** 发送栏 **/
 @property (nonatomic, weak) IBOutlet UIView *inputMessageView;
 
 @property (weak, nonatomic) IBOutlet LSLiveTextView *inputTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputTextViewRight;
 
-@property (weak, nonatomic) IBOutlet LSCheckButton * emotionBtn;
+@property (weak, nonatomic) IBOutlet LSCheckButton *popBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *popBtnWidth;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint * inputMessageViewHeight;
+@property (weak, nonatomic) IBOutlet LSCheckButton *emotionBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *emotionBtnWidth;
+
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *inputMessageViewHeight;
 @property (weak, nonatomic) IBOutlet UILabel *bottomMsgLabel;
 
 /** 发送栏底部约束 **/

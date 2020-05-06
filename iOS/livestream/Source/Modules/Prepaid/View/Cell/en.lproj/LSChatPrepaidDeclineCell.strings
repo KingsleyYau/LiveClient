@@ -1,0 +1,14 @@
+
+/* Class = "UILabel"; text = "Sorry, request decline!"; ObjectID = "E3f-t4-gqm"; */
+"E3f-t4-gqm.text" = "Sorry, request decline!";
+
+/* Class = "UILabel"; text = "Note:"; ObjectID = "aPs-aY-Sm0"; */
+"aPs-aY-Sm0.text" = "Note:";
+
+/* Class = "UILabel"; text = "Request (ID:xxxx) has been accepted."; ObjectID = "hmJ-Re-slj"; */
+"hmJ-Re-slj.text" = "Request (ID:S12345678) has been declined.";
+
+"SCHEDULE_TITLE" = "Request %@ has been declined.";
+
+"LADY_ACCEPT" = "Sorry, request declined!";
+"MAN_ACCEPT" = "Request declined!";

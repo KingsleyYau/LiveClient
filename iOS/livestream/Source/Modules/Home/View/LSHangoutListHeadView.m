@@ -63,6 +63,9 @@
     self.getItBtn.layer.cornerRadius = 18.0f;
     self.getItBtn.layer.masksToBounds = YES;
     
+    self.lView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xE7E8EE) orDark:COLOR_WITH_16BAND_RGB(0x666666)];
+    self.rView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xE7E8EE) orDark:COLOR_WITH_16BAND_RGB(0x666666)];
+    
 }
 - (IBAction)clickAction:(id)sender {
 

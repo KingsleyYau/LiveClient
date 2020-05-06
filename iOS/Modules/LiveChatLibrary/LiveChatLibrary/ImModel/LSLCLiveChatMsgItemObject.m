@@ -39,6 +39,8 @@
         self.loadingImage = NO;
         self.emotionMsg = nil;
         self.magicIconMsg = nil;
+        self.scheduleMsg = nil;
+        self.scheduleReplyMsg = nil;
         self.inviteType = IniviteTypeChat;
     }
     return self;

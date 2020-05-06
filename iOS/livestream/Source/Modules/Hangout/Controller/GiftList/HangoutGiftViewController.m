@@ -26,7 +26,7 @@
 // 全选按钮
 @property (weak, nonatomic) IBOutlet UIButton *checkAllBtn;
 // 选择主播控件
-@property (weak, nonatomic) IBOutlet UICollectionView *selectAnchorSendView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *selectAnchorSendView;
 // 礼物选择视图
 @property (weak, nonatomic) IBOutlet UIView *selectSendView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *selectSendViewHeight;

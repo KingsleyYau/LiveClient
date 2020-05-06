@@ -19,6 +19,7 @@
 #import "BookPrivateBroadcastViewController.h"
 #import "LSShowListWithAnchorIdRequest.h"
 #import "LSAddCreditsViewController.h"
+#import "LiveUrlHandler.h"
 // 10秒后显示退出按钮
 #define CANCEL_BUTTON_TIMEOUT 10
 
@@ -229,7 +230,7 @@ typedef enum ShowButtonType {
         [self setupLiverHeadImageView];
     } else {
         // 请求并缓存主播信息
-        [self.roomUserInfoManager getUserInfo:self.liveRoom.userId
+        [self.roomUserInfoManager getLiverInfo:self.liveRoom.userId
                                 finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                     dispatch_async(dispatch_get_main_queue(), ^{
                                         // 刷新女士头像
@@ -295,7 +296,7 @@ typedef enum ShowButtonType {
     [self.imageViewLoader loadImageFromCache:self.headImage
                                      options:SDWebImageRefreshCached
                                     imageUrl:self.liveRoom.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                            placeholderImage:LADYDEFAULTIMG
                                finishHandler:^(UIImage *image){
                                }];
 }
@@ -609,7 +610,10 @@ typedef enum ShowButtonType {
         self.addBtn.hidden = NO;
     } else if (type == ShowButtonType_Book) {
         self.reloadBtn.hidden = YES;
-        self.bookBtn.hidden = !self.liveRoom.priv.isHasBookingAuth;
+    // 关闭预约,隐藏按钮
+        self.bookBtn.hidden = YES;
+//        self.bookBtn.hidden = !self.liveRoom.priv.isHasBookingAuth;
+        
         self.addBtn.hidden = YES;
     } else {
         self.addBtn.hidden = YES;
@@ -726,8 +730,8 @@ typedef enum ShowButtonType {
 
 - (IBAction)addBtnDid:(UIButton *)sender {
     self.isAddCredit = YES;
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 - (IBAction)reloadBtnDid:(UIButton *)sender {

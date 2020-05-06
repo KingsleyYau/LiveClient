@@ -418,6 +418,8 @@ static LSLoginManager *loginManager = nil;
                             // 登陆成功
                             _manId = item.userId;
                             _token = item.token;
+                             item.isShowWillStartNotice = YES;
+                             item.isShowStartNotice = YES;
                             _loginItem = item;
 
                             // 标记可以自动重登陆

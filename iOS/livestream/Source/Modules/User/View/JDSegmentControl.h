@@ -29,5 +29,9 @@
 - (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry isShowbottomLine:(BOOL)isBottom;
 //是否对称 是否显示底部线
 
+//显示未读数
 - (void)updateBtnUnreadCount:(NSArray * )countArray;
+
+//显示红点
+- (void)updateBtnUnreadNum:(NSArray * )countArray;
 @end

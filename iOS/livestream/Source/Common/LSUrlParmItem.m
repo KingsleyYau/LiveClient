@@ -25,8 +25,8 @@
         // 公共参数
         _anchorId = [LSURLQueryParam urlParamForKey:@"anchorid" url:url];
         _anchorName = [LSURLQueryParam urlParamForKey:@"anchorname" url:url];
-        _hangoutAnchorId = [LSURLQueryParam urlParamForKey:@"hangoutAnchorId" url:url];
-        _hangoutAnchorName = [LSURLQueryParam urlParamForKey:@"hangoutAnchorName" url:url];
+        _recommendAnchorId = [LSURLQueryParam urlParamForKey:@"recommendAnchorId" url:url];
+        _recommendAnchorName = [LSURLQueryParam urlParamForKey:@"recommendAnchorName" url:url];
         
         // Webview属性参数
         _opentype = [LSURLQueryParam urlParamForKey:@"opentype" url:url];
@@ -114,12 +114,14 @@
             }break;
             case LiveUrlTypeSendMail:{
                 // TODO:发送意向信
+                _emfId = [LSURLQueryParam urlParamForKey:@"emf_id" url:url];
             }break;
             case LiveUrlTypeHangoutDialog: {
                 // TODO:多人直播间弹窗
             }break;
             case LiveUrlTypeHangout: {
                 // TODO:多人直播间
+                _roomId = [LSURLQueryParam urlParamForKey:@"roomid" url:url];
                 _sourceSite = [LSURLQueryParam urlParamForKey:@"origin" url:url];
             }break;
             case LiveUrlTypeSendSayHi: {
@@ -137,16 +139,38 @@
                   _sayhiId = [LSURLQueryParam urlParamForKey:@"sayhiid" url:url];
             }break;
             case LiveUrlTypeGreetMailDetail: {
+                // TODO:进入意向信详情
                 _loiId = [LSURLQueryParam urlParamForKey:@"loi_id" url:url];
             }break;
             case LiveUrlTypeGiftFlowerList: {
+                // TODO:进入鲜花礼品列表
                   NSString *listTypeString = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
                 if( [listTypeString intValue] >= LiveUrlGiftFlowerListTypeStore && [listTypeString intValue] < LiveUrlGiftFlowerListTypeUnknow ) {
                     _flowerListType = [listTypeString intValue];
                 }
             }break;
             case LiveUrlTypeGiftFlowerAnchorStore: {
-                
+                // TODO:进入指定的鲜花礼品
+            }break;
+            case LiveUrlTypeScheduleList: {
+                // TODO:进入预约列表
+                  NSString *listTypeString = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+                if( [listTypeString intValue] >= LiveUrlScheduleListTypePending && [listTypeString intValue] < LiveUrlScheduleListTypeUnknow ) {
+                    _scheduleListType = [listTypeString intValue];
+                }
+            }break;
+            case LiveUrlTypeScheduleDetail: {
+                // TODO:进入预约详情
+                _refId = [LSURLQueryParam urlParamForKey:@"refid" url:url];
+                _inviteId = [LSURLQueryParam urlParamForKey:@"invitationid" url:url];
+            }break;
+            case LiveUrlTypeScheduleMailDetail: {
+                // TODO:进入发信详情
+                _loiId = [LSURLQueryParam urlParamForKey:@"loi_id" url:url];
+                NSString *listTypeString = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+                if( [listTypeString intValue] >= LiveUrlScheduleMailDetailTypeInbox && [listTypeString intValue] < LiveUrlScheduleMailDetailTypeUnknow ) {
+                    _mailScheduelDetailType = [listTypeString intValue];
+                }
             }break;
             default: {
             } break;
@@ -184,6 +208,7 @@
     _roomType = LiveUrlRoomTypeUnknow;
     _bookingListType = LiveUrlBookingListTypeUnknow;
     _backpackListType = LiveUrlBackPackListTypeUnknow;
+    _scheduleListType = LiveUrlScheduleListTypeUnknow;
     
     _anchorId = @"";
     _anchorName = @"";
@@ -244,6 +269,12 @@
         type = LiveUrlTypeGiftFlowerList;
     }else if ([moduleString isEqualToString:@"giftflower_anchor_store"]) {
         type = LiveUrlTypeGiftFlowerAnchorStore;
+    }else if ([moduleString isEqualToString:@"schedule_list"]) {
+        type = LiveUrlTypeScheduleList;
+    }else if ([moduleString isEqualToString:@"schedulemaildetail"]) {
+        type = LiveUrlTypeScheduleMailDetail;
+    }else if ([moduleString isEqualToString:@"scheduledetail"]) {
+        type = LiveUrlTypeScheduleDetail;
     }
 
     return type;

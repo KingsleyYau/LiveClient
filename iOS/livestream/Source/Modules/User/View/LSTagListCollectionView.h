@@ -28,7 +28,7 @@
 @property (nonatomic, strong) NSArray* allTags;
 /** 选择的标签 */
 @property (nonatomic, strong) NSArray* selectTags;
-@property (nonatomic, strong) UICollectionView* collectionView;
+@property (nonatomic, strong) LSCollectionView* collectionView;
 /** 代理 */
 @property (nonatomic, weak) id<LSTagListCollectionViewDelegate> tagDelegate;
 /** view高度 */

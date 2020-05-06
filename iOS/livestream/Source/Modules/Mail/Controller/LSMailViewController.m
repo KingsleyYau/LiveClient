@@ -14,12 +14,13 @@
 #import "LSMailDetailViewController.h"
 #import "LSOutBoxViewController.h"
 #import "LSShadowView.h"
+#import "LSMailScheduleDetailViewController.h"
 
 #define kFunctionViewHeight 88
 #define PageSize 20
 
 
-@interface LSMailViewController ()<LSSelectBoxViewDelegate,UIScrollViewRefreshDelegate,MailTableViewDelegate,LSMailDetailViewControllerrDelegate>
+@interface LSMailViewController ()<LSSelectBoxViewDelegate,UIScrollViewRefreshDelegate,MailTableViewDelegate,LSMailDetailViewControllerrDelegate,LSMailScheduleDetailViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *topView;
 
@@ -328,6 +329,18 @@
     
 }
 
+// TODO: 接收预约邮件详情的代理方法 更新邮件未读
+- (void)lsMailScheduleDetailViewController:(LSMailScheduleDetailViewController *)vc haveReadScheduleDetailMail:(LSHttpLetterDetailItemObject *)model index:(int)index {
+    if (self.items.count > 0) {
+        [self.items removeObjectAtIndex:index];
+    }
+    [self.items insertObject:model atIndex:index];
+    
+    self.tableView.items = self.items;
+    
+    [self.tableView reloadData];
+}
+
 
 // TODO: 接收邮件详情的代理方法 更新邮件未读
 - (void)lsMailDetailViewController:(LSMailDetailViewController *)vc haveReadMailDetailMail:(LSHttpLetterListItemObject *)model index:(int)index{
@@ -367,13 +380,22 @@
  @param index 信件下标
  */
 - (void)mailListDidClickToPushMailDetail:(LSHttpLetterListItemObject *)model index:(NSInteger)index{
-    // TODO: 跳转EMF情页
-    LSMailDetailViewController *vc = [[LSMailDetailViewController alloc] initWithNibName:nil bundle:nil];
-    vc.mailIndex = (int)index;
-    vc.letterItem = model;
-    vc.mailDetailDelegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
-
+    if (model.hasSchedule) {
+        // TODO:跳转收件预约详情
+        LSMailScheduleDetailViewController *vc = [[LSMailScheduleDetailViewController alloc] initWithNibName:nil bundle:nil];
+        vc.letterItem = model;
+        vc.mailIndex = (int)index;
+        vc.scheduleDetailDelegate = self;
+        vc.isInBoxSheduleDetail = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else {
+        // TODO: 跳转EMF情页
+        LSMailDetailViewController *vc = [[LSMailDetailViewController alloc] initWithNibName:nil bundle:nil];
+        vc.mailIndex = (int)index;
+        vc.letterItem = model;
+        vc.mailDetailDelegate = self;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 
@@ -384,10 +406,19 @@
  @param index 信件下标
  */
 - (void)outBoxListDidClickToPushMailDetail:(LSHttpLetterListItemObject *)model index:(NSInteger)index{
-    LSOutBoxViewController *vc = [[LSOutBoxViewController alloc] initWithNibName:nil bundle:nil];
-    vc.letterItem = model;
-    [self.navigationController pushViewController:vc animated:YES];
-    
+    if (model.hasSchedule) {
+         // TODO: 跳转预约发信详情页
+        LSMailScheduleDetailViewController *vc = [[LSMailScheduleDetailViewController alloc] initWithNibName:nil bundle:nil];
+        vc.letterItem = model;
+        vc.mailIndex = (int)index;
+        vc.isInBoxSheduleDetail = NO;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else {
+        // TODO: 跳转发信详情页
+        LSOutBoxViewController *vc = [[LSOutBoxViewController alloc] initWithNibName:nil bundle:nil];
+        vc.letterItem = model;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 

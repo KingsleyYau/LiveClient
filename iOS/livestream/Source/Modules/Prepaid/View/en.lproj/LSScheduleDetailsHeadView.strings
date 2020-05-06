@@ -1,0 +1,93 @@
+
+/* Class = "UILabel"; text = "00"; ObjectID = "1Ww-jb-Y8X"; */
+"1Ww-jb-Y8X.text" = "00";
+
+/* Class = "UILabel"; text = "*No further action required. One-on-One not started yet."; ObjectID = "1Xi-dd-r7E"; */
+"1Xi-dd-r7E.text" = "*No further action required. One-on-One not started yet.";
+
+/* Class = "UILabel"; text = "Timezone:"; ObjectID = "2mT-Um-Hpe"; */
+"2mT-Um-Hpe.text" = "Timezone:";
+
+/* Class = "UILabel"; text = "ID:XXXXX"; ObjectID = "2yo-qd-pg5"; */
+"2yo-qd-pg5.text" = "ID:XXXXX";
+
+/* Class = "UILabel"; text = "00"; ObjectID = "3bY-xZ-UpM"; */
+"3bY-xZ-UpM.text" = "00";
+
+/* Class = "UILabel"; text = "Time remains until the One-on-One Starts"; ObjectID = "7dJ-Mi-eKP"; */
+"7dJ-Mi-eKP.text" = "Time remains until the One-on-One Starts";
+
+/* Class = "UILabel"; text = "Schedule Information"; ObjectID = "B5z-9M-xAe"; */
+"B5z-9M-xAe.text" = "Schedule Information";
+
+/* Class = "UILabel"; text = "HKT(GMT - 6)"; ObjectID = "DSb-05-eQY"; */
+"DSb-05-eQY.text" = "HKT(GMT - 6)";
+
+/* Class = "UIButton"; normalTitle = " [Cancel]"; ObjectID = "FPg-Bz-XuE"; */
+"FPg-Bz-XuE.normalTitle" = " [Cancel]";
+
+/* Class = "UILabel"; text = "Further Actions"; ObjectID = "IrA-m5-GH8"; */
+"IrA-m5-GH8.text" = "Further Actions";
+
+/* Class = "UILabel"; text = "13:00 - 14:00 Dec 28,2020"; ObjectID = "L2F-Gw-257"; */
+"L2F-Gw-257.text" = "13:00 - 14:00 Dec 28,2020";
+
+/* Class = "UILabel"; text = "00"; ObjectID = "LVf-mE-cie"; */
+"LVf-mE-cie.text" = "00";
+
+/* Class = "UILabel"; text = "26yrs / Un"; ObjectID = "Oxy-sl-AuK"; */
+"Oxy-sl-AuK.text" = "26yrs / Un";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "Q0S-pO-foF"; */
+"Q0S-pO-foF.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Days"; ObjectID = "Qt4-LB-ePX"; */
+"Qt4-LB-ePX.text" = "Days";
+
+/* Class = "UILabel"; text = "(A123456)"; ObjectID = "R38-WH-7BW"; */
+"R38-WH-7BW.text" = "(A123456)";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "RzT-HS-7Oe"; */
+"RzT-HS-7Oe.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "Confirmed"; ObjectID = "Ux2-Gq-f5X"; */
+"Ux2-Gq-f5X.text" = "Confirmed";
+
+/* Class = "UILabel"; text = "30 minutes"; ObjectID = "V6c-Ud-MSm"; */
+"V6c-Ud-MSm.text" = "30 minutes";
+
+/* Class = "UILabel"; text = "Confirmed: %@"; ObjectID = "WPs-B5-e27"; */
+"WPs-B5-e27.text" = "Confirmed: %@";
+
+/* Class = "UILabel"; text = "Munites"; ObjectID = "ZdV-7I-PZR"; */
+"ZdV-7I-PZR.text" = "Minutes";
+
+/* Class = "UILabel"; text = "%@ (Your local time)"; ObjectID = "gi5-6p-RgM"; */
+"gi5-6p-RgM.text" = "%@ (Your local time)";
+
+/* Class = "UILabel"; text = "Hours"; ObjectID = "ljn-nO-ZE9"; */
+"ljn-nO-ZE9.text" = "Hours";
+
+/* Class = "UIButton"; normalTitle = "Canceled by CharmLive"; ObjectID = "m8V-oT-MjV"; */
+"m8V-oT-MjV.normalTitle" = "Canceled by CharmLive";
+
+/* Class = "UILabel"; text = "Request Sent From"; ObjectID = "uxa-nc-dd9"; */
+"uxa-nc-dd9.text" = "Request Sent From";
+
+/* Class = "UILabel"; text = "Canceled"; ObjectID = "wRh-XS-BAk"; */
+"wRh-XS-BAk.text" = "Canceled";
+
+/* Class = "UILabel"; text = "Send: %@"; ObjectID = "z8t-3C-pE8"; */
+"z8t-3C-pE8.text" = "Send: %@";
+
+"MINUTE" = "%d minutes";
+
+"PENDING_STATUS" = "Pending your confirmation";
+"ACCEPT_STATUS" = "Comfirmed";
+"DECLINED_STATUS" = "Declined";
+"COMPLET_STATUS" = "Completed";
+"MISS_STATUS" = "Missed";
+"EXPIR_STATUS" = "Expired";
+"CANCEL_STATUS" = "Canceled";
+
+"CANCEL_BY" = "Canceled by %@";

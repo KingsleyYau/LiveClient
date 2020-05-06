@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RoomStyleItem.h"
 
 @protocol LSGiftTypeViewDelegate <NSObject>
 
@@ -16,9 +17,11 @@
 
 @interface LSGiftTypeView : UIView
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @property (nonatomic, strong) NSArray * items;
 @property (weak, nonatomic) id<LSGiftTypeViewDelegate> delegate;
+
+@property (nonatomic, strong) RoomStyleItem *roomStyleItem;
 
 - (void)selectTypeRow:(NSInteger)row isAnimated:(BOOL)animated;
 @end

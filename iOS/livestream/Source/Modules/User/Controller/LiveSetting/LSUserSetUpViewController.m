@@ -15,6 +15,7 @@
 #import "LSPushNoticeViewController.h"
 #import "LSChangePasswordViewController.h"
 #import "LSLoginManager.h"
+#import "LSUserInfoManager.h"
 typedef enum {
     SectionTypeFirst,
     SectionTypeSecond,
@@ -205,7 +206,7 @@ typedef enum {
         }
     }else if (indexPath.section == SectionTypeSecond) {
         if (indexPath.row == SecondSectionTypeCleanCache) {
-            NSString *tips = @"Are you sure you wish to clean the app cache";
+            NSString *tips = @"Are you sure you wish to clean the app cache?";
            UIAlertController *cleanAlert = [UIAlertController alertControllerWithTitle:tips message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self clearCache];
@@ -218,8 +219,10 @@ typedef enum {
             
         }
     }else if (indexPath.section == SectionTypeThird) {
-        UIAlertController *cleanAlert = [UIAlertController alertControllerWithTitle:@"Do you wish to log out" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *cleanAlert = [UIAlertController alertControllerWithTitle:@"Do you wish to log out?" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            // 登出清除用户信息缓存
+            [[LSUserInfoManager manager] removeAllUserInfo];
             [[LSLoginManager manager] logout:LogoutTypeActive];
             [[LiveModule module].analyticsManager reportActionEvent:ClickLiveLogout eventCategory:EventCategorySettings];
         }];

@@ -14,7 +14,7 @@
 
 @interface LSSelectWordView ()<UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 
 @property (strong, nonatomic) NSMutableArray <LSSayHiTextListItem *>*textList;
 

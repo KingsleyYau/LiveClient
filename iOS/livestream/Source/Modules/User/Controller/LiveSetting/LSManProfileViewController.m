@@ -24,6 +24,9 @@
 #import "DialogTip.h"
 #import "LSProfilePhotoViewController.h"
 #import "LSProfilePhotoActionViewController.h"
+#import "LSRichAttrLabel.h"
+#import "LSChatTextAttachment.h"
+
 #define Minimum 100
 #define Maximum 2000
 #define ShowMax 200
@@ -45,7 +48,7 @@ typedef enum {
     RowTypeZodiac,
 } RowType;
 
-@interface LSManProfileViewController () <UITextViewDelegate, NSXMLParserDelegate, LSMotifyAboutYouViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, LSManDetailTableViewCellDelegate, LSTagListCollectionViewDelegate, LSAllTagListCollectionViewDelegate, LSEditInterestViewControllerDelegate, LSInformationSelectViewDelegate> {
+@interface LSManProfileViewController () <UITextViewDelegate, NSXMLParserDelegate, LSMotifyAboutYouViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, LSManDetailTableViewCellDelegate, LSTagListCollectionViewDelegate, LSAllTagListCollectionViewDelegate, LSEditInterestViewControllerDelegate, LSInformationSelectViewDelegate,TTTAttributedLabelDelegate> {
     CGRect _orgFrame;
     CGRect _newFrame;
 }
@@ -81,10 +84,6 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *interestList;
 /** 兴趣标题列表 */
 @property (nonatomic, strong) NSMutableArray *selectInterestList;
-///** 兴趣图片列表 */
-//@property (nonatomic, strong) NSMutableArray* selectInterestImageList;
-
-/**  */
 @property (nonatomic, strong) LSManInterestItem *interestItem;
 /** 选择的兴趣列表 */
 //@property (nonatomic, copy) NSArray* selectInterests;
@@ -94,17 +93,16 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UILabel *interestTips;
 
 #pragma mark - aboutYouView
-@property (weak, nonatomic) IBOutlet LSLinkTextView *personalMsg;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *personalMsgHeight;
 @property (weak, nonatomic) IBOutlet UIScrollView *backgroundScrollView;
 @property (weak, nonatomic) IBOutlet UIButton *aboutYouEditBtn;
 /** aboutYou */
 @property (weak, nonatomic) IBOutlet UIView *aboutYouLineView;
-
+@property (weak, nonatomic) IBOutlet LSRichAttrLabel *personalCont;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *personalContHeight;
 #pragma mark - information
 /** information数组 */
 @property (nonatomic, copy) NSArray *informationDetail;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 /** maminformation数组 */
 @property (nonatomic, copy) NSArray *manInformationDetail;
 @property (weak, nonatomic) IBOutlet UILabel *personName;
@@ -125,6 +123,8 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backTopDistance;
 /** 下载器 */
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
+
+
 @end
 
 @implementation LSManProfileViewController
@@ -159,11 +159,6 @@ typedef enum {
 
 
     self.interestContentView.tagDelegate = self;
-    self.personalMsg.delegate = self;
-    self.personalMsg.editable = NO;
-    self.personalMsg.dataDetectorTypes = UIDataDetectorTypeLink;
-    [self.personalMsg textContainer].lineBreakMode = NSLineBreakByWordWrapping;
-    self.personalMsg.delaysContentTouches = YES;
     self.aboutYouEditBtn.layer.cornerRadius = self.aboutYouEditBtn.bounds.size.height * 0.5;
     self.aboutYouEditBtn.layer.masksToBounds = YES;
     self.updatePerson = NO;
@@ -171,7 +166,8 @@ typedef enum {
     self.sessionManager = [LSDomainSessionRequestManager manager];
     [self setupArray];
     [self setUpPlist];
-
+    
+    [self setupAboutYou];
 //    if (IS_IPHONE_X) {
 //        self.backTopDistance.constant = 45;
 //    }
@@ -294,6 +290,16 @@ typedef enum {
     [self.interestContentView.collectionView reloadData];
 }
 
+
+- (void)setupAboutYou {
+    self.personalCont.font = [UIFont systemFontOfSize:13];
+    self.personalCont.textColor = [UIColor colorWithRed:56 / 255.0 green:56 / 255.0 blue:56 / 255.0 alpha:1];
+    self.personalCont.delegate = self;
+    self.personalCont.linkAttributes = @{
+        NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone),
+        NSForegroundColorAttributeName : [UIColor colorWithRed:0 green:102 / 255.0 blue:255.0 alpha:1],
+    };
+}
 #pragma mark - 界面逻辑
 - (void)setupContainView {
     [super setupContainView];
@@ -502,99 +508,121 @@ typedef enum {
     return [self.sessionManager sendRequest:request];
 }
 
-- (void)getTextViewHeight:(NSString *_Nullable)text {
+- (void)getTextViewHeight:(NSString * _Nullable)text {
+    
 
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 4;
-    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    CGSize labelSize = [self.personalCont sizeThatFits:CGSizeMake(self.personalCont.frame.size.width - 20, MAXFLOAT)];
+    CGFloat height = ceil(labelSize.height) + 1;
+    
+    if (height <= 1) {
+        height = 50;
+    }
 
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:13], NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+    self.personalContHeight.constant = height ;
+    [self.personalCont layoutIfNeeded];
 
-    NSInteger height = 50;
-    CGRect rect = [text boundingRectWithSize:CGSizeMake(self.aboutView.frame.size.width - 20, MAXFLOAT)
-                                     options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                  attributes:dict
-                                     context:nil];
-    height += ceil(rect.size.height);
-
-    self.personalMsgHeight.constant = height;
-    [self.personalMsg layoutIfNeeded];
 }
 
-- (void)getPersonalMsg {
+- (void)getPersonalMsg{
 
-    self.personalMsg.text = [self.personalItem canUpdateResume] ? self.personalItem.resume : self.personalItem.resume_content;
-    // 去除首尾空格和换行
-    NSString *content = [self.personalMsg.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-    if (content.length == 0) {
+    NSString *personalMsg = [self.personalItem canUpdateResume]?self.personalItem.resume:self.personalItem.resume_content;
+    NSString *cont = [personalMsg stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (cont.length == 0) {
         self.aboutYouPlaceholder.hidden = NO;
-    } else {
+    }else {
         self.aboutYouPlaceholder.hidden = YES;
     }
-
-    [self getTextViewHeight:content];
-
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 4;
-    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-
-    if (content.length > ShowMax && self.personalMsg.editable == NO) {
+        UIColor *dyColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
+    if (cont.length > ShowMax) {
         NSString *detail = @"Show more";
-        NSInteger subStringIndex = ShowMax - detail.length;
-        NSString *personalMsg = [NSString stringWithFormat:@"%@...\n%@", [content substringToIndex:subStringIndex], detail];
-        self.personalMsg.attributedText = [LSLinkTextView AllString:personalMsg ChangeString:detail ChangeStrColor:[UIColor colorWithRed:0 green:102 blue:255 alpha:255] StrStyle:NSUnderlineStyleNone font:[UIFont systemFontOfSize:14]];
-        self.showMore = YES;
-        [self getTextViewHeight:personalMsg];
+        NSInteger subStringIndex = ShowMax - detail.length ;
+        NSString *personalMsg = [NSString stringWithFormat:@"%@...\n%@", [cont substringToIndex:subStringIndex],detail];
+        NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:personalMsg attributes:@{NSForegroundColorAttributeName : dyColor}];
+
+        
+        // 设置超链接内容
+        LSChatTextAttachment *attachment = [[LSChatTextAttachment alloc] init];
+        attachment.text = @"Show more";
+        attachment.url = [NSURL URLWithString:@"MORE"];
+        attachment.bounds = CGRectMake(0, 0, [UIFont systemFontOfSize:14].lineHeight, [UIFont systemFontOfSize:14].lineHeight);
+        NSRange tapRange = [personalMsg rangeOfString:@"Show more"];
+        [atts addAttributes:@{
+                                     NSFontAttributeName : [UIFont systemFontOfSize:13],
+                                     NSAttachmentAttributeName : attachment,
+                                     } range:tapRange];
+        
+        self.personalCont.attributedText = atts;
+        [atts enumerateAttributesInRange:NSMakeRange(0, atts.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+            LSChatTextAttachment *attachment = attrs[NSAttachmentAttributeName];
+            if( attachment && attachment.url != nil ) {
+                [self.personalCont addLinkToURL:attachment.url withRange:range];
+            }
+        }];
+
+        [self getTextViewHeight:self.personalCont.attributedText.string];
+    }else {
+        self.personalCont.text = cont;
+        [self getTextViewHeight:cont];
     }
+ 
+    
 }
 
-#pragma mark - 输入回调
-- (void)textViewDidBeginEditing:(UITextView *)textView {
-}
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if( [[url absoluteString] isEqualToString:@"MORE"] ) {
+        label.text = [self.personalItem canUpdateResume]?self.personalItem.resume:self.personalItem.resume_content;
+        NSString *content = [label.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString *detail = @"\nShow less";
+        NSString *personalMsg = [content stringByAppendingString:detail];
+        UIColor *dyColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
+        NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:personalMsg attributes:@{NSForegroundColorAttributeName : dyColor}];
+        // 设置超链接内容
+        LSChatTextAttachment *attachment = [[LSChatTextAttachment alloc] init];
+        attachment.text = detail;
+        attachment.url = [NSURL URLWithString:@"LESS"];
+        attachment.bounds = CGRectMake(0, 0, [UIFont systemFontOfSize:14].lineHeight, [UIFont systemFontOfSize:14].lineHeight);
+        NSRange tapRange = [personalMsg rangeOfString:detail];
+        [atts addAttributes:@{
+            NSFontAttributeName : [UIFont systemFontOfSize:14],
+            NSAttachmentAttributeName : attachment,
+        } range:tapRange];
+        
+        label.attributedText = atts;
+        [atts enumerateAttributesInRange:NSMakeRange(0, atts.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+            LSChatTextAttachment *attachment = attrs[NSAttachmentAttributeName];
+            if( attachment && attachment.url != nil ) {
+                [self.personalCont addLinkToURL:attachment.url withRange:range];
+            }
+        }];
 
-- (void)textViewDidChange:(UITextView *)textView {
-}
+        [self getTextViewHeight:self.personalCont.attributedText.string];
+    }else if ([[url absoluteString] isEqualToString:@"LESS"]) {
+        NSString *detail = @"Show more";
+        NSInteger subStringIndex = ShowMax - detail.length ;
+        NSString *personalMsg = [NSString stringWithFormat:@"%@...\n%@", [label.text substringToIndex:subStringIndex],detail];
+        NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:personalMsg];
+        
+        
+        // 设置超链接内容
+        LSChatTextAttachment *attachment = [[LSChatTextAttachment alloc] init];
+        attachment.text = @"Show more";
+        attachment.url = [NSURL URLWithString:@"MORE"];
+        attachment.bounds = CGRectMake(0, 0, [UIFont systemFontOfSize:14].lineHeight, [UIFont systemFontOfSize:14].lineHeight);
+        NSRange tapRange = [personalMsg rangeOfString:@"Show more"];
+        [atts addAttributes:@{
+            NSFontAttributeName : [UIFont systemFontOfSize:14],
+            NSAttachmentAttributeName : attachment,
+        } range:tapRange];
+                label.attributedText = atts;
+        [atts enumerateAttributesInRange:NSMakeRange(0, atts.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+            LSChatTextAttachment *attachment = attrs[NSAttachmentAttributeName];
+            if( attachment && attachment.url != nil ) {
+                [self.personalCont addLinkToURL:attachment.url withRange:range];
+            }
+        }];
 
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-
-    return YES;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-
-    if ([textView isEqual:self.personalMsg]) {
-        if ([text isEqualToString:@"\n"]) {
-            //        self.loadingView.hidden = NO;
-            [self showLoading];
-            //        [self startEditResume:textView.text]
-            // 判断输入的字是否是回车，即按下return
-            [textView resignFirstResponder];
-            return NO;
-        }
+        [self getTextViewHeight:self.personalCont.attributedText.string];
     }
-
-    return YES;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.showMore) {
-            textView.text = [self.personalItem canUpdateResume] ? self.personalItem.resume : self.personalItem.resume_content;
-            NSString *content = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSString *detail = @"Show less";
-            NSString *showless = @"\nShow less";
-            NSString *personalMsg = [content stringByAppendingString:showless];
-            //    textView.attributedText = [self parseMessage:textView.text font:[UIFont systemFontOfSize:14] color:[UIColor blackColor]];
-            textView.attributedText = [LSLinkTextView AllString:personalMsg ChangeString:detail ChangeStrColor:[UIColor colorWithRed:0 green:102 blue:255 alpha:255] StrStyle:NSUnderlineStyleNone font:[UIFont systemFontOfSize:13]];
-            [self getTextViewHeight:content];
-            self.showMore = NO;
-        } else {
-            [self getPersonalMsg];
-        }
-    });
-
-    return YES;
 }
 
 #pragma mark - 弹框提示处理

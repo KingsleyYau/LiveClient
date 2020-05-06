@@ -11,7 +11,7 @@
 #import "LSSayHiThemeListCollectionViewCell.h"
 
 @interface LSSelectThemeView ()<UICollectionViewDelegate,UICollectionViewDataSource>
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableArray <LSSayHiThemeItemObject *>*themeList;
 

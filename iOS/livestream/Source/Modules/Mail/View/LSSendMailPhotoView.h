@@ -15,7 +15,7 @@
 @end
 
 @interface LSSendMailPhotoView : UIView
-@property (strong, nonatomic) UICollectionView *collectionView;
+@property (strong, nonatomic) LSCollectionView *collectionView;
 
 @property (weak, nonatomic) id <LSSendMailPhotoViewDelegate> delegate;
 @property (strong, nonatomic) NSArray *photoArray;

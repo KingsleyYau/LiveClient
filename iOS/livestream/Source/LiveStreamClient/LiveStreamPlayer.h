@@ -25,7 +25,7 @@
 /**
  显示界面
  */
-@property (strong, nonatomic) GPUImageView* _Nullable playView;
+//@property (strong, nonatomic) GPUImageView* _Nullable playView;
 
 /**
  委托
@@ -48,6 +48,20 @@
  *  @return 实例
  */
 + (instancetype _Nonnull)instance;
+
+/**
+*  添加播放控件
+
+   @param playView 播放控件
+*/
+- (void)addPlayView:(GPUImageView *_Nonnull)playView;
+
+/**
+*  移除播放控件
+
+   @param playView 播放控件
+*/
+- (void)removePlayView:(GPUImageView *_Nonnull)playView;
 
 /**
  播放流连接

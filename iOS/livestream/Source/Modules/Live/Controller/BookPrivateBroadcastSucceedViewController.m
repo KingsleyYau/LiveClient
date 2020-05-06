@@ -15,7 +15,7 @@
 #import "LiveGobalManager.h"
 @interface BookPrivateBroadcastSucceedViewController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) NSArray *titleArray;
 @property (nonatomic, strong) LSGiftManager *giftDownloadManager;
 @end

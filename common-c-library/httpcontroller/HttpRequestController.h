@@ -148,6 +148,21 @@
 #include "HttpCreateGiftOrderTask.h"
 #include "HttpWomanListAdvertTask.h"
 #include "HttpGetFeaturedAnchorListTask.h"
+#include "HttpCheckDiscountTask.h"
+#include "HttpGetAppPayTask.h"
+#include "HttpUploadFailPayInfoTask.h"
+#include "HttpAndroidCheckPayCallTask.h"
+#include "HttpAndroidPremiumMemberShipTask.h"
+#include "HttpGetScheduleInviteStatusTask.h"
+#include "HttpGetSessionInviteListTask.h"
+#include "HttpGetScheduleInviteDetailTask.h"
+#include "HttpGetScheduleInviteListTask.h"
+#include "HttpCancelScheduleInviteTask.h"
+#include "HttpDeclinedScheduleInviteTask.h"
+#include "HttpAcceptScheduleInviteTask.h"
+#include "HttpSendScheduleInviteTask.h"
+#include "HttpGetCountryTimeZoneListTask.h"
+#include "HttpGetScheduleDurationListTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -1595,6 +1610,83 @@ public:
                            );
     
     /**
+     * 16.1.获取我司订单号（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param number                        信用点套餐ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetAppPay(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& number,
+                        IRequestGetAppPayCallback* callback = NULL
+                        );
+    
+    /**
+     * 16.2.获取商品列表（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AndroidPremiumMemberShip(
+                                       HttpRequestManager *pHttpRequestManager,
+                                       IRequestAndroidPremiumMemberShipCallback* callback = NULL
+                                       );
+    
+    /**
+     * 16.3.购买成功上传校验送点（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * callType       请求类型（LSPAIDCALLTYPE_NORMAL：正常流程请求，LSPAIDCALLTYPE_UNUSUAL：异常后补
+     * manid          男士ID
+     * orderNo        我司订单ID
+     * number         产品ID
+     * token          我Google pay billing返回用于校验Token
+     * data           我订单purchase original Json数据
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AndroidCheckPayCall(
+                                  HttpRequestManager *pHttpRequestManager,
+                                  LSPaidCallType callType,
+                                  string manid,
+                                  string orderNo,
+                                  string number,
+                                  string token,
+                                  string data,
+                                  IRequestAndroidCheckPayCallCallback* callback = NULL
+                              );
+    
+    /**
+     * 16.4.Google购买失败信息上传（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * manid            男士ID
+     * orderNo          我司订单ID
+     * number           产品ID
+     * errNo            Google返回错误码
+     * errMsg           Google返回错误描述信息
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long UploadFailPayInfo(
+                                HttpRequestManager *pHttpRequestManager,
+                                string manid,
+                                string orderNo,
+                                string number,
+                                string errNo,
+                                string errMsg,
+                                IRequestUploadFailPayInfoCallback* callback = NULL
+                                  );
+    
+    
+    /**
      * 8.1.获取可邀请多人互动的主播列表
      *
      * @param pHttpRequestManager           http管理器
@@ -2069,6 +2161,10 @@ public:
                            list<string> imgList,
                            LSLetterComsumeType comsumeType,
                            string sayHiResponseId = "",
+                            bool isSchedule = false,
+                            string timeZoneId = "",
+                            string startTime = 0,
+                            int duration = 0,
                            IRequestSendEmfCallback* callback = NULL
                            );
     
@@ -2506,7 +2602,22 @@ public:
                              );
     
     /**
-     * 6.6.25.获取直播主播列表广告
+     * 15.13.检测优惠折扣
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CheckDiscount(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& anchorId,
+                            IRequestCheckDiscountCallback* callback = NULL
+                            );
+    
+    /**
+     * 6.25.获取直播主播列表广告
      *
      * @param pHttpRequestManager           http管理器
      * @param deviceId                      设备唯一标识
@@ -2521,6 +2632,152 @@ public:
                               LSAdvertSpaceType adspaceId,
                               IRequestWomanListAdvertCallback* callback = NULL
                               );
+    
+    /**
+     * 17.1.获取时长价格配置列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetScheduleDurationList(
+                                      HttpRequestManager *pHttpRequestManager,
+                                      IRequestGetScheduleDurationListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.2.获取国家时区列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetCountryTimeZoneList(
+                                      HttpRequestManager *pHttpRequestManager,
+                                      IRequestGetCountryTimeZoneListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.3.发送预付费直播邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SendScheduleInvite(
+                                HttpRequestManager *pHttpRequestManager,
+                                 LSScheduleInviteType type,
+                                 string refId,
+                                 string anchorId,
+                                 string timeZoneId,
+                                 string startTime,
+                                 int duration,
+                                IRequestSendScheduleInviteCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.4.接受预付费直播邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AcceptScheduleInvite(
+                                HttpRequestManager *pHttpRequestManager,
+                                 string inviteId,
+                                 int duration,
+                                IRequestAcceptScheduleInviteCallback* callback = NULL
+                                      );
+    /**
+     * 17.5.拒绝预付费直播邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long DeclinedScheduleInvite(
+                                HttpRequestManager *pHttpRequestManager,
+                                string inviteId,
+                                IRequestDeclinedScheduleInviteCallback* callback = NULL
+                                      );
+    /**
+     * 17.6.取消预付费直播邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CancelScheduleInvite(
+                                HttpRequestManager *pHttpRequestManager,
+                                string inviteId,
+                                IRequestCancelScheduleInviteCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.7.获取预付费直播邀请列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetScheduleInviteList(
+                                HttpRequestManager *pHttpRequestManager,
+                                LSScheduleInviteStatus status,
+                                LSScheduleSendFlagType sendFlag,
+                                string anchorId,
+                                int start,
+                                int step,
+                                IRequestGetScheduleInviteListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.8.获取预付费直播邀请详情
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetScheduleInviteDetail(
+                                HttpRequestManager *pHttpRequestManager,
+                                string inviteId,
+                                IRequestGetScheduleInviteDetailCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.9.获取某会话中预付费直播邀请列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetSessionInviteList(
+                                HttpRequestManager *pHttpRequestManager,
+                                LSScheduleInviteType type,
+                                string refId,
+                                IRequestGetSessionInviteListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 17.10.获取预付费直播邀请状态
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetScheduleInviteStatus(
+                                HttpRequestManager *pHttpRequestManager,
+                                IRequestGetScheduleInviteStatusCallback* callback = NULL
+                                      );
     
 private:
     void OnTaskFinish(IHttpTask* task);

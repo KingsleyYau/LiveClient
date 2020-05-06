@@ -12,6 +12,7 @@
 
 @property (nonatomic ,assign) NSInteger number;/**< 初始化数字 */
 
+@property (nonatomic, copy) NSString *numImageName;
 /**
  改变数字显示
  

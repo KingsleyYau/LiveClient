@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
 #import "IntroduceView.h"
+#import "LiveGobalManager.h"
 
 @interface LSWKWebViewController : LSGoogleAnalyticsViewController
 
@@ -24,6 +25,7 @@
 // webview是否加载完成
 @property (nonatomic, assign) BOOL didFinshNav;
 
+@property (nonatomic, assign) BOOL isOpenVideo;
 - (void)setupRequestWebview;
 
 - (void)setupIsResume:(BOOL)isResume;

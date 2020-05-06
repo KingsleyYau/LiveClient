@@ -28,6 +28,7 @@ using namespace std;
 #include "item/LSLCLCVideoItem.h"
 #include "item/LSLCMagicIconConfig.h"
 #include "item/LSLCThemeConfig.h"
+#include "item/LSLCLiveScheduleSessionItem.h"
 
 //virtual void OnCheckCoupon)(long requestId, bool success, Coupon item, string userId, string errnum, string errmsg);
 //virtual void OnUseCoupon)(long requestId, bool success, string errnum, string errmsg, string userId);
@@ -88,6 +89,7 @@ public:
 	virtual void OnCheckFunctions(long requestId, bool success, const string& errnum, const string& errmsg, const list<string>& flagList) {};
     // 12.16.上传LiveChat相关附件
     virtual void OnUploadManPhoto(long requestId, bool success, int errnum, const string& errmsg, const string& url, const string& md5) {};
+    virtual void OnGetSessionInviteList(long requestId, bool success, int errnum, const string& errmsg, const ChatScheduleSessionList& list) {};
 };
 
 
@@ -274,6 +276,12 @@ public:
 			string versionCode,
 			string user_sid,
 			string user_id);
+    
+    /*
+     * 17.9.获取某会话中预付费直播邀请列表
+     * @param inviteId  livechat的会话Id
+     */
+    long GetSessionInviteList(string inviteId);
 
 protected:
 	virtual void onSuccess(long requestId, string path, const char* buf, int size);
@@ -291,6 +299,7 @@ private:
 	void HandleQueryRecentVideo(Json::Value root, list<LSLCVideoItem> &itemList);
 	void HandleGetVideo(Json::Value root, string &url);
     void UploadManPhotoCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
+    void GetSessionInviteListCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size);
 };
 
 #endif /* LSLIVECHATREQUESTLIVECHATCONTROLLER_H_ */

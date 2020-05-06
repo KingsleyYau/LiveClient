@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LiveRoom.h"
 #import "LSGoogleAnalyticsViewController.h"
+
 @protocol TalentOnDemandVCDelegate <NSObject>
 @optional;
 - (void)talentOnDemandVCCancelButtonDid;
@@ -25,7 +26,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *failedView;
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 
 @property (nonatomic, strong) LiveRoom * liveRoom;
 

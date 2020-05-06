@@ -16,6 +16,8 @@ using namespace std;
 #include <json/json/json.h>
 #include <common/Arithmetic.h>
 #include "../LSLiveChatRequestLiveChatDefine.h"
+#include "LSLCHttpScheduleInviteItem.h"
+#include <common/KLog.h>
 
 class LSLCRecord {
 public:
@@ -74,6 +76,16 @@ public:
 					magicIconId = message;
 					messageType = LRM_MAGIC_ICON;
 				}break;
+                    case LIPM_SCHEDULE_INVITE:{
+                        Json::Value jRoot;
+                        Json::Reader reader;
+                        if( reader.parse(message, jRoot) ) {
+                            if( jRoot.isObject() ) {
+                                scheduleMsg.Parse(jRoot);
+                            }
+                        }
+                        messageType = LRM_SCHEDULE;
+                    }break;
 				default:{
 					messageType = LRM_UNKNOW;
 				}break;
@@ -124,6 +136,7 @@ public:
         videoDesc = item.videoDesc;
         videoCharge = item.videoCharge;
         magicIconId = item.magicIconId;
+        scheduleMsg = item.scheduleMsg;
     }
 
 	virtual ~LSLCRecord() {
@@ -254,6 +267,7 @@ public:
 	 * @param videoDesc		视频描述
 	 * @param videoCharge	视频是否已付费
 	 * @param magicIconId   小高表Id
+     * @param scheduleMsg  预付费邀请消息
 	 */
 	LIVECHAT_RECODE_TOFLAG toflag;
 	long adddate;
@@ -274,6 +288,7 @@ public:
 	string videoDesc;
 	bool videoCharge;
 	string magicIconId;
+    LSLCHttpScheduleInviteItem scheduleMsg;
 };
 
 #endif /* LSLCRECORD_H_ */

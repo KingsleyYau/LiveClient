@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -86,14 +86,43 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Mz-Dp-MSk">
+                                <rect key="frame" x="0.0" y="0.0" width="59" height="19"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Setting_StroeOFF_BG" translatesAutoresizingMaskIntoConstraints="NO" id="NTM-21-hWE">
+                                        <rect key="frame" x="0.0" y="0.0" width="59" height="19"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$40 OFF" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v2w-ja-Goh">
+                                        <rect key="frame" x="0.0" y="0.0" width="59" height="19"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="v2w-ja-Goh" secondAttribute="bottom" id="0dw-kp-Mj8"/>
+                                    <constraint firstAttribute="width" constant="59" id="2zE-kR-5Ed"/>
+                                    <constraint firstItem="NTM-21-hWE" firstAttribute="top" secondItem="2Mz-Dp-MSk" secondAttribute="top" id="3fZ-s6-fYX"/>
+                                    <constraint firstAttribute="trailing" secondItem="v2w-ja-Goh" secondAttribute="trailing" id="3i9-Hx-8wx"/>
+                                    <constraint firstItem="NTM-21-hWE" firstAttribute="leading" secondItem="2Mz-Dp-MSk" secondAttribute="leading" id="6uz-4z-QlU"/>
+                                    <constraint firstItem="v2w-ja-Goh" firstAttribute="leading" secondItem="2Mz-Dp-MSk" secondAttribute="leading" id="8h3-tG-jzD"/>
+                                    <constraint firstAttribute="bottom" secondItem="NTM-21-hWE" secondAttribute="bottom" id="9v1-eu-azF"/>
+                                    <constraint firstAttribute="height" constant="19" id="BQx-qW-apR"/>
+                                    <constraint firstItem="v2w-ja-Goh" firstAttribute="top" secondItem="2Mz-Dp-MSk" secondAttribute="top" id="ckg-BQ-ecL"/>
+                                    <constraint firstAttribute="trailing" secondItem="NTM-21-hWE" secondAttribute="trailing" id="qtv-BT-SQp"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Hkx-Pj-481" secondAttribute="trailing" constant="8" id="8XL-Rp-g1i"/>
                             <constraint firstAttribute="trailing" secondItem="FCy-ku-JQ9" secondAttribute="trailing" id="Btx-Kc-8rX"/>
                             <constraint firstAttribute="trailing" secondItem="U7V-9o-21V" secondAttribute="trailing" id="C6b-ad-Cg9"/>
                             <constraint firstAttribute="bottom" secondItem="tZW-Wc-6Di" secondAttribute="bottom" constant="8" id="GO3-KS-o0U"/>
+                            <constraint firstItem="2Mz-Dp-MSk" firstAttribute="leading" secondItem="BPj-Z0-b3V" secondAttribute="leading" id="HHh-xz-x6C"/>
                             <constraint firstItem="dYU-ml-EsY" firstAttribute="top" secondItem="BPj-Z0-b3V" secondAttribute="top" id="JG9-hH-jHa"/>
+                            <constraint firstItem="2Mz-Dp-MSk" firstAttribute="top" secondItem="BPj-Z0-b3V" secondAttribute="top" id="P4q-hr-5rf"/>
                             <constraint firstItem="yUA-HF-nBB" firstAttribute="baseline" secondItem="tZW-Wc-6Di" secondAttribute="baseline" id="S9D-p8-rfD"/>
                             <constraint firstAttribute="bottom" secondItem="FCy-ku-JQ9" secondAttribute="bottom" id="XBe-Br-YF4"/>
                             <constraint firstItem="U7V-9o-21V" firstAttribute="leading" secondItem="BPj-Z0-b3V" secondAttribute="leading" id="Yh1-TI-oEW"/>
@@ -121,6 +150,8 @@
                 <outlet property="discountLabel" destination="yUA-HF-nBB" id="Sln-vj-N2o"/>
                 <outlet property="discountLabelW" destination="p9a-2u-62x" id="uSy-Qv-bjz"/>
                 <outlet property="imageView" destination="U7V-9o-21V" id="cJO-SI-dJa"/>
+                <outlet property="offLabel" destination="v2w-ja-Goh" id="k7K-ec-woD"/>
+                <outlet property="offView" destination="2Mz-Dp-MSk" id="Ipe-UO-hS8"/>
                 <outlet property="priceLabel" destination="tZW-Wc-6Di" id="W0k-nx-1QY"/>
                 <outlet property="priceLabelW" destination="SBi-dX-Ty3" id="WAV-cU-sz3"/>
                 <outlet property="stroeNewIcon" destination="dYU-ml-EsY" id="Ohs-0m-AR0"/>
@@ -130,6 +161,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="LS_Setting_StroeOFF_BG" width="59" height="19"/>
         <image name="LS_Stroe_Add_R" width="20" height="20"/>
         <image name="LS_Stroe_New" width="40" height="40"/>
     </resources>

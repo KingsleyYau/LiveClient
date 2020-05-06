@@ -23,16 +23,6 @@
 
 #pragma mark - 获取用户详情
 typedef void (^GetUserInfoHandler)(LSUserInfoModel * _Nonnull item);
-
-/**
- 获取用户详情
- 
- @param userId 用户Id
- @param finishHandler 获取成功回调
- */
-- (void)getUserInfo:(NSString * _Nonnull)userId finishHandler:(GetUserInfoHandler _Nullable)finishHandler;
-
-
 /**
  3.12获取指定观众信息
  

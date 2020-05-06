@@ -88,7 +88,7 @@
         self.freeIcon.hidden = YES;
     }
     
-    [self.imageLoader loadImageWithImageView:self.ladyHead options:0 imageUrl:self.url placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageWithImageView:self.ladyHead options:0 imageUrl:self.url placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
         
     }];
 }

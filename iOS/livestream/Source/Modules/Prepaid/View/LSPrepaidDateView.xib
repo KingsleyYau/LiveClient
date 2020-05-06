@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSPrepaidDateView">
+            <connections>
+                <outlet property="beginTimeButton" destination="Tsq-hK-hII" id="w7w-Ng-4kY"/>
+                <outlet property="countriesButton" destination="WOv-u6-ESi" id="93I-cN-9fs"/>
+                <outlet property="creditsButton" destination="SRN-tE-HlU" id="Pzx-6g-aan"/>
+                <outlet property="endTimeButton" destination="dKl-u7-Nwm" id="h0m-Mg-iSn"/>
+                <outlet property="localTimeLabel" destination="jlZ-v6-npQ" id="9Su-bq-BC2"/>
+                <outlet property="timeButton" destination="BUE-at-4Du" id="Pqy-mr-isj"/>
+                <outlet property="timeZoneButton" destination="fPb-8S-tPf" id="gDg-cd-WgN"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="325" height="255"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time Zone:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="INK-fK-GoZ">
+                    <rect key="frame" x="10" y="10" width="78" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="IR0-Kd-G5D"/>
+                        <constraint firstAttribute="width" constant="78" id="vIl-Fa-gJz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One-on-One Start Time:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NJe-et-6m7">
+                    <rect key="frame" x="10" y="75" width="168" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="QWE-kt-b4U"/>
+                        <constraint firstAttribute="width" constant="168" id="dbv-2M-lum"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session Duration:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7nB-Eg-5f4">
+                    <rect key="frame" x="10" y="162" width="121" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="d01-Tb-02u"/>
+                        <constraint firstAttribute="width" constant="121" id="ysR-6X-w1x"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your local time :Dec 28,2020 19:00 - 20:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlZ-v6-npQ">
+                    <rect key="frame" x="10" y="133" width="300" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="300" id="fHg-g6-tzl"/>
+                        <constraint firstAttribute="height" constant="16" id="jmJ-9g-8YN"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="to" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2VV-d6-ltI">
+                    <rect key="frame" x="224.5" y="107" width="14" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="8GW-Sl-uHr"/>
+                        <constraint firstAttribute="width" constant="14" id="ocG-Tr-era"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="WOv-u6-ESi">
+                    <rect key="frame" x="10" y="31" width="118" height="32"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="6br-b0-Tab"/>
+                        <constraint firstAttribute="width" constant="118" id="fAl-Ts-fqf"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" title="United States" backgroundImage="LS_Prepaid_TimeBtnBG">
+                        <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="buttonDid:" destination="-1" eventType="touchUpInside" id="Jhc-3U-TRt"/>
+                    </connections>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="fUk-hu-qKw">
+                    <rect key="frame" x="111" y="41" width="12" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="12" id="3bZ-dg-ywq"/>
+                        <constraint firstAttribute="width" constant="12" id="Ite-fE-m3N"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="BUE-at-4Du">
+                    <rect key="frame" x="10" y="99" width="126" height="32"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="SOB-xn-f0F"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" title="Dec 28，2020" backgroundImage="LS_Prepaid_TimeBtnBG">
+                        <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="buttonDid:" destination="-1" eventType="touchUpInside" id="wRs-ze-YtV"/>
+                    </connections>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="W6H-x5-vOx">
+                    <rect key="frame" x="119" y="109" width="12" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="12" id="9wr-PL-UAJ"/>
+                        <constraint firstAttribute="height" constant="12" id="mKb-Rm-6hQ"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tsq-hK-hII">
+                    <rect key="frame" x="148" y="99" width="69" height="32"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="Zua-zG-2CE"/>
+                        <constraint firstAttribute="width" constant="69" id="aLV-cU-KRc"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" title="00:00" backgroundImage="LS_Prepaid_TimeBtnBG">
+                        <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="buttonDid:" destination="-1" eventType="touchUpInside" id="k8v-u8-56h"/>
+                    </connections>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="As7-3o-2PL">
+                    <rect key="frame" x="200" y="109" width="12" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="12" id="bnH-iI-kI2"/>
+                        <constraint firstAttribute="width" constant="12" id="sMJ-i7-JjD"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKl-u7-Nwm">
+                    <rect key="frame" x="246" y="99" width="69" height="32"/>
+                    <color key="backgroundColor" red="0.94117647058823528" green="0.97647058823529409" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="F8t-eE-ZrJ"/>
+                        <constraint firstAttribute="width" constant="69" id="PvW-6p-KI9"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" title="00:00" backgroundImage="LS_Prepaid_TimeBtnBG">
+                        <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="fPb-8S-tPf">
+                    <rect key="frame" x="138" y="31" width="177" height="32"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="EWO-uD-p9e"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="25" maxY="0.0"/>
+                    <state key="normal" title="(GMT-6) US/Eastern" backgroundImage="LS_Prepaid_TimeBtnBG">
+                        <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="buttonDid:" destination="-1" eventType="touchUpInside" id="9aE-rB-RPv"/>
+                    </connections>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="v1p-MZ-Dxk">
+                    <rect key="frame" x="298" y="41" width="12" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="12" id="Vsl-h2-rdU"/>
+                        <constraint firstAttribute="width" constant="12" id="mFe-Zy-7Vd"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SRN-tE-HlU">
+                    <rect key="frame" x="10" y="180" width="305" height="32"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="vd3-jn-6jz"/>
+                    </constraints>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" backgroundImage="LS_Prepaid_TimeBtnBG">
+                        <attributedString key="attributedTitle">
+                            <fragment content="30 Minutes - 13.50 Credits ">
+                                <attributes>
+                                    <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <font key="NSFont" size="13" name="Helvetica-Bold"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                        <tabStops>
+                                            <textTab alignment="left" location="28">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="56">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="84">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="112">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="140">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="168">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="196">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="224">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="252">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="280">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="308">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="336">
+                                                <options/>
+                                            </textTab>
+                                        </tabStops>
+                                    </paragraphStyle>
+                                </attributes>
+                            </fragment>
+                            <fragment content="15.00 Credits">
+                                <attributes>
+                                    <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <font key="NSFont" size="13" name="Helvetica-Bold"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                        <tabStops>
+                                            <textTab alignment="left" location="28">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="56">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="84">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="112">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="140">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="168">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="196">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="224">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="252">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="280">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="308">
+                                                <options/>
+                                            </textTab>
+                                            <textTab alignment="left" location="336">
+                                                <options/>
+                                            </textTab>
+                                        </tabStops>
+                                    </paragraphStyle>
+                                    <integer key="NSStrikethrough" value="1"/>
+                                    <color key="NSStrikethroughColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                    </state>
+                    <connections>
+                        <action selector="buttonDid:" destination="-1" eventType="touchUpInside" id="gRF-Zw-jSF"/>
+                    </connections>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Nhe-fi-0L5">
+                    <rect key="frame" x="298" y="190" width="12" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="12" id="T0W-O7-RUF"/>
+                        <constraint firstAttribute="width" constant="12" id="eIQ-3S-Voy"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Credits will only be deducted after the broadcaster  accepts." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zSP-KI-Pp5">
+                    <rect key="frame" x="10" y="216" width="305" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Ake-jg-t3g"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="v1p-MZ-Dxk" firstAttribute="centerY" secondItem="fPb-8S-tPf" secondAttribute="centerY" id="1jv-Kb-GpB"/>
+                <constraint firstItem="As7-3o-2PL" firstAttribute="centerY" secondItem="Tsq-hK-hII" secondAttribute="centerY" id="4vw-pX-3ba"/>
+                <constraint firstItem="dKl-u7-Nwm" firstAttribute="top" secondItem="fPb-8S-tPf" secondAttribute="bottom" constant="36" id="6OX-Vj-sfs"/>
+                <constraint firstItem="INK-fK-GoZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="10" id="7ps-A9-O6K"/>
+                <constraint firstItem="Tsq-hK-hII" firstAttribute="top" secondItem="NJe-et-6m7" secondAttribute="bottom" constant="8" id="9NT-pk-Szm"/>
+                <constraint firstItem="7nB-Eg-5f4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="AJI-8o-4dH"/>
+                <constraint firstItem="2VV-d6-ltI" firstAttribute="top" secondItem="fPb-8S-tPf" secondAttribute="bottom" constant="44" id="CJ3-hw-uMP"/>
+                <constraint firstAttribute="trailing" secondItem="SRN-tE-HlU" secondAttribute="trailing" constant="10" id="DVI-YU-gLI"/>
+                <constraint firstAttribute="trailing" secondItem="zSP-KI-Pp5" secondAttribute="trailing" constant="10" id="ELd-9j-N6R"/>
+                <constraint firstItem="7nB-Eg-5f4" firstAttribute="top" secondItem="jlZ-v6-npQ" secondAttribute="bottom" constant="13" id="FPP-55-x1z"/>
+                <constraint firstItem="BUE-at-4Du" firstAttribute="top" secondItem="NJe-et-6m7" secondAttribute="bottom" constant="8" id="HuJ-2w-9n4"/>
+                <constraint firstItem="dKl-u7-Nwm" firstAttribute="leading" secondItem="2VV-d6-ltI" secondAttribute="trailing" constant="7.5" id="IOh-e2-73Q"/>
+                <constraint firstItem="fUk-hu-qKw" firstAttribute="trailing" secondItem="WOv-u6-ESi" secondAttribute="trailing" constant="-5" id="KYL-Yv-Kk5"/>
+                <constraint firstItem="zSP-KI-Pp5" firstAttribute="top" secondItem="SRN-tE-HlU" secondAttribute="bottom" constant="4" id="OMY-i2-ZSu"/>
+                <constraint firstItem="Tsq-hK-hII" firstAttribute="leading" secondItem="BUE-at-4Du" secondAttribute="trailing" constant="12" id="P24-Ji-hYD"/>
+                <constraint firstItem="Nhe-fi-0L5" firstAttribute="trailing" secondItem="SRN-tE-HlU" secondAttribute="trailing" constant="-5" id="V1I-7K-48O"/>
+                <constraint firstItem="Nhe-fi-0L5" firstAttribute="centerY" secondItem="SRN-tE-HlU" secondAttribute="centerY" id="W0d-NP-66p"/>
+                <constraint firstItem="INK-fK-GoZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="WfM-S1-5l9"/>
+                <constraint firstItem="zSP-KI-Pp5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="Wjh-uh-Mgf"/>
+                <constraint firstItem="WOv-u6-ESi" firstAttribute="top" secondItem="INK-fK-GoZ" secondAttribute="bottom" constant="5" id="ZQd-N4-atL"/>
+                <constraint firstItem="BUE-at-4Du" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="ZiR-7L-Wfp"/>
+                <constraint firstItem="SRN-tE-HlU" firstAttribute="top" secondItem="7nB-Eg-5f4" secondAttribute="bottom" constant="2" id="bM0-tL-a3d"/>
+                <constraint firstItem="v1p-MZ-Dxk" firstAttribute="trailing" secondItem="fPb-8S-tPf" secondAttribute="trailing" constant="-5" id="bQZ-RR-RRc"/>
+                <constraint firstItem="WOv-u6-ESi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="bgt-kH-BqH"/>
+                <constraint firstItem="fPb-8S-tPf" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="31" id="c95-oj-d4X"/>
+                <constraint firstItem="As7-3o-2PL" firstAttribute="trailing" secondItem="Tsq-hK-hII" secondAttribute="trailing" constant="-5" id="dLQ-uk-lpf"/>
+                <constraint firstItem="jlZ-v6-npQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="fDr-YM-0cq"/>
+                <constraint firstItem="fUk-hu-qKw" firstAttribute="centerY" secondItem="WOv-u6-ESi" secondAttribute="centerY" id="gUd-2e-pFP"/>
+                <constraint firstItem="fPb-8S-tPf" firstAttribute="leading" secondItem="WOv-u6-ESi" secondAttribute="trailing" constant="10" id="ggY-Wc-yMI"/>
+                <constraint firstItem="SRN-tE-HlU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="jMb-ik-B4H"/>
+                <constraint firstItem="2VV-d6-ltI" firstAttribute="leading" secondItem="Tsq-hK-hII" secondAttribute="trailing" constant="7.5" id="jyD-rU-jCx"/>
+                <constraint firstItem="NJe-et-6m7" firstAttribute="top" secondItem="WOv-u6-ESi" secondAttribute="bottom" constant="12" id="nNn-kp-zv7"/>
+                <constraint firstAttribute="trailing" secondItem="fPb-8S-tPf" secondAttribute="trailing" constant="10" id="nig-W6-9rW"/>
+                <constraint firstAttribute="trailing" secondItem="dKl-u7-Nwm" secondAttribute="trailing" constant="10" id="pkh-N7-eHG"/>
+                <constraint firstItem="NJe-et-6m7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="vEP-uW-A15"/>
+                <constraint firstItem="W6H-x5-vOx" firstAttribute="centerY" secondItem="BUE-at-4Du" secondAttribute="centerY" id="x2T-F4-MFP"/>
+                <constraint firstItem="jlZ-v6-npQ" firstAttribute="top" secondItem="BUE-at-4Du" secondAttribute="bottom" constant="2" id="xfI-X1-nsX"/>
+                <constraint firstItem="W6H-x5-vOx" firstAttribute="trailing" secondItem="BUE-at-4Du" secondAttribute="trailing" constant="-5" id="y5P-kD-n5T"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="136.80000000000001" y="209.14542728635683"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_Prepaid_TimeBtnBG" width="8.5" height="8.5"/>
+        <image name="LS_Schedule_Arrow" width="12" height="12"/>
+    </resources>
+</document>

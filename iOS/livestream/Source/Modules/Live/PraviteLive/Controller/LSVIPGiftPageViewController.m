@@ -29,7 +29,11 @@
 <JTSegmentControlDelegate, LSPZPagingScrollViewDelegate, LSCheckButtonDelegate, LiveRoomCreditRebateManagerDelegate, LSGiftCollectionViewDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, SendGiftTheQueueManagerDelegate,LSGiftTypeViewDelegate>
 
 @property (nonatomic, weak) IBOutlet LSGiftTypeView *segmentView;
- 
+
+@property (weak, nonatomic) IBOutlet UIImageView *headBgView;
+@property (weak, nonatomic) IBOutlet UIButton *tipViewBtn;
+@property (weak, nonatomic) IBOutlet UIButton *downGiftViewBtn;
+
 @property (nonatomic, weak) IBOutlet LSPZPagingScrollView *pagingScrollView;
 
 @property (weak, nonatomic) IBOutlet UIImageView *loading;
@@ -116,12 +120,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    [self.headBgView setImage:self.roomStyleItem.giftPageHeadBgImage];
+    [self.tipViewBtn setImage:self.roomStyleItem.giftPageTipBtnImage forState:UIControlStateNormal];
+    [self.downGiftViewBtn setImage:self.roomStyleItem.giftPageDownBtnImage forState:UIControlStateNormal];
+    [self.pagingScrollView setBackgroundColor:self.roomStyleItem.giftPageBgColor];
     
     // 初始化提示
     self.dialogTipView = [DialogTip dialogTip];
     
     self.segmentView.delegate = self;
+    self.segmentView.roomStyleItem = self.roomStyleItem;
     
     // 初始化分栏
     [self setupSegment];
@@ -168,7 +177,7 @@
             
             
             NSInteger roomType = 0;
-            if (weakSelf.liveRoom.roomType ==LiveRoomType_Public || weakSelf.liveRoom.roomType == LiveRoomType_Public_VIP) {
+            if (weakSelf.liveRoom.roomType ==LiveRoomType_Public) {
                 roomType = 1;
             }else {
                 roomType = 2;
@@ -222,6 +231,7 @@
     
     for (LSGiftTypeItemObject * item in items) {
         LSGiftCollectionView *vc = [[LSGiftCollectionView alloc] init];
+        vc.backgroundColor = self.roomStyleItem.giftPageBgColor;
         vc.delegate = self;
         vc.liveRoom = self.liveRoom;
         vc.giftTypeId = item.typeId;

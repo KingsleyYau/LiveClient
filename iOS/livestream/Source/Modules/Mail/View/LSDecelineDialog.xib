@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSDecelineDialog">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.60000002384185791" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FRg-jS-c6h">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jCC-ZW-Lu6">
+                    <rect key="frame" x="20" y="336.5" width="374" height="223"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Request has been successfully declined." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s33-qc-w3T">
+                            <rect key="frame" x="20" y="66" width="334" height="19.5"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="textColor" red="0.99607843137254903" green="0.41176470588235292" blue="0.011764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fyz-Pv-l55">
+                            <rect key="frame" x="65.5" y="159" width="243" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="243" id="TnW-Qt-FdM"/>
+                                <constraint firstAttribute="height" constant="44" id="UjK-TT-7kp"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="-7" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Write a mail to her now" image="Mail_SchaduleDIalogMail" backgroundImage="Home_BlueShadeBg">
+                                <color key="titleColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </state>
+                            <connections>
+                                <action selector="writeToMail:" destination="iN0-l3-epB" eventType="touchUpInside" id="sai-Dx-L3D"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do you wish to write a mail to the broadcaster to dicuss more details about the request." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qy9-c3-2cc">
+                            <rect key="frame" x="18" y="105.5" width="339" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_DialogDecline" translatesAutoresizingMaskIntoConstraints="NO" id="qiR-UO-9vN">
+                            <rect key="frame" x="169" y="21" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="36" id="pE5-Hq-kbm"/>
+                                <constraint firstAttribute="width" secondItem="qiR-UO-9vN" secondAttribute="height" multiplier="1:1" id="saj-nB-o4n"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="0.91764705882352937" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="s33-qc-w3T" firstAttribute="top" secondItem="qiR-UO-9vN" secondAttribute="bottom" constant="9" id="52k-JQ-bQE"/>
+                        <constraint firstItem="qiR-UO-9vN" firstAttribute="top" secondItem="jCC-ZW-Lu6" secondAttribute="top" constant="21" id="BfT-uk-xZm"/>
+                        <constraint firstItem="Fyz-Pv-l55" firstAttribute="top" secondItem="qy9-c3-2cc" secondAttribute="bottom" constant="20" id="ItR-is-iCO"/>
+                        <constraint firstAttribute="trailing" secondItem="qy9-c3-2cc" secondAttribute="trailing" constant="17" id="VeR-nr-nyS"/>
+                        <constraint firstItem="qy9-c3-2cc" firstAttribute="top" secondItem="s33-qc-w3T" secondAttribute="bottom" constant="20" id="Y3H-Hd-96c"/>
+                        <constraint firstAttribute="bottom" secondItem="Fyz-Pv-l55" secondAttribute="bottom" constant="20" id="afZ-9J-ClF"/>
+                        <constraint firstItem="qiR-UO-9vN" firstAttribute="centerX" secondItem="jCC-ZW-Lu6" secondAttribute="centerX" id="dNy-57-5bY"/>
+                        <constraint firstItem="Fyz-Pv-l55" firstAttribute="centerX" secondItem="jCC-ZW-Lu6" secondAttribute="centerX" id="hsz-d3-naU"/>
+                        <constraint firstAttribute="trailing" secondItem="s33-qc-w3T" secondAttribute="trailing" constant="20" id="oC4-RW-m3U"/>
+                        <constraint firstItem="s33-qc-w3T" firstAttribute="leading" secondItem="jCC-ZW-Lu6" secondAttribute="leading" constant="20" id="umr-y8-4Lf"/>
+                        <constraint firstItem="qy9-c3-2cc" firstAttribute="leading" secondItem="jCC-ZW-Lu6" secondAttribute="leading" constant="18" id="wpb-eY-tUU"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wJA-L5-HYE">
+                    <rect key="frame" x="364" y="306.5" width="30" height="30"/>
+                    <state key="normal" image="VIPLive_Close"/>
+                    <connections>
+                        <action selector="hideDialogAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="AVH-kc-wvT"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="jCC-ZW-Lu6" firstAttribute="top" secondItem="wJA-L5-HYE" secondAttribute="bottom" id="27D-oJ-hew"/>
+                <constraint firstItem="FRg-jS-c6h" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="43n-Qg-UAC"/>
+                <constraint firstItem="FRg-jS-c6h" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="HJA-EM-hCK"/>
+                <constraint firstItem="FRg-jS-c6h" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="LH9-Vm-h4L"/>
+                <constraint firstItem="jCC-ZW-Lu6" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Sl6-9H-gIG"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="jCC-ZW-Lu6" secondAttribute="trailing" constant="20" id="TGu-bc-xNG"/>
+                <constraint firstItem="jCC-ZW-Lu6" firstAttribute="centerX" secondItem="FRg-jS-c6h" secondAttribute="centerX" id="Ued-uH-5Gr"/>
+                <constraint firstItem="wJA-L5-HYE" firstAttribute="trailing" secondItem="jCC-ZW-Lu6" secondAttribute="trailing" id="UnO-0J-quJ"/>
+                <constraint firstItem="jCC-ZW-Lu6" firstAttribute="centerY" secondItem="FRg-jS-c6h" secondAttribute="centerY" id="u1w-tb-8LK"/>
+                <constraint firstAttribute="bottom" secondItem="FRg-jS-c6h" secondAttribute="bottom" id="wWi-c7-R2v"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="actionBtn" destination="Fyz-Pv-l55" id="L8I-Nk-Dgt"/>
+                <outlet property="contentView" destination="jCC-ZW-Lu6" id="eaR-lJ-Sd1"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="91"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Home_BlueShadeBg" width="3" height="3"/>
+        <image name="Mail_DialogDecline" width="28" height="28"/>
+        <image name="Mail_SchaduleDIalogMail" width="28" height="28"/>
+        <image name="VIPLive_Close" width="30" height="30"/>
+    </resources>
+</document>

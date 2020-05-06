@@ -9,6 +9,7 @@
 #import "LSGoogleAnalyticsViewController.h"
 #import "LSGiftProductTableViewCell.h"
 #import "LSChatTextView.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LSCheckOutViewController : LSGoogleAnalyticsViewController<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,LSGiftProductTableViewCellDelegate>
@@ -25,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *deliveryFeesPrice;
 @property (weak, nonatomic) IBOutlet UILabel *discountPrice;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableViewHeight;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *freeGreetingCard;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *freeGreetingCardHeight;
 

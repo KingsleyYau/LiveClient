@@ -167,6 +167,15 @@
 - (BOOL)sendInstantInviteUserReport:(SEQ_T)reqId inviteId:(NSString *_Nonnull)inviteId isShow:(BOOL)isShow;
 
 /**
+ *  7.9.观众通知服务器对预约操作（操作为发送、接受、拒绝预约）
+ *
+ *  @param reqId                 请求序列号
+ *  @param item                    预约的信息
+ *
+ */
+- (BOOL)sendHandleSchedule:(SEQ_T)reqId item:(ImScheduleRoomInfoObject *_Nonnull)item;
+
+/**
  *  8.1.发送直播间才艺点播邀请
  *
  *  @param reqId                 请求序列号

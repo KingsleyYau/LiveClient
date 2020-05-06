@@ -24,10 +24,19 @@
     
     switch (item.msgType) {
         case MsgType_FirstFree:{
-            /** 试聊券消息 **/
+            /** 私密直播间试用券消息 **/
             [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_FirstFree", @"Member_FirstFree") font:SystemFont(NoticeFontSize) color:roomStyleItem.firstFreeStrColor]];
             [attributeStr appendAttributedString:[self parseMessage:item.text font:SystemFont(NoticeFontSize) color:COLOR_WITH_16BAND_RGB(0xff3508)]];
             [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_FirstFree_Time", @"Member_FirstFree_Time") font:SystemFont(NoticeFontSize) color:roomStyleItem.firstFreeStrColor]];
+        } break;
+            
+        case MsgType_Public_FirstFree:{
+            /** 公开直播间试用券消息 **/
+            [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_FirstFree", @"Member_FirstFree") font:SystemFont(NoticeFontSize) color:roomStyleItem.firstFreeStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:item.text font:SystemFont(NoticeFontSize) color:COLOR_WITH_16BAND_RGB(0xff3508)]];
+            [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_Public_Time", @"Member_Public_Time") font:SystemFont(NoticeFontSize) color:roomStyleItem.firstFreeStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%d",item.freeSeconds] font:SystemFont(NoticeFontSize) color:COLOR_WITH_16BAND_RGB(0xff3508)]];
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:NSLocalizedString(@"Member_Public_Room_Price", @"Member_Public_Room_Price"),item.roomPrice] font:SystemFont(NoticeFontSize) color:roomStyleItem.firstFreeStrColor]];
         } break;
             
         case MsgType_Announce: {

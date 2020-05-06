@@ -50,6 +50,8 @@ static LSLiveChatManagerOC *liveChatManager = nil;
 - (void)onRecvEditMsg:(const char *)userId;
 - (void)onGetHistoryMessage:(bool)success errNo:(const string &)errNo errMsg:(const string &)errMsg userItem:(LSLCUserItem *)userItem;
 - (void)onGetUsersHistoryMessage:(bool)success errNo:(const string &)errNo errMsg:(const string &)errMsg userList:(const LCUserList &)userList;
+- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(const string &)errMsg item:(LSLCMessageItem *)item scheduleReplyItem:(LSLCMessageItem *)scheduleReplyItem;
+- (void)onRecvScheduleInviteNotice:(LSLCMessageItem *)item womanId:(const string &)womanId scheduleReplyItem:(LSLCMessageItem *)scheduleReplyItem;
 
 #pragma mark---- 试聊券回调处理(OC) ----
 - (void)onCheckTryTicket:(bool)success errNo:(const char *)errNo errMsg:(const char *)errMsg userId:(const char *)userId status:(CouponStatus)status;
@@ -252,6 +254,18 @@ class LiveChatManManagerListener : public ILSLiveChatManManagerListener {
             [liveChatManager onGetUsersHistoryMessage:success errNo:errNo errMsg:errMsg userList:userList];
         }
     };
+    
+    // Alex, 发送预约邀请
+    void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, LSLCMessageItem *msgItem, LSLCMessageItem *msgReplyItem) {
+        if (nil != liveChatManager) {
+            [liveChatManager onSendScheduleInvite:err errMsg:errmsg item:msgItem scheduleReplyItem:msgReplyItem];
+        }
+    }
+    void OnRecvScheduleInviteNotice(const string& womanId, LSLCMessageItem *msgItem, LSLCMessageItem *msgReplyItem) {
+        if (nil != liveChatManager) {
+            [liveChatManager onRecvScheduleInviteNotice:msgItem womanId:womanId scheduleReplyItem:msgReplyItem];
+        }
+    }
 
 #pragma mark---- 高级表情回调(C++) ----
     //获取高级表情配置item（登录成功后manmanager调用，后回调的）
@@ -1286,6 +1300,33 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
     }
 }
 
+- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(const string &)errMsg item:(LSLCMessageItem *)item scheduleReplyItem:(LSLCMessageItem *)scheduleReplyItem {
+    LSLCLiveChatMsgItemObject *obj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:item];
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    LSLCLiveChatMsgItemObject *replyObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:scheduleReplyItem];
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onSendScheduleInvite:errMsg:item:msgReplyItem:)]) {
+                [delegate onSendScheduleInvite:errNo errMsg:nsErrMsg item:obj msgReplyItem:replyObj];
+            }
+        }
+    }
+}
+- (void)onRecvScheduleInviteNotice:(LSLCMessageItem *)item womanId:(const string &)womanId scheduleReplyItem:(LSLCMessageItem *)scheduleReplyItem {
+    LSLCLiveChatMsgItemObject *obj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:item];
+    NSString *nsWomanId = [NSString stringWithUTF8String:womanId.c_str()];
+    LSLCLiveChatMsgItemObject *replyObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:scheduleReplyItem];
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LSLiveChatManagerListenerDelegate> delegate = (id<LSLiveChatManagerListenerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvScheduleInviteNotice:womanId:scheduleReplyItem:)]) {
+                [delegate onRecvScheduleInviteNotice:obj womanId:nsWomanId scheduleReplyItem:replyObj];
+            }
+        }
+    }
+}
+
 - (StatusType)getMsgStatus:(NSString *)userId msgId:(NSInteger)msgId {
     StatusType statusType = StatusType_Fail;
     if (NULL != mILSLiveChatManManager) {
@@ -1647,6 +1688,42 @@ static LiveChatManManagerListener *gLiveChatManManagerListener;
         mILSLiveChatManManager->GetVideoPathWithExist(strUserId, strInviteId, strVideoId);
     }
     return path;
+}
+
+-(LSLCLiveChatMsgItemObject *)sendScheduleInvite:(NSString* _Nonnull)userId scheduleItem:(LSLCLiveChatScheduleMsgItemObject * _Nonnull)scheduleItem {
+    LSLCLiveChatMsgItemObject *msgObj = nil;
+    if (NULL != mILSLiveChatManManager) {
+        LSLCMessageItem* msgItem = new LSLCMessageItem;
+        //msgItem->m_fromId = [scheduleItem.manId UTF8String];
+        //msgItem->m_inviteId = [scheduleItem.inviteId UTF8String];
+        //msgItem->m_sendType = SendType_Send;
+        string strUserId = "";
+        if (userId != nil) {
+            strUserId = [userId UTF8String];
+        }
+        LSLCScheduleInviteItem* scheduleMsgItem = [LSLCLiveChatItem2OCObj getLiveChatScheduleInviteItem:scheduleItem];
+        
+        msgItem->SetScheduleInviteItem(scheduleMsgItem);
+
+        LSLCMessageItem *msgScheduleItem = mILSLiveChatManManager->SendScheduleInvite(strUserId, msgItem);
+        if (NULL != msgScheduleItem) {
+            msgObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:msgScheduleItem];
+        }
+    }
+    return msgObj;
+}
+
+-(LSLCLiveChatMsgItemObject *)acceptOrDeclineScheduleInvite:(LSLCLiveChatMsgItemObject * _Nonnull)infoItem {
+    LSLCLiveChatMsgItemObject *msgObj = nil;
+    if (NULL != mILSLiveChatManManager) {
+        LSLCMessageItem* item = [LSLCLiveChatItem2OCObj getLiveChatMsgItem:infoItem] ;
+
+        LSLCMessageItem *msgScheduleItem =  mILSLiveChatManManager->SendScheduleInvite(item->m_fromId, item);
+        if (NULL != msgScheduleItem) {
+            msgObj = [LSLCLiveChatItem2OCObj getLiveChatMsgItemObject:msgScheduleItem];
+        }
+    }
+    return msgObj;
 }
 
 

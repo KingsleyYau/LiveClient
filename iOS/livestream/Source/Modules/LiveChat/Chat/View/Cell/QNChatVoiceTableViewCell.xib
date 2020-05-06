@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,22 +13,22 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="55.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1n-dU-IHW">
                         <rect key="frame" x="104" y="11" width="8" height="8"/>
                         <color key="backgroundColor" red="1" green="0.20679030879999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="8" id="bO8-df-I2L"/>
-                            <constraint firstAttribute="height" constant="8" id="t1E-nV-ViO"/>
+                            <constraint firstAttribute="height" constant="8" id="QeK-P8-b4f"/>
+                            <constraint firstAttribute="width" constant="8" id="VFV-N9-8ju"/>
                         </constraints>
                     </view>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Chat_Anchor_Rectangle" translatesAutoresizingMaskIntoConstraints="NO" id="6mV-65-3GU">
-                        <rect key="frame" x="16" y="8" width="80" height="25"/>
+                        <rect key="frame" x="16" y="8" width="80" height="40"/>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bc4-qI-XnC">
-                        <rect key="frame" x="16" y="8" width="80" height="25"/>
+                        <rect key="frame" x="16" y="8" width="80" height="40"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="Kgu-k1-ajo"/>
@@ -46,20 +43,19 @@
                         </connections>
                     </button>
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="heW-Ab-LU4">
-                        <rect key="frame" x="116" y="10.5" width="20" height="20"/>
+                        <rect key="frame" x="116" y="18" width="20" height="20"/>
                     </activityIndicatorView>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="r1n-dU-IHW" firstAttribute="leading" secondItem="6mV-65-3GU" secondAttribute="trailing" constant="8" id="1XY-Tv-dnG"/>
                     <constraint firstItem="bc4-qI-XnC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="5gd-WH-pmQ"/>
                     <constraint firstItem="6mV-65-3GU" firstAttribute="leading" secondItem="bc4-qI-XnC" secondAttribute="leading" id="7jm-7d-iGb"/>
-                    <constraint firstItem="r1n-dU-IHW" firstAttribute="leading" secondItem="6mV-65-3GU" secondAttribute="trailing" constant="8" id="9Jp-EG-nAp"/>
+                    <constraint firstItem="r1n-dU-IHW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="EJr-0W-q82"/>
                     <constraint firstItem="6mV-65-3GU" firstAttribute="top" secondItem="bc4-qI-XnC" secondAttribute="top" id="G1L-0P-iqu"/>
                     <constraint firstItem="6mV-65-3GU" firstAttribute="bottom" secondItem="bc4-qI-XnC" secondAttribute="bottom" id="GbG-YC-JBe"/>
-                    <constraint firstItem="r1n-dU-IHW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="SaF-TC-YIS"/>
                     <constraint firstItem="6mV-65-3GU" firstAttribute="trailing" secondItem="bc4-qI-XnC" secondAttribute="trailing" id="TZN-6k-qIE"/>
                     <constraint firstItem="heW-Ab-LU4" firstAttribute="leading" secondItem="6mV-65-3GU" secondAttribute="trailing" constant="20" id="bKc-YJ-hGd"/>
                     <constraint firstAttribute="bottom" secondItem="bc4-qI-XnC" secondAttribute="bottom" constant="8" id="bxH-s2-Lh5"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="r1n-dU-IHW" secondAttribute="bottom" constant="31" id="gJp-LT-1uh"/>
                     <constraint firstItem="6mV-65-3GU" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="gcm-fv-QCT"/>
                     <constraint firstItem="heW-Ab-LU4" firstAttribute="centerY" secondItem="6mV-65-3GU" secondAttribute="centerY" id="m8q-QD-vKP"/>
                     <constraint firstItem="heW-Ab-LU4" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="r5c-cY-WYH"/>
@@ -75,7 +71,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="Chat_Anchor_Rectangle" width="17" height="25"/>
+        <image name="Chat_Anchor_Rectangle" width="17.5" height="25.5"/>
         <image name="LS_ChatVoiceLady_PlayIcon" width="20" height="20"/>
     </resources>
 </document>

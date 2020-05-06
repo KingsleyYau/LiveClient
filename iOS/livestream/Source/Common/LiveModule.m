@@ -56,7 +56,7 @@
 #import "LSPaymentManager.h"
 #import "QNContactManager.h"
 
-#import "LSSendSayHiViewController.h"
+#import "LSMinLiveManager.h"
 
 #define HTTP_AUTHOR @"test"
 #define HTTP_PASSWORD @"5179"
@@ -273,7 +273,6 @@ static LiveModule *gModule = nil;
 
 - (UIViewController *)mainVC {
     _moduleVC = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
-//    _moduleVC = [[LSSendSayHiViewController alloc] initWithNibName:nil bundle:nil];
     return _moduleVC;
 }
 
@@ -318,14 +317,21 @@ static LiveModule *gModule = nil;
     @synchronized(self) {
         self.sessionId = nil;
         self.manId = nil;
+        self.flowersGift = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-
+        
         if (type == LogoutTypeKick || type == LogoutTypeActive) {
-            [_moduleVC.view removeFromSuperview];
-            [_moduleVC removeFromParentViewController];
+             [[LSMinLiveManager manager]removeVC];
+             [[LiveGobalManager manager] dismissLiveRoomVC];
+            
+            [self.moduleVC.view removeFromSuperview];
+            [self.moduleVC removeFromParentViewController];
             _moduleVC = nil;
+            self.loginManager.loginItem.isShowStartNotice = YES;
+            self.loginManager.loginItem.isShowWillStartNotice = YES;
+            
         }
         BOOL kick = (type != LogoutTypeRelogin);
         [[LSLiveChatManagerOC manager] logoutUser:kick];
@@ -345,7 +351,7 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId anchorId:userId roomType:LiveRoomType_Private];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId anchorName:userName anchorId:userId roomType:LiveRoomType_Private];
         [[LiveMutexService service] openUrlByLive:url];
     });
 }
@@ -356,7 +362,7 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:inviteItem.roomId anchorId:inviteItem.oppositeId roomType:LiveRoomType_Private];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:inviteItem.roomId anchorName:inviteItem.oppositeNickName anchorId:inviteItem.oppositeId roomType:LiveRoomType_Private];
         [[LiveMutexService service] openUrlByLive:url];
     });
 }
@@ -368,8 +374,8 @@ static LiveModule *gModule = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前在直播模块
         if (_moduleVC.navigationController) {
-            // 当前主播私密邀请能否显示
-            if ([_liveGobalManager canShowInvite:anchorId] || !_liveGobalManager.isHangouting) {
+            // 当前主播私密邀请能否显示,正在多人互动邀请中不接私密邀请的推送
+            if ([_liveGobalManager canShowInvite:anchorId] && !_liveGobalManager.isHangouting) {
                 // 生成直播间跳转的URL
                 NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:inviteId anchorId:anchorId anchorName:nickName];
                 // 弹出通知

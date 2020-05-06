@@ -17,7 +17,7 @@
 - (void)tableViewWillBeginDragging;
 @end
 
-@interface MailTableView : UITableView <UITableViewDataSource, UITableViewDelegate>
+@interface MailTableView : LSTableView <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) NSArray *items;
 

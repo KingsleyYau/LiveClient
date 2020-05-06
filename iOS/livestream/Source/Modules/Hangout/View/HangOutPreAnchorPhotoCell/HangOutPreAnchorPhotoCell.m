@@ -42,12 +42,12 @@
     self.nameLabel.text = item.nickName;
     // 请求主播个人信息
     if (item.photoUrl.length > 0) {
-        [self.imageLoader loadImageFromCache:self.headImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+        [self.imageLoader loadImageFromCache:self.headImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
     } else {
         WeakObject(self, weakSelf);
-        self.headImageView.image = [UIImage imageNamed:@"Default_Img_Lady_Circyle"];
+        self.headImageView.image = LADYDEFAULTIMG;
         [[LSUserInfoManager manager] getUserInfo:item.anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
-            [weakSelf.imageLoader loadImageFromCache:weakSelf.headImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+            [weakSelf.imageLoader loadImageFromCache:weakSelf.headImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
         }];
     }
 }

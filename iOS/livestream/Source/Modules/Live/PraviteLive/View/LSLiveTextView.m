@@ -99,6 +99,10 @@
     [self setNeedsDisplay];
 }
 
+- (void)setPlaceholderText:(NSString *)placeholder {
+    
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
     if (object == self && [keyPath isEqualToString:@"text"]) {
         // 刷新界面
@@ -172,8 +176,8 @@
         //如果文字内容高度没有超过textView的高度
         if(contentSize.height <= self.frame.size.height) {
             //textView的高度减去文字高度除以2就是Y方向的偏移量，也就是textView的上内边距
-            //            CGFloat offsetY = (self.frame.size.height - contentSize.height) / 2;
-            offset = UIEdgeInsetsMake(0, 0, 0, 0);
+            CGFloat offsetY = (self.frame.size.height - contentSize.height) / 2;
+            offset = UIEdgeInsetsMake(0, 0, offsetY, 0);
             [self setContentInset:offset];
         }
         

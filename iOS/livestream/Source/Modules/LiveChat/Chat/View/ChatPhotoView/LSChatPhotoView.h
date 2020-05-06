@@ -25,7 +25,7 @@
 @interface LSChatPhotoView : UIView<UICollectionViewDelegate, UICollectionViewDataSource>
 
 
-@property (weak, nonatomic) IBOutlet UICollectionView* chatPhotoCollectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView* chatPhotoCollectionView;
 
 @property (weak, nonatomic) IBOutlet UIButton *photoCamBtn;
 @property (weak, nonatomic) IBOutlet UIButton *photoAlbumBtn;

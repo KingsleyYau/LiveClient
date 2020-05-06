@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "QNIniviteListTableViewCell.h"
+
 @class QNInviteListTableView;
 @protocol QNInviteListTableViewDelegate <NSObject>
 @optional
@@ -15,7 +16,7 @@
 - (void)tableView:(QNInviteListTableView *)tableView didSelectContact:(LSLadyRecentContactObject *)item;
 
 @end
-@interface QNInviteListTableView : UITableView<UITableViewDelegate,UITableViewDataSource>
+@interface QNInviteListTableView : LSTableView<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, weak)  id<QNInviteListTableViewDelegate> tableViewDelegate;
 @property (nonatomic, retain) NSArray *items;
 @end

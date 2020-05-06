@@ -17,7 +17,7 @@
 
 @interface HotHeadView : UIView
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 @property (strong, nonatomic) NSArray *iconArray;
 @property (strong, nonatomic) NSArray *titleArray;

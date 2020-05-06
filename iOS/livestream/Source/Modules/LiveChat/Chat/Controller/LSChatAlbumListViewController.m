@@ -16,7 +16,7 @@
 #import "LSChatPhotoPreviewViewController.h"
 @interface LSChatAlbumListViewController ()<UICollectionViewDelegate, UICollectionViewDataSource,ChatPhotoDataManagerDelegate>
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @property (nonatomic, strong) QNChatTitleView *titleView;
 @property (nonatomic, strong) NSArray * array;
 @end

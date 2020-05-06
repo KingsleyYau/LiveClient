@@ -1,0 +1,20 @@
+
+/* Class = "UILabel"; text = "Request (ID:S12345678) has been accepted.Check request details here>"; ObjectID = "8VG-nj-0Rg"; */
+"8VG-nj-0Rg.text" = "Request (ID:S12345678) has been accepted.Check request details here>";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "XPC-PP-6sv"; */
+"XPC-PP-6sv.text" = "Label";
+
+"REQUEST_CONFIRMED" = "Congrats! Request accepted!";
+"REQUEST_DECLINED" = "Sorry, request decline!";
+
+"INVITE_CONFIRMED" = "Well Done!";
+"INVITE_DECLINED" = "Request decline!";
+
+"Request" = "Request";
+"ScheduleID" = " (ID:%@) ";
+"Declined_Tip" = "has been declined.Check request details ";
+"Accepted_Tip" = "has been accepted.Check request details ";
+"Here" = "here>";
+
+

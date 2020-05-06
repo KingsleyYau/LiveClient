@@ -59,6 +59,7 @@
 		506143D6219A700300B7631F /* LSLCLiveChatEmotionItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506143B8219A700300B7631F /* LSLCLiveChatEmotionItemObject.m */; };
 		506143D7219A700300B7631F /* LSLCLiveChatTextItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506143BB219A700300B7631F /* LSLCLiveChatTextItemObject.m */; };
 		506143D8219A700300B7631F /* LSLCLiveChatMsgPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 506143BC219A700300B7631F /* LSLCLiveChatMsgPhotoItem.m */; };
+		FA1304192440093E007577C4 /* LSLCScheduleInviteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA1304172440093E007577C4 /* LSLCScheduleInviteItem.cpp */; };
 		FA3F9486219D174B001B8B60 /* LSLCCustomItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3F944F219D1741001B8B60 /* LSLCCustomItem.cpp */; };
 		FA3F9487219D174B001B8B60 /* LSLCPhotoDownloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3F9450219D1741001B8B60 /* LSLCPhotoDownloader.cpp */; };
 		FA3F9488219D174B001B8B60 /* LSLCUserItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3F9452219D1741001B8B60 /* LSLCUserItem.cpp */; };
@@ -201,9 +202,15 @@
 		FA8C007321F85DD700211ACA /* LSLCAutoInviteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA8C007221F85DD700211ACA /* LSLCAutoInviteItem.cpp */; };
 		FA90B60A2199936A00E01F2F /* LSLiveChatManagerOC.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA90B5ED2199936900E01F2F /* LSLiveChatManagerOC.mm */; };
 		FA952C9D223B8B1100546CA2 /* LSLCLiveChatMsgVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FA952C9C223B8B1100546CA2 /* LSLCLiveChatMsgVideoItem.m */; };
+		FA96C314243C69430060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA96C310243C69420060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.cpp */; };
+		FA96C315243C69430060EABB /* LSLiveChatSendScheduleInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA96C312243C69430060EABB /* LSLiveChatSendScheduleInviteTask.cpp */; };
 		FAB9F3CD21FE9D9000B12257 /* LSLCAutoInviteInviteManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB9F3CC21FE9D9000B12257 /* LSLCAutoInviteInviteManager.cpp */; };
 		FAB9F3D721FF00B800B12257 /* LSLCNormalInviteManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB9F3D621FF00B800B12257 /* LSLCNormalInviteManager.cpp */; };
+		FAC2925B243D7AC50022599E /* LSLCLiveChatScheduleMsgItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC29259243D7AC40022599E /* LSLCLiveChatScheduleMsgItemObject.m */; };
+		FAC2925E243D7DCD0022599E /* LSLCLiveChatScheduleInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC2925D243D7DCC0022599E /* LSLCLiveChatScheduleInfoItemObject.m */; };
 		FAC6F08B2244C969007ED9D2 /* LSLCRecentVideoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC6F08A2244C968007ED9D2 /* LSLCRecentVideoItemObject.m */; };
+		FACAA6462446DF420057BB19 /* LSLCScheduleInviteReplyItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACAA6452446DF420057BB19 /* LSLCScheduleInviteReplyItem.cpp */; };
+		FACAA6492446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FACAA6482446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.m */; };
 		FAE3403722DC27C400A5A54C /* LSSendInviteMsgTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE3403622DC27C400A5A54C /* LSSendInviteMsgTask.cpp */; };
 /* End PBXBuildFile section */
 
@@ -377,6 +384,9 @@
 		506143BC219A700300B7631F /* LSLCLiveChatMsgPhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCLiveChatMsgPhotoItem.m; sourceTree = "<group>"; };
 		506143BD219A700300B7631F /* LSLCLiveChatItem2OCObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCLiveChatItem2OCObj.h; sourceTree = "<group>"; };
 		50F7838D2195195700F6B626 /* libLiveChatLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLiveChatLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA1304172440093E007577C4 /* LSLCScheduleInviteItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCScheduleInviteItem.cpp; sourceTree = "<group>"; };
+		FA1304182440093E007577C4 /* LSLCScheduleInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCScheduleInviteItem.h; sourceTree = "<group>"; };
+		FA1433872449510200EE7D11 /* LSLCLiveScheduleSessionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCLiveScheduleSessionItem.h; sourceTree = "<group>"; };
 		FA3F944E219D1741001B8B60 /* LSLCVoiceItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCVoiceItem.h; sourceTree = "<group>"; };
 		FA3F944F219D1741001B8B60 /* LSLCCustomItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCCustomItem.cpp; sourceTree = "<group>"; };
 		FA3F9450219D1741001B8B60 /* LSLCPhotoDownloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCPhotoDownloader.cpp; sourceTree = "<group>"; };
@@ -433,6 +443,7 @@
 		FA3F9483219D174A001B8B60 /* LSLCVideoDownloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCVideoDownloader.cpp; sourceTree = "<group>"; };
 		FA3F9484219D174B001B8B60 /* LSLCTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCTextManager.h; sourceTree = "<group>"; };
 		FA3F9485219D174B001B8B60 /* LSLCMagicIconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCMagicIconDownloader.h; sourceTree = "<group>"; };
+		FA59045F2445507D00CC25CF /* LSLCHttpScheduleInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCHttpScheduleInviteItem.h; sourceTree = "<group>"; };
 		FA620D1621F719E000F43C8B /* LSLCAutoInviteFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCAutoInviteFilter.h; sourceTree = "<group>"; };
 		FA620D1721F719E100F43C8B /* LSLCAutoInviteFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCAutoInviteFilter.cpp; sourceTree = "<group>"; };
 		FA6F0261225F10BE004C3C98 /* ILSLiveChatErrCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILSLiveChatErrCode.h; sourceTree = "<group>"; };
@@ -671,12 +682,26 @@
 		FA90B5EE2199936900E01F2F /* LSLiveChatManagerOC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLiveChatManagerOC.h; sourceTree = "<group>"; };
 		FA952C9B223B8B1100546CA2 /* LSLCLiveChatMsgVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCLiveChatMsgVideoItem.h; sourceTree = "<group>"; };
 		FA952C9C223B8B1100546CA2 /* LSLCLiveChatMsgVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCLiveChatMsgVideoItem.m; sourceTree = "<group>"; };
+		FA96C30E243C5B230060EABB /* LSLCScheduleInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCScheduleInfoItem.h; sourceTree = "<group>"; };
+		FA96C30F243C5B230060EABB /* LSLCScheduleMsgItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCScheduleMsgItem.h; sourceTree = "<group>"; };
+		FA96C310243C69420060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLiveChatRecvScheduleInviteNoticeTask.cpp; sourceTree = "<group>"; };
+		FA96C311243C69430060EABB /* LSLiveChatSendScheduleInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLiveChatSendScheduleInviteTask.h; sourceTree = "<group>"; };
+		FA96C312243C69430060EABB /* LSLiveChatSendScheduleInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLiveChatSendScheduleInviteTask.cpp; sourceTree = "<group>"; };
+		FA96C313243C69430060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLiveChatRecvScheduleInviteNoticeTask.h; sourceTree = "<group>"; };
 		FAB9F3CB21FE9D8F00B12257 /* LSLCAutoInviteInviteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCAutoInviteInviteManager.h; sourceTree = "<group>"; };
 		FAB9F3CC21FE9D9000B12257 /* LSLCAutoInviteInviteManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCAutoInviteInviteManager.cpp; sourceTree = "<group>"; };
 		FAB9F3D521FF00B700B12257 /* LSLCNormalInviteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCNormalInviteManager.h; sourceTree = "<group>"; };
 		FAB9F3D621FF00B800B12257 /* LSLCNormalInviteManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCNormalInviteManager.cpp; sourceTree = "<group>"; };
+		FAC29259243D7AC40022599E /* LSLCLiveChatScheduleMsgItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCLiveChatScheduleMsgItemObject.m; sourceTree = "<group>"; };
+		FAC2925A243D7AC50022599E /* LSLCLiveChatScheduleMsgItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCLiveChatScheduleMsgItemObject.h; sourceTree = "<group>"; };
+		FAC2925C243D7DCC0022599E /* LSLCLiveChatScheduleInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCLiveChatScheduleInfoItemObject.h; sourceTree = "<group>"; };
+		FAC2925D243D7DCC0022599E /* LSLCLiveChatScheduleInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCLiveChatScheduleInfoItemObject.m; sourceTree = "<group>"; };
 		FAC6F0892244C968007ED9D2 /* LSLCRecentVideoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCRecentVideoItemObject.h; sourceTree = "<group>"; };
 		FAC6F08A2244C968007ED9D2 /* LSLCRecentVideoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCRecentVideoItemObject.m; sourceTree = "<group>"; };
+		FACAA6442446DF410057BB19 /* LSLCScheduleInviteReplyItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCScheduleInviteReplyItem.h; sourceTree = "<group>"; };
+		FACAA6452446DF420057BB19 /* LSLCScheduleInviteReplyItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSLCScheduleInviteReplyItem.cpp; sourceTree = "<group>"; };
+		FACAA6472446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLCLiveChatScheduleReplyItemObject.h; sourceTree = "<group>"; };
+		FACAA6482446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLCLiveChatScheduleReplyItemObject.m; sourceTree = "<group>"; };
 		FAE3403522DC27C400A5A54C /* LSSendInviteMsgTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSendInviteMsgTask.h; sourceTree = "<group>"; };
 		FAE3403622DC27C400A5A54C /* LSSendInviteMsgTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSSendInviteMsgTask.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -768,6 +793,8 @@
 		5061417C219A6E4D00B7631F /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FA1433872449510200EE7D11 /* LSLCLiveScheduleSessionItem.h */,
+				FA59045F2445507D00CC25CF /* LSLCHttpScheduleInviteItem.h */,
 				50614199219A6E4D00B7631F /* LSLCAdvert.h */,
 				50614196219A6E4D00B7631F /* LSLCCheckServerItem.h */,
 				5061418E219A6E4D00B7631F /* LSLCCoupon.h */,
@@ -811,6 +838,10 @@
 		5061429B219A6E4D00B7631F /* livechatmanmanager */ = {
 			isa = PBXGroup;
 			children = (
+				FACAA6452446DF420057BB19 /* LSLCScheduleInviteReplyItem.cpp */,
+				FACAA6442446DF410057BB19 /* LSLCScheduleInviteReplyItem.h */,
+				FA1304172440093E007577C4 /* LSLCScheduleInviteItem.cpp */,
+				FA1304182440093E007577C4 /* LSLCScheduleInviteItem.h */,
 				FA6F0261225F10BE004C3C98 /* ILSLiveChatErrCode.h */,
 				FA8A60FB225C3140005EAF92 /* LSLiveChatEnumDefine.cpp */,
 				FA8A60FC225C3141005EAF92 /* LSLiveChatEnumDefine.h */,
@@ -915,6 +946,12 @@
 		5061438F219A700300B7631F /* ImModel */ = {
 			isa = PBXGroup;
 			children = (
+				FACAA6472446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.h */,
+				FACAA6482446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.m */,
+				FAC2925C243D7DCC0022599E /* LSLCLiveChatScheduleInfoItemObject.h */,
+				FAC2925D243D7DCC0022599E /* LSLCLiveChatScheduleInfoItemObject.m */,
+				FAC2925A243D7AC50022599E /* LSLCLiveChatScheduleMsgItemObject.h */,
+				FAC29259243D7AC40022599E /* LSLCLiveChatScheduleMsgItemObject.m */,
 				FA952C9B223B8B1100546CA2 /* LSLCLiveChatMsgVideoItem.h */,
 				FA952C9C223B8B1100546CA2 /* LSLCLiveChatMsgVideoItem.m */,
 				506143A9219A700300B7631F /* LSLCEmotionItemObject.h */,
@@ -1001,6 +1038,11 @@
 		FA85467B219C14B7007B9270 /* livechat */ = {
 			isa = PBXGroup;
 			children = (
+				FA96C310243C69420060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.cpp */,
+				FA96C313243C69430060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.h */,
+				FA96C312243C69430060EABB /* LSLiveChatSendScheduleInviteTask.cpp */,
+				FA96C311243C69430060EABB /* LSLiveChatSendScheduleInviteTask.h */,
+				FA96C30D243C5A8D0060EABB /* livechatItem */,
 				FAE3403622DC27C400A5A54C /* LSSendInviteMsgTask.cpp */,
 				FAE3403522DC27C400A5A54C /* LSSendInviteMsgTask.h */,
 				FA8547C2219C20BE007B9270 /* ILSLiveChatClient.cpp */,
@@ -1232,6 +1274,15 @@
 			path = "../../../../common-c-library/livechat";
 			sourceTree = "<group>";
 		};
+		FA96C30D243C5A8D0060EABB /* livechatItem */ = {
+			isa = PBXGroup;
+			children = (
+				FA96C30E243C5B230060EABB /* LSLCScheduleInfoItem.h */,
+				FA96C30F243C5B230060EABB /* LSLCScheduleMsgItem.h */,
+			);
+			path = livechatItem;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1291,6 +1342,7 @@
 			files = (
 				FA3F9490219D174B001B8B60 /* LSLCMagicIconDownloader.cpp in Sources */,
 				FA854897219C297B007B9270 /* LSLiveChatRecvWarningTask.cpp in Sources */,
+				FA1304192440093E007577C4 /* LSLCScheduleInviteItem.cpp in Sources */,
 				FA8547C9219C20C8007B9270 /* ILSLiveChatTransportPacketHandler.cpp in Sources */,
 				FA854894219C297B007B9270 /* LSLiveChatManFeeThemeTask.cpp in Sources */,
 				FA85487C219C297B007B9270 /* LSLiveChatRecvLadyAutoInviteStatusTask.cpp in Sources */,
@@ -1299,6 +1351,7 @@
 				FA854885219C297B007B9270 /* LSLiveChatRecvEmotionTask.cpp in Sources */,
 				FA85486F219C297B007B9270 /* LSLiveChatSendLadyVideoTask.cpp in Sources */,
 				506142EA219A6E4E00B7631F /* LSLiveChatRequestPaidController.cpp in Sources */,
+				FAC2925E243D7DCD0022599E /* LSLCLiveChatScheduleInfoItemObject.m in Sources */,
 				FA3F949D219D174B001B8B60 /* LSLCMessageItem.cpp in Sources */,
 				FA3F9488219D174B001B8B60 /* LSLCUserItem.cpp in Sources */,
 				FA3F948E219D174B001B8B60 /* LSLCContactManager.cpp in Sources */,
@@ -1312,7 +1365,9 @@
 				FA854895219C297B007B9270 /* LSLiveChatSendCamShareInviteTask.cpp in Sources */,
 				506143C5219A700300B7631F /* LSLCLiveChatWarningItemObject.m in Sources */,
 				FA85487F219C297B007B9270 /* LSLiveChatUploadDeviceTypeTask.cpp in Sources */,
+				FA96C314243C69430060EABB /* LSLiveChatRecvScheduleInviteNoticeTask.cpp in Sources */,
 				FA3F9489219D174B001B8B60 /* LSLCVideoManager.cpp in Sources */,
+				FACAA6492446E7A20057BB19 /* LSLCLiveChatScheduleReplyItemObject.m in Sources */,
 				FA854869219C297B007B9270 /* LSLiveChatRecvManCamShareStartTask.cpp in Sources */,
 				FA854862219C297B007B9270 /* LSLiveChatSendThemeRecommendTask.cpp in Sources */,
 				FA854795219C14B8007B9270 /* LSLiveChatGetSessionInfoWithManTask.cpp in Sources */,
@@ -1341,6 +1396,7 @@
 				FA85486E219C297B007B9270 /* LSLiveChatRecvManJoinOrExitConferenceTask.cpp in Sources */,
 				506142EF219A6E4E00B7631F /* LSLCLadyDetail.cpp in Sources */,
 				506142EB219A6E4E00B7631F /* LSLiveChatRequestFakeController.cpp in Sources */,
+				FA96C315243C69430060EABB /* LSLiveChatSendScheduleInviteTask.cpp in Sources */,
 				FA8547D3219C20C8007B9270 /* LSLiveChatTaskManager.cpp in Sources */,
 				FA8547CC219C20C8007B9270 /* ILSLiveChatSocketHandler.cpp in Sources */,
 				FA854785219C14B8007B9270 /* LSLiveChatGetAllPaidThemeTask.cpp in Sources */,
@@ -1382,6 +1438,7 @@
 				FA85486D219C297B007B9270 /* LSLiveChatShowPhotoTask.cpp in Sources */,
 				FA85485D219C297B007B9270 /* LSLiveChatRecvMagicIconTask.cpp in Sources */,
 				FA3F9495219D174B001B8B60 /* LSLCEmotionDownloader.cpp in Sources */,
+				FACAA6462446DF420057BB19 /* LSLCScheduleInviteReplyItem.cpp in Sources */,
 				5061436E219A6E4E00B7631F /* LSLiveChatManManager.cpp in Sources */,
 				FA3F9493219D174B001B8B60 /* LSLCPhotoItem.cpp in Sources */,
 				FA854799219C14B8007B9270 /* LSLiveChatEndTalkTask.cpp in Sources */,
@@ -1442,6 +1499,7 @@
 				506143D2219A700300B7631F /* LSLCLiveChatEmotionConfigItemObject.m in Sources */,
 				FA85478F219C14B8007B9270 /* LSLiveChatJniIntToType.cpp in Sources */,
 				506143C7219A700300B7631F /* LSLCLIveChatSendPhotoItem.m in Sources */,
+				FAC2925B243D7AC50022599E /* LSLCLiveChatScheduleMsgItemObject.m in Sources */,
 				FA85475A219C14B7007B9270 /* LSLiveChatGetSessionInfoTask.cpp in Sources */,
 				FA85486A219C297B007B9270 /* LSLiveChatRecvKickOfflineTask.cpp in Sources */,
 				FA854875219C297B007B9270 /* LSLiveChatRecvShowVideoTask.cpp in Sources */,

@@ -126,6 +126,17 @@ private:
     // 请求线程启动标记
     bool m_requestThreadStart;
     
+    private:
+    typedef map<long, LSLCUserItem*>        LCUserMap;        // 用户map表
+    private:
+    // 用户map表加锁
+    void LockUserMap();
+    // 用户map表解锁
+    void UnlockUserMap();
+    private:
+    LCUserMap        m_userMap;        // 用户map表
+    IAutoLock*        m_userMapLock;    // 用户map表锁
+    
     /******************************************* 定时任务处理 End *******************************************/
     
 public:
@@ -315,6 +326,8 @@ public:
     string GetMagicIconThumbPath(const string& magicIconId) override;
     // 发送邀请语
     bool SendInviteMessage(const string& userId, const string& message, const string& nickName) override;
+    // 发送预约邀请
+    LSLCMessageItem* SendScheduleInvite(const string& userId, LSLCMessageItem* msgItem) override;
     
     // --------- Camshare --------
     // 发送Camshare邀请
@@ -402,6 +415,8 @@ private:
     bool InsertFeeBackcall(LSLCMessageItem* item);
     // 对购买消息回调的处理
     void HandleFeebackcall(LSLCMessageItem* item);
+    // 获取某会话中预付费列表
+    void HandleGetSessionInviteList(LSLCUserItem* item);
     
     // ----------- 公共 ---------------------
     // 获取当前会话信息（用于发送时的上传私密，购买私密照，购买视频。 或者定时获取当前会话信息）
@@ -470,6 +485,8 @@ private:
 	virtual void OnPlayVideo(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, int ticket) override;
     virtual void  OnUploadPopLadyAutoInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& userId, const string& msg, const string& key, const string& inviteId) override;
     virtual void OnSendInviteMessage(const string& inUserId, const string& inMessage, LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& inviteId, const string& nickName) override;
+    // Alex, 发送预约邀请
+    virtual void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const LSLCScheduleInfoItem& item) override;
     
 	// 服务器主动请求
 	virtual void OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message,INVITE_TYPE inviteType) override;
@@ -492,6 +509,8 @@ private:
 	virtual void OnRecvShowVideo(const string& toId, const string& fromId, const string& fromName, const string& inviteId, const string& videoId, const string& sendId, bool charge, const string& videoDec, int ticket) override;
 	virtual void OnRecvMagicIcon(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& iconId) override;
     virtual void OnRecvAutoInviteMsg(const string& womanId, const string& manId, const string& key) override;
+    
+    virtual void OnRecvScheduleInviteNotice(const LSLCScheduleInfoItem& item)  override;
 
 	// ------------------- ILSLiveChatRequestLiveChatControllerCallback -------------------
 private:
@@ -507,6 +526,7 @@ private:
     //获取小高级表情配置回调 alex 2016-09-09
     virtual void OnGetMagicIconConfig(long requestId, bool success, const string& errnum, const string& errmsg,const LSLCMagicIconConfig& config) override;
     virtual void OnCheckPhoto(long requestId, bool success, const string& errnum, const string& errmsg, const string& sendId, bool isCharge) override;
+    virtual void OnGetSessionInviteList(long requestId, bool success, int errnum, const string& errmsg, const ChatScheduleSessionList& list) override;
     
 	// ------------------- ILSLiveChatRequestOtherControllerCallback -------------------
 private:

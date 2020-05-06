@@ -14,6 +14,7 @@
 #import "LiveModule.h"
 #import "DialogIconTips.h"
 #import "DialogTip.h"
+
 #define ROW_TYPE @"ROW_TYPE"
 #define ROW_SIZE @"ROW_SIZE"
 typedef enum {
@@ -24,7 +25,7 @@ typedef enum {
 @interface LSPushNoticeViewController ()<UITableViewDataSource,UITableViewDelegate,LSPushSettingTableViewCellDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *openSettingBtn;
 @property (weak, nonatomic) IBOutlet UIView *turnOnNoticeTipView;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, copy) NSArray* tableViewArray;
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 /** isPriMsgAppPush */

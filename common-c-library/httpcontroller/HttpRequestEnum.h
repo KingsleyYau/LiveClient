@@ -200,6 +200,16 @@ typedef enum {
     
     HTTP_LCC_ERR_GREETINGMESSAGE_TOO_LONG = 22120,              // 订单备注太长（22120）Sorry, the greeting message can not exceed 250 characters.'（15.12.生成订单）
     HTTP_LCC_ERR_ITEM_TOO_MUCH = 22121,                         // 当前购物车内准备赠送给该主播的该礼品数量已满（达到99），不可再添加（22121）ou can only add 1-99 items.（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
+    /*预付费直播*/
+    HTTP_LCC_ERR_SCHEDULE_ANCHOR_NO_PRIV = 17501,          // 发送预付费直播:主播无权限（17501）（用于17.3.发送预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM = 17502,          // 发送预付费直播:开始时间离现在不足24小时或超过14天（17502）（用于17.3.发送预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_NO_CREDIT = 17302,          // 发送预付费直播:男士信用点不足（17302）（用于17.3.发送预付费直播邀请 用于17.4.接受预付费直播邀请）
+    
+    HTTP_LCC_ERR_SCHEDULE_ACCEPTED_LESS_OR_EXPIRED = 17503,          // 接受预付费直播:开始时间离现在不足6小时或已过期（17503）（用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED = 17505,          // 接受预付费直播:该邀请已接受（17505）（用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED = 17506,          // 接受预付费直播:该邀请已拒绝（17506）（用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_CANCEL_LESS_OR_EXPIRED = 17504,          // 取消预付费直播:开始时间离现在不足6小时（17504）（用于17.6.取消预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_NO_READ_BEFORE = 17507,          // 没有阅读前不能接受或拒绝（This request was sent by mail.Please read this mail before accept or decline this request）（17507）（用于17.4.接受预付费直播邀请 用于17.5.拒绝预付费直播邀请）
     
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
@@ -1088,6 +1098,177 @@ inline int GetLSAdvertSpaceTypeToInt(LSAdvertSpaceType type) {
 
 inline LSAdvertSpaceType GetLSAdvertSpaceTypeWithInt(int value) {
     return (LSAD_SPACE_TYPE_BEGIN <= value && value < LSAD_SPACE_TYPE_END ? (LSAdvertSpaceType)value : LSAD_SPACE_TYPE_UNKNOW);
+}
+
+//优惠折扣类型
+typedef enum {
+    LSDISCOUNTTYPE_UNKNOW = 0,              // 未知
+    LSDISCOUNTTYPE_BIRTHDAY = 1,            // 主播生日
+    LSDISCOUNTTYPE_HOLIDAY = 2,             // 节日活动
+    LSDISCOUNTTYPE_COMMON,                  // 常规活动
+    LSDISCOUNTTYPE_BEGIN = LSDISCOUNTTYPE_UNKNOW,    // 有效起始值
+    LSDISCOUNTTYPE_END = LSDISCOUNTTYPE_COMMON,    // 有效结束值
+} LSDiscountType;
+inline LSDiscountType GetLSDiscountTypeWithInt(int value) {
+    return (LSDISCOUNTTYPE_BEGIN <= value && value <= LSDISCOUNTTYPE_END ? (LSDiscountType)value : LSDISCOUNTTYPE_UNKNOW);
+}
+
+//优惠折扣类型
+typedef enum {
+    LSPAIDCALLTYPE_UNKNOW = 0,              // 未知
+    LSPAIDCALLTYPE_NORMAL = 1,            // 正常流程请求
+    LSPAIDCALLTYPE_UNUSUAL = 2,             // 异常后补
+    LSPAIDCALLTYPE_BEGIN = LSPAIDCALLTYPE_UNKNOW,    // 有效起始值
+    LSPAIDCALLTYPE_END = LSPAIDCALLTYPE_UNUSUAL,    // 有效结束值
+} LSPaidCallType;
+inline LSPaidCallType GetLSPaidCallTypeWithInt(int value) {
+    return (LSPAIDCALLTYPE_BEGIN <= value && value <= LSPAIDCALLTYPE_END ? (LSPaidCallType)value : LSPAIDCALLTYPE_UNKNOW);
+}
+
+typedef enum LSPayType {
+    LSPAYTYPE_GOOGLEPLAY = 0,     // Google Play
+    LSPAYTYPE_QNPLAY = 1,         // 使用QN支付
+    LSPAYTYPE_BEGIN = LSPAYTYPE_GOOGLEPLAY,
+    LSPAYTYPE_END = LSPAYTYPE_QNPLAY
+}LSPayType;
+
+// int 转换 UserType
+inline LSPayType GetIntToLSPayType(int value) {
+    return LSPAYTYPE_BEGIN <= value && value <= LSPAYTYPE_END ? (LSPayType)value : LSPAYTYPE_QNPLAY;
+}
+
+typedef enum LSScheduleInviteType {
+    LSSCHEDULEINVITETYPE_UNKOWN = 0,            // 未知
+    LSSCHEDULEINVITETYPE_EMF = 1,               // emf
+    LSSCHEDULEINVITETYPE_LIVECHAT = 2,          // livechat
+    LSSCHEDULEINVITETYPE_PUBLICLIVE = 3,        // 公开直播
+    LSSCHEDULEINVITETYPE_PRIVATELIVE = 4,       // 私密直播间
+    LSSCHEDULEINVITETYPE_BEGIN = LSSCHEDULEINVITETYPE_UNKOWN,
+    LSSCHEDULEINVITETYPE_END = LSSCHEDULEINVITETYPE_PRIVATELIVE
+}LSScheduleInviteType;
+
+// int 转换 UserType
+inline LSScheduleInviteType GetIntToLSScheduleInviteType(int value) {
+    return LSSCHEDULEINVITETYPE_BEGIN < value && value <= LSSCHEDULEINVITETYPE_END ? (LSScheduleInviteType)value : LSSCHEDULEINVITETYPE_UNKOWN;
+}
+
+// int 转换 LSScheduleInviteType
+inline int GetLSScheduleInviteTypeToInt(LSScheduleInviteType type) {
+    int result = 0;
+    switch (type) {
+        case LSSCHEDULEINVITETYPE_EMF:
+            result = 1;
+            break;
+        case LSSCHEDULEINVITETYPE_LIVECHAT:
+            result = 2;
+            break;
+        case LSSCHEDULEINVITETYPE_PUBLICLIVE:
+            result = 3;
+            break;
+        case LSSCHEDULEINVITETYPE_PRIVATELIVE:
+            result = 4;
+            break;
+            
+        default:
+            break;
+    }
+    return result;
+}
+
+typedef enum LSScheduleInviteStatus {
+    LSSCHEDULEINVITESTATUS_UNKOWN = 0,            // 未知
+    LSSCHEDULEINVITESTATUS_PENDING = 1,          // Pending
+    LSSCHEDULEINVITESTATUS_CONFIRMED = 2,          // Confirmed
+    LSSCHEDULEINVITESTATUS_CANCELED = 3,        // Canceled
+    LSSCHEDULEINVITESTATUS_EXPIRED = 4,       // Expired
+    LSSCHEDULEINVITESTATUS_COMPLETED = 5,       // Completed
+    LSSCHEDULEINVITESTATUS_DECLINED = 6,       // Declined
+    LSSCHEDULEINVITESTATUS_MISSED = 7,       // Missed
+    LSSCHEDULEINVITESTATUS_BEGIN = LSSCHEDULEINVITESTATUS_UNKOWN,
+    LSSCHEDULEINVITESTATUS_END = LSSCHEDULEINVITESTATUS_MISSED
+}LSScheduleInviteStatus;
+
+// int 转换 UserType
+inline LSScheduleInviteStatus GetIntToLSScheduleInviteStatus(int value) {
+    return LSSCHEDULEINVITESTATUS_BEGIN < value && value <= LSSCHEDULEINVITESTATUS_END ? (LSScheduleInviteStatus)value : LSSCHEDULEINVITESTATUS_UNKOWN;
+}
+
+// int 转换 LSScheduleInviteType
+inline int GetLSScheduleInviteStatusToInt(LSScheduleInviteStatus type) {
+    int result = 0;
+    switch (type) {
+        case LSSCHEDULEINVITESTATUS_PENDING:
+            result = 1;
+            break;
+        case LSSCHEDULEINVITESTATUS_CONFIRMED:
+            result = 2;
+            break;
+        case LSSCHEDULEINVITESTATUS_CANCELED:
+            result = 3;
+            break;
+        case LSSCHEDULEINVITESTATUS_EXPIRED:
+            result = 4;
+            break;
+        case LSSCHEDULEINVITESTATUS_COMPLETED:
+            result = 5;
+            break;
+        case LSSCHEDULEINVITESTATUS_DECLINED:
+            result = 6;
+            break;
+        case LSSCHEDULEINVITESTATUS_MISSED:
+            result = 7;
+            break;
+            
+        default:
+            break;
+    }
+    return result;
+}
+
+typedef enum LSScheduleSendFlagType {
+    LSSCHEDULESENDFLAGTYPE_ALL = 0,            // 全部
+    LSSCHEDULESENDFLAGTYPE_MAN = 1,          // 男士
+    LSSCHEDULESENDFLAGTYPE_ANCHOR = 2,          // 主播
+    LSSCHEDULESENDFLAGTYPE_BEGIN = LSSCHEDULESENDFLAGTYPE_ALL,
+    LSSCHEDULESENDFLAGTYPE_END = LSSCHEDULESENDFLAGTYPE_ANCHOR
+}LSScheduleSendFlagType;
+
+// int 转换 UserType
+inline LSScheduleSendFlagType GetIntToLSScheduleSendFlagType(int value) {
+    return LSSCHEDULESENDFLAGTYPE_BEGIN <= value && value <= LSSCHEDULESENDFLAGTYPE_END ? (LSScheduleSendFlagType)value : LSSCHEDULESENDFLAGTYPE_ALL;
+}
+
+// int 转换 LSScheduleInviteType
+inline int GetLSScheduleSendFlagTypeToInt(LSScheduleSendFlagType type) {
+    int result = 0;
+    switch (type) {
+        case LSSCHEDULESENDFLAGTYPE_ALL:
+            result = 0;
+            break;
+        case LSSCHEDULESENDFLAGTYPE_MAN:
+            result = 1;
+            break;
+        case LSSCHEDULESENDFLAGTYPE_ANCHOR:
+            result = 2;
+            break;
+            
+        default:
+            break;
+    }
+    return result;
+}
+
+typedef enum LSScheduleStatus {
+    LSSCHEDULESTATUS_NOSCHEDULE = 0,            // 无预约
+    LSSCHEDULESTATUS_SHOWED = 1,          // 可开播
+    LSSCHEDULESTATUS_SHOWING = 2,          // 在30分钟内即将开播
+    LSSCHEDULESTATUS_BEGIN = LSSCHEDULESTATUS_NOSCHEDULE,
+    LSSCHEDULESTATUS_END = LSSCHEDULESTATUS_SHOWING
+}LSScheduleStatus;
+
+// int 转换 UserType
+inline LSScheduleStatus GetIntToLSScheduleStatus(int value) {
+    return LSSCHEDULESTATUS_BEGIN <= value && value <= LSSCHEDULESTATUS_END ? (LSScheduleStatus)value : LSSCHEDULESTATUS_NOSCHEDULE;
 }
 
 #endif

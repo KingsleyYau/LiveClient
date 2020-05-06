@@ -18,6 +18,10 @@
     
     self.unreadView.layer.cornerRadius = self.unreadView.frame.size.height / 2;
     self.unreadView.layer.masksToBounds = YES;
+    
+    self.contentLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x333333) orDark:[UIColor whiteColor]];
+    
+    self.imageLoader = [LSImageViewLoader loader];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -45,7 +49,6 @@
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.unreadView.hidden = YES;
         cell.redLabel.hidden = YES;
-        
     }
     return cell;
 }
@@ -64,6 +67,18 @@
     } else {
         self.unreadView.hidden = YES;
         self.redLabel.hidden = YES;
+    }
+    if (self.offIcon.hidden) {
+        [self.offIcon removeFromSuperview];
+    }
+}
+
+- (void)showWillShowSoon:(BOOL)isSoon {
+    self.logoIcon.hidden = NO;
+    if (isSoon) {
+        self.logoIcon.image = [UIImage imageNamed:@"Setting_Soon"];
+    }else {
+        self.logoIcon.image = [UIImage imageNamed:@"Setting_Clock"];
     }
 }
 
@@ -88,6 +103,9 @@
         self.unreadView.hidden = YES;
         self.redLabel.hidden = YES;
     }
+    if (self.offIcon.hidden) {
+        [self.offIcon removeFromSuperview];
+    }
 }
 
 - (void)showUnreadPoint:(int)num {
@@ -97,6 +115,9 @@
     } else {
         self.unreadView.hidden = YES;
         self.redLabel.hidden = YES;
+    }
+    if (self.offIcon.hidden) {
+        [self.offIcon removeFromSuperview];
     }
 }
 

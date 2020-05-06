@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "No Schedule One-on-One at the moment."; ObjectID = "Y2y-DV-hgH"; */
+"Y2y-DV-hgH.text" = "No Schedule One-on-One at the moment.";
+
+"ACCEPT_TIP" = "Schedule One-on-One request has been accepted successfully.";
+
+"STARTED_TITLE" = "You have started One-on-One with:";
+"STARTED_NOW_TITLE" = "It is time to start One-on-One now!";
+"STARTED_WILL_TITLE" = "One-on-One will be started soon!";

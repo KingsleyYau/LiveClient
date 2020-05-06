@@ -11,6 +11,7 @@
 #import "LSProgramItemObject.h"
 #import "LSHttpAuthorityItemObject.h"
 #import "LSWomanListAdItemObject.h"
+#import "LSHomeScheduleItem.h"
 @interface LiveRoomInfoItemObject : NSObject
 {
 
@@ -54,6 +55,8 @@
 @property (nonatomic, assign) NSInteger addDate;
 /** 广告 */
 @property (nonatomic, strong) LSWomanListAdItemObject *adItem;
+/** schedule */
+@property (nonatomic, strong) LSHomeScheduleItem *schedule;
 
 // - (void)SetInterestWithIndex:(InterestType)type index:(int)index;
 

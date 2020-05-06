@@ -21,7 +21,7 @@
 
 @interface HangOutFinshViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewWidth;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UIButton *startAgainBtn;
@@ -131,13 +131,14 @@
     [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
     
     LSUserInfoModel *item = self.anchorArray.firstObject;
-    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:item.userId anchorName:item.nickName hangoutAnchorId:@"" hangoutAnchorName:@""];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" inviteAnchorId:item.userId inviteAnchorName:item.nickName recommendAnchorId:@"" recommendAnchorName:@""];
     [[LiveUrlHandler shareInstance] handleOpenURL:url];
 }
 
 - (IBAction)addCreditAciton:(id)sender {
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+    [[LiveModule module].serviceManager handleOpenURL:url];
+    
 }
 
 - (IBAction)closeAciton:(id)sender {

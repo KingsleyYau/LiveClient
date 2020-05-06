@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "LSRecommendAnchorItemObject.h"
+
 @protocol LSMycontactTableViewDelegate <NSObject>
 
 - (void)mycontactTableViewDidSelectItem:
 (LSRecommendAnchorItemObject *)item;    
-- (void)mycontactTableViewDidClickWatchNowBtn:
-(LSRecommendAnchorItemObject *)item;
 - (void)mycontactTableViewDidClickInviteBtn:
 (LSRecommendAnchorItemObject *)item;
 - (void)mycontactTableViewDidClickChatBtn:
@@ -24,7 +23,7 @@
 (LSRecommendAnchorItemObject *)item;
 @end
 
-@interface LSMycontactTableView : UITableView<UITableViewDataSource, UITableViewDelegate>
+@interface LSMycontactTableView : LSTableView<UITableViewDataSource, UITableViewDelegate>
 
 
 @property (nonatomic, weak) id <LSMycontactTableViewDelegate> tableViewDelegate;

@@ -122,7 +122,7 @@
         [[LiveUrlHandler shareInstance] handleOpenURL:url];
     } else {
         [self sendAutoInvitationHangoutLog:model.userId isAuto:model.isAuto];
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:model.userId anchorName:model.userName hangoutAnchorId:@"" hangoutAnchorName:@""];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" inviteAnchorId:model.userId inviteAnchorName:model.userName recommendAnchorId:@"" recommendAnchorName:@""];
         [[LiveUrlHandler shareInstance] handleOpenURL:url];
     }
 

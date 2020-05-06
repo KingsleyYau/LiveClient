@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,13 +20,12 @@
                             <rect key="frame" x="0.0" y="0.0" width="158" height="39"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Inbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KcT-DC-dZN">
-                                    <rect key="frame" x="20" y="8.5" width="42" height="21"/>
+                                    <rect key="frame" x="20" y="9" width="42" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Book_select_icon" translatesAutoresizingMaskIntoConstraints="NO" id="WAY-5S-neW">
-                                    <rect key="frame" x="130" y="16.5" width="8" height="5"/>
+                                    <rect key="frame" x="130" y="17" width="8" height="5"/>
                                 </imageView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uDC-SZ-9C3" userLabel="Inbox Button">
                                     <rect key="frame" x="0.0" y="0.0" width="158" height="39"/>
@@ -42,7 +38,7 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
                                 <constraint firstItem="KcT-DC-dZN" firstAttribute="leading" secondItem="BXD-I9-nzV" secondAttribute="leading" constant="20" id="Cvw-VQ-PKc"/>
                                 <constraint firstAttribute="bottom" secondItem="uDC-SZ-9C3" secondAttribute="bottom" id="Jxk-vs-bGt"/>
@@ -60,7 +56,6 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Outbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqp-9b-PrP">
                                     <rect key="frame" x="20" y="8.5" width="56" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Book_select_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7vv-Wi-ryi">
@@ -77,7 +72,7 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
                                 <constraint firstItem="izj-Ir-sjJ" firstAttribute="top" secondItem="Nf3-wA-yTe" secondAttribute="top" id="0fg-rr-Y17"/>
                                 <constraint firstAttribute="bottom" secondItem="izj-Ir-sjJ" secondAttribute="bottom" id="3Z1-vs-LK0"/>
@@ -90,7 +85,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.92549019607843142" green="0.93333333333333335" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
                         <constraint firstItem="Nf3-wA-yTe" firstAttribute="top" secondItem="BXD-I9-nzV" secondAttribute="bottom" constant="1" id="JoK-FJ-K9G"/>
                         <constraint firstAttribute="trailing" secondItem="Nf3-wA-yTe" secondAttribute="trailing" id="Min-Lw-sVM"/>
@@ -116,6 +111,7 @@
                 <outlet property="outboxIcon" destination="7vv-Wi-ryi" id="ePV-rL-ATC"/>
                 <outlet property="shadowView" destination="NTx-Xc-v5A" id="iMa-MJ-URv"/>
             </connections>
+            <point key="canvasLocation" x="134" y="155"/>
         </view>
     </objects>
     <resources>

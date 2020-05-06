@@ -28,6 +28,9 @@ typedef enum {
 @end
 
 @interface LSHomeListCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatLeading;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatTrailing;
 
 @property (nonatomic, weak) id<LSHomeListCellDelegate> cellDelegate;
 

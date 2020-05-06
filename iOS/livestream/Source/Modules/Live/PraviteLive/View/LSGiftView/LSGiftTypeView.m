@@ -83,16 +83,15 @@
     }
     
     if (self.oldRow == indexPath.row) {
-        cell.backgroundColor = COLOR_WITH_16BAND_RGB(0x330435);
-        cell.titleLabel.textColor = COLOR_WITH_16BAND_RGB(0xED85E8);
+        cell.backgroundColor = self.roomStyleItem.giftSegmentTitleColor;
+        cell.titleLabel.textColor = self.roomStyleItem.giftSegmentTitleSelectColor;
     }else {
         cell.backgroundColor = [UIColor clearColor];
-        cell.titleLabel.textColor = COLOR_WITH_16BAND_RGB(0x330435);
+        cell.titleLabel.textColor = self.roomStyleItem.giftSegmentTitleColor;
     }
      
     return result;
 }
-
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     

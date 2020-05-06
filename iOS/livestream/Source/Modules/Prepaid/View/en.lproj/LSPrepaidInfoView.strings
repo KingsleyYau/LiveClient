@@ -1,0 +1,19 @@
+
+/* Class = "UILabel"; text = "During the scheduled period, start One-on-One with the broadcaster and enjoy."; ObjectID = "IhI-6c-ZO4"; */
+"IhI-6c-ZO4.text" = "During the scheduled period, start One-on-One with the broadcaster and enjoy.";
+
+/* Class = "UILabel"; text = "After the schedule has been confirmed, credits will be charged as your pre-paid minutes according to the session duration."; ObjectID = "O6l-Pc-6a1"; */
+"O6l-Pc-6a1.text" = "After the schedule has been confirmed, credits will be charged as your pre-paid minutes according to the session duration.";
+
+/* Class = "UILabel"; text = "The longer the duration, the higher the discount you will have."; ObjectID = "Qp9-OW-aI5"; */
+"Qp9-OW-aI5.text" = "The longer the duration, the higher the discount you will have.";
+
+/* Class = "UILabel"; text = "Scheduling a One-on-One"; ObjectID = "rg2-Pk-32G"; */
+"rg2-Pk-32G.text" = "Scheduling a One-on-One";
+
+/* Class = "UILabel"; text = "      cheduled One-one-one is an easy way to make One-on-One video call schedules with the broadcasters, at the same time saving up to 30% of your credits."; ObjectID = "soi-O8-jCu"; */
+"soi-O8-jCu.text" = "      cheduled One-one-one is an easy way to make One-on-One video call schedules with the broadcasters, at the same time saving up to 30% of your credits.";
+
+"TITLE" = "      Scheduled One-one-one is an easy way to make One-on-One video call schedules with the broadcasters, at the same time %@ of your credits.";
+
+"discount_num" = "save up to %ld%%";

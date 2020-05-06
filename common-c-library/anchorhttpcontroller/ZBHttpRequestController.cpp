@@ -431,6 +431,38 @@ long long ZBHttpRequestController::GetCurrentRoomInfo(
     return requestId;
 }
 
+long long ZBHttpRequestController::ZBSetAutoInvitationPush(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 ZBSetPushType status,
+                                                 IRequestZBSetAutoInvitationPushCallback* callback
+                                                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    ZBHttpSetAutoInvitationPushTask* task = new ZBHttpSetAutoInvitationPushTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(status);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long ZBHttpRequestController::ZBManHandleBookingList(
                                                       HttpRequestManager *pHttpRequestManager,
                                                       ZBBookingListType type,

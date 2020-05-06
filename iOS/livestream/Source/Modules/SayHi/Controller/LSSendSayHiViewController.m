@@ -290,8 +290,8 @@
 - (void)didStartOneOnOneClick:(LSSayHiDialogViewController *)vc {
     [self.dialogVC.view removeFromSuperview];
     [self.dialogVC removeFromParentViewController];
-    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorId:self.anchorId roomType:LiveRoomType_Private];
-    [[LiveUrlHandler shareInstance] handleOpenURL:url];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:self.anchorName anchorId:self.anchorId roomType:LiveRoomType_Private];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 - (void)didSendMailClick:(LSSayHiDialogViewController *)vc {

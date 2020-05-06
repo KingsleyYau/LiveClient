@@ -9,13 +9,13 @@
 #import "LiveHeaderScrollview.h"
 #import "LiveHeaderScrollviewCell.h"
 #import "LSUserUnreadCountManager.h"
-
+#import "LSColor.h"
 #define BottomLineColor [UIColor colorWithRed:41/255 green:122/255 blue:243/255 alpha:1]
 
 @interface LiveHeaderScrollview ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 /** CollectionView **/
-@property (nonatomic, strong) UICollectionView *mainCollectionView;
+@property (nonatomic, strong) LSCollectionView *mainCollectionView;
 
 /** 记录当前选择下标 **/
 @property (nonatomic, assign) NSInteger currentRow;
@@ -57,7 +57,7 @@
 - (void)setUpCollectionView {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    _mainCollectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+    _mainCollectionView = [[LSCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
     [self addSubview:_mainCollectionView];
     _mainCollectionView.backgroundColor = [UIColor clearColor];
     _mainCollectionView.showsHorizontalScrollIndicator = NO;
@@ -110,7 +110,7 @@
     if (indexPath.row == self.currentRow) {
         cell.mainLB.textColor = Color(63, 167, 255, 1);
     } else {
-        cell.mainLB.textColor = [UIColor blackColor];
+        cell.mainLB.textColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
     }
     
     if (indexPath.row == self.dataSource.count - 1) {

@@ -1,0 +1,29 @@
+
+/* Class = "UILabel"; text = "6000"; ObjectID = "BRY-RS-EDB"; */
+"BRY-RS-EDB.text" = "6000";
+
+/* Class = "UILabel"; text = "You are sending a One-on-One request via the mail service, a normal mail charge (1 stamp or 0.8 credits) will be applied for the request. After having your request sent, you can view the mail in your outbox or Schedule One-on-One section."; ObjectID = "Cnl-AF-W0V"; */
+"Cnl-AF-W0V.text" = "You are sending a One-on-One request via the mail service, a normal mail charge (1 stamp or 0.8 credits) will be applied for the request. After having your request sent, you can view the mail in your outbox or Schedule One-on-One section.";
+
+/* Class = "UIButton"; normalTitle = "Learn how Schedule One-on-One works"; ObjectID = "E4y-82-IrG"; */
+"E4y-82-IrG.normalTitle" = "Learn how Schedule One-on-One works";
+
+/* Class = "UILabel"; text = "Mail Message"; ObjectID = "JNA-vb-KWZ"; */
+"JNA-vb-KWZ.text" = "Mail Message";
+
+/* Class = "UILabel"; text = "Send Request to"; ObjectID = "Kos-gX-iIj"; */
+"Kos-gX-iIj.text" = "Send Request to";
+
+/* Class = "UILabel"; text = "Schedule information"; ObjectID = "YDN-Xw-EJP"; */
+"YDN-Xw-EJP.text" = "Schedule information";
+
+/* Class = "UILabel"; text = "charaters left."; ObjectID = "fQ9-GX-Nxk"; */
+"fQ9-GX-Nxk.text" = "charaters left.";
+
+/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "wpY-EU-tTO"; */
+"wpY-EU-tTO.normalTitle" = "Send";
+//发信二次提示
+"SEND_MAIL_TIP" = "Do you wish to send this mail?";
+"UNAVAILABLE" = "Sorry, the broadcaster is not available to receive Schedule One-on-One requests at the moment.";
+"OUT_OF_TIME" = "The schedule start time must be 24 hours to 14 days further from now.";
+"NO_MAIL_TEXT" = "You haven't enter any message yet. Please enter your message before sending this mail.";

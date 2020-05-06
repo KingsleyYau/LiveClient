@@ -24,5 +24,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *notShowLabel;
 @property (weak, nonatomic) IBOutlet UIButton *getItBtn;
 @property (weak, nonatomic) IBOutlet UILabel *creditTips;
+@property (weak, nonatomic) IBOutlet UIView *lView;
+@property (weak, nonatomic) IBOutlet UIView *rView;
 @property (nonatomic, weak) id<LSHangoutListHeadViewDelegate> hangoutHeadDelegate;
 @end

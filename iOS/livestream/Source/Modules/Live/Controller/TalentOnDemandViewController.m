@@ -110,7 +110,7 @@
 {
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
     [self.navigationController.navigationBar setTitleTextAttributes:
      @{NSFontAttributeName : [UIFont boldSystemFontOfSize:15],
        NSForegroundColorAttributeName : [UIColor whiteColor]}];
@@ -379,7 +379,7 @@
     }
 }
 
-- (void)onRecvSendChatNotice:(NSString *_Nonnull)roomId level:(int)level fromId:(NSString *_Nonnull)fromId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg honorUrl:(NSString *_Nonnull)honorUrl {
+- (void)onRecvSendChatNotice:(NSString *_Nonnull)roomId level:(int)level fromId:(NSString *_Nonnull)fromId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg honorUrl:(NSString *_Nonnull)honorUrl avatarImg:(NSString * _Nonnull)avatarImg{
     self.talentInviteId = @"";
     self.checkedTalentName = @"";
 }

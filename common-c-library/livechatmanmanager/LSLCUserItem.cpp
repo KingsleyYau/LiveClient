@@ -37,6 +37,9 @@ LSLCUserItem::LSLCUserItem()
         m_statusLock->Init(IAutoLock::IAutoLockType_Recursive);
     }
     
+    m_isHistoryHttpSchedule = false;    // 是否获取了http的预付费
+    m_isHistoryImMsg = false;           // 是否获取了历史记录
+    
 }
 
 LSLCUserItem::~LSLCUserItem()
@@ -654,3 +657,133 @@ LSLCMessageItem* LSLCUserItem::GetMsgItemWithVideoId(const string& videoId, cons
     
     return msgItem;
 }
+
+
+// 获取预付费消息 （alex， 2020-04-10）
+LSLCMessageItem* LSLCUserItem::GetAndInsertScheduleMsgWithList(const string& inviteId, const string& scheduleId) {
+    LSLCMessageItem* msgItem = NULL;
+    
+    //LockMsgList();
+    bool bFlag = false;
+    for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
+        LSLCMessageItem* item = *itr;
+        
+        if( NULL != item->GetScheduleInviteItem() && item->GetScheduleInviteItem()->m_sessionId == scheduleId && item->m_inviteId == inviteId) {
+            msgItem = item;
+            bFlag = true;
+            break;
+        }
+    }
+
+    //UnlockMsgList();
+    
+    return msgItem;
+}
+
+// 获取和插入预付费消息 （alex， 2020-04-10）
+LSLCMessageItem* LSLCUserItem::GetAndInsertScheduleReplyWithList(const string& inviteId, const string& scheduleId) {
+    LSLCMessageItem* msgItem = NULL;
+    
+    //LockMsgList();
+    bool bFlag = false;
+    for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
+        LSLCMessageItem* item = *itr;
+        
+        if( NULL != item->GetScheduleInviteReplyItem() && item->GetScheduleInviteReplyItem()->m_scheduleId == scheduleId && item->m_inviteId == inviteId) {
+            msgItem = item;
+            bFlag = true;
+            break;
+        }
+    }
+
+    //UnlockMsgList();
+    
+    return msgItem;
+}
+
+// 合并预付费邀请记录 （alex， 2020-04-16)
+void LSLCUserItem::CombineScheduleInviteMessageItem() {
+    LockMsgList();
+    for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
+        LSLCMessageItem* item = *itr;
+        
+        if( NULL != item->GetScheduleInviteReplyItem()) {
+            LSLCMessageItem* msgItem = GetAndInsertScheduleMsgWithList(item->m_inviteId, item->GetScheduleInviteReplyItem()->m_scheduleId);
+            if (NULL != msgItem) {
+                msgItem->GetScheduleInviteItem()->m_type = (item->GetScheduleInviteReplyItem()->m_isScheduleAccept == true ? SCHEDULEINVITE_CONFIRMED : SCHEDULEINVITE_DECLINED);
+                msgItem->GetScheduleInviteItem()->m_durationAdjusted = item->GetScheduleInviteReplyItem()->m_durationAdjusted;
+                msgItem->GetScheduleInviteItem()->m_actionGmtTime = item->GetScheduleInviteReplyItem()->m_actionGmtTime;
+            }
+        }
+    }
+    UnlockMsgList();
+}
+
+// 合并http预付费邀请记录 （alex， 2020-04-16)
+void LSLCUserItem::CombineHttpScheduleInviteMessageItem() {
+    LockMsgList();
+    for(ChatScheduleSessionList::const_iterator itr = m_scheduleSessionList.begin(); itr != m_scheduleSessionList.end(); itr++) {
+        LSLCLiveScheduleSessionItem item = *itr;
+        
+       // if( NULL != item->GetScheduleInviteReplyItem()) {
+            LSLCMessageItem* msgItem = GetAndInsertScheduleMsgWithList(m_inviteId, item.inviteId);
+            if (NULL == msgItem) {
+                msgItem = new LSLCMessageItem;
+                SendType sendType = (item.sendFlag == 1 ? SendType_Send : SendType_Recv);
+                msgItem->Init(0
+                           , sendType
+                           , m_userId
+                           , m_userId
+                           , m_inviteId
+                           , StatusType_Finish);
+                LSLCScheduleInviteItem* scheduleItem = new LSLCScheduleInviteItem;
+                scheduleItem->InitHttpRecord(item);
+                msgItem->SetScheduleInviteItem(scheduleItem);
+                
+            }
+            
+            if (msgItem->GetScheduleInviteItem()->m_type != SCHEDULEINVITE_PENDING) {
+                LSLCMessageItem* replyMsgItem =  GetAndInsertScheduleReplyWithList(m_inviteId, item.inviteId);
+                if (NULL == replyMsgItem) {
+                    replyMsgItem = new LSLCMessageItem;
+                    SendType sendType = (item.sendFlag == 1 ? SendType_Send : SendType_Recv);
+                    replyMsgItem->Init(0
+                               , sendType
+                               , m_userId
+                               , m_userId
+                               , m_inviteId
+                               , StatusType_Finish);
+                    LSLCScheduleInviteReplyItem* scheduleReplyItem = new LSLCScheduleInviteReplyItem;
+                    bool isScheduleAccept = (msgItem->GetScheduleInviteItem()->m_type == SCHEDULEINVITE_CONFIRMED ? true : false);
+                    bool isScheduleFromMe = (item.sendFlag == 1 ? true : false);
+                    scheduleReplyItem->Init(item.inviteId, isScheduleAccept, isScheduleFromMe, item.statusUpdateTime, item.duration);
+                    replyMsgItem->SetScheduleInviteReplyItem(scheduleReplyItem);
+                }
+            }
+
+       // }
+    }
+    UnlockMsgList();
+}
+
+//
+//// 获取预付费消息为发送的 （alex， 2020-04-16）暂时只有获取历史记录调用
+//LSLCMessageItem* LSLCUserItem::GetScheduleMsgWithListWithSend(const string& inviteId, const string& scheduleId) {
+//    LSLCMessageItem* msgItem = NULL;
+//    
+//    LockMsgList();
+//    bool bFlag = false;
+//    for(LCMessageList::const_iterator itr = m_msgList.begin(); itr != m_msgList.end(); itr++) {
+//        LSLCMessageItem* item = *itr;
+//        
+//        if( NULL != item->GetScheduleInviteItem() && item->GetScheduleInviteItem()->m_sessionId == scheduleId && item->m_inviteId == inviteId && item->GetScheduleInviteItem()->m_type == SCHEDULEINVITE_PENDING) {
+//            msgItem = item;
+//            bFlag = true;
+//            break;
+//        }
+//    }
+//
+//    UnlockMsgList();
+//    
+//    return msgItem;
+//}

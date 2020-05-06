@@ -16,6 +16,7 @@
 #import "AnchorPersonalViewController.h"
 #import "LSShadowView.h"
 #import "QNRiskControlManager.h"
+#import "LiveModule.h"
 @interface LSMyContactsViewController ()<UIScrollViewRefreshDelegate,LSMycontactTableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *searchBtn;
 @property (weak, nonatomic) IBOutlet LSMycontactTableView *tableView;
@@ -120,15 +121,15 @@
 }
 
 - (void)mycontactTableViewDidClickInviteBtn:(LSRecommendAnchorItemObject *)item {
-    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorId:item.anchorId roomType:LiveRoomType_Private];
-    [[LiveUrlHandler shareInstance] handleOpenURL:url];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:item.anchorNickName anchorId:item.anchorId roomType:LiveRoomType_Private];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 - (void)mycontactTableViewDidClickChatBtn:(LSRecommendAnchorItemObject *)item {
     if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:self]) {
         QNChatViewController *vc = [[QNChatViewController alloc] initWithNibName:nil bundle:nil];
         vc.womanId = item.anchorId;
-        vc.photoURL = item.anchorCover;
+        vc.photoURL = item.anchorAvatar;
         vc.firstName = item.anchorNickName;
         [self.navigationController pushViewController:vc animated:YES];
     }

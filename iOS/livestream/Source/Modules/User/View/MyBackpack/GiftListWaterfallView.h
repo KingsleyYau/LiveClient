@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BackGiftItemObject.h"
 
-@interface GiftListWaterfallView : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@interface GiftListWaterfallView : LSCollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSArray *items;
 @end

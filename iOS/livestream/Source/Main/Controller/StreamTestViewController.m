@@ -55,8 +55,11 @@
     NSMutableArray *playerArray = [NSMutableArray array];
     for (int i = 0; i < self.playerPreviewArray.count; i++) {
         LiveStreamPlayer *player = [LiveStreamPlayer instance];
-        player.playView = self.playerPreviewArray[i];
-        player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
+//        player.playView = self.playerPreviewArray[i];
+//        player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
+        GPUImageView *videoView = self.playerPreviewArray[i];
+        videoView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
+        [player addPlayView:videoView];
         [playerArray addObject:player];
     }
     self.playerArray = playerArray;

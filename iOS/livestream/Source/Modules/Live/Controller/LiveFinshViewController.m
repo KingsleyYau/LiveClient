@@ -49,7 +49,7 @@ typedef enum ButtonStatus {
 
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (weak, nonatomic) IBOutlet UIView *recommandView;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomViewBottom;
 
 
@@ -131,7 +131,7 @@ typedef enum ButtonStatus {
     }
     
     // 请求并缓存主播信息
-    [self.roomUserInfoManager getUserInfo:self.liveRoom.userId
+    [self.roomUserInfoManager getLiverInfo:self.liveRoom.userId
                             finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     // 刷新女士头像
@@ -152,7 +152,7 @@ typedef enum ButtonStatus {
     [self.ladyImageLoader loadImageFromCache:self.headImageView
                                      options:SDWebImageRefreshCached
                                     imageUrl:self.liveRoom.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                            placeholderImage:LADYDEFAULTIMG
                                finishHandler:^(UIImage *image){
                                }];
 }
@@ -231,7 +231,9 @@ typedef enum ButtonStatus {
 - (void)showErrorButton:(ButtonStatus)Status {
     switch (Status) {
         case ButtonStatus_Book:{
-            self.bookPrivateBtn.hidden = !self.liveRoom.priv.isHasBookingAuth;
+//            self.bookPrivateBtn.hidden = !self.liveRoom.priv.isHasBookingAuth;
+            //关闭预约按钮,隐藏按钮
+            self.bookPrivateBtn.hidden = YES;
             self.viewHotBtn.hidden = YES;
             self.addCreditBtn.hidden = YES;
         }break;
@@ -421,8 +423,8 @@ typedef enum ButtonStatus {
 - (IBAction)addCreditAction:(id)sender {
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
     [nvc forceToDismissAnimated:NO completion:nil];
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+    NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 - (IBAction)pushShowDetailVC:(id)sender {

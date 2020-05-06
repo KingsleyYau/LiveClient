@@ -16,7 +16,7 @@
 @end
 
 @interface LSTopGiftView : UIView
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *button;
 @property (weak, nonatomic) id<LSTopGiftViewDelegate> delegate;
 @property (nonatomic, strong) LiveRoom *liveRoom;

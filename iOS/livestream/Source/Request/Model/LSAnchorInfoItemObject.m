@@ -19,6 +19,7 @@
         self.anchorType = ANCHORLEVELTYPE_UNKNOW;
         self.isLive = NO;
         self.introduction = @"";
+        self.anchorPriv = NULL;
     }
     return self;
 }
@@ -29,6 +30,7 @@
         self.anchorType = [coder decodeIntForKey:@"anchorType"];
         self.isLive = [coder decodeBoolForKey:@"isLive"];
         self.introduction = [coder decodeObjectForKey:@"introduction"];
+        self.anchorPriv = [coder decodeObjectForKey:@"anchorPriv"];
     }
     return self;
 }
@@ -38,6 +40,7 @@
     [coder encodeInt:self.anchorType forKey:@"anchorType"];
     [coder encodeBool:self.isLive forKey:@"isLive"];
     [coder encodeObject:self.introduction forKey:@"introduction"];
+    [coder encodeObject:self.anchorPriv forKey:@"anchorPriv"];
 }
 
 @end

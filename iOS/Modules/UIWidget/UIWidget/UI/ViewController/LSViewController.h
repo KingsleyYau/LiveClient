@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "LSColor.h"
 @interface LSViewController : UIViewController
 @property (strong) NSString* backTitle;
 @property (strong) UIView *loadActivityView;
@@ -39,6 +39,10 @@
  是否能通过手势返回
  */
 @property (assign) BOOL canPopWithGesture;
+/**
+ 是否加载强制更新状态栏
+ */
+@property (assign) BOOL isUpdateStatusBar;
 
 #pragma mark - 横屏切换
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
@@ -80,7 +84,7 @@
  *  重设和显示加载状态(为了防止之前的showLoading 和 hideLoading 没有一一对应，重新设置)
  */
 - (void)showAndResetLoading;
-
+- (void)reloadLoadingActivityViewFrame;
 /**
  <#Description#>
 

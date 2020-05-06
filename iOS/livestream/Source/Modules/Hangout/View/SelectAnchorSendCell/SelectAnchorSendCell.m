@@ -48,7 +48,7 @@
     } else {
         self.firstImageView.hidden = YES;
     }
-    [self.imageLoader loadImageFromCache:self.headImageView options:SDWebImageRefreshCached imageUrl:url placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageFromCache:self.headImageView options:SDWebImageRefreshCached imageUrl:url placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
     }];
 }
 

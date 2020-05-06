@@ -8,6 +8,7 @@
 
 #import "LSCreditView.h"
 #import "LSShadowView.h"
+#import "LiveGobalManager.h"
 @interface LSCreditView ()
 
 @end
@@ -24,6 +25,14 @@
     return self;
 }
 
+
++ (instancetype)initLSCreditView {
+    NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"LSCreditView" owner:nil options:nil];
+    LSCreditView *view = [nibs objectAtIndex:0];
+
+    return view;
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     
@@ -38,18 +47,40 @@
 }
 
 - (IBAction)tapBG:(UITapGestureRecognizer *)sender {
-    self.hidden = YES;
+//    self.hidden = YES;
+    [self removeShowCreditView];
 }
 
 - (IBAction)addBtnDid:(UIButton *)sender {
     if ([self.delegate respondsToSelector:@selector(creditViewDidAddCredit)]) {
         [self.delegate creditViewDidAddCredit];
     }
-    self.hidden = YES;
+//    self.hidden = YES;
+    [self removeShowCreditView];
 }
 
 - (IBAction)closeBtnDid:(UIButton *)sender {
-    self.hidden = YES;
+//    self.hidden = YES;
+    [self removeShowCreditView];
 }
 
+
+- (void)showLSCreditViewInView:(UIView *)view {
+    [[LiveGobalManager manager] showPopupView:self withVc:nil];
+    [view addSubview:self];
+    [view bringSubviewToFront:self];
+    
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.leading.trailing.equalTo(view);
+        }];
+
+    }
+
+}
+
+- (void)removeShowCreditView {
+    [self removeFromSuperview];
+    [[LiveGobalManager manager] removeLiveRoomPopup];
+}
 @end

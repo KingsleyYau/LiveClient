@@ -151,7 +151,8 @@
             self.textBackgroundView.backgroundColor = styleItem.warningBackgroundViewColor;
         }break;
             
-        case MsgType_FirstFree:{
+        case MsgType_FirstFree:
+        case MsgType_Public_FirstFree:{
             self.textBackgroundView.backgroundColor = styleItem.firstFreeBackgroundViewColor;
         }break;
             

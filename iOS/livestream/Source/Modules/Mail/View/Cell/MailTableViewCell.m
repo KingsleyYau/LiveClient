@@ -8,6 +8,7 @@
 
 #import "MailTableViewCell.h"
 #import "LSDateTool.h"
+#import "LSColor.h"
 
 @interface MailTableViewCell ()
 
@@ -26,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *followImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *onLineImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *onlineImageViewWidth;
+@property (weak, nonatomic) IBOutlet UIImageView *scheduleIcon;
 
 @property (nonatomic, strong) LSDateTool *dateTool;
 
@@ -81,7 +83,7 @@
 
 - (void)updataMailCell:(LSHttpLetterListItemObject *)obj type:(MailType)type {
     // 加载
-    [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
     }];
     self.anchorNameLabel.text = obj.anchorNickName;
     
@@ -91,18 +93,18 @@
     if (obj.hasRead) {
         self.redLabel.hidden = YES;
         self.anchorNameLabel.font = [UIFont systemFontOfSize:16];
-        self.anchorNameLabel.textColor = COLOR_WITH_16BAND_RGB(0x8B8B8B);
-        self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
-        self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xffffff);
+        self.anchorNameLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x8B8B8B) orDark:COLOR_WITH_16BAND_RGB(0x8B8B8B)];
+        self.contentLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x999999) orDark:COLOR_WITH_16BAND_RGB(0x999999)];
+        self.contentView.backgroundColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:[UIColor blackColor]];
     } else {
         self.redLabel.hidden = NO;
         self.anchorNameLabel.font = [UIFont boldSystemFontOfSize:16];
-        self.anchorNameLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
-        self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
+        self.anchorNameLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:COLOR_WITH_16BAND_RGB(0x383838)];
+        self.contentLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:COLOR_WITH_16BAND_RGB(0x383838)];
         if (type == MAIL_GREETING) {
-            self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xffe5e7);
+            self.contentView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xffe5e7) orDark:COLOR_WITH_16BAND_RGB(0xffe5e7)];
         } else {
-            self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdbe9fd);
+            self.contentView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xdbe9fd) orDark:COLOR_WITH_16BAND_RGB(0xdbe9fd)];
         }
     }
     
@@ -120,15 +122,21 @@
         self.receiveVideoIconLeft.constant = 0;
     }
     
+    if (obj.hasSchedule) {
+        self.scheduleIcon.hidden = NO;
+    }else {
+        self.scheduleIcon.hidden = YES;
+    }
+    
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:obj.letterSendTime];
     self.timeLabel.text = [self.dateTool showMailListTimeTextOfDate:date];
 }
 
 - (void)updataOutBoxMailCell:(LSHttpLetterListItemObject *)obj {
     
-    self.contentView.backgroundColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    self.contentView.backgroundColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:[UIColor blackColor]];
     // 加载
-    [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageViewLoader loadImageFromCache:self.headImage options:SDWebImageRefreshCached imageUrl:obj.anchorAvatar placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
     }];
     self.anchorNameLabel.text = obj.anchorNickName;
     
@@ -136,8 +144,8 @@
     
     // 有未读显示文字颜色
     self.redLabel.hidden = YES;
-    self.anchorNameLabel.textColor = COLOR_WITH_16BAND_RGB(0x8B8B8B);
-    self.contentLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
+    self.anchorNameLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x8B8B8B) orDark:COLOR_WITH_16BAND_RGB(0x8B8B8B)];
+    self.contentLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x999999) orDark:COLOR_WITH_16BAND_RGB(0x999999)];
     
     self.replyImage.hidden = YES;
     self.receiveImageIcon.hidden = obj.hasImg ? NO : YES;
@@ -150,6 +158,12 @@
     } else {
         self.receiveVideoIconWidth.constant = 0;
         self.receiveVideoIconLeft.constant = 0;
+    }
+    
+    if (obj.hasSchedule) {
+        self.scheduleIcon.hidden = NO;
+    }else {
+        self.scheduleIcon.hidden = YES;
     }
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:obj.letterSendTime];

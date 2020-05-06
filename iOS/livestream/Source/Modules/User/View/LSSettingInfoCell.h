@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSBaseTableViewCell.h"
 
 
-@interface LSSettingInfoCell : UITableViewCell
+@interface LSSettingInfoCell : LSBaseTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *numLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowIcon;

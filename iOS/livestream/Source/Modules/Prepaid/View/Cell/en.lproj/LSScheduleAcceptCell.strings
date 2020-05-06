@@ -1,0 +1,41 @@
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "7ul-nD-peJ"; */
+"7ul-nD-peJ.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "Dec 28, 13:00 - 14:00 HKT(GMT -06:00) "; ObjectID = "9BG-ei-U2L"; */
+"9BG-ei-U2L.text" = "Dec 28, 13:00 - 14:00 HKT(GMT -06:00) ";
+
+/* Class = "UILabel"; text = "From"; ObjectID = "DIp-p8-KO2"; */
+"DIp-p8-KO2.text" = "From";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "ErR-vK-agU"; */
+"ErR-vK-agU.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Dec 27, 13:00 - 14:00 (Your local time)"; ObjectID = "MSt-lB-CSp"; */
+"MSt-lB-CSp.text" = "Dec 27, 13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "Schedule ID:"; ObjectID = "NQ6-jT-AMQ"; */
+"NQ6-jT-AMQ.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "45 Minutes"; ObjectID = "PMN-qw-59R"; */
+"PMN-qw-59R.text" = "45 Minutes";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "XhE-eK-XuQ"; */
+"XhE-eK-XuQ.text" = "Name";
+
+/* Class = "UIButton"; normalTitle = "View"; ObjectID = "Zfo-6n-js3"; */
+"Zfo-6n-js3.normalTitle" = "View";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "c0w-9O-t8t"; */
+"c0w-9O-t8t.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "cjT-7n-o3c"; */
+"cjT-7n-o3c.normalTitle" = "Accept";
+
+"STATUS_TIP_HER" = "Pending her confirmation";
+
+"STATUS_TIP_YOUR" = "Pending your confirmation";
+
+"Start_Time" = "%@ %@(GMT %@)";
+
+"Local_Time" = "%@ (Your local time)";

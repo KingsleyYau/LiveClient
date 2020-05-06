@@ -182,7 +182,7 @@
     [cell.imageViewLoader loadImageWithImageView:cell.imageView
                                          options:0
                                         imageUrl:item.anchorImg
-                                placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                placeholderImage:LADYDEFAULTIMG
                                    finishHandler:nil];
 
     return cell;

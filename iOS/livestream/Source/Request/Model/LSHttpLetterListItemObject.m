@@ -26,6 +26,7 @@
         self.hasVideo = NO;
         self.hasRead = NO;
         self.hasReplied = NO;
+        self.hasSchedule = NO;
     }
     return self;
 }
@@ -44,7 +45,7 @@
         self.hasVideo = [coder decodeBoolForKey:@"hasVideo"];
         self.hasRead = [coder decodeBoolForKey:@"hasRead"];
         self.hasReplied = [coder decodeBoolForKey:@"hasReplied"];
-
+        self.hasSchedule = [coder decodeBoolForKey:@"hasSchedule"];
     }
     return self;
 }
@@ -62,6 +63,7 @@
     [coder encodeBool:self.hasVideo forKey:@"hasVideo"];
     [coder encodeBool:self.hasRead forKey:@"hasRead"];
     [coder encodeBool:self.hasReplied forKey:@"hasReplied"];
+    [coder encodeBool:self.hasSchedule forKey:@"hasSchedule"];
 }
 
 @end

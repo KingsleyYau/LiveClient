@@ -41,11 +41,15 @@
 }
  
 - (IBAction)closeBtnDid:(id)sender {
-    self.hidden = YES;
+    if ([self.delegate respondsToSelector:@selector(didCloseGiftInfoView:)]) {
+        [self.delegate didCloseGiftInfoView:self];
+    }
 }
 
 - (IBAction)bgTap:(id)sender {
-    self.hidden = YES;
+    if ([self.delegate respondsToSelector:@selector(didCloseGiftInfoView:)]) {
+        [self.delegate didCloseGiftInfoView:self];
+    }
 }
 
 @end

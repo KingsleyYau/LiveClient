@@ -258,6 +258,9 @@ static LSUserUnreadCountManager * unreadCountinstance;
                 self.unreadModel.bookingNoreadNum = userInfoItem.bookingUnreadNum;
                 self.unreadModel.backpackNoreadNum = userInfoItem.backpackUnreadNum + userInfoItem.livechatVocherUnreadNum;
                 self.unreadModel.sayHiNoreadNum = userInfoItem.sayHiResponseUnreadNum;
+                self.unreadModel.schedulePendingUnreadNum = userInfoItem.schedulePendingUnreadNum;
+                self.unreadModel.scheduleConfirmedUnreadNum = userInfoItem.scheduleConfirmedUnreadNum;
+                self.unreadModel.scheduleStatus = userInfoItem.scheduleStatus;
             }
             finshHandler(success, self.unreadModel);
         });
@@ -297,12 +300,20 @@ static LSUserUnreadCountManager * unreadCountinstance;
         case LSUnreadType_Booking:{ // Booking
             unreadNum = self.unreadModel.bookingNoreadNum;
         }break;
-
-        default:{ // BackPack
+        case LSUnreadType_Schedule:{ // schedule
+            unreadNum = self.unreadModel.scheduleConfirmedUnreadNum + self.unreadModel.schedulePendingUnreadNum;
+        }break;
+        case LSUnreadType_Backpack: {   // BackPack
             unreadNum = self.unreadModel.backpackNoreadNum;
+        }break;
+        default:{
         }break;
     }
     return unreadNum;
+}
+
+- (LSScheduleStatus)getScheduleStatus{
+    return self.unreadModel.scheduleStatus;
 }
 
 - (void)onChangeRecentContactStatus:(QNContactManager *)manager {

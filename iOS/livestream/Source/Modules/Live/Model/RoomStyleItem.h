@@ -68,9 +68,49 @@
 /**连击礼物背景*/
 @property (nonatomic, strong) UIImage *comboViewBgImage;
 
+/**连击礼物数字图片名*/
+@property (nonatomic, strong) NSString *comboNumImageName;
+
 /**弹幕背景颜色*/
 @property (nonatomic, strong) UIColor *barrageBgColor;
 
 /**购票标志*/
-@property (nonatomic, strong) UIImage * buyTicketImage;
+@property (nonatomic, strong) UIImage *buyTicketImage;
+
+/**推荐礼物背景颜色*/
+@property (nonatomic, strong) UIColor *chooseTopGiftViewBgColor;
+
+/**展开礼物列表按钮图片*/
+@property (nonatomic, strong) UIImage *topGiftViewBtnImage;
+
+/**表情按钮图片*/
+@property (nonatomic, strong) UIImage *emotionImage;
+
+/**表情按钮选中图片*/
+@property (nonatomic, strong) UIImage *emotionSelectImage;
+
+/**弹幕按钮图片*/
+@property (nonatomic, strong) UIImage *popBtnImage;
+
+/**弹幕按钮选中图片*/
+@property (nonatomic, strong) UIImage *popBtnSelectImage;
+
+/**礼物列表头部背景*/
+@property (nonatomic, strong) UIImage *giftPageHeadBgImage;
+
+/**礼物列表提示按钮图片*/
+@property (nonatomic, strong) UIImage *giftPageTipBtnImage;
+
+/**礼物列表收起按钮图片*/
+@property (nonatomic, strong) UIImage *giftPageDownBtnImage;
+
+/**礼物列表背景颜色*/
+@property (nonatomic, strong) UIColor *giftPageBgColor;
+
+/**礼物列表分类标题(或选中背景)颜色*/
+@property (nonatomic, strong) UIColor *giftSegmentTitleColor;
+
+/**礼物列表分类标题选中颜色*/
+@property (nonatomic, strong) UIColor *giftSegmentTitleSelectColor;
+
 @end

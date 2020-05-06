@@ -46,6 +46,11 @@
     
     self.addBtn.layer.cornerRadius = 4;
     self.addBtn.layer.masksToBounds = YES;
+    
+
+    [self.changeSiteBtn setTitleColor:[LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]] forState:UIControlStateNormal];
+    self.balanceLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]];
+    self.creditName.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame

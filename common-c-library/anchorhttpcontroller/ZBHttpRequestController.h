@@ -48,6 +48,7 @@
 #include "HttpAnchorCheckIsPlayProgramTask.h"
 #include "HttpAnchorGetShowRoomInfoTask.h"
 #include "HttpGetCurrentRoomInfoTask.h"
+#include "ZBHttpSetAutoInvitationPushTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -256,6 +257,20 @@ public:
                             IRequestGetCurrentRoomInfoCallback* callback = NULL
                             );
     
+    /**
+     *  3.10.设置主播公开直播间自动邀请状态
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param status                        处理结果（SETPUSHTYPE_CLOSE：关闭，SETPUSHTYPE_START：启动）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ZBSetAutoInvitationPush(
+                            HttpRequestManager *pHttpRequestManager,
+                            ZBSetPushType status,
+                            IRequestZBSetAutoInvitationPushCallback* callback = NULL
+                            );
     
     /**
      *  4.1.获取预约邀请列表

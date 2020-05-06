@@ -427,3 +427,34 @@ inline LIVECHATINVITE_RISK_TYPE GetliveChatInviteRiskType(int value) {
     return LIVECHATINVITE_RISK_BEGIN <= value && value <= LIVECHATINVITE_RISK_END ? (LIVECHATINVITE_RISK_TYPE)value : LIVECHATINVITE_RISK_NOLIMIT;
 }
 
+// 预付费邀请操作类型
+typedef enum {
+    SCHEDULEINVITE_PENDING     = 0,    // 发送
+    SCHEDULEINVITE_CONFIRMED   = 1,    // 接受
+    SCHEDULEINVITE_DECLINED    = 2,    // 拒绝
+    SCHEDULEINVITE_BEGIN       = SCHEDULEINVITE_PENDING,    // 有效范围起始值
+    SCHEDULEINVITE_END         = SCHEDULEINVITE_DECLINED,    // 有效范围结束值
+} SCHEDULEINVITE_TYPE;
+// int 转换 SCHEDULEINVITE_TYPE
+inline SCHEDULEINVITE_TYPE GetScheduleInviteType(int value) {
+    return SCHEDULEINVITE_BEGIN <= value && value <= SCHEDULEINVITE_END ? (SCHEDULEINVITE_TYPE)value : SCHEDULEINVITE_PENDING;
+}
+
+inline int GetIntWithScheduleInviteType(SCHEDULEINVITE_TYPE type) {
+    int value = 0;
+    switch (type) {
+        case SCHEDULEINVITE_PENDING:
+            value = 0;
+            break;
+        case SCHEDULEINVITE_CONFIRMED:
+            value = 1;
+            break;
+        case SCHEDULEINVITE_DECLINED:
+            value = 2;
+            break;
+        default:
+            break;
+    }
+    return value;
+}
+

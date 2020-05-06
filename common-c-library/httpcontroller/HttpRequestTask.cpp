@@ -253,14 +253,63 @@ bool HttpRequestTask::ParseIOSPaid(const char* buf, int size, string &code, Json
     if( reader.parse(strBuf, root, false) ) {
         FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseIOSPaid( parse Json finish )");
         if( root.isObject() ) {
+            *data = root;
             if( root[COMMON_IOSPAY_RESULT].isInt() && root[COMMON_IOSPAY_RESULT].asInt() == 1 ) {
                 code = "";
-                *data = root;
+                //*data = root;
                 
                 result = true;
             } else {
-                if( root[COMMON_IIOSPAY_CODE].isString() ) {
-                    code = root[COMMON_IIOSPAY_CODE].asString();
+                
+                if (root[COMMON_ERRNO].isString()) {
+                    code = root[COMMON_ERRNO].asString();
+                }
+                
+                if (code.empty()) {
+                    if( root[COMMON_IIOSPAY_CODE].isString() ) {
+                        code = root[COMMON_IIOSPAY_CODE].asString();
+                    }
+                }
+                
+                result = false;
+            }
+        }
+    }
+    
+    return result;
+}
+
+// android 支付的头部
+bool HttpRequestTask::ParseAndroidPaid(const char* buf, int size, string &errnum, string &errmsg, Json::Value *data, Json::Value *errdata) {
+    bool result = false;
+    
+    Json::Value root;
+    Json::Reader reader;
+    
+    string strBuf("");
+    strBuf.assign(buf, size);
+    if( reader.parse(strBuf, root, false) ) {
+        FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseAndroidPaid( parse Json finish )");
+        *data = root;
+        if( root.isObject() ) {
+            if( root[COMMON_IOSPAY_RESULT].isInt() && root[COMMON_IOSPAY_RESULT].asInt() == 1 ) {
+                errnum = "";
+                
+                result = true;
+            } else {
+                
+                if (root[COMMON_ERRNO].isString()) {
+                    errnum = root[COMMON_ERRNO].asString();
+                }
+                
+                if (errnum.empty()) {
+                    if( root[COMMON_IIOSPAY_CODE].isString() ) {
+                        errnum = root[COMMON_IIOSPAY_CODE].asString();
+                    }
+                }
+
+                if( root[COMMON_ERRMSG].isString() ) {
+                    errmsg = root[COMMON_ERRMSG].asString();
                 }
                 
                 result = false;

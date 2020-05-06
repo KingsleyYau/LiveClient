@@ -52,7 +52,7 @@
  *  @param font        字体
  *  @return 表情富文本消息
  */
-- (NSAttributedString *)parseMessageTextEmotion:(NSString *)text font:(UIFont *)font;
+- (NSMutableAttributedString *)parseMessageTextEmotion:(NSString *)text font:(UIFont *)font;
 
 
 /**

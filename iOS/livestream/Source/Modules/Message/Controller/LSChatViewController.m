@@ -165,7 +165,7 @@
     [super setupNavigationBar];
 
     if (self.anchorId.length > 0) {
-        [self.roomUserInfoManager getUserInfo:self.anchorId
+        [self.roomUserInfoManager getLiverInfo:self.anchorId
                                 finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                     // 设置聊天标题
                                     [self setupTitleButton:item.nickName];

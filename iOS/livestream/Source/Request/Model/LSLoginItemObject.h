@@ -57,6 +57,7 @@
 //@property (nonatomic, strong) LSMailPrivItemObject* mailPriv;
 @property (nonatomic, strong) LSUserPrivItemObject* userPriv;
 @property (nonatomic, assign) BOOL isGiftFlowerSwitch;
-
+@property (nonatomic, assign) BOOL isShowStartNotice;
+@property (nonatomic, assign) BOOL isShowWillStartNotice;
 
 @end

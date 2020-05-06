@@ -33,7 +33,23 @@ NS_ASSUME_NONNULL_BEGIN
  删除草稿箱
  */
 - (void)deleteMailDraft:(NSString *)ladyId;
+/**
+ 保存预约草稿箱
+ */
+- (void)saveScheduleMailDraftFromLady:(NSString *)ladyId content:(NSString *)text;
+/**
+ 删除草稿箱
+ */
+- (void)deleteScheduleMailDraft:(NSString *)ladyId;
 
+/**
+删除所有草稿箱
+*/
+- (void)removeAllScheduleMailDraft;
+/**
+获取预约草稿箱
+*/
+- (NSString *)getScheduleMailDraft:(NSString *)ladyId;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -154,6 +154,10 @@
  */
 @property (strong, nonatomic, readonly) NSBundle *liveBundle;
 
+/**
+ 鲜花礼品折扣图片
+*/
+@property (nonatomic, copy) NSString * flowersGift;
 #pragma mark - 普通更新
 /**
  是否需要普通更新

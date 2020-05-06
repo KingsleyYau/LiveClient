@@ -18,6 +18,7 @@
 #import "LSLCLiveChatEmotionConfigItemObject.h"
 #import "LSLCLiveChatMagicIconItemObject.h"
 #import "LSLCLiveChatMagicIconConfigItemObject.h"
+#import "LSLCLiveChatScheduleInfoItemObject.h"
 
 @protocol LSLiveChatManagerListenerDelegate <NSObject>
 @optional
@@ -227,6 +228,25 @@
  *  @param userList 用户数组
  */
 - (void)onGetUsersHistoryMessage:(BOOL)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg userIds:(NSArray<NSString *> *_Nonnull)userIds;
+
+/**
+ *  直播发送预约Schedule邀请（包含发送，接受，拒绝）
+ *
+ *  @param errNo    结果类型
+ *  @param errMsg   结果描述
+ *  @param item       预约信息
+ *  @param msgReplyItem  预付费回复信息
+ */
+- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(NSString *_Nonnull)errMsg item:(LSLCLiveChatMsgItemObject *_Nonnull)item msgReplyItem:(LSLCLiveChatMsgItemObject *_Nullable)msgReplyItem;
+
+/**
+ *  直播接收预约Schedule邀请（包含接收，接受，拒绝）
+ *
+ *  @param item       预约信息
+ *  @param womanId 主播ID
+ *  @param scheduleReplyItem 预约回复item（NULL 是发送）
+ */
+- (void)onRecvScheduleInviteNotice:(LSLCLiveChatMsgItemObject *_Nonnull)item womanId:(NSString *_Nonnull)womanId scheduleReplyItem:(LSLCLiveChatMsgItemObject *_Nullable)scheduleReplyItem;
 
 #pragma mark - 私密照回调
 /**

@@ -27,10 +27,10 @@
     }
     
     cell.imageViewHeader.image = nil;
-    cell.labelName.text = @"";
-    cell.labelName.layer.shadowRadius = 1.0;
-    cell.labelName.layer.shadowColor = Color(0, 0, 0, 0.7).CGColor;
-    cell.labelName.layer.shadowOffset = CGSizeMake(0, 0.5);
+    cell.labelMessage.text = @"";
+    cell.labelMessage.layer.shadowRadius = 1.0;
+    cell.labelMessage.layer.shadowColor = Color(0, 0, 0, 0.7).CGColor;
+    cell.labelMessage.layer.shadowOffset = CGSizeMake(0, 0.5);
     cell.labelMessage.text = @"";
     
     return cell;

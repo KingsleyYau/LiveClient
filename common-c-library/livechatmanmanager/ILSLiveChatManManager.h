@@ -61,6 +61,10 @@ public:
 	virtual void OnSendMessageListFail(LSLIVECHAT_LCC_ERR_TYPE errType, const LCMessageList& msgList) = 0;
 	virtual void OnGetHistoryMessage(bool success, const string& errNo, const string& errMsg, LSLCUserItem* userItem) = 0;
 	virtual void OnGetUsersHistoryMessage(bool success, const string& errNo, const string& errMsg, const LCUserList& userList) = 0;
+    
+    // Alex, 发送预约邀请
+    virtual void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, LSLCMessageItem* msgItem, LSLCMessageItem* msgReplyItem) = 0;
+    virtual void OnRecvScheduleInviteNotice(const string& womanId, LSLCMessageItem* msgItem, LSLCMessageItem* msgReplyItem) = 0;
 
 	// ------- emotion listener -------
 	virtual void OnGetEmotionConfig(bool success, const string& errNo, const string& errMsg, const LSLCOtherEmotionConfigItem& config) = 0;
@@ -130,6 +134,8 @@ public:
     // -------- invite listener -----
     // 为了区分OnRecvMessage,这个使用在Qn冒泡跳转到直播后，发送邀请语成功，如果用OnRecvMessage，直播会再冒泡 (Alex, 2019-07-26)
     virtual void OnRecvAutoInviteMessage(LSLCMessageItem* msgItem) = 0;
+    
+
 };
 
 class LSLiveChatHttpRequestManager;
@@ -296,6 +302,8 @@ public:
     virtual string GetMagicIconThumbPath(const string& magicIconId) = 0;
     // 发送邀请语
     virtual bool SendInviteMessage(const string& userId, const string& message, const string& nickName) = 0;
+    // 发送预约邀请
+    virtual LSLCMessageItem* SendScheduleInvite(const string& userId, LSLCMessageItem* msgItem) = 0;
     
     // --------- Camshare --------
     // 发送Camshare邀请

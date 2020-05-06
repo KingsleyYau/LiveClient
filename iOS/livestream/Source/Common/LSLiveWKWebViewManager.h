@@ -59,6 +59,12 @@
  @param isResume 标志位
  */
 - (void)webViewTransferJSIsResume:(BOOL)isResume;
+
+/**
+网页打开视频播放
+
+*/
+- (void)webViewOpenVideo;
 @end
 
 @interface LSLiveWKWebViewManager : NSObject

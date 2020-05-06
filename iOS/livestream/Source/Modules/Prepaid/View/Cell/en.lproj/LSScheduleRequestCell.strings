@@ -1,0 +1,45 @@
+
+/* Class = "UILabel"; text = "One-on_One Start Time:"; ObjectID = "2sT-WW-OlY"; */
+"2sT-WW-OlY.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "%@"; ObjectID = "AE4-a6-DuY"; */
+"AE4-a6-DuY.text" = "%@";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Hr1-Cu-q0U"; */
+"Hr1-Cu-q0U.text" = "Label";
+
+/* Class = "UILabel"; text = "Time Sent: %@"; ObjectID = "b15-OK-qXD"; */
+"b15-OK-qXD.text" = "Time Sent: %@";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "bo4-yT-8Gm"; */
+"bo4-yT-8Gm.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "bvx-TB-a3k"; */
+"bvx-TB-a3k.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "cy0-fg-mxu"; */
+"cy0-fg-mxu.text" = "Label";
+
+/* Class = "UILabel"; text = "Time Confirmed: %@"; ObjectID = "jaw-31-PAx"; */
+"jaw-31-PAx.text" = "Time Confirmed: %@";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "t91-2J-9Ra"; */
+"t91-2J-9Ra.text" = "Status:";
+
+/* Class = "UILabel"; text = "Schedule ID:"; ObjectID = "vPK-aQ-y0m"; */
+"vPK-aQ-y0m.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "%@"; ObjectID = "whJ-na-B5z"; */
+"whJ-na-B5z.text" = "%@";
+
+"Confirmed" = "Confirmed";
+
+"Pending" = "Pending her confirmation";
+
+"Minutes" = "%d Minutes";
+
+"Start_Time" = "%@ %@(GMT %@)";
+
+"Local_Time" = "%@ (Your local time)";
+
+"No_Confirmation" = "No Confirmation time yet.";

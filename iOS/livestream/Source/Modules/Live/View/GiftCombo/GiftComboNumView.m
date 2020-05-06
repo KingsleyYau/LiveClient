@@ -66,8 +66,8 @@
         UIView* view = nil;
         
         // 用图片展现
-        UIImage* icon = [UIImage imageNamed:[NSString stringWithFormat:@"w_%@",num]];
-        UIImageView* imageView = [[UIImageView alloc]initWithImage:icon];
+        UIImage* icon = [UIImage imageNamed:[NSString stringWithFormat:@"%@%@",self.numImageName,num]];
+        UIImageView* imageView = [[UIImageView alloc] initWithImage:icon];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         view = imageView;
         
@@ -99,7 +99,7 @@
 - (UIView *)xIV {
     if (!_xIV) {
         // 用图片展现
-        UIImage* icon = [UIImage imageNamed:@"w_x"];
+        UIImage* icon = [UIImage imageNamed:[NSString stringWithFormat:@"%@x",self.numImageName]];
         UIImageView* imageView = [[UIImageView alloc]initWithImage:icon];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         _xIV = imageView;

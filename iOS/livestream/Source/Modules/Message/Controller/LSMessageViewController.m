@@ -15,7 +15,7 @@
 @interface LSMessageViewController ()<UITableViewDataSource,UITableViewDelegate,LMMessageManagerDelegate,UIScrollViewRefreshDelegate>
 @property (weak, nonatomic) IBOutlet UIView *noDataView;
 @property (weak, nonatomic) IBOutlet UIButton *searchBtn;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) NSArray * data;
 @property (nonatomic, strong) LSPrivateMessageManager *messageManager;
 @end

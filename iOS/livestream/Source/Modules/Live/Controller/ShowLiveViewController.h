@@ -9,12 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "LSGoogleAnalyticsViewController.h"
-#import "PlayViewController.h"
+#import "LSVIPInputViewController.h"
 #import "LiveRoom.h"
 
 #import "LSUITapImageView.h"
 #import "VIPAudienceView.h"
-#import "ChardTipView.h"
 
 @interface ShowLiveViewController : LSGoogleAnalyticsViewController
 
@@ -27,7 +26,7 @@
 /**
  播放控制器
  */
-@property (nonatomic, strong) PlayViewController *playVC;
+@property (nonatomic, strong) LSVIPInputViewController *playVC;
 
 #pragma mark - 界面控件
 /**
@@ -49,18 +48,11 @@
  底部背景
  */
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleBgImageTop;
 /**
  直播间类型资费提示(暂时不用)
  */
 @property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 
-/**
- 关注按钮
- */
-@property (weak, nonatomic) IBOutlet UIButton *followBtn;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *followBtnWidth;
 
 /**
  观众席
@@ -69,13 +61,9 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 
-@property (strong, nonatomic) ChardTipView *tipView;
-
 #pragma mark - 界面事件
 
 - (IBAction)pushLiveHomePage:(id)sender;
-
-- (IBAction)followLiverAction:(id)sender;
 
 - (IBAction)closeAction:(id)sender;
 

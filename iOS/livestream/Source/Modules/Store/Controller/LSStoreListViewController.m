@@ -63,7 +63,7 @@
     [self.storeView.collectionView setupPullRefresh:self pullDown:YES pullUp:NO];
     self.storeView.collectionView.pullScrollEnabled = YES;
     self.storeView.collectionViewDelegate = self;
-
+        
      self.headView.delegate = self;
     
     [self getStroeData];

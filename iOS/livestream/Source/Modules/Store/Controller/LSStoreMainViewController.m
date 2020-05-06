@@ -32,7 +32,7 @@
     [super viewDidLoad];
     
      self.edgesForExtendedLayout = UIRectEdgeNone;
-        
+    
     LSStoreListViewController * storeVC = [[LSStoreListViewController alloc]initWithNibName:nil bundle:nil];
     [self addChildViewController:storeVC];
     
@@ -70,7 +70,7 @@
      //创建分栏控件
     self.segment = [[QNSementView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 88, 44)];
     self.segment.titleArray = @[NSLocalizedStringFromSelf(@"Store"), NSLocalizedStringFromSelf(@"Delivery")];
-    [self.segment setTextNormalColor:COLOR_WITH_16BAND_RGB(0x383838) andSelectedColor:COLOR_WITH_16BAND_RGB(0x383838)];
+    [self.segment setTextNormalColor:COLOR_WITH_16BAND_RGB(0x383838) andSelectedColor:[LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]]];
     [self.segment setLineNormalColor:[UIColor clearColor] andelectedColor:COLOR_WITH_16BAND_RGB(0x297AF3)];
     [self.segment newTitleBtnIsSymmetry:YES];
     self.segment.delegate = self;

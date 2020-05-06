@@ -39,55 +39,6 @@
     return self;
 }
 
-- (void)getUserInfo:(NSString *)userId finishHandler:(GetUserInfoHandler)finishHandler {
-    if( userId.length ) {
-        @synchronized (self) {
-            // 获取用户属性
-            LSUserInfoModel *userInfo = [self.userDictionary valueForKey:userId];
-            LSUserInfoModel *liverInfo = [self.liverDictionary valueForKey:userId];
-            if (liverInfo) {
-                // 回调
-                if( finishHandler ) {
-                    finishHandler(liverInfo);
-                }
-            } else if (userInfo) {
-                // 回调
-                if( finishHandler ) {
-                    finishHandler(userInfo);
-                }
-            } else {
-                // 请求观众信息
-                GetNewFansBaseInfoRequest *request = [[GetNewFansBaseInfoRequest alloc] init];
-                request.userId = userId;
-                request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetNewFansBaseInfoItemObject * _Nonnull item) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if(success) {
-                            LSUserInfoModel *info = [[LSUserInfoModel alloc] init];
-                            info.nickName = item.nickName;
-                            info.photoUrl = item.photoUrl;
-                            info.riderId = item.riderId;
-                            info.riderName = item.riderName;
-                            info.riderUrl = item.riderUrl;
-                            @synchronized (self) {
-                                [self.userDictionary setObject:info forKey:userId];
-                            }
-                            NSLog(@"LSRoomUserInfoManager:: getUserInfo: FansBaseInfo( userId : %@, photoUrl : %@ )", userId, item.photoUrl);
-                            // 回调
-                            if( finishHandler ) {
-                                finishHandler(info);
-                            }
-                        } else {
-                            // 请求失败请求主播信息
-                            [self getLiverInfo:userId finishHandler:finishHandler];
-                        }
-                    });
-                };
-                [self.sessionManager sendRequest:request];
-            }
-        }
-    }
-}
-
 - (void)getLiverInfo:(NSString * _Nonnull)userId finishHandler:(GetUserInfoHandler _Nullable)finishHandler {
     if (userId.length) {
         LSGetUserInfoRequest *request = [[LSGetUserInfoRequest alloc] init];
@@ -131,14 +82,13 @@
         request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetNewFansBaseInfoItemObject * _Nonnull item) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(success) {
-                    
                     LSUserInfoModel *info = [[LSUserInfoModel alloc] init];
                     info.nickName = item.nickName;
                     info.photoUrl = item.photoUrl;
                     info.riderId = item.riderId;
                     info.riderName = item.riderName;
                     info.riderUrl = item.riderUrl;
-                    
+                    info.isAnchor = NO;
                     @synchronized (self) {
                         [self.userDictionary setObject:info forKey:userId];
                     }

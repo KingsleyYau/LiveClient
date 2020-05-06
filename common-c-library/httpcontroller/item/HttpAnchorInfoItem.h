@@ -15,6 +15,8 @@ using namespace std;
 #include <json/json/json.h>
 
 #include "../HttpLoginProtocol.h"
+#include "HttpAnchorPrivItem.h"
+
 
 class HttpAnchorInfoItem {
 public:
@@ -46,6 +48,10 @@ public:
                 roomPhotoUrl = root[LIVEROOM_GETUSRRINFO_ANCHORINFO_ROOM_PHOTOURL].asString();
             }
             
+            if ( root[LIVEROOM_GETUSRRINFO_ANCHORINFO_PRIV].isObject()) {
+                anchorPriv.Parse(root[LIVEROOM_GETUSRRINFO_ANCHORINFO_PRIV]);
+            }
+            
         }
 	}
 
@@ -67,12 +73,14 @@ public:
      * isLive               是否正在公开直播（0：否，1：是）
      * introduction         主播个人介绍
      * roomPhotoUrl         主播封面
+     * anchorPriv             主播权限
      */
 	string address;
 	AnchorLevelType anchorType;
     bool isLive;
     string introduction;
     string roomPhotoUrl;
+    HttpAnchorPrivItem anchorPriv;
 };
 
 #endif /* HTTPANCHORINFOITEM_H_ */

@@ -19,6 +19,7 @@
  * 推荐主播结构体
  * anchorId         主播ID
  * anchorNickName   主播昵称
+ * anchorAge            主播年龄
  * anchorCover      主播封面
  * anchorAvatar     主播头像
  * isFollow         是否关注（0：不关注，1：关注）
@@ -31,6 +32,7 @@
 
 @property (nonatomic, strong) NSString* anchorId;
 @property (nonatomic, strong) NSString* anchorNickName;
+@property (nonatomic, assign) int anchorAge;
 @property (nonatomic, strong) NSString* anchorCover;
 @property (nonatomic, strong) NSString* anchorAvatar;
 @property (nonatomic, assign) BOOL isFollow;

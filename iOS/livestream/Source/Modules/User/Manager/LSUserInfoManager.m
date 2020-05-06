@@ -80,9 +80,15 @@ static LSUserInfoManager *gManager = nil;
                 if (finishHandler) {
                     finishHandler(info);
                 }
+            } else {
+                finishHandler(nil);
             }
         });
     };
     [self.sessionManager sendRequest:request];
+}
+
+- (void)removeAllUserInfo {
+    [self.userDictionary removeAllObjects];
 }
 @end

@@ -10,6 +10,8 @@
 #import "LSImageViewLoader.h"
 #import "LiveUrlHandler.h"
 #import "HomeVouchersManager.h"
+#import "LiveGobalManager.h"
+#import "LiveModule.h"
 #define defaultCount 30
 
 @interface LSPrivateInviteView()
@@ -37,6 +39,7 @@
 }
 
 - (void)showPrivateViewInView:(UIView *)view {
+    [[LiveGobalManager manager] showPopupView:self withVc:nil];
     [view addSubview:self];
     [view bringSubviewToFront:self];
     
@@ -49,10 +52,12 @@
     self.inviteMsg.text = [NSString stringWithFormat:@"%@ is inviting your to start One-on-One broadcast!",self.item.anchorName];
     
     UIImageView *imageV = [[UIImageView alloc] init];
-    [self.loader loadImageFromCache:imageV options:SDWebImageRefreshCached imageUrl:self.item.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@""] finishHandler:^(UIImage *image) {
-        [self.anchorIcon setImage:image forState:UIControlStateNormal];
+    [[LSImageViewLoader loader] loadHDListImageWithImageView:imageV options:SDWebImageRefreshCached imageUrl:self.item.anchorPhotoUrl placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+               [self.anchorIcon setImage:image forState:UIControlStateNormal];
+        });
     }];
-    
+
     // 是否有私密试聊卷
     BOOL isFree = NO;
     if ([[HomeVouchersManager manager] isShowInviteFree:self.item.anchorId]) {
@@ -70,10 +75,16 @@
         return;
     }
     self.totalCount--;
-    NSString *title = [NSString stringWithFormat:@"%lus Decline",(long)self.totalCount];
+    NSString *title = [NSString stringWithFormat:@"Decline (%lus)",(long)self.totalCount];
     NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
+                                                                                                           NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x383838),
                                                                                                            NSUnderlineStyleAttributeName :@(NSUnderlineStyleSingle)
                                                                                                                         }];
+    NSRange timeRange = [title rangeOfString:[NSString stringWithFormat:@"%lus",(long)self.totalCount]];
+    [atts addAttributes:@{
+                                 NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0xFF9901),
+                                 } range:timeRange];
+    
     [self.declineBtn setAttributedTitle:atts forState:UIControlStateNormal];
 }
 
@@ -100,6 +111,7 @@
 - (void)removeShow {
     [self stopTimer];
     [self removeFromSuperview];
+    [[LiveGobalManager manager] removeLiveRoomPopup];
 }
 
 - (IBAction)declineAction:(id)sender {
@@ -108,7 +120,7 @@
 
 - (IBAction)startOneOnOneAction:(id)sender {
     [self removeShow];
-    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorId:self.item.anchorId roomType:LiveRoomType_Private];
-    [[LiveUrlHandler shareInstance] handleOpenURL:url];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:self.item.anchorName anchorId:self.item.anchorId roomType:LiveRoomType_Private];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 @end

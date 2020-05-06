@@ -67,8 +67,12 @@
 		5240E5EB215E0F6C00B43159 /* LSLinkTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5240E5E9215E0F6C00B43159 /* LSLinkTextView.m */; };
 		524E605A235D650400784175 /* UIResponder+LSFirstRespone.m in Sources */ = {isa = PBXBuildFile; fileRef = 524E6059235D650400784175 /* UIResponder+LSFirstRespone.m */; };
 		52702C041F79DFF5009AAE55 /* Fail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52702C031F79DFF5009AAE55 /* Fail@2x.png */; };
+		5283D1D3241B582000412EB4 /* LSThemeColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5283D1D2241B582000412EB4 /* LSThemeColorButton.m */; };
+		5283D1D7241B585100412EB4 /* LSBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5283D1D5241B585100412EB4 /* LSBaseTableViewCell.m */; };
 		529DA2EB1F78AC7E00651318 /* LSListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529DA2EA1F78AC7E00651318 /* LSListViewController.m */; };
 		52F65B762044F174007DA957 /* LSProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F65B742044F174007DA957 /* LSProgressView.m */; };
+		5769B0FF2419E17400802FC6 /* LSTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5769B0FE2419E17400802FC6 /* LSTableView.m */; };
+		5769B103241A171800802FC6 /* LSCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5769B102241A171800802FC6 /* LSCollectionView.m */; };
 		CA799B64171F98700043B352 /* LSUIWidget.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = CA799B63171F98700043B352 /* LSUIWidget.h */; };
 		CA799B66171F98700043B352 /* LSUIWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = CA799B65171F98700043B352 /* LSUIWidget.m */; };
 		CAF53823171FDB71005DCB49 /* LSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAF537CD171FDB70005DCB49 /* LSNavigationController.m */; };
@@ -198,10 +202,18 @@
 		524E6058235D650400784175 /* UIResponder+LSFirstRespone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIResponder+LSFirstRespone.h"; sourceTree = "<group>"; };
 		524E6059235D650400784175 /* UIResponder+LSFirstRespone.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+LSFirstRespone.m"; sourceTree = "<group>"; };
 		52702C031F79DFF5009AAE55 /* Fail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fail@2x.png"; sourceTree = "<group>"; };
+		5283D1D1241B582000412EB4 /* LSThemeColorButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSThemeColorButton.h; sourceTree = "<group>"; };
+		5283D1D2241B582000412EB4 /* LSThemeColorButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSThemeColorButton.m; sourceTree = "<group>"; };
+		5283D1D4241B585100412EB4 /* LSBaseTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSBaseTableViewCell.h; sourceTree = "<group>"; };
+		5283D1D5241B585100412EB4 /* LSBaseTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSBaseTableViewCell.m; sourceTree = "<group>"; };
 		529DA2E91F78AC7E00651318 /* LSListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSListViewController.h; sourceTree = "<group>"; };
 		529DA2EA1F78AC7E00651318 /* LSListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSListViewController.m; sourceTree = "<group>"; };
 		52F65B742044F174007DA957 /* LSProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSProgressView.m; sourceTree = "<group>"; };
 		52F65B752044F174007DA957 /* LSProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSProgressView.h; sourceTree = "<group>"; };
+		5769B0FD2419E17400802FC6 /* LSTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSTableView.h; sourceTree = "<group>"; };
+		5769B0FE2419E17400802FC6 /* LSTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSTableView.m; sourceTree = "<group>"; };
+		5769B101241A171800802FC6 /* LSCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSCollectionView.h; sourceTree = "<group>"; };
+		5769B102241A171800802FC6 /* LSCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSCollectionView.m; sourceTree = "<group>"; };
 		CA799B5B171F98700043B352 /* libUIWidget.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUIWidget.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA799B62171F98700043B352 /* UIWidget-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIWidget-Prefix.pch"; sourceTree = "<group>"; };
 		CA799B63171F98700043B352 /* LSUIWidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUIWidget.h; sourceTree = "<group>"; };
@@ -367,6 +379,10 @@
 			isa = PBXGroup;
 			children = (
 				50EAD27B1D17C2B7008B8F76 /* RefreshControl */,
+				5769B0FD2419E17400802FC6 /* LSTableView.h */,
+				5769B0FE2419E17400802FC6 /* LSTableView.m */,
+				5283D1D4241B585100412EB4 /* LSBaseTableViewCell.h */,
+				5283D1D5241B585100412EB4 /* LSBaseTableViewCell.m */,
 			);
 			path = TableView;
 			sourceTree = "<group>";
@@ -453,6 +469,15 @@
 			path = Progress;
 			sourceTree = "<group>";
 		};
+		5769B100241A16FD00802FC6 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				5769B101241A171800802FC6 /* LSCollectionView.h */,
+				5769B102241A171800802FC6 /* LSCollectionView.m */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
 		577FD96D20FDBECA00961C6A /* UINavigation-SXFixSpace */ = {
 			isa = PBXGroup;
 			children = (
@@ -506,6 +531,7 @@
 		CAF537C9171FDB70005DCB49 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				5769B100241A16FD00802FC6 /* CollectionView */,
 				3E9F69072227B21D00C69F0F /* TopLeftLabel */,
 				57A265E620F738C1000DB5EC /* UIButtonItem */,
 				3EEAFA8420AAFEBD00DEA419 /* LSYYWebImage */,
@@ -545,6 +571,8 @@
 				CAF537EC171FDB70005DCB49 /* LSCheckButton.m */,
 				50E7C70520AD1DEE00E7D93F /* LSHighlightedButton.h */,
 				50E7C70620AD1DEE00E7D93F /* LSHighlightedButton.m */,
+				5283D1D1241B582000412EB4 /* LSThemeColorButton.h */,
+				5283D1D2241B582000412EB4 /* LSThemeColorButton.m */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -724,11 +752,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5283D1D3241B582000412EB4 /* LSThemeColorButton.m in Sources */,
 				50A98C4C1F9485B000043448 /* LSUIImageFactory.m in Sources */,
 				3EEAFAB520AAFEBD00DEA419 /* UIImage+LSYYWebImage.m in Sources */,
 				3EEAFABC20AAFEBD00DEA419 /* LSYYImageCache.m in Sources */,
 				50E7C70720AD1DEE00E7D93F /* LSHighlightedButton.m in Sources */,
 				CA799B66171F98700043B352 /* LSUIWidget.m in Sources */,
+				5283D1D7241B585100412EB4 /* LSBaseTableViewCell.m in Sources */,
 				3EEAFABE20AAFEBD00DEA419 /* LSYYWebImageOperation.m in Sources */,
 				3EEAFAB420AAFEBD00DEA419 /* UIButton+LSYYWebImage.m in Sources */,
 				3EEAFAB920AAFEBD00DEA419 /* LSYYImage.m in Sources */,
@@ -761,7 +791,9 @@
 				3E9F690A2227B23B00C69F0F /* TopLeftLabel.m in Sources */,
 				3EEAFABB20AAFEBD00DEA419 /* LSYYSpriteSheetImage.m in Sources */,
 				CAF5383F171FDB71005DCB49 /* LSViewController.m in Sources */,
+				5769B103241A171800802FC6 /* LSCollectionView.m in Sources */,
 				3EEAFABD20AAFEBD00DEA419 /* LSYYWebImageManager.m in Sources */,
+				5769B0FF2419E17400802FC6 /* LSTableView.m in Sources */,
 				CAF53875171FE62E005DCB49 /* CustomUIView.m in Sources */,
 				52238B2722FA5A4000C95718 /* LSPullRefreshObserve.m in Sources */,
 				5063A4121ECF1A9400361942 /* LSBLTextField.m in Sources */,

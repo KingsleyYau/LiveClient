@@ -1,0 +1,100 @@
+
+/* Class = "UILabel"; text = "Pending her confimation"; ObjectID = "0xE-20-sGI"; */
+"0xE-20-sGI.text" = "Pending her confimation";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "1pT-ae-uHs"; */
+"1pT-ae-uHs.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Schedule ID:"; ObjectID = "6En-5D-ATW"; */
+"6En-5D-ATW.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "7mN-JJ-Ys2"; */
+"7mN-JJ-Ys2.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
+
+/* Class = "UILabel"; text = "Request has benn sent to xxx"; ObjectID = "C74-d2-5VW"; */
+"C74-d2-5VW.text" = "Request has benn sent to xxx";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "Cc9-p4-mO9"; */
+"Cc9-p4-mO9.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
+
+/* Class = "UILabel"; text = "XXXXXXX"; ObjectID = "Gha-gQ-V2o"; */
+"Gha-gQ-V2o.text" = "XXXXXXX";
+
+/* Class = "UILabel"; text = "Schedule One-on-One Request"; ObjectID = "IlA-bD-ccM"; */
+"IlA-bD-ccM.text" = "Schedule One-on-One Request";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "Jiu-kt-5ky"; */
+"Jiu-kt-5ky.text" = "Status:";
+
+/* Class = "UILabel"; text = "Ann has accepted your request."; ObjectID = "KZt-Jx-hnw"; */
+"KZt-Jx-hnw.text" = "Ann has accepted your request.";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 (Your local time)"; ObjectID = "LxH-Ar-4JL"; */
+"LxH-Ar-4JL.text" = "Dec 28,13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "No confirmation time yet."; ObjectID = "M0k-s7-SGJ"; */
+"M0k-s7-SGJ.text" = "No confirmation time yet.";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "Mgb-Jl-CDc"; */
+"Mgb-Jl-CDc.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "XXX Declined your request"; ObjectID = "NVE-Nl-NfK"; */
+"NVE-Nl-NfK.text" = "XXX Declined your request";
+
+/* Class = "UILabel"; text = "Congrats! Request accepted!"; ObjectID = "PT6-8v-cho"; */
+"PT6-8v-cho.text" = "Congrats! Request accepted!";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 (Your local time)"; ObjectID = "QTk-pj-Njh"; */
+"QTk-pj-Njh.text" = "Dec 28,13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "SaS-Yw-WyI"; */
+"SaS-Yw-WyI.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Now is waiting for her to confirm."; ObjectID = "XZP-Uz-Rr5"; */
+"XZP-Uz-Rr5.text" = "Now is waiting for her to confirm.";
+
+/* Class = "UILabel"; text = "Below are the detailed information"; ObjectID = "br2-3A-Pyn"; */
+"br2-3A-Pyn.text" = "Below are the detailed information";
+
+/* Class = "UILabel"; text = "Note:"; ObjectID = "fnj-oO-b4w"; */
+"fnj-oO-b4w.text" = "Note:";
+
+/* Class = "UILabel"; text = "Sorry,request decline!"; ObjectID = "gAO-St-gVk"; */
+"gAO-St-gVk.text" = "Sorry,request decline!";
+
+/* Class = "UILabel"; text = "45 Minutes"; ObjectID = "jAJ-xo-kH6"; */
+"jAJ-xo-kH6.text" = "45 Minutes";
+
+/* Class = "UILabel"; text = "Time sent:Dec 22,12:30(GTMT)"; ObjectID = "spS-pV-IbC"; */
+"spS-pV-IbC.text" = "Time sent:Dec 22,12:30(GTMT)";
+
+
+"WAITING_TITLE" = "Request has benn sent to %@!";
+
+"ACCEPTED_TITLE" = "%@ has accepted your request.";
+
+"DECLINED_TITLE" = "%@ Declined your request.";
+
+"DECLINED_TITLE_ME" = "You have declined this request.";
+
+"ACCEPTED_TITLE_ME" = "You have accepted this request.";
+
+//状态
+"PENDING" = "Pending her confimation";
+"CONFIRMED" = "Confirmed";
+"DECLINED" = "Declined";
+
+"NO_CONFIMATION" = "No confirmation time yet.";
+"TIME_CONFIRMED" = "Time Confirmed:%@ (GMT)";
+"TIME_DECLINED" = "Time Declined:%@ (GMT)";
+
+"SENT_TIME" = "Time Sent:%@ (GMT)";
+"DURATION" = "%d Minutes";
+
+"LOCAL_TIME" = "%@ - %@ (Your local time)";
+
+"ME_ACCEPT" = "Congrats! Request accepted!";
+"LADY_ACCEPT" = "Well done!";
+
+"ME_DECLINE" = "Sorry, request declined!";
+"LADY_DECLINE" = "Request declined!";

@@ -22,8 +22,9 @@
 #import "AnchorPersonalViewController.h"
 #import "LSDateTool.h"
 #import "LiveModule.h"
+
 @interface LSSayHiDetailViewController ()<UITableViewDelegate,UITableViewDataSource,LSSayHiDetailHeadViewDelegate,LSSayHiReadReplyCellDelegate,LSSayHiDetailAddCreditsCellDelegate>
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) LSSayHiDetailHeadView * headView;
 @property (nonatomic, strong) NSMutableArray * items;
 @property (nonatomic, assign) BOOL isLoadImage;

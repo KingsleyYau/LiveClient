@@ -16,7 +16,7 @@
 
 @interface LSStoreListHeadView : UIView 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) NSArray * titleArray;
 @property (nonatomic, assign) NSInteger selectRow;
 @property (weak, nonatomic) id<LSStoreListHeadViewDelegate> delegate;

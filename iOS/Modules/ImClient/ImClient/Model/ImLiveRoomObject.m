@@ -35,6 +35,7 @@
         self.useCoupon = 0;
         self.shareLink = @"";
         self.isHasTalent = NO;
+        self.freeSeconds = 0;
         
     }
     return self;
@@ -70,6 +71,7 @@
         self.liveShowType = [coder decodeIntForKey:@"liveShowType"];
         self.isHasTalent = [coder decodeBoolForKey:@"isHasTalent"];
         self.isHangoutPriv = [coder decodeBoolForKey:@"isHangoutPriv"];
+        self.freeSeconds = [coder decodeIntForKey:@"freeSeconds"];
     }
     return self;
 }
@@ -103,6 +105,7 @@
     [coder encodeInt:self.liveShowType forKey:@"liveShowType"];
     [coder encodeBool:self.isHasTalent forKey:@"isHasTalent"];
     [coder encodeBool:self.isHangoutPriv forKey:@"isHangoutPriv"];
+    [coder encodeInt:self.freeSeconds forKey:@"freeSeconds"];
 }
 
 

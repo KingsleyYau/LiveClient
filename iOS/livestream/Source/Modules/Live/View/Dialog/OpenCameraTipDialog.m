@@ -81,7 +81,7 @@
     
     
     self.ladyImageLoader = [LSImageViewLoader loader];
-    [self.ladyImageLoader loadImageFromCache:self.ladyHeadImage options:0 imageUrl:ladyPhoto placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.ladyImageLoader loadImageFromCache:self.ladyHeadImage options:0 imageUrl:ladyPhoto placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
         
     }];
     

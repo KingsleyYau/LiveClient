@@ -10,5 +10,7 @@
 #import <UIKit/UIKit.h>
 
 @interface LSColor : NSObject
-+ (UIColor*)colorWithIntRGB:(NSInteger)red green:(NSInteger)green blue:(NSInteger)blue alpha:(NSInteger)alpha;
++ (UIColor *)colorWithIntRGB:(NSInteger)red green:(NSInteger)green blue:(NSInteger)blue alpha:(NSInteger)alpha;
+
++ (UIColor *)colorWithLight:(UIColor *)lightColor orDark:(UIColor *)darkColor;
 @end
