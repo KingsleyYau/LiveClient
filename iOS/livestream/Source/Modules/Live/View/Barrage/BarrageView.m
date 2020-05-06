@@ -52,79 +52,72 @@
  */
 @property (assign, nonatomic) NSInteger numbers;
 
+@property (strong, nonatomic) dispatch_queue_t syncQueue;
+
 @end
 
 @implementation BarrageView
 
 #pragma mark - Setter/Getter
 
-- (NSMutableArray *)cellCaches
-{
+- (NSMutableArray *)cellCaches {
     if (!_cellCaches) {
         _cellCaches = [NSMutableArray array];
     }
     return _cellCaches;
 }
 
-- (NSMutableArray *)dataArray
-{
+- (NSMutableArray *)dataArray {
     if (!_dataArray) {
         _dataArray = [NSMutableArray array];
     }
     return _dataArray;
 }
 
-- (NSMutableArray *)highPrioritys
-{
+- (NSMutableArray *)highPrioritys {
     if (!_highPrioritys) {
         _highPrioritys = [NSMutableArray array];
     }
     return _highPrioritys;
 }
 
-- (NSMutableArray *)mediumPrioritys
-{
+- (NSMutableArray *)mediumPrioritys {
     if (!_mediumPrioritys) {
         _mediumPrioritys = [NSMutableArray array];
     }
     return _mediumPrioritys;
 }
 
-- (NSMutableArray *)lowPrioritys
-{
+- (NSMutableArray *)lowPrioritys {
     if (!_lowPrioritys) {
         _lowPrioritys = [NSMutableArray array];
     }
     return _lowPrioritys;
 }
 
-- (NSMutableArray<BarrageViewCell *> *)showCells
-{
+- (NSMutableArray<BarrageViewCell *> *)showCells {
     if (!_showCells) {
         _showCells = [NSMutableArray array];
     }
     return _showCells;
 }
 
-- (NSInteger)numbers
-{
+- (NSInteger)numbers {
     if (!_numbers) {
         _numbers = [self.dataSouce numberOfRowsInTableView:self];
     }
     return _numbers;
 }
 
-- (CGFloat)cellHeight
-{
+- (CGFloat)cellHeight {
     if (_cellHeight == 0) {
         //_cellHeight = (H - margin * (self.numbers - 1)) / self.numbers;
-        _cellHeight = 44;
+        _cellHeight = 32;
     }
     return _cellHeight;
 }
 
-- (NSMutableArray<NSValue *> *)orbitPoints
-{
+- (NSMutableArray<NSValue *> *)orbitPoints {
     if (!_orbitPoints) {
         _orbitPoints  = [NSMutableArray array];
         for (int row  = 0; row < self.numbers; row ++) {
@@ -141,8 +134,7 @@
 
 #pragma mark - Initial
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         [self addOwnViews];
     }
@@ -153,20 +145,17 @@
     
 }
 
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     [super awakeFromNib];
     [self addOwnViews];
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     [self configOwnView];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     //因为视图在动画过程中不能响应手势，所以只能通过计算来响应用户的手势点击事件
     UITouch *touch = [touches anyObject];
     CGPoint point  = [touch locationInView:self];
@@ -175,12 +164,12 @@
     for (NSInteger index = self.showCells.count - 1; index >= 0; index--) {
         BarrageViewCell *cell = self.showCells[index];
         if (cell.row == row) {
-            NSDate *nowDate       = [NSDate date];
+            NSDate *nowDate = [NSDate date];
             if (cell.stopDate) {
-                nowDate               = cell.stopDate;
+                nowDate = cell.stopDate;
             }
-            CGFloat offsetX       = [nowDate timeIntervalSinceDate:cell.startTime] * cell.speed;
-            CGRect currentFrame   = cell.frame;
+            CGFloat offsetX = [nowDate timeIntervalSinceDate:cell.startTime] * cell.speed;
+            CGRect currentFrame = cell.frame;
             currentFrame.origin.x = cell.frame.origin.x - offsetX - cell.frame.size.width * 0.5;
             if (CGRectContainsPoint(currentFrame, point)) {
                 if ([self.delegate respondsToSelector:@selector(barrageView:didSelectedCell:)]) {
@@ -195,27 +184,25 @@
 #pragma mark - Private
 
 //轨道检测(具体的计算应该交给cell)
-- (NSInteger)examineOrbit:(BarrageViewCell *)currentCell
-{
+- (NSInteger)examineOrbit:(BarrageViewCell *)currentCell {
     return [currentCell examineOrbitWithNumbers:self.numbers showCells:self.showCells];
 }
 
 //计算cell的初始位置
-- (CGRect)FrameWithRow:(NSInteger )row width:(CGFloat)width
-{
+- (CGRect)FrameWithRow:(NSInteger )row width:(CGFloat)width {
     CGPoint point = self.orbitPoints[row].CGPointValue;
     return CGRectMake(W + width, point.y + self.cellHeight * 0.5, width, self.cellHeight);
 }
 
 //根据cell的width确定动画的时间
-- (NSTimeInterval)animationDurationWithCell:(BarrageViewCell *)cell width:(CGFloat)cellWdith
-{
-    return 6;
+- (NSTimeInterval)animationDurationWithCell:(BarrageViewCell *)cell width:(CGFloat)cellWdith {
+    NSTimeInterval time = (W + cellWdith) / (W / self.speedBaseVlaue);
+    NSLog(@"animationDurationWithCell : %f",time);
+    return time;
 }
 
 //检测cell是否实现了BarrageViewCellAble协议
-+ (void)checkElementOfBarrages:(NSArray<id<BarrageModelAble>> *)barrages
-{
++ (void)checkElementOfBarrages:(NSArray<id<BarrageModelAble>> *)barrages {
     for (id<BarrageModelAble> obj in barrages) {
         if (![obj conformsToProtocol:@protocol(BarrageModelAble)]) {
             //(@"为了保证cell动画速度的正确，cell的模型必须要实现BarrageViewCellAble协议");
@@ -226,57 +213,57 @@
 }
 
 //对数据源进行分类
-- (void)assortDataArray:(NSArray *)dataArray
-{
+- (void)assortDataArray:(NSArray *)dataArray {
     [self.dataArray addObjectsFromArray:dataArray];
-    for (id<BarrageModelAble> obj in dataArray) {
+    for (BarrageModel *obj in dataArray) {
         [self addModel:obj];
     }
 }
 
 //从数据源中取出number个model用于轨道检测
-- (NSArray *)subArrayWithNumber:(NSInteger)number
-{
+- (NSArray *)subArrayWithNumber:(NSInteger)number {
     NSMutableArray *array = [NSMutableArray array];
     if (self.highPrioritys.count) {
-        [array addObjectsFromArray:self.highPrioritys];
+        array = [self.highPrioritys copy];
     }
     if (self.mediumPrioritys.count) {
-        [array addObjectsFromArray:self.mediumPrioritys];
+        array = [self.mediumPrioritys copy];
     }
     if (self.lowPrioritys.count) {
-        [array addObjectsFromArray:self.lowPrioritys];
+        array = [self.lowPrioritys copy];
     }
     if (array.count >= number) {
         NSArray *subArray = [array subarrayWithRange:NSMakeRange(0, number)];
-        [self removeModels:subArray];
         return subArray;
-    }else {
-        [self removeModels:array];
+    } else {
         return array;
     }
 }
 
 //将obj添加到数据源中
-- (void)addModel:(id<BarrageModelAble>)obj
-{
+- (void)addModel:(BarrageModel *)obj {
     switch ([obj level]) {
         case PriorityLevelLow:
-            [self.lowPrioritys addObject:obj];
+            if (![self.lowPrioritys containsObject:obj]) {
+                [self.lowPrioritys addObject:obj];
+            }
             break;
         case PriorityLevelMedium:
-            [self.mediumPrioritys addObject:obj];
+            if (![self.mediumPrioritys containsObject:obj]) {
+                [self.mediumPrioritys addObject:obj];
+            }
             break;
         case PriorityLevelHigh:
-            [self.highPrioritys addObject:obj];
+            if (![self.highPrioritys containsObject:obj]) {
+                [self.highPrioritys addObject:obj];
+                NSLog(@"BarrageView::addModel count:%lu, text:%@",(unsigned long)self.highPrioritys.count, obj.message);
+            }
             break;
     }
-    NSLog(@"BarrageView::addModel array:%@ obj:%p",self.highPrioritys,obj);
 }
 
 //从数据源中删除obj
-- (void)removeModel:(id<BarrageModelAble>)obj
-{
+- (void)removeModel:(BarrageModel *)obj {
     switch ([obj level]) {
         case PriorityLevelLow:
             [self.lowPrioritys removeObject:obj];
@@ -291,9 +278,8 @@
 }
 
 //从数据源中删除objs
-- (void)removeModels:(NSArray *)objs
-{
-    for (id<BarrageModelAble> obj in objs) {
+- (void)removeModels:(NSArray *)objs {
+    for (BarrageModel *obj in objs) {
         if ([self.lowPrioritys containsObject:obj]) {
             [self.lowPrioritys removeObject:obj];
             continue;
@@ -310,8 +296,7 @@
 }
 
 //判断数据源是否为空
-- (BOOL)dataArrayIsNil
-{
+- (BOOL)dataArrayIsNil {
     if (self.highPrioritys.count > 0 || self.mediumPrioritys.count > 0 || self.lowPrioritys.count > 0) {
         return NO;
     }
@@ -319,8 +304,7 @@
 }
 
 //计算point点所在的轨道
-- (NSInteger)rowCalculatorOfPoint:(CGPoint)point
-{
+- (NSInteger)rowCalculatorOfPoint:(CGPoint)point {
     //内边距
     CGFloat inset = (H - (self.cellHeight + margin) * self.numbers + margin) * 0.5;
     inset         = MAX(0, inset);
@@ -329,8 +313,7 @@
 
 #pragma mark - Publick
 
-- (BarrageViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier
-{
+- (BarrageViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier {
     BarrageViewCell *availableCell = nil;
 //    for (int index = 0; index < self.cellCaches.count; index++) {
 //        BarrageViewCell *cell = self.cellCaches[index];
@@ -351,8 +334,7 @@
     return availableCell;
 }
 
-- (void)insertBarrages:(NSArray<id<BarrageModelAble>> *)barrages immediatelyShow:(BOOL)flag
-{
+- (void)insertBarrages:(NSArray<BarrageModel *> *)barrages immediatelyShow:(BOOL)flag {
     [BarrageView checkElementOfBarrages:barrages];
     if (barrages.count) {
         [self assortDataArray:barrages];
@@ -364,17 +346,15 @@
     
 }
 
-- (void)deleteBarrages:(NSArray<id<BarrageModelAble>> *)barrages
-{
+- (void)deleteBarrages:(NSArray<BarrageModel *> *)barrages {
     for (id<BarrageModelAble> obj in barrages) {
         [self removeModel:obj];
     }
 }
 
-- (void)startAnimation
-{
+- (void)startAnimation {
     NSArray *subArray = [self subArrayWithNumber:self.numbers];//需要展示的models
-    for (id<BarrageModelAble> obj in subArray) {
+    for (BarrageModel *obj in subArray) {
         if (![self.dataArray containsObject:obj]) continue;
         
         NSLog(@"BarrageView::startAnimation subArray:%@ obj:%p",subArray,obj);
@@ -409,6 +389,7 @@
                 if (!ws.dataArray.count) {
                     ws.currentArray = nil;
                 }
+                [ws removeModels:subArray];
             }];
         }
     }
@@ -418,8 +399,7 @@
     }
 }
 
-- (void)pauseAnimation
-{
+- (void)pauseAnimation {
     //停止当前动画
     if (self.showCells.count) {
         [self.showCells makeObjectsPerformSelector:@selector(pauseLayerAnimation)];
@@ -430,8 +410,7 @@
     }
 }
 
-- (void)resumeAnimation
-{
+- (void)resumeAnimation {
     if (self.showCells.count) {
         [self.showCells makeObjectsPerformSelector:@selector(resumeLayerAnimation)];
     }
@@ -441,8 +420,7 @@
     }
 }
 
-- (void)stopAnimation
-{
+- (void)stopAnimation {
     //暂停动画
     [self pauseAnimation];
     
@@ -463,15 +441,22 @@
 
 @implementation BarrageView (ProtectedMethod)
 
-- (void)addOwnViews
-{
+- (void)addOwnViews {
     //初始值
-    self.speedBaseVlaue = 15.0;
+    self.speedBaseVlaue = 8.0;
 }
 
-- (void)configOwnView
-{
+- (void)configOwnView {
     
+}
+
+- (dispatch_queue_t)syncQueue {
+    static dispatch_queue_t queue = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("com.kong.NSKSafeMutableArray", DISPATCH_QUEUE_CONCURRENT);
+    });
+    return queue;
 }
 
 @end

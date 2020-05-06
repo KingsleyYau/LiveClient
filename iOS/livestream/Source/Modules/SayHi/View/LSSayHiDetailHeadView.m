@@ -53,7 +53,7 @@
     
     self.imageLoader = [LSImageViewLoader loader];
     
-    [self.imageLoader loadImageFromCache:self.ladyHead options:0 imageUrl:obj.avatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageFromCache:self.ladyHead options:0 imageUrl:obj.avatar placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
     }];
     
     self.backgroundImageloader = [LSImageViewLoader loader];

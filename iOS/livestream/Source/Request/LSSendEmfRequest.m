@@ -17,6 +17,10 @@
         self.content = @"";
         self.comsumeType = LSLETTERCOMSUMETYPE_CREDIT;
         self.sayHiResponseId = @"";
+        self.isSchedule = NO;
+        self.timeZoneId = @"";
+        self.startTime = @"";
+        self.duration = 0;
     }
     
     return self;
@@ -29,7 +33,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager sendEmf:self.anchorId loiId:self.loiId emfId:self.emfId content:self.content imgList:self.imgList comsumeType:self.comsumeType sayHiResponseId:self.sayHiResponseId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+        NSInteger request = [self.manager sendEmf:self.anchorId loiId:self.loiId emfId:self.emfId content:self.content imgList:self.imgList comsumeType:self.comsumeType sayHiResponseId:self.sayHiResponseId isSchedule:self.isSchedule timeZoneId:self.timeZoneId startTime:self.startTime duration:self.duration finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *  emfId) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理
@@ -39,7 +43,7 @@
             }
             
             if( !bFlag && weakSelf.finishHandler ) {
-                weakSelf.finishHandler(success, errnum, errmsg);
+                weakSelf.finishHandler(success, errnum, errmsg, emfId);
                 [weakSelf finishRequest];
             }
         }];
@@ -50,7 +54,7 @@
 
 - (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
-        self.finishHandler(NO, errnum, errmsg);
+        self.finishHandler(NO, errnum, errmsg, @"");
     }
     
     [super callRespond:success errnum:errnum errmsg:errmsg];

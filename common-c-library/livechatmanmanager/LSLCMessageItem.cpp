@@ -45,6 +45,8 @@ LSLCMessageItem::LSLCMessageItem()
 	m_customItem = NULL;
     m_magicIconItem = NULL;
     m_autoInviteItem = NULL;
+    m_scheduleInviteItem = NULL;
+    m_scheduleReplyItem = NULL;
 
 	m_userItem = NULL;
     
@@ -229,12 +231,29 @@ bool LSLCMessageItem::InitWithRecord(
 			result = true;
 		}
 	}break;
-        case LRM_MAGIC_ICON: {
-            if (!record.magicIconId.empty()) {
-                LSLCMagicIconItem* magicIconItem = magicIconMgr->GetMagicIcon(record.magicIconId);
-                SetMagicIconItem(magicIconItem);
+    case LRM_MAGIC_ICON: {
+        if (!record.magicIconId.empty()) {
+            LSLCMagicIconItem* magicIconItem = magicIconMgr->GetMagicIcon(record.magicIconId);
+            SetMagicIconItem(magicIconItem);
+            result = true;
+        }
+    }break;
+        case LRM_SCHEDULE: {
+            SCHEDULEINVITE_TYPE type = GetScheduleInviteType(record.scheduleMsg.type);
+            if (type == SCHEDULEINVITE_PENDING) {
+                LSLCScheduleInviteItem* scheduleItem = new LSLCScheduleInviteItem();
+                scheduleItem->InitRecord(record.scheduleMsg);
+                SetScheduleInviteItem(scheduleItem);
+                result = true;
+            } else {
+                LSLCScheduleInviteReplyItem* scheduleReplyItem = new LSLCScheduleInviteReplyItem();
+                bool isScheduleAccept = (type == SCHEDULEINVITE_CONFIRMED ? true : false);
+                bool isScheduleFromM = record.toflag == LRT_SEND ? true : false;
+                scheduleReplyItem->Init(record.scheduleMsg.sessionId, isScheduleAccept, isScheduleFromM, record.scheduleMsg.actionGmtTime, record.scheduleMsg.durationAdjusted);
+                SetScheduleInviteReplyItem(scheduleReplyItem);
                 result = true;
             }
+
         }break;
 	default: {
 		FileLog("LiveChatManager", "LSLCMessageItem::InitWithRecord() unknow message type");
@@ -379,6 +398,32 @@ LSLCCustomItem* LSLCMessageItem::GetCustomItem() const
 	return m_customItem;	
 }
 
+//  设置预付费邀请item alex 2020－04-10
+void LSLCMessageItem::SetScheduleInviteItem(LSLCScheduleInviteItem* theScheduleMsgItem) {
+    if (m_msgType == MT_Unknow
+        && theScheduleMsgItem != NULL) {
+        m_scheduleInviteItem = theScheduleMsgItem;
+        m_msgType = MT_Schedule;
+    }
+}
+//  获取自动邀请item alex 2019－04-10
+LSLCScheduleInviteItem* LSLCMessageItem::GetScheduleInviteItem() const {
+    return m_scheduleInviteItem;
+}
+
+//  设置预付费邀请item alex 2020－04-15
+void LSLCMessageItem::SetScheduleInviteReplyItem(LSLCScheduleInviteReplyItem* theScheduleReplyItem) {
+    if (m_msgType == MT_Unknow
+        && theScheduleReplyItem != NULL) {
+        m_scheduleReplyItem = theScheduleReplyItem;
+        m_msgType = MT_ScheduleReply;
+    }
+}
+//  获取自动邀请item alex 2019－04-10
+LSLCScheduleInviteReplyItem* LSLCMessageItem::GetScheduleInviteReplyItem() const {
+    return m_scheduleReplyItem;
+}
+
 // 判断子消息item（如：语音、图片、视频等）是否正在处理
 bool LSLCMessageItem::IsSubItemProcssign() const
 {
@@ -490,6 +535,12 @@ void LSLCMessageItem::Clear()
 	delete m_customItem;
 	m_customItem = NULL;
     
+    delete m_scheduleInviteItem;
+    m_scheduleInviteItem = NULL;
+    
+    delete m_scheduleReplyItem;
+    m_scheduleReplyItem = NULL;
+    
     m_magicIconItem = NULL;
     
     if (m_autoInviteItem != NULL) {
@@ -528,6 +579,8 @@ bool LSLCMessageItem::IsChatMessage()
         case MT_Voice:
         case MT_Emotion:
         case MT_MagicIcon:
+        case MT_Schedule:
+        case MT_ScheduleReply:
             result = true;
             break;
             
@@ -599,6 +652,18 @@ void LSLCMessageItem::InitWithMessageItem(const LSLCMessageItem* messageItem) {
                 if (messageItem->GetMagicIconItem()) {
                     LSLCMagicIconItem* magicIconItem = new LSLCMagicIconItem(messageItem->GetMagicIconItem());
                     SetMagicIconItem(magicIconItem);
+                }
+            }
+            case MT_Schedule: {
+                if (messageItem->GetScheduleInviteItem()) {
+                    LSLCScheduleInviteItem* scheduleInviteItem = new LSLCScheduleInviteItem(messageItem->GetScheduleInviteItem());
+                    SetScheduleInviteItem(scheduleInviteItem);
+                }
+            }
+            case MT_ScheduleReply: {
+                if (messageItem->GetScheduleInviteReplyItem()) {
+                    LSLCScheduleInviteReplyItem* scheduleReplyItem = new LSLCScheduleInviteReplyItem(messageItem->GetScheduleInviteReplyItem());
+                    SetScheduleInviteReplyItem(scheduleReplyItem);
                 }
             }
             default: {

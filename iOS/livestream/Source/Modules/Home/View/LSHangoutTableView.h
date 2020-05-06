@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LSHangoutListItemObject.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @class LSHangoutTableView;
 @protocol LSHangoutTableViewDelegate <NSObject>
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tableView:(LSHangoutTableView *)tableView didClickHangoutFriendCardMsg:(LSFriendsInfoItemObject *)item;
 @end
 
-@interface LSHangoutTableView : UITableView<UITableViewDataSource, UITableViewDelegate>
+@interface LSHangoutTableView : LSTableView<UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, weak) IBOutlet id <LSHangoutTableViewDelegate> tableViewDelegate;
 @property (nonatomic, retain) NSArray *items;

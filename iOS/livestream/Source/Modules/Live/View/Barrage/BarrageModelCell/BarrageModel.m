@@ -22,18 +22,19 @@
 
 - (CGFloat)cellWidth {
     CGFloat width = 0;
-    CGFloat widthName = [self.name sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14.0]}].width;
-    CGFloat widthMessage = [self.message sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15.0]}].width;
-    width = (widthName > widthMessage)?widthName:widthMessage;
-    return width + 80;
+    CGFloat widthName = [self.name sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:14.0]}].width;
+    CGFloat widthMessage = [self.message sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:14.0]}].width;
+    width = widthName + widthMessage;
+    return width + 65;
 }
 
-+ (instancetype)barrageModelForName:(NSString *)name message:(NSString *)message urlWihtUserID:(NSString *)userId {
++ (instancetype)barrageModelForName:(NSString *)name message:(NSString *)message userId:(NSString *)userId url:(NSString *)url {
     
     BarrageModel *item = [[BarrageModel alloc] init];
     item.name = name;
     item.message = message;
     item.userId = userId;
+    item.url = url;
     item.level = PriorityLevelHigh;
     
     return item;

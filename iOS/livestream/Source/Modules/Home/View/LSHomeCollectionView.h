@@ -12,6 +12,7 @@
 #import "LSHomeListCell.h"
 #import "LSLoginManager.h"
 #import "HomeVouchersManager.h"
+#import "LSHomeSchedueleCell.h"
 @protocol LSHomeCollectionViewDelegate <NSObject>
 
 - (void)waterfallView:(UICollectionView *)waterfallView didSelectItem:(LiveRoomInfoItemObject *)item;
@@ -24,16 +25,18 @@
 - (void)waterfallView:(UICollectionView *)waterfallView homeListCellBookingBtnDid:(LiveRoomInfoItemObject *)item;
 - (void)waterfallView:(UICollectionView *)waterfallView homeListCellFocusBtnDid:(LiveRoomInfoItemObject *)item;
 
-- (void)waterfallView:(UICollectionView *)waterfallView homeListHotHeadBtnDid:(NSInteger )row;
+- (void)waterfallView:(UICollectionView *)waterfallView homeScheduleDidRemove:(LiveRoomInfoItemObject *)item;
 
 @optional
+- (void)waterfallView:(UICollectionView *)waterfallView homeListHotHeadBtnDid:(NSInteger )row;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 @end
 
-@interface LSHomeCollectionView : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,LSHomeListCellDelegate,HotHeadViewDelegate>
+@interface LSHomeCollectionView : LSCollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,LSHomeListCellDelegate,HotHeadViewDelegate,LSHomeSchedueleCellDelegate>
 
 @property (nonatomic, retain) NSArray *items;
+@property (nonatomic, retain) NSArray *noticeItems;
 @property (nonatomic, strong) HotHeadView * headView;
 @property (strong, nonatomic) NSArray *iconArray;
 @property (strong, nonatomic) NSArray *titleArray;

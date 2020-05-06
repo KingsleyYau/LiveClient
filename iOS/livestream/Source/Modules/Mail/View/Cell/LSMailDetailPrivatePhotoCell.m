@@ -13,7 +13,7 @@
 
 @interface LSMailDetailPrivatePhotoCell ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 @property (strong, nonatomic) NSMutableArray<LSMailAttachmentModel *> *imageItems;
 

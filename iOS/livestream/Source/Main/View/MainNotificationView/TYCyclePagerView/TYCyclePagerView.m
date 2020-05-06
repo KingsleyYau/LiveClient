@@ -33,7 +33,7 @@ NS_INLINE TYIndexSection TYMakeIndexSection(NSInteger index, NSInteger section) 
 }
 
 // UI
-@property (nonatomic, weak) UICollectionView *collectionView;
+@property (nonatomic, weak) LSCollectionView *collectionView;
 @property (nonatomic, strong) TYCyclePagerViewLayout *layout;
 @property (nonatomic, strong) NSTimer *timer;
 
@@ -91,7 +91,7 @@ NS_INLINE TYIndexSection TYMakeIndexSection(NSInteger index, NSInteger section) 
 
 - (void)addCollectionView {
     TYCyclePagerTransformLayout *layout = [[TYCyclePagerTransformLayout alloc]init];
-    UICollectionView *collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
+    LSCollectionView *collectionView = [[LSCollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
     layout.delegate = _delegateFlags.applyTransformToAttributes ? self : nil;;
     collectionView.backgroundColor = [UIColor clearColor];
     collectionView.dataSource = self;

@@ -29,8 +29,8 @@
 /**
  *  表情选择控件
  */
-@property (weak,nonatomic) IBOutlet UICollectionView* emotionCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *smallEmotionCollectionView;
+@property (weak,nonatomic) IBOutlet LSCollectionView *emotionCollectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *smallEmotionCollectionView;
 
 /**
  *  表情数组

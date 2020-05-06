@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSOtherOptionView">
+            <rect key="frame" x="0.0" y="0.0" width="252" height="193"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_ScheduleDetail_Dialog" translatesAutoresizingMaskIntoConstraints="NO" id="y33-lM-1mD">
+                    <rect key="frame" x="0.0" y="0.0" width="252" height="193"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ch0-br-LK5">
+                    <rect key="frame" x="18" y="18" width="216" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="e8W-qD-Rkf"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <state key="normal" title="Decline request and reply a mail" backgroundImage="LSCommon_BgGray">
+                        <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="declineAndSendMailAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="cNz-Vg-I7o"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QAE-9J-nO1">
+                    <rect key="frame" x="18" y="126" width="216" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="lAC-HR-Ac8"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <state key="normal" title="Not decided yet send a mail first" backgroundImage="LSCommon_BgGray">
+                        <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="sendMailAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="yVC-Vh-dlN"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pds-6L-9di">
+                    <rect key="frame" x="18" y="72" width="216" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="HUM-PT-fTy"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <state key="normal" title="Decline request" backgroundImage="LSCommon_BgGray">
+                        <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="declineAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="F0B-xy-6Sb"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="y33-lM-1mD" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="38N-VG-iKJ"/>
+                <constraint firstItem="ch0-br-LK5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="18" id="572-if-Xus"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="y33-lM-1mD" secondAttribute="trailing" id="6WU-RP-Muj"/>
+                <constraint firstItem="Pds-6L-9di" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="18" id="Lj7-zU-qum"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="y33-lM-1mD" secondAttribute="bottom" id="Nvn-QP-x2K"/>
+                <constraint firstItem="QAE-9J-nO1" firstAttribute="top" secondItem="Pds-6L-9di" secondAttribute="bottom" constant="18" id="X9c-jM-Qxz"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ch0-br-LK5" secondAttribute="trailing" constant="18" id="dWA-uW-NkA"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Pds-6L-9di" secondAttribute="trailing" constant="18" id="f6B-v8-pcm"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="QAE-9J-nO1" secondAttribute="trailing" constant="18" id="ggg-vp-Gtg"/>
+                <constraint firstItem="QAE-9J-nO1" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="18" id="iOD-az-uNc"/>
+                <constraint firstItem="Pds-6L-9di" firstAttribute="top" secondItem="ch0-br-LK5" secondAttribute="bottom" constant="18" id="k9v-Sy-PyS"/>
+                <constraint firstItem="ch0-br-LK5" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="18" id="mui-1G-DRm"/>
+                <constraint firstItem="y33-lM-1mD" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="uUe-KH-BIB"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="decelineBtn" destination="Pds-6L-9di" id="MnN-eA-IFa"/>
+                <outlet property="declineSendMailBtn" destination="ch0-br-LK5" id="kXg-CJ-fll"/>
+                <outlet property="sendMailBtn" destination="QAE-9J-nO1" id="cSu-r9-tTd"/>
+            </connections>
+            <point key="canvasLocation" x="99" y="21"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LSCommon_BgGray" width="4" height="44"/>
+        <image name="Mail_ScheduleDetail_Dialog" width="260" height="201"/>
+    </resources>
+</document>

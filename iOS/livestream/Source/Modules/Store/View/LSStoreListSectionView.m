@@ -25,6 +25,8 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    self.backgroundColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:COLOR_WITH_16BAND_RGB(0x666666)];
+    self.titleLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]];
 }
 
 - (CGFloat)getStrW:(NSString *)str {

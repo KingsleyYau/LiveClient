@@ -57,7 +57,7 @@ typedef enum ContactType {
     
     self.nameLabel.text = item.anchorNickName;
     
-    [self.imageViewLoader loadImageWithImageView:self.ladyHead options:0 imageUrl:item.anchorCover placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageViewLoader loadImageWithImageView:self.ladyHead options:0 imageUrl:item.anchorAvatar placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
     }];
     
     self.timeLabel.text = [NSString stringWithFormat:@"Last Contacted:%@",[LSDateTool getTime:item.lastCountactTime]];
@@ -79,12 +79,13 @@ typedef enum ContactType {
         // 不在线
         self.onlineIcon.hidden = YES;
         self.liveIcon.hidden = YES;
-        
-        if (item.priv.isHasBookingAuth) {
-            [self showSlidingFirType:ContactType_Mail secType:ContactType_Book];
-        } else {
-            [self showSlidingFirType:ContactType_None secType:ContactType_Mail];
-        }
+          //关闭预约,隐藏按钮
+          [self showSlidingFirType:ContactType_None secType:ContactType_Mail];
+//        if (item.priv.isHasBookingAuth) {
+//            [self showSlidingFirType:ContactType_Mail secType:ContactType_Book];
+//        } else {
+//            [self showSlidingFirType:ContactType_None secType:ContactType_Mail];
+//        }
     }
 }
 

@@ -41,6 +41,9 @@
 
 @property (nonatomic, assign) CGFloat cellH;
 
+//用于判断预付费消息是否展开
+@property (nonatomic, assign) BOOL isScheduleMore;
+
 typedef enum {
     MessageSenderUnknow = 0,
     MessageSenderLady,
@@ -59,6 +62,8 @@ typedef enum {
     MessageTypeSmallEmotion,
     MessageTypeCoupon,
     MessageTypeVideo,
+    MessageTypeSchedule,
+    MessageTypeScheduleTips,
 } Type;
 @property (nonatomic, assign) Type type;
 

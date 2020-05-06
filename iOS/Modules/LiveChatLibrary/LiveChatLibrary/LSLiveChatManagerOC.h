@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "LSLiveChatManagerListener.h"
 
+
 @interface LSLiveChatManagerOC : NSObject
 
-@property (nonatomic, strong) NSString *versionCode;
+@property (nonatomic, strong) NSString * versionCode;
 
 #pragma mark - 获取实例
 /**
@@ -612,7 +613,7 @@
  * @param inviteId     消息邀请ID
  * @return 操作是否成功
  */
--(BOOL)getVideoPhoto:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId;
+-(BOOL)getVideoPhoto:(NSString* )userId videoId:(NSString*)videoId inviteId:(NSString* )inviteId;
 /**
  * 购买微视频
  *
@@ -621,7 +622,7 @@
  * @param inviteId     消息邀请ID
  * @return 操作是否成功
  */
--(BOOL)videoFee:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId;
+-(BOOL)videoFee:(NSString*)userId videoId:(NSString* )videoId inviteId:(NSString*)inviteId;
 /**
  * 获取微视频播放文件
  *
@@ -632,14 +633,14 @@
  * @param msgId        消息ID
  * @return 操作是否成功
  */
--(BOOL)getVideo:(NSString* _Nonnull)userId videoId:(NSString* _Nonnull)videoId inviteId:(NSString* _Nonnull)inviteId videoUrl:(NSString* _Nonnull)videoUrl msgId:(int)msgId;
+-(BOOL)getVideo:(NSString*)userId videoId:(NSString* )videoId inviteId:(NSString* )inviteId videoUrl:(NSString* )videoUrl msgId:(int)msgId;
 /**
  * 获取视频当前下载状态
  *
  * @param videoId      视频ID
  * @return 操作是否成功
  */
--(BOOL)isGetingVideo:(NSString* _Nonnull)videoId;
+-(BOOL)isGetingVideo:(NSString* )videoId;
 /**
  * 获取视频图片文件路径（仅文件存在）
  *
@@ -647,17 +648,33 @@
  * @param inviteId     消息邀请ID
  * @param videoId      视频ID
  * @param type         (VPT_DEFAULT:默认尺寸 VPT_BIG:大图)
- * @return
  */
--(NSString* _Nonnull)getVideoPhotoPathWithExist:(NSString* _Nonnull)userId inviteId:(NSString* _Nonnull)inviteId videoId:(NSString* _Nonnull)videoId type:(VIDEO_PHOTO_TYPE)type;
+-(NSString* )getVideoPhotoPathWithExist:(NSString*)userId inviteId:(NSString* )inviteId videoId:(NSString* )videoId type:(VIDEO_PHOTO_TYPE)type;
 /**
  * 获取视频文件路径（仅文件存在）
  *
  * @param userId       用户ID
  * @param inviteId     消息邀请ID
  * @param videoId      视频ID
- * @return
+ *
  */
--(NSString* _Nonnull)getVideoPathWithExist:(NSString* _Nonnull)userId inviteId:(NSString* _Nonnull)inviteId videoId:(NSString* _Nonnull)videoId;
+-(NSString* )getVideoPathWithExist:(NSString*)userId inviteId:(NSString*)inviteId videoId:(NSString* )videoId;
+
+/**
+* 发送预约邀请
+*
+* @param userId    用户ID（女士ID）
+* @param scheduleItem    发送预约邀请信息
+* @return msgItem消息
+*/
+-(LSLCLiveChatMsgItemObject *)sendScheduleInvite:(NSString* )userId scheduleItem:(LSLCLiveChatScheduleMsgItemObject * )scheduleItem;
+
+/**
+* 接收或者拒绝预约邀请
+*
+* @param msgItem    预约邀请信息（msgItem.scheduleMsg里面的 duration（修改后的市场，不改变就不能改）， type（必改，接收还是拒绝）statusUpdateTime（必改，操作时间））duration
+* @return msgItem消息
+ */
+-(LSLCLiveChatMsgItemObject *)acceptOrDeclineScheduleInvite:(LSLCLiveChatMsgItemObject * )msgItem;
 
 @end

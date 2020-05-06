@@ -23,7 +23,7 @@
 
 @interface HangoutInviteTableViewController () <UIScrollViewRefreshDelegate>
 // 列表界面
-@property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet LSTableView *tableView;
 // 提示界面
 @property (weak, nonatomic) IBOutlet UIView *maskView;
 // 空列表控件
@@ -158,7 +158,7 @@
 
     if (indexPath.row < self.items.count) {
         LSHangoutAnchorItemObject *item = [self.items objectAtIndex:indexPath.row];
-        [cell.imageViewLoader loadImageFromCache:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        [cell.imageViewLoader loadImageFromCache:cell.imageViewHeader options:SDWebImageRefreshCached imageUrl:item.avatarImg placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
         }];
         cell.labelName.text = item.nickName;
         cell.labelDesc.text = [NSString stringWithFormat:@"%dyrs / %@", item.age, item.country, nil];

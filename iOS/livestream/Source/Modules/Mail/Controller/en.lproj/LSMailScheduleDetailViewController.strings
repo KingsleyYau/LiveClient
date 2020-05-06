@@ -1,0 +1,5 @@
+"TITLE" = "Mail Viewer";
+"Anchor_Description" = "%@ has sent you a One-on-One Schedule request and she wishes to have a On-on-One video session during the appointed time. Please response and let her know your decision.";
+"Your_Description" = "You have sent a One-on-One Schedule request to %@ via mail service, below are the details.";
+"Decelined_Schedule" = "Schedule One-on-One request has been declined successfully.";
+"Accept_Schedule" = "Schedule One-on-One request has been accepted successfully.";

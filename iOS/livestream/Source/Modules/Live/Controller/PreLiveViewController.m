@@ -8,14 +8,12 @@
 
 #import "PreLiveViewController.h"
 
-#import "PublicViewController.h"
 #import "PublicVipViewController.h"
 #import "PrivateViewController.h"
 #import "PrivateViewController.h"
 #import "BookPrivateBroadcastViewController.h"
 #import "LiveFinshViewController.h"
 #import "AnchorPersonalViewController.h"
-#import "ShowLiveViewController.h"
 #import "LSAddCreditsViewController.h"
 #import "QNChatViewController.h"
 #import "LSSendSayHiViewController.h"
@@ -136,12 +134,12 @@ typedef enum ButtonStatus {
     [super initCustomParam];
 
     NSLog(@"PreLiveViewController::initCustomParam()");
-    
+
     // 隐藏导航栏
     self.isShowNavBar = NO;
     // 禁止导航栏后退手势
     self.canPopWithGesture = NO;
-    
+
     // 初始化管理器
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
@@ -161,7 +159,7 @@ typedef enum ButtonStatus {
     self.roomUserInfoManager = [LSRoomUserInfoManager manager];
 
     self.recommandItems = [[NSMutableArray alloc] init];
-    
+
     // 注册前后台切换通知
     _isBackground = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -189,14 +187,14 @@ typedef enum ButtonStatus {
 
     // 停止计时
     [self stopAllTimer];
-    
+
     //已有RoomId 进入直播间
     if (self.liveRoom.roomId.length > 0) {
         //退出直播间
-        [self.imManager leaveRoom:self.liveRoom];
+        // [self.imManager leaveRoom:self.liveRoom];
     } else {
         //未有RoomId 取消邀请
-        if (self.liveRoom.roomType == LiveRoomType_Private || self.liveRoom.roomType == LiveRoomType_Private_VIP) {
+        if (self.liveRoom.roomType == LiveRoomType_Private) {
             if (self.inviteId.length > 0) {
                 [self.imManager cancelPrivateLive:nil];
             }
@@ -214,7 +212,6 @@ typedef enum ButtonStatus {
 
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-
 }
 
 - (void)viewDidLoad {
@@ -224,25 +221,25 @@ typedef enum ButtonStatus {
 
     self.bookButton.layer.cornerRadius = self.bookButton.tx_height / 2;
     self.bookButton.layer.masksToBounds = YES;
-    
+
     self.vipStartButton.layer.cornerRadius = self.vipStartButton.tx_height / 2;
     self.vipStartButton.layer.masksToBounds = YES;
-    
+
     self.addCreditButton.layer.cornerRadius = self.addCreditButton.tx_height / 2;
     self.addCreditButton.layer.masksToBounds = YES;
-    
+
     self.retryButton.layer.cornerRadius = self.retryButton.tx_height / 2;
     self.retryButton.layer.masksToBounds = YES;
-    
+
     self.chatNowBtn.layer.cornerRadius = self.chatNowBtn.tx_height / 2;
     self.chatNowBtn.layer.masksToBounds = YES;
-    
+
     self.sendMailButton.layer.cornerRadius = self.sendMailButton.tx_height / 2;
     self.sendMailButton.layer.masksToBounds = YES;
-    
+
     self.ladyImageView.layer.cornerRadius = self.ladyImageView.tx_height / 2;
     self.ladyImageView.layer.masksToBounds = YES;
-    
+
     NSMutableArray *array = [NSMutableArray array];
     for (int i = 1; i <= 7; i++) {
         [array addObject:[UIImage imageNamed:[NSString stringWithFormat:@"Prelive_Loading%d", i]]];
@@ -255,24 +252,24 @@ typedef enum ButtonStatus {
     if (self.liveRoom.userName.length > 0) {
         [self setupLiverNameLabel];
     }
-    
+
     // 刷新女士头像
     if (self.liveRoom.photoUrl.length > 0) {
         [self setupLiverHeadImageView];
     } else {
         // 请求并缓存主播信息
-        [self.roomUserInfoManager getUserInfo:self.liveRoom.userId
-                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        // 刷新女士头像
-                                        self.liveRoom.photoUrl = item.photoUrl;
-                                        [self setupLiverHeadImageView];
-                                        
-                                        // 刷新女士名字
-                                        self.liveRoom.userName = item.nickName;
-                                        [self setupLiverNameLabel];
-                                    });
-                                }];
+        [self.roomUserInfoManager getLiverInfo:self.liveRoom.userId
+                                 finishHandler:^(LSUserInfoModel *_Nonnull item) {
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         // 刷新女士头像
+                                         self.liveRoom.photoUrl = item.photoUrl;
+                                         [self setupLiverHeadImageView];
+
+                                         // 刷新女士名字
+                                         self.liveRoom.userName = item.nickName;
+                                         [self setupLiverNameLabel];
+                                     });
+                                 }];
     }
 
     // 设置不允许显示立即邀请
@@ -295,7 +292,7 @@ typedef enum ButtonStatus {
     [self.imageViewLoader loadImageFromCache:self.ladyImageView
                                      options:SDWebImageRefreshCached
                                     imageUrl:self.liveRoom.photoUrl
-                            placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                            placeholderImage:LADYDEFAULTIMG
                                finishHandler:^(UIImage *image){
                                }];
 }
@@ -303,12 +300,15 @@ typedef enum ButtonStatus {
 - (void)setupLiverNameLabel {
     NSMutableAttributedString *name = [[NSMutableAttributedString alloc] initWithString:self.liveRoom.userName
                                                                              attributes:@{
-                                                            NSFontAttributeName : [UIFont boldSystemFontOfSize:14],
-                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xffffff)}];
-    
-    NSMutableAttributedString *anchorId = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"(ID:%@)",self.liveRoom.userId] attributes:@{
-                                                            NSFontAttributeName : [UIFont systemFontOfSize:14],
-                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0x999999)}];
+                                                                                 NSFontAttributeName : [UIFont boldSystemFontOfSize:14],
+                                                                                 NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0xffffff)
+                                                                             }];
+
+    NSMutableAttributedString *anchorId = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"(ID:%@)", self.liveRoom.userId]
+                                                                                 attributes:@{
+                                                                                     NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                                     NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x999999)
+                                                                                 }];
     [name appendAttributedString:anchorId];
     self.ladyNameLabel.attributedText = name;
 }
@@ -365,7 +365,7 @@ typedef enum ButtonStatus {
         bFlag = [self.imManager enterRoom:self.liveRoom.roomId
                             finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem, ImAuthorityItemObject *_Nonnull priv) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    NSLog(@"PreLiveViewController::startRequest( [请求进入指定直播间, %@], roomId : %@, waitStart : %@ ,isHasOneOnOneAuth %d, isHasBookingAuth : %d)", BOOL2SUCCESS(success), self.liveRoom.roomId, BOOL2YES(roomItem.waitStart), priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
+                                    NSLog(@"PreLiveViewController::startRequest( [请求进入指定直播间, %@], roomId : %@, waitStart : %@, isHasOneOnOneAuth %d, isHasBookingAuth : %d)", BOOL2SUCCESS(success), self.liveRoom.roomId, BOOL2YES(roomItem.waitStart), priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
                                     self.liveRoom.priv = priv;
                                     [self handleEnterRoom:success errType:errType errMsg:errMsg roomItem:roomItem];
                                 });
@@ -378,7 +378,7 @@ typedef enum ButtonStatus {
         }
 
     } else {
-        if (self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP) {
+        if (self.liveRoom.roomType == LiveRoomType_Public) {
             NSLog(@"PreLiveViewController::startRequest( [请求进入公开直播间], roomType : %d, userId : %@, roomId : %@ )", self.liveRoom.roomType, self.liveRoom.userId, self.liveRoom.roomId);
             NSString *str = [NSString stringWithFormat:@"请求进入公开直播间"];
             self.statusLabel.text = DEBUG_STRING(str);
@@ -387,7 +387,7 @@ typedef enum ButtonStatus {
             bFlag = [self.imManager enterPublicRoom:self.liveRoom.userId
                                       finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem, ImAuthorityItemObject *_Nonnull priv) {
                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                              NSLog(@"PreLiveViewController::startRequest( [请求进入公开直播间, %@], roomId : %@, waitStart : %@, errMsg : %@ isHasOneOnOneAuth : %d, isHasBookingAuth : %d)",
+                                              NSLog(@"PreLiveViewController::startRequest( [请求进入公开直播间, %@], roomId : %@, waitStart : %@, errMsg : %@, isHasOneOnOneAuth : %d, isHasBookingAuth : %d)",
                                                     BOOL2SUCCESS(success), roomItem.roomId, BOOL2YES(roomItem.waitStart), errMsg, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
                                               self.liveRoom.priv = priv;
                                               [self handleEnterRoom:success errType:errType errMsg:errMsg roomItem:roomItem];
@@ -422,14 +422,14 @@ typedef enum ButtonStatus {
             self.talentIcon.animationDuration = 0.9;
             [self.talentIcon startAnimating];
              */
-            
+
             // TODO:发起私密直播邀请
             bFlag = [self.imManager invitePrivateLive:self.liveRoom.userId
                                                 logId:@""
                                                 force:self.inviteForce
                                         finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSString *_Nonnull invitationId, int timeout, NSString *_Nonnull roomId, ImInviteErrItemObject *_Nonnull inviteErrItem) {
                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                NSLog(@"PreLiveViewController::startRequest( [请求私密邀请, %@], userId : %@, invitationId : %@, roomId : %@, errType : %d, errMsg : %@ ,chatOnlineStatus : %d, isHasOneOnOneAuth : %d, isHasBookingAuth: %d )", BOOL2SUCCESS(success), self.liveRoom.userId, invitationId, roomId, errType, errMsg, inviteErrItem.status, inviteErrItem.priv.isHasOneOnOneAuth, inviteErrItem.priv.isHasBookingAuth);
+                                                NSLog(@"PreLiveViewController::startRequest( [请求私密邀请, %@], userId : %@, invitationId : %@, roomId : %@, errType : %d, errMsg : %@, chatOnlineStatus : %d, isHasOneOnOneAuth : %d, isHasBookingAuth: %d )", BOOL2SUCCESS(success), self.liveRoom.userId, invitationId, roomId, errType, errMsg, inviteErrItem.status, inviteErrItem.priv.isHasOneOnOneAuth, inviteErrItem.priv.isHasBookingAuth);
                                                 self.liveRoom.priv = inviteErrItem.priv;
                                                 if (self.exitLeftSecond > 0) {
                                                     // 未超时
@@ -438,9 +438,9 @@ typedef enum ButtonStatus {
                                                         NSString *str = [NSString stringWithFormat:@"请求私密邀请成功, 等待对方确认"];
                                                         self.statusLabel.text = DEBUG_STRING(str);
                                                         self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_TIPS_INVITE_SUCCESS");
-                                                        
+
                                                         [self upQNInviteId:invitationId roomId:roomId anchorId:self.liveRoom.userId];
-                                                        
+
                                                         if (roomId.length > 0) {
                                                             // 有roomId直接进入
                                                             NSLog(@"PreLiveViewController::startRequest( [请求私密邀请成功, 有roomId直接进入私密直播间], userId : %@, roomId : %@ )", self.liveRoom.userId, roomId);
@@ -453,7 +453,7 @@ typedef enum ButtonStatus {
                                                             self.inviteId = invitationId;
                                                         } else {
                                                             // 没法处理, 弹出错误提示(邀请失败)
-                                                            NSString *str = [NSString stringWithFormat:@"请求私密邀请失败,没有inviteId或者roomId"];
+                                                            NSString *str = [NSString stringWithFormat:@"请求私密邀请失败, 没有inviteId或者roomId"];
                                                             self.statusLabel.text = DEBUG_STRING(str);
                                                             [self handleError:errType errMsg:errMsg onlineStatus:inviteErrItem.status];
                                                         }
@@ -485,7 +485,7 @@ typedef enum ButtonStatus {
     request.roomId = roomId;
     request.inviteType = LSBUBBLINGINVITETYPE_ONEONONE;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
-        NSLog(@"PreLiveViewController::upQNInviteId([更新邀请ID %@] errnum : %d, errmsg : %@ , roomId : %@, inviteId : %@)",BOOL2SUCCESS(success),errnum,errmsg,roomId,inviteId);
+        NSLog(@"PreLiveViewController::upQNInviteId( [更新邀请ID, %@], errnum : %d, errmsg : %@, roomId : %@, inviteId : %@ )", BOOL2SUCCESS(success), errnum, errmsg, roomId, inviteId);
     };
     [self.sessionManager sendRequest:request];
 }
@@ -513,7 +513,7 @@ typedef enum ButtonStatus {
             // 没有信用点
             [self showErrorButton:ButtonStatus_AddCredits];
         } break;
-            
+
         case LCC_ERR_INVITE_NO_RESPOND:
         case LCC_ERR_INVITATION_EXPIRE:
         case LCC_ERR_INVITE_REJECT:
@@ -535,12 +535,12 @@ typedef enum ButtonStatus {
             // 房间满人、主播不在线、预约已过期(找不到房间信息)、该主播不存在公开直播间、主播各种繁忙
             [self showErrorButton:ButtonStatus_Book];
         } break;
-        
+
         case LCC_ERR_CONNECTFAIL: {
             // 连接服务器失败
             [self showErrorButton:ButtonStatus_Retry];
         } break;
-            
+
         case LCC_ERR_PRIVTE_INVITE_AUTHORITY: {
             // 主播无立即私密邀请权限
             if (self.liveRoom.roomId.length > 0) {
@@ -553,7 +553,7 @@ typedef enum ButtonStatus {
                 }
             }
         } break;
-            
+
         default: {
             [self showErrorButton:ButtonStatus_None];
         } break;
@@ -611,77 +611,79 @@ typedef enum ButtonStatus {
 }
 
 - (void)showBookOneOnOne {
-    if (self.liveRoom.priv.isHasBookingAuth) {
-        self.bookButton.hidden = NO;
-    } else {
-        self.bookButton.hidden = YES;
-    }
+    // 关闭预约,隐藏按钮
+    self.bookButton.hidden = YES;
+    //    if (self.liveRoom.priv.isHasBookingAuth) {
+    //        self.bookButton.hidden = NO;
+    //    } else {
+    //        self.bookButton.hidden = YES;
+    //    }
 }
 
 - (void)showErrorButton:(ButtonStatus)Status {
     switch (Status) {
-        case ButtonStatus_Book:{
+        case ButtonStatus_Book: {
             [self showBookOneOnOne];
             self.retryButton.hidden = YES;
             self.addCreditButton.hidden = YES;
             self.vipStartButton.hidden = YES;
             self.chatNowBtn.hidden = YES;
             self.sendMailButton.hidden = YES;
-        }break;
-            
-        case ButtonStatus_Retry:{
+        } break;
+
+        case ButtonStatus_Retry: {
             self.retryButton.hidden = NO;
             self.addCreditButton.hidden = YES;
             self.bookButton.hidden = YES;
             self.vipStartButton.hidden = YES;
             self.chatNowBtn.hidden = YES;
             self.sendMailButton.hidden = YES;
-        }break;
-            
-        case ButtonStatus_AddCredits:{
+        } break;
+
+        case ButtonStatus_AddCredits: {
             self.addCreditButton.hidden = NO;
             self.retryButton.hidden = YES;
             self.bookButton.hidden = YES;
             self.vipStartButton.hidden = YES;
             self.chatNowBtn.hidden = YES;
             self.sendMailButton.hidden = YES;
-        }break;
-            
-        case ButtonStatus_ChatNow:{
+        } break;
+
+        case ButtonStatus_ChatNow: {
             self.chatNowBtn.hidden = NO;
             self.addCreditButton.hidden = YES;
             self.retryButton.hidden = YES;
             self.bookButton.hidden = YES;
             self.vipStartButton.hidden = YES;
             self.sendMailButton.hidden = YES;
-        }break;
-            
-        case ButtonStatus_SendMail:{
+        } break;
+
+        case ButtonStatus_SendMail: {
             self.sendMailButton.hidden = NO;
             self.chatNowBtn.hidden = YES;
             self.addCreditButton.hidden = YES;
             self.retryButton.hidden = YES;
             self.bookButton.hidden = YES;
             self.vipStartButton.hidden = YES;
-        }break;
-            
-        case ButtonStatus_Invite:{
+        } break;
+
+        case ButtonStatus_Invite: {
             [self showStartOneOnOne];
             self.retryButton.hidden = YES;
             self.addCreditButton.hidden = YES;
             self.bookButton.hidden = YES;
             self.chatNowBtn.hidden = YES;
             self.sendMailButton.hidden = YES;
-        }break;
-            
-        default:{
+        } break;
+
+        default: {
             self.retryButton.hidden = YES;
             self.addCreditButton.hidden = YES;
             self.bookButton.hidden = YES;
             self.vipStartButton.hidden = YES;
             self.chatNowBtn.hidden = YES;
             self.sendMailButton.hidden = YES;
-        }break;
+        } break;
     }
 }
 
@@ -777,41 +779,19 @@ typedef enum ButtonStatus {
         [LiveGobalManager manager].liveRoom = self.liveRoom;
     } else {
         // TODO:根据服务器返回的直播间类型进入
-        if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_FREEPUBLICLIVEROOM) {
-            // 免费公开直播间
+        if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_FREEPUBLICLIVEROOM || self.liveRoom.imLiveRoom.roomType == ROOMTYPE_CHARGEPUBLICLIVEROOM) {
+            // 公开直播间
             self.liveRoom.roomType = LiveRoomType_Public;
-            [self enterPublicRoom];
-
-        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_CHARGEPUBLICLIVEROOM) {
-            // 付费公开直播间
-            self.liveRoom.roomType = LiveRoomType_Public_VIP;
             [self enterPublicVipRoom];
 
-        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_COMMONPRIVATELIVEROOM) {
-            // 普通私密直播间
-            //        self.liveRoom.roomType = LiveRoomType_Private;
-            //        [self enterPrivateRoom];
-            self.liveRoom.roomType = LiveRoomType_Private_VIP;
-            [self enterPrivateVipRoom];
-
-        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_LUXURYPRIVATELIVEROOM) {
-            // 豪华私密直播间
-            self.liveRoom.roomType = LiveRoomType_Private_VIP;
-            [self enterPrivateVipRoom];
+        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_COMMONPRIVATELIVEROOM || self.liveRoom.imLiveRoom.roomType == ROOMTYPE_LUXURYPRIVATELIVEROOM) {
+            // 私密直播间
+            self.liveRoom.roomType = LiveRoomType_Private;
+            [self enterPrivateRoom];
         } else {
             [self handleError:LCC_ERR_FAIL errMsg:NSLocalizedStringFromSelf(@"UNKNOW_ROOM_TYPE") onlineStatus:IMCHATONLINESTATUS_ONLINE];
         }
     }
-}
-
-- (void)enterPublicRoom {
-    // TODO:进入免费公开直播间界面
-    self.isEnterRoom = YES;
-    PublicViewController *vc = [[PublicViewController alloc] initWithNibName:nil bundle:nil];
-    vc.liveRoom = self.liveRoom;
-    self.vc = vc;
-    [self.navigationController popToRootViewControllerAnimated:NO];
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)enterPublicVipRoom {
@@ -828,26 +808,6 @@ typedef enum ButtonStatus {
     // TODO:进入私密直播间界面
     self.isEnterRoom = YES;
     PrivateViewController *vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
-    vc.liveRoom = self.liveRoom;
-    self.vc = vc;
-    [self.navigationController popToRootViewControllerAnimated:NO];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)enterPrivateVipRoom {
-    // TODO:进入豪华私密直播间界面
-    self.isEnterRoom = YES;
-    PrivateViewController *vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
-    vc.liveRoom = self.liveRoom;
-    self.vc = vc;
-    [self.navigationController popToRootViewControllerAnimated:NO];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)enterShowLiveRoom {
-    // TODO:进入节目直播间
-    self.isEnterRoom = YES;
-    ShowLiveViewController *vc = [[ShowLiveViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
     [self.navigationController popToRootViewControllerAnimated:NO];
@@ -949,33 +909,33 @@ typedef enum ButtonStatus {
             if ([item.invitationId isEqualToString:self.inviteId]) {
                 if (self.status == PreLiveStatus_Inviting) {
                     switch (item.replyType) {
-                        case HTTPREPLYTYPE_AGREE:{
+                        case HTTPREPLYTYPE_AGREE: {
                             // 主播同意, 发起进入直播间请求
                             self.statusLabel.text = DEBUG_STRING(@"主播同意私密邀请");
                             self.status = PreLiveStatus_WaitingEnterRoom;
-                            
+
                             self.inviteId = nil;
-                            
+
                             if (item.roomId.length > 0) {
                                 self.liveRoom.roomId = item.roomId;
                             }
                             [self startRequest];
-                        }break;
-                        
+                        } break;
+
                         case HTTPREPLYTYPE_REJECT:
                         case HTTPREPLYTYPE_CANCEL:
                         case HTTPREPLYTYPE_OUTTIME:
                         case HTTPREPLYTYPE_ANCHORABSENT:
-                        case HTTPREPLYTYPE_FANSABSENT:{
+                        case HTTPREPLYTYPE_FANSABSENT: {
                             // 清空邀请
                             self.inviteId = nil;
-                            
+
                             // 显示错误提示
                             [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE") onlineStatus:IMCHATONLINESTATUS_ONLINE];
-                        }break;
-                            
-                        default:{
-                        }break;
+                        } break;
+
+                        default: {
+                        } break;
                     }
                 }
             }
@@ -1048,6 +1008,15 @@ typedef enum ButtonStatus {
     });
 }
 
+- (void)onRecvPublicRoomFreeMsgNotice:(NSString *)roomId message:(NSString *)message {
+    NSLog(@"LSVIPLiveViewController::onRecvPublicRoomFreeMsgNotice( [接收公开直播间资费提示通知] roomId : %@, message : %@ )", roomId, message);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            self.liveRoom.publicRoomFreeMsg = message;
+        }
+    });
+}
+
 #pragma mark - 倒数控制
 - (void)enterRoomCountDown {
     //    NSLog(@"PreLiveViewController::countDown( enterRoomLeftSecond : %d )", self.enterRoomLeftSecond);
@@ -1063,13 +1032,17 @@ typedef enum ButtonStatus {
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.enterRoomLeftSecond > 0) {
-            NSMutableAttributedString *tip = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"PRELIVE_TIPS_BOARDCAST_ACCEPT") attributes:@{
-                                                            NSFontAttributeName : [UIFont systemFontOfSize:16],
-                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xffffff)}];
-            
-            NSMutableAttributedString *second = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %ds",self.enterRoomLeftSecond] attributes:@{
-                                                            NSFontAttributeName : [UIFont boldSystemFontOfSize:22],
-                                                            NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xff8500)}];
+            NSMutableAttributedString *tip = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"PRELIVE_TIPS_BOARDCAST_ACCEPT")
+                                                                                    attributes:@{
+                                                                                        NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                        NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0xffffff)
+                                                                                    }];
+
+            NSMutableAttributedString *second = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %ds", self.enterRoomLeftSecond]
+                                                                                       attributes:@{
+                                                                                           NSFontAttributeName : [UIFont boldSystemFontOfSize:22],
+                                                                                           NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0xff8500)
+                                                                                       }];
             [tip appendAttributedString:second];
             self.tipsLabel.attributedText = tip;
         }
@@ -1079,7 +1052,7 @@ typedef enum ButtonStatus {
 - (void)startEnterRoomTimer {
     NSLog(@"PreLiveViewController::startEnterRoomTimer()");
     self.loadingView.hidden = YES;
-    
+
     WeakObject(self, weakSelf);
     [self.enterRoomTimer startTimer:nil
                        timeInterval:1.0 * NSEC_PER_SEC
@@ -1151,7 +1124,7 @@ typedef enum ButtonStatus {
 - (IBAction)close:(id)sender {
     // TODO:点击关闭界面
     NSLog(@"PreLiveViewController::close()");
-    
+
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
     [nvc forceToDismissAnimated:YES completion:nil];
 }
@@ -1160,11 +1133,11 @@ typedef enum ButtonStatus {
     // TODO:点击充值
     // 重置参数
     [self reset];
-    
+
     self.isAddCredit = YES;
     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 - (IBAction)retry:(id)sender {
@@ -1172,11 +1145,11 @@ typedef enum ButtonStatus {
     [[LiveModule module].analyticsManager reportActionEvent:BroadcastTransitionClickContinue eventCategory:EventCategoryTransition];
     // 重置参数
     [self reset];
-    
+
     // 开始计时
     [self stopHandleTimer];
     [self startHandleTimer];
-    
+
     // 发起请求
     [self startRequest];
 }
@@ -1197,11 +1170,11 @@ typedef enum ButtonStatus {
     // TODO:点击强制邀请
     // 重置参数
     [self reset];
-    
+
     // 开始计时
     [self stopHandleTimer];
     [self startHandleTimer];
-    
+
     self.inviteForce = YES;
     [self startRequest];
 }
@@ -1217,7 +1190,7 @@ typedef enum ButtonStatus {
 
 - (IBAction)sendMailBtnDid:(id)sender {
     // TODO:点击进入发信
-    NSURL *url = [[LiveUrlHandler shareInstance] createSendmailByanchorId:self.liveRoom.userId anchorName:self.liveRoom.userName];
+    NSURL *url = [[LiveUrlHandler shareInstance] createSendmailByanchorId:self.liveRoom.userId anchorName:self.liveRoom.userName emfiId:@""];
     [[LiveUrlHandler shareInstance] handleOpenURL:url];
 }
 

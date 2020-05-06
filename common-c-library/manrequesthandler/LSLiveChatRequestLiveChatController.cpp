@@ -592,7 +592,10 @@ void LSLiveChatRequestLiveChatController::onSuccess(long requestId, string url, 
         }
 
 		mLSLiveChatRequestLiveChatControllerCallback->OnCheckFunctions(requestId, bFlag, errnum, errmsg, flagList);
-	}
+	}else if (url.compare(LC_GETSESSIONINVITELIST_PATH) == 0) {
+        // 17.9.获取某会话中预付费直播邀请列表
+        GetSessionInviteListCallbackHandle(requestId, url, true, buf, size);
+    }
 
 
 	FileLog("httprequest", "LSLiveChatRequestLiveChatController::onSuccess() url: %s, end", url.c_str());
@@ -739,7 +742,10 @@ void LSLiveChatRequestLiveChatController::onFail(long requestId, string url) {
         //12.6.检测功能是否开通
 		list<string> flagList;
 		mLSLiveChatRequestLiveChatControllerCallback->OnCheckFunctions(requestId, false, LOCAL_ERROR_CODE_TIMEOUT, LOCAL_ERROR_CODE_TIMEOUT_DESC, flagList);
-	}
+	}else if (url.compare(LC_GETSESSIONINVITELIST_PATH) == 0) {
+        // 17.9.获取某会话中预付费直播邀请列表
+        GetSessionInviteListCallbackHandle(requestId, url, false, NULL, 0);
+    }
 
 	FileLog("httprequest", "LSLiveChatRequestLiveChatController::onFail() url: %s, end", url.c_str());
 }
@@ -1811,6 +1817,39 @@ void LSLiveChatRequestLiveChatController::UploadManPhotoCallbackHandle(long requ
     }
 }
 
+void LSLiveChatRequestLiveChatController::GetSessionInviteListCallbackHandle(long requestId, const string& url, bool requestRet, const char* buf, int size) {
+    int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
+    string errmsg = "";
+    bool bFlag = false;
+    ChatScheduleSessionList list;
+    
+    if (requestRet) {
+        // request success
+        Json::Value dataJson;
+        bFlag = HandleLSResult(buf, size, errnum, errmsg, &dataJson);
+        if (dataJson.isObject()) {
+            if(dataJson[LC_GETSESSIONINVITELIST_LIST].isArray()) {
+                for (int i = 0; i < dataJson[LC_GETSESSIONINVITELIST_LIST].size(); i++) {
+                    Json::Value element = dataJson[LC_GETSESSIONINVITELIST_LIST].get(i, Json::Value::null);
+                    LSLCLiveScheduleSessionItem item;
+                    if (item.Parse(element)) {
+                        list.push_back(item);
+                    }
+                }
+            }
+        }
+    }
+    else {
+        // request fail
+        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+    }
+    
+    if( NULL != mLSLiveChatRequestLiveChatControllerCallback ) {
+        mLSLiveChatRequestLiveChatControllerCallback->OnGetSessionInviteList(requestId, bFlag, errnum, errmsg, list);
+    }
+}
+
 /**
  * 12.5 查询小高级表情配置
  */
@@ -1999,5 +2038,28 @@ long LSLiveChatRequestLiveChatController::CheckFunctions(
 			);
 
 	return StartRequest(url, entiy, this, WebSite);
+}
+
+
+long LSLiveChatRequestLiveChatController::GetSessionInviteList(string inviteId) {
+    HttpEntiy entiy;
+    string url = LC_GETSESSIONINVITELIST_PATH;
+    char temp[16];
+
+    entiy.AddContent(LC_GETSESSIONINVITELIST_REF_ID, inviteId.c_str());
+
+    sprintf(temp, "%d", 2);
+    entiy.AddContent(LC_GETSESSIONINVITELIST_TYPE, temp);
+
+
+    FileLog("httprequest", "LSLiveChatRequestLiveChatController::GetSessionInviteList( "
+            "url : %s, "
+            "inviteId : %s"
+            ")",
+            url.c_str(),
+            inviteId.c_str()
+            );
+
+    return StartRequest(url, entiy, this, WebSite);
 }
 

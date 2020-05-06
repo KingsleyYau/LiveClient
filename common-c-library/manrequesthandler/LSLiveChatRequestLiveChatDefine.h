@@ -191,6 +191,7 @@ typedef enum {
 	LIPM_THEME = 12, // 主题
 	LIPM_CAMSHARE_MESSAGE = 13, // CamShare
 	LIPM_CAMSHARE_HEART = 14, // CamShare心跳
+    LIPM_SCHEDULE_INVITE = 15, // 预付费邀请
 } LIVECHAT_RECORD_PROTOCOL_MSGTYPE;
 // 聊天记录消息内部定义类型
 typedef enum {
@@ -203,6 +204,7 @@ typedef enum {
 	LRM_PHOTO,
 	LRM_VIDEO,
 	LRM_MAGIC_ICON,
+    LRM_SCHEDULE,
 } LIVECHAT_RECORD_MSGTYPE;
 
 // 发送私密照片类型
@@ -451,5 +453,19 @@ static const int FunctionsArray[] = {
  * 返回
  */
 #define	LC_CHECK_FUNCTIONS_DATA		"data"
+
+/* 接口路径  */
+#define LC_GETSESSIONINVITELIST_PATH     "/pman/scheduleLive/api/getSessionInviteList"
+
+/**
+ * 请求
+ */
+#define    LC_GETSESSIONINVITELIST_TYPE         "type"
+#define    LC_GETSESSIONINVITELIST_REF_ID       "ref_id"
+
+/**
+ * 返回
+ */
+#define    LC_GETSESSIONINVITELIST_LIST         "list"
 
 #endif /* LIVECHATREQUESTLIVECHATDEFINE_H_ */

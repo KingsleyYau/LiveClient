@@ -1,0 +1,67 @@
+
+/* Class = "UILabel"; text = "Note:"; ObjectID = "3Dy-xW-a6r"; */
+"3Dy-xW-a6r.text" = "Note:";
+
+/* Class = "UILabel"; text = "Schedule ID:"; ObjectID = "9xb-v7-ziB"; */
+"9xb-v7-ziB.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "OQS-ok-q0T"; */
+"OQS-ok-q0T.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "“Hey Jack, would you like to have One-on-One\nwith me?”"; ObjectID = "RPN-7A-Xfd"; */
+"RPN-7A-Xfd.text" = "“Hey Jack, would you like to have One-on-One\nwith me?”";
+
+/* Class = "UILabel"; text = "No confirmation time yet."; ObjectID = "SFM-l8-E61"; */
+"SFM-l8-E61.text" = "No confirmation time yet.";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "SgC-WG-uNC"; */
+"SgC-WG-uNC.text" = "Status:";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 (Your local time)"; ObjectID = "TWb-F5-dtc"; */
+"TWb-F5-dtc.text" = "Dec 28,13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "Wyj-9O-i5Y"; */
+"Wyj-9O-i5Y.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "Z36-xn-rgZ"; */
+"Z36-xn-rgZ.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
+
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "c8J-EO-WgH"; */
+"c8J-EO-WgH.normalTitle" = "Accept";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 (Your local time)"; ObjectID = "cRg-W6-ZuF"; */
+"cRg-W6-ZuF.text" = "Dec 28,13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "cqS-nG-RYw"; */
+"cqS-nG-RYw.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "XXXXXXX"; ObjectID = "dkd-Ih-vsy"; */
+"dkd-Ih-vsy.text" = "XXXXXXX";
+
+/* Class = "UILabel"; text = "Pending her confimation"; ObjectID = "eeP-cG-poR"; */
+"eeP-cG-poR.text" = "Pending her confimation";
+
+/* Class = "UILabel"; text = "Schedule One-on-One Request"; ObjectID = "h92-eY-b7e"; */
+"h92-eY-b7e.text" = "Schedule One-on-One Request";
+
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "jfr-Jq-jU0"; */
+"jfr-Jq-jU0.normalTitle" = "Accept";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "qxc-9R-hue"; */
+"qxc-9R-hue.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Time sent:Dec 22,12:30(GTMT)"; ObjectID = "sSS-yS-ljc"; */
+"sSS-yS-ljc.text" = "Time sent:Dec 22,12:30(GTMT)";
+
+/* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "yTr-Ut-8hr"; */
+"yTr-Ut-8hr.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
+
+"PENDING" = "Pending your confimation";
+
+"NO_CONFIMATION" = "No confirmation time yet.";
+
+"SCHEDULE_TITLE" = "“Hey %@, would you like to have One-on-One with me?”";
+
+"LOCAL_TIME" = "%@ - %@ (Your local time)";
+
+"SENT_TIME" = "Time Sent:%@ (GMT)";

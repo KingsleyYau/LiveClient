@@ -647,6 +647,23 @@ static LSImManager *imManager = nil;
     return bFlag;
 }
 
+- (BOOL)sendHandleSchedule:(ImScheduleRoomInfoObject *_Nonnull)item {
+    NSLog(@"LSImManager::sendHandleSchedule( [观众通知服务器对预约操作（操作为发送、接受、拒绝预约）] )");
+    BOOL bFlag = NO;
+
+    @synchronized(self) {
+        if (self.isIMLogin) {
+            //if (self.inviteId.length > 0) {
+                SEQ_T reqId = [self.client getReqId];
+                bFlag = [self.client sendHandleSchedule:reqId item:item];
+;
+           // }
+        }
+    }
+
+    return bFlag;
+}
+
 - (void)onGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg item:(ImInviteIdItemObject *)item priv:(ImAuthorityItemObject* )priv{
     NSLog(@"LSImManager::onGetInviteInfo( [获取指定立即私密邀请信息, %@], errType : %d, errmsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
     @synchronized(self) {
@@ -687,9 +704,25 @@ static LSImManager *imManager = nil;
     NSLog(@"LSImManager::onRecvBookingNotice( [接收预约开始倒数通知] )");
 }
 
+- (void)onSendHandleSchedule:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg {
+     NSLog(@"LSImManager::onSendHandleSchedule( [7.9.观众通知服务器对预约操作（操作为发送、接受、拒绝预约）] )");
+}
+
+- (void)onRecvHandleScheduleNotice:(ImScheduleRoomInfoObject* _Nonnull)item {
+     NSLog(@"LSImManager::onRecvHandleScheduleNotice( [接收预约开始倒数通知] )");
+}
+
+- (void)onRecvScheduleBeforeStartNotice:(ImScheduleStartInfoObject* _Nonnull)item {
+    NSLog(@"LSImManager::onRecvScheduleBeforeStartNotice( [接收预付费即将开始] )");
+}
+
+- (void)onRecvScheduleStartNotice:(ImScheduleStartInfoObject* _Nonnull)item {
+    NSLog(@"LSImManager::onRecvScheduleStartNotice( [接收预付费开始] )");
+}
+
 #pragma mark - 才艺点播
 - (BOOL)sendTalent:(NSString *)roomId talentId:(NSString *)talentId {
-    NSLog(@"LSImManager::sendTalent( [发送直播间才艺点播邀请], roomId : %@ )", roomId);
+    NSLog(@"LSImManager::sendTalent( [观众端接收到预约操作通知], roomId : %@ )", roomId);
     BOOL bFlag = NO;
 
     @synchronized(self) {
@@ -821,20 +854,20 @@ static LSImManager *imManager = nil;
 }
 
 #pragma mark - 消息和礼物通知
-- (void)onRecvSendChatNotice:(NSString *)roomId level:(int)level fromId:(NSString *)fromId nickName:(NSString *)nickName msg:(NSString *)msg honorUrl:(NSString *)honorUrl {
-    NSLog(@"LSImManager::onRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@, honorUrl : %@ )", roomId, nickName, msg, honorUrl);
+- (void)onRecvSendChatNotice:(NSString *)roomId level:(int)level fromId:(NSString *)fromId nickName:(NSString *)nickName msg:(NSString *)msg honorUrl:(NSString *)honorUrl avatarImg:(NSString * _Nonnull)avatarImg{
+    NSLog(@"LSImManager::onRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@, honorUrl : %@, photoUrl : %@)", roomId, nickName, msg, honorUrl, avatarImg);
 }
 
 - (void)onRecvSendSystemNotice:(NSString *)roomId msg:(NSString *)msg link:(NSString *)link type:(IMSystemType)type {
     NSLog(@"LSImManager::onRecvSendSystemNotice( [接收直播间公告消息], roomId : %@, msg : %@, link: %@, type : %d)", roomId, msg, link, type);
 }
 
-- (void)onRecvSendToastNotice:(NSString *)roomId fromId:(NSString *)fromId nickName:(NSString *)nickName msg:(NSString *)msg honorUrl:(NSString *)honorUrl {
-    NSLog(@"LSImManager::onRecvSendToastNotice( [接收直播间弹幕通知], roomId : %@, fromId : %@, nickName : %@, msg : %@, honorUrl:%@)", roomId, fromId, nickName, msg, honorUrl);
+- (void)onRecvSendToastNotice:(NSString *)roomId fromId:(NSString *)fromId nickName:(NSString *)nickName msg:(NSString *)msg honorUrl:(NSString *)honorUrl  avatarImg:(NSString* _Nonnull)avatarImg {
+    NSLog(@"LSImManager::onRecvSendToastNotice( [接收直播间弹幕通知], roomId : %@, fromId : %@, nickName : %@, msg : %@, honorUrl:%@, avatarImg:%@)", roomId, fromId, nickName, msg, honorUrl, avatarImg);
 }
 
-- (void)onRecvSendGiftNotice:(NSString *)roomId fromId:(NSString *)fromId nickName:(NSString *)nickName giftId:(NSString *)giftId giftName:(NSString *)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(NSString *)honorUrl {
-    NSLog(@"LSImManager::onRecvSendGiftNotice( [接收直播间礼物通知], roomId : %@, fromId : %@, nickName : %@, honorUrl : %@)", roomId, fromId, nickName, honorUrl);
+- (void)onRecvSendGiftNotice:(NSString *)roomId fromId:(NSString *)fromId nickName:(NSString *)nickName giftId:(NSString *)giftId giftName:(NSString *)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(NSString *)honorUrl photoUrl:(NSString * _Nonnull)photoUrl{
+    NSLog(@"LSImManager::onRecvSendGiftNotice( [接收直播间礼物通知], roomId : %@, fromId : %@, nickName : %@, honorUrl : %@, photoUrl : %@)", roomId, fromId, nickName, honorUrl, photoUrl);
 }
 
 #pragma mark - 公共

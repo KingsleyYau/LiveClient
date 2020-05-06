@@ -52,6 +52,12 @@ public:
             /* holidayPrice */
             if( root[LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER].isObject() ) {
                 Json::Value priceElement = root[LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER];
+                
+                /* holidayName */
+                if (priceElement[LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER_NAME].isString()) {
+                    holidayName = priceElement[LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER_NAME].asString();
+                }
+                
                 if (priceElement[LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER_PRICE].isNumeric()) {
                     holidayPrice = priceElement[LIVEROOM_CHECKOUT_HOLIDAYSPECIALOFFER_PRICE].asDouble();
                 }
@@ -80,6 +86,7 @@ public:
 
 	HttpCheckoutItem() {
         deliveryPrice = 0.0;
+        holidayName = "";
         holidayPrice = 0.0;
         totalPrice = 0.0;
         greetingmessage = "";
@@ -95,6 +102,7 @@ public:
      * giftList                   礼品列表
      * greetingCard               免费贺卡
      * deliveryPrice              邮费价格
+     * holidayName                优惠名称
      * holidayPrice               优惠价格
      * totalPrice                 总额
      * greetingmessage            文本信息
@@ -103,6 +111,7 @@ public:
     CheckoutFlowerGiftList giftList;
     HttpGreetingCardItem greetingCard;
     double deliveryPrice;
+    string holidayName;
     double holidayPrice;
     double totalPrice;
     string greetingmessage;

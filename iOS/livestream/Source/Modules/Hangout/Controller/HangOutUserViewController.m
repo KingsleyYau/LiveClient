@@ -811,6 +811,7 @@
             GiftItem *model = [GiftItem itemRoomId:item.roomId
                                             fromID:item.fromId
                                           nickName:item.nickName
+                                          photoUrl:@""
                                             giftID:item.giftId
                                           giftName:item.giftName
                                            giftNum:item.giftNum

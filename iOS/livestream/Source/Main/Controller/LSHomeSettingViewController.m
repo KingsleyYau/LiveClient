@@ -33,6 +33,7 @@
 #import "LSSayHiListViewController.h"
 #import "LSMyContactsViewController.h"
 #import "LSStoreMainViewController.h"
+#import "LSScheduleListRootViewController.h"
 #define HeadViewH 252
 
 @interface LSHomeSettingViewController ()<UITableViewDelegate,UITableViewDataSource, LSHomeSettingHaedViewDelegate,                  LSUserUnreadCountManagerDelegate>
@@ -117,6 +118,12 @@
     item.firstType = SettingFirstTypeChat;
     [sectionFirstArray addObject:item];
     
+    LSHomeSetItemObject *item5 = [[LSHomeSetItemObject alloc] init];
+    item5.iconName = @"Setting_Schedule";
+    item5.titleName = @"Schedule One-on_One";
+    item5.firstType = SettingFirstTypeSchedule;
+    [sectionFirstArray addObject:item5];
+    
     if ([LSLoginManager manager].loginItem.userPriv.isGiftFlowerPriv && [LSLoginManager manager].loginItem.isGiftFlowerSwitch) {
         LSHomeSetItemObject *item4 = [[LSHomeSetItemObject alloc] init];
         item4.iconName = @"LS_Setting_Stroe";
@@ -147,11 +154,11 @@
     
      NSMutableArray *sectionThreeArray = [NSMutableArray array];
     
-    LSHomeSetItemObject *sectionSecondItem1 = [[LSHomeSetItemObject alloc] init];
-    sectionSecondItem1.iconName = @"Setting_Bookings_Icon";
-    sectionSecondItem1.titleName = @"My Bookings";
-    sectionSecondItem1.thirdType = SettingThirdTypeBooks;
-    [sectionThreeArray addObject:sectionSecondItem1];
+//    LSHomeSetItemObject *sectionSecondItem1 = [[LSHomeSetItemObject alloc] init];
+//    sectionSecondItem1.iconName = @"Setting_Bookings_Icon";
+//    sectionSecondItem1.titleName = @"My Bookings";
+//    sectionSecondItem1.thirdType = SettingThirdTypeBooks;
+//    [sectionThreeArray addObject:sectionSecondItem1];
     
     
     LSHomeSetItemObject *sectionSecondItem2 = [[LSHomeSetItemObject alloc] init];
@@ -286,20 +293,21 @@
     
     if (section == 3) {
         UIView * view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 49)];
-        view.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEDF1);
+        view.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xECEDF1) orDark:[UIColor blackColor]];
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, 0, 200, 49)];
         titleLabel.text = [self.titleArray objectAtIndex:section];
         titleLabel.font = [UIFont systemFontOfSize:16];
         titleLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
+        titleLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x999999) orDark:[UIColor whiteColor]];
         [view addSubview:titleLabel];
         return view;
     }
     UIView * view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 30)];
-    view.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEDF1);
+    view.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xECEDF1) orDark:[UIColor blackColor]];
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 0, 200, 30)];
     titleLabel.text = [self.titleArray objectAtIndex:section];;
     titleLabel.font = [UIFont systemFontOfSize:14];
-    titleLabel.textColor = COLOR_WITH_16BAND_RGB(0x999999);
+    titleLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x999999) orDark:[UIColor whiteColor]];
     [view addSubview:titleLabel];
     return view;
 }
@@ -379,12 +387,32 @@
                     case SettingFirstTypeGreeting:{
                            [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Loi]];
                     }break;
-                        case SettingFirstTypeStroe:{
-                            
-                            if ([LSConfigManager manager].item.flowersGift > 0) {
-                               setCell.offIcon.hidden = NO;
-                                setCell.offLabel.text = [NSString stringWithFormat:@"$%d OFF",[LSConfigManager manager].item.flowersGift];
-                            }
+                    case SettingFirstTypeStroe:{
+                        if ([LiveModule module].flowersGift.length > 0) {
+                            setCell.offIcon.hidden = NO;
+                            // cell视图悬浮在最上层
+                            setCell.layer.zPosition = 1;
+                            [setCell.imageLoader loadImageWithImageView:setCell.offIcon options:0 imageUrl:[LiveModule module].flowersGift placeholderImage:nil finishHandler:nil];
+                        }
+                    }break;
+                    case SettingFirstTypeSchedule:{
+                       LSScheduleStatus status = [self.unreadManager getScheduleStatus];
+                        switch (status) {
+                            case LSSCHEDULESTATUS_NOSCHEDULE:{
+                                // 未开播显示未读数
+                                [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Schedule]];
+                            }break;
+                            case LSSCHEDULESTATUS_SHOWED:{
+                                // 有预约显示倒计时
+                                [setCell showWillShowSoon:NO];
+                            }break;
+                            case LSSCHEDULESTATUS_SHOWING:{
+                                // 有即将开播的预约显示闹钟
+                                [setCell showWillShowSoon:YES];
+                            }break;
+                            default:
+                                break;
+                        }
                         
                     }break;
                     default:
@@ -483,6 +511,11 @@
                 }break;
                 case SettingFirstTypeStroe:{
                     LSStoreMainViewController * vc = [[LSStoreMainViewController alloc]initWithNibName:nil bundle:nil];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+                }break;
+                case SettingFirstTypeSchedule:{
+                    //TODO: 跳转预约列表页
+                    LSScheduleListRootViewController * vc = [[LSScheduleListRootViewController alloc]initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
                 default:

@@ -1,0 +1,11 @@
+
+/* Class = "UILabel"; text = "Confirmed Schedule One-on-One"; ObjectID = "wJd-RU-HF3"; */
+"wJd-RU-HF3.text" = "Confirmed Schedule One-on-One";
+
+"PENDING_VIEW_TITLE" = "One-on-One Schedule to Confirm";
+
+"MY_PENDING_NUM" = "requests pending your confirmation.";
+"HER_PENDING_NUM" = "requests pending her confirmation.";
+
+"MY_PENDING_TITEL" = "Pending your confirmation";
+"HER_PENDING_TITEL" = "Pending her confirmation";

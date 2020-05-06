@@ -178,7 +178,7 @@
     [loader loadImageFromCache:self.anchorImageView
                        options:SDWebImageRefreshCached
                       imageUrl:self.item.avatarImg
-              placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+              placeholderImage:LADYDEFAULTIMG
                  finishHandler:^(UIImage *image) {
                      dispatch_async(dispatch_get_main_queue(), ^{
                          if (image) {
@@ -307,7 +307,7 @@
     [[LiveModule module].analyticsManager reportActionEvent:InviteHangOut eventCategory:EventCategoryBroadcast];
     [self dismissView];
     if (self.useUrlHandler) {
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:self.anchorId anchorName:self.item.nickName hangoutAnchorId:@"" hangoutAnchorName:@""];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" inviteAnchorId:self.anchorId inviteAnchorName:self.item.nickName recommendAnchorId:@"" recommendAnchorName:@""];
         [[LiveModule module].serviceManager handleOpenURL:url];
     } else {
         if ([self.dialogDelegate respondsToSelector:@selector(hangoutDialogViewController:didClickHangoutBtn:)]) {

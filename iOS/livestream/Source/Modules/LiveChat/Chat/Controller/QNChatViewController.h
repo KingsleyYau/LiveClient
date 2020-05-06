@@ -7,7 +7,7 @@
 //
 
 #import "LSGoogleAnalyticsPageViewController.h"
-
+#import "LSChatInputToolView.h"
 #import "QNChatTitleView.h"
 #import "QNChatTextView.h"
 
@@ -15,7 +15,7 @@
 /**
  *  消息列表
  */
-@property (weak) IBOutlet UITableView *tableView;
+@property (weak) IBOutlet LSTableView *tableView;
 /**
  *  发送栏
  */
@@ -24,6 +24,10 @@
  *  输入框
  */
 @property (weak) IBOutlet QNChatTextView *textView;
+/**
+*  工具界面
+*/
+@property (weak, nonatomic) IBOutlet LSChatInputToolView *chatInputToolView;
 /**
  *  输入框高度约束
  */
@@ -46,9 +50,8 @@
 @property (strong) NSString *firstName;
 @property (strong) NSString *photoURL;
 
-@property (weak) IBOutlet LSCheckButton *emotionBtn;
-@property (weak) IBOutlet LSCheckButton *photoBtn;
-@property (weak) IBOutlet UIButton *voiceButton;
+
 @property (weak) IBOutlet UIImageView *voiceImageView;
+ 
 
 @end

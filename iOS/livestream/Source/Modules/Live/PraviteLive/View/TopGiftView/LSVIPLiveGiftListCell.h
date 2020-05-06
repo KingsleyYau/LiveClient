@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "LSGiftManagerItem.h"
+#import "LiveRoom.h"
 
 typedef enum GiftListType {
     GiftListTypeNormal,
@@ -40,7 +41,7 @@ typedef enum GiftListType {
  @param item 礼物数据
  @param type 类型(普通礼物/背包礼物)
  */
-- (void)updateItem:(LSGiftManagerItem *)item type:(NSString *)type;
+- (void)updateItem:(LSGiftManagerItem *)item liveRoom:(LiveRoom *)liveRoom type:(NSString *)type;
 
 /**
  刷新选中状态

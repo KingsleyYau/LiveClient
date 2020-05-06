@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+
 @class CountryTableView;
 @class Country;
 @protocol CountryTableViewDelegate <NSObject>
@@ -16,7 +17,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 @end
-@interface CountryTableView : UITableView<UITableViewDataSource,UITableViewDelegate>
+@interface CountryTableView : LSTableView<UITableViewDataSource,UITableViewDelegate>
 
 
 @property (nonatomic, weak) IBOutlet id <CountryTableViewDelegate> tableViewDelegate;

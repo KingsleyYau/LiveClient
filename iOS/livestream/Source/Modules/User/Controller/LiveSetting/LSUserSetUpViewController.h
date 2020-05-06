@@ -9,7 +9,7 @@
 #import "LSGoogleAnalyticsViewController.h"
 
 @interface LSUserSetUpViewController : LSGoogleAnalyticsViewController
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 /** 数据 */
 @property (nonatomic,strong) NSArray *items;
 @end

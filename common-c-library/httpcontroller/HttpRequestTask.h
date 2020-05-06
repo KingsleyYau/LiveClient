@@ -61,6 +61,8 @@ protected:
     bool ParseLiveCommon(const char* buf, int size, int &errnum, string &errmsg, Json::Value *data, Json::Value *errdata = NULL);
     // ios 支付的头部
     bool ParseIOSPaid(const char* buf, int size, string &code, Json::Value *data);
+    // android 支付的头部
+    bool ParseAndroidPaid(const char* buf, int size, string &errnum, string &errmsg, Json::Value *data, Json::Value *errdata = NULL);
     // 这个直播新的头部
     bool ParseNewLiveCommon(const char* buf, int size, int &errnum, string &errmsg, Json::Value *data, Json::Value *errdata = NULL);
     

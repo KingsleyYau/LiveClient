@@ -43,6 +43,14 @@
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[LSUserSettingFollowCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        
+        UIColor *modelTitleColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
+        UIColor *modelBgColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:[UIColor blackColor]];
+        cell.backgroundColor = modelBgColor;
+        cell.followInfoView.backgroundColor = modelBgColor;
+        cell.followTitle.textColor = modelTitleColor;
+      
     }
 
     return cell;
@@ -80,7 +88,7 @@
         [headView addSubview:headImage];
         [headView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(headImageTap:)]];
         
-        [[LSImageViewLoader loader] loadImageFromCache:headImage options:0 imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+        [[LSImageViewLoader loader] loadImageFromCache:headImage options:0 imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
         }];
         
         if (item.roomType != HTTPROOMTYPE_NOLIVEROOM) {

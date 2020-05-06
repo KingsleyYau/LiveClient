@@ -1,0 +1,20 @@
+
+/* Class = "UILabel"; text = "You have insufficient credits to send this schedule. Please add more credits and try again."; ObjectID = "3KF-AJ-tOs"; */
+"3KF-AJ-tOs.text" = "You have insufficient credits to send this schedule. Please add more credits and try again.";
+
+/* Class = "UILabel"; text = "Credits Purchase"; ObjectID = "S40-8w-EjI"; */
+"S40-8w-EjI.text" = "Credits Purchase";
+
+/* Class = "UIButton"; normalTitle = "Purchase Credits"; ObjectID = "Zxb-W7-pvg"; */
+"Zxb-W7-pvg.normalTitle" = "Purchase Credits";
+
+/* Class = "UILabel"; text = ".2f%"; ObjectID = "a66-cO-aFL"; */
+"a66-cO-aFL.text" = ".2f%";
+
+/* Class = "UILabel"; text = "Credits balance: "; ObjectID = "gAo-Hu-ceq"; */
+"gAo-Hu-ceq.text" = "Credits balance: ";
+
+/* Class = "UILabel"; text = "Wish to schedule a One-on-One with %@?"; ObjectID = "mUZ-QF-KyS"; */
+"mUZ-QF-KyS.text" = "Wish to schedule a One-on-One with %@?";
+
+"LATER" = "Later";

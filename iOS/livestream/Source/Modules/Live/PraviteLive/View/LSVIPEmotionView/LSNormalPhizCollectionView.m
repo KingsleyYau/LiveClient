@@ -53,7 +53,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    LSVIPLivePhizCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:
+     LSVIPLivePhizCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:
                                          [LSVIPLivePhizCell cellIdentifier] forIndexPath:indexPath];
     
     ChatEmotionItem *emotionItem = self.stanListItem.emoList[indexPath.row];

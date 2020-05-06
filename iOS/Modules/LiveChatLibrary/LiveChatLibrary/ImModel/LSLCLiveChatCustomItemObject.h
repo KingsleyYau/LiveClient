@@ -11,7 +11,6 @@
 @interface LSLCLiveChatCustomItemObject : NSObject
 /** 消息内容 */
 @property (nonatomic,assign) NSInteger param;
-
 /**
  *  初始化
  *

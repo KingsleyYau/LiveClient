@@ -38,6 +38,7 @@
         _playUrlIndex = 0;
         _publishUrlIndex = 0;
         _active = YES;
+        _canShowMinLiveView = NO;
     }
     return self;
 }

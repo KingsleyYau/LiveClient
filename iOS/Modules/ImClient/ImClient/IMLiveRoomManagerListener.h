@@ -235,9 +235,10 @@
  *  @param nickName    发送方的昵称
  *  @param msg         文本消息内容
  *  @param honorUrl    勋章图片url
+ *  @param avatarImg    发送方的头像
  *
  */
-- (void)onRecvSendChatNotice:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg honorUrl:(NSString* _Nonnull)honorUrl;
+- (void)onRecvSendChatNotice:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg honorUrl:(NSString* _Nonnull)honorUrl avatarImg:(NSString* _Nonnull)avatarImg;
 
 /**
  *  4.3.接收直播间公告消息回调
@@ -277,9 +278,10 @@
  *  @param multi_click_end      连击结束数
  *  @param multi_click_id       连击ID，相同则表示是同一次连击
  *  @param honorUrl             勋章图片url
+ *  @param photoUrl             发送方的头像
  *
  */
-- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(NSString* _Nonnull)honorUrl;
+- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(NSString* _Nonnull)honorUrl photoUrl:(NSString* _Nonnull)photoUrl;
 
 #pragma mark - 直播间弹幕消息操作回调
 /**
@@ -302,9 +304,10 @@
  *  @param nickName             发送方的昵称
  *  @param msg                  消息内容
  *  @param honorUrl             勋章图片url
+ *  @param avatarImg            头像url
  *
  */
-- (void)onRecvSendToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg honorUrl:(NSString* _Nonnull)honorUrl;
+- (void)onRecvSendToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg honorUrl:(NSString* _Nonnull)honorUrl avatarImg:(NSString* _Nonnull)avatarImg;
 
 #pragma mark - 邀请私密直播
 /**
@@ -396,6 +399,42 @@
  *
  */
 - (void)onSendInstantInviteUserReport:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+/**
+ *  7.9.观众通知服务器对预约操作（操作为发送、接受、拒绝预约） 回调
+ *
+ *  @param success       操作是否成功
+ *  @param reqId         请求序列号
+ *  @param err           结果类型
+ *  @param errMsg        结果描述
+ *
+ */
+- (void)onSendHandleSchedule:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+/**
+ *  7.10.观众端接收到预约操作通知（操作为发送、接受、拒绝预约）回调
+ *
+ *  @param item       预付费预约回复知结构体
+ *
+ */
+- (void)onRecvHandleScheduleNotice:(ImScheduleRoomInfoObject* _Nonnull)item;
+
+/**
+*  7.11.预付费即将开始通知回调
+*
+*  @param item       预付费即将开始结构体
+*
+*/
+- (void)onRecvScheduleBeforeStartNotice:(ImScheduleStartInfoObject* _Nonnull)item;
+
+/**
+*  7.12.预付费开始通知回调
+*
+*  @param item       预付费即将开始结构体
+*
+*/
+- (void)onRecvScheduleStartNotice:(ImScheduleStartInfoObject* _Nonnull)item;
+
 // ------------- 直播间才艺点播邀请 -------------
 /**
  *  8.1.发送直播间才艺点播邀请 回调

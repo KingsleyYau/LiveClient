@@ -1,0 +1,33 @@
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "1ag-GU-eQ3"; */
+"1ag-GU-eQ3.text" = "One-on-One Start Time:";
+
+/* Class = "UIButton"; normalTitle = " chedule ID: "; ObjectID = "34k-5b-AjT"; */
+"34k-5b-AjT.normalTitle" = " Schedule ID: ";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "EJa-bp-5IV"; */
+"EJa-bp-5IV.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "Start One-on-One now"; ObjectID = "PNM-9K-Joc"; */
+"PNM-9K-Joc.normalTitle" = "Start One-on-One now";
+
+/* Class = "UILabel"; text = "From"; ObjectID = "Y2w-1w-b1k"; */
+"Y2w-1w-b1k.text" = "From";
+
+/* Class = "UILabel"; text = "Dec 28, 13:00 - 14:00 HKT(GMT -06:00) "; ObjectID = "YAI-Uk-F3e"; */
+"YAI-Uk-F3e.text" = "Dec 28, 13:00 - 14:00 HKT(GMT -06:00) ";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "aXV-Eb-Zc4"; */
+"aXV-Eb-Zc4.text" = "Name";
+
+/* Class = "UILabel"; text = "Dec 27, 13:00 - 14:00 (Your local time)"; ObjectID = "nmr-oB-dSc"; */
+"nmr-oB-dSc.text" = "Dec 27, 13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "Will start within 30 minutes"; ObjectID = "sDZ-Qg-mjI"; */
+"sDZ-Qg-mjI.text" = "Will start within 30 minutes";
+
+"Start_Time" = "%@ %@(GMT %@)";
+
+"Local_Time" = "%@ (Your local time)";
+
+"WILL_TIME" = "Will start within %d minutes";

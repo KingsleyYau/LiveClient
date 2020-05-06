@@ -11,14 +11,13 @@
 #import "VoucherListRequest.h"
 #import "GetChatVoucherListRequest.h"
 #import "DialogTip.h"
-
 #import "AnchorPersonalViewController.h"
 @interface VouchersListViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewRefreshDelegate,TTTAttributedLabel>
 
 @property (weak, nonatomic) IBOutlet UIView *infoView;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *infoBtn;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) NSMutableArray * array;
 @property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @property (nonatomic, assign) BOOL isRequstData;

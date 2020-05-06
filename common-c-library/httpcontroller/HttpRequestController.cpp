@@ -2782,6 +2782,142 @@ long long HttpRequestController::MobilePayGoto(
     return requestId;
 }
 
+long long HttpRequestController::GetAppPay(
+                                           HttpRequestManager *pHttpRequestManager,
+                                           const string& number,
+                                           IRequestGetAppPayCallback* callback
+                                               ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetAppPayTask* task = new HttpGetAppPayTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(number);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::AndroidPremiumMemberShip(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   IRequestAndroidPremiumMemberShipCallback* callback
+                                   ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAndroidPremiumMemberShipTask* task = new HttpAndroidPremiumMemberShipTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::AndroidCheckPayCall(
+                              HttpRequestManager *pHttpRequestManager,
+                              LSPaidCallType callType,
+                              string manid,
+                              string orderNo,
+                              string number,
+                              string token,
+                              string data,
+                              IRequestAndroidCheckPayCallCallback* callback
+                              ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAndroidCheckPayCallTask* task = new HttpAndroidCheckPayCallTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(callType, manid, orderNo, number, token, data);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::UploadFailPayInfo(
+                            HttpRequestManager *pHttpRequestManager,
+                            string manid,
+                            string orderNo,
+                            string number,
+                            string errNo,
+                            string errMsg,
+                            IRequestUploadFailPayInfoCallback* callback
+                            ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpUploadFailPayInfoTask* task = new HttpUploadFailPayInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(manid, orderNo, number, errNo, errMsg);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::GetCanHangoutAnchorList(
                                   HttpRequestManager *pHttpRequestManager,
                                   HangoutAnchorListType type,
@@ -3686,13 +3822,17 @@ long long HttpRequestController::SendEmf(
                   list<string> imgList,
                   LSLetterComsumeType comsumeType,
                   string sayHiResponseId,
+                 bool isSchedule,
+                 string timeZoneId,
+                 string startTime,
+                 int duration,
                   IRequestSendEmfCallback* callback
                   ) {
     long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSendEmfTask* task = new HttpSendEmfTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(anchorId, loiId, emfId, content, imgList, comsumeType, sayHiResponseId);
+    task->SetParam(anchorId, loiId, emfId, content, imgList, comsumeType, sayHiResponseId, isSchedule, timeZoneId, startTime, duration);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -4578,6 +4718,38 @@ long long HttpRequestController::CreateGiftOrder(
     return requestId;
 }
 
+long long HttpRequestController::CheckDiscount(
+                                               HttpRequestManager *pHttpRequestManager,
+                                               const string& anchorId,
+                                               IRequestCheckDiscountCallback* callback
+                                               ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpCheckDiscountTask* task = new HttpCheckDiscountTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::WomanListAdvert(
                                                  HttpRequestManager *pHttpRequestManager,
                                                  const string& deviceId,
@@ -4611,3 +4783,330 @@ long long HttpRequestController::WomanListAdvert(
     return requestId;
 }
 
+long long HttpRequestController::GetScheduleDurationList(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         IRequestGetScheduleDurationListCallback* callback
+                                                         ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetScheduleDurationListTask* task = new HttpGetScheduleDurationListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetCountryTimeZoneList(
+                                                        HttpRequestManager *pHttpRequestManager,
+                                                        IRequestGetCountryTimeZoneListCallback* callback
+                                                        ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetCountryTimeZoneListTask* task = new HttpGetCountryTimeZoneListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SendScheduleInvite(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    LSScheduleInviteType type,
+                                                    string refId,
+                                                    string anchorId,
+                                                    string timeZoneId,
+                                                    string startTime,
+                                                    int duration,
+                                                    IRequestSendScheduleInviteCallback* callback
+                                                    ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSendScheduleInviteTask* task = new HttpSendScheduleInviteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, refId, anchorId, timeZoneId, startTime, duration);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::AcceptScheduleInvite(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      string inviteId,
+                                                      int duration,
+                                                      IRequestAcceptScheduleInviteCallback* callback
+                                                      ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAcceptScheduleInviteTask* task = new HttpAcceptScheduleInviteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId, duration);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::DeclinedScheduleInvite(
+                                                        HttpRequestManager *pHttpRequestManager,
+                                                        string inviteId,
+                                                        IRequestDeclinedScheduleInviteCallback* callback
+                                                        ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpDeclinedScheduleInviteTask* task = new HttpDeclinedScheduleInviteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::CancelScheduleInvite(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      string inviteId,
+                                                      IRequestCancelScheduleInviteCallback* callback
+                                                      ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpCancelScheduleInviteTask* task = new HttpCancelScheduleInviteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetScheduleInviteList(
+                                                       HttpRequestManager *pHttpRequestManager,
+                                                       LSScheduleInviteStatus status,
+                                                       LSScheduleSendFlagType sendFlag,
+                                                       string anchorId,
+                                                       int start,
+                                                       int step,
+                                                       IRequestGetScheduleInviteListCallback* callback
+                                                       ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetScheduleInviteListTask* task = new HttpGetScheduleInviteListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(status, sendFlag, anchorId, start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetScheduleInviteDetail(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         string inviteId,
+                                                         IRequestGetScheduleInviteDetailCallback* callback
+                                                         ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetScheduleInviteDetailTask* task = new HttpGetScheduleInviteDetailTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetSessionInviteList(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      LSScheduleInviteType type,
+                                                      string refId,
+                                                      IRequestGetSessionInviteListCallback* callback
+                                                      ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetSessionInviteListTask* task = new HttpGetSessionInviteListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, refId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetScheduleInviteStatus(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         IRequestGetScheduleInviteStatusCallback* callback
+                                                         ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetScheduleInviteStatusTask* task = new HttpGetScheduleInviteStatusTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}

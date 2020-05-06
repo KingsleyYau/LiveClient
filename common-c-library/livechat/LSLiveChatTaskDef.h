@@ -79,6 +79,7 @@ typedef enum {
 	TCMD_GETSESSIONINFOWITHMAN = 66,  // 女士端获取会话信息
 	TCMD_SUMMITAUTOINVITECAMFIRST = 290,  // 提交小助手Cam优先标志
     TCMD_SENDINVITEMSG = 146,  // 提交小助手Cam优先标志
+    TCMD_SCHEDULE_ONE_ON_ONE = 317,     // 直播发送预约Schedule邀请（包含发送，接受，拒绝）
 	// 服务器主动请求命令
 	TCMD_RECVMSG		    = 24,	// 文字聊天信息通知
 	TCMD_RECVEMOTION	    = 101,	// 高级表情聊天信息通知
@@ -114,6 +115,7 @@ typedef enum {
 	TCMD_RECVCAMHEARBEATEXCEPTION       = 287,  // Cam心跳包异常更新通知
 	TCMD_RECVMANCAMJOINOREXITCONF       = 242,  // 男士加入或退出Camshare会议室更新通知
 	TCMD_RECVMANSESSIONINFO       		= 70,   // 女士获取会话信息通知
+    TCMD_SCHEDULE_ONE_ON_ONE_UPDATE = 316,     // 直播接收预约Schedule邀请（包含接收，接受，拒绝）
 } TASK_CMD_TYPE;
 
 // 判断是否客户端主动请求的命令
@@ -182,6 +184,7 @@ inline bool IsRequestCmd(int cmd)
 	case TCMD_GETSESSIONINFOWITHMAN://女士端获取会话信息
 	case TCMD_SUMMITAUTOINVITECAMFIRST://女士提交小助手Cam优先
     case TCMD_SENDINVITEMSG://发送邀请语
+    case TCMD_SCHEDULE_ONE_ON_ONE: // 直播发送预约Schedule邀请（包含发送，接受，拒绝）
 		result = true;	// 主动请求的命令
 		break;
 	default:

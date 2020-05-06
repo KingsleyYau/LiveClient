@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSScheduleListView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Msg_Bg" translatesAutoresizingMaskIntoConstraints="NO" id="DN1-vG-9Bf">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                </imageView>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_List_Title" translatesAutoresizingMaskIntoConstraints="NO" id="azV-Fs-ZVJ">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="41"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="41" id="es9-37-9y7"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirmed Schedule One-on-One" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJd-RU-HF3">
+                    <rect key="frame" x="10" y="12" width="355" height="17"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                    <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="meJ-6K-ECf">
+                    <rect key="frame" x="0.0" y="41" width="375" height="626"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="azV-Fs-ZVJ" firstAttribute="leading" secondItem="fXt-n3-mx6" secondAttribute="leading" id="0T4-OY-y92"/>
+                <constraint firstItem="meJ-6K-ECf" firstAttribute="top" secondItem="azV-Fs-ZVJ" secondAttribute="bottom" id="3Hl-0X-1py"/>
+                <constraint firstAttribute="trailing" secondItem="DN1-vG-9Bf" secondAttribute="trailing" id="6OJ-Fo-xjz"/>
+                <constraint firstItem="fXt-n3-mx6" firstAttribute="bottom" secondItem="meJ-6K-ECf" secondAttribute="bottom" id="7sm-Ve-GoX"/>
+                <constraint firstItem="wJd-RU-HF3" firstAttribute="centerX" secondItem="azV-Fs-ZVJ" secondAttribute="centerX" id="A9Y-cK-HSe"/>
+                <constraint firstItem="DN1-vG-9Bf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="FFy-tR-1ad"/>
+                <constraint firstItem="wJd-RU-HF3" firstAttribute="leading" secondItem="fXt-n3-mx6" secondAttribute="leading" constant="10" id="FPC-Mt-Fww"/>
+                <constraint firstItem="fXt-n3-mx6" firstAttribute="trailing" secondItem="azV-Fs-ZVJ" secondAttribute="trailing" id="Kxc-3p-27c"/>
+                <constraint firstItem="DN1-vG-9Bf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Zf4-s6-eNv"/>
+                <constraint firstAttribute="bottom" secondItem="DN1-vG-9Bf" secondAttribute="bottom" id="htf-dI-sJf"/>
+                <constraint firstItem="wJd-RU-HF3" firstAttribute="centerY" secondItem="azV-Fs-ZVJ" secondAttribute="centerY" id="rOa-Ue-0Ic"/>
+                <constraint firstItem="fXt-n3-mx6" firstAttribute="trailing" secondItem="meJ-6K-ECf" secondAttribute="trailing" id="sah-5o-qEU"/>
+                <constraint firstItem="meJ-6K-ECf" firstAttribute="leading" secondItem="fXt-n3-mx6" secondAttribute="leading" id="uTj-CF-6gI"/>
+                <constraint firstItem="azV-Fs-ZVJ" firstAttribute="top" secondItem="fXt-n3-mx6" secondAttribute="top" id="xgC-sv-3e4"/>
+                <constraint firstItem="fXt-n3-mx6" firstAttribute="trailing" secondItem="wJd-RU-HF3" secondAttribute="trailing" constant="10" id="zjc-vc-GqA"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fXt-n3-mx6"/>
+            <point key="canvasLocation" x="133" y="123"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_Schedule_List_Title" width="6" height="42"/>
+        <image name="LS_Schedule_Msg_Bg" width="4" height="332"/>
+    </resources>
+</document>

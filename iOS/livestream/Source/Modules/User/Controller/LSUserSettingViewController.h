@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
- 
 
 @interface LSUserSettingViewController : LSGoogleAnalyticsViewController
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @end
 
  

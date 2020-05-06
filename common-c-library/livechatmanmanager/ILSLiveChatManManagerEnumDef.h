@@ -30,6 +30,8 @@ typedef enum  {
     MT_Video,        // 微视频
     MT_System,        // 系统消息
     MT_Custom,        //自定义消息
+    MT_Schedule,      // 预付费邀请消息
+    MT_ScheduleReply,   // 预付费回复消息
 } MessageType;
 
 // 消息发送方向 类型
@@ -58,6 +60,7 @@ typedef enum _CodeType
     NOT_SUPPORT_VOICE,        // 不支持语音消息
     NOT_SUPPORT_PHOTO,        // 不支持私密照消息
     NOT_SUPPORT_MAGICICON,    // 不支持小高表消息
+    NOT_SUPPORT_SCHEDULE,    // 不支持预付费消息
 } CodeType;
 
 // 消息类型

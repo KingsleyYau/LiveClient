@@ -18,6 +18,7 @@
 #import "LSLCLiveChatMagicIconConfigItemObject.h"
 #import "LSLCLiveChatMsgVoiceItem.h"
 #import "LSLCLiveChatMsgVideoItem.h"
+#import "LSLCLiveChatScheduleInfoItemObject.h"
 @interface LSLCLiveChatItem2OCObj : NSObject
 
 #pragma mark - 公共处理
@@ -179,5 +180,16 @@
  * @return 视频消息object
  */
 + (LSLCLiveChatMsgVideoItem* _Nullable)getLiveChatVideoItemObject:(const lcmm::LSLCVideoItem*_Nullable)videoItem;
+
+/**
+ * 预约信息object
+ *
+ * @param msgItem 预约信息
+ *
+ * @return 预约信息object
+ */
++ (LSLCLiveChatScheduleInfoItemObject* _Nullable)getLiveChatScheduleInfoItemObject:(const LSLCScheduleInfoItem& )msgItem;
+
++ (LSLCScheduleInviteItem* _Nullable)getLiveChatScheduleInviteItem:(LSLCLiveChatScheduleMsgItemObject*_Nonnull)scheduleItem;
 
 @end

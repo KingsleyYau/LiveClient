@@ -34,6 +34,9 @@ typedef enum {
     LiveUrlTypeGreetMailDetail,
     LiveUrlTypeGiftFlowerList,
     LiveUrlTypeGiftFlowerAnchorStore,
+    LiveUrlTypeScheduleList,
+    LiveUrlTypeScheduleMailDetail,
+    LiveUrlTypeScheduleDetail,
     LiveUrlTypeUnknow,
 } LiveUrlType;
 
@@ -81,6 +84,21 @@ typedef enum {
     LiveUrlGiftFlowerListTypeDelivery,
     LiveUrlGiftFlowerListTypeUnknow,
 } LiveUrlGiftFlowerListType;
+
+typedef enum {
+    LiveUrlScheduleListTypePending = 1,
+    LiveUrlScheduleListTypeConfirm,
+    LiveUrlScheduleListTypeDeceline,
+    LiveUrlScheduleListTypeExpired,
+    LiveUrlScheduleListTypeUnknow,
+} LiveUrlScheduleListType;
+
+
+typedef enum {
+    LiveUrlScheduleMailDetailTypeInbox = 1,
+    LiveUrlScheduleMailDetailTypeOutBox,
+    LiveUrlScheduleMailDetailTypeUnknow,
+} LiveUrlScheduleMailDetailType;
 @interface LSUrlParmItem : NSObject
 /**
  根据URL生成实例
@@ -101,19 +119,18 @@ typedef enum {
  主播Id
  */
 @property (strong, readonly) NSString *anchorId;
-
-/**
- 私密直播间主播推荐好友多人互动时使用 (私密直播间主播ID)
- */
-@property (strong, readonly) NSString *hangoutAnchorId;
-/**
- 私密直播间主播推荐好友多人互动时使用 (私密直播间主播名称)
- */
-@property (strong, readonly) NSString *hangoutAnchorName;
 /**
  主播名称
  */
 @property (strong, readonly) NSString *anchorName;
+/**
+多人互动邀请 推荐主播Id
+*/
+@property (strong, readonly) NSString *recommendAnchorId;
+/**
+多人互动邀请 推荐主播名称
+*/
+@property (strong, readonly) NSString *recommendAnchorName;
 
 #pragma mark - 主界面参数
 /**
@@ -140,6 +157,10 @@ typedef enum {
  预约列表类型
  */
 @property (assign, readonly) LiveUrlBookingListType bookingListType;
+/**
+ 预约详情类型
+ */
+@property (assign, readonly) LiveUrlScheduleMailDetailType mailScheduelDetailType;
 
 #pragma mark - 背包列表参数
 /**
@@ -169,9 +190,11 @@ typedef enum {
 @property (assign, readonly) LiveUrlGiftFlowerListType flowerListType;
 #pragma mark - 意向信参数
 /**
- 意向信id
+ 意向信id   Or  信件id Or 预约详情id
  */
 @property (strong, readonly) NSString *loiId;
+@property (strong, readonly) NSString *refId;
+@property (strong, readonly) NSString *emfId;
 #pragma mark - 对话框参数
 @property (strong, readonly) NSString *title;
 @property (strong, readonly) NSString *msg;
@@ -190,6 +213,11 @@ typedef enum {
 @property (strong, readonly) NSString *inviteMsg;
 @property (copy, readonly) NSString *sourceSite;
 
+#pragma mark - 预约列表参数
+/**
+  预约列表类型
+ */
+@property (assign, readonly) LiveUrlScheduleListType scheduleListType;
 #pragma mark - 协议解析
 + (int)mainListIndexWithType:(LiveUrlMainListType)type;
 

@@ -25,7 +25,7 @@
 
 @end
 
-@interface LSChatTableView : UITableView<UITableViewDataSource, UITableViewDelegate, LSChatSelfMessageCellDelegate, LSChatAddCreditsTableViewCellDelegate>
+@interface LSChatTableView : LSTableView<UITableViewDataSource, UITableViewDelegate, LSChatSelfMessageCellDelegate, LSChatAddCreditsTableViewCellDelegate>
 
 @property (nonatomic, weak) IBOutlet id <LSChatTableViewDelegate> tableViewDelegate;
 @property (nonatomic, retain) NSArray *msgArray;

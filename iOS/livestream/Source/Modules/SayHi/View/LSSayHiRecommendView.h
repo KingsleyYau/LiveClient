@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)lsSayHiRecommendView:(LSSayHiRecommendView*)view didSelectAchor:(LSSayHiAnchorItemObject *)lady;
 @end
 
-@interface LSSayHiRecommendView : UICollectionView <UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@interface LSSayHiRecommendView : LSCollectionView <UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (nonatomic, weak) id<LSSayHiRecommendViewDelegate> recommendDelegate;
 @property (nonatomic, strong) NSArray *items;
 @end

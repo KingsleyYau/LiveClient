@@ -26,6 +26,7 @@
  * hasVideo       是否有视频
  * hasRead        是否已读
  * hasReplied     是否已回复
+ * hasReplied     是否有预付费直播
  */
 @property (nonatomic, copy) NSString* _Nonnull anchorId;
 @property (nonatomic, copy) NSString* _Nonnull anchorAvatar;
@@ -39,5 +40,6 @@
 @property (nonatomic, assign) BOOL hasVideo;
 @property (nonatomic, assign) BOOL hasRead;
 @property (nonatomic, assign) BOOL hasReplied;
+@property (nonatomic, assign) BOOL hasSchedule;
 
 @end

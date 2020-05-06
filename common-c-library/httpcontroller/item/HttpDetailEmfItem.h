@@ -17,6 +17,7 @@ using namespace std;
 #include "HttpLetterDetailAnchorItem.h"
 #include "HttpEmfImgItem.h"
 #include "HttpEmfVideoItem.h"
+#include "HttpScheduleInviteDetailItem.h"
 
 class HttpDetailEmfItem {
 public:
@@ -64,6 +65,11 @@ public:
             if (root[LETTER_HAS_REPLIED].isNumeric()) {
                 hasReplied = root[LETTER_HAS_REPLIED].asInt() == 0 ? false : true;
             }
+            
+            /* scheduleInfo */
+            if (root[LETTER_SCHEDULE_INFO].isObject()) {
+                scheduleInfo.Parse(root[LETTER_SCHEDULE_INFO]);
+            }
 
         }
         result = true;
@@ -92,6 +98,7 @@ public:
      * loiVideoList     视频列表
      * hasRead          是否已读
      * hasReplied       是否已回复
+     * scheduleInfo    预约信息
      */
     HttpLetterDetailAnchorItem oppAnchor;
     string      emfId;
@@ -101,6 +108,7 @@ public:
     HttpEmfVideoList emfVideoList;
     bool hasRead;
     bool hasReplied;
+    HttpScheduleInviteDetailItem scheduleInfo;
 };
 
 

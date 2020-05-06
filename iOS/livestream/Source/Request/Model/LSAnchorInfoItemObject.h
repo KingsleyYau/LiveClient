@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <httpcontroller/HttpRequestEnum.h>
+#import "LSAnchorPrivItemObject.h"
 @interface LSAnchorInfoItemObject : NSObject
 /**
  * 主播信息结构体
@@ -22,5 +23,6 @@
 @property (nonatomic, assign) BOOL isLive;
 @property (nonatomic, copy) NSString* _Nonnull introduction;
 @property (nonatomic, copy) NSString* _Nonnull roomPhotoUrl;
+@property (nonatomic, strong) LSAnchorPrivItemObject* _Nullable anchorPriv;
 
 @end

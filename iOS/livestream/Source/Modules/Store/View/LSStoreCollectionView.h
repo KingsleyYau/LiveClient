@@ -21,7 +21,7 @@
 @end
 
 @interface LSStoreCollectionView : UIView
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UILabel *noDataTip;
 @property (nonatomic, strong) NSArray * items;
 @property (weak, nonatomic) id<LSStoreCollectionViewDelegate> collectionViewDelegate;

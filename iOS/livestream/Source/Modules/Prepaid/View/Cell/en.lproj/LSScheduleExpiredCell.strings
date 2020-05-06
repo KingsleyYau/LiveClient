@@ -1,0 +1,25 @@
+
+/* Class = "UILabel"; text = "Dec 27, 13:00 - 14:00 (Your local time)"; ObjectID = "1y2-bD-avR"; */
+"1y2-bD-avR.text" = "Dec 27, 13:00 - 14:00 (Your local time)";
+
+/* Class = "UILabel"; text = "From"; ObjectID = "6WX-xr-0Sb"; */
+"6WX-xr-0Sb.text" = "From";
+
+/* Class = "UILabel"; text = "chedule ID:"; ObjectID = "L0d-WG-F2D"; */
+"L0d-WG-F2D.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "QYv-wl-Q7F"; */
+"QYv-wl-Q7F.text" = "One-on-One Start Time:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "cRb-oW-vjU"; */
+"cRb-oW-vjU.text" = "Label";
+
+/* Class = "UILabel"; text = "Dec 28, 13:00 - 14:00 HKT(GMT -06:00) "; ObjectID = "k72-jB-cIv"; */
+"k72-jB-cIv.text" = "Dec 28, 13:00 - 14:00 HKT(GMT -06:00) ";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "yEP-ZZ-Cka"; */
+"yEP-ZZ-Cka.text" = "Name";
+
+"Start_Time" = "%@ %@(GMT %@)";
+
+"Local_Time" = "%@ (Your local time)";

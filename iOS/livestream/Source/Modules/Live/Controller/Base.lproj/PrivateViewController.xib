@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -58,7 +56,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PzM-a5-E3r" userLabel="Liver Homepage Btn">
-                            <rect key="frame" x="12" y="8" width="42" height="42"/>
+                            <rect key="frame" x="12" y="8" width="93.666666666666671" height="42"/>
                             <connections>
                                 <action selector="pushToAnchorPersonal:" destination="-1" eventType="touchUpInside" id="Sjl-fw-Nn1"/>
                             </connections>
@@ -80,13 +78,13 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="23g-vX-uiz" userLabel="Cancel Btn">
-                            <rect key="frame" x="373" y="21" width="31" height="31"/>
+                            <rect key="frame" x="364" y="16" width="40" height="40"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="31" id="5ci-11-Nrm"/>
+                                <constraint firstAttribute="height" constant="40" id="5ci-11-Nrm"/>
                                 <constraint firstAttribute="width" secondItem="23g-vX-uiz" secondAttribute="height" multiplier="1:1" id="a7U-bp-gCb"/>
-                                <constraint firstAttribute="width" constant="31" id="vrB-8w-gQI"/>
+                                <constraint firstAttribute="width" constant="40" id="vrB-8w-gQI"/>
                             </constraints>
-                            <state key="normal" image="Live_Private_Close"/>
+                            <state key="normal" image="Live_Public_ShrankRoom"/>
                             <connections>
                                 <action selector="closeAction:" destination="-1" eventType="touchUpInside" id="V3A-Bp-Tub"/>
                             </connections>
@@ -102,16 +100,16 @@
                         <constraint firstAttribute="trailing" secondItem="jaE-2b-OdZ" secondAttribute="trailing" id="R1o-NU-efg"/>
                         <constraint firstItem="jl5-eC-38s" firstAttribute="top" secondItem="PzM-a5-E3r" secondAttribute="top" constant="5" id="WCN-Wv-zeP"/>
                         <constraint firstItem="jaE-2b-OdZ" firstAttribute="top" secondItem="0Lr-s9-7i7" secondAttribute="top" constant="-44" id="Y4o-rZ-HxE"/>
-                        <constraint firstItem="PzM-a5-E3r" firstAttribute="trailing" secondItem="QKZ-4l-Nu0" secondAttribute="trailing" id="e8L-SU-eUE"/>
                         <constraint firstItem="23g-vX-uiz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0qe-sQ-nib" secondAttribute="trailing" constant="10" id="eaz-BT-3ik"/>
                         <constraint firstItem="jaE-2b-OdZ" firstAttribute="leading" secondItem="0Lr-s9-7i7" secondAttribute="leading" id="fO8-sy-gV8"/>
+                        <constraint firstItem="PzM-a5-E3r" firstAttribute="trailing" secondItem="jl5-eC-38s" secondAttribute="trailing" id="fbF-hd-4FS"/>
                         <constraint firstItem="PzM-a5-E3r" firstAttribute="leading" secondItem="QKZ-4l-Nu0" secondAttribute="leading" id="gHW-Ts-IQz"/>
                         <constraint firstItem="0qe-sQ-nib" firstAttribute="leading" secondItem="jl5-eC-38s" secondAttribute="trailing" constant="11" id="ifY-aT-61L"/>
                         <constraint firstItem="QKZ-4l-Nu0" firstAttribute="centerY" secondItem="0Lr-s9-7i7" secondAttribute="centerY" id="lqT-M1-ixZ"/>
                         <constraint firstItem="PzM-a5-E3r" firstAttribute="bottom" secondItem="QKZ-4l-Nu0" secondAttribute="bottom" id="m2J-Eg-G0p"/>
                         <constraint firstAttribute="trailing" secondItem="23g-vX-uiz" secondAttribute="trailing" constant="10" id="na5-aa-ryr"/>
                         <constraint firstAttribute="bottom" secondItem="jaE-2b-OdZ" secondAttribute="bottom" id="p23-gn-ykj"/>
-                        <constraint firstItem="23g-vX-uiz" firstAttribute="top" secondItem="0Lr-s9-7i7" secondAttribute="top" constant="21" id="x62-Qt-yMf"/>
+                        <constraint firstItem="23g-vX-uiz" firstAttribute="top" secondItem="0Lr-s9-7i7" secondAttribute="top" constant="16" id="x62-Qt-yMf"/>
                         <constraint firstItem="0qe-sQ-nib" firstAttribute="centerY" secondItem="jl5-eC-38s" secondAttribute="centerY" id="yB6-s4-mqv"/>
                     </constraints>
                 </view>
@@ -127,11 +125,12 @@
                 <constraint firstItem="0Lr-s9-7i7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="t3S-g1-4XQ"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
+            <point key="canvasLocation" x="139" y="154"/>
         </view>
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
-        <image name="Live_Private_Close" width="31" height="31"/>
         <image name="Live_Private_HeadBg" width="4" height="136"/>
+        <image name="Live_Public_ShrankRoom" width="31" height="31"/>
     </resources>
 </document>

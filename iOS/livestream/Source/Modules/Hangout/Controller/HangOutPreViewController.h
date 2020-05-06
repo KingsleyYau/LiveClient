@@ -17,16 +17,15 @@
 @property (copy, nonatomic) NSString *roomId;
 
 /**
- 好友推荐跳转时 为被推荐人主播ID和名称
- 非好友推荐跳转时 为被邀请主播ID和名称
+被邀请主播ID和名称
  */
 @property (copy, nonatomic) NSString *inviteAnchorId;
 @property (copy, nonatomic) NSString *inviteAnchorName;
 
 /**
- 推荐好友时使用 (推荐人ID和名称)
- */
-@property (copy, nonatomic) NSString *hangoutAnchorId;
-@property (copy, nonatomic) NSString *hangoutAnchorName;
+推荐主播的ID和名称
+*/
+@property (copy, nonatomic) NSString *recommendAnchorId;
+@property (copy, nonatomic) NSString *recommendAnchorName;
 
 @end

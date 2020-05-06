@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BarrageViewCell.h"
-#import "BarrageModelAble.h"
+#import "BarrageModel.h"
 
 @protocol BarrageViewDataSouce, BarrageViewDelegate;
 
@@ -45,16 +45,16 @@
 /**
  *  插入新的数据源
  *
- *  @param barrages cell的模型数组，模型必须要遵守BarrageModelAble协议
- *  @param flag     标记插入的新数据是否需要立即显示，如果flag为NO，后面需要主动调用startAnimation方法，插入的数据才会显示
+ *  @param model 数据模型
+ *  @param flag  标记插入的新数据是否需要立即显示，如果flag为NO，后面需要主动调用startAnimation方法，插入的数据才会显示
  */
-- (void)insertBarrages:(NSArray<id<BarrageModelAble> > *)barrages immediatelyShow:(BOOL)flag;
+- (void)insertBarrages:(NSArray<BarrageModel *> *)model immediatelyShow:(BOOL)flag;
 /**
  *  从数据源中删除，只能删除还未展示的cell模型，只能根据对象删除
  *
  *  @param barrages cell的模型数组
  */
-- (void)deleteBarrages:(NSArray<id<BarrageModelAble> > *)barrages;
+- (void)deleteBarrages:(NSArray<BarrageModel *> *)barrages;
 /**
  *  开始动画
  */
@@ -100,7 +100,7 @@
 /**
  *  返回弹幕的样式
  */
-- (BarrageViewCell *)barrageView:(BarrageView *)barrageView cellForModel:(id<BarrageModelAble>)model;
+- (BarrageViewCell *)barrageView:(BarrageView *)barrageView cellForModel:(BarrageModel *)model;
 
 @end
 

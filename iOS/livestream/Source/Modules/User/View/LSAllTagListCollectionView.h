@@ -27,7 +27,7 @@
 /** 选择的标签 */
 @property (nonatomic, strong) NSArray* selectTags;
 
-@property (nonatomic, strong) UICollectionView* collectionView;
+@property (nonatomic, strong) LSCollectionView* collectionView;
 
 
 /** 代理 */

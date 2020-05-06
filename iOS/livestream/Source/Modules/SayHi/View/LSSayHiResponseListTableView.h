@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tableView:(LSSayHiResponseListTableView *)tableView didSelectSayHiDetail:(LSSayHiResponseListItemObject *)item;
 @end
 
-@interface LSSayHiResponseListTableView : UITableView<UITableViewDataSource,UITableViewDelegate>
+@interface LSSayHiResponseListTableView : LSTableView<UITableViewDataSource,UITableViewDelegate>
 @property (nonatomic, copy) NSArray *items;
 /** 代理 */
 @property (nonatomic, weak) id<LSSayHiResponseListTableViewDelegate> tableViewDelegate;

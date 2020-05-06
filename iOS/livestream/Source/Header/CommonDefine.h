@@ -59,4 +59,6 @@
 #define DialogTag -1
 #define IsDialog(view) ((view.tag & 0x8FFFFFFF) >> 31)
 
+#define LADYDEFAULTIMG [UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+
 #endif

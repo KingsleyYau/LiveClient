@@ -22,6 +22,7 @@
         self.giftWeekdayPrice = 0.0;
         self.giftDiscountPrice = 0.0;
         self.giftPrice = 0.0;
+        self.giftDiscount = 0.0;
         self.isNew = NO;
         self.giftDescription = @"";
     }
@@ -38,6 +39,7 @@
         self.giftWeekdayPrice = [coder decodeDoubleForKey:@"giftWeekdayPrice"];
         self.giftDiscountPrice = [coder decodeDoubleForKey:@"giftDiscountPrice"];
         self.giftPrice = [coder decodeDoubleForKey:@"giftPrice"];
+        self.giftDiscount = [coder decodeDoubleForKey:@"giftDiscount"];
         self.isNew = [coder decodeBoolForKey:@"isNew"];
         self.deliverableCountry = [coder decodeObjectForKey:@"deliverableCountry"];
         self.giftDescription = [coder decodeObjectForKey:@"giftDescription"];
@@ -54,6 +56,7 @@
     [coder encodeDouble:self.giftWeekdayPrice forKey:@"giftWeekdayPrice"];
     [coder encodeDouble:self.giftDiscountPrice forKey:@"giftDiscountPrice"];
     [coder encodeDouble:self.giftPrice forKey:@"giftPrice"];
+    [coder encodeDouble:self.giftDiscount forKey:@"giftDiscount"];
     [coder encodeBool:self.isNew forKey:@"isNew"];
     [coder encodeObject:self.deliverableCountry forKey:@"deliverableCountry"];
     [coder encodeObject:self.giftDescription forKey:@"giftDescription"];

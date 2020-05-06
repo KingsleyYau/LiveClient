@@ -18,7 +18,7 @@
 #import "LiveModule.h"
 #import "LSAddCreditsViewController.h"
 @interface BookPrivateBroadcastViewController () <UITableViewDelegate, UITableViewDataSource, AddVirtualGiftsCellDelegate, UIPickerViewDelegate, UIPickerViewDataSource, AddPhoneNumCellDelegate>
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, assign) NSInteger tableRow;
 @property (nonatomic, copy) NSString *noteStr;
 @property (nonatomic, assign) BOOL isShowVG;
@@ -78,7 +78,7 @@
     self.pickerView.dataSource = self;
     self.pickerView.delegate = self;
 
-    self.tableView.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEDF1);
+    self.tableView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xECEDF1) orDark:COLOR_WITH_16BAND_RGB(0x666666)];
 
     self.isShowVG = NO;
 
@@ -406,12 +406,14 @@
 
     static NSString *cellName = @"cellName";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellName];
+    cell.backgroundColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:[UIColor blackColor]];
+     cell.textLabel.textColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.textLabel.numberOfLines = 0;
-        cell.textLabel.textColor = [UIColor blackColor];
+       
         cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
         cell.detailTextLabel.textColor = COLOR_WITH_16BAND_RGB(0x297AF3);
     }
@@ -421,7 +423,6 @@
         if (self.dayTimeArray.count > 0) {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.detailTextLabel.text = row == 0 ? self.dayStr : self.timeStr;
-            cell.backgroundColor = [UIColor whiteColor];
         }
     } else {
         cell.textLabel.text = self.noteStr;

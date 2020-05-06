@@ -11,9 +11,20 @@
 #define LSMAILDRAFTNAME @"SendMailText_"
 
 static LSSendMailDraftManager *sendMailDraftManager = nil;
+@interface LSSendMailDraftManager ()
+#pragma mark - 接口管理器
+// 缓存数据
+@property (nonatomic, strong) NSMutableDictionary *userDictionary;
 
+@end
 @implementation LSSendMailDraftManager
 
+- (instancetype)init {
+    if (self = [super init]) {
+        self.userDictionary = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 + (instancetype)manager {
     if (sendMailDraftManager == nil) {
@@ -58,4 +69,19 @@ static LSSendMailDraftManager *sendMailDraftManager = nil;
     [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
+- (NSString *)getScheduleMailDraft:(NSString *)ladyId {
+    return  [self.userDictionary objectForKey:[NSString stringWithFormat:@"ScheduleDraft_%@",ladyId]];
+}
+
+- (void)saveScheduleMailDraftFromLady:(NSString *)ladyId content:(NSString *)text {
+    [self.userDictionary setObject:text forKey:[NSString stringWithFormat:@"ScheduleDraft_%@",ladyId]];
+}
+
+- (void)deleteScheduleMailDraft:(NSString *)ladyId {
+    [self.userDictionary removeObjectForKey:[NSString stringWithFormat:@"ScheduleDraft_%@",ladyId]];
+}
+
+- (void)removeAllScheduleMailDraft {
+    [self.userDictionary removeAllObjects];
+}
 @end

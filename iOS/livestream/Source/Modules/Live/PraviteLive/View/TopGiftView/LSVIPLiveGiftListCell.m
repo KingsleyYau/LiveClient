@@ -67,9 +67,22 @@
     self.shadowView.layer.masksToBounds = YES;
 }
 
-- (void)updateItem:(LSGiftManagerItem *)item type:(NSString *)type {
+- (void)updateItem:(LSGiftManagerItem *)item liveRoom:(LiveRoom *)liveRoom type:(NSString *)type {
     // 重置控件状态
     [self reset:item];
+    
+    // 直播间样式
+    switch (liveRoom.roomType) {
+        case LiveRoomType_Public:{
+            self.giftCreditLabel.textColor = COLOR_WITH_16BAND_RGB(0xfedc4b);
+            [self.giftBgView setImage:[UIImage imageNamed:@"Live_Public_Top_GiftBg"]];
+        }break;
+            
+        default:{
+            self.giftCreditLabel.textColor = COLOR_WITH_16BAND_RGB(0xFF6D00);
+            [self.giftBgView setImage:[UIImage imageNamed:@"VIPLive_GiftBG"]];
+        }break;
+    }
     
     // 大礼物
     if (item.infoItem.type == GIFTTYPE_Heigh) {
@@ -105,9 +118,16 @@
         
     } else {
         // 普通礼物
-        
         // 礼物价格
-        NSString *crediteNum = [NSString stringWithFormat:@"%@ Credits", @(item.infoItem.credit)];
+        NSString * creditStr = @"credits";
+        if (item.infoItem.credit == 1.0f ||
+            item.infoItem.credit == 0.1f ||
+            item.infoItem.credit == 0.01f)
+        {
+            creditStr = @"credit";
+        }
+        
+        NSString *crediteNum = [NSString stringWithFormat:@"%@ %@", @(item.infoItem.credit),creditStr];
         if (item.infoItem.credit <= 0 || item.roomInfoItem.isFree) {
             crediteNum = @"Free";
         }

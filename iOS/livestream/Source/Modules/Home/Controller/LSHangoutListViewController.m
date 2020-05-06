@@ -54,7 +54,6 @@
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-    
     self.items = [NSArray array];
     self.sessionManager = [LSSessionRequestManager manager];
     // 初始化下拉
@@ -124,7 +123,7 @@
 
 - (void)setupTableView {
     self.tableView.backgroundView = nil;
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xE7E8EE) orDark:COLOR_WITH_16BAND_RGB(0x666666)];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
     self.tableView.tableViewDelegate = self;

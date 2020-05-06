@@ -13,7 +13,6 @@
 #import "LiveRoom.h"
 
 #import "LSUITapImageView.h"
-#import "ChardTipView.h"
 #import "RoomTypeIsFirstManager.h"
 
 @class PrivateViewController;
@@ -32,7 +31,7 @@
 @property (nonatomic, strong) LiveRoom* liveRoom;
 
 /**
- <#Description#>
+ 代理
  */
 @property (nonatomic, weak) id<PrivateViewControllerDelegate> vcDelegate;
 
@@ -44,11 +43,6 @@
 #pragma mark - 标题栏
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
-
-#pragma mark - 直播间资费提醒(暂时不用)
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chargeTipImageWidth;
-@property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
-@property (strong, nonatomic) ChardTipView *tipView;
 
 #pragma mark - 标题栏背景
 

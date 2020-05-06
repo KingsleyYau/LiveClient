@@ -189,9 +189,11 @@
     [super viewDidLoad];
 
     // 初始化视频界面
-    self.player.playView = self.videoView;
-    self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
-
+//    self.player.playView = self.videoView;
+//    self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
+    self.videoView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
+    [self.player addPlayView:self.videoView];
+    
     // 取消按钮切圆角
     self.cancelButton.layer.cornerRadius = self.cancelButton.frame.size.height / 2;
 
@@ -369,8 +371,8 @@
         giftComboView.delegate = self;
         giftComboView.hidden = YES;
 
-        UIImage *image = [UIImage imageNamed:@"Live_Public_Bg_Combo"];
-        [giftComboView.backImageView setImage:image];
+//        UIImage *image = [UIImage imageNamed:@"Live_Public_Bg_Combo"];
+        giftComboView.numberView.numImageName = @"white_";
 
         NSNumber *height = [NSNumber numberWithInteger:giftComboView.frame.size.height];
         CGFloat width = [UIScreen mainScreen].bounds.size.width / 2 - 5;
@@ -625,13 +627,13 @@
     self.tipMessageLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"INVITING_ANCHOR"), self.liveRoom.userName];
 
     if (!self.liveRoom.photoUrl.length) {
-        [self.roomUserInfoManager getUserInfo:self.anchorItem.anchorId
+        [self.roomUserInfoManager getLiverInfo:self.anchorItem.anchorId
                             finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                 self.liveRoom.photoUrl = item.photoUrl;
                                 [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                                        options:SDWebImageRefreshCached
                                                                       imageUrl:self.liveRoom.photoUrl
-                                                              placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                              placeholderImage:LADYDEFAULTIMG
                                                                  finishHandler:^(UIImage *image){
 
                                                                  }];
@@ -640,7 +642,7 @@
         [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                options:SDWebImageRefreshCached
                                               imageUrl:self.liveRoom.photoUrl
-                                      placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                      placeholderImage:LADYDEFAULTIMG
                                          finishHandler:^(UIImage *image){
 
                                          }];
@@ -672,13 +674,13 @@
     self.tipMessageLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ANCHOR_IS_COMING"), self.liveRoom.userName];
 
     if (!self.liveRoom.photoUrl.length) {
-        [self.roomUserInfoManager getUserInfo:self.anchorItem.anchorId
+        [self.roomUserInfoManager getLiverInfo:self.anchorItem.anchorId
                             finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                 self.liveRoom.photoUrl = item.photoUrl;
                                 [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                                        options:SDWebImageRefreshCached
                                                                       imageUrl:self.liveRoom.photoUrl
-                                                              placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                              placeholderImage:LADYDEFAULTIMG
                                                                  finishHandler:^(UIImage *image){
 
                                                                  }];
@@ -687,7 +689,7 @@
         [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                options:SDWebImageRefreshCached
                                               imageUrl:self.liveRoom.photoUrl
-                                      placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                      placeholderImage:LADYDEFAULTIMG
                                          finishHandler:^(UIImage *image){
 
                                          }];
@@ -714,13 +716,13 @@
     [self.tipIconView stopAnimating];
 
     if (!self.liveRoom.photoUrl.length) {
-        [self.roomUserInfoManager getUserInfo:self.anchorItem.anchorId
+        [self.roomUserInfoManager getLiverInfo:self.anchorItem.anchorId
                             finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                 self.liveRoom.photoUrl = item.photoUrl;
                                 [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                                        options:SDWebImageRefreshCached
                                                                       imageUrl:self.liveRoom.photoUrl
-                                                              placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                              placeholderImage:LADYDEFAULTIMG
                                                                  finishHandler:^(UIImage *image){
                                                                  }];
                             }];
@@ -728,7 +730,7 @@
         [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                options:SDWebImageRefreshCached
                                               imageUrl:self.liveRoom.photoUrl
-                                      placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                      placeholderImage:LADYDEFAULTIMG
                                          finishHandler:^(UIImage *image){
                                          }];
     }
@@ -880,6 +882,7 @@
     GiftItem *item = [GiftItem itemRoomId:model.roomId
                                    fromID:model.fromId
                                  nickName:model.nickName
+                                 photoUrl:@""
                                    giftID:model.giftId
                                  giftName:model.giftName
                                   giftNum:model.giftNum
@@ -1013,13 +1016,13 @@
 - (void)sendHangoutInvite:(LSHangoutAnchorItemObject *)anchorItem {
     if (self.liveType == LIVETYPE_OUTLIEROOM) {
         if (!self.liveRoom.photoUrl.length) {
-            [self.roomUserInfoManager getUserInfo:anchorItem.anchorId
+            [self.roomUserInfoManager getLiverInfo:anchorItem.anchorId
                                 finishHandler:^(LSUserInfoModel *_Nonnull item) {
                                     self.liveRoom.photoUrl = item.photoUrl;
                                     [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                                                            options:SDWebImageRefreshCached
                                                                           imageUrl:self.liveRoom.photoUrl
-                                                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                                  placeholderImage:LADYDEFAULTIMG
                                                                      finishHandler:^(UIImage *image){
                                                                      }];
                                 }];

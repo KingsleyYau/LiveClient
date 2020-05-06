@@ -58,6 +58,21 @@ public:
             if (root[LIVEROOM_GETTOTALNOREADNUM_LIVECHATVOUCHERUNREADNUM].isNumeric()) {
                 livechatVocherUnreadNum = root[LIVEROOM_GETTOTALNOREADNUM_LIVECHATVOUCHERUNREADNUM].asInt();
             }
+            
+            /* schedulePendingUnreadNum */
+            if (root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULEPENDINGUNREADNUM].isNumeric()) {
+                schedulePendingUnreadNum = root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULEPENDINGUNREADNUM].asInt();
+            }
+            
+            /* scheduleConfirmedUnreadNum */
+            if (root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULECONFIRMEDUNREADNUM].isNumeric()) {
+                scheduleConfirmedUnreadNum = root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULECONFIRMEDUNREADNUM].asInt();
+            }
+            
+            /* scheduleStatus */
+            if (root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULESTATUS].isNumeric()) {
+                scheduleStatus = GetIntToLSScheduleStatus(root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULESTATUS].asInt());
+            }
         }
 
         result = true;
@@ -74,6 +89,9 @@ public:
         backpackUnreadNum = 0;
         sayHiResponseUnreadNum = 0;
         livechatVocherUnreadNum = 0;
+        schedulePendingUnreadNum = 0;
+        scheduleConfirmedUnreadNum = 0;
+        scheduleStatus = LSSCHEDULESTATUS_NOSCHEDULE;
     }
     
     virtual ~HttpMainNoReadNumItem() {
@@ -89,6 +107,9 @@ public:
      * backpackUnreadNum            背包未读数量
      * sayHiResponseUnreadNum       sayHi回复未读数量
      * livechatVocherUnreadNum      livechat试聊劵未读数量
+     * schedulePendingUnreadNum     预付费直播-男士待确定未读数
+     * scheduleConfirmedUnreadNum   预付费直播-男主播接受未读数
+     * scheduleStatus           预付费直播状态（LSSCHEDULESTATUS_NOSCHEDULE：无预约 LSSCHEDULESTATUS_SHOWED：可开播 LSSCHEDULESTATUS_SHOWING：在30分钟内即将开播）
      */
     int showTicketUnreadNum;
     int loiUnreadNum;
@@ -98,6 +119,10 @@ public:
     int backpackUnreadNum;
     int sayHiResponseUnreadNum;
     int livechatVocherUnreadNum;
+    int schedulePendingUnreadNum;
+    int scheduleConfirmedUnreadNum;
+    LSScheduleStatus scheduleStatus;
+    
 };
 
 #endif /* HTTPMAINNOREADNUMITEM_H_*/

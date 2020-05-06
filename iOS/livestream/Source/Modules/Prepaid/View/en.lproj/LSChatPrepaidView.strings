@@ -1,0 +1,13 @@
+
+/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "HW1-jJ-H5g"; */
+"HW1-jJ-H5g.normalTitle" = "Send";
+
+/* Class = "UILabel"; text = "Send a schedule One-on-One request, have your One-on-One organized and save up to 30% of credits!"; ObjectID = "jWg-VC-eLg"; */
+"jWg-VC-eLg.text" = "Send a schedule One-on-One request, have your One-on-One organized and save up to 30% of credits!";
+
+/* Class = "UILabel"; text = "Schedule One-on-One with Request"; ObjectID = "qSV-tw-npM"; */
+"qSV-tw-npM.text" = "Schedule One-on-One Request";
+
+"TITLE" = "Send a schedule One-on-One request, have your One-on-One organized and %@ of credits!";
+
+"discount_num" = "save up to %ld%%";

@@ -14,6 +14,8 @@
 
 "WATCHING_WILL_NO_MONEY" = "You are running out of credits. Please buy more credits to continue watching.";
 
+"POPUP_MESSAGE_ADD_CREDIT" = "You don't have enough credits to send pop-up message. Please buy more!";
+
 "Rebate_Tip" = "Credit rebate: ";
 
 "Recv_Rebate" = "You have been given a rebate of";
@@ -41,4 +43,10 @@
 "CLOSE_MAN_PUSH_ERROR" = "Could not end 2-way video chat. Please try again later.";
 
 "PUSH_TIPS" = "2-way video is billed at %@ credit per minute. Are you sure to turn it on?";
+
+"LESSEN_TIP" = "Send Schedule One-on-One Request";
+
+"ON_CREDIT_ACCEPT_SCHEDULE" = "%@ is planning a One-on_One with you!";
+
+"ON_CREDIT_SEND_SCHEDULE" = "Wish to schedule a One-on-One with %@?";
 

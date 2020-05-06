@@ -11,7 +11,7 @@
 
 @interface LSAddCreditsViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic,weak) IBOutlet UITableView *tableView;
+@property (nonatomic,weak) IBOutlet LSTableView *tableView;
 /** 数据 */
 @property (nonatomic,strong) NSArray *items;
 @property (nonatomic, weak) IBOutlet UIView* loadingView;

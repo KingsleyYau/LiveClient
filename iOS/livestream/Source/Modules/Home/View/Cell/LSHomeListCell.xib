@@ -140,7 +140,7 @@
                         <rect key="frame" x="76" y="282" width="25" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="25" id="7M9-p6-pEg"/>
-                            <constraint firstAttribute="height" constant="25" id="xPW-aa-EYJ"/>
+                            <constraint firstAttribute="width" secondItem="9TV-PX-Q7B" secondAttribute="height" multiplier="1:1" id="Ssx-KA-E9c"/>
                         </constraints>
                         <state key="normal" backgroundImage="LS_Home_Chat"/>
                         <connections>
@@ -196,7 +196,7 @@
                     </imageView>
                 </subviews>
             </view>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="pzE-1e-IHz" secondAttribute="trailing" constant="12" id="8Dj-sL-SJT"/>
                 <constraint firstItem="kT6-us-tuh" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="9bP-p3-AyT"/>
@@ -250,7 +250,10 @@
                 <outlet property="camIcon" destination="x3X-GS-n98" id="B6V-ph-sB9"/>
                 <outlet property="chatBtn" destination="9TV-PX-Q7B" id="rT6-hh-qwd"/>
                 <outlet property="chatBtnX" destination="nsS-AG-L3k" id="xhH-GY-cuG"/>
+                <outlet property="chatLeading" destination="x6Q-7G-sCR" id="bs8-ld-Ed1"/>
                 <outlet property="chatNowBtn" destination="ocz-AZ-Tdk" id="52K-sS-5vY"/>
+                <outlet property="chatTrailing" destination="Qk4-0Y-Tj0" id="ifX-3A-yNs"/>
+                <outlet property="chatWidth" destination="7M9-p6-pEg" id="pcN-0i-tpo"/>
                 <outlet property="focusBtn" destination="b9r-ys-zH1" id="XCA-EY-5DY"/>
                 <outlet property="imageViewHeader" destination="oxT-7N-Pjh" id="lT9-Us-8TF"/>
                 <outlet property="inviteBtnBottom" destination="HQC-6i-qgy" id="ORO-61-bRx"/>

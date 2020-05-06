@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) PrivateInviteItem *item;
 + (instancetype)initPrivateInviteView;
 - (void)showPrivateViewInView:(UIView *)view;
+- (void)removeShow;
 @end
 
 NS_ASSUME_NONNULL_END

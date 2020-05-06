@@ -78,7 +78,7 @@ typedef enum : NSUInteger {
 
 @property (weak, nonatomic) IBOutlet UILabel *attachmentsTip;
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableViewHeight;
 
 // 回复view
@@ -217,7 +217,7 @@ typedef enum : NSUInteger {
     [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
                                            options:SDWebImageRefreshCached
                                           imageUrl:self.letterItem.anchorAvatar
-                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                  placeholderImage:LADYDEFAULTIMG
                                      finishHandler:^(UIImage *image){
                                      }];
     // 姓名
@@ -615,7 +615,7 @@ typedef enum : NSUInteger {
     } else {
         request.comsumeType = LSLETTERCOMSUMETYPE_CREDIT;
     }
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *emfId) {
         NSLog(@"LSMailDetailViewController::sendMail (发送信件 %@ errmsg: %@ errnum: %d)", BOOL2SUCCESS(success), errmsg, errnum);
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideLoading];

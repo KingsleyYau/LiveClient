@@ -82,7 +82,7 @@
 }
 
 - (void)setCellPattern:(LMPrivateMsgContactObject *)model {
-    [self.imageLoader loadImageFromCache:self.headView options:SDWebImageRefreshCached imageUrl:model.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageFromCache:self.headView options:SDWebImageRefreshCached imageUrl:model.avatarImg placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
     }];
     self.nameLbael.text = model.nickName;
     self.msgLabel.attributedText = [[LSChatEmotionManager emotionManager] parseMessageTextEmotion:model.lastMsg

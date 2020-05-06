@@ -23,7 +23,7 @@
 
 @interface ShowListViewController () <UITableViewDelegate, UITableViewDataSource, ShowCellDelegate, ShowAddCreditsViewDelegate, UIScrollViewDelegate, UIScrollViewRefreshDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 //接口管理器
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 //列表数据
@@ -81,7 +81,7 @@
     self.tableView.estimatedRowHeight = 0;
     self.tableView.estimatedSectionHeaderHeight = 0;
     self.tableView.estimatedSectionFooterHeight = 0;
-
+    self.tableView.backgroundColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0xE7E8EE) orDark:COLOR_WITH_16BAND_RGB(0x666666)];
     // 初始化下拉
     [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     self.tableView.pullScrollEnabled = YES;
@@ -340,8 +340,9 @@
 - (void)showCellBtnDid:(NSInteger)type fromItem:(LSProgramItemObject *)item {
     if (type == 1) {
         [[LiveModule module].analyticsManager reportActionEvent:ShowEnterShowBroadcast eventCategory:EventCategoryShowCalendar];
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId anchorId:item.anchorId];
-        [[LiveUrlHandler shareInstance] handleOpenURL:url];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId anchorName:item.anchorNickName anchorId:item.anchorId];
+//        [[LiveUrlHandler shareInstance] handleOpenURL:url];
+        [[LiveModule module].serviceManager handleOpenURL:url];
     } else if (type == 2) {
         [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarClickGetTicket eventCategory:EventCategoryShowCalendar];
         self.addCreditsView = [[ShowAddCreditsView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];

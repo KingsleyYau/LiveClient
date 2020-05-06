@@ -22,11 +22,13 @@
 #import "LSAddCreditsViewController.h"
 #import "LSShadowView.h"
 #import "LiveGobalManager.h"
+#import "LiveModule.h"
+
 #define MAXNum 20
 
 @interface LSMyReservationsPageViewController () <UITableViewDelegate, UITableViewDataSource, NewInvitesCellDelegate, UIScrollViewRefreshDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 @property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, assign) int page;
@@ -303,7 +305,7 @@
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
         
-        [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+        [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
         
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];
@@ -413,8 +415,8 @@
         }else {
             userId = obj.fromId;
         }
-       NSURL * url = [[LiveUrlHandler shareInstance]createUrlToInviteByRoomId:obj.roomId anchorId:userId roomType:LiveRoomType_Private];
-         [[LiveUrlHandler shareInstance] handleOpenURL:url];
+        NSURL * url = [[LiveUrlHandler shareInstance]createUrlToInviteByRoomId:obj.roomId anchorName:@"" anchorId:userId roomType:LiveRoomType_Private];
+         [[LiveModule module].serviceManager handleOpenURL:url];
     }
 }
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -33,7 +31,6 @@
                         <constraint firstAttribute="width" constant="200" id="7Iy-Dz-pGz"/>
                         <constraint firstAttribute="height" constant="40" id="WET-W6-0ZJ"/>
                     </constraints>
-                    <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
@@ -62,7 +59,7 @@
                     <rect key="frame" x="177.5" y="547" width="20" height="20"/>
                 </activityIndicatorView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="hMP-SN-pZU" firstAttribute="top" secondItem="DfN-Zd-1du" secondAttribute="bottom" constant="20" id="6NN-dL-Ihl"/>
                 <constraint firstItem="hMP-SN-pZU" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="7kN-xC-3Vl"/>
@@ -78,7 +75,7 @@
                 <constraint firstItem="DfN-Zd-1du" firstAttribute="top" secondItem="RYp-d0-Xf6" secondAttribute="bottom" constant="20" id="vhX-2g-AOs"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <point key="canvasLocation" x="23.5" y="-276"/>
+            <point key="canvasLocation" x="-62" y="-304"/>
         </view>
     </objects>
 </document>

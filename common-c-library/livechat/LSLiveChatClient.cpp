@@ -73,6 +73,7 @@
 #include "LSLiveChatSummitLadyCamStatusTask.h"
 #include "LSLiveChatGetSessionInfoWithManTask.h"
 #include "LSLiveChatSummitAutoInviteCamFirstTask.h"
+#include "LSLiveChatSendScheduleInviteTask.h"
 #include "LSSendInviteMsgTask.h"
 
 CLSLiveChatClient::CLSLiveChatClient()
@@ -1678,6 +1679,29 @@ bool CLSLiveChatClient::SendInviteMessage(const string& inUserId, const string& 
     return result;
 }
 
+// 发送邀请语
+bool CLSLiveChatClient::SendScheduleInvite(const LSLCScheduleInfoItem& item) {
+    bool result = false;
+    FileLog("CLSLiveChatClient", "CLSLiveChatClient::SendScheduleInvite(manId : %s, womanId : %s) begin", item.manId.c_str(), item.womanId.c_str());
+    if(NULL != m_taskManager && m_taskManager->IsStart())
+    {
+        LSLiveChatSendScheduleInviteTask* task = new LSLiveChatSendScheduleInviteTask();
+        FileLog("LiveChatClient", "CLSLiveChatClient::SendScheduleInvite() task:%p begin", task);
+        if(NULL != task){
+            result = task->Init(this);
+            result = result && task->InitParam(item);
+            if(result){
+                int seq = m_seqCounter.GetAndIncrement();
+                task->SetSeq(seq);
+                result = m_taskManager->HandleRequestTask(task);
+            }
+        }
+        FileLog("LiveChatClient", "CLSLiveChatClient::SendScheduleInvite() task:%p end", task);
+    }
+    FileLog("LiveChatClient", "CLSLiveChatClient::SendScheduleInvite() end");
+    return result;
+}
+
 // 获取用户账号
 string CLSLiveChatClient::GetUser()
 {
@@ -2336,6 +2360,16 @@ void CLSLiveChatClient::OnSendInviteMessage(const string& inUserId, const string
     m_listenerListLock->Unlock();
 }
 
+// Alex, 发送预约邀请
+void CLSLiveChatClient::OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const LSLCScheduleInfoItem& item) {
+    m_listenerListLock->Lock();
+    for(LSLiveChatClientListenerList::const_iterator itr = m_listenerList.begin(); itr != m_listenerList.end(); itr++) {
+        ILSLiveChatClientListener* callback = *itr;
+        callback->OnSendScheduleInvite(err, errmsg, item);
+    }
+    m_listenerListLock->Unlock();
+}
+
 void CLSLiveChatClient::OnRecvMessage(const string& toId, const string& fromId, const string& fromName, const string& inviteId, bool charge, int ticket, TALK_MSG_TYPE msgType, const string& message, INVITE_TYPE inviteType) {
     m_listenerListLock->Lock();
     for(LSLiveChatClientListenerList::const_iterator itr = m_listenerList.begin(); itr != m_listenerList.end(); itr++) {
@@ -2638,6 +2672,15 @@ void CLSLiveChatClient::OnRecvManJoinOrExitConference(MAN_CONFERENCE_EVENT_TYPE 
     for(LSLiveChatClientListenerList::const_iterator itr = m_listenerList.begin(); itr != m_listenerList.end(); itr++) {
         ILSLiveChatClientListener* callback = *itr;
         callback->OnRecvManJoinOrExitConference(eventType, fromId, toId, userList);
+    }
+    m_listenerListLock->Unlock();
+}
+
+void CLSLiveChatClient::OnRecvScheduleInviteNotice(const LSLCScheduleInfoItem& item) {
+    m_listenerListLock->Lock();
+    for(LSLiveChatClientListenerList::const_iterator itr = m_listenerList.begin(); itr != m_listenerList.end(); itr++) {
+        ILSLiveChatClientListener* callback = *itr;
+        callback->OnRecvScheduleInviteNotice(item);
     }
     m_listenerListLock->Unlock();
 }

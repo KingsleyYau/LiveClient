@@ -21,6 +21,7 @@
         self.secretPhotoImage = nil;
         self.emotionDefault = nil;
         self.emotionAnimationArray = nil;
+        self.isScheduleMore = NO;
     }
     return self;
 }

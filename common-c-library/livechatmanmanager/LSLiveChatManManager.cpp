@@ -65,6 +65,7 @@ typedef enum {
     REQUEST_TASK_GetVideo,                      // 获取视频（用于获取视频时，而url又没有，先feevideo，feevideo返回后再getvideo）
     REQUEST_TASK_NOPRIV_SENDMESSAGE,            // 没有发送消息权限，线程返回发送成功
     REQUEST_TASK_NOLOGIN_PHOTOANDVIDEOFEE,      // IM没有登录购买私密照和视频，线程返回网络失败
+    REQUEST_TASK_GETSESSIONLIST,                // 获取某回话中预付费直播邀请列表
 } REQUEST_TASK_TYPE;
 
 // 定时业务结构体
@@ -141,6 +142,8 @@ LSLiveChatManManager::LSLiveChatManManager()
 	m_requestThreadStart = false;
 	m_requestQueueLock = IAutoLock::CreateAutoLock();
 	m_requestQueueLock->Init();
+    m_userMapLock = IAutoLock::CreateAutoLock();
+    m_userMapLock->Init();
     
 	// 请求管理器及控制器
 	m_httpRequestManager = NULL;
@@ -2176,6 +2179,22 @@ void LSLiveChatManManager::HandleFeebackcall(LSLCMessageItem* item) {
     }
 }
 
+// 获取某会话中预付费列表
+void LSLiveChatManManager::HandleGetSessionInviteList(LSLCUserItem* item) {
+    if (NULL != item && !item->m_inviteId.empty() && NULL != m_requestOtherController) {
+        long reqId = m_requestController->GetSessionInviteList(item->m_inviteId);
+        if (reqId != REQUEST_TASK_GETSESSIONLIST) {
+            if (NULL != m_userMapLock) {
+                m_userMapLock->Lock();
+            }
+            m_userMap.insert(LCUserMap::value_type(reqId, item));
+            
+            if (NULL != m_userMapLock) {
+                m_userMapLock->Unlock();
+            }
+        }
+    }
+}
 
 void LSLiveChatManManager::GetTalkInfo(const string& userId) {
     if (NULL != m_client) {
@@ -2489,7 +2508,7 @@ bool LSLiveChatManManager::GetMagicIconThumbImage(const string& magicIconId)
 string LSLiveChatManManager::GetMagicIconThumbPath(const string& magicIconId)
 {
     LSLCMagicIconItem* magicIconItem = m_magicIconMgr->GetMagicIcon(magicIconId);
-    FileLog("LiveChatManager", "LiveChatManager::GetMagicIconSrcPath() magicIconId:%s, magicIconItem:%p", magicIconId.c_str(), magicIconItem);;
+    FileLog("LiveChatManager", "LiveChatManager::GetMagicIconSrcPath() magicIconId:%s, magicIconItem:%p", magicIconId.c_str(), magicIconItem);
     
     if (!magicIconItem->m_thumbPath.empty()) {
         if (IsFileExist(magicIconItem->m_thumbPath)) {
@@ -2510,6 +2529,75 @@ bool LSLiveChatManManager::SendInviteMessage(const string& userId, const string&
     }
     return result;
     
+}
+
+// 发送预约邀请
+LSLCMessageItem* LSLiveChatManManager::SendScheduleInvite(const string& userId, LSLCMessageItem* msgItem) {
+    FileLog("LiveChatManager", "LiveChatManager::SendScheduleInvite() userId:%s, msgItem:%p", userId.c_str(), msgItem);
+    //LSLCMessageItem* msgScheduleItem = NULL;
+    if (NULL != msgItem) {
+        LSLCUserItem* userItem = m_userMgr->GetUserItem(userId);
+        
+        string manId = "";
+        string womanId = "";
+        
+        if (msgItem->GetScheduleInviteItem()->m_type == SCHEDULEINVITE_PENDING) {
+            msgItem->Init(m_msgIdBuilder.GetAndIncrement()
+                    , SendType_Send
+                    , m_userId
+                    , userId
+                    , userItem->m_inviteId
+                    , StatusType_Processing);
+            manId = msgItem->m_fromId;
+            womanId = msgItem->m_toId;
+            msgItem->m_inviteId = userItem->m_inviteId;
+        } else {
+            manId = msgItem->m_toId;
+            womanId = msgItem->m_fromId;
+        }
+//        LSLCUserItem* userItem = m_userMgr->GetUserItem(womanId);
+        
+        userItem->LockMsgList();
+        LSLCMessageItem* oldmsgItem = userItem->GetAndInsertScheduleMsgWithList(msgItem->m_inviteId, msgItem->GetScheduleInviteItem()->m_sessionId);
+        userItem->UnlockMsgList();
+        if (NULL != oldmsgItem) {
+            // 添加到历史记录
+            oldmsgItem->GetScheduleInviteItem()->m_type = msgItem->GetScheduleInviteItem()->m_type;
+            oldmsgItem->GetScheduleInviteItem()->m_durationAdjusted = msgItem->GetScheduleInviteItem()->m_durationAdjusted;
+            oldmsgItem->GetScheduleInviteItem()->m_actionGmtTime = msgItem->GetScheduleInviteItem()->m_actionGmtTime;
+        } else {
+//            oldmsgItem->GetScheduleInviteItem()->m_type = msgItem->GetScheduleInviteItem()->m_type;
+//            oldmsgItem->GetScheduleInviteItem()->m_durationAdjusted = msgItem->GetScheduleInviteItem()->m_durationAdjusted;
+//            oldmsgItem->GetScheduleInviteItem()->m_actionGmtTime = msgItem->GetScheduleInviteItem()->m_actionGmtTime;
+            
+            // 添加到历史记录
+            userItem->InsertSortMsgList(msgItem);
+        }
+
+        
+        if (IsLogin()) {
+            LSLCScheduleInfoItem item;
+            item.manId = manId;
+            item.womanId = womanId;
+            item.msg.sessionId = msgItem->GetScheduleInviteItem()->m_sessionId;
+            item.msg.type = msgItem->GetScheduleInviteItem()->m_type;
+            item.msg.timeZone = msgItem->GetScheduleInviteItem()->m_timeZone;
+            item.msg.timeZoneOffSet = msgItem->GetScheduleInviteItem()->m_timeZoneValue;
+            item.msg.sessionDuration = msgItem->GetScheduleInviteItem()->m_sessionDuration;
+            item.msg.durationAdjusted = msgItem->GetScheduleInviteItem()->m_durationAdjusted;
+            if (msgItem->GetScheduleInviteItem()->m_type == SCHEDULEINVITE_PENDING) {
+                item.msg.actionGmtTime = msgItem->GetScheduleInviteItem()->m_sendGmtTime;
+            } else {
+                item.msg.actionGmtTime = msgItem->GetScheduleInviteItem()->m_actionGmtTime;
+            }
+            item.msg.startGmtTime = msgItem->GetScheduleInviteItem()->m_startGmtTime;
+            item.msg.timePeriod = msgItem->GetScheduleInviteItem()->m_timePeriod;
+            item.msg.inviteId = msgItem->m_inviteId;
+            m_client->SendScheduleInvite(item);
+        }
+    }
+
+    return msgItem;
 }
 
 // --------- Camshare --------
@@ -3262,6 +3350,53 @@ void LSLiveChatManManager::OnSendInviteMessage(const string& inUserId, const str
     
 }
 
+// Alex, 发送预约邀请
+void LSLiveChatManManager::OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const LSLCScheduleInfoItem& item) {
+    FileLevelLog("LiveChatManager", KLog::LOG_WARNING, "LiveChatManager::OnSendScheduleInvite() begin, manId:%s, womanId:%s, err:%d, errmsg:%s", item.manId.c_str(), item.womanId.c_str(), err, errmsg.c_str());
+        
+    LSLCUserItem* userItem = m_userMgr->GetUserItem(item.womanId);
+    userItem->LockMsgList();
+    LSLCMessageItem* msgItem = userItem->GetAndInsertScheduleMsgWithList(item.msg.inviteId, item.msg.sessionId);
+    userItem->UnlockMsgList();
+    LSLCMessageItem* msgReplyItem = NULL;
+    if (NULL != msgItem && NULL != msgItem->GetScheduleInviteItem()) {
+        if (msgItem->GetScheduleInviteItem()->m_type == SCHEDULEINVITE_PENDING) {
+                    // 回调
+            msgItem->m_statusType = (LSLIVECHAT_LCC_ERR_SUCCESS==err ? StatusType_Finish : StatusType_Fail);
+            msgItem->m_procResult.SetResult(err, "", errmsg);
+        } else {
+             msgReplyItem = new LSLCMessageItem;
+                msgReplyItem->Init(m_msgIdBuilder.GetAndIncrement()
+                , SendType_Recv
+                , item.womanId
+                , item.manId
+                , item.msg.inviteId
+                , StatusType_Finish);
+            msgReplyItem->m_statusType = (LSLIVECHAT_LCC_ERR_SUCCESS==err ? StatusType_Finish : StatusType_Fail);
+            msgReplyItem->m_procResult.SetResult(err, "", errmsg);
+            LSLCScheduleInviteReplyItem* scheduleReplyItem = new LSLCScheduleInviteReplyItem;
+            bool isScheduleAccept = (item.msg.type == SCHEDULEINVITE_CONFIRMED ? true : false);
+            bool isScheduleFromMe = true;
+            scheduleReplyItem->Init(item.msg.sessionId, isScheduleAccept, isScheduleFromMe, item.msg.actionGmtTime, item.msg.durationAdjusted);
+            msgReplyItem->SetScheduleInviteReplyItem(scheduleReplyItem);
+            // 添加到用户聊天记录中
+            if (!userItem->InsertSortMsgList(msgReplyItem)) {
+                // 添加到用户聊天记录列表不成功
+                delete msgReplyItem;
+                msgReplyItem = NULL;
+            }
+        }
+    }
+    if (NULL != m_listener && NULL != msgItem) {
+
+        m_listener->OnSendScheduleInvite(err, errmsg, msgItem, msgReplyItem);
+    }
+        FileLog("LiveChatManager", "LiveChatManager::OnSendScheduleInvite() end, manId:%s, womanId:%s"
+                , item.manId.c_str(),  item.womanId.c_str());
+    //}
+
+}
+
 // 服务器主动请求
 void LSLiveChatManManager::OnRecvShowVideo(const string& toId, const string& fromId, const string& fromName, const string& inviteId, const string& videoId, const string& sendId, bool charge, const string& videoDec, int ticket)
 {
@@ -3781,6 +3916,83 @@ void LSLiveChatManManager::OnRecvAutoInviteMsg(const string& womanId, const stri
     FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvAutoInviteMsg(womanId : %s, manId : %s) end", womanId.c_str(), manId.c_str());
 }
 
+void LSLiveChatManManager::OnRecvScheduleInviteNotice(const LSLCScheduleInfoItem& item) {
+    FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvScheduleInviteNotice(womanId : %s, manId : %s) begin", item.womanId.c_str(), item.manId.c_str());
+    // 判断是否有接收邀请风控
+    if (IsRecvMessageLimited(item.womanId)) {
+     FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvScheduleInviteNotice(womanId : %s, manId : %s) is RecvMessageLimited end", item.womanId.c_str(), item.manId.c_str());
+        return;
+    }
+//    // 联系人过滤
+//    if (m_contactMgr->IsExist(item.womanId)) {
+//      FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvScheduleInviteNotice(womanId : %s, manId : %s) is IsExist contact end", item.womanId.c_str(), item.manId.c_str());
+//        return;
+//    }
+    if (NULL != m_userMgr) {
+        LSLCUserItem* userItem = m_userMgr->GetUserItem(item.womanId);
+        if (NULL != userItem) {
+            userItem->LockMsgList();
+            LSLCMessageItem* msgItem = userItem->GetAndInsertScheduleMsgWithList(item.msg.inviteId, item.msg.sessionId);
+            userItem->UnlockMsgList();
+            if (NULL == msgItem) {
+                msgItem = new LSLCMessageItem;
+                    msgItem->Init(m_msgIdBuilder.GetAndIncrement()
+                    , SendType_Recv
+                    , item.womanId
+                    , item.manId
+                    , item.msg.inviteId
+                    , StatusType_Finish);
+                
+                LSLCScheduleInviteItem* scheduleItem = new LSLCScheduleInviteItem;
+                scheduleItem->Init(item.msg);
+                msgItem->SetScheduleInviteItem(scheduleItem);
+                
+                // 添加到用户聊天记录中
+                if (!userItem->InsertSortMsgList(msgItem)) {
+                    // 添加到用户聊天记录列表不成功
+                    delete msgItem;
+                    msgItem = NULL;
+                }
+            } else {
+                msgItem->GetScheduleInviteItem()->m_type = item.msg.type;
+                msgItem->GetScheduleInviteItem()->m_actionGmtTime = item.msg.actionGmtTime;
+                msgItem->GetScheduleInviteItem()->m_sessionDuration = item.msg.sessionDuration;
+                msgItem->GetScheduleInviteItem()->m_durationAdjusted = item.msg.durationAdjusted;
+                
+            }
+            
+            LSLCMessageItem* msgReplyItem = NULL;
+            if (item.msg.type != SCHEDULEINVITE_PENDING) {
+                    msgReplyItem = new LSLCMessageItem;
+                    msgReplyItem->Init(m_msgIdBuilder.GetAndIncrement()
+                    , SendType_Recv
+                    , item.womanId
+                    , item.manId
+                    , item.msg.inviteId
+                    , StatusType_Finish);
+                LSLCScheduleInviteReplyItem* scheduleReplyItem = new LSLCScheduleInviteReplyItem;
+                bool isScheduleAccept = (item.msg.type == SCHEDULEINVITE_CONFIRMED ? true : false);
+                bool isScheduleFromMe = false;
+                scheduleReplyItem->Init(item.msg.sessionId, isScheduleAccept, isScheduleFromMe, item.msg.actionGmtTime, item.msg.durationAdjusted);
+                msgReplyItem->SetScheduleInviteReplyItem(scheduleReplyItem);
+                // 添加到用户聊天记录中
+                if (!userItem->InsertSortMsgList(msgReplyItem)) {
+                    // 添加到用户聊天记录列表不成功
+                    delete msgReplyItem;
+                    msgReplyItem = NULL;
+                }
+            }
+            
+            // callback
+            if (NULL != m_listener) {
+                m_listener->OnRecvScheduleInviteNotice(item.womanId , msgItem, msgReplyItem);
+            }
+        }
+
+    }
+    FileLevelLog("LiveChatManager", KLog::LOG_MSG, "LSLiveChatManManager::OnRecvScheduleInviteNotice(womanId : %s, manId : %s) end", item.womanId.c_str(), item.manId.c_str());
+}
+
 string LSLiveChatManManager::GetLogPath()
 {
 	return m_dirPath + LOG_DIR;
@@ -3804,6 +4016,25 @@ void LSLiveChatManManager::OnCheckCoupon(long requestId, bool success, const LSL
         // 判断是否时token过期
         HandleTokenOver(errnum, errmsg);
 
+    }
+}
+
+void LSLiveChatManManager::OnGetSessionInviteList(long requestId, bool success, int errnum, const string& errmsg, const ChatScheduleSessionList& list) {
+    LSLCUserItem* userItem = NULL;
+    if (NULL != m_userMapLock) {
+        m_userMapLock->Lock();
+    }
+    LCUserMap::iterator iter = m_userMap.find(requestId);
+    if (iter != m_userMap.end()) {
+        // 有则返回
+        userItem = (*iter).second;
+        m_userMap.erase(iter);
+    }
+//    if (NULL != userItem) {
+//        <#statements#>
+//    }
+    if (NULL != m_userMapLock) {
+        m_userMapLock->Unlock();
     }
 }
 
@@ -3913,6 +4144,7 @@ void LSLiveChatManManager::OnQueryChatRecordMutiple(long requestId, bool success
                                 m_videoMgr,
                                 m_magicIconMgr))
                         {
+
                             userItem->InsertSortMsgList(item);
                             
                         }
@@ -3929,6 +4161,9 @@ void LSLiveChatManManager::OnQueryChatRecordMutiple(long requestId, bool success
                 
                 // 合并视频聊天记录
 				m_videoMgr->CombineMessageItem(userItem);
+                // 合并预付费邀请记录 （alex， 2020-04-16)
+                userItem->CombineScheduleInviteMessageItem();
+                
 				// 添加到用户数组
 				userList.push_back(userItem);
                 
@@ -4285,6 +4520,22 @@ bool LSLiveChatManManager::IsRequestQueueEmpty()
 	return result;
 }
 
+// 用户map表加锁
+void LSLiveChatManManager::LockUserMap()
+{
+    if (NULL != m_userMapLock) {
+        m_userMapLock->Lock();
+    }
+}
+
+// 用户map表解锁
+void LSLiveChatManManager::UnlockUserMap()
+{
+    if (NULL != m_userMapLock) {
+        m_userMapLock->Unlock();
+    }
+}
+
 // 弹出请求队列第一个item
 LSLiveChatManManager::TaskItem* LSLiveChatManManager::PopRequestTask()
 {
@@ -4424,6 +4675,12 @@ void LSLiveChatManManager::RequestHandler(RequestItem* item) {
                  iter++)
             {
                 userIds.push_back((*iter)->m_userId);
+//                // 获取会话中预付费列表
+//                LSLCUserItem* userItem = (*iter);
+//                RequestItem* requestItem = new RequestItem();
+//                requestItem->requestType = REQUEST_TASK_GETSESSIONLIST;
+//                requestItem->param = (TaskParam)userItem;
+//                InsertRequestTask(this, (TaskParam)requestItem, 0);
             }
             
             if (!userIds.empty()) {
@@ -4528,6 +4785,14 @@ void LSLiveChatManManager::RequestHandler(RequestItem* item) {
             LSLCMessageItem* msgItem = (LSLCMessageItem*)item->param;
             if (NULL != msgItem) {
                 HandleFeebackcall(msgItem);
+            }
+        }break;
+        case REQUEST_TASK_GETSESSIONLIST:
+        {
+            // 发送消息的回调
+            LSLCUserItem* userItem = (LSLCUserItem*)item->param;
+            if (NULL != userItem) {
+                HandleGetSessionInviteList(userItem);
             }
         }break;
     }

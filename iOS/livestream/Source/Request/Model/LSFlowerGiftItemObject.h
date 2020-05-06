@@ -23,6 +23,7 @@
  * giftWeekdayPrice     平日价
  * giftDiscountPrice    优惠价
  * giftPrice            显示价格
+ * giftDiscount         优惠折扣
  * isNew                是否NEW
  * deliverableCountry   配送国家
  * giftDescription      描述
@@ -35,6 +36,7 @@
 @property (nonatomic, assign) double giftWeekdayPrice;
 @property (nonatomic, assign) double giftDiscountPrice;
 @property (nonatomic, assign) double giftPrice;
+@property (nonatomic, assign) double giftDiscount;
 @property (nonatomic, assign) BOOL isNew;
 @property (nonatomic, strong) NSMutableArray<NSString *>* deliverableCountry;
 @property (nonatomic, copy) NSString* giftDescription;

@@ -71,6 +71,19 @@ public:
     LCMessageList GetPrivateAndVideoMessageList();
     // 根据videoId获取用户item
     LSLCMessageItem* GetMsgItemWithVideoId(const string& videoId, const string& inviteId);
+    
+    // 获取和插入预付费消息 （alex， 2020-04-10）
+    LSLCMessageItem* GetAndInsertScheduleMsgWithList(const string& inviteId, const string& scheduleId);
+    
+    // 获取和插入预付费消息 （alex， 2020-04-10）
+    LSLCMessageItem* GetAndInsertScheduleReplyWithList(const string& inviteId, const string& scheduleId);
+    
+    // 合并预付费邀请记录 （alex， 2020-04-16)
+    void CombineScheduleInviteMessageItem();
+//    // 获取预付费消息为发送的 （alex， 2020-04-16）
+//    LSLCMessageItem* GetScheduleMsgWithListWithSend(const string& inviteId, const string& scheduleId);
+    void CombineHttpScheduleInviteMessageItem();
+    
 
 public:
 	// 聊天消息列表加锁
@@ -105,5 +118,9 @@ public:
 	IAutoLock*		m_sendMsgListLock;	// 待发消息列表锁
     
     IAutoLock*		m_statusLock;       // 状态锁
+    
+    bool            m_isHistoryHttpSchedule;    // 是否获取了http的预付费
+    bool            m_isHistoryImMsg;           // 是否获取了历史记录
+    ChatScheduleSessionList m_scheduleSessionList;  //
 };
 typedef list<LSLCUserItem*>		LCUserList;

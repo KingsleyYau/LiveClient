@@ -405,6 +405,11 @@ public:
                 isGiftFlowerSwitch = root[LOGIN_USER_FLOWERS_GIFT_SWITCH].asInt() == 0 ? false : true;
             }
             
+            /* payType */
+            if (root[LOGIN_PAYTYPE].isNumeric()) {
+                payType = GetIntToLSPayType(root[LOGIN_PAYTYPE].asInt());
+            }
+            
         }
         
     }
@@ -427,6 +432,7 @@ public:
         isHangoutRisk = false;
         liveChatInviteRiskType = LSHTTP_LIVECHATINVITE_RISK_NOLIMIT;
         isGiftFlowerSwitch = false;
+        payType = LSPAYTYPE_QNPLAY;
     }
     
     virtual ~HttpLoginItem() {
@@ -458,6 +464,7 @@ public:
      * mailPriv   信件及意向信权限相关
      * userPriv   信件及意向信权限相关
      * isGiftFlowerSwitch  鲜花礼品开关(1:打开  0:关闭)
+     * payType  支付通道分类（LSPAYTYPE_QNPLAY：使用QN支付，LSPAYTYPE_GOOGLEPLAY：Google Play，默认：1）
      */
     string userId;
     string token;
@@ -480,6 +487,7 @@ public:
     HttpUserPrivItem userPriv;
 //    bool isGiftFlowerPriv;
     bool isGiftFlowerSwitch;
+    LSPayType payType;
 };
 
 #endif /* LOGINITEM_H_ */

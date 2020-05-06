@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <httpcontroller/HttpRequestEnum.h>
 @interface TotalUnreadNumObject : NSObject
 /**
  * 获取主界面未读数量
@@ -26,5 +26,7 @@
 @property (nonatomic, assign) int bookingNoreadNum;
 @property (nonatomic, assign) int backpackNoreadNum;
 @property (nonatomic, assign) int sayHiNoreadNum;
-
+@property (nonatomic, assign) int schedulePendingUnreadNum;
+@property (nonatomic, assign) int scheduleConfirmedUnreadNum;
+@property (nonatomic, assign) LSScheduleStatus scheduleStatus;
 @end

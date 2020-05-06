@@ -56,7 +56,7 @@
     headImage.layer.cornerRadius = headImage.frame.size.height / 2;
     headImage.layer.masksToBounds = YES;
     [self.scrollView addSubview:headImage];
-    [[LSImageViewLoader loader] loadImageWithImageView:headImage options:0 imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+    [[LSImageViewLoader loader] loadImageWithImageView:headImage options:0 imageUrl:self.liveRoom.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
 
     CGFloat headW = headImage.frame.size.width + headImage.frame.origin.x;
 
@@ -105,7 +105,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+
     [self.navigationController.navigationBar setTitleTextAttributes:
                                                  @{NSFontAttributeName : [UIFont boldSystemFontOfSize:15],
                                                    NSForegroundColorAttributeName : [UIColor whiteColor]}];

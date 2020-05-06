@@ -239,10 +239,16 @@
 }
 
 - (void)setStatusBarBackgroundColor:(UIColor *)color {
-    UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
-    if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {
-        statusBar.backgroundColor = color;
-    }
+    if (@available(iOS 13.0, *)) {
+           UIView *statusBar = [[UIView alloc]initWithFrame:[UIApplication sharedApplication].keyWindow.windowScene.statusBarManager.statusBarFrame] ;
+            statusBar.backgroundColor = color;
+            [[UIApplication sharedApplication].keyWindow addSubview:statusBar];
+        } else {
+            UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
+            if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {
+                statusBar.backgroundColor = color;
+            }
+        }
 }
 
 //页面跳转失败 (当main frame开始加载数据失败时，会回调)
@@ -348,6 +354,13 @@
         }
         result = NO;
     }
+    
+    if ([urlStr containsString:@"video"]&&[urlStr containsString:@".mp4"]) {
+        NSLog(@"LSLiveWKWebViewManager::Play Video");
+        if ([self.delegate respondsToSelector:@selector(webViewOpenVideo)]) {
+            [self.delegate webViewOpenVideo];
+        }
+    }
 
     // 如果链接含有打开指定页的跳转则执行链接跳转
     if ([urlStr containsString:qpidJump] || [urlStr containsString:qpidLiveJump]) {
@@ -390,10 +403,8 @@
             result = NO;
         }
     }
+   
     
-    
- 
-
     if (result) {
         if (![self.requestUrl isEqualToString:urlStr]) {
             self.requestUrl = urlStr;

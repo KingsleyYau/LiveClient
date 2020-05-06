@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "LSHttpLetterImgItemObject.h"
 #import "LSHttpLetterVideoItemObject.h"
+#import "LSScheduleInviteDetailItemObject.h"
 
 @interface LSHttpLetterDetailItemObject : NSObject
 {
@@ -49,6 +50,7 @@
 @property (nonatomic, assign) BOOL hasReplied;
 @property (nonatomic, strong) NSMutableArray<LSHttpLetterImgItemObject *>* _Nonnull letterImgList;
 @property (nonatomic, strong) NSMutableArray<LSHttpLetterVideoItemObject *>* _Nonnull letterVideoList;
+@property (nonatomic, strong) LSScheduleInviteDetailItemObject *_Nullable scheduleInfo;
 
 
 @end

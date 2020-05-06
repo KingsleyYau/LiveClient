@@ -13,7 +13,6 @@
 
 @interface BarrageModelCell : BarrageViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel* labelName;
 @property (weak, nonatomic) IBOutlet UILabel* labelMessage;
 @property (weak, nonatomic) IBOutlet UIView* labelMessageBackgroundView;
 @property (weak, nonatomic) IBOutlet LSUIImageViewTopFit* imageViewHeader;

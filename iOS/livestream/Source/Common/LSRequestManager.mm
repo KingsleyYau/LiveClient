@@ -177,6 +177,16 @@ static const int HTTPErrorTypeArray[] = {
     
     HTTP_LCC_ERR_GREETINGMESSAGE_TOO_LONG,              // 订单备注太长（22120）Sorry, the greeting message can not exceed 250 characters.'（15.12.生成订单）
     HTTP_LCC_ERR_ITEM_TOO_MUCH,                         // 当前购物车内准备赠送给该主播的该礼品数量已满（达到99），不可再添加（22121）ou can only add 1-99 items.（用于15.8.添加购物车商品 15.9.修改购物车商品数量 15.12.生成订单）
+    /*预付费直播*/
+    HTTP_LCC_ERR_SCHEDULE_ANCHOR_NO_PRIV,          // 发送预付费直播:主播无权限（17501）（用于17.3.发送预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM,          // 发送预付费直播:开始时间离现在不足24小时或超过14天（17502）（用于17.3.发送预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_NO_CREDIT,          // 发送预付费直播:男士信用点不足（17302）（用于17.3.发送预付费直播邀请 用于17.4.接受预付费直播邀请
+    
+    HTTP_LCC_ERR_SCHEDULE_ACCEPTED_LESS_OR_EXPIRED,          // 接受预付费直播:开始时间离现在不足6小时或已过期（17503）（用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED,          // 接受预付费直播:该邀请已接受（17505）（用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED,          // 接受预付费直播:该邀请已拒绝（17506）（用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_CANCEL_LESS_OR_EXPIRED,          // // 没有阅读前不能接受或拒绝（This request was sent by mail.Please read this mail before accept or decline this request）（17507）（用于17.4.接受预付费直播邀请 用于17.5.拒绝预付费直播邀请
+    HTTP_LCC_ERR_SCHEDULE_NO_READ_BEFORE,
     
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE,                       // 强制更新，这里时本地返回的，仅用于ios
@@ -231,7 +241,7 @@ static LSRequestManager *gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_WARNING);
+    KLog::SetLogLevel(KLog::LOG_OFF);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
@@ -1893,6 +1903,7 @@ public:
             LSRecommendAnchorItemObject *item = [[LSRecommendAnchorItemObject alloc] init];
             item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
             item.anchorNickName = [NSString stringWithUTF8String:(*iter).anchorNickName.c_str()];
+            item.anchorAge = (*iter).anchorAge;
             item.anchorCover = [NSString stringWithUTF8String:(*iter).anchorCover.c_str()];
             item.anchorAvatar = [NSString stringWithUTF8String:(*iter).anchorAvatar.c_str()];
             item.isFollow = (*iter).isFollow;
@@ -2758,6 +2769,7 @@ public:
         
         obj.sendLetter = [NSString stringWithUTF8String:configItem.sendLetter.c_str()];
         obj.flowersGift = configItem.flowersGift;
+        obj.scheduleSaveUp = configItem.scheduleSaveUp;
         
         GetConfigFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -3140,8 +3152,12 @@ public:
         anchorItem.isLive = userItem.anchorInfo.isLive;
         anchorItem.introduction = [NSString stringWithUTF8String:userItem.anchorInfo.introduction.c_str()];
         anchorItem.roomPhotoUrl = [NSString stringWithUTF8String:userItem.anchorInfo.roomPhotoUrl.c_str()];
+        LSAnchorPrivItemObject * anchorPriv = [[LSAnchorPrivItemObject alloc] init];
+        anchorPriv.scheduleOneOnOneRecvPriv = userItem.anchorInfo.anchorPriv.scheduleOneOnOneRecvPriv;
+        anchorPriv.scheduleOneOnOneSendPriv = userItem.anchorInfo.anchorPriv.scheduleOneOnOneSendPriv;
+        anchorItem.anchorPriv = anchorPriv;
         item.anchorInfo = anchorItem;
-        
+
         GetUserInfoFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
         @synchronized(manager.delegateDictionary) {
@@ -3188,6 +3204,9 @@ public:
         obj.backpackUnreadNum = item.backpackUnreadNum;
         obj.sayHiResponseUnreadNum = item.sayHiResponseUnreadNum;
         obj.livechatVocherUnreadNum = item.livechatVocherUnreadNum;
+        obj.schedulePendingUnreadNum = item.schedulePendingUnreadNum;
+        obj.scheduleConfirmedUnreadNum = item.scheduleConfirmedUnreadNum;
+        obj.scheduleStatus = item.scheduleStatus;
         
         GetTotalNoreadNumFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -4621,6 +4640,7 @@ RequestSetPushConfigCallbackImp gRequestSetPushConfigCallbackImp;
         item.hasRead = (*iter).hasItem.hasRead;
         item.hasReplied = (*iter).hasItem.hasReplied;
         item.onlineStatus = (*iter).hasItem.onlineStatus;
+        item.hasSchedule = (*iter).hasItem.hasSchedule;
         [array addObject:item];
     }
     return array;
@@ -4815,6 +4835,29 @@ public:
             [letterVideoList addObject:item2];
         }
         obj.letterVideoList = letterVideoList;
+        
+        if (!detailEmfItem.scheduleInfo.anchorId.empty()) {
+            LSScheduleInviteDetailItemObject* giftItem = [[LSScheduleInviteDetailItemObject alloc] init];
+            giftItem.anchorId = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.anchorId.c_str()];
+            giftItem.inviteId = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.inviteId.c_str()];
+            giftItem.sendFlag = detailEmfItem.scheduleInfo.sendFlag;
+            giftItem.isSummerTime = detailEmfItem.scheduleInfo.isSummerTime;
+            giftItem.startTime = detailEmfItem.scheduleInfo.startTime;
+            giftItem.endTime = detailEmfItem.scheduleInfo.endTime;
+            giftItem.addTime = detailEmfItem.scheduleInfo.addTime;
+            giftItem.statusUpdateTime = detailEmfItem.scheduleInfo.statusUpdateTime;
+            giftItem.timeZoneValue = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.timeZoneValue.c_str()];
+            giftItem.timeZoneCity = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.timeZoneCity.c_str()];
+            giftItem.duration = detailEmfItem.scheduleInfo.duration;
+            giftItem.status = detailEmfItem.scheduleInfo.status;
+            giftItem.cancelerName = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.cancelerName.c_str()];
+            giftItem.type = detailEmfItem.scheduleInfo.type;
+            giftItem.refId = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.refId.c_str()];
+            giftItem.isActive = detailEmfItem.scheduleInfo.isActive;
+            obj.scheduleInfo = giftItem;
+        }
+
+        
         GetEmfDetailFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
         @synchronized(manager.delegateDictionary) {
@@ -4848,7 +4891,7 @@ class RequestSendEmfCallbackImp : public IRequestSendEmfCallback {
 public:
     RequestSendEmfCallbackImp(){};
     ~RequestSendEmfCallbackImp(){};
-    void OnSendEmf(HttpSendEmfTask* task, bool success, int errnum, const string& errmsg) {
+    void OnSendEmf(HttpSendEmfTask* task, bool success, int errnum, const string& errmsg, const string& emfId) {
         NSLog(@"LSRequestManager::OnSendEmf( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         SendEmfFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -4858,7 +4901,7 @@ public:
         }
         
         if (handler) {
-            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:emfId.c_str()]);
         }
     }
 };
@@ -4870,6 +4913,10 @@ RequestSendEmfCallbackImp gRequestSendEmfCallbackImp;
              imgList:(NSArray<NSString *>*)imgList
          comsumeType:(LSLetterComsumeType)comsumeType
      sayHiResponseId:(NSString*)sayHiResponseId
+          isSchedule:(BOOL)isSchedule
+          timeZoneId:(NSString*)timeZoneId
+           startTime:(NSString*)startTime
+            duration:(int)duration
        finishHandler:(SendEmfFinishHandler )finishHandler {
     string stranchorId = "";
     if (anchorId != nil) {
@@ -4899,8 +4946,18 @@ RequestSendEmfCallbackImp gRequestSendEmfCallbackImp;
     if (sayHiResponseId != nil) {
         strSayHiResponseId = [sayHiResponseId UTF8String];
     }
+    
+    string strtimeZoneId = "";
+    if (timeZoneId != nil) {
+        strtimeZoneId = [timeZoneId UTF8String];
+    }
+    
+    string strstartTime = "";
+    if (startTime != nil) {
+        strstartTime = [startTime UTF8String];
+    }
 
-    NSInteger request = (NSInteger)mHttpRequestController.SendEmf(&mHttpRequestManager, stranchorId, strloiId, stremfId, strcontent, list, comsumeType, strSayHiResponseId, &gRequestSendEmfCallbackImp);
+    NSInteger request = (NSInteger)mHttpRequestController.SendEmf(&mHttpRequestManager, stranchorId, strloiId, stremfId, strcontent, list, comsumeType, strSayHiResponseId, isSchedule, strtimeZoneId, strstartTime, duration, &gRequestSendEmfCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
@@ -5686,6 +5743,7 @@ public:
                 giftItem.giftWeekdayPrice = (*giftIter).giftWeekdayPrice;
                 giftItem.giftDiscountPrice = (*giftIter).giftDiscountPrice;
                 giftItem.giftPrice = (*giftIter).giftPrice;
+                giftItem.giftDiscount = (*giftIter).giftDiscount;
                 giftItem.isNew = (*giftIter).isNew;
                 NSMutableArray* CountryList = [NSMutableArray array];
                 for(CountryList::const_iterator countryIter = (*giftIter).deliverableCountry.begin(); countryIter != (*giftIter).deliverableCountry.end(); countryIter++) {
@@ -5754,6 +5812,7 @@ public:
         giftItem.giftWeekdayPrice = item.giftWeekdayPrice;
         giftItem.giftDiscountPrice = item.giftDiscountPrice;
         giftItem.giftPrice = item.giftPrice;
+        giftItem.giftDiscount = item.giftDiscount;
         giftItem.isNew = item.isNew;
         NSMutableArray* CountryList = [NSMutableArray array];
         for(CountryList::const_iterator countryIter = item.deliverableCountry.begin(); countryIter != item.deliverableCountry.end(); countryIter++) {
@@ -5817,6 +5876,7 @@ public:
             giftItem.giftWeekdayPrice = (*giftIter).giftWeekdayPrice;
             giftItem.giftDiscountPrice = (*giftIter).giftDiscountPrice;
             giftItem.giftPrice = (*giftIter).giftPrice;
+            giftItem.giftDiscount = (*giftIter).giftDiscount;
             giftItem.isNew = (*giftIter).isNew;
             NSMutableArray* CountryList = [NSMutableArray array];
             for(CountryList::const_iterator countryIter = (*giftIter).deliverableCountry.begin(); countryIter != (*giftIter).deliverableCountry.end(); countryIter++) {
@@ -6270,9 +6330,13 @@ public:
         greetingItem.giftId = [NSString stringWithUTF8String:item.greetingCard.giftId.c_str()];
         greetingItem.giftName = [NSString stringWithUTF8String:item.greetingCard.giftName.c_str()];
         greetingItem.giftNumber = item.greetingCard.giftNumber;
+        greetingItem.isBirthday = item.greetingCard.isBirthday;
+        greetingItem.giftPrice = item.greetingCard.giftPrice;
+        greetingItem.giftImg = [NSString stringWithUTF8String:item.greetingCard.giftImg.c_str()];
         obj.greetingCard = greetingItem;
         
         obj.deliveryPrice = item.deliveryPrice;
+        obj.holidayName = [NSString stringWithUTF8String:item.holidayName.c_str()];
         obj.holidayPrice = item.holidayPrice;
         obj.totalPrice = item.totalPrice;
         
@@ -6374,6 +6438,56 @@ RequestCreateGiftOrderCallbackImp gRequestCreateGiftOrderCallbackImp;
     return request;
 }
 
+class RequestCheckDiscountCallbackImp : public IRequestCheckDiscountCallback {
+public:
+    RequestCheckDiscountCallbackImp(){};
+    ~RequestCheckDiscountCallbackImp(){};
+    void OnCheckDiscount(HttpCheckDiscountTask* task, bool success, int errnum, const string& errmsg, const HttpCheckDiscountItem& item) {
+        NSLog(@"LSRequestManager::OnCheckDiscount( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        LSCheckDiscountItemObject* obj = [[LSCheckDiscountItemObject alloc] init];
+        obj.type = item.type;
+        obj.name = [NSString stringWithUTF8String:item.name.c_str()];
+        obj.discount = item.discount;
+        obj.imgUrl = [NSString stringWithUTF8String:item.imgUrl.c_str()];
+        
+        
+        CheckDiscountFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+
+RequestCheckDiscountCallbackImp gRequestCheckDiscountCallbackImp;
+
+- (NSInteger)checkDiscount:(NSString*)anchorId
+             finishHandler:(CheckDiscountFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strAnchorId = "";
+    if (anchorId != nil) {
+        strAnchorId = [anchorId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.CheckDiscount(&mHttpRequestManager,
+                                                                 strAnchorId,
+                                                                 &gRequestCheckDiscountCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
 #pragma mark - 广告模块回调
 
 class RequestWomanListAdvertCallbackImp : public IRequestWomanListAdvertCallback {
@@ -6428,6 +6542,559 @@ RequestWomanListAdvertCallbackImp gRequestWomanListAdvertCallbackImp;
     return request;
 }
 
+#pragma mark - 预付费直播
+
+class RequestGetScheduleDurationListCallbackImp : public IRequestGetScheduleDurationListCallback {
+public:
+    RequestGetScheduleDurationListCallbackImp(){};
+    ~RequestGetScheduleDurationListCallbackImp(){};
+    void OnGetScheduleDurationList(HttpGetScheduleDurationListTask* task, bool success, int errnum, const string& errmsg, const ScheduleDurationList& list) {
+        NSLog(@"LSRequestManager::OnGetScheduleDurationList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* giftList = [NSMutableArray array];
+        for(ScheduleDurationList::const_iterator giftIter = list.begin(); giftIter != list.end(); giftIter++) {
+            LSScheduleDurationItemObject* giftItem = [[LSScheduleDurationItemObject alloc] init];
+            giftItem.duration = (*giftIter).duration;
+            giftItem.isDefault = (*giftIter).isDefault;
+            giftItem.credit = (*giftIter).credit;
+            giftItem.originalCredit = (*giftIter).originalCredit;
+            [giftList addObject:giftItem];
+        }
+        
+        GetScheduleDurationListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], giftList);
+        }
+    }
+};
+
+RequestGetScheduleDurationListCallbackImp gRequestGetScheduleDurationListCallbackImp;
+
+- (NSInteger)getScheduleDurationList:(GetScheduleDurationListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetScheduleDurationList(&mHttpRequestManager,
+                                                                &gRequestGetScheduleDurationListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+
+class RequestGetCountryTimeZoneListCallbackImp : public IRequestGetCountryTimeZoneListCallback {
+public:
+    RequestGetCountryTimeZoneListCallbackImp(){};
+    ~RequestGetCountryTimeZoneListCallbackImp(){};
+    void OnGetCountryTimeZoneList(HttpGetCountryTimeZoneListTask* task, bool success, int errnum, const string& errmsg, const CountryTimeZoneList& list) {
+        NSLog(@"LSRequestManager::OnGetCountryTimeZoneList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* giftList = [NSMutableArray array];
+        for(CountryTimeZoneList::const_iterator giftIter = list.begin(); giftIter != list.end(); giftIter++) {
+            LSCountryTimeZoneItemObject* giftItem = [[LSCountryTimeZoneItemObject alloc] init];
+            giftItem.countryCode = [NSString stringWithUTF8String:(*giftIter).countryCode.c_str()];
+            giftItem.countryName = [NSString stringWithUTF8String:(*giftIter).countryName.c_str()];
+            giftItem.isDefault = (*giftIter).isDefault;
+            NSMutableArray* androidList = [NSMutableArray array];
+            for(TimeZoneList::const_iterator androidIter = (*giftIter).timeZoneList.begin(); androidIter != (*giftIter).timeZoneList.end(); androidIter++) {
+                LSTimeZoneItemObject* androidItem = [[LSTimeZoneItemObject alloc] init];
+                androidItem.zoneId = [NSString stringWithUTF8String:(*androidIter).zoneId.c_str()];
+                androidItem.value = [NSString stringWithUTF8String:(*androidIter).value.c_str()];
+                androidItem.city = [NSString stringWithUTF8String:(*androidIter).city.c_str()];
+                androidItem.cityCode = [NSString stringWithUTF8String:(*androidIter).cityCode.c_str()];
+                androidItem.summerTimeStart = (*androidIter).summerTimeStart;
+                androidItem.summerTimeEnd = (*androidIter).summerTimeEnd;
+                [androidList addObject:androidItem];
+            }
+            giftItem.timeZoneList = androidList;
+            [giftList addObject:giftItem];
+        }
+        
+        GetCountryTimeZoneListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], giftList);
+        }
+    }
+};
+
+RequestGetCountryTimeZoneListCallbackImp gRequestGetCountryTimeZoneListCallbackImp;
+
+- (NSInteger)getCountryTimeZoneList:(GetCountryTimeZoneListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetCountryTimeZoneList(&mHttpRequestManager,
+                                                                &gRequestGetCountryTimeZoneListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+
+class RequestSendScheduleInviteCallbackImp : public IRequestSendScheduleInviteCallback {
+public:
+    RequestSendScheduleInviteCallbackImp(){};
+    ~RequestSendScheduleInviteCallbackImp(){};
+    void OnSendScheduleInvite(HttpSendScheduleInviteTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteItem& item) {
+        NSLog(@"LSRequestManager::OnSendScheduleInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        LSSendScheduleInviteItemObject* obj = [[LSSendScheduleInviteItemObject alloc] init];
+        obj.inviteId = [NSString stringWithUTF8String:item.inviteId.c_str()];
+        obj.isSummerTime = item.isSummerTime;
+        obj.startTime = item.startTime;
+        obj.addTime = item.addTime;
+        
+        SendScheduleInviteFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+
+RequestSendScheduleInviteCallbackImp gRequestSendScheduleInviteCallbackImp;
+
+- (NSInteger)sendScheduleInvite:(LSScheduleInviteType)type
+                          refId:(NSString*)refId
+                       anchorId:(NSString*)anchorId
+                     timeZoneId:(NSString*)timeZoneId
+                      startTime:(NSString*)startTime
+                       duration:(int)duration
+                  finishHandler:(SendScheduleInviteFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strrefId = "";
+    if (refId != nil) {
+        strrefId = [refId UTF8String];
+    }
+    
+    string stranchorId = "";
+    if (anchorId != nil) {
+        stranchorId = [anchorId UTF8String];
+    }
+    
+    string strtimeZoneId = "";
+    if (timeZoneId != nil) {
+        strtimeZoneId = [timeZoneId UTF8String];
+    }
+    
+    string strstartTime = "";
+    if (startTime != nil) {
+        strstartTime = [startTime UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.SendScheduleInvite(&mHttpRequestManager,
+                                                                   type,
+                                                                   strrefId,
+                                                                   stranchorId,
+                                                                   strtimeZoneId,
+                                                                   strstartTime,
+                                                                   duration,
+                                                                   &gRequestSendScheduleInviteCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestAcceptScheduleInviteCallbackImp : public IRequestAcceptScheduleInviteCallback {
+public:
+    RequestAcceptScheduleInviteCallbackImp(){};
+    ~RequestAcceptScheduleInviteCallbackImp(){};
+    void OnAcceptScheduleInvite(HttpAcceptScheduleInviteTask* task, bool success, int errnum, const string& errmsg, long long starusUpdateTime) {
+        NSLog(@"LSRequestManager::OnAcceptScheduleInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        AcceptScheduleInviteFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], (NSInteger)starusUpdateTime);
+        }
+    }
+};
+
+RequestAcceptScheduleInviteCallbackImp gRequestAcceptScheduleInviteCallbackImp;
+
+- (NSInteger)acceptScheduleInvite:(NSString*)inviteId
+                         duration:(int)duration
+                    finishHandler:(AcceptScheduleInviteFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strinviteId = "";
+    if (inviteId != nil) {
+        strinviteId = [inviteId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.AcceptScheduleInvite(&mHttpRequestManager,
+                                                                     strinviteId,
+                                                                     duration,
+                                                                     &gRequestAcceptScheduleInviteCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestDeclinedScheduleInviteCallbackImp : public IRequestDeclinedScheduleInviteCallback {
+public:
+    RequestDeclinedScheduleInviteCallbackImp(){};
+    ~RequestDeclinedScheduleInviteCallbackImp(){};
+    void OnDeclinedScheduleInvite(HttpDeclinedScheduleInviteTask* task, bool success, int errnum, const string& errmsg, long long starusUpdateTime) {
+        NSLog(@"LSRequestManager::OnDeclinedScheduleInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        DeclinedScheduleInviteFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], starusUpdateTime);
+        }
+    }
+};
+
+RequestDeclinedScheduleInviteCallbackImp gRequestDeclinedScheduleInviteCallbackImp;
+
+- (NSInteger)declinedScheduleInvite:(NSString*)inviteId
+                      finishHandler:(DeclinedScheduleInviteFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strinviteId = "";
+    if (inviteId != nil) {
+        strinviteId = [inviteId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.DeclinedScheduleInvite(&mHttpRequestManager,
+                                                                       strinviteId,
+                                                                       &gRequestDeclinedScheduleInviteCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestCancelScheduleInviteCallbackImp : public IRequestCancelScheduleInviteCallback {
+public:
+    RequestCancelScheduleInviteCallbackImp(){};
+    ~RequestCancelScheduleInviteCallbackImp(){};
+    void OnCancelScheduleInvite(HttpCancelScheduleInviteTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"LSRequestManager::OnCancelScheduleInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        CancelScheduleInviteFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+
+RequestCancelScheduleInviteCallbackImp gRequestCancelScheduleInviteCallbackImp;
+
+- (NSInteger)cancelScheduleInvite:(NSString*)inviteId
+                    finishHandler:(CancelScheduleInviteFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strinviteId = "";
+    if (inviteId != nil) {
+        strinviteId = [inviteId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.CancelScheduleInvite(&mHttpRequestManager,
+                                                                     strinviteId,
+                                                                     &gRequestCancelScheduleInviteCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetScheduleInviteListCallbackImp : public IRequestGetScheduleInviteListCallback {
+public:
+    RequestGetScheduleInviteListCallbackImp(){};
+    ~RequestGetScheduleInviteListCallbackImp(){};
+    void OnGetScheduleInviteList(HttpGetScheduleInviteListTask* task, bool success, int errnum, const string& errmsg, const ScheduleInviteList& list) {
+        NSLog(@"LSRequestManager::OnGetScheduleInviteList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* giftList = [NSMutableArray array];
+        for(ScheduleInviteList::const_iterator giftIter = list.begin(); giftIter != list.end(); giftIter++) {
+            LSScheduleInviteListItemObject* giftItem = [[LSScheduleInviteListItemObject alloc] init];
+            LSScheduleAnchorInfoItemObject* anchorIdItem = [[LSScheduleAnchorInfoItemObject alloc] init];
+            anchorIdItem.anchorId = [NSString stringWithUTF8String:(*giftIter).anchorInfo.anchorId.c_str()];
+            anchorIdItem.nickName = [NSString stringWithUTF8String:(*giftIter).anchorInfo.nickName.c_str()];
+            anchorIdItem.avatarImg = [NSString stringWithUTF8String:(*giftIter).anchorInfo.avatarImg.c_str()];
+            anchorIdItem.onlineStatus = (*giftIter).anchorInfo.onlineStatus;
+            anchorIdItem.age = (*giftIter).anchorInfo.age;
+            anchorIdItem.country = [NSString stringWithUTF8String:(*giftIter).anchorInfo.country.c_str()];
+            giftItem.anchorInfo = anchorIdItem;
+            giftItem.inviteId = [NSString stringWithUTF8String:(*giftIter).inviteId.c_str()];
+            giftItem.sendFlag = (*giftIter).sendFlag;
+            giftItem.isSummerTime = (*giftIter).isSummerTime;
+            giftItem.startTime = (*giftIter).startTime;
+            giftItem.endTime = (*giftIter).endTime;
+            giftItem.timeZoneValue = [NSString stringWithUTF8String:(*giftIter).timeZoneValue.c_str()];
+            giftItem.timeZoneCity = [NSString stringWithUTF8String:(*giftIter).timeZoneCity.c_str()];
+            giftItem.duration = (*giftIter).duration;
+            giftItem.status = (*giftIter).status;
+            giftItem.type = (*giftIter).type;
+            giftItem.refId = [NSString stringWithUTF8String:(*giftIter).refId.c_str()];
+            giftItem.hasRead = (*giftIter).hasRead;
+            giftItem.isActive = (*giftIter).isActive;
+            [giftList addObject:giftItem];
+        }
+        
+        GetScheduleInviteListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], giftList);
+        }
+    }
+};
+
+RequestGetScheduleInviteListCallbackImp gRequestGetScheduleInviteListCallbackImp;
+
+- (NSInteger)getScheduleInviteList:(LSScheduleInviteStatus)status
+                          sendFlag:(LSScheduleSendFlagType)sendFlag
+                          anchorId:(NSString*)anchorId
+                             start:(int)start
+                              step:(int)step
+                     finishHandler:(GetScheduleInviteListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string stranchorId = "";
+    if (anchorId != nil) {
+        stranchorId = [anchorId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetScheduleInviteList(&mHttpRequestManager,
+                                                                      status,
+                                                                      sendFlag,
+                                                                      stranchorId,
+                                                                      start,
+                                                                      step,
+                                                                      &gRequestGetScheduleInviteListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetScheduleInviteDetailCallbackImp : public IRequestGetScheduleInviteDetailCallback {
+public:
+    RequestGetScheduleInviteDetailCallbackImp(){};
+    ~RequestGetScheduleInviteDetailCallbackImp(){};
+    void OnGetScheduleInviteDetail(HttpGetScheduleInviteDetailTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteDetailItem& item) {
+        NSLog(@"LSRequestManager::OnGetScheduleInviteDetail( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        LSScheduleInviteDetailItemObject* giftItem = [[LSScheduleInviteDetailItemObject alloc] init];
+        giftItem.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+        giftItem.inviteId = [NSString stringWithUTF8String:item.inviteId.c_str()];
+        giftItem.sendFlag = item.sendFlag;
+        giftItem.isSummerTime = item.isSummerTime;
+        giftItem.startTime = item.startTime;
+        giftItem.endTime = item.endTime;
+        giftItem.addTime = item.addTime;
+        giftItem.statusUpdateTime = item.statusUpdateTime;
+        giftItem.timeZoneValue = [NSString stringWithUTF8String:item.timeZoneValue.c_str()];
+        giftItem.timeZoneCity = [NSString stringWithUTF8String:item.timeZoneCity.c_str()];
+        giftItem.duration = item.duration;
+        giftItem.status = item.status;
+        giftItem.cancelerName = [NSString stringWithUTF8String:item.cancelerName.c_str()];
+        giftItem.type = item.type;
+        giftItem.refId = [NSString stringWithUTF8String:item.refId.c_str()];
+        giftItem.isActive = item.isActive;
+        
+        GetScheduleInviteDetailFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], giftItem);
+        }
+    }
+};
+
+RequestGetScheduleInviteDetailCallbackImp gRequestGetScheduleInviteDetailCallbackImp;
+
+- (NSInteger)getScheduleInviteDetail:(NSString*)inviteId
+                       finishHandler:(GetScheduleInviteDetailFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strinviteId = "";
+    if (inviteId != nil) {
+        strinviteId = [inviteId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetScheduleInviteDetail(&mHttpRequestManager,
+                                                                        strinviteId,
+                                                                        &gRequestGetScheduleInviteDetailCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetSessionInviteListCallbackImp : public IRequestGetSessionInviteListCallback {
+public:
+    RequestGetSessionInviteListCallbackImp(){};
+    ~RequestGetSessionInviteListCallbackImp(){};
+    void OnGetSessionInviteList(HttpGetSessionInviteListTask* task, bool success, int errnum, const string& errmsg, const LiveScheduleInviteList& list) {
+        NSLog(@"LSRequestManager::OnGetSessionInviteList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* giftList = [NSMutableArray array];
+        for(LiveScheduleInviteList::const_iterator giftIter = list.begin(); giftIter != list.end(); giftIter++) {
+            LSScheduleLiveInviteItemObject* giftItem = [[LSScheduleLiveInviteItemObject alloc] init];
+            giftItem.inviteId = [NSString stringWithUTF8String:(*giftIter).inviteId.c_str()];
+            giftItem.sendFlag = (*giftIter).sendFlag;
+            giftItem.isSummerTime = (*giftIter).isSummerTime;
+            giftItem.startTime = (*giftIter).startTime;
+            giftItem.endTime = (*giftIter).endTime;
+            giftItem.timeZoneValue = [NSString stringWithUTF8String:(*giftIter).timeZoneValue.c_str()];
+            giftItem.timeZoneCity = [NSString stringWithUTF8String:(*giftIter).timeZoneCity.c_str()];
+            giftItem.duration = (*giftIter).duration;
+            giftItem.status = (*giftIter).status;
+            giftItem.addTime = (*giftIter).addTime;
+            giftItem.statusUpdateTime = (*giftIter).statusUpdateTime;
+            [giftList addObject:giftItem];
+        }
+        
+        GetSessionInviteListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], giftList);
+        }
+    }
+};
+
+RequestGetSessionInviteListCallbackImp gRequestGetSessionInviteListCallbackImp;
+
+- (NSInteger)getSessionInviteList:(LSScheduleInviteType)type
+                            refId:(NSString*)refId
+                    finishHandler:(GetSessionInviteListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strrefId = "";
+    if (refId != nil) {
+        strrefId = [refId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetSessionInviteList(&mHttpRequestManager,
+                                                                     type,
+                                                                     strrefId,
+                                                                     &gRequestGetSessionInviteListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetScheduleInviteStatusCallbackImp : public IRequestGetScheduleInviteStatusCallback {
+public:
+    RequestGetScheduleInviteStatusCallbackImp(){};
+    ~RequestGetScheduleInviteStatusCallbackImp(){};
+    void OnGetScheduleInviteStatus(HttpGetScheduleInviteStatusTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteStatusItem& item) {
+        NSLog(@"LSRequestManager::OnGetScheduleInviteStatus( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        LSScheduleinviteStatusItemObject* obj = [[LSScheduleinviteStatusItemObject alloc] init];
+        obj.needStartNum = item.needStartNum;
+        obj.beStartNum = item.beStartNum;
+        obj.beStrtTime = item.beStrtTime;
+        obj.startLeftSeconds = item.startLeftSeconds;
+        GetScheduleInviteStatusFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+
+RequestGetScheduleInviteStatusCallbackImp gRequestGetScheduleInviteStatusCallbackImp;
+
+- (NSInteger)getScheduleInviteStatus:(GetScheduleInviteStatusFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetScheduleInviteStatus(&mHttpRequestManager,
+                                                                        &gRequestGetScheduleInviteStatusCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
 
 @end
 

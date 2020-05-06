@@ -165,7 +165,7 @@ typedef enum : NSUInteger {
                                     [[LSImageViewLoader loader] loadImageFromCache:weakSelf.headImage
                                                                            options:0
                                                                           imageUrl:weakSelf.photoUrl
-                                                                  placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]
+                                                                  placeholderImage:LADYDEFAULTIMG
                                                                      finishHandler:^(UIImage *image){
                                                                      }];
                                 }
@@ -382,7 +382,7 @@ typedef enum : NSUInteger {
     }
     request.imgList = uploadedArray;
     request.comsumeType = self.isStamps == YES ? LSLETTERCOMSUMETYPE_STAMP : LSLETTERCOMSUMETYPE_CREDIT;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *  emfId  ) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"LSSendMailViewController::sendBtnDid %@ errmsg: %@ errnum: %d", BOOL2SUCCESS(success), errmsg, errnum);
             [weakSelf hideLoading];

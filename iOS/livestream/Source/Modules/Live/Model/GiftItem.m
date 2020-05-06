@@ -60,6 +60,7 @@
 + (instancetype)itemRoomId:(NSString *)roomid
               fromID:(NSString *)fromid
             nickName:(NSString *)nickname
+                  photoUrl:(NSString *)photoUrl
               giftID:(NSString *)giftid
             giftName:(NSString *)giftname
                    giftNum:(int)giftnum
@@ -72,6 +73,7 @@
     item.roomid = roomid;
     item.fromid = fromid;
     item.nickname = nickname;
+    item.photoUrl = photoUrl;
     item.giftid = giftid;
     item.giftname = giftname;
     item.giftnum = giftnum;

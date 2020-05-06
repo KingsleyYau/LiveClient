@@ -25,7 +25,7 @@
 
 @interface LSMyCartViewController ()<UITableViewDelegate,UITableViewDataSource,LSMyCartCellDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 
 @property (weak, nonatomic) IBOutlet UIView *failViews;
 @property (weak, nonatomic) IBOutlet UIButton *retryBtn;

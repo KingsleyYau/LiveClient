@@ -1,0 +1,44 @@
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "3Iz-EN-rzL"; */
+"3Iz-EN-rzL.text" = "Pending your confirmation";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "8a4-jq-ShV"; */
+"8a4-jq-ShV.text" = "Status:";
+
+/* Class = "UILabel"; text = "Time Confirmed: %@"; ObjectID = "FTj-Su-Bwy"; */
+"FTj-Su-Bwy.text" = "No Confirmation time yet.";
+
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "Ikk-ik-3dO"; */
+"Ikk-ik-3dO.normalTitle" = "Accept";
+
+/* Class = "UILabel"; text = "%@"; ObjectID = "Pu3-Oi-84T"; */
+"Pu3-Oi-84T.text" = "%@";
+
+/* Class = "UILabel"; text = "Session Duration:"; ObjectID = "SOX-1y-9IN"; */
+"SOX-1y-9IN.text" = "Session Duration:";
+
+/* Class = "UILabel"; text = "One-on_One Start Time:"; ObjectID = "WsR-f6-bZf"; */
+"WsR-f6-bZf.text" = "One-on-One Start Time:";
+
+/* Class = "UIButton"; normalTitle = "30 Minutes - 13.50 Credits 15.00 Credits"; ObjectID = "dkr-iO-GQN"; */
+"dkr-iO-GQN.normalTitle" = "30 Minutes - 13.50 Credits 15.00 Credits";
+
+/* Class = "UILabel"; text = "%@"; ObjectID = "hL2-vl-f2z"; */
+"hL2-vl-f2z.text" = "%@";
+
+/* Class = "UILabel"; text = "Schedule ID:"; ObjectID = "lje-hG-uDn"; */
+"lje-hG-uDn.text" = "Schedule ID:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "os6-Da-J2e"; */
+"os6-Da-J2e.text" = "Label";
+
+/* Class = "UILabel"; text = "Time Send: %@"; ObjectID = "saO-Ud-9ob"; */
+"saO-Ud-9ob.text" = "Time Send: %@";
+
+"Start_Time" = "%@ %@(GMT %@)";
+
+"Local_Time" = "%@ (Your local time)";
+
+"Minutes_Credits" = "%d Minutes - %0.2f Credits";
+
+"Original_Credits" = "%0.2f Credits";

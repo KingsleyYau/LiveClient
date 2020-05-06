@@ -12,7 +12,7 @@
 #import "LiveUrlHandler.h"
 #import "LiveGobalManager.h"
 #import "LSImManager.h"
-
+#import "LSMinLiveManager.h"
 static LiveMutexService *gService = nil;
 @interface LiveMutexService () {
     NSString *_siteId;
@@ -45,7 +45,7 @@ static LiveMutexService *gService = nil;
 }
 
 - (NSString *)serviceConflictTips {
-    return @"Are you sure to leave the current broadcast room?";
+    return @"To continue this operation, you need to leave the current broadcast room. Are you sure?";
 }
 
 - (void)setSiteId:(NSString *)siteId {
@@ -67,33 +67,63 @@ static LiveMutexService *gService = nil;
     BOOL bFlag = NO;
     NSLog(@"LiveMutexService::isStopService( url : %@, siteId : %@, Current roomId : %@ )", url, siteId, [LiveGobalManager manager].liveRoom.roomId);
     
-    // 如果在直播间
-    if ( [LiveGobalManager manager].liveRoom ) {
-        if( ((siteId.length > 0) && ![siteId isEqualToString:_siteId]) ) {
-            // 站点不相同
-            bFlag = YES;
-        } else {
-            // 处理链接
-            LSUrlParmItem *item = [[LiveUrlHandler shareInstance] parseUrlParms:url];
-            switch (item.type) {
-                case LiveUrlTypeMain:
-                case LiveUrlTypeLiveRoom:
-                case LiveUrlTypeBookingList:
-                case LiveUrlTypeBackpackList:
-                case LiveUrlTypeMyLevel:
-                case LiveUrlTypeChatList:
-                case LiveUrlTypeGreetMailList:
-                case LiveUrlTypeMailList:
-                case LiveUrlTypeSayHiList:
-                case LiveUrlTypeGiftFlowerList: {
-                    bFlag = YES;
+    // 处理链接
+    LSUrlParmItem *item = [[LiveUrlHandler shareInstance] parseUrlParms:url];
+
+        // 如果在直播间
+        if ( [LiveGobalManager manager].liveRoom ) {
+            if( ((siteId.length > 0) && ![siteId isEqualToString:_siteId]) ) {
+                // 站点不相同
+                bFlag = YES;
+            } else {
+                if ([LiveGobalManager manager].liveRoom.userId.length > 0 && [item.anchorId isEqualToString:[LiveGobalManager manager].liveRoom.userId]) {
+                    switch (item.roomType) {
+                        case LiveUrlRoomTypePublic:{
+                            if ([LiveGobalManager manager].liveRoom.roomType != LiveRoomType_Public) {
+                                bFlag = YES;
+                            }
+                        }break;
+                        case LiveUrlRoomTypePrivate: {
+//                            if ([LiveGobalManager manager].liveRoom.roomType != LiveRoomType_Private) {
+                                bFlag = YES;
+//                            }
+                        }break;
+                        case LiveUrlRoomTypePrivateInvite:{
+//                            if ([LiveGobalManager manager].liveRoom.roomType != LiveRoomType_Private) {
+                                bFlag = YES;
+//                            }
+                        }break;
+                        case LiveUrlRoomTypePrivateAccept: {
+//                            if ([LiveGobalManager manager].liveRoom.roomType != LiveRoomType_Private) {
+                            bFlag = YES;
+//                            }
+                        }break;
+                            
+                        default:
+                            break;
+                    }
+                    if (item.roomId.length > 0) {
+                        bFlag = YES;
+                    }
+                }else {
+                    switch (item.type) {
+
+                        case LiveUrlTypeLiveRoom:{
+                            bFlag = YES;
+                        }
+                        default:
+                            break;
+                    }
                 }
-                default:
-                    break;
+                
+                
+
             }
         }
-    }
+        
     
+    
+
     return bFlag;
 }
 
@@ -102,6 +132,7 @@ static LiveMutexService *gService = nil;
     NSLog(@"LiveMutexService::stopService( [Live互斥服务停止] )");
 
     if ([LiveGobalManager manager].liveRoom) {
+        [[LSMinLiveManager manager] minLiveViewDidCloseBtn];
         [[LSImManager manager] leaveRoom:[LiveGobalManager manager].liveRoom];
     }
 

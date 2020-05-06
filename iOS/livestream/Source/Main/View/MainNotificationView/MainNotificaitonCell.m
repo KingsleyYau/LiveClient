@@ -41,12 +41,12 @@
     [self.imageViewLoader stop];
     // 头像
     // 显示默认头像
-    [self.chatHead setImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    [self.chatHead setImage:LADYDEFAULTIMG];
     // 创建新的
     self.imageViewLoader = [LSImageViewLoader loader];
     
     // 加载
-    [self.imageViewLoader loadImageWithImageView:self.chatHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+    [self.imageViewLoader loadImageWithImageView:self.chatHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
     
     self.chatName.text = item.userName;
     
@@ -61,9 +61,9 @@
 }
 
 - (void)loadLiveNotificationViewUI:(LSMainNotificaitonModel *)item {
-    [[LSImageViewLoader loader] loadImageWithImageView:self.liveHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+    [[LSImageViewLoader loader] loadImageWithImageView:self.liveHead options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
     
-    [[LSImageViewLoader loader] loadImageWithImageView:self.liveFriendHead options:SDWebImageRefreshCached imageUrl:item.friendUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+    [[LSImageViewLoader loader] loadImageWithImageView:self.liveFriendHead options:SDWebImageRefreshCached imageUrl:item.friendUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
     
     self.liveName.text = [NSString stringWithFormat:@"%@'s circle",item.userName];
     [self updateNameFrame:self.liveName.text isChat:NO];

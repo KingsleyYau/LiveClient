@@ -78,18 +78,20 @@
         cell.textLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
     }
     if (indexPath.row < self.titleArray.count) {
+        
+        if (self.selectRow == indexPath.row) {
+            cell.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEEF1);
+        }else {
+            cell.textLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]];
+            cell.backgroundColor = [LSColor colorWithLight:[UIColor whiteColor] orDark:[UIColor blackColor]];
+        }
+        
          LSStoreFlowerGiftItemObject * item = self.titleArray[indexPath.row];
         
         if (item.isHasGreeting) {
             cell.textLabel.attributedText = [self getContentStr:item.typeName labelFont:cell.textLabel.font maxWidth:SCREEN_WIDTH - 40];
         }else {
             cell.textLabel.text = item.typeName;
-        }
-        
-        if (self.selectRow == indexPath.row) {
-            cell.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEEF1);
-        }else {
-            cell.backgroundColor = [UIColor whiteColor];
         }
     }
     

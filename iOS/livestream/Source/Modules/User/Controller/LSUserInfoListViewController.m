@@ -16,8 +16,9 @@
 #import "MyBackpackViewController.h"
 #import "MeLevelViewController.h"
 #import "MyTicketPageViewController.h"
+
 @interface LSUserInfoListViewController () <UITableViewDelegate, UITableViewDataSource, LSUserUnreadCountManagerDelegate>
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (nonatomic, strong) NSArray *titleArray;
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadCountManager;
 @property (nonatomic, assign) int myReservationsCount;

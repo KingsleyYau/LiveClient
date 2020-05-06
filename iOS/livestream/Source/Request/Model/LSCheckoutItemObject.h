@@ -19,6 +19,7 @@
  * giftList                   礼品列表
  * greetingCard               免费贺卡
  * deliveryPrice              邮费价格
+ * holidayName                优惠名称
  * holidayPrice               优惠价格
  * totalPrice                 总额
  * greetingmessage            文本信息
@@ -27,6 +28,7 @@
 @property (nonatomic, strong) NSMutableArray<LSCheckoutGiftItemObject *>* giftList;
 @property (nonatomic, strong) LSGreetingCardItemObject* greetingCard;
 @property (nonatomic, assign) double deliveryPrice;
+@property (nonatomic, copy) NSString* holidayName;
 @property (nonatomic, assign) double holidayPrice;
 @property (nonatomic, assign) double totalPrice;
 @property (nonatomic, copy) NSString* greetingmessage;

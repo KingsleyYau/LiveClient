@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+typedef void (^ActionBlock)(void);
 @class VIPAudienceView;
 @protocol VIPAudienceViewDelegate <NSObject>
 
@@ -18,9 +18,11 @@
 
 @end
 
-@interface VIPAudienceView : UIView
+@interface VIPAudienceView : UIView<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
+@property (nonatomic, strong) LSCollectionView *collectionView;
 @property(nonatomic, weak) id<VIPAudienceViewDelegate> delegate;
 @property(nonatomic, strong) NSMutableArray *audienceArray;
-
+@property (nonatomic, assign) BOOL isRoomIn;
+- (void)audienceLeave:(int)index action:(ActionBlock)actionBlock;
 @end

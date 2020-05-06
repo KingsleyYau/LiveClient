@@ -64,6 +64,14 @@
 #import "LSMyCartItemObject.h"
 #import "LSCheckoutItemObject.h"
 #import "LSWomanListAdItemObject.h"
+#import "LSCheckDiscountItemObject.h"
+#import "LSScheduleDurationItemObject.h"
+#import "LSCountryTimeZoneItemObject.h"
+#import "LSSendScheduleInviteItemObject.h"
+#import "LSScheduleInviteListItemObject.h"
+#import "LSScheduleInviteDetailItemObject.h"
+#import "LSScheduleLiveInviteItemObject.h"
+#import "LSScheduleinviteStatusItemObject.h"
 #include <httpcontroller/HttpRequestEnum.h>
 
 @interface LSRequestManager : NSObject
@@ -2237,8 +2245,9 @@ typedef void (^GetEmfDetailFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum
  *  @param success      成功失败
  *  @param errnum       错误码
  *  @param errmsg       错误提示
+ *  @param emfId        信件ID
  */
-typedef void (^SendEmfFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *  errmsg);
+typedef void (^SendEmfFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *  errmsg, NSString *  emfId);
 
 
 /**
@@ -2251,6 +2260,10 @@ typedef void (^SendEmfFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSS
  * @param imgList                       附件数组
  * @param comsumeType                   付费类型（LSLETTERCOMSUMETYPE_CREDIT：信用点，LSLETTERCOMSUMETYPE_STAMP：邮票）
  * @param sayHiResponseId              SayHi的回复ID（可无，无则表示不是回复）
+ * @param isSchedule              是否预付费直播邀请
+ * @param timeZoneId              时区ID
+ * @param startTime              邀请开始时间（格式： yyyy-mm-dd hh:00:00）
+ * @param duration               分钟时长
  * @param finishHandler    接口回调
  * @return 成功请求Id
  */
@@ -2261,6 +2274,10 @@ typedef void (^SendEmfFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSS
              imgList:(NSArray<NSString *>*)imgList
          comsumeType:(LSLetterComsumeType)comsumeType
      sayHiResponseId:(NSString*)sayHiResponseId
+          isSchedule:(BOOL)isSchedule
+          timeZoneId:(NSString*)timeZoneId
+           startTime:(NSString*)startTime
+            duration:(int)duration
             finishHandler:(SendEmfFinishHandler )finishHandler;
 
 /**
@@ -2854,6 +2871,27 @@ typedef void (^CreateGiftOrderFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE err
       specialDeliveryRequest:(NSString*)specialDeliveryRequest
                finishHandler:(CreateGiftOrderFinishHandler)finishHandler;
 
+/**
+ *  15.13.检测优惠折扣接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             优惠折扣
+ */
+typedef void (^CheckDiscountFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSCheckDiscountItemObject* item);
+
+/**
+ *  15.13.检测优惠折扣接口
+ *
+ *  @param anchorId         主播ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)checkDiscount:(NSString*)anchorId
+             finishHandler:(CheckDiscountFinishHandler)finishHandler;
+
 
 #pragma mark - 广告模块回调
 
@@ -2873,5 +2911,236 @@ typedef void (^WonmanListAdvertFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE er
  *  @param finishHandler    回调
  */
 - (NSInteger)wonmanListAdvert:(WonmanListAdvertFinishHandler )finishHandler;
+
+#pragma mark - 预付费直播
+/**
+ *  17.1.获取时长价格配置列表 0接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            预约时间价格列表
+ */
+typedef void (^GetScheduleDurationListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSScheduleDurationItemObject *> *array);
+
+/**
+ *  17.1.获取时长价格配置列表接口
+ *
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getScheduleDurationList:(GetScheduleDurationListFinishHandler)finishHandler;
+
+/**
+ *  17.2.获取国家时区列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            国家时区列表
+ */
+typedef void (^GetCountryTimeZoneListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSCountryTimeZoneItemObject *> *array);
+
+/**
+ *  17.2.获取国家时区列表接口
+ *
+ *  @param finishHandler            接口回调
+ *g
+ *  @return 成功请求Id
+ */
+- (NSInteger)getCountryTimeZoneList:(GetCountryTimeZoneListFinishHandler)finishHandler;
+
+/**
+ *  17.3.发送预付费直播邀请接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             发送预付费邀请信息
+ */
+typedef void (^SendScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSendScheduleInviteItemObject* item);
+
+/**
+ *  17.3.发送预付费直播邀请接口
+ *
+ *  @param finishHandler            接口回调
+ *  @param type             邀请来源类型（LSSCHEDULEINVITETYPE_EMF.emf  LSSCHEDULEINVITETYPE_LIVECHAT.livechat  LSSCHEDULEINVITETYPE_PUBLICLIVE.公开直播间  LSSCHEDULEINVITETYPE_PRIVATELIVE.私密直播间）
+ *  @param refId            关联的ID(信件ID、livechat邀请ID、场次ID等)
+ *  @param anchorId         主播ID
+ *  @param timeZoneId       时区ID
+ *  @param startTime        邀请开始时间(格式：yyyy-mm-dd hh:00:00)
+ *  @param duration         分钟时长
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)sendScheduleInvite:(LSScheduleInviteType)type
+                          refId:(NSString*)refId
+                       anchorId:(NSString*)anchorId
+                     timeZoneId:(NSString*)timeZoneId
+                      startTime:(NSString*)startTime
+                       duration:(int)duration
+                  finishHandler:(SendScheduleInviteFinishHandler)finishHandler;
+
+/**
+ *  17.4.接受预付费直播邀请接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param statusUpdateTime      邀请状态改变时间
+ */
+typedef void (^AcceptScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime);
+
+/**
+ *  17.4.接受预付费直播邀请接口
+ *  @param inviteId         邀请ID
+ *  @param duration         分钟时长
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)acceptScheduleInvite:(NSString*)inviteId
+                       duration:(int)duration
+                  finishHandler:(AcceptScheduleInviteFinishHandler)finishHandler;
+
+/**
+ *  17.5.拒绝预付费直播邀请接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param statusUpdateTime      邀请状态改变时间
+ */
+typedef void (^DeclinedScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime);
+
+/**
+ *  17.5.拒绝预付费直播邀请接口
+ *
+ *  @param inviteId         邀请ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)declinedScheduleInvite:(NSString*)inviteId
+                      finishHandler:(DeclinedScheduleInviteFinishHandler)finishHandler;
+
+/**
+ *  17.6.取消预付费直播邀请接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ */
+typedef void (^CancelScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ *  17.6.取消预付费直播邀请接口
+ *
+ *  @param inviteId         邀请ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)cancelScheduleInvite:(NSString*)inviteId
+                    finishHandler:(CancelScheduleInviteFinishHandler)finishHandler;
+
+/**
+ *  17.7.获取预付费直播邀请列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            预付费直播邀请列表
+ */
+typedef void (^GetScheduleInviteListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSScheduleInviteListItemObject *> *array);
+
+/**
+ *  17.7.获取预付费直播邀请列表接口
+ *
+ *  @param status           邀请状态(    LSSCHEDULEINVITESTATUS_PENDING: Pending
+ LSSCHEDULEINVITESTATUS_CONFIRMED :  Confirmed
+ LSSCHEDULEINVITESTATUS_CANCELED :  Canceled
+ LSSCHEDULEINVITESTATUS_EXPIRED: Expired
+ LSSCHEDULEINVITESTATUS_COMPLETED:  Completed
+ LSSCHEDULEINVITESTATUS_DECLINED:  Declined
+ LSSCHEDULEINVITESTATUS_MISSED : Missed)
+ *  @param sendFlag     发起方(LSSCHEDULESENDFLAGTYPE_ALL:全部(默认) LSSCHEDULESENDFLAGTYPE_MAN:男士 LSSCHEDULESENDFLAGTYPE_ANCHOR:主播)
+ *  @param anchorId         主播ID
+ *  @param start            起始数
+ *  @param step             步长
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getScheduleInviteList:(LSScheduleInviteStatus)status
+                          sendFlag:(LSScheduleSendFlagType)sendFlag
+                          anchorId:(NSString*)anchorId
+                             start:(int)start
+                              step:(int)step
+                     finishHandler:(GetScheduleInviteListFinishHandler)finishHandler;
+
+/**
+ *  17.8.获取预付费直播邀请详情接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             预付费直播邀请详情
+ */
+typedef void (^GetScheduleInviteDetailFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSScheduleInviteDetailItemObject *item);
+
+/**
+ *  17.8.获取预付费直播邀请详情接口
+ *
+ *  @param inviteId         邀请ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getScheduleInviteDetail:(NSString*)inviteId
+                       finishHandler:(GetScheduleInviteDetailFinishHandler)finishHandler;
+
+/**
+ *  17.9.获取某会话中预付费直播邀请列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array            会话中预付费直播邀请列表
+ */
+typedef void (^GetSessionInviteListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSScheduleLiveInviteItemObject *> *array);
+
+/**
+ *  17.9.获取某会话中预付费直播邀请列表接口
+ *
+ *   @param type             邀请来源类型（LSSCHEDULEINVITETYPE_EMF.emf  LSSCHEDULEINVITETYPE_LIVECHAT.livechat  LSSCHEDULEINVITETYPE_PUBLICLIVE.公开直播间  LSSCHEDULEINVITETYPE_PRIVATELIVE.私密直播间
+ *  @param refId            关联的ID(信件ID、livechat邀请ID、场次ID等)
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getSessionInviteList:(LSScheduleInviteType)type
+                            refId:(NSString*)refId
+                    finishHandler:(GetSessionInviteListFinishHandler)finishHandler;
+
+/**
+ *  17.10.获取预付费直播邀请状态接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item             预付费直播邀请状态
+ */
+typedef void (^GetScheduleInviteStatusFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSScheduleinviteStatusItemObject *item);
+
+/**
+ *  17.10.获取预付费直播邀请状态接口
+ *
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getScheduleInviteStatus:(GetScheduleInviteStatusFinishHandler)finishHandler;
 
 @end

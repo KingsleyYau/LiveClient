@@ -184,12 +184,6 @@
 - (BOOL)updateRecentWithMsg:(LSLCLiveChatMsgItemObject *)msg {
     BOOL bFlag = NO;
 
-    if ([[LSLiveChatManagerOC manager] isCamshareInChat:self.womanId]) {
-        self.isInCamshare = YES;
-    } else {
-        self.isInCamshare = NO;
-    }
-
     if ([self isLastMsgChange:msg]) {
         // 更新联系人消息
         self.msg = msg;
@@ -199,7 +193,7 @@
         NSString *photoSticker = NSLocalizedString(@"NOTICE_MESSAGE_PHOTO", nil);
         NSString *voiceSticker = NSLocalizedString(@"NOTICE_MESSAGE_VOICE", nil);
         NSString *videoSticker = NSLocalizedString(@"NOTICE_MESSAGE_VIDEO", nil);
-
+        NSString *shcheduleSticker = NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE", nil);
         if (msg.msgType == MT_Text && msg.textMsg) {
             NSString *string = [LSStringEncoder htmlEntityDecode:msg.textMsg.displayMsg];
             NSString *trimmedString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -285,7 +279,17 @@
                 default:
                     break;
             }
-        }else {
+        } else if (msg.msgType == MT_Schedule) {
+            NSAttributedString *attributeString = nil;
+            if (msg.sendType == SendType_Recv) {
+                 attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:@"  %@ %@", self.firstname, shcheduleSticker] font:[UIFont systemFontOfSize:14]];
+            }else{
+                attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:@"  You %@", shcheduleSticker] font:[UIFont systemFontOfSize:14]];
+            }
+            NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
+            self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LS_Schedule_Request_Icon"];
+        }
+        else {
             // 如果消息被清空,当前联系还是保存之前的内容,需要置空
             self.lastInviteMessage = [[NSMutableAttributedString alloc] initWithString:@""];
         }

@@ -80,12 +80,15 @@ typedef enum : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationTitle = NSLocalizedStringFromSelf(@"Credits");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self reloadLoadingActivityViewFrame];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -96,6 +99,7 @@ typedef enum : NSUInteger {
 
     [self getCount];
     [self getPremiumMembershipInfo];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -106,14 +110,12 @@ typedef enum : NSUInteger {
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // Dispose of any resources that can be recreated.`
 }
 
 #pragma mark - 界面事件
 - (void)setupNavigationBar {
     [super setupNavigationBar];
-
-    self.title = NSLocalizedStringFromSelf(@"Credits");
 }
 
 - (void)setupContainView {
@@ -151,6 +153,8 @@ typedef enum : NSUInteger {
 - (void)initCustomParam {
     // 初始化父类参数
     [super initCustomParam];
+    self.isShowNavBar = YES;
+    
     self.backTitle = NSLocalizedString(@"", nil);
 
     self.orderNo = @"";
@@ -162,7 +166,6 @@ typedef enum : NSUInteger {
 
 - (void)dealloc {
     [self.paymentManager removeDelegate:self];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

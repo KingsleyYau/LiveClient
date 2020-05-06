@@ -26,6 +26,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *discountLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *discountLabelW;
 @property (weak, nonatomic) IBOutlet UIImageView *stroeNewIcon;
+@property (weak, nonatomic) IBOutlet UIView * offView;
+@property (weak, nonatomic) IBOutlet UILabel * offLabel;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (weak, nonatomic) id<LSStoreListCellDelegate> cellDelegate;
 + (NSString *)cellIdentifier;

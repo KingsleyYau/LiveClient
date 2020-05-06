@@ -28,6 +28,7 @@
         self.letterContent= @"";
         self.hasRead = NO;
         self.hasReplied = NO;
+        self.scheduleInfo = NULL;
     }
     return self;
 }
@@ -50,6 +51,7 @@
         self.hasReplied = [coder decodeBoolForKey:@"hasReplied"];
         self.letterImgList = [coder decodeObjectForKey:@"letterImgList"];
         self.letterVideoList = [coder decodeObjectForKey:@"letterVideoList"];
+        self.scheduleInfo = [coder decodeObjectForKey:@"scheduleInfo"];
     }
     return self;
 }
@@ -71,7 +73,7 @@
     [coder encodeBool:self.hasReplied forKey:@"hasReplied"];
     [coder encodeObject:self.letterImgList forKey:@"letterImgList"];
     [coder encodeObject:self.letterVideoList forKey:@"letterVideoList"];
-
+    [coder encodeObject:self.scheduleInfo forKey:@"scheduleInfo"];
 }
 
 @end

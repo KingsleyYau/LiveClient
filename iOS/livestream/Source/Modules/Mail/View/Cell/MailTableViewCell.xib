@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,7 +13,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="71.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="xCJ-i6-hgv">
@@ -64,13 +62,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Online" translatesAutoresizingMaskIntoConstraints="NO" id="nQb-eE-xme">
-                        <rect key="frame" x="215" y="18.5" width="40" height="14"/>
+                        <rect key="frame" x="215" y="19" width="40" height="14"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="40" id="5D5-jI-HNm"/>
                         </constraints>
                     </imageView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Follow" translatesAutoresizingMaskIntoConstraints="NO" id="MHB-mb-oV2">
-                        <rect key="frame" x="261" y="18.5" width="14" height="14"/>
+                        <rect key="frame" x="261" y="19" width="14" height="14"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="MHB-mb-oV2" secondAttribute="height" multiplier="1:1" id="Hxg-I0-ANd"/>
                             <constraint firstAttribute="width" constant="14" id="ZGj-Hd-Ek4"/>
@@ -83,7 +81,15 @@
                             <constraint firstAttribute="width" secondItem="hrY-rj-d3t" secondAttribute="height" multiplier="1:1" id="sI9-el-bna"/>
                         </constraints>
                     </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Chat_Schedule" translatesAutoresizingMaskIntoConstraints="NO" id="6Xr-Ki-dmQ">
+                        <rect key="frame" x="343" y="39" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="3QO-Mt-R7S"/>
+                            <constraint firstAttribute="width" secondItem="6Xr-Ki-dmQ" secondAttribute="height" multiplier="1:1" id="5ti-CR-4dY"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
+                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                 <constraints>
                     <constraint firstItem="iMR-JE-eeF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="2Mi-fO-9dl"/>
                     <constraint firstItem="BYb-TB-t3R" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="3al-B8-8Ng"/>
@@ -92,6 +98,7 @@
                     <constraint firstItem="hrY-rj-d3t" firstAttribute="leading" secondItem="OCU-pu-bUD" secondAttribute="trailing" constant="5" id="DtF-Ln-arz"/>
                     <constraint firstItem="nyH-We-fIh" firstAttribute="top" secondItem="xCJ-i6-hgv" secondAttribute="top" id="EkO-1q-UeX"/>
                     <constraint firstItem="nQb-eE-xme" firstAttribute="leading" secondItem="nyH-We-fIh" secondAttribute="trailing" constant="6" id="GZ9-Kg-HQD"/>
+                    <constraint firstAttribute="trailing" secondItem="6Xr-Ki-dmQ" secondAttribute="trailing" constant="12" id="Klq-3f-XQm"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MHB-mb-oV2" secondAttribute="trailing" constant="100" id="PQm-Wq-kZE"/>
                     <constraint firstItem="MHB-mb-oV2" firstAttribute="centerY" secondItem="nQb-eE-xme" secondAttribute="centerY" id="RIV-D2-lYs"/>
                     <constraint firstItem="vwU-gl-H2f" firstAttribute="top" secondItem="nyH-We-fIh" secondAttribute="bottom" constant="4" id="V8C-Dp-x0l"/>
@@ -100,6 +107,7 @@
                     <constraint firstItem="MHB-mb-oV2" firstAttribute="centerY" secondItem="nQb-eE-xme" secondAttribute="centerY" id="ZeA-wO-Mfy"/>
                     <constraint firstItem="fve-yd-4y3" firstAttribute="centerY" secondItem="nyH-We-fIh" secondAttribute="centerY" id="Zv6-J6-84w"/>
                     <constraint firstItem="iMR-JE-eeF" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="nRI-gI-BWe"/>
+                    <constraint firstItem="6Xr-Ki-dmQ" firstAttribute="top" secondItem="fve-yd-4y3" secondAttribute="bottom" constant="6" id="ugi-dG-6Ra"/>
                     <constraint firstItem="xCJ-i6-hgv" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="uum-1C-McX"/>
                     <constraint firstItem="BYb-TB-t3R" firstAttribute="leading" secondItem="iMR-JE-eeF" secondAttribute="leading" constant="-1" id="w8S-qT-VeI"/>
                     <constraint firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" constant="15" id="x6d-qd-550"/>
@@ -122,6 +130,7 @@
                 <outlet property="receiveVideoIconWidth" destination="6yH-mi-pSu" id="t2t-BR-ZC1"/>
                 <outlet property="redLabel" destination="iMR-JE-eeF" id="cX1-ds-gG8"/>
                 <outlet property="replyImage" destination="BYb-TB-t3R" id="cyE-rh-58B"/>
+                <outlet property="scheduleIcon" destination="6Xr-Ki-dmQ" id="U0p-NO-jOx"/>
                 <outlet property="timeLabel" destination="fve-yd-4y3" id="zQ2-9n-bmB"/>
             </connections>
             <point key="canvasLocation" x="-12" y="34.182908545727138"/>
@@ -129,6 +138,7 @@
     </objects>
     <resources>
         <image name="Default_Img_Lady_HangOut" width="187.5" height="187.5"/>
+        <image name="LS_Chat_Schedule" width="24" height="25"/>
         <image name="Mail_Is_Reply" width="16" height="16"/>
         <image name="Mail_Receive_Follow" width="14" height="14"/>
         <image name="Mail_Receive_Image" width="12" height="12"/>

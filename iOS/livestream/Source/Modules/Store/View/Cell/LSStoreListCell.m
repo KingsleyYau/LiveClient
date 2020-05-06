@@ -33,6 +33,8 @@
     self.layer.borderColor = [UIColor lightGrayColor].CGColor;
     
     self.imageViewLoader = [LSImageViewLoader loader];
+    
+    self.titleLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]];
 }
 
 - (void)uploadUI:(LSFlowerGiftItemObject *)item {
@@ -49,6 +51,14 @@
     self.stroeNewIcon.hidden = !item.isNew;
     
     self.discountLabel.hidden = YES;
+    
+    if (item.giftDiscount > 0) {
+        self.offView.hidden = NO;
+        self.offLabel.text = [NSString stringWithFormat:@"$%d OFF",(int)item.giftDiscount];
+    }
+    else {
+        self.offView.hidden = YES;
+    }
  
     switch (item.priceShowType) {
         case LSPRICESHOWTYPE_WEEKDAY://平日价

@@ -195,12 +195,12 @@ static CURLcode Curl_SSL_Handle(CURL *curl, void *sslctx, void *param)
 
 static KMutex gCurlShareMutex;
 static void Curl_Lock(CURL *handle, curl_lock_data data, curl_lock_access access, void *useptr) {
-    FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_STAT, "HttpClient::Curl_Lock( access : %d )", access);
+    //FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_STAT, "HttpClient::Curl_Lock( access : %d )", access);
     gCurlShareMutex.lock();
 }
 
 static void Curl_Unlock(CURL *handle, curl_lock_data data, void *useptr) {
-    FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_STAT, "HttpClient::Curl_Unlock()");
+    //FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_STAT, "HttpClient::Curl_Unlock()");
     gCurlShareMutex.unlock();
 }
 
@@ -662,6 +662,7 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 
 	// add by samson 2015-03-18 增加公共http User-Agent
 	curl_easy_setopt(mpCURL, CURLOPT_USERAGENT, USER_AGENT);
+     curl_easy_setopt(mpCURL, CURLOPT_FOLLOWLOCATION, 1);
 
 	if( entiy != NULL ) {
 		if( !entiy->mIsGetMethod ) {
@@ -895,7 +896,7 @@ size_t HttpClient::HttpProgress(double downloadTotal, double downloadNow, double
         
 //		if( downloadTotal != downloadNow && mdDownloadLast != -1 &&  mdDownloadLast == downloadNow ) {
             if (downloadTotal == 0 || downloadTotal != downloadNow) {
-                if (mdDownloadLast != 0 && mdDownloadLast == downloadNow) {
+                if (mdDownloadLast != 0     && mdDownloadLast == downloadNow) {
                     if( totalTime - mdDownloadLastTime > mdDownloadTimeout ) {
                         // DWONLOAD_TIMEOUT no receive data, download timeout
                         FileLog(LIVESHOW_HTTP_LOG, "HttpClient::HttpProgress( download timeout )");

@@ -34,6 +34,8 @@
         
         self.sendLetter = @"";
         
+        self.scheduleSaveUp = 0;
+        
         self.socketHost = @"";
         self.socketHostDomain = @"l";
         self.socketPort = 0;
@@ -72,6 +74,7 @@
         self.chatVoiceHostUrl = [coder decodeObjectForKey:@"chatVoiceHostUrl"];
         self.minBalanceForChat = [coder decodeDoubleForKey:@"minBalanceForChat"];
         self.flowersGift = [coder decodeIntForKey:@"flowersGift"];
+        self.scheduleSaveUp = [coder decodeIntForKey:@"scheduleSaveUp"];
     }
     return self;
 }
@@ -102,6 +105,7 @@
     [coder encodeObject:self.chatVoiceHostUrl forKey:@"chatVoiceHostUrl"];
     [coder encodeDouble:self.minBalanceForChat forKey:@"minBalanceForChat"];
     [coder encodeInt:self.flowersGift forKey:@"flowersGift"];
+    [coder encodeInt:self.scheduleSaveUp forKey:@"scheduleSaveUp"];
 
 }
 

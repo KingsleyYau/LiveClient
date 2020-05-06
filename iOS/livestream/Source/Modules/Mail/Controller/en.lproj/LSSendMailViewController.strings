@@ -36,7 +36,7 @@
 "SEND_MAIL_UPLOADING" = "Please ensure that your photos are uploaded successfully before sending this mail.";
 
 //发信二次提示
-"SENDMAIL_CREDIT_TIP" = "Sending this mail cost you %0.1f credit. Do you wish to send this mail?";
+"SENDMAIL_CREDIT_TIP" = "Sending this mail cost you %0.1f credits. Do you wish to send this mail?";
 
 "SENDMAIL_STAMPS_TIP" = "Sending this mail cost you %0.0f stamps. Do you wish to send this mail?";
 

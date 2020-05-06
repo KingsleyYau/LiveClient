@@ -11,7 +11,7 @@
 #import "LSChatPhoneAlbumPhoto.h"
 #import "LSChatPhotoCollectionViewCell.h"
 @interface LSChatPhotoPreviewViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 @end
 
 @implementation LSChatPhotoPreviewViewController

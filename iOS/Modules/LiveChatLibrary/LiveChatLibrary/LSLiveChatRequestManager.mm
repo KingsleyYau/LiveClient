@@ -78,6 +78,7 @@ class LSLiveChatRequestLiveChatControllerCallback : public ILSLiveChatRequestLiv
     virtual void OnGetThemeConfig(long requestId, bool success, const string &errnum, const string &errmsg, const LSLCThemeConfig &config){};
     virtual void OnGetThemeDetail(long requestId, bool success, const string &errnum, const string &errmsg, const ThemeItemList &themeList){};
     virtual void OnCheckFunctions(long requestId, bool success, const string &errnum, const string &errmsg, const list<string> &flagList){};
+    virtual void OnGetSessionInviteList(long requestId, bool success, int errnum, const string& errmsg, const ChatScheduleSessionList& list) {};
 };
 
 static LSLiveChatRequestLiveChatControllerCallback gLSLiveChatRequestLiveChatControllerCallback;

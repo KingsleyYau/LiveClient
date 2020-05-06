@@ -10,8 +10,8 @@
 
 @implementation RoomStyleItem
 
-- (UIImage *)buyTicketImage
-{
+- (UIImage *)buyTicketImage {
     return [UIImage imageNamed:@"LiveShowIcon"];
 }
+
 @end

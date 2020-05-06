@@ -17,7 +17,7 @@
 
 @interface CeleBrationGiftView ()<UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, CeleBrationGiftViewCellDelegate>
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 @property (weak, nonatomic) IBOutlet UIPageControl *pageView;
 

@@ -17,7 +17,7 @@ class HttpSendEmfTask;
 class IRequestSendEmfCallback {
 public:
 	virtual ~IRequestSendEmfCallback(){};
-	virtual void OnSendEmf(HttpSendEmfTask* task, bool success, int errnum, const string& errmsg) = 0;
+	virtual void OnSendEmf(HttpSendEmfTask* task, bool success, int errnum, const string& errmsg, const string& emfId) = 0;
 };
       
 class HttpSendEmfTask : public HttpRequestTask {
@@ -40,7 +40,11 @@ public:
                   string content,
                   list<string> imgList,
                   LSLetterComsumeType comsumeType,
-                  string sayHiResponseId
+                  string sayHiResponseId,
+                  bool isSchedule,
+                  string timeZoneId,
+                  string startTime,
+                  int duration
                   );
     
 protected:

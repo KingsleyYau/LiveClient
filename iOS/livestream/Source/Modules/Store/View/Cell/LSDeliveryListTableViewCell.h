@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *anchorIcon;
 @property (weak, nonatomic) IBOutlet UILabel *giftNote;
 @property (weak, nonatomic) IBOutlet UIButton *statusNote;
-@property (weak, nonatomic) IBOutlet UICollectionView *giftListCollectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *giftListCollectionView;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (nonatomic, copy) NSArray *giftArray;
 

@@ -9,30 +9,36 @@
 #import "VIPAudienceView.h"
 #import "AudienceCell.h"
 #import "LiveBundle.h"
+#import "LSAudienceViewFlowLayout.h"
 
-@interface VIPAudienceView () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
+@interface VIPAudienceView () 
 
-@property (nonatomic, strong) UICollectionView *collectionView;
-
+@property (copy,nonatomic) ActionBlock _Nullable actionBlock;
 @end
 
 @implementation VIPAudienceView
+
+- (void)dealloc {
+    NSLog(@"VIPAudienceView dealloc");
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
 
     self = [super initWithCoder:aDecoder];
     if (self) {
 
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake(24, 24);
+        LSAudienceViewFlowLayout *layout = [[LSAudienceViewFlowLayout alloc] init];
+        layout.itemSize = CGSizeMake(31, 31);
         //        layout.minimumInteritemSpacing = 0;
         layout.minimumLineSpacing = 4;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        self.collectionView = [[LSCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         self.collectionView.dataSource = self;
         self.collectionView.delegate = self;
         self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.bounces = NO;
+        self.collectionView.alwaysBounceHorizontal = YES;
+        self.isRoomIn = NO;
         NSBundle *bundle = [LiveBundle mainBundle];
         UINib *nib = [UINib nibWithNibName:@"AudienceCell" bundle:bundle];
         [self.collectionView registerNib:nib forCellWithReuseIdentifier:[AudienceCell cellIdentifier]];
@@ -50,7 +56,7 @@
 - (void)setAudienceArray:(NSMutableArray *)audienceArray {
     _audienceArray = audienceArray;
     
-    [self.collectionView reloadData];
+//    [self.collectionView reloadData];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -61,7 +67,15 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     AudienceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[AudienceCell cellIdentifier] forIndexPath:indexPath];
-    [cell updateHeadImageWith:self.audienceArray[indexPath.row] isVip:YES];
+    if (indexPath.row < self.audienceArray.count) {
+        [cell updateHeadImageWith:self.audienceArray[indexPath.row] isVip:YES];
+        if (indexPath.row == self.audienceArray.count - 1 ) {
+            if (self.isRoomIn) {
+                [cell audienceRoomInAnimation];
+            }
+        }
+    }
+
     return cell;
 }
 
@@ -115,5 +129,24 @@
 }
 
 
+- (void)audienceLeave:(int)index action:(ActionBlock)actionBlock; {
+
+    
+    [self.collectionView performBatchUpdates:^{
+        
+        NSIndexPath *path = [NSIndexPath indexPathForItem:index inSection:0];
+        
+        [self.collectionView deleteItemsAtIndexPaths:@[path]];
+        
+    }completion:^(BOOL finished){
+        actionBlock();
+        [self.collectionView reloadData];
+        
+    }];
+
+   
+  
+
+}
 
 @end

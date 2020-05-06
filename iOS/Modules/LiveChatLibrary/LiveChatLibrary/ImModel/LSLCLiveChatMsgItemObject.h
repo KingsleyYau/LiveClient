@@ -18,6 +18,8 @@
 #import "LSLCLiveChatMagicIconItemObject.h"
 #import "LSLCLiveChatMsgVoiceItem.h"
 #import "LSLCLiveChatMsgVideoItem.h"
+#import "LSLCLiveChatScheduleMsgItemObject.h"
+#import "LSLCLiveChatScheduleReplyItemObject.h"
 
 typedef enum {
     IniviteTypeChat		= 0,		     // livechat
@@ -66,6 +68,10 @@ typedef enum {
 @property (nonatomic,strong) LSLCLiveChatEmotionItemObject* emotionMsg;
 // ** 小高级表情消息 alex添加 */
 @property (nonatomic,strong) LSLCLiveChatMagicIconItemObject* magicIconMsg;
+// ** 预付费邀请消息 alex添加 */
+@property (nonatomic,strong) LSLCLiveChatScheduleMsgItemObject* scheduleMsg;
+// ** 预付费回复消息 alex添加 */
+@property (nonatomic,strong) LSLCLiveChatScheduleReplyItemObject* scheduleReplyMsg;
 /** 邀请类型 */
 @property (nonatomic, assign) IniviteType inviteType;
 /**

@@ -11,7 +11,7 @@
 
 @interface LSTopGiftView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (nonatomic, strong) NSArray * items;
+@property (nonatomic, strong) NSMutableArray * items;
 @end
 
 @implementation LSTopGiftView
@@ -22,6 +22,7 @@
     if (self) {
         self =  [[LiveBundle mainBundle] loadNibNamed:@"LSTopGiftView" owner:self options:nil].firstObject;
         self.frame = frame;
+        self.items = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -35,7 +36,7 @@
         CGRect newFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         containerView.frame = newFrame;
         [self addSubview:containerView];
-         
+        self.items = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -68,27 +69,59 @@
 -(void)getGiftData {
     self.loading.hidden = NO;
     self.button.hidden = YES;
-    [[LSGiftManager manager]getRoomRandomGiftList:self.liveRoom.roomId finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+    [[LSGiftManager manager] getRoomRandomGiftList:self.liveRoom.roomId finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.loading.hidden = YES;
             if (success) {
                 self.isShowGiftData = YES;
-                if (giftList.count > 0) {
-                    self.button.hidden = YES;
-                    self.items = giftList;
-                    if (giftList.count > 5) {
-                        self.items = [giftList subarrayWithRange:NSMakeRange(0, 5)];
-                    }
+                self.button.hidden = YES;
+                [self.items addObjectsFromArray:giftList];
+                
+                if (giftList.count >= 5) {
+                    self.items = [NSMutableArray arrayWithArray:[giftList subarrayWithRange:NSMakeRange(0, 5)]];
                     [self.collectionView reloadData];
+                } else {
+                    [self supplyGift];
                 }
-                else {
-                    [self setButtonImage:NO];
-                }
-            }
-            else {
+                
+            } else {
                 [self setButtonImage:YES];
             }
         });
+    }];
+}
+
+- (void)supplyGift {
+    [[LSGiftManager manager] getRoomGiftList:self.liveRoom.roomId finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+        if (success) {
+            for (LSGiftManagerItem *giftItem in giftList) {
+                BOOL isConten = NO;
+                for (LSGiftManagerItem *item in self.items) {
+                    if ([giftItem.giftId isEqualToString:item.giftId]) {
+                        isConten = YES;
+                        break;
+                    }
+                }
+                if (!isConten && [giftItem canSend:self.liveRoom.imLiveRoom.loveLevel userLevel:self.liveRoom.imLiveRoom.manLevel] == GiftSendType_Can_Send && giftItem.roomInfoItem.isShow) {
+                    [self.items addObject:giftItem];
+                }
+                
+                if (self.items.count >= 5) {
+                    break;
+                }
+            }
+            if (self.items.count > 0) {
+                [self.collectionView reloadData];
+            } else {
+                [self setButtonImage:NO];
+            }
+        } else {
+            if (self.items.count > 0) {
+                [self.collectionView reloadData];
+            } else {
+                [self setButtonImage:YES];
+            }
+        }
     }];
 }
 
@@ -128,7 +161,7 @@
     result = cell;
     
     LSGiftManagerItem *item = self.items[indexPath.row];
-    [cell updateItem:item type:@"Nomal"];
+    [cell updateItem:item liveRoom:self.liveRoom type:@"Nomal"];
     return result;
 }
 

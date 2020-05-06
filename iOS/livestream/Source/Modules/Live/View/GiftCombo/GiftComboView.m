@@ -8,7 +8,6 @@
 
 #import "GiftComboView.h"
 #import "LiveBundle.h"
-#import "LiveViewController.h"
 #import "LSVIPLiveViewController.h"
 static NSInteger const kTimeOut = 3;             /**< 超时移除时长 */
 static CGFloat const kRemoveAnimationTime = 0.5; /**< 移除动画时长 */
@@ -42,12 +41,8 @@ static CGFloat const kNumberChangeTime = 0.55;    /**< 计时器时长 */
 #pragma mark - 初始化
 + (instancetype)giftComboView:(id)owner {
     NSArray *nibs = [NSArray array];
-    if ([owner isKindOfClass:[LiveViewController class]]) {
-        // 公开用
+    if([owner isKindOfClass:[LSVIPLiveViewController class]]){
         nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboPublicView" owner:owner options:nil];
-    } else if([owner isKindOfClass:[LSVIPLiveViewController class]]){
-        // 私密
-        nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboView" owner:owner options:nil];
     }else{
         nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboNewView" owner:owner options:nil];
     }

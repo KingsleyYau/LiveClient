@@ -20,4 +20,6 @@
 
 - (void)setCornerRadius:(CGFloat)radius;
 
+- (void)audienceRoomInAnimation;
+- (void)audienceRoomOutAnimation;
 @end

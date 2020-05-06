@@ -17,7 +17,7 @@
 
 @end
 
-@interface QNContactListTableView : UITableView<UITableViewDataSource,UITableViewDelegate>
+@interface QNContactListTableView : LSTableView<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, weak)  id<QNContactListTableViewDelegate> tableViewDelegate;
 @property (nonatomic, retain) NSArray *items;

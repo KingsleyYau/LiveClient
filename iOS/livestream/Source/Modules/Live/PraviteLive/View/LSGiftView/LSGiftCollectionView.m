@@ -10,7 +10,7 @@
 #import "LSGiftManager.h"
 @interface LSGiftCollectionView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 // 九宫格控件
-@property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
+@property (nonatomic, weak) IBOutlet LSCollectionView *collectionView;
 
 // 失败提示
 @property (nonatomic, weak) IBOutlet UIButton *tipBtn;
@@ -128,15 +128,13 @@
                     }
                 }
                 self.giftArray = array;
-            }
-            else {
+            } else {
                 self.giftArray = giftList;
             }
             
             if( self.giftArray.count == 0 ) {
                 // 没有数据
                 [self setButtonImage:NO];
-                
             } else {
                 self.tipBtn.hidden = YES;
             }
@@ -189,36 +187,9 @@
     LSVIPLiveGiftListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[LSVIPLiveGiftListCell cellIdentifier] forIndexPath:indexPath];
     if (indexPath.row < self.giftArray.count) {
         LSGiftManagerItem *item = self.giftArray[indexPath.row];
-        [cell updateItem:item type:self.giftTypeId];
+        [cell updateItem:item liveRoom:self.liveRoom type:self.giftTypeId];
         
         cell.giftCreditLabel.font = [UIFont systemFontOfSize:11];
-        
-        //        BOOL bSelectedItem = NO;
-        //        if (self.selectedIndexPath == indexPath.row) {
-        //            bSelectedItem = YES;
-        //
-        //        } else if (self.selectedIndexPath == -1 && indexPath.row == 0) {
-        //            bSelectedItem = YES;
-        //
-        //            // 默认选中第一个
-        //            self.selectedIndexPath = 0;
-        //        }
-        //
-        //        if( bSelectedItem ) {
-        //            cell.selectCell = YES;
-        //            self.selectGiftItem = item;
-        //
-        //            if (self.isChanceSelect) {
-        //                if ([self.vcDelegate respondsToSelector:@selector(didChangeGiftItem:item:)]) {
-        //                    [self.vcDelegate didChangeGiftItem:self item:item];
-        //                }
-        //                self.isChanceSelect = NO;
-        //            }
-        //        }
-        //
-        //        // 刷新选中状态
-        //        [cell reloadSelectedItem];
-        
     }
     
     return cell;
@@ -229,15 +200,6 @@
     if (indexPath.row < self.giftArray.count) {
         LSGiftManagerItem *item = self.giftArray[indexPath.row];
         
-        //        if (self.selectedIndexPath != indexPath.row) {
-        //            self.selectedIndexPath = indexPath.row;
-        //
-        //            self.isChanceSelect = YES;
-        //
-        //
-        //        } else {
-        //            self.isChanceSelect = NO;
-        //        }
         if ([self.delegate respondsToSelector:@selector(didSendGiftItem:item:)]) {
             [self.delegate didSendGiftItem:self item:item];
         }

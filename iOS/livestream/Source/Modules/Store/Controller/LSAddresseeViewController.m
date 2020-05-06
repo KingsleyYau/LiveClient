@@ -28,7 +28,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *addresseeView;
 @property (weak, nonatomic) IBOutlet UIButton *addOrderBtn;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 @property (weak, nonatomic) IBOutlet UIView *activitView;
 

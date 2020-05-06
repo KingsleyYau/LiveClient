@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -31,7 +29,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWs-n6-Ctu">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWs-n6-Ctu">
                     <rect key="frame" x="73" y="329.5" width="268" height="237"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j2F-Jx-VZ7">
@@ -46,52 +44,60 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="shK-Lh-5sl">
-                            <rect key="frame" x="113.5" y="102" width="41" height="39"/>
+                            <rect key="frame" x="116" y="102" width="36" height="16"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="39" id="emo-1c-quZ"/>
+                                <constraint firstAttribute="height" constant="16" id="emo-1c-quZ"/>
                             </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                             <state key="normal" title="Mary">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
                                 <action selector="anchorIconAction:" destination="-1" eventType="touchUpInside" id="Zb3-TI-9Ot"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID: A234898" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bnL-er-nHz">
-                            <rect key="frame" x="10" y="147" width="248" height="15"/>
+                            <rect key="frame" x="10" y="124" width="248" height="10"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <color key="textColor" red="0.69411764705882351" green="0.56862745098039214" blue="0.19215686274509802" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="1" green="0.59999999999999998" blue="0.0039215686274509803" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Come and watch my dance, would you…" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rl0-Sr-HBO">
-                            <rect key="frame" x="20" y="170" width="228" height="27"/>
+                            <rect key="frame" x="20" y="142" width="228" height="27"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="27" id="8Ly-q9-Sz7"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z8R-96-r8s">
+                            <rect key="frame" x="0.0" y="182.5" width="268" height="0.5"/>
+                            <color key="backgroundColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="vLC-L0-CRI"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KxG-JL-IXl">
-                            <rect key="frame" x="0.0" y="197" width="268" height="40"/>
+                            <rect key="frame" x="0.0" y="183" width="268" height="54"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgx-kb-UP5">
-                                    <rect key="frame" x="0.0" y="0.0" width="89.5" height="40"/>
-                                    <state key="normal" image="Home_Message_Btn"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="89.5" height="54"/>
+                                    <state key="normal" image="Live_Livechat"/>
                                     <connections>
                                         <action selector="chatAction:" destination="-1" eventType="touchUpInside" id="Cjg-Wu-659"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6GF-rv-SWE">
-                                    <rect key="frame" x="89.5" y="0.0" width="89" height="40"/>
-                                    <state key="normal" image="Home_Mail_Btn"/>
+                                    <rect key="frame" x="89.5" y="0.0" width="89" height="54"/>
+                                    <state key="normal" image="Live_Mail"/>
                                     <connections>
                                         <action selector="mailAction:" destination="-1" eventType="touchUpInside" id="WH9-qt-Tgf"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="icf-mU-vqj">
-                                    <rect key="frame" x="178.5" y="0.0" width="89.5" height="40"/>
-                                    <state key="normal" image="Dialog_Un_Follow"/>
+                                    <rect key="frame" x="178.5" y="0.0" width="89.5" height="54"/>
+                                    <state key="normal" image="LS_Home_Unfollow"/>
                                     <connections>
                                         <action selector="favouriteAction:" destination="-1" eventType="touchUpInside" id="rM0-Qj-6Jn"/>
                                     </connections>
@@ -111,14 +117,14 @@
                                 <constraint firstItem="6GF-rv-SWE" firstAttribute="leading" secondItem="Fgx-kb-UP5" secondAttribute="trailing" id="mKd-Jw-NH8"/>
                                 <constraint firstItem="Fgx-kb-UP5" firstAttribute="leading" secondItem="KxG-JL-IXl" secondAttribute="leading" id="qdU-Mk-z7B"/>
                                 <constraint firstItem="icf-mU-vqj" firstAttribute="leading" secondItem="6GF-rv-SWE" secondAttribute="trailing" id="vZ5-Qz-s72"/>
-                                <constraint firstAttribute="height" constant="40" id="vm7-f3-utK"/>
+                                <constraint firstAttribute="height" constant="54" id="vm7-f3-utK"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SOV-10-PTt">
-                            <rect key="frame" x="237" y="12" width="17" height="17"/>
+                            <rect key="frame" x="228" y="0.0" width="40" height="40"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="17" id="0PV-t8-NMJ"/>
-                                <constraint firstAttribute="width" constant="17" id="jqe-c6-Pd1"/>
+                                <constraint firstAttribute="height" constant="40" id="0PV-t8-NMJ"/>
+                                <constraint firstAttribute="width" constant="40" id="jqe-c6-Pd1"/>
                             </constraints>
                             <state key="normal" image="Live_AncorDetail_Close"/>
                             <connections>
@@ -126,27 +132,30 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="KxG-JL-IXl" firstAttribute="leading" secondItem="mWs-n6-Ctu" secondAttribute="leading" id="11w-WK-dH3"/>
                         <constraint firstAttribute="width" constant="268" id="1DH-vN-A16"/>
                         <constraint firstAttribute="bottom" secondItem="KxG-JL-IXl" secondAttribute="bottom" id="4ml-ll-Eh2"/>
+                        <constraint firstItem="Z8R-96-r8s" firstAttribute="leading" secondItem="mWs-n6-Ctu" secondAttribute="leading" id="9V9-cJ-UjT"/>
                         <constraint firstItem="rl0-Sr-HBO" firstAttribute="leading" secondItem="mWs-n6-Ctu" secondAttribute="leading" constant="20" id="Amp-UX-Zqr"/>
+                        <constraint firstAttribute="trailing" secondItem="Z8R-96-r8s" secondAttribute="trailing" id="J6e-tG-yy5"/>
                         <constraint firstItem="bnL-er-nHz" firstAttribute="leading" secondItem="mWs-n6-Ctu" secondAttribute="leading" constant="10" id="MPh-sZ-oMs"/>
                         <constraint firstItem="bnL-er-nHz" firstAttribute="top" secondItem="shK-Lh-5sl" secondAttribute="bottom" constant="6" id="MzU-tE-McU"/>
                         <constraint firstItem="j2F-Jx-VZ7" firstAttribute="top" secondItem="mWs-n6-Ctu" secondAttribute="top" constant="20" id="Okf-3h-wn6"/>
                         <constraint firstItem="shK-Lh-5sl" firstAttribute="centerX" secondItem="j2F-Jx-VZ7" secondAttribute="centerX" id="PZa-0P-kJN"/>
                         <constraint firstAttribute="trailing" secondItem="KxG-JL-IXl" secondAttribute="trailing" id="SjR-sj-S0O"/>
-                        <constraint firstItem="SOV-10-PTt" firstAttribute="top" secondItem="mWs-n6-Ctu" secondAttribute="top" constant="12" id="Smb-4k-d0B"/>
+                        <constraint firstItem="SOV-10-PTt" firstAttribute="top" secondItem="mWs-n6-Ctu" secondAttribute="top" id="Smb-4k-d0B"/>
                         <constraint firstItem="shK-Lh-5sl" firstAttribute="top" secondItem="j2F-Jx-VZ7" secondAttribute="bottom" constant="14" id="b9L-lo-nKr"/>
                         <constraint firstItem="rl0-Sr-HBO" firstAttribute="top" secondItem="bnL-er-nHz" secondAttribute="bottom" constant="8" symbolic="YES" id="jCc-6f-10e"/>
                         <constraint firstAttribute="trailing" secondItem="rl0-Sr-HBO" secondAttribute="trailing" constant="20" id="kSx-Ms-HRT"/>
-                        <constraint firstItem="KxG-JL-IXl" firstAttribute="top" secondItem="rl0-Sr-HBO" secondAttribute="bottom" id="lgQ-fK-TEy"/>
+                        <constraint firstItem="KxG-JL-IXl" firstAttribute="top" secondItem="rl0-Sr-HBO" secondAttribute="bottom" constant="14" id="lgQ-fK-TEy"/>
                         <constraint firstAttribute="width" secondItem="mWs-n6-Ctu" secondAttribute="height" multiplier="266:235" id="mGk-Vm-y8t"/>
                         <constraint firstAttribute="trailing" secondItem="bnL-er-nHz" secondAttribute="trailing" constant="10" id="mOb-gb-G9M"/>
                         <constraint firstItem="bnL-er-nHz" firstAttribute="centerX" secondItem="shK-Lh-5sl" secondAttribute="centerX" id="nzA-5s-xNR"/>
+                        <constraint firstItem="KxG-JL-IXl" firstAttribute="top" secondItem="Z8R-96-r8s" secondAttribute="bottom" id="sIk-HQ-ydm"/>
                         <constraint firstItem="rl0-Sr-HBO" firstAttribute="centerX" secondItem="bnL-er-nHz" secondAttribute="centerX" id="vRs-tt-MdF"/>
-                        <constraint firstAttribute="trailing" secondItem="SOV-10-PTt" secondAttribute="trailing" constant="14" id="xtg-lh-CMW"/>
+                        <constraint firstAttribute="trailing" secondItem="SOV-10-PTt" secondAttribute="trailing" id="xtg-lh-CMW"/>
                         <constraint firstItem="j2F-Jx-VZ7" firstAttribute="centerX" secondItem="mWs-n6-Ctu" secondAttribute="centerX" id="zH0-dT-kXA"/>
                     </constraints>
                 </view>
@@ -165,9 +174,9 @@
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
-        <image name="Dialog_Un_Follow" width="28" height="28"/>
-        <image name="Home_Mail_Btn" width="21" height="21"/>
-        <image name="Home_Message_Btn" width="20" height="20"/>
-        <image name="Live_AncorDetail_Close" width="16" height="17"/>
+        <image name="LS_Home_Unfollow" width="25" height="25"/>
+        <image name="Live_AncorDetail_Close" width="14" height="15"/>
+        <image name="Live_Livechat" width="25" height="25"/>
+        <image name="Live_Mail" width="25" height="25"/>
     </resources>
 </document>

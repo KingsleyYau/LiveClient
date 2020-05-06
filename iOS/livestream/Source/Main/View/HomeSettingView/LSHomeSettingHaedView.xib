@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment version="2304" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -46,7 +44,7 @@
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hTg-Fy-TT7" userLabel="Change Site Btn">
                     <rect key="frame" x="25" y="139" width="325" height="32"/>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="vUI-wF-ome"/>
                     </constraints>
@@ -113,7 +111,7 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <gestureRecognizers/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="7nN-dU-GR7" secondAttribute="trailing" constant="12" id="4nx-Bh-b3z"/>
@@ -156,6 +154,7 @@
                 <outlet property="backgroundView" destination="pXQ-qk-qUT" id="1bY-uv-5TC"/>
                 <outlet property="balanceLabel" destination="Ckn-vo-K5K" id="vkc-bo-YOw"/>
                 <outlet property="changeSiteBtn" destination="hTg-Fy-TT7" id="Dg6-Km-L9U"/>
+                <outlet property="creditName" destination="Zb0-lS-oK5" id="rdk-W5-lXo"/>
                 <outlet property="headView" destination="MNZ-hZ-UH3" id="aVo-F4-v6n"/>
                 <outlet property="nameLabel" destination="zqX-xJ-1Ih" id="7ZD-4y-VCg"/>
                 <outlet property="settingBtnY" destination="qoA-Ya-s0p" id="cm1-gx-7aG"/>

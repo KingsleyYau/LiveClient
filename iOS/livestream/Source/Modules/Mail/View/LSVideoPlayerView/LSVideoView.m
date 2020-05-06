@@ -58,7 +58,7 @@
 
 - (void)play {
     if (self.url.length > 0) {
-        NSURL * url = [NSURL URLWithString:self.url];
+        NSURL *url = [NSURL URLWithString:self.url];
         self.progressView.frame = CGRectMake(0, self.frame.size.height - 40, self.frame.size.width, 40);
         self.item = [[AVPlayerItem alloc] initWithURL:url];
         self.player = [AVPlayer playerWithPlayerItem:self.item];

@@ -66,9 +66,6 @@
     if ([count intValue] == 0) {
         _unreadLabel.hidden = YES;
         _noNumUnreadlabel.hidden = YES;
-    }else if ([count intValue] < 0){
-        _noNumUnreadlabel.hidden = NO;
-        _noNumUnreadlabel.frame = CGRectMake(self.frame.size.width - 15, 5, 8, 8);
     }
     else
     {
@@ -82,6 +79,16 @@
            _unreadLabel.frame = CGRectMake(self.frame.size.width - 15, 5, 12, 12);
             _unreadLabel.text = count;
         }
+    }
+}
+
+- (void)updateUnreadNum:(NSString *)num {
+    if ([num intValue] > 0) {
+        _noNumUnreadlabel.hidden = NO;
+        _noNumUnreadlabel.frame = CGRectMake(self.frame.size.width - 15, 5, 8, 8);
+    }else {
+        _unreadLabel.hidden = YES;
+        _noNumUnreadlabel.hidden = YES;
     }
 }
 
@@ -200,4 +207,10 @@
     }
 }
 
+- (void)updateBtnUnreadNum:(NSArray * )countArray {
+    for (int i = 0; i < countArray.count; i++) {
+        JDUnreadButton * button = [self viewWithTag:i + 88];
+        [button updateUnreadNum:countArray[i]];
+    }
+}
 @end

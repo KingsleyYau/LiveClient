@@ -156,48 +156,75 @@ static LiveUrlHandler *gInstance = nil;
         }break;
         case LiveUrlTypeSendMail: {
             // TODO:进入发信页面
-            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenSendMail:anchorName:)]) {
-                [self.parseDelegate liveUrlHandler:self didOpenSendMail:item.anchorId anchorName:item.anchorName];
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenSendMail:anchorName:emfId:)]) {
+                [self.parseDelegate liveUrlHandler:self didOpenSendMail:item.anchorId anchorName:item.anchorName emfId:item.emfId];
             }
         }break;
         case LiveUrlTypeHangoutDialog: {
+            // TODO:进入多人互动页弹层
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenHangoutDialog:anchorName:)]) {
                 [self.parseDelegate liveUrlHandler:self didOpenHangoutDialog:item.anchorId anchorName:item.anchorName];
             }
         }break;
         case LiveUrlTypeHangout: {
-            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenHangoutRoom:anchorName:)]) {
-                [self.parseDelegate liveUrlHandler:self didOpenHangoutRoom:item.anchorId anchorName:item.anchorName];
+            // TODO:进入多人互动
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openHangout:inviteAnchorId:inviteAnchorName:recommendAnchorId:recommendAnchorName:)]) {
+                [self.parseDelegate liveUrlHandler:self openHangout:item.roomId inviteAnchorId:item.anchorId inviteAnchorName:item.anchorName recommendAnchorId:item.recommendAnchorId recommendAnchorName:item.recommendAnchorName];
             }
+            
         }break;
         case LiveUrlTypeSendSayHi:{
+            // TODO:进入发送sayhi
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didSendSayhi:anchorName:)]) {
                 [self.parseDelegate liveUrlHandler:self didSendSayhi:item.anchorId anchorName:item.anchorName];
             }
         }break;
         case LiveUrlTypeSayHiList:{
+            // TODO:进入sayhi列表
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openSayHiType:)]) {
                 [self.parseDelegate liveUrlHandler:self openSayHiType:item.sayHiListType];
             }
         }break;
         case LiveUrlTypeSayHiDetail:{
+            // TODO:进入sayhi详情
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenSayHiDetail:)]) {
                 [self.parseDelegate liveUrlHandler:self didOpenSayHiDetail:item.sayhiId];
             }
         }break;
         case LiveUrlTypeGreetMailDetail: {
+            // TODO:进入意向信详情
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenGreetingMailDetail:)]) {
                 [self.parseDelegate liveUrlHandler:self didOpenGreetingMailDetail:item.loiId];
             }
         }break;
         case LiveUrlTypeGiftFlowerList: {
-            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:OpenGiftFlowerList:)]) {
-                [self.parseDelegate liveUrlHandler:self OpenGiftFlowerList:item.flowerListType];
+            // TODO:进入鲜花商城
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openGiftFlowerList:)]) {
+                [self.parseDelegate liveUrlHandler:self openGiftFlowerList:item.flowerListType];
             }
         }break;
         case LiveUrlTypeGiftFlowerAnchorStore: {
+            // TODO:进入指定主播鲜花商城
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openGiftFlowerAnchorStore:)]) {
                 [self.parseDelegate liveUrlHandler:self openGiftFlowerAnchorStore:item.anchorId];
+            }
+        }break;
+        case LiveUrlTypeScheduleList: {
+            // TODO:进入预约列表
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openScheduleList:)]) {
+                [self.parseDelegate liveUrlHandler:self openScheduleList:item.scheduleListType];
+            }
+        }break;
+        case LiveUrlTypeScheduleDetail: {
+            // TODO:进入指定预约详情
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openScheduleDetail:refId:anchorId:)]) {
+                [self.parseDelegate liveUrlHandler:self openScheduleDetail:item.inviteId refId:item.refId anchorId:item.anchorId];
+            }
+        }break;
+        case LiveUrlTypeScheduleMailDetail: {
+            // TODO:进入指定信件预约详情
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openScheduleMailDetail:anchorName:type:)]) {
+                [self.parseDelegate liveUrlHandler:self openScheduleMailDetail:item.loiId anchorName:item.anchorName type:item.mailScheduelDetailType];
             }
         }break;
         default: {
@@ -221,36 +248,36 @@ static LiveUrlHandler *gInstance = nil;
     
     switch (item.roomType) {
         case LiveUrlRoomTypeHangOut:{
-            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openHangout:anchorId:anchorName:hangoutAnchorId:hangoutAnchorName:)]) {
-                [self.parseDelegate liveUrlHandler:self openHangout:item.roomId anchorId:item.anchorId anchorName:item.anchorName hangoutAnchorId:item.hangoutAnchorId hangoutAnchorName:item.hangoutAnchorName];
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openHangout:inviteAnchorId:inviteAnchorName:recommendAnchorId:recommendAnchorName:)]) {
+                [self.parseDelegate liveUrlHandler:self openHangout:item.roomId inviteAnchorId:item.anchorId inviteAnchorName:item.anchorName recommendAnchorId:item.recommendAnchorId recommendAnchorName:item.recommendAnchorName];
             }
         }break;
             
         default:{
             if (item.roomId.length > 0) {
-                if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openPublicLive:anchorId:roomType:)]) {
-                    [self.parseDelegate liveUrlHandler:self openPublicLive:item.roomId anchorId:item.anchorId roomType:LiveRoomType_Private_VIP];
+                if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openPrivateLive:anchorName:anchorId:roomType:)]) {
+                    [self.parseDelegate liveUrlHandler:self openPrivateLive:item.roomId anchorName:item.anchorName anchorId:item.anchorId roomType:LiveRoomType_Private];
                 }
             } else {
                 switch (item.roomType) {
                     case LiveUrlRoomTypePublic: {
                         if (item.liveShowId.length > 0) {
                             // 进入节目
-                            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openShow:anchorId:roomType:)]) {
-                                [self.parseDelegate liveUrlHandler:self openShow:item.liveShowId anchorId:item.anchorId roomType:LiveRoomType_Public];
+                            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openShow:anchorName:anchorId:roomType:)]) {
+                                [self.parseDelegate liveUrlHandler:self openShow:item.liveShowId anchorName:item.anchorName anchorId:item.anchorId roomType:LiveRoomType_Public];
                             }
                         } else {
                             // 进入公开直播间
-                            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openPublicLive:anchorId:roomType:)]) {
-                                [self.parseDelegate liveUrlHandler:self openPublicLive:item.roomId anchorId:item.anchorId roomType:LiveRoomType_Public];
+                            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openPreLive:anchorName:anchorId:roomType:)]) {
+                                [self.parseDelegate liveUrlHandler:self openPreLive:item.roomId anchorName:item.anchorName anchorId:item.anchorId roomType:LiveRoomType_Public];
                             }
                         }
                     } break;
                     case LiveUrlRoomTypePrivate:
                     case LiveUrlRoomTypePrivateInvite: {
                         // 主动邀请
-                        if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openPreLive:anchorId:roomType:)]) {
-                            [self.parseDelegate liveUrlHandler:self openPreLive:item.roomId anchorId:item.anchorId roomType:LiveRoomType_Private];
+                        if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openPreLive:anchorName:anchorId:roomType:)]) {
+                            [self.parseDelegate liveUrlHandler:self openPreLive:item.roomId anchorName:item.anchorName anchorId:item.anchorId roomType:LiveRoomType_Private];
                         }
                     } break;
                     case LiveUrlRoomTypePrivateAccept: {
@@ -268,35 +295,37 @@ static LiveUrlHandler *gInstance = nil;
 }
 
 #pragma mark - 获取模块URL
-- (NSURL *)createUrlToHangoutByRoomId:(NSString *)roomId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName hangoutAnchorId:(NSString *)hangoutAnchorId hangoutAnchorName:(NSString *)hangoutAnchorName {
+- (NSURL *)createUrlToHangoutByRoomId:(NSString *)roomId inviteAnchorId:(NSString *)inviteAnchorId inviteAnchorName:(NSString *)inviteAnchorName recommendAnchorId:(NSString *)recommendAnchorId recommendAnchorName:(NSString *)recommendAnchorName {
     int roomTypeInt = 4;
     NSString *codeRoomId = roomId.length > 0 ? roomId : @"";
-    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
-    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
-    NSString *codeHangoutAnchorId = hangoutAnchorId.length > 0 ? hangoutAnchorId : @"";
-    NSString *codeHangoutAnchorName = hangoutAnchorName.length > 0 ? hangoutAnchorName : @"";
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&&roomid=%@&anchorid=%@&anchorname=%@&hangoutAnchorId=%@&hangoutAnchorName=%@&roomtype=%d", codeRoomId, codeAnchorId, [self encodeParameter:codeAnchorName], codeHangoutAnchorId, [self encodeParameter:codeHangoutAnchorName], roomTypeInt];
+    NSString *codeInviteAnchorId = inviteAnchorId.length > 0 ? inviteAnchorId : @"";
+    NSString *codeInviteAnchorName = inviteAnchorName.length > 0 ? inviteAnchorName : @"";
+    NSString *codeRecommendAnchorId = recommendAnchorId.length > 0 ? recommendAnchorId : @"";
+    NSString *codeRecommendAnchorName = recommendAnchorName.length > 0 ? recommendAnchorName : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=hangout&&roomid=%@&anchorid=%@&anchorname=%@&recommendAnchorId=%@&recommendAnchorName=%@&roomtype=%d", codeRoomId, codeInviteAnchorId, [self encodeParameter:codeInviteAnchorName], codeRecommendAnchorId, [self encodeParameter:codeRecommendAnchorName], roomTypeInt];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
-- (NSURL *)createUrlToInviteByRoomId:(NSString *)roomId anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType {
+- (NSURL *)createUrlToInviteByRoomId:(NSString *)roomId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId roomType:(LiveRoomType)roomType {
     int roomTypeInt = 0;
-    if (roomType == LiveRoomType_Private || roomType == LiveRoomType_Private_VIP) {
+    if (roomType == LiveRoomType_Private) {
         roomTypeInt = 1;
     }
 
     NSString *codeRoomId = roomId.length > 0 ? roomId : @"";
     NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&roomid=%@&anchorid=%@&roomtype=%d", codeRoomId, codeAnchorId, roomTypeInt];
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&roomid=%@&anchorid=%@&anchorname=%@&roomtype=%d", codeRoomId, codeAnchorId,[self encodeParameter:codeAnchorName],roomTypeInt];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 
-- (NSURL *)createUrlToShowRoomId:(NSString *)roomId anchorId:(NSString *)anchorId {
+- (NSURL *)createUrlToShowRoomId:(NSString *)roomId anchorName:(NSString *)anchorName anchorId:(NSString *)anchorId {
     NSString *codeRoomId = roomId.length > 0 ? roomId : @"";
     NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&liveshowid=%@&anchorid=%@&roomtype=0", codeRoomId, codeAnchorId];
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&liveshowid=%@&anchorname=%@&anchorid=%@&roomtype=0", codeRoomId,[self encodeParameter:codeAnchorName], codeAnchorId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
@@ -338,11 +367,12 @@ static LiveUrlHandler *gInstance = nil;
     return encodePara;
 }
 
-- (NSURL *)createSendmailByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName {
+- (NSURL *)createSendmailByanchorId:(NSString *)anchorId anchorName:(NSString *)anchorName emfiId:(NSString *)emfId {
     NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
     NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *codeEmfId = emfId.length > 0 ? emfId : @"";
     NSString *encodeName = [self encodeParameter:codeAnchorName];
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendmail&anchorid=%@&anchorname=%@", codeAnchorId, encodeName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendmail&anchorid=%@&anchorname=%@&emf_id=%@", codeAnchorId, encodeName,codeEmfId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
@@ -391,5 +421,35 @@ static LiveUrlHandler *gInstance = nil;
     return url;
 }
 
+- (NSURL *)createScheduleList:(LiveUrlScheduleListType)type {
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=schedule_list&listtype=%d",type];;
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
 
+
+- (NSURL *)createScheduleMailDetail:(NSString *)mailId anchorName:(NSString *)anchorName type:(LiveUrlScheduleMailDetailType)type{
+    NSString *codeMailId = mailId.length > 0 ? mailId : @"";
+    NSString *codeAnchorName = anchorName.length > 0 ? anchorName : @"";
+    NSString *encodeName = [self encodeParameter:codeAnchorName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=schedulemaildetail&loi_id=%@&anchorName=%@&listtype=%d",codeMailId,encodeName,type];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (NSURL *)createScheduleDetail:(NSString *)inviteId anchorId:(NSString *)anchorId refId:(NSString *)refId{
+    NSString *codeInviteId = inviteId.length > 0 ? inviteId : @"";
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+      NSString *codeRefId = refId.length > 0 ? refId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=scheduledetail&invitationid=%@&anchorid=%@&refid=%@",codeInviteId,codeAnchorId,codeRefId];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+
+- (NSURL *)createBuyCredit {
+    NSString *urlString = @"qpidnetwork://app/open?service=live&module=buycredit";
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
 @end

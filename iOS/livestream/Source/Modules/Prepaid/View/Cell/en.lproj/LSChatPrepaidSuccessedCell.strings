@@ -1,0 +1,14 @@
+
+/* Class = "UILabel"; text = "Request (ID:xxxx) has been accepted."; ObjectID = "5qT-IY-ep8"; */
+"5qT-IY-ep8.text" = "Request (ID:xxxx) has been accepted.";
+
+/* Class = "UILabel"; text = "Congrats! Request accepted!"; ObjectID = "D38-YA-4tr"; */
+"D38-YA-4tr.text" = "Congrats! Request accepted!";
+
+/* Class = "UILabel"; text = "Note:"; ObjectID = "DEu-SF-i6F"; */
+"DEu-SF-i6F.text" = "Note:";
+
+"SCHEDULE_TITLE" = "Request %@ has been accepted.";
+
+"LADY_ACCEPT" = "Congrats! Request accepted!";
+"MAN_ACCEPT" = "Well done!";

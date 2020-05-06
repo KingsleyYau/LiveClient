@@ -119,7 +119,6 @@
     [self.tableView setupPullRefresh:self pullDown:YES pullUp:YES];
     
     self.tableView.backgroundView = nil;
-    self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.showsHorizontalScrollIndicator = NO;
     self.tableView.tableViewDelegate = self;

@@ -42,6 +42,7 @@
 #include "LSLiveChatRecvCamHearbeatExceptionTask.h"
 #include "LSLiveChatRecvManJoinOrExitConferenceTask.h"
 #include "LSLiveChatRecvManSessionInfoTask.h"
+#include "LSLiveChatRecvScheduleInviteNoticeTask.h"
 #include <common/CheckMemoryLeak.h>
 
 // 根据 cmd 创建 task
@@ -151,6 +152,10 @@ ILSLiveChatTask* ILSLiveChatTask::CreateTaskWithCmd(int cmd)
 	case TCMD_RECVMANSESSIONINFO:
 		task = new LSLiveChatRecvManSessionInfoTask();
 		break;
+    case TCMD_SCHEDULE_ONE_ON_ONE_UPDATE:
+        task = new LSLiveChatRecvScheduleInviteNoticeTask();
+        break;
+
 	}
 
 	return task;

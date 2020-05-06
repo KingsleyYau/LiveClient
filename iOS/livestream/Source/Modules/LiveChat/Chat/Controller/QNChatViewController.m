@@ -33,10 +33,15 @@
 #import "QNChatVoiceSelfTableViewCell.h"
 #import "QNChatMoonFeeTableViewCell.h"
 #import "LSChatVideoLadyTableViewCell.h"
+#import "LSChatScheduleManCell.h"
+#import "LSChatScheduleLadyCell.h"
+#import "LSChatPrepaidSuccessedCell.h"
+#import "LSChatPrepaidDeclineCell.h"
 
 #import "QNChatEmotionKeyboardView.h"
 #import "QNChatEmotionChooseView.h"
-//#import "ChatEmotionListView.h"
+
+#import "LSChatNavRightView.h"
 
 #import "LSChatPhotoView.h"
 #import "LSChatPhoneAlbumPhoto.h"
@@ -70,6 +75,16 @@
 
 #import "SelectNumButton.h"
 #import "LSShadowView.h"
+
+#import "LSPrePaidManager.h"
+#import "LSChatPrepaidView.h"
+#import "LSPrePaidPickerView.h"
+#import "LSPrepaidInfoView.h"
+#import "LSChatPrepaidTipView.h"
+#import "LSPurchaseCreditsView.h"
+#import "LSScheduleListView.h"
+#import "LSPurchaseCreditsView.h"
+#import "LiveUrlHandler.h"
 
 #define ADD_CREDIT_URL @"ADD_CREDIT_URL"
 
@@ -107,7 +122,8 @@ typedef enum AlertPayType {
 @interface QNChatViewController () <ChatTextSelfDelegate, LSLiveChatManagerListenerDelegate, LSCheckButtonDelegate,         ChatEmotionChooseViewDelegate, TTTAttributedLabelDelegate, ChatTextViewDelegate, ChatPhotoViewDelegate, ChatPhotoDataManagerDelegate, ChatPhotoLadyTableViewCellDelegate,
                                     ChatPhotoSelfTableViewCellDelegate, ChatMoonFeeTableViewCellDelegate,
                                     ChatLargeEmotionSelfTableViewCellDelegate, ChatEmotionKeyboardViewDelegate, ChatSmallEmotionViewDelegate, ChatSmallEmotionSelfTableViewCellDelegate, ChatNormalSmallEmotionViewDelegate, UIScrollViewDelegate,
-                                    ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCellDelegate, ChatAudioPlayerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ChatVideoLadyTableViewCellDelegate> {
+                                    ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCellDelegate, ChatAudioPlayerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ChatVideoLadyTableViewCellDelegate,LSChatInputToolViewDelegate,LSChatPrepaidViewDelegate,LSPrePaidPickerViewDelegate,LSPrePaidManagerDelegate,LSChatPrepaidTipViewDelegate,LSChatScheduleManCellDelegate,
+LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewDelegate> {
     CGRect _orgFrame;
 }
 #pragma mark - 界面
@@ -150,10 +166,6 @@ typedef enum AlertPayType {
 
 /** 照片相册 */
 @property (nonatomic, strong) LSChatPhotoView *photoView;
-
-/** 消息数据 */
-@property (nonatomic, strong) LSLCLiveChatMsgItemObject *msgItem;
-
 /**
  键盘弹出高度
  */
@@ -188,17 +200,18 @@ typedef enum AlertPayType {
 
 @property (nonatomic, assign) BOOL isEndChat;
 
-// 多功能按钮
-@property (strong, nonatomic) SelectNumButton *buttonBar;
-@property (strong, nonatomic) NSMutableArray *buttonBarTitles;
-@property (strong, nonatomic) NSMutableArray *buttonBarIcons;
-/*
- *  多功能按钮约束
- */
-@property (strong, nonatomic) MASConstraint *buttonBarTop;
-@property (assign, nonatomic) int buttonBarHeight;
 // 关闭多功能按钮
 @property (strong, nonatomic) UIButton *closeButtonBarBtn;
+
+@property (nonatomic, strong) LSChatPrepaidView * perpaidView;
+@property (nonatomic, strong) LSPrePaidPickerView * pickerView;
+@property (nonatomic, strong) LSPrepaidInfoView * perpaidInfoView;
+@property (nonatomic, strong) LSChatPrepaidTipView * prepaidTipView;
+@property (nonatomic, strong) LSPurchaseCreditsView * prepaidCreditsView;
+@property (nonatomic, strong) LSScheduleListView *scheduleListView;
+@property (nonatomic, assign) NSInteger scheduleItemRow;
+@property (nonatomic, assign) NSInteger scheduleCount;
+@property (nonatomic, strong) LSChatNavRightView * rightView;
 
 @end
 
@@ -212,18 +225,17 @@ typedef enum AlertPayType {
     [self.audioPlayer removDelegate];
 
     [[LSChatPhotoDataManager manager] removeDelegate:self];
+    
+    [self removePrePaidPickerView];
+    
+    [[LSPrePaidManager manager]removeScheduleListArray];
+    
+    [[LSPrePaidManager manager] removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.buttonBarTitles = [[NSMutableArray alloc] init];
-    self.buttonBarIcons = [[NSMutableArray alloc] init];
-    UIImage *image = [UIImage imageNamed:@"Chat_List_Recent_Watched"];
-    [self.buttonBarIcons addObject:image];
-    image = [UIImage imageNamed:@"Chat_List_End_Chat"];
-    [self.buttonBarIcons addObject:image];
-
+ 
     //监听进入后台
     __weak typeof(self) weakSelf = self;
     UIApplication *app = [UIApplication sharedApplication];
@@ -236,6 +248,8 @@ typedef enum AlertPayType {
                                                           [weakSelf voiceButtonTouchUpInside];
                                                       }
                                                   }];
+    
+    [self getScheduleList];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -291,7 +305,8 @@ typedef enum AlertPayType {
     // 关闭输入框
     [self closeAllInputView];
     [self hideButtonBar];
-
+    [self hidenAllPrepaidView];
+ 
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -321,7 +336,7 @@ typedef enum AlertPayType {
 - (void)initCustomParam {
     // 初始化父类参数
     [super initCustomParam];
-    self.backTitle = NSLocalizedString(@"Chat", nil);
+    self.backTitle = @"";
 
     self.liveChatManager = [LSLiveChatManagerOC manager];
     [self.liveChatManager addDelegate:self];
@@ -341,6 +356,8 @@ typedef enum AlertPayType {
 
     [[LSChatPhotoDataManager manager] addDelegate:self];
     [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
+    
+    [[LSPrePaidManager manager] addDelegate:self];
 }
 
 - (NSString *)identification {
@@ -377,14 +394,26 @@ typedef enum AlertPayType {
 
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightcontainVew];
     self.navigationItem.rightBarButtonItem = barButtonItem;
+    
+    self.rightView = [[LSChatNavRightView alloc]init];
+    [self.navigationController.view addSubview:self.rightView];
+    self.rightView.hidden = YES;
+    CGFloat y = 45;
+    if (IS_IPHONE_X) {
+        y = 75;
+    }
+    self.rightView.frame = CGRectMake(SCREEN_WIDTH - 260, y, 255, 176);
+    [self.rightView.endChatBtn addTarget:self action:@selector(chatNavRightViewBtnDid:) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightView.schedleBtn addTarget:self action:@selector(chatNavRightViewBtnDid:) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightView.recentBtn addTarget:self action:@selector(chatNavRightViewBtnDid:) forControlEvents:UIControlEventTouchUpInside];
 
     // 获取用户信息
     WeakObject(self, weakSelf);
-    self.titleView.personIcon.image = [UIImage imageNamed:@"Default_Img_Lady_Circyle"];
+    self.titleView.personIcon.image = LADYDEFAULTIMG;
     self.titleViewLoader = [LSImageViewLoader loader];
     [[LSUserInfoManager manager] getUserInfo:weakSelf.womanId
                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                   [weakSelf.titleViewLoader loadImageWithImageView:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+                                   [weakSelf.titleViewLoader loadImageWithImageView:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
                                    weakSelf.titleView.personName.text = item.nickName;
                                    weakSelf.firstName = item.nickName;
                                }];
@@ -396,7 +425,7 @@ typedef enum AlertPayType {
     [self setupInputView];
     [self setupEmotionInputView];
     [self setupPhotoView];
-    [self setupButtonBar];
+    [self setPrepaidView];
 
     self.audioPlayer = [QNChatAudioPlayer sharedInstance];
     self.audioPlayer.delegate = self;
@@ -428,22 +457,7 @@ typedef enum AlertPayType {
         self.tableView.frame = rect;
     }
 
-    // 表情输入
-    self.emotionBtn.adjustsImageWhenHighlighted = NO;
-    self.emotionBtn.selectedChangeDelegate = self;
-    [self.emotionBtn setImage:[UIImage imageNamed:@"LS_Chat-EmotionGray"] forState:UIControlStateNormal];
-    [self.emotionBtn setImage:[UIImage imageNamed:@"LS_Chat-EmotionBlue"] forState:UIControlStateSelected];
-
-    // 私密照输入
-    self.photoBtn.selectedChangeDelegate = self;
-    [self.photoBtn setImage:[UIImage imageNamed:@"LS_Chat-Keyboard-PhotoGray"] forState:UIControlStateNormal];
-    [self.photoBtn setImage:[UIImage imageNamed:@"LS_Chat-Keyboard-PhotoBlue"] forState:UIControlStateSelected];
-
-    [self.voiceButton addTarget:self action:@selector(voiceButtonTouchDown) forControlEvents:UIControlEventTouchDown];
-    [self.voiceButton addTarget:self action:@selector(voiceButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
-    [self.voiceButton addTarget:self action:@selector(voiceButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
-    [self.voiceButton addTarget:self action:@selector(voiceButtonDragOutside) forControlEvents:UIControlEventTouchDragExit];
-    [self.voiceButton addTarget:self action:@selector(voiceButtonDragInside) forControlEvents:UIControlEventTouchDragEnter];
+    self.chatInputToolView.delegate = self;
 }
 
 - (void)setupEmotionInputView {
@@ -472,6 +486,7 @@ typedef enum AlertPayType {
         NSMutableArray *array = [NSMutableArray array];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage *image = [UIImage imageNamed:@"LS_Chat_SmallEmotion"];
+        button.backgroundColor = [UIColor clearColor];
         [button setImage:image forState:UIControlStateNormal];
         button.adjustsImageWhenHighlighted = NO;
         [array addObject:button];
@@ -511,62 +526,10 @@ typedef enum AlertPayType {
     [self.navigationController pushViewController:vc animated:YES];
     //}
 }
-
-#pragma mark - 初始化多功能按钮
-- (void)setupButtonBar {
-    self.buttonBarHeight = 0;
-    self.buttonBar = [[SelectNumButton alloc] init];
-    [self.view addSubview:self.buttonBar];
-    [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@(self.buttonBarHeight));
-        make.width.equalTo(@(196));
-        make.right.equalTo(self.view.mas_right).offset(-20);
-        self.buttonBarTop = make.bottom.equalTo(self.view.mas_top);
-    }];
-    self.buttonBar.isVertical = YES;
-    self.buttonBar.clipsToBounds = YES;
-    self.buttonBar.layer.cornerRadius = 3;
-    self.buttonBar.layer.masksToBounds = YES;    
-
-    LSShadowView *shadowView = [[LSShadowView alloc] init];
-    shadowView.shadowColor = COLOR_WITH_16BAND_RGB(0x000000);
-    [shadowView showShadowAddView:self.buttonBar];
-}
-
-#pragma mark - 多功能按钮
-- (void)setupButtonBar:(NSMutableArray *)titles {
-    UIImage *whiteImage = [LSUIImageFactory createImageWithColor:[UIColor whiteColor] imageRect:CGRectMake(0, 0, 1, 1)];
-    UIImage *blueImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0xf7cd3a) imageRect:CGRectMake(0, 0, 1, 1)];
-
-    NSMutableArray *items = [NSMutableArray array];
-    for (int i = 0; i < titles.count; i++) {
-        NSString *title = [NSString stringWithFormat:@"%@", titles[i]];
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-
-        UIImage *image = self.buttonBarIcons[i];
-        [button setImage:image forState:UIControlStateNormal];
-        [button setImage:image forState:UIControlStateSelected];
-        [button setImageEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
-
-        [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button setTitle:title forState:UIControlStateNormal];
-        [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
-
-        [button setBackgroundImage:whiteImage forState:UIControlStateNormal];
-        [button setBackgroundImage:blueImage forState:UIControlStateSelected];
-        [button addTarget:self action:@selector(floatBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-        button.tag = i;
-        [items addObject:button];
-    }
-    self.buttonBar.items = items;
-    [self.buttonBar reloadData:YES];
-}
-
-- (void)floatBtnAction:(id)sender {
-    UIButton *btn = sender;
-    if (btn.tag) {
+ 
+#pragma mark - 导航栏点击方法
+- (void)chatNavRightViewBtnDid:(UIButton*)btn {
+    if (btn.tag == 100) {
         if (self.isEndChat) {
             if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
                 [self.liveChatManager endTalk:self.womanId];
@@ -586,7 +549,15 @@ typedef enum AlertPayType {
                 }
             }
         }
-    } else {
+    } else if (btn.tag == 101){
+        [self hideButtonBar];
+        if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+            self.perpaidView.hidden = NO;
+        }else {
+            [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"SCHEDULE_TIP")];
+        }
+    }
+    else {
         LSRecentWatchViewController *vc = [[LSRecentWatchViewController alloc] initWithNibName:nil bundle:nil];
         vc.womanId = self.womanId;
         [self.navigationController pushViewController:vc animated:YES];
@@ -594,47 +565,35 @@ typedef enum AlertPayType {
 }
 
 - (void)showButtonBar {
+    NSString *endChatStr = @"";
+    if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+        //在聊显示EndChat
+        endChatStr = NSLocalizedStringFromSelf(@"EndChat");
+        self.isEndChat = YES;
+    } else if (![self.liveChatManager isInManInvite:self.womanId]) {
+        //非男士主动邀请
+        endChatStr = NSLocalizedStringFromSelf(@"EndChat");
+        self.isEndChat = YES;
+    } else {
+        //男士主动邀请
+        endChatStr = NSLocalizedStringFromSelf(@"Cancel invitation");
+        self.isEndChat = NO;
+    }
+    
+    self.rightView.chatLabel.text = endChatStr;
     self.closeButtonBarBtn.hidden = NO;
     [self.view bringSubviewToFront:self.closeButtonBarBtn];
-    
-    // 删除底部约束
-    [self.buttonBarTop uninstall];
-    self.buttonBarHeight = 45 * (int)self.buttonBarTitles.count;
-    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@(self.buttonBarHeight));
-        self.buttonBarTop = make.top.equalTo(self.view.mas_top).offset(10);
-    }];
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         [self.view layoutIfNeeded];
-                         self.buttonBar.alpha = 1;
-                     }
-                     completion:^(BOOL finished){
-                         [self.view bringSubviewToFront:self.buttonBar];
-                     }];
+    self.rightView.hidden = NO;
 }
 
 - (void)hideButtonBar {
     self.closeButtonBarBtn.hidden = YES;
-    // 删除底部约束
-    [self.buttonBarTop uninstall];
-    self.buttonBarHeight = 0;
-    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@(self.buttonBarHeight));
-        self.buttonBarTop = make.bottom.equalTo(self.view.mas_top);
-    }];
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         [self.view layoutIfNeeded];
-                         self.buttonBar.alpha = 0;
-                     }
-                     completion:^(BOOL finished){
-
-                     }];
+    self.rightView.hidden = YES;
 }
 
 - (void)closeButtonBarAction:(id)sender {
     [self hideButtonBar];
+    [self hidenPrepaidTipView];
 }
 
 #pragma mark - 键盘和底部输入控件管理
@@ -687,15 +646,7 @@ typedef enum AlertPayType {
     // 移除手势
     [self removeSingleTap];
 
-    // 关闭表情输入
-    if (self.emotionBtn.selected == YES) {
-        self.emotionBtn.selected = NO;
-        [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
-    }
-    if (self.photoBtn.selected == YES) {
-        self.photoBtn.selected = NO;
-        [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
-    }
+    [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
     // 关闭系统键盘
     [self.textView resignFirstResponder];
 }
@@ -703,35 +654,8 @@ typedef enum AlertPayType {
 #pragma mark - 点击按钮事件
 - (void)settingDid {
     [self closeAllInputView];
-
-    NSString *endChatStr = @"";
-    if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
-        //在聊显示EndChat
-        endChatStr = NSLocalizedStringFromSelf(@"EndChat");
-        self.isEndChat = YES;
-    } else if (![self.liveChatManager isInManInvite:self.womanId]) {
-        //非男士主动邀请
-        endChatStr = NSLocalizedStringFromSelf(@"EndChat");
-        self.isEndChat = YES;
-    } else {
-        //男士主动邀请
-        endChatStr = NSLocalizedStringFromSelf(@"Cancel invitation");
-        self.isEndChat = NO;
-    }
-
-    if (self.buttonBarHeight) {
-        [self hideButtonBar];
-    } else {
-        [self.buttonBarTitles removeAllObjects];
-        [self.buttonBarTitles addObject:NSLocalizedStringFromSelf(@"Recent Watched")];
-        [self.buttonBarTitles addObject:endChatStr];
-
-        [self setupButtonBar:self.buttonBarTitles];
-        [self showButtonBar];
-    }
-
-    //    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:endChatStr, nil];
-    //    [actionSheet showInView:self.view];
+    [self hidenPrepaidTipView];
+    [self showButtonBar];
 }
 
 - (void)sendMsgAction:(id)sender {
@@ -849,52 +773,52 @@ typedef enum AlertPayType {
 
 #pragma mark - 表情按钮选择回调
 - (void)selectedChanged:(id)sender {
-    if ([sender isEqual:self.photoBtn]) {
-        // 取消按钮点击
-        [self.textView endEditing:YES];
-
-        UIButton *photoBtn = (UIButton *)sender;
-        // 不允许访问相册,弹出提示
-        PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
-        if (photoAuthorStatus == PHAuthorizationStatusRestricted || photoAuthorStatus == PHAuthorizationStatusDenied) {
-            //            NSString *photoLibraryAllow = NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil);
-            NSString *photoLibraryAllow = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil)];
-            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:photoLibraryAllow preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self clickAlertViewButton:AlertTypePhotoAllow];
-            }];
-            [alertVC addAction:closeAC];
-            [self presentViewController:alertVC animated:YES completion:nil];
-            return;
-        } else if (photoAuthorStatus == PHAuthorizationStatusNotDetermined) {
-            [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
-            photoBtn.selected = NO;
-            return;
-        } else {
-            // 允许访问相册,允许按钮操作弹出相册栏
-            if (photoBtn.selected == YES) {
-                self.emotionBtn.selected = NO;
-                // 显示相册
-                [self showVisualableStylePhoto];
-
-            } else {
-                // 切换成系统的的键盘
-                [self showKeyboardView];
-            }
-        }
-    } else {
-        [self.textView endEditing:YES];
-        UIButton *emotionBtn = (UIButton *)sender;
-        if (emotionBtn.selected == YES) {
-            self.photoBtn.selected = NO;
-            // 弹出底部emotion的键盘
-            [self showEmotionView];
-
-        } else {
-            // 切换成系统的的键盘
-            [self showKeyboardView];
-        }
-    }
+//    if ([sender isEqual:self.photoBtn]) {
+//        // 取消按钮点击
+//        [self.textView endEditing:YES];
+//
+//        UIButton *photoBtn = (UIButton *)sender;
+//        // 不允许访问相册,弹出提示
+//        PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
+//        if (photoAuthorStatus == PHAuthorizationStatusRestricted || photoAuthorStatus == PHAuthorizationStatusDenied) {
+//            //            NSString *photoLibraryAllow = NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil);
+//            NSString *photoLibraryAllow = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil)];
+//            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:photoLibraryAllow preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                [self clickAlertViewButton:AlertTypePhotoAllow];
+//            }];
+//            [alertVC addAction:closeAC];
+//            [self presentViewController:alertVC animated:YES completion:nil];
+//            return;
+//        } else if (photoAuthorStatus == PHAuthorizationStatusNotDetermined) {
+//            [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
+//            photoBtn.selected = NO;
+//            return;
+//        } else {
+//            // 允许访问相册,允许按钮操作弹出相册栏
+//            if (photoBtn.selected == YES) {
+//                self.emotionBtn.selected = NO;
+//                // 显示相册
+//                [self showVisualableStylePhoto];
+//
+//            } else {
+//                // 切换成系统的的键盘
+//                [self showKeyboardView];
+//            }
+//        }
+//    } else {
+//        [self.textView endEditing:YES];
+//        UIButton *emotionBtn = (UIButton *)sender;
+//        if (emotionBtn.selected == YES) {
+//            self.photoBtn.selected = NO;
+//            // 弹出底部emotion的键盘
+//            [self showEmotionView];
+//
+//        } else {
+//            // 切换成系统的的键盘
+//            [self showKeyboardView];
+//        }
+//    }
 }
 
 #pragma mark - 普通表情选择回调
@@ -1399,11 +1323,10 @@ typedef enum AlertPayType {
     }
 }
 
+// TODO:发送小高级表情
 - (void)sendSmallEmotion:(NSString *)emotionId {
     [[LiveModule module].analyticsManager reportActionEvent:SendLivechatSticker eventCategory:EventCategoryLiveChat];
-    // TODO:发送小高级表情
     LSLCLiveChatMsgItemObject *msg = [self.liveChatManager sendMagicIcon:self.womanId iconId:emotionId];
-    self.msgItem = msg;
     if (msg != nil) {
         NSLog(@"QNChatViewController::sendEmotion( 发送小高级表情消息 emotionId : %@ )", msg.magicIconMsg.magicIconId);
 
@@ -1416,6 +1339,23 @@ typedef enum AlertPayType {
     [self insertData:msg scrollToEnd:YES animated:YES];
 }
 
+// TODO:发送预付费消息
+- (void)sendSchedule:(LSLCLiveChatScheduleMsgItemObject *)item {
+    // 发送消息
+    LSLCLiveChatMsgItemObject *msg = [self.liveChatManager sendScheduleInvite:self.womanId scheduleItem:item];
+    if (msg != nil) {
+        NSLog(@"QNChatViewController::sendMsg( 发送预付费消息 , msgId : %ld )", (long)msg.msgId);
+
+        // 更新最近联系人数据
+        [self updateRecents:msg];
+
+    } else {
+        NSLog(@"QNChatViewController::sendMsg( 发送预付费消息, 失败 fail)");
+    }
+    // 刷新列表
+    [self insertData:msg scrollToEnd:YES animated:YES];
+}
+    
 #pragma mark - 播放语音
 - (void)palyVoice:(NSInteger)row {
     // 语音在播放中，点击其他语音
@@ -1499,9 +1439,68 @@ typedef enum AlertPayType {
     }
 }
 
-#pragma mark - 录音按钮点击事件
+#pragma mark - 工具栏点击事件
+
+- (void)chatInputToolViewBtnDid:(UIButton *)btton {
+     [self.view endEditing:YES];
+    switch (btton.tag) {
+        case 0:{
+           // 不允许访问相册,弹出提示
+           PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
+           if (photoAuthorStatus == PHAuthorizationStatusRestricted || photoAuthorStatus == PHAuthorizationStatusDenied) {
+               //            NSString *photoLibraryAllow = NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil);
+               NSString *photoLibraryAllow = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Allow", nil), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"], NSLocalizedString(@"Tips_PhotoLibrary_Allow", nil)];
+               UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"" message:photoLibraryAllow preferredStyle:UIAlertControllerStyleAlert];
+               UIAlertAction *closeAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                   [self clickAlertViewButton:AlertTypePhotoAllow];
+               }];
+               [alertVC addAction:closeAC];
+               [self presentViewController:alertVC animated:YES completion:nil];
+               return;
+           } else if (photoAuthorStatus == PHAuthorizationStatusNotDetermined) {
+               [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
+               return;
+           } else {
+               if (self.photoView.hidden) {
+                   // 显示相册
+                    [self showVisualableStylePhoto];
+               }else {
+                   // 切换成系统的的键盘
+                   [self showKeyboardView];
+               }
+           }
+        }break;
+        case 1:{
+            if (self.chatEmotionKeyboardView.hidden) {
+                 // 弹出底部emotion的键盘
+                [self showEmotionView];
+            }else {
+               // 切换成系统的的键盘
+                [self showKeyboardView];
+            }
+        }break;
+        case 2: {
+            [self voiceButtonTouchUpInside];
+        }break;
+        case 3:{
+            [self showPrepaidView];
+        }break;
+        default:
+            break;
+    }
+    
+ 
+}
+#pragma mark - 录音按钮事件
 // 录音按钮按下
 - (void)voiceButtonTouchDown {
+    [self closeAllInputView];
+    
+    CGRect cellRect = [self.chatInputToolView.collectionView convertRect:CGRectMake(SCREEN_WIDTH - ((SCREEN_WIDTH/4)*2), 0, SCREEN_WIDTH/4, self.chatInputToolView.collectionView.tx_height) toView:self.chatInputToolView.collectionView];
+    //cell在当前屏幕的位置
+    CGRect rect2 = [self.chatInputToolView.collectionView convertRect:cellRect toView:self.view];
+    self.voiceImageView.frame = CGRectMake(rect2.origin.x, 30, cellRect.size.width, cellRect.size.width);
+    
     [self stopVoice:self.voicePlayRow];
     [self chatAudioPlayerDidFinishPlay];
     if (![QNChatVoiceView canRecord]) {
@@ -1637,15 +1636,15 @@ typedef enum AlertPayType {
     item.liveChatMsgItemObject = msg;
     item.msgId = msg.msgId;
     if (msg.msgType == MT_Custom) {
-        // 自定义消息
-        QNMessage *custom = [self.msgCustomDict valueForKey:[NSString stringWithFormat:@"%ld", (long)msg.msgId]];
-        if (custom != nil) {
-            item = [custom copy];
-            
-            item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
-            CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
-            item.cellH = viewSize.height;
-        }
+               // 自定义消息
+             QNMessage *custom = [self.msgCustomDict valueForKey:[NSString stringWithFormat:@"%ld", (long)msg.msgId]];
+             if (custom != nil) {
+                 item = [custom copy];
+                 
+                 item.attText = [self parseMessage:item.text font:[UIFont systemFontOfSize:SystemMessageFontSize] color:MessageGrayColor];
+                 CGSize viewSize = CGSizeMake(self.tableView.frame.size.width, [QNChatSystemTipsTableViewCell cellHeight:self.tableView.frame.size.width detailString:item.attText]);
+                 item.cellH = viewSize.height;
+             }
     } else {
         // 其他
 
@@ -1879,6 +1878,25 @@ typedef enum AlertPayType {
                 item.cellH = [LSChatVideoLadyTableViewCell cellHeight:isCross];
 
             } break;
+            case MT_Schedule: {
+                item.type = MessageTypeSchedule;
+                if (item.sender == MessageSenderSelf) {
+                    item.cellH = [LSChatScheduleManCell cellHeight:item.isScheduleMore];
+                }else {
+                    BOOL isSent = NO;
+                    if (item.liveChatMsgItemObject.scheduleMsg.type == SCHEDULEINVITE_PENDING) {
+                        isSent = YES;
+                    }
+                    item.cellH = [LSChatScheduleLadyCell cellHeight:item.isScheduleMore isAcceptView:isSent];
+                }
+            }break;
+            case MT_ScheduleReply:{
+                item.type = MessageTypeScheduleTips;
+                if (item.liveChatMsgItemObject.scheduleReplyMsg.isScheduleAccept) {
+                    item.cellH = [LSChatPrepaidSuccessedCell cellHeight];
+                }else {
+                }item.cellH = [LSChatPrepaidDeclineCell cellHeight];
+            }break;
             default:
                 break;
         }
@@ -2628,7 +2646,6 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
                         } break;
                     }
                 } break;
-
                 default:
                     break;
             }
@@ -2739,6 +2756,64 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
                 [cell layoutIfNeeded];
             }
         } break;
+        case MessageTypeSchedule:{
+            if (item.sender == MessageSenderSelf) {
+                LSChatScheduleManCell * cell = [LSChatScheduleManCell getUITableViewCell:tableView];
+                cell.cellDelegate = self;
+                result = cell;
+                result.tag = indexPath.row;
+                [cell updateCardData:item ladyName:self.firstName];
+                switch (item.status) {
+                    case MessageStatusProcessing: {
+                        // 发送中
+                        [cell.loadingActivity startAnimating];
+                        cell.loadingActivity.hidden = NO;
+                        cell.retryBtn.hidden = YES;
+                    } break;
+                    case MessageStatusFinish: {
+                        // 发送成功
+                        [cell.loadingActivity stopAnimating];
+                        cell.retryBtn.hidden = YES;
+                    } break;
+                    case MessageStatusFail: {
+                        // 发送失败
+                        [cell.loadingActivity stopAnimating];
+                        cell.retryBtn.hidden = NO;
+                    } break;
+                    default: {
+                        // 未知
+                        [cell.loadingActivity stopAnimating];
+                        cell.retryBtn.hidden = YES;
+                    } break;
+                }
+                
+            }else {
+                LSChatScheduleLadyCell * cell = [LSChatScheduleLadyCell getUITableViewCell:tableView];
+                  cell.cellDelegate = self;
+                  result = cell;
+                  result.tag = indexPath.row;
+                if (item.liveChatMsgItemObject.scheduleMsg.type ==SCHEDULEINVITE_PENDING) {
+                    [cell updateAcceptData:item];
+                }else {
+                  [cell updateCardData:item ladyName:self.firstName];
+                }
+            }
+        }break;
+        case MessageTypeScheduleTips:{
+            //接受
+            if (item.liveChatMsgItemObject.scheduleReplyMsg.isScheduleAccept) {
+                LSChatPrepaidSuccessedCell * cell = [LSChatPrepaidSuccessedCell getUITableViewCell:tableView];
+                result = cell;
+                [cell updateScheduleId:item.liveChatMsgItemObject.scheduleReplyMsg.scheduleId isFormME:item.liveChatMsgItemObject.scheduleReplyMsg.isScheduleFromMe];
+                [cell.labelTap addTarget:self action:@selector(chatScheduleladyCellDidOpenScheduleList)];
+
+            }else {
+                LSChatPrepaidDeclineCell * cell = [LSChatPrepaidDeclineCell getUITableViewCell:tableView];
+                result = cell;
+                [cell updateScheduleId:item.liveChatMsgItemObject.scheduleReplyMsg.scheduleId isFormME:item.liveChatMsgItemObject.scheduleReplyMsg.isScheduleFromMe];
+                [cell.labelTap addTarget:self action:@selector(chatScheduleladyCellDidOpenScheduleList)];
+            }
+        }break;
         default: {
         } break;
     }
@@ -2819,7 +2894,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         // 弹出键盘
         // 增加加速度
 
-        if (self.emotionBtn.selected == YES || self.photoBtn.selected == YES) {
+        if (self.chatEmotionKeyboardView.hidden == NO || self.photoView.hidden == NO) {
             self.inputMessageViewBottom.constant = -height + h;
         } else {
             self.inputMessageViewBottom.constant = -height;
@@ -2864,12 +2939,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
 
-    if (self.emotionBtn.selected == NO) {
-        // 没有选择表情
-        [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
-    } else if (self.photoBtn.selected == NO) {
-        [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
-    }
+    [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
 }
 
 #pragma mark - 输入回调
@@ -2896,8 +2966,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     // 增加手势
     [self addSingleTap];
     // 切换所有按钮到系统键盘状态
-    self.emotionBtn.selected = NO;
-    self.photoBtn.selected = NO;
+    
     return YES;
 }
 
@@ -2928,7 +2997,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 #pragma mark - 输入栏高度改变回调
 - (void)textViewChangeHeight:(QNChatTextView *_Nonnull)textView height:(CGFloat)height {
     if (height < INPUTMESSAGEVIEW_MAX_HEIGHT) {
-        self.inputMessageViewHeight.constant = height + 10;
+        self.inputMessageViewHeight.constant = height + 60;
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.textView setNeedsDisplay];
@@ -3021,7 +3090,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
-- (void)onGetHistoryMessage:(BOOL)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg userId:(NSString *_Nonnull)userId {
+- (void)onGetHistoryMessage:(BOOL)success errNo:(NSString *)errNo errMsg:(NSString *)errMsg userId:(NSString *)userId {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([userId isEqualToString:self.womanId]) {
@@ -3031,7 +3100,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
-- (void)onGetUsersHistoryMessage:(BOOL)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg userIds:(NSArray *_Nonnull)userIds {
+- (void)onGetUsersHistoryMessage:(BOOL)success errNo:(NSString *)errNo errMsg:(NSString *)errMsg userIds:(NSArray *)userIds {
     dispatch_async(dispatch_get_main_queue(), ^{
         for (NSString *userId in userIds) {
             // 当前聊天女士才显示
@@ -3044,7 +3113,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
-- (void)onCheckTryTicket:(BOOL)success errNo:(NSString *_Nonnull)errNo errMsg:(NSString *_Nonnull)errMsg userId:(NSString *_Nonnull)userId status:(CouponStatus)status {
+- (void)onCheckTryTicket:(BOOL)success errNo:(NSString *)errNo errMsg:(NSString *)errMsg userId:(NSString *)userId status:(CouponStatus)status {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 当前聊天女士才显示
@@ -3385,5 +3454,431 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
+#pragma mark - 预付费逻辑
 
+- (void)setPrepaidView {
+    self.perpaidView = [[LSChatPrepaidView alloc]init];
+    self.perpaidView.delegate = self;
+    self.perpaidView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    [self.navigationController.view addSubview:self.perpaidView];
+    self.perpaidView.hidden = YES;
+    
+    self.prepaidTipView = [[LSChatPrepaidTipView alloc]init];
+    self.prepaidTipView.delegate = self;
+    [self.view addSubview:self.prepaidTipView];
+    self.prepaidTipView.hidden = YES;
+    [self.prepaidTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@278);
+        make.right.equalTo(@-20);
+        make.bottom.equalTo(self.chatInputToolView.mas_top).offset(0);
+    }];
+    
+    self.prepaidCreditsView = [[LSPurchaseCreditsView alloc]init];
+    self.prepaidCreditsView.delegate = self;
+    self.prepaidCreditsView.hidden = YES;
+    [self.navigationController.view addSubview:self.prepaidCreditsView];
+    self.prepaidCreditsView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    [self.prepaidCreditsView setupCreditView:self.photoURL name:self.firstName];
+}
+
+- (void)showPrepaidView {
+    
+    if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+        if (self.scheduleCount > 0) {
+            [self getScheduleList];
+            [self showPrepaidTipView];
+        }else {
+            self.perpaidView.hidden = NO;
+        }
+    }else {
+        [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"SCHEDULE_TIP")];
+    }
+}
+
+- (void)hidenAllPrepaidView {
+    self.perpaidView.hidden = YES;
+    self.prepaidCreditsView.hidden = YES;
+    self.prepaidTipView.hidden = YES;
+}
+
+- (void)showPrepaidTipView {
+    self.closeButtonBarBtn.hidden = NO;
+    [self.view insertSubview:self.closeButtonBarBtn belowSubview:self.prepaidTipView];
+    self.prepaidTipView.hidden = NO;
+}
+
+- (void)hidenPrepaidTipView {
+    self.closeButtonBarBtn.hidden = YES;
+    self.prepaidTipView.hidden = YES;
+}
+
+- (void)showPrepaidCreditsView {
+    self.prepaidCreditsView.hidden = NO;
+}
+
+- (void)chatPrepaidViewDidHowWork {
+    self.perpaidInfoView = nil;
+    [self.perpaidInfoView removeFromSuperview];
+    self.perpaidInfoView = [[LSPrepaidInfoView alloc]init];
+    [self.navigationController.view addSubview:self.perpaidInfoView];
+}
+
+- (void)chatPrepaidViewDidClose {
+    self.perpaidView.hidden = YES;
+}
+
+- (void)chatPrepaidViewDidSend:(LSScheduleInviteItem *)item {
+    self.perpaidView.sendBtn.userInteractionEnabled = NO;
+    LSLCLiveChatUserItemObject *user = [self.liveChatManager getUserWithId:self.womanId];
+    LSScheduleInviteItem * inviteItem = [[LSScheduleInviteItem alloc]init];
+    inviteItem.type = LSSCHEDULEINVITETYPE_LIVECHAT;
+    inviteItem.refId = user.inviteId;
+    inviteItem.anchorId = self.womanId;
+    inviteItem.timeZoneItem = [LSPrePaidManager manager].zoneItem;
+    inviteItem.startTime = [[LSPrePaidManager manager] getSendRequestTime:@"yyyy-MM-dd HH:00:00"];
+    inviteItem.duration = [[LSPrePaidManager manager].duration intValue];
+    
+    [[LSPrePaidManager manager] sendScheduleInvite:inviteItem];
+}
+
+- (void)chatPrepaidViewDidTimeBtn:(UIButton *)button {
+    self.pickerView = [[LSPrePaidPickerView alloc]init];
+    self.pickerView.delegate = self;
+    [self.view.window addSubview:self.pickerView];
+    self.pickerView.selectTimeRow = [self.perpaidView getSelectedRow:button];
+    self.pickerView.items = [self.perpaidView getPickerData:button];
+    [self.pickerView reloadData];
+}
+
+- (void)prepaidTipViewDidConfirm {
+    self.prepaidTipView.hidden = YES;
+    [self setupScheduleListView:INVITEDSTATUS_CONFIRM array:[LSPrePaidManager manager].scheduleListConfirmedArray];
+}
+
+- (void)prepaidTipViewDidPending {
+    self.prepaidTipView.hidden = YES;
+    [self setupScheduleListView:INVITEDSTATUS_PENDING array:[LSPrePaidManager manager].scheduleListPendingdArray];
+}
+
+
+#pragma mark - PrePaidPickerViewDelegate
+- (void)removePrePaidPickerView {
+    [self.pickerView removeFromSuperview];
+    self.pickerView = nil;
+}
+
+- (void)prepaidPickerViewSelectedRow:(NSInteger)row {
+    [self removePrePaidPickerView];
+    if (!self.perpaidView.isHidden) {
+        [self.perpaidView pickerViewSelectedRow:row];
+    }else if (self.scheduleListView){
+        LSScheduleDurationItemObject * item = [[LSPrePaidManager manager].creditsArray objectAtIndex:row];
+        [self.scheduleListView reloadSelectTime:item];
+        
+       
+    }else{
+        LSScheduleDurationItemObject * item = [[LSPrePaidManager manager].creditsArray objectAtIndex:row];
+        
+        QNMessage *msgItem = [self.msgArray objectAtIndex:self.scheduleItemRow];
+        msgItem.liveChatMsgItemObject.scheduleMsg.duration = item.duration;
+        [self.tableView reloadData];
+    }
+}
+
+- (void)prepaidTipViewDidSendRequest {
+    [self hidenPrepaidTipView];
+    self.perpaidView.hidden = NO;
+}
+
+#pragma mark - 获得该会话预付费数据
+- (void)getScheduleList {
+    if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
+        LSLCLiveChatUserItemObject *user = [self.liveChatManager getUserWithId:self.womanId];
+         [[LSPrePaidManager manager] getScheduleRequestsList:LSSCHEDULEINVITETYPE_LIVECHAT refId:user.inviteId];
+    }
+}
+
+#pragma mark - 预付费IM回调
+//直播发送预约Schedule邀请（包含发送，接受，拒绝）
+- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(NSString *)errMsg item:(LSLCLiveChatMsgItemObject *)item msgReplyItem:(LSLCLiveChatMsgItemObject *)msgReplyItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 当前聊天女士才显示
+        if ([item.toId isEqualToString:self.womanId]) {
+            NSLog(@"QNChatViewController::onSendScheduleInvite( 直播发送预约Schedule邀请 type:%d)",item.scheduleMsg.type);
+          [self getScheduleList];
+          [self updataMessageData:item scrollToEnd:NO animated:NO];
+                 
+          if (msgReplyItem) {
+             [self insertData:msgReplyItem scrollToEnd:YES animated:YES];
+          }
+        }
+    });
+}
+
+//直播接收预约Schedule邀请（包含接收，接受，拒绝）
+- (void)onRecvScheduleInviteNotice:(LSLCLiveChatMsgItemObject *)item womanId:(NSString *)womanId scheduleReplyItem:(LSLCLiveChatMsgItemObject *)scheduleReplyItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 当前聊天女士才显示
+        if ([womanId isEqualToString:self.womanId]) {
+            NSLog(@"QNChatViewController::onRecvScheduleInviteNotice( 直播接收预约Schedule邀请 type:%d)",item.scheduleMsg.type);
+            
+            [self getScheduleList];
+            if (item.scheduleMsg.type !=SCHEDULEINVITE_PENDING) {
+                [self updataMessageData:item scrollToEnd:NO animated:NO];
+            }else {
+                [self insertData:item scrollToEnd:YES animated:YES];
+            }
+            if (scheduleReplyItem) {
+                [self insertData:scheduleReplyItem scrollToEnd:YES animated:YES];
+            }
+        }
+    });
+}
+
+#pragma mark - 接口回调
+- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.perpaidView.sendBtn.userInteractionEnabled = YES;
+        if (errnum == HTTP_LCC_ERR_SUCCESS) {
+            self.perpaidView.hidden = YES;
+            LSLCLiveChatScheduleMsgItemObject * msgItem = [[LSPrePaidManager manager]newSendMsgItemForm:item];
+            [self sendSchedule:msgItem];
+            [self getScheduleList];
+        } else {
+            //无信用点
+            if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
+                [self showPrepaidCreditsView];
+            } else if (errnum == HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM) {
+                [self.perpaidView.deteView updateNewBeginTime];
+             [[DialogTip dialogTip] showDialogTip:self.view.window tipText:errmsg];
+            }else {
+             [[DialogTip dialogTip] showDialogTip:self.view.window tipText:errmsg];
+            }
+        }     
+    });
+}
+
+- (void)onRecvSendAcceptSchedule:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg statusUpdateTime:(NSInteger)statusUpdateTime scheduleInviteId:(NSString *)inviteId duration:(int)duration roomInfoItem:(ImScheduleRoomInfoObject *)roomInfoItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (errnum == HTTP_LCC_ERR_SUCCESS) {
+            [self getScheduleList];
+            [self updateScheduleStatusTime:statusUpdateTime scheduleInviteId:inviteId duration:duration status:SCHEDULEINVITE_CONFIRMED];
+        } else {
+            [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
+            //已接受
+            if (errnum == HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED) {
+               [self updateScheduleStatusTime:statusUpdateTime scheduleInviteId:inviteId duration:duration status:SCHEDULEINVITE_CONFIRMED];
+            }
+            //已拒绝
+            if (errnum == HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED) {
+                [self updateScheduleStatusTime:statusUpdateTime scheduleInviteId:inviteId duration:duration status:SCHEDULEINVITE_DECLINED];
+            }
+            //无信用点
+            if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
+                 [self showPrepaidCreditsView];
+            }
+             [self.tableView reloadData];
+        }
+    });
+}
+
+- (void)updateScheduleStatusTime:(NSInteger)statusUpdateTime scheduleInviteId:(NSString *)inviteId duration:(int)duration status:(SCHEDULEINVITE_TYPE)status{
+    @synchronized (self.msgArray) {
+         for (QNMessage * msg in [[self.msgArray reverseObjectEnumerator] allObjects]) {
+             if ([msg.liveChatMsgItemObject.scheduleMsg.scheduleInviteId isEqualToString:inviteId]) {
+                 msg.liveChatMsgItemObject.scheduleMsg.statusUpdateTime = statusUpdateTime;
+                 msg.liveChatMsgItemObject.scheduleMsg.type = status;
+                 msg.liveChatMsgItemObject.scheduleMsg.duration = duration;
+                 msg.cellH = [LSChatScheduleLadyCell cellHeight:msg.isScheduleMore isAcceptView:NO];
+                 [self.tableView reloadData];
+                 //发送IM接口
+                 [self.liveChatManager acceptOrDeclineScheduleInvite:msg.liveChatMsgItemObject];
+                 break;
+             }
+         }
+    }
+}
+
+- (void)onGetScheduleListCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount {
+    self.scheduleCount = maxCount;
+    if (maxCount > 0) {
+        [self.chatInputToolView updateUncount:[NSString stringWithFormat:@"%ld",maxCount]];
+        [self.rightView updateCount:maxCount];
+        
+        [self.prepaidTipView updateCount:count pcount:pCount];
+        CGFloat viewH = 0;
+        if (count > 0 && pCount > 0) {
+            self.prepaidTipView.confirmView.hidden = NO;
+            self.prepaidTipView.pendingView.hidden = NO;
+            viewH = 353;
+        } else if (count > 0 && pCount == 0){
+            viewH = 315;
+            self.prepaidTipView.confirmView.hidden = NO;
+            self.prepaidTipView.pendingView.hidden = YES;
+        }else if (count == 0 && pCount > 0){
+            viewH = 315;
+            self.prepaidTipView.confirmView.hidden = YES;
+            self.prepaidTipView.pendingView.hidden = NO;
+        }else {
+            
+        }
+        
+        [self.prepaidTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.equalTo(@(viewH));
+        }];
+    }
+}
+ 
+
+#pragma mark - ChatScheduleManCellDelegate
+- (void)chatScheduleManCellHidenDetalis:(NSInteger)row {
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    item.isScheduleMore = NO;
+    item.cellH = [LSChatScheduleManCell cellHeight:item.isScheduleMore];
+    [self.tableView reloadData];
+}
+
+- (void)chatScheduleManCellShowDetalis:(NSInteger)row {
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    item.isScheduleMore = YES;
+    item.cellH = [LSChatScheduleManCell cellHeight:item.isScheduleMore];
+    [self.tableView reloadData];
+    if (row == self.msgArray.count -1) {
+         [self scrollToEnd:YES];
+    }
+}
+
+- (void)chatScheduleManCellDidOpenScheduleList {
+    [self chatScheduleladyCellDidOpenScheduleList];
+}
+
+- (void)chatScheduleManCellDidLearnHowWorks {
+    [self chatPrepaidViewDidHowWork];
+}
+
+- (void)chatScheduleManCellDidRetryBtn:(LSChatScheduleManCell*)cell {
+    NSIndexPath *path = [self.tableView indexPathForCell:cell];
+    [self handleErrorMsg:path.row];
+}
+
+#pragma mark - ChatScheduleladyCellDelegate
+- (void)chatScheduleladyCellDidAccept:(NSInteger)row {
+    
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    int duration = item.liveChatMsgItemObject.scheduleMsg.duration;
+    if (duration== 0) {
+         duration = item.liveChatMsgItemObject.scheduleMsg.origintduration;
+    }
+     [[LSPrePaidManager manager]sendAcceptScheduleInvite:item.liveChatMsgItemObject.scheduleMsg.scheduleInviteId duration:duration infoObj:nil];
+}
+
+- (void)chatScheduleladyCellDidDurationRow:(NSInteger)row {
+    [self closeAllInputView];
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    self.scheduleItemRow = row;
+    NSInteger selectRow = 0;
+    int duration = item.liveChatMsgItemObject.scheduleMsg.duration;
+    if (duration == 0) {
+        duration = item.liveChatMsgItemObject.scheduleMsg.origintduration;
+    }
+    for (int i = 0;i<[LSPrePaidManager manager].creditsArray.count;i++) {
+        LSScheduleDurationItemObject * cItem = [LSPrePaidManager manager].creditsArray[i];
+        if (cItem.duration == duration) {
+            selectRow = i;
+            break;
+        }
+    }
+    
+    self.pickerView = [[LSPrePaidPickerView alloc]init];
+    self.pickerView.delegate = self;
+    [self.view.window addSubview:self.pickerView];
+    self.pickerView.selectTimeRow = selectRow;
+    self.pickerView.items = [[LSPrePaidManager manager]getCreditArray];
+    [self.pickerView reloadData];
+}
+
+- (void)chatScheduleladyCellHidenDetalis:(NSInteger)row {
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    item.isScheduleMore = NO;
+    BOOL isSent = NO;
+    if (item.liveChatMsgItemObject.scheduleMsg.type == SCHEDULEINVITE_PENDING) {
+        isSent = YES;
+    }
+    item.cellH = [LSChatScheduleLadyCell cellHeight:item.isScheduleMore isAcceptView:isSent];
+    [self.tableView reloadData];
+}
+
+- (void)chatScheduleladyCellShowDetalis:(NSInteger)row {
+    QNMessage *item = [self.msgArray objectAtIndex:row];
+    item.isScheduleMore = YES;
+    BOOL isSent = NO;
+    if (item.liveChatMsgItemObject.scheduleMsg.type == SCHEDULEINVITE_PENDING) {
+        isSent = YES;
+    }
+    item.cellH = [LSChatScheduleLadyCell cellHeight:item.isScheduleMore isAcceptView:isSent];
+    [self.tableView reloadData];
+    if (row == self.msgArray.count -1) {
+         [self scrollToEnd:YES];
+    }
+}
+
+- (void)chatScheduleladyCellDidOpenScheduleList {
+    NSURL * url = [[LiveUrlHandler shareInstance]createScheduleList:LiveUrlScheduleListTypePending];
+     [[LiveModule module].serviceManager handleOpenURL:url];
+}
+
+- (void)chatScheduleladyCellDidLearnHowWorks {
+    [self chatPrepaidViewDidHowWork];
+}
+
+#pragma mark - PrepaidCreditsViewDelegate
+- (void)purchaseDidAction {
+    [self addCreditsViewShow];
+}
+
+#pragma mark - 显示预付费列表
+- (void)setupScheduleListView:(InvitedStatus)invitedStatus array:(NSMutableArray *)array {
+    self.scheduleListView = [[LSScheduleListView alloc] init];
+    self.scheduleListView.delegate = self;
+    self.scheduleListView.invitedStatus = invitedStatus;
+    [self.view addSubview:self.scheduleListView];
+    [self.view bringSubviewToFront:self.scheduleListView];
+    [self.scheduleListView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    [self.scheduleListView setListData:array];
+}
+
+#pragma mark - LSScheduleListViewDelegate
+- (void)changeDurationForItem:(LSScheduleLiveInviteItemObject *)item {
+    NSInteger selectRow = 0;
+    for (int i = 0; i < [LSPrePaidManager manager].creditsArray.count; i++) {
+        LSScheduleDurationItemObject * cItem = [LSPrePaidManager manager].creditsArray[i];
+        if (cItem.duration == item.duration) {
+            selectRow = i;
+            break;
+        }
+    }
+    
+    self.pickerView = [[LSPrePaidPickerView alloc] init];
+    self.pickerView.delegate = self;
+    [self.view.window addSubview:self.pickerView];
+    self.pickerView.selectTimeRow = selectRow;
+    self.pickerView.items = [[LSPrePaidManager manager] getCreditArray];
+    [self.pickerView reloadData];
+}
+
+- (void)sendAcceptSchedule:(NSString *)inviteId duration:(int)duration item:(LSScheduleInviteItem *)item {
+    [self closeScheduleListView];
+     [[LSPrePaidManager manager]sendAcceptScheduleInvite:inviteId duration:duration infoObj:nil];
+}
+
+- (void)howWorkScheduleListView {
+    [self chatPrepaidViewDidHowWork];
+}
+
+- (void)closeScheduleListView {
+    [self.scheduleListView removeFromSuperview];
+    self.scheduleListView = nil;
+}
 @end

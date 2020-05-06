@@ -22,12 +22,14 @@
 #import "LSMainNotificationManager.h"
 #import "LSMainOpenURLManager.h"
 #import "LSMinLiveManager.h"
+#import "LSPrePaidManager.h"
 #pragma mark 界面
 #import "LSHotViewController.h"
 #import "LSFollowingViewController.h"
 #import "LSHangoutListViewController.h"
 #import "ShowListViewController.h"
 #import "HangOutPreViewController.h"
+#import "LSTestViewController.h"
 #pragma mark 浮层view
 #import "ShowTipView.h"
 #import "StartHangOutTipView.h"
@@ -38,6 +40,7 @@
 #import "LSLiveAdView.h"
 #pragma mark 接口
 #import "LSRetrieveBannerRequest.h"
+#import "LSCheckDiscountRequest.h"
 
 #define MainPageOverView 3
 
@@ -45,7 +48,7 @@ typedef enum AlertType {
     AlertTypeUpdate = 9001,
 } AlertType;
 
-@interface LSMainViewController () <LoginManagerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, LSFollowingViewControllerDelegate, LSPZPagingScrollViewDelegate, StartHangOutTipViewDelegate, LiveHeaderScrollviewDelegate, LSUserUnreadCountManagerDelegate, UIGestureRecognizerDelegate, LSBackgroudReloadManagerDelegate, ShowListViewControllerDelegate, LSHomeSettingViewControllerDelegate, LiveModuleDelegate, LSMainNotificationManagerDelegate,LiveAdViewDelegate,LSMinLiveManagerDelegate>
+@interface LSMainViewController () <LoginManagerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, LSFollowingViewControllerDelegate, LSPZPagingScrollViewDelegate, StartHangOutTipViewDelegate, LiveHeaderScrollviewDelegate, LSUserUnreadCountManagerDelegate, UIGestureRecognizerDelegate, LSBackgroudReloadManagerDelegate, ShowListViewControllerDelegate, LSHomeSettingViewControllerDelegate, LiveModuleDelegate, LSMainNotificationManagerDelegate, LiveAdViewDelegate, LSMinLiveManagerDelegate>
 
 /**
  内容页
@@ -70,7 +73,6 @@ typedef enum AlertType {
 
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadManager;
 
-
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipe;
 
 @property (nonatomic, strong) UIView *coverView;
@@ -88,9 +90,9 @@ typedef enum AlertType {
 
 @property (nonatomic, strong) NSMutableArray *notifiArray;
 
-@property (nonatomic, strong) LSLiveAdView * liveAdV;
+@property (nonatomic, strong) LSLiveAdView *liveAdV;
 
-@property (nonatomic, strong) LSMainOpenURLManager * openUrlManagr;
+@property (nonatomic, strong) LSMainOpenURLManager *openUrlManagr;
 @end
 
 @implementation LSMainViewController
@@ -104,30 +106,27 @@ typedef enum AlertType {
 #pragma mark - 界面初始化
 - (void)initCustomParam {
     [super initCustomParam];
-    
+
     //self.navigationTitle = NSLocalizedStringFromSelf(@"NAVIGATION_ITEM_TITLE");
     self.canPopWithGesture = NO;
-    
+
     // 监听登录事件
     self.loginManager = [LSLoginManager manager];
     [self.loginManager addDelegate:self];
-    
-    self.openUrlManagr = [[LSMainOpenURLManager alloc]init];
-    
+
+    self.openUrlManagr = [[LSMainOpenURLManager alloc] init];
+
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
-    
+
     self.unreadManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadManager addDelegate:self];
-    
-    [[LSMinLiveManager manager] setMinViewAddVC:self];
-    [LSMinLiveManager manager].delegate = self;
-    
+
     [LSBackgroudReloadManager manager].delegate = self;
-    
+
     [LiveModule module].noticeDelegate = self;
-    
+
     [LSMainNotificationManager manager].delegate = self;
     // 第一次登录
     self.isFirstLogin = YES;
@@ -138,67 +137,73 @@ typedef enum AlertType {
 - (void)dealloc {
     // 去掉登录事件
     [self.loginManager removeDelegate:self];
-    
+
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
-    
+
     [self.unreadManager removeDelegate:self];
-    
+
     [self.openUrlManagr removeMainVC];
+
+    [[LSMinLiveManager manager] removeVC];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    
+
     self.curIndex = 0;
-    
+
     // 主播Hot列表
     LSHotViewController *vcHot = [[LSHotViewController alloc] initWithNibName:nil bundle:nil];
     [self addChildViewController:vcHot];
-    
+
     // 主播Follow列表
     LSFollowingViewController *vcFollow = [[LSFollowingViewController alloc] initWithNibName:nil bundle:nil];
     vcFollow.followVCDelegate = self;
     [self addChildViewController:vcFollow];
-    
+
     ShowListViewController *vcShowList = [[ShowListViewController alloc] initWithNibName:nil bundle:nil];
     vcShowList.showDelegate = self;
     [self addChildViewController:vcShowList];
-    
+
     if (![LSLoginManager manager].loginItem.userPriv.hangoutPriv.isHangoutPriv) {
         self.viewControllers = [NSArray arrayWithObjects:vcHot, vcFollow, vcShowList, nil];
     } else {
-        
+
         //多人互动列表
         LSHangoutListViewController *hangoutVC = [[LSHangoutListViewController alloc] initWithNibName:nil bundle:nil];
         [self addChildViewController:hangoutVC];
-        
+
         self.viewControllers = [NSArray arrayWithObjects:vcHot, hangoutVC, vcFollow, vcShowList, nil];
     }
-    
+
     self.pagingScrollView.pagingViewDelegate = self;
     self.pagingScrollView.delaysContentTouches = NO;
-    
+
     self.hangoutTipView = [[StartHangOutTipView alloc] init];
     self.hangoutTipView.hidden = YES;
     self.hangoutTipView.delegate = self;
     [self.navigationController.view addSubview:self.hangoutTipView];
-    
+
     self.coverView = [[UIView alloc] init];
     self.coverView.backgroundColor = Color(0, 0, 0, 0.5);
     self.coverView.hidden = YES;
     [self.navigationController.view addSubview:self.coverView];
-    
+
     [self addSwipeGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // 头部颜色
-    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+
+    if ([LSPrePaidManager manager].countriesArray.count == 0) {
+        [[LSPrePaidManager manager] getCountryData];
+    }
+
+    //获取鲜花礼品折扣
+    [self getStoreDiscount];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -214,37 +219,47 @@ typedef enum AlertType {
         if ([LiveModule module].isUpdate) {
             // 存在可以升级的版本
             UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Update_Title", nil) message:[LiveModule module].updateDesc preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Not_Now", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self loadADRequset];
-            }];
-            UIAlertAction *updateAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Update", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LiveModule module].updateStoreURL]];
-            }];
+            UIAlertAction *cancelAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Not_Now", nil)
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction *_Nonnull action) {
+                                                                 [self loadADRequset];
+                                                             }];
+            UIAlertAction *updateAC = [UIAlertAction actionWithTitle:NSLocalizedString(@"Update", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *_Nonnull action) {
+                                                                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LiveModule module].updateStoreURL]];
+                                                             }];
             [alertVC addAction:cancelAC];
             [alertVC addAction:updateAC];
             [self presentViewController:alertVC animated:YES completion:nil];
-        }else {
+        } else {
             [self loadADRequset];
         }
+
+        [[LSMinLiveManager manager] setMinViewAddVC:self];
+        [LSMinLiveManager manager].delegate = self;
     }
-    
+
     [super viewDidAppear:animated];
-    
+
     [self.view addGestureRecognizer:self.swipe];
-    
+
     self.openUrlManagr.mainVC = self;
     // 登录成功后判断是否有内部链接未打开，有则跳转
     [[LiveUrlHandler shareInstance] openURL];
-    
+
     [self.pagingScrollView layoutIfNeeded];
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:NO];
-    
+
     // 判断登录状态显示loading
     [self showLoadingForStatus];
+
+    [LiveGobalManager manager].isInMainView = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [LiveGobalManager manager].isInMainView = NO;
 }
 
 - (void)setupNavigationBar {
@@ -273,14 +288,14 @@ typedef enum AlertType {
 }
 
 - (void)handleSwipeFrom:(UISwipeGestureRecognizer *)sender {
-    
+
     if (self.curIndex == 0 && sender.direction == UISwipeGestureRecognizerDirectionRight) {
         [self addSettingView];
     }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if ([otherGestureRecognizer.view isKindOfClass:[UICollectionView class]]) {
+    if ([otherGestureRecognizer.view isKindOfClass:[UICollectionView class]] || [otherGestureRecognizer.view isKindOfClass:NSClassFromString(@"LSMinLiveView")]) {
         return NO;
     }
     return YES;
@@ -303,13 +318,14 @@ typedef enum AlertType {
         self.settingVC.homeDelegate = self;
         [self.unreadManager getTotalUnreadNum:^(BOOL success, TotalUnreadNumObject *unreadModel){
         }];
+        [self getStoreDiscount];
         [self.settingVC showSettingView];
         [self.settingVC viewWillAppear:NO];
         [self reportDidShowPage:MainPageOverView];
     }
 }
 
--(void)lsHomeSettingViewControllerDidRemoveVC:(LSHomeSettingViewController *)homeSettingVC {
+- (void)lsHomeSettingViewControllerDidRemoveVC:(LSHomeSettingViewController *)homeSettingVC {
     [homeSettingVC.view removeFromSuperview];
     [homeSettingVC removeFromParentViewController];
     [self.navigationController setNeedsStatusBarAppearanceUpdate];
@@ -333,7 +349,7 @@ typedef enum AlertType {
             self.coverView.hidden = NO;
             [self showLoading];
         } break;
-            
+
         default: {
             // 如果第一次登录 刷新列表数据
             if (self.isFirstLogin) {
@@ -361,9 +377,9 @@ typedef enum AlertType {
 
 - (void)willMoveToParentViewController:(nullable UIViewController *)parent {
     [super willMoveToParentViewController:parent];
-    
+
     NSLog(@"LSMainViewController::willMoveToParentViewController( parent : %@ )", parent);
-    
+
     if (!parent) {
         // 停止互斥服务
         [[LiveMutexService service] closeService];
@@ -432,16 +448,15 @@ typedef enum AlertType {
 }
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
-    
     UIViewController *vc = [self.viewControllers objectAtIndex:index];
     CGFloat pageViewHeight = pageView.self.frame.size.height;
-    
+
     if (vc.view != nil) {
         [vc.view removeFromSuperview];
     }
-    
+
     [pageView removeAllSubviews];
-    
+
     [vc.view setFrame:CGRectMake(0, 0, pageView.self.frame.size.width, pageViewHeight)];
     [pageView addSubview:vc.view];
 }
@@ -450,7 +465,7 @@ typedef enum AlertType {
     self.curIndex = index;
     [self reportDidShowPage:index];
     [self.liveHeaderScrollview scrollCollectionItemToDesWithDesIndex:self.curIndex];
-    
+
     if (self.curIndex == 0) {
         LSHotViewController *hotVC = (LSHotViewController *)self.viewControllers[self.curIndex];
         [hotVC reloadUnreadNum];
@@ -466,7 +481,7 @@ typedef enum AlertType {
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
             [self.unreadManager getTotalUnreadNum:^(BOOL success, TotalUnreadNumObject *unreadModel){
             }];
-            
+
             if (self.viewControllers.count && self.isFirstLogin) {
                 [self reloadVCData:NO];
                 self.isFirstLogin = NO;
@@ -479,7 +494,7 @@ typedef enum AlertType {
                 sessionErrorMsg = errmsg;
             }
             [manager logout:LogoutTypeKick msg:sessionErrorMsg];
-            NSLog(@"LSMainViewController sessionErrorMsg: %@  errmsg:%@", sessionErrorMsg, errmsg);
+            NSLog(@"LSMainViewController::onLogin( sessionErrorMsg : %@, errmsg : %@ )", sessionErrorMsg, errmsg);
         }
     });
 }
@@ -490,13 +505,14 @@ typedef enum AlertType {
         self.isFirstLogin = YES;
         [self resetMainListLoad:NO];
         [self resetMainListLogin:NO];
+
         // 如果被踢添加弹窗提示
         if (type == LogoutTypeKick) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
             [alertView show];
-            NSLog(@"LSMainViewController onLogout: %d  errmsg:%@", type, msg);
+            NSLog(@"LSMainViewController::onLogout( type : %d, errmsg : %@ )", type, msg);
         }
-        
+
     });
 }
 
@@ -526,16 +542,16 @@ typedef enum AlertType {
     }
 }
 
+#pragma mark - Hangout
 - (void)removeHangoutTip:(id)sender {
     self.closeHangoutTipBtn.hidden = YES;
     self.hangoutTipView.hidden = YES;
 }
 
-#pragma mark - StartHangOutTipViewDelegate
 - (void)requestHangout:(StartHangOutTipView *)view {
     self.closeHangoutTipBtn.hidden = YES;
     self.hangoutTipView.hidden = YES;
-    
+
     HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
     [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:vc];
 }
@@ -557,10 +573,9 @@ typedef enum AlertType {
 - (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList {
     IMOngoingShowItemObject *item = [ongoingShowList firstObject];
     NSLog(@"LSMainViewController 第一次IM登录接收节目开播通知类型:%d 消息内容:%@", item.type, item.msg);
-    
+
     [self onRecvProgramPlayNotice:item.showInfo type:item.type msg:item.msg];
 }
-
 
 #pragma mark - 后台刷新
 - (void)WillEnterForegroundReloadData {
@@ -569,19 +584,19 @@ typedef enum AlertType {
 }
 
 #pragma mark - 本地推送逻辑
-
 - (void)mainNotificationManagerShowNotificaitonView:(LSMainNotificaitonModel *)model {
-    
+
     if (!self.mainNotificaitonView) {
         self.mainNotificaitonView = [[MainNotificaitonView alloc] initWithFrame:CGRectMake(-screenSize.width, self.view.frame.size.height - 95, screenSize.width, 90)];
         [self.view addSubview:self.mainNotificaitonView];
-        
-        [UIView animateWithDuration:0.3 animations:^{
-            CGRect rect = self.mainNotificaitonView.frame;
-            rect.origin.x = 0;
-            self.mainNotificaitonView.frame = rect;
-        }];
-        
+
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             CGRect rect = self.mainNotificaitonView.frame;
+                             rect.origin.x = 0;
+                             self.mainNotificaitonView.frame = rect;
+                         }];
+
         [self.notifiArray removeAllObjects];
         self.notifiArray = [NSMutableArray array];
     }
@@ -591,39 +606,39 @@ typedef enum AlertType {
 }
 
 - (void)mainNotificationManagerHideNotificaitonView:(LSMainNotificaitonModel *)model {
-    
     [self.notifiArray removeObject:model];
     self.mainNotificaitonView.items = self.notifiArray;
     [self.mainNotificaitonView deleteCollectionViewRow];
 }
 
 - (void)mainNotificationManagerRemoveNotificaitonView {
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        CGRect rect = self.mainNotificaitonView.frame;
-        rect.origin.x = screenSize.width;
-        self.mainNotificaitonView.frame = rect;
-    }completion:^(BOOL finished) {
-        [self.mainNotificaitonView removeFromSuperview];
-        self.mainNotificaitonView = nil;
-    }];
+    [UIView animateWithDuration:0.3
+        animations:^{
+            CGRect rect = self.mainNotificaitonView.frame;
+            rect.origin.x = screenSize.width;
+            self.mainNotificaitonView.frame = rect;
+        }
+        completion:^(BOOL finished) {
+            [self.mainNotificaitonView removeFromSuperview];
+            self.mainNotificaitonView = nil;
+        }];
 }
 
-#pragma mark 广告逻辑
+#pragma mark - 广告逻辑
 - (void)loadADRequset {
-    LSRetrieveBannerRequest * request = [[LSRetrieveBannerRequest alloc]init];
+    LSRetrieveBannerRequest *request = [[LSRetrieveBannerRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *htmUrl) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success && htmUrl.length > 0) {
-                NSLog(@"LSMainViewController::loadADRequset htmlUrl:%@",htmUrl);
-                self.liveAdV = [[LSLiveAdView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+                NSLog(@"LSMainViewController::loadADRequset( [首页广告], htmUrl.length : %lu )", htmUrl.length);
+                self.liveAdV = [[LSLiveAdView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
                 self.liveAdV.delegate = self;
                 [self.view.window addSubview:self.liveAdV];
                 [self.liveAdV loadHTmlStr:htmUrl baseUrl:nil];
             }
         });
     };
-    [[LSSessionRequestManager manager]sendRequest:request];
+    [[LSSessionRequestManager manager] sendRequest:request];
 }
 
 - (void)liveAdViewDidClose:(LSLiveAdView *)adView {
@@ -631,21 +646,31 @@ typedef enum AlertType {
     self.liveAdV = nil;
 }
 
-//打开重定向URL
 - (void)liveAdViewRedirectURL:(NSURL *)url {
-    NSLog(@"LSMainViewController::liveAdViewRedirectURL url:%@",url);
+    // 打开重定向URL
+    NSLog(@"LSMainViewController::liveAdViewRedirectURL( [打开重定向广告], url : %@ )", url);
     if (url) {
-      [[LiveUrlHandler shareInstance]handleOpenURL:url];
+        [[LiveUrlHandler shareInstance] handleOpenURL:url];
     }
-    
 }
 
+#pragma mark - 最小化处理(LSMinManagerDelegate)
 - (void)pushMaxLive {
-    if ([LSMinLiveManager manager].publicLiveVC) {
-        [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:[LSMinLiveManager manager].publicLiveVC];
-    }
-    if ([LSMinLiveManager manager].privateLiveVC) {
-      [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:[LSMinLiveManager manager].privateLiveVC];
-    }
+    [[LiveGobalManager manager] presentLiveRoomVCFromVC:self toVC:[LSMinLiveManager manager].liveVC];
+    [[LSMinLiveManager manager] hidenMinLive];
+}
+
+#pragma mark - 鲜花礼品折扣
+- (void)getStoreDiscount {
+    LSCheckDiscountRequest *request = [[LSCheckDiscountRequest alloc] init];
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSCheckDiscountItemObject *item) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success && item.imgUrl > 0) {
+                NSLog(@"LSMainViewController::getStoreDiscount success : %@, errnum : %d, errmsg : %@, imgUrl : %@", BOOL2SUCCESS(success),errnum,errmsg,item.imgUrl);
+                [LiveModule module].flowersGift = item.imgUrl;
+            }
+        });
+    };
+    [[LSSessionRequestManager manager]sendRequest:request];
 }
 @end

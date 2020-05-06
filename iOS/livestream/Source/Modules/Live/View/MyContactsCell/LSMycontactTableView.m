@@ -104,4 +104,8 @@
     }
 }
 
+- (void)myContactsListCellWillShowSlidingView:(NSInteger)row {
+    
+}
+
 @end

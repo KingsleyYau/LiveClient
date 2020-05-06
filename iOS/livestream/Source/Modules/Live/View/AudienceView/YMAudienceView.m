@@ -12,7 +12,7 @@
 
 @interface YMAudienceView () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) LSCollectionView *collectionView;
 
 @end
 
@@ -24,11 +24,11 @@
     if (self) {
 
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake(25, 25);
+        layout.itemSize = CGSizeMake(31, 31);
         //        layout.minimumInteritemSpacing = 0;
         layout.minimumLineSpacing = 4;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        self.collectionView = [[LSCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         self.collectionView.dataSource = self;
         self.collectionView.delegate = self;
         self.collectionView.showsHorizontalScrollIndicator = NO;

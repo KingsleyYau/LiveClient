@@ -43,6 +43,11 @@
 @property (nonatomic, strong) LSContinueNavView * navView;
 /** 当前订单 */
 @property (nonatomic, copy) NSString *orderNum;
+@property (weak, nonatomic) IBOutlet UIImageView *greetingCardTypeIcon;
+@property (weak, nonatomic) IBOutlet UILabel *greetingCardName;
+@property (weak, nonatomic) IBOutlet UILabel *greetingCardPrice;
+@property (weak, nonatomic) IBOutlet UIImageView *greetingCardSmallIcon;
+@property (weak, nonatomic) IBOutlet UILabel *festivalName;
 
 @end
 
@@ -250,6 +255,7 @@
     }
     NSMutableArray *tempArray = [NSMutableArray array];
     BOOL hasGreetingCard = NO;
+    // 礼物列表,是否具有贺卡
     for (LSCheckoutGiftItemObject *itemObject in item.giftList) {
         if (itemObject.isGreetingCard) {
             hasGreetingCard = YES;
@@ -257,6 +263,7 @@
         [tempArray addObject:itemObject];
     }
     
+    // 是否有贺卡
     if (hasGreetingCard || item.greetingCard.giftNumber > 0) {
         self.freeGreetingCard.hidden = NO;
         self.freeGreetingCardHeight.constant = 80;
@@ -268,22 +275,47 @@
     self.items = tempArray;
     [self reloadTableView];
     
+    // 贺卡类型
+    if (item.greetingCard.isBirthday) {
+        // 生日贺卡优惠
+        self.greetingCardName.text = @"Birthday Greeting Card";
+        self.greetingCardPrice.text = [NSString stringWithFormat:@"USD 0.00 USD %0.2f",item.greetingCard.giftPrice];
+        NSString * str = [NSString stringWithFormat:@"USD %0.2f",item.greetingCard.giftPrice];
+        NSRange discountRange = [self.greetingCardPrice.text rangeOfString:str];
+         NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc]initWithString:self.greetingCardPrice.text];
+                [attributeStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0x999999) range:discountRange];
+                [attributeStr addAttribute:NSStrikethroughStyleAttributeName value:
+        @(NSUnderlineStyleSingle) range:discountRange];
+        self.greetingCardPrice.attributedText = attributeStr;
+    }else {
+        self.greetingCardName.text = @"Greeting Card";
+    }
+    self.festivalName.text = item.holidayName;
+    [[LSImageViewLoader loader] loadHDListImageWithImageView:self.greetingCardTypeIcon options:0 imageUrl:item.greetingCard.giftImg placeholderImage:nil finishHandler:nil];
+    [[LSImageViewLoader loader] loadHDListImageWithImageView:self.greetingCardSmallIcon options:0 imageUrl:item.greetingCard.giftImg placeholderImage:nil finishHandler:nil];
+
     
+    // 节日价格
     self.deliveryFeesPrice.text = [NSString stringWithFormat:@"USD %.2f",item.deliveryPrice];
-    self.discountPrice.text = [NSString stringWithFormat:@"USD %.2f",item.holidayPrice];
+    self.discountPrice.text = [NSString stringWithFormat:@"-USD %.2f",fabs(item.holidayPrice)];
+    
     self.greetingMsgTextView.text = item.greetingmessage;
     self.specialDeliveryMsg.text = item.specialDeliveryRequest;
     
     self.totalPriceFee.text = [NSString stringWithFormat:@"USD %.2f",item.totalPrice];
     
+    
+    // 特殊要求信息
     if (item.specialDeliveryRequest.length == 0 && self.specialMsg.length > 0) {
         self.specialDeliveryMsg.text = self.specialMsg;
     }
     
+    // 贺卡信息
     if (item.greetingmessage.length == 0 && self.greetingMsg.length > 0) {
         self.greetingMsgTextView.text = self.greetingMsg;
     }
     
+    // 贺卡以及要求字数控制
     self.specialDeliveryMsgCount.text = [NSString stringWithFormat:@"%d",(int)(maxCount - self.specialDeliveryMsg.text.length)];
     self.greetingMsgCount.text = [NSString stringWithFormat:@"%d",(int)(maxCount - self.greetingMsgTextView.text.length)];
 }

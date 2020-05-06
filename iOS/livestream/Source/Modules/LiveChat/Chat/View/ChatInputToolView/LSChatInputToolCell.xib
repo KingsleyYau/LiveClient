@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="LSChatInputToolCell">
+            <rect key="frame" x="0.0" y="0.0" width="126" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="126" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dr0-wB-usg">
+                        <rect key="frame" x="49.5" y="10.5" width="27" height="29"/>
+                        <state key="normal" image="LS_Schedule_Request_Icon"/>
+                    </button>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kEE-Wr-MY2">
+                        <rect key="frame" x="70.5" y="5.5" width="16" height="16"/>
+                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="16" id="22d-Sa-SPb"/>
+                            <constraint firstAttribute="width" constant="16" id="AA4-od-k1P"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="Dr0-wB-usg" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="NFf-jI-zwN"/>
+                <constraint firstItem="kEE-Wr-MY2" firstAttribute="top" secondItem="Dr0-wB-usg" secondAttribute="top" constant="-5" id="Vhb-hn-kBj"/>
+                <constraint firstItem="kEE-Wr-MY2" firstAttribute="trailing" secondItem="Dr0-wB-usg" secondAttribute="trailing" constant="10" id="XHg-L2-JkT"/>
+                <constraint firstItem="Dr0-wB-usg" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="jy5-uR-ekp"/>
+            </constraints>
+            <size key="customSize" width="126" height="50"/>
+            <connections>
+                <outlet property="iconBtn" destination="Dr0-wB-usg" id="zNi-zQ-P6o"/>
+                <outlet property="redLabel" destination="kEE-Wr-MY2" id="gKN-wA-r4X"/>
+            </connections>
+            <point key="canvasLocation" x="57" y="125"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="LS_Schedule_Request_Icon" width="27" height="29"/>
+    </resources>
+</document>

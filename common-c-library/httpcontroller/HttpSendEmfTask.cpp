@@ -29,7 +29,11 @@ void HttpSendEmfTask::SetParam(
                                string content,
                                list<string> imgList,
                                LSLetterComsumeType comsumeType,
-                               string sayHiResponseId
+                               string sayHiResponseId,
+                               bool isSchedule,
+                               string timeZoneId,
+                               string startTime,
+                               int duration
                                   ) {
 
     char temp[16];
@@ -71,16 +75,36 @@ void HttpSendEmfTask::SetParam(
     if (sayHiResponseId.length() >  0 ) {
         mHttpEntiy.AddContent(LETTER_SAYHI_RESPONSEID, sayHiResponseId.c_str());
     }
+    
+    snprintf(temp, sizeof(temp), "%d", isSchedule == false ? 0 : 1);
+    mHttpEntiy.AddContent(LETTER_IS_SCHEDULE, temp);
+    
+    if (isSchedule) {
+        if (timeZoneId.length() >  0 ) {
+            mHttpEntiy.AddContent(LETTER_TIME_ZONE_ID, timeZoneId.c_str());
+        }
+        
+        if (startTime.length() >  0 ) {
+            mHttpEntiy.AddContent(LETTER_START_TIME, startTime.c_str());
+        }
+        
+        snprintf(temp, sizeof(temp), "%d", duration);
+        mHttpEntiy.AddContent(LETTER_DURATION, temp);
+    }
 
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendEmfTask::SetParam( "
             "task : %p, "
-            "anchorId : %s,"
-            "loiId : %s,"
-            "emfId : %s,"
-            "content : %s,"
-            "sayHiResponseId : %s,"
-            "comsumeType : %d"
+            "anchorId : %s, "
+            "loiId : %s, "
+            "emfId : %s, "
+            "content : %s, "
+            "sayHiResponseId : %s, "
+            "comsumeType : %d, "
+            "isSchedule : %d, "
+            "timeZoneId : %s, "
+            "startTime : %s, "
+            "duration : %d"
             ")",
             this,
             anchorId.c_str(),
@@ -88,7 +112,11 @@ void HttpSendEmfTask::SetParam(
             emfId.c_str(),
             content.c_str(),
             sayHiResponseId.c_str(),
-            comsumeType
+            comsumeType,
+            isSchedule,
+            timeZoneId.c_str(),
+            startTime.c_str(),
+            duration
             );
 }
 
@@ -107,7 +135,7 @@ bool HttpSendEmfTask::ParseData(const string& url, bool bFlag, const char* buf, 
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-    HttpLetterItemList list;
+    string emfId = "";
     bool bParse = false;
     
     if ( bFlag ) {
@@ -115,15 +143,11 @@ bool HttpSendEmfTask::ParseData(const string& url, bool bFlag, const char* buf, 
         Json::Value dataJson;
         Json::Value errDataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson, &errDataJson) ) {
-//            if(dataJson.isObject()) {
-//                if (dataJson[LETTER_LIST].isArray()) {
-//                    for (int i = 0; i < dataJson[LETTER_LIST].size(); i++) {
-//                        HttpLetterListItem item;
-//                        item.Parse(dataJson[LETTER_LIST].get(i, Json::Value::null), false);
-//                        list.push_back(item);
-//                    }
-//                }
-//            }
+            if(dataJson.isObject()) {
+                if (dataJson[LETTER_EMF_ID].isString()) {
+                    emfId = dataJson[LETTER_EMF_ID].asString();
+                }
+            }
             
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
@@ -136,7 +160,7 @@ bool HttpSendEmfTask::ParseData(const string& url, bool bFlag, const char* buf, 
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnSendEmf(this, bParse, errnum, errmsg);
+        mpCallback->OnSendEmf(this, bParse, errnum, errmsg, emfId);
     }
     
     return bParse;

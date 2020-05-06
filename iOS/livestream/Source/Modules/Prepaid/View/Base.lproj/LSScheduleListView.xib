@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSScheduleListView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C9G-bx-lK9">
+                    <rect key="frame" x="20" y="90" width="335" height="487"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Msg_Bg" translatesAutoresizingMaskIntoConstraints="NO" id="DN1-vG-9Bf">
+                            <rect key="frame" x="0.0" y="0.0" width="335" height="487"/>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_List_Title" translatesAutoresizingMaskIntoConstraints="NO" id="azV-Fs-ZVJ">
+                            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="es9-37-9y7"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirmed Schedule One-on-One" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJd-RU-HF3">
+                            <rect key="frame" x="10" y="13.5" width="315" height="17"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                            <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="meJ-6K-ECf">
+                            <rect key="frame" x="0.0" y="44" width="335" height="443"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="DN1-vG-9Bf" secondAttribute="trailing" id="1uE-0F-gnt"/>
+                        <constraint firstAttribute="bottom" secondItem="meJ-6K-ECf" secondAttribute="bottom" id="3vL-Tb-SJI"/>
+                        <constraint firstAttribute="trailing" secondItem="azV-Fs-ZVJ" secondAttribute="trailing" id="8rD-qr-Idb"/>
+                        <constraint firstItem="DN1-vG-9Bf" firstAttribute="leading" secondItem="C9G-bx-lK9" secondAttribute="leading" id="CS8-5e-hRU"/>
+                        <constraint firstItem="azV-Fs-ZVJ" firstAttribute="leading" secondItem="C9G-bx-lK9" secondAttribute="leading" id="FBp-xt-dIa"/>
+                        <constraint firstItem="meJ-6K-ECf" firstAttribute="leading" secondItem="C9G-bx-lK9" secondAttribute="leading" id="Hok-mM-ZdD"/>
+                        <constraint firstAttribute="bottom" secondItem="DN1-vG-9Bf" secondAttribute="bottom" id="ICX-db-ysJ"/>
+                        <constraint firstAttribute="trailing" secondItem="meJ-6K-ECf" secondAttribute="trailing" id="TiZ-Hd-tWF"/>
+                        <constraint firstAttribute="height" constant="487" id="XGe-8q-rX1"/>
+                        <constraint firstItem="meJ-6K-ECf" firstAttribute="top" secondItem="azV-Fs-ZVJ" secondAttribute="bottom" id="eGN-h0-Ffc"/>
+                        <constraint firstItem="DN1-vG-9Bf" firstAttribute="top" secondItem="C9G-bx-lK9" secondAttribute="top" id="h6V-2g-OZa"/>
+                        <constraint firstItem="wJd-RU-HF3" firstAttribute="leading" secondItem="C9G-bx-lK9" secondAttribute="leading" constant="10" id="hFo-yG-Wuq"/>
+                        <constraint firstItem="wJd-RU-HF3" firstAttribute="centerY" secondItem="azV-Fs-ZVJ" secondAttribute="centerY" id="mSI-zn-JBW"/>
+                        <constraint firstItem="azV-Fs-ZVJ" firstAttribute="top" secondItem="C9G-bx-lK9" secondAttribute="top" id="nIt-rE-o5G"/>
+                        <constraint firstAttribute="trailing" secondItem="wJd-RU-HF3" secondAttribute="trailing" constant="10" id="ozO-9g-VOa"/>
+                        <constraint firstAttribute="width" priority="750" constant="335" id="yRs-lt-JmU"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xiW-fC-TVy">
+                    <rect key="frame" x="326" y="55" width="35" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="xiW-fC-TVy" secondAttribute="height" multiplier="1:1" id="TBw-yd-3NV"/>
+                        <constraint firstAttribute="height" constant="35" id="lFF-SB-Wag"/>
+                    </constraints>
+                    <state key="normal" image="Live_Btn_Cancel"/>
+                    <connections>
+                        <action selector="closeBtnDid:" destination="iN0-l3-epB" eventType="touchUpInside" id="9ke-KW-zys"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="C9G-bx-lK9" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="1cg-oY-YMY"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="C9G-bx-lK9" secondAttribute="trailing" constant="20" id="6cI-aA-scK"/>
+                <constraint firstItem="C9G-bx-lK9" firstAttribute="top" secondItem="xiW-fC-TVy" secondAttribute="bottom" id="Ad8-hU-a3L"/>
+                <constraint firstItem="C9G-bx-lK9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="c1A-HH-ecl"/>
+                <constraint firstItem="C9G-bx-lK9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="u0o-x6-b71"/>
+                <constraint firstItem="xiW-fC-TVy" firstAttribute="trailing" secondItem="C9G-bx-lK9" secondAttribute="trailing" constant="6" id="zag-un-Pzz"/>
+            </constraints>
+            <connections>
+                <outlet property="borderView" destination="C9G-bx-lK9" id="hoS-f9-s2Z"/>
+                <outlet property="borderViewHeight" destination="XGe-8q-rX1" id="FmL-hg-d30"/>
+                <outlet property="tableView" destination="meJ-6K-ECf" id="99s-Tk-aR7"/>
+                <outlet property="titleLabel" destination="wJd-RU-HF3" id="zSu-mR-ldT"/>
+            </connections>
+            <point key="canvasLocation" x="132" y="122.78860569715144"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_Schedule_List_Title" width="6" height="42"/>
+        <image name="LS_Schedule_Msg_Bg" width="4" height="332"/>
+        <image name="Live_Btn_Cancel" width="17.5" height="17.5"/>
+    </resources>
+</document>

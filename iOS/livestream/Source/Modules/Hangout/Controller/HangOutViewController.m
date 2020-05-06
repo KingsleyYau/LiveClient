@@ -49,6 +49,8 @@
 #import "LSAddCreditsViewController.h"
 
 #import "LSUserInfoManager.h"
+#import "LiveModule.h"
+#import "LiveUrlHandler.h"
 
 #import <objc/runtime.h>
 
@@ -228,7 +230,7 @@
     
     // 标记退出hangout直播间
     [LiveGobalManager manager].isHangouting = NO;
-    [[LiveGobalManager manager] setupLiveVC:nil orHangOutVC:nil];
+    [[LiveGobalManager manager] setupVIPLiveVC:nil orHangOutVC:nil];
     
     // 发送退出多人互动直播间
     if (self.liveRoom.roomId.length > 0) {
@@ -333,7 +335,7 @@
     // 赋值到全局变量, 用于后台计时操作
     [LiveGobalManager manager].liveRoom = self.liveRoom;
     // 赋值到全局变量 用于观看信件或chat视频关闭直播声音
-    [[LiveGobalManager manager] setupLiveVC:nil orHangOutVC:self];
+    [[LiveGobalManager manager] setupVIPLiveVC:nil orHangOutVC:self];
     
     // 初始化直播间文本样式
     [self setUpLiveRoomType];
@@ -580,7 +582,7 @@
                     [vc sendHangoutComboGift:item clickId:clickId isPrivate:self.isPrivate];
                 } else {
                     NSString *giftName = item.infoItem.name;
-                    [self.roomUserInfoManager getUserInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                    [self.roomUserInfoManager getLiverInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                         [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ANCHOR_LEAVE"),giftName ,item.nickName]];
                     }];
                 }
@@ -616,7 +618,7 @@
                         [vc sendHangoutGift:item clickId:clickId isPrivate:self.isPrivate];
                     } else {
                         NSString *giftName = item.infoItem.name;
-                        [self.roomUserInfoManager getUserInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                        [self.roomUserInfoManager getLiverInfo:anchorId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                             [self showdiaLog:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_GIFT_ANCHOR_LEAVE"),giftName ,item.nickName]];
                         }];
                     }
@@ -701,8 +703,8 @@
 }
 
 - (void)rechargeCreditAction:(HangoutCreditView *)creditView {
-    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+    [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
 #pragma mark - 初始化控制台
@@ -1010,7 +1012,7 @@
         }
         if (!nameArray.count) {
             for (NSString *userId in at) {
-                [self.roomUserInfoManager getUserInfo:userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                [self.roomUserInfoManager getLiverInfo:userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                     [nameArray addObject:item.nickName];
                 }];
             }
@@ -1062,7 +1064,7 @@
         [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
     } else {
         if (toUserId.length > 0) {
-            [self.roomUserInfoManager getUserInfo:toUserId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            [self.roomUserInfoManager getLiverInfo:toUserId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                 msgItem.toName = item.nickName;
                 attributeString = [self.msgManager setupGiftMessageStyle:self.roomStyleItem msgItem:msgItem];
                 msgItem.attText = attributeString;
@@ -1885,8 +1887,8 @@
         if (tag > 0) {
             [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
         }
-        LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:vc animated:NO];
+        NSURL *url = [[LiveUrlHandler shareInstance] createBuyCredit];
+        [[LiveModule module].serviceManager handleOpenURL:url];
     }];
     [alertVC addAction:canaelAC];
     [alertVC addAction:addAC];

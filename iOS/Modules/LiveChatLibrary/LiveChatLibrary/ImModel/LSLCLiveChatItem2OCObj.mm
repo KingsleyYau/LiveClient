@@ -18,6 +18,8 @@
 + (LSLCLiveChatMsgPhotoItem* _Nullable)getLiveChatPhotoItemObject:(const LSLCPhotoItem*)photoItem;
 + (LSLCLiveChatMsgVoiceItem* _Nullable)getLiveChatVoiceItemObject:(const LSLCVoiceItem*)voiceItem;
 + (LSLCLiveChatMsgVideoItem* _Nullable)getLiveChatVideoItemObject:(const lcmm::LSLCVideoItem*_Nullable)videoItem;
++ (LSLCLiveChatScheduleMsgItemObject* _Nullable)getLiveChatScheduleInviteItemObject:(const LSLCScheduleInviteItem*)ScheduleInviteItem;
++ (LSLCLiveChatScheduleReplyItemObject* _Nullable)getLiveChatScheduleReplyItemObject:(const LSLCScheduleInviteReplyItem*)ScheduleReplyItem;
 
 + (NSArray<LSLCEmotionTypeItemObject*>* _Nullable)getEmotionTypeItemObject:(const LSLCOtherEmotionConfigItem::TypeList&)typeList;
 + (NSArray<LSLCEmotionTagItemObject*>* _Nullable)getEmotionTagItemObject:(const LSLCOtherEmotionConfigItem::TagList&)tagList;
@@ -35,6 +37,7 @@
 + (LSLCMagicIconItem* _Nullable)getLiveChatMagicIconItem:(LSLCLiveChatMagicIconItemObject* _Nonnull)magicIcon;
 + (LSLCVoiceItem* _Nullable)getLiveChatVoiceItem:(LSLCLiveChatMsgVoiceItem*_Nonnull)voiceItem;
 + (lcmm::LSLCVideoItem* _Nullable)getLiveChatVideoItem:(LSLCLiveChatMsgVideoItem*_Nonnull)videoItem;
+//+ (LSLCScheduleInviteItem* _Nullable)getLiveChatScheduleInviteItem:(LSLCLiveChatScheduleMsgItemObject*_Nonnull)scheduleItem;
 @end
 
 @implementation LSLCLiveChatItem2OCObj
@@ -209,6 +212,12 @@
         else if (MT_Video == msgItem->m_msgType) {
             obj.videoMsg = [self getLiveChatVideoItemObject:msgItem->GetVideoItem()];
         }
+        else if (MT_Schedule == msgItem->m_msgType) {
+            obj.scheduleMsg = [self getLiveChatScheduleInviteItemObject:msgItem->GetScheduleInviteItem()];
+        }
+        else if (MT_ScheduleReply == msgItem->m_msgType) {
+            obj.scheduleReplyMsg = [self getLiveChatScheduleReplyItemObject:msgItem->GetScheduleInviteReplyItem()];
+        }
     }
     return obj;
 }
@@ -267,6 +276,9 @@
     }
     else if (MT_Video == msgItem.m_msgType) {
         obj.videoMsg = [self getLiveChatVideoItemObject:msgItem.GetVideoItem()];
+    }
+    else if (MT_Schedule == msgItem.m_msgType) {
+        obj.scheduleMsg = [self getLiveChatScheduleInviteItemObject:msgItem.GetScheduleInviteItem()];
     }
     return obj;
 }
@@ -574,9 +586,13 @@
             LSLCVoiceItem* voiceItem = [LSLCLiveChatItem2OCObj getLiveChatVoiceItem:msg.voiceMsg];
             msgItem->SetVoiceItem(voiceItem);
         }
-        else if (MT_Video == msgItem->m_msgType) {
+        else if (MT_Video == msg.msgType) {
             lcmm::LSLCVideoItem* videoItem = [LSLCLiveChatItem2OCObj getLiveChatVideoItem:msg.videoMsg];
             msgItem->SetVideoItem(videoItem);
+        }
+        else if (MT_Schedule == msg.msgType) {
+            LSLCScheduleInviteItem* scheduleItem = [LSLCLiveChatItem2OCObj getLiveChatScheduleInviteItem:msg.scheduleMsg];
+            msgItem->SetScheduleInviteItem(scheduleItem);
         }
         else
         {
@@ -764,6 +780,25 @@
         
     }
     return lcVideoItem;
+}
+
++ (LSLCScheduleInviteItem* _Nullable)getLiveChatScheduleInviteItem:(LSLCLiveChatScheduleMsgItemObject*_Nonnull)scheduleItem
+{
+    LSLCScheduleInviteItem* lcScheduleItem = new LSLCScheduleInviteItem;
+    if(NULL != lcScheduleItem && scheduleItem != nil){
+        lcScheduleItem->m_sessionId = scheduleItem.scheduleInviteId != nil ? [scheduleItem.scheduleInviteId UTF8String] : "";
+        lcScheduleItem->m_type = scheduleItem.type;
+        lcScheduleItem->m_timeZone  = scheduleItem.timeZone != nil ? [scheduleItem.timeZone UTF8String] : "";
+        lcScheduleItem->m_timeZoneValue   = scheduleItem.timeZoneOffSet;
+        lcScheduleItem->m_sessionDuration = scheduleItem.origintduration;
+        lcScheduleItem->m_durationAdjusted = scheduleItem.duration;
+        lcScheduleItem->m_startGmtTime = scheduleItem.startTime;
+        lcScheduleItem->m_timePeriod = scheduleItem.period != nil ? [scheduleItem.period UTF8String] : "";
+        lcScheduleItem->m_actionGmtTime = scheduleItem.statusUpdateTime;
+        lcScheduleItem->m_sendGmtTime = scheduleItem.sendTime;
+        
+    }
+    return lcScheduleItem;
 }
 
 
@@ -971,5 +1006,59 @@
     }
     return obj;
 }
+
++ (LSLCLiveChatScheduleMsgItemObject* _Nullable)getLiveChatScheduleInviteItemObject:(const LSLCScheduleInviteItem*)scheduleInviteItem
+{
+        LSLCLiveChatScheduleMsgItemObject* obj = nil;
+        if (NULL != scheduleInviteItem)
+        {
+            obj = [[LSLCLiveChatScheduleMsgItemObject alloc] init];
+            obj.scheduleInviteId = [NSString stringWithUTF8String:scheduleInviteItem->m_sessionId.c_str()];
+            obj.type = scheduleInviteItem->m_type;
+            obj.timeZone = [NSString stringWithUTF8String:scheduleInviteItem->m_timeZone.c_str()];
+            obj.timeZoneOffSet = scheduleInviteItem->m_timeZoneValue;
+            obj.origintduration = scheduleInviteItem->m_sessionDuration;
+            obj.duration = scheduleInviteItem->m_durationAdjusted;
+            obj.startTime = scheduleInviteItem->m_startGmtTime;
+            obj.period = [NSString stringWithUTF8String:scheduleInviteItem->m_timePeriod.c_str()];
+            obj.statusUpdateTime = scheduleInviteItem->m_actionGmtTime;
+            obj.sendTime = scheduleInviteItem->m_sendGmtTime;
+        }
+        return obj;
+}
+
++ (LSLCLiveChatScheduleReplyItemObject* _Nullable)getLiveChatScheduleReplyItemObject:(const LSLCScheduleInviteReplyItem*)ScheduleReplyItem
+{
+    LSLCLiveChatScheduleReplyItemObject* obj = nil;
+    if (NULL != ScheduleReplyItem)
+    {
+        obj = [[LSLCLiveChatScheduleReplyItemObject alloc] init];
+        obj.scheduleId = [NSString stringWithUTF8String:ScheduleReplyItem->m_scheduleId.c_str()];
+        obj.isScheduleAccept = ScheduleReplyItem->m_isScheduleAccept;
+        obj.isScheduleFromMe = ScheduleReplyItem->m_isScheduleFromMe;
+    }
+    return obj;
+}
+
+
+//+ (LSLCLiveChatScheduleInfoItemObject* _Nullable)getLiveChatScheduleInfoItemObject:(const LSLCScheduleInfoItem&)msgItem {
+//    LSLCLiveChatScheduleInfoItemObject* obj = [[LSLCLiveChatScheduleInfoItemObject alloc] init];
+//    obj.manId = [NSString stringWithUTF8String:msgItem.manId.c_str()];
+//    obj.womanId = [NSString stringWithUTF8String:msgItem.womanId.c_str()];
+//    LSLCLiveChatScheduleMsgItemObject* msgObj = [[LSLCLiveChatScheduleMsgItemObject alloc] init];
+//    msgObj.scheduleInviteId = [NSString stringWithUTF8String:msgItem.msg.sessionId.c_str()];
+//    msgObj.type = msgItem.msg.type;
+//    msgObj.timeZone = [NSString stringWithUTF8String:msgItem.msg.timeZone.c_str()];
+//    msgObj.timeZoneOffSet = msgItem.msg.timeZoneOffSet;
+//    msgObj.origintduration = msgItem.msg.sessionDuration;
+//    msgObj.duration = msgItem.msg.durationAdjusted;
+//    msgObj.startTime = msgItem.msg.startGmtTime;
+//    msgObj.period = [NSString stringWithUTF8String:msgItem.msg.timePeriod.c_str()];
+//    msgObj.inviteId = [NSString stringWithUTF8String:msgItem.msg.inviteId.c_str()];
+//    msgObj.statusUpdateTime = msgItem.msg.actionGmtTime;
+//    obj.msg = msgObj;
+//
+//    return obj;
+//}
 
 @end

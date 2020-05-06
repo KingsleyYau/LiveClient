@@ -35,4 +35,14 @@ typedef void (^GetUserInfoHandler)(LSUserInfoModel * item);
  @param finishHandler 回调
  */
 - (void)getUserInfo:(NSString *)userId finishHandler:(GetUserInfoHandler)finishHandler;
+/**
+获取用户信息(缓存)
+直接获取接口
+@param userId 用户Id
+@param finishHandler 回调
+*/
+- (void)getUserInfoWithRequest:(NSString *)userId finishHandler:(GetUserInfoHandler)finishHandler;
+
+/// 清除用户信息缓存
+- (void)removeAllUserInfo;
 @end

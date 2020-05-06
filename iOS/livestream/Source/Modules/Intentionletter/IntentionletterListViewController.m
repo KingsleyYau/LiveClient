@@ -10,7 +10,7 @@
 #import "LSEMFBoxTableViewCell.h"
 @interface IntentionletterListViewController ()
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @end
 
 @implementation IntentionletterListViewController

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SelectCoverView : UICollectionView
+@interface SelectCoverView : LSCollectionView
 
 @end

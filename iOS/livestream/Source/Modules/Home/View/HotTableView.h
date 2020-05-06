@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "LiveRoomInfoItemObject.h"
 
 @class HotTableView;
@@ -46,7 +45,7 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 @end
 
-@interface HotTableView : UITableView <UITableViewDataSource, UITableViewDelegate>{
+@interface HotTableView : LSTableView <UITableViewDataSource, UITableViewDelegate>{
     
 }
 

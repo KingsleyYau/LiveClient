@@ -38,6 +38,20 @@ public:
             if( root[LIVEROOM_CHECKOUT_GIFTLIST_GIFTNUMBER].isNumeric() ) {
                 giftNumber = root[LIVEROOM_CHECKOUT_GIFTLIST_GIFTNUMBER].asInt();
             }
+            /* isBirthday */
+            if( root[LIVEROOM_CHECKOUT_GIFTLIST_ISBIRTHDAY].isNumeric() ) {
+                isBirthday = root[LIVEROOM_CHECKOUT_GIFTLIST_ISBIRTHDAY].asInt() == 0 ? false : true;
+            }
+            
+            /* giftPrice */
+            if( root[LIVEROOM_CHECKOUT_GIFTLIST_GIFTPRICE].isNumeric() ) {
+                giftPrice = root[LIVEROOM_CHECKOUT_GIFTLIST_GIFTPRICE].asDouble();
+            }
+            
+            /* giftImg */
+            if (root[LIVEROOM_CHECKOUT_GIFTLIST_GIFTIMG].isString()) {
+                giftImg = root[LIVEROOM_CHECKOUT_GIFTLIST_GIFTIMG].asString();
+            }
             
             result = true;
         }
@@ -48,6 +62,9 @@ public:
 		giftId = "";
         giftName = "";
         giftNumber = 0;
+        isBirthday = false;
+        giftPrice = 0.0;
+        giftImg = "";
 	}
 
 	virtual ~HttpGreetingCardItem() {
@@ -59,11 +76,16 @@ public:
      * giftId               礼品ID
      * giftName             礼品名称
      * giftNumber           礼品数量
+     * isBirthday           是否生日贺卡
+     * giftPrice            原价
+     * giftImg              图片地址
      */
 	string giftId;
     string giftName;
     int giftNumber;
-
+    bool isBirthday;
+    double giftPrice;
+    string giftImg;
 };
 
 

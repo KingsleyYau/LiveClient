@@ -17,6 +17,8 @@
 #include "LSLCCustomItem.h"
 #include "LSLCMagicIconItem.h"
 #include "LSLCAutoInviteItem.h"
+#include "LSLCScheduleInviteItem.h"
+#include "LSLCScheduleInviteReplyItem.h"
 #include <livechat/ILSLiveChatClient.h>
 #include "ILSLiveChatManManagerEnumDef.h"
 #include <string>
@@ -132,8 +134,16 @@ public:
     LSLCMagicIconItem* GetMagicIconItem() const;
     //  设置自动邀请item alex 2019－01-28
     void SetAutoInviteItem(LSLCAutoInviteItem* theAutoInviteItem);
-    //  获取自动邀请item alex 2019－01-28
+    //  获取预付费邀请item alex 2020－01-28
     LSLCAutoInviteItem* GetAutoInviteItem() const;
+    //  设置预付费邀请item alex 2020－04-10
+    void SetScheduleInviteItem(LSLCScheduleInviteItem* theScheduleMsgItem);
+    //  获取自动邀请item alex 2019－04-10
+    LSLCScheduleInviteItem* GetScheduleInviteItem() const;
+    //  设置预付费邀请item alex 2020－04-15
+    void SetScheduleInviteReplyItem(LSLCScheduleInviteReplyItem* theScheduleReplyItem);
+    //  获取自动邀请item alex 2019－04-15
+    LSLCScheduleInviteReplyItem* GetScheduleInviteReplyItem() const;
 	// 设置用户item
 	void SetUserItem(LSLCUserItem* theUserItem);
 	// 获取用户item
@@ -174,6 +184,8 @@ private:
 	LSLCCustomItem*	  m_customItem;	// 自定义消息item
     LSLCMagicIconItem*  m_magicIconItem;  // 小高级表情Item
     LSLCAutoInviteItem* m_autoInviteItem; // 自动邀请Item
+    LSLCScheduleInviteItem* m_scheduleInviteItem; // 预付费邀请Item
+    LSLCScheduleInviteReplyItem* m_scheduleReplyItem; // 预付费邀请回复消息item
 
 	LSLCUserItem*		m_userItem;		// 用户item
 

@@ -15,10 +15,10 @@
 
 "Tips_Add_Credit" = "add more credits.";
 "Tips_Try_Ticket_Credit_YES" = "Send your first message to start free chat now.";
-"Tips_Try_Ticket_Credit_NO" = "Live chat billed at 0.5 credit per 5 mins.";
+"Tips_Try_Ticket_Credit_NO" = "Chat billed at 0.5 credits per 5 mins. Billing begins after your first message is sent.";
 "Tips_Try_Ticket_Credit_NO_Reply" = "※  Billing begins after your message is replied. 0.5 credits per 5 mins.";
 
-"Tips_Your_Free_Chat_Is_Ended" = "Your free chat is ended. Live chat billed at 0.5 credit per 5 mins.";
+"Tips_Your_Free_Chat_Is_Ended" = "Your free chat is ended. Chat billed at 0.5 credits per 5 mins.";
 "Tips_Text_Not_Support" = "The recipient's device does not support text messages.";
 "Tips_Emotion_Not_Support" = "The recipient's device does not support animating stickers.";
 "Tips_Voice_Not_Support" = "The recipient's device does not support voice messages.";
@@ -49,8 +49,10 @@
 
 "InChat_Tip" = "You can not cancel the invitation when you are in chat.";
 
-"EndChat" = "   End Chat";
+"EndChat" = "End Chat";
 
-"Cancel invitation" = "   Cancel invitation";
+"Cancel invitation" = "Cancel invitation";
 
-"Recent Watched" = "   Recent Watched";
+"Recent Watched" = "Recent Watched";
+
+"SCHEDULE_TIP" = "Can not send Schedule One-on-One request until you start chatting with the member.";

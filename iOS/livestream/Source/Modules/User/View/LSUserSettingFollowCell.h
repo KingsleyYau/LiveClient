@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSBaseTableViewCell.h"
 
 @protocol LSUserSettingFollowCellDelegate <NSObject>
 
@@ -14,10 +15,11 @@
 
 @end
 
-@interface LSUserSettingFollowCell : UITableViewCell
+@interface LSUserSettingFollowCell : LSBaseTableViewCell
 
 @property (weak, nonatomic) id<LSUserSettingFollowCellDelegate> cellDelegate;
 @property (weak, nonatomic) IBOutlet UIView *followInfoView;
+@property (weak, nonatomic) IBOutlet UILabel *followTitle;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

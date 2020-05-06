@@ -33,7 +33,7 @@
 @property (weak, nonatomic) IBOutlet UIView *actionView;
 @property (weak, nonatomic) IBOutlet UILabel *anchorName;
 @property (nonatomic, strong) NSMutableArray *friendArray;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

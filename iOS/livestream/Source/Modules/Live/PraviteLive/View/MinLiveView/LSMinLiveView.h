@@ -15,6 +15,8 @@
 
 - (void)minLiveViewDidVideo;
 
+- (void)minLiveViewPan:(UIPanGestureRecognizer *)sender;
+
 @end
 
 @interface LSMinLiveView : UIView
@@ -22,5 +24,8 @@
 @property (nonatomic, weak) id<LSMinLiveViewDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet GPUImageView *videoView;
+
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingView;
+
 @end
  

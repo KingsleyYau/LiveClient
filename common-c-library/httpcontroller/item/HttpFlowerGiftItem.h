@@ -65,6 +65,11 @@ public:
                 giftPrice = root[LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTPRICE].asDouble();
             }
             
+            /* giftDiscount */
+            if (root[LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTDISCOUNT].isNumeric()) {
+                giftDiscount = root[LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_GIFTDISCOUNT].asDouble();
+            }
+            
             /* isNew */
             if (root[LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_ISNEW].isNumeric()) {
                 isNew = root[LIVEROOM_GETSTOREGIFTLIST_GIFTLIST_ISNEW].asInt() == 0 ? false : true;
@@ -114,6 +119,7 @@ public:
         giftWeekdayPrice = 0.0;
         giftDiscountPrice = 0.0;
         giftPrice = 0.0;
+        giftDiscount = 0.0;
         isNew = false;
         giftDescription = "";
 	}
@@ -132,6 +138,7 @@ public:
      * giftWeekdayPrice     平日价
      * giftDiscountPrice    优惠价
      * giftPrice            显示价格
+     * giftDiscount         优惠折扣
      * isNew                是否NEW
      * deliverableCountry   配送国家
      * giftDescription      描述
@@ -144,6 +151,7 @@ public:
     double giftWeekdayPrice;
     double giftDiscountPrice;
     double giftPrice;
+    double giftDiscount;
     bool isNew;
     CountryList deliverableCountry;
     string giftDescription;

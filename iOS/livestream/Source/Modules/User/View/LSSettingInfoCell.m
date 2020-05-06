@@ -13,6 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
+    self.titleLabel.textColor = [LSColor colorWithLight:COLOR_WITH_16BAND_RGB(0x383838) orDark:[UIColor whiteColor]];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -37,6 +38,11 @@
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[LSSettingInfoCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
+        UIColor *modelColor = [LSColor colorWithLight:[UIColor blackColor] orDark:[UIColor whiteColor]];
+        cell.titleLabel.textColor = modelColor;
+
+
     }
     
     return cell;

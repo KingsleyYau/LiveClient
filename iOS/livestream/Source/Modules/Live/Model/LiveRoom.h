@@ -15,9 +15,7 @@
 typedef enum LiveRoomType {
     LiveRoomType_Unknow = 0,
     LiveRoomType_Public,
-    LiveRoomType_Public_VIP,
     LiveRoomType_Private,
-    LiveRoomType_Private_VIP,
     LiveRoomType_Hang_Out,
 } LiveRoomType;
 
@@ -45,11 +43,17 @@ typedef enum LiveRoomType {
 @property (strong) ImLiveRoomObject *imLiveRoom;
 @property (strong) IMHangoutRoomItemObject *hangoutLiveRoom;
 
+// 公开直播间免费提醒
+@property (nonatomic, copy) NSString *publicRoomFreeMsg;
+
 @property (nonatomic, weak) UIViewController *superController;
 @property (nonatomic, weak) UIView *superView;
 
-// 私密直播/私密预约 权限
+// 主播的 接收私密邀请/接收私密预约 权限
 @property (nonatomic, strong) ImAuthorityItemObject* priv;
+
+/** 是否允许最小化 */
+@property (nonatomic, assign) BOOL canShowMinLiveView;
 /**
  重置
  */

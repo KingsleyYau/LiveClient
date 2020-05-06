@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *headImageView;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *shopBtn;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutBtn;
 

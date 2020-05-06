@@ -11,6 +11,7 @@
 #import "LSGiftCollectionView.h"
 #import "LiveRoom.h"
 #import "LSGiftManagerItem.h"
+#import "RoomStyleItem.h"
 
 @class LSVIPGiftPageViewController;
 @protocol LSVIPGiftPageViewControllerDelegate <NSObject>
@@ -28,6 +29,8 @@
 @property (nonatomic, strong) LiveRoom *liveRoom;
 @property (nonatomic, weak) id<LSVIPGiftPageViewControllerDelegate> vcDelegate;
 @property (nonatomic, assign) NSInteger viewHeight;
+
+@property (nonatomic, strong) RoomStyleItem *roomStyleItem;
 
 @property (nonatomic, assign) BOOL isShowView;
 /**

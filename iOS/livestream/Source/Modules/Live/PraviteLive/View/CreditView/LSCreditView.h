@@ -21,5 +21,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) id<LSCreditViewDelegate> delegate;
+
+
++ (instancetype)initLSCreditView;
+- (void)showLSCreditViewInView:(UIView *)view;
+- (void)removeShowCreditView;
 @end
 

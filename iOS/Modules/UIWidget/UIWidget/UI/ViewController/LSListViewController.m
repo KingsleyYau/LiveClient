@@ -183,6 +183,7 @@
     CGPoint failTipsCenter = self.noDataTip.center;
     failTipsCenter.x = iconCenter;
     self.noDataTip.center = failTipsCenter;
+    self.noDataTip.numberOfLines = 0;
     self.noDataTip.textAlignment = NSTextAlignmentCenter;
     self.failTips.font = [UIFont systemFontOfSize:16];
     self.noDataTip.textColor = [UIColor colorWithRed:153.0 / 255.0 green:153.0 / 255.0 blue:153.0 / 255.0 alpha:1];

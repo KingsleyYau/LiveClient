@@ -7,20 +7,21 @@
 //
 
 #import "LSVIPInputViewController.h"
+
 #import "LSExpertPhizCollectionView.h"
 #import "LSNormalPhizCollectionView.h"
+#import "DialogTip.h"
 
 #import "LiveModule.h"
-
-#import "GetLeftCreditRequest.h"
-
 #import "LiveRoomCreditRebateManager.h"
 #import "LSChatEmotionManager.h"
+#import "LiveUrlHandler.h"
+#import "HomeVouchersManager.h"
 
 #import "LSGiftManagerItem.h"
 #import "LSChatEmotion.h"
 
-#import "DialogTip.h"
+#import "GetLeftCreditRequest.h"
 
 #define PlaceholderFont [UIFont boldSystemFontOfSize:14]
 #define MaxInputCount 70
@@ -130,8 +131,11 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
     
     // 初始化直播间界面管理器
     self.liveVC.liveRoom = self.liveRoom;
+    // 初始化直播间界面样式
+    self.liveVC.roomStyleItem = self.roomStyleItem;
     // 初始化礼物列表界面管理器
     self.giftVC.liveRoom = self.liveRoom;
+    self.giftVC.roomStyleItem = self.roomStyleItem;
     // 初始化进入房间时间
     self.roomInDate = [NSDate date];
     
@@ -148,12 +152,16 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
     [self.view sendSubviewToBack:self.liveVC.view];
     [self.view bringSubviewToFront:self.liveVC.msgSuperView];
     [self.view bringSubviewToFront:self.liveVC.previewVideoView];
+    
     // 初始化礼物列表界面
     [self.chooseGiftListView addSubview:self.giftVC.view];
     self.chooseGiftListView.hidden = YES;
     
     self.inputView.layer.cornerRadius = self.inputView.tx_height/2;
     self.inputView.layer.masksToBounds = YES;
+    
+    self.inviteBtn.layer.cornerRadius = self.inviteBtn.tx_height / 2;
+    self.inviteBtn.layer.masksToBounds = YES;
     
     self.chooseTopGiftView.layer.cornerRadius = 8;
     self.chooseTopGiftView.layer.masksToBounds = YES;
@@ -163,18 +171,57 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
     self.inputTextView.delegate = self;
     self.inputTextView.liveTextViewDelegate = self;
     
-    self.emotionBtn.adjustsImageWhenHighlighted = NO;
-    [self.emotionBtn setImage:[UIImage imageNamed:@"VIPLive_Input_Emoji"] forState:UIControlStateNormal];
-    [self.emotionBtn setImage:[UIImage imageNamed:@"VIPLive_Input_Keyboard"] forState:UIControlStateSelected];
+    // 私密直播间
+    if (self.roomStyleItem.emotionImage && self.roomStyleItem.emotionSelectImage) {
+        self.emotionBtn.adjustsImageWhenHighlighted = NO;
+        [self.emotionBtn setImage:self.roomStyleItem.emotionImage forState:UIControlStateNormal];
+        [self.emotionBtn setImage:self.roomStyleItem.emotionSelectImage forState:UIControlStateSelected];
+        self.emotionBtn.selectedChangeDelegate = self;
+        // inputView约束
+        self.inputViewRight.constant = 5;
+        self.sendBtnWidth.constant = 64;
+        self.inviteBtnWidth.constant = 0;
+        // inputMessageView约束
+        self.popBtnWidth.constant = 0;
+        self.emotionBtnWidth.constant = 41;
+        self.inputTextViewRight.constant = 14;
+        self.inviteFreeImage.hidden = YES;
+    }
     
-    self.emotionBtn.selectedChangeDelegate = self;
-
+    // 公开直播间
+    if (self.roomStyleItem.popBtnImage && self.roomStyleItem.popBtnSelectImage) {
+        self.popBtn.adjustsImageWhenHighlighted = NO;
+        [self.popBtn setImage:self.roomStyleItem.popBtnImage forState:UIControlStateNormal];
+        [self.popBtn setImage:self.roomStyleItem.popBtnSelectImage forState:UIControlStateSelected];
+        self.popBtn.selectedChangeDelegate = self;
+        // inputView约束
+        self.inputViewRight.constant = 10;
+        self.sendBtnWidth.constant = 0;
+        
+        self.inviteFreeImage.hidden = ![[HomeVouchersManager manager] isShowInviteFree:self.liveRoom.userId];
+        // 男士无私密权限或者为节目直播间 不显示邀请按钮
+        if (self.liveRoom.priv.isHasOneOnOneAuth && !self.liveRoom.liveShowType) {
+            self.inviteBtnWidth.constant = SCREEN_WIDTH / 2 - 10;
+        } else {
+            self.inviteFreeImage.hidden = YES;
+            self.inviteBtnWidth.constant = 0;
+        }
+        
+        // inputMessageView约束
+        self.popBtnWidth.constant = 44;
+        self.emotionBtnWidth.constant = 0;
+        self.inputTextViewRight.constant = 7;
+    }
+    
     // 初始化表情控件
     [self setupEmotionInputView];
  
     self.topGiftView.delegate = self;
     self.topGiftView.liveRoom = self.liveRoom;
     [self.topGiftView getGiftData];
+    
+    self.chooseTopGiftView.backgroundColor = self.roomStyleItem.chooseTopGiftViewBgColor;
+    [self.topGiftViewBtn setImage:self.roomStyleItem.topGiftViewBtnImage forState:UIControlStateNormal];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -250,6 +297,16 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
         } else {
             // 切换成系统的的键盘
             [self showKeyboardView];
+        }
+    } else if (sender == self.popBtn) {
+        if (self.popBtn.selected) {
+            self.inputTextView.placeholder = NSLocalizedStringFromSelf(@"POP_MSG");
+            // 调用修改view color方法 触发drawRect
+            [self.inputTextView setBackgroundColor:[UIColor clearColor]];
+        } else {
+            self.inputTextView.placeholder = NSLocalizedStringFromSelf(@"INPUT_MSG");
+            // 调用修改view color方法 触发drawRect
+            [self.inputTextView setBackgroundColor:COLOR_WITH_16BAND_RGB_ALPHA(0x00000000)];
         }
     }
 }
@@ -479,6 +536,12 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
     [self keyboardDidSendBtn];
 }
 
+- (IBAction)inviteBtnDid:(id)sender {
+    
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" anchorName:self.liveRoom.userName anchorId:self.liveRoom.userId roomType:LiveRoomType_Private];
+    [[LiveModule module].serviceManager handleOpenURL:url];
+}
+
 #pragma mark - 显示礼物列表
 - (void)showChooseGiftListView {
     self.chooseGiftListView.hidden = NO;
@@ -627,19 +690,9 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
         // 收起礼物列表
         [self closeChooseGiftListView];
     }
-    //    else {
-    //        // 如果没有打开键盘
-    //        if (!_isKeyboradShow) {
-    //            // 发送点赞请求
-    //            [self sendActionLikeRequest];
-    //
-    //            // 第一次点赞, 插入本地文本
-    //            if (!_isFirstLike) {
-    //                _isFirstLike = YES;
-    //                [self.liveVC addLikeMessage:self.loginManager.loginItem.nickName];
-    //            }
-    //        }
-    //    }
+    if (!self.liveVC.prepaidTipView.isHidden) {
+        self.liveVC.prepaidTipView.hidden = YES;
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -787,7 +840,9 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
         if (self.inputTextView.text.length > 0) {
             self.bottomMsgLabel.attributedText = self.inputTextView.attributedText;
             self.bottomMsgLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        }else {
+        } else {
+            self.bottomMsgLabel.font = [UIFont systemFontOfSize:14];
+            self.bottomMsgLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
             self.bottomMsgLabel.text = NSLocalizedStringFromSelf(@"BOTTOM_MSG");
         }
         
@@ -880,7 +935,7 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
     } else {
         // 判断是否超过字符限制
         NSInteger strLength = textView.text.length - range.length + text.length;
-        if (strLength >= MaxInputCount && text.length >= range.length) {
+        if (strLength > MaxInputCount && text.length >= range.length) {
             // 判断是否删除字符
             if ('\000' != [text UTF8String][0] && ![text isEqualToString:@"\b"]) {
                 // 非删除字符，不允许输入
@@ -912,8 +967,10 @@ IMLiveRoomManagerDelegate, LSVIPLiveViewControllerDelegate, LSNormalPhizCollecti
             if (betweenTime >= 1) {
                 NSString *str = [self.inputTextView.text stringByReplacingOccurrencesOfString:@" " withString:@""];
                 if (str.length > 0) {
-                    [self.liveVC sendMsg:self.inputTextView.text isLounder:NO];
+                    [self.liveVC sendMsg:self.inputTextView.text isLounder:self.popBtn.selected];
                     self.inputTextView.text = @"";
+                    self.bottomMsgLabel.font = [UIFont systemFontOfSize:14];
+                    self.bottomMsgLabel.textColor = COLOR_WITH_16BAND_RGB(0x383838);
                     self.bottomMsgLabel.text = NSLocalizedStringFromSelf(@"BOTTOM_MSG");
                     // 点击send关闭键盘
                     [self closeAllInputView];
