@@ -201,6 +201,7 @@ bool AudioDecoderAAC::CreateContext() {
     int ret = 0;
     
     mCodec = avcodec_find_decoder(AV_CODEC_ID_AAC);
+//    mCodec = avcodec_find_decoder_by_name("libfdk_aac");
     if ( mCodec ) {
         bFlag = true;
         

@@ -43,6 +43,8 @@ MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
 }
 
 MediaFileReader::~MediaFileReader() {
+    Stop();
+    
     if (mpMediaReaderRunnable) {
         delete mpMediaReaderRunnable;
         mpMediaReaderRunnable = NULL;
