@@ -36,6 +36,7 @@
 @property (strong) NSString *_Nonnull recordFilePath;
 @property (strong) NSString *_Nullable recordH264FilePath;
 @property (strong) NSString *_Nullable recordAACFilePath;
+@property (strong) NSString *_Nonnull filePath;
 
 @property (assign) BOOL isStart;
 @property (assign) BOOL isConnected;
@@ -100,6 +101,23 @@
     self.recordAACFilePath = recordAACFilePath;
 
     if (self.url.length > 0) {
+        [self run];
+        bFlag = YES;
+    }
+
+    return bFlag;
+}
+
+- (BOOL)playFilePath:(NSString * _Nonnull)filePath {
+    NSLog(@"LiveStreamPlayer::playUrl( self : %p, filePath : %@ )", self, filePath);
+
+    BOOL bFlag = NO;
+
+    [self cancel];
+
+    self.filePath = filePath;
+
+    if (self.filePath.length > 0) {
         [self run];
         bFlag = YES;
     }
@@ -175,7 +193,11 @@
             // 仅在前台才运行
             if (!_isBackground) {
                 // 开始拉流
-                self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+                if (self.filePath.length > 0) {
+                    self.isConnected = [self.player playFilePath:self.filePath];
+                } else {
+                    self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+                }
             } else {
                 NSLog(@"LiveStreamPlayer::run( [Player is in background], self : %p )", self);
             }
@@ -229,7 +251,11 @@
         }
 
         @synchronized(self) {
-            self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            if (self.filePath.length > 0) {
+                self.isConnected = [self.player playFilePath:self.filePath];
+            } else {
+                self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            }
         }
 
         NSLog(@"LiveStreamPlayer::reconnect( [Finish], self : %p )", self);

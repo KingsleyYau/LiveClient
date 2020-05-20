@@ -1,7 +1,7 @@
 /*****************************************************************************
  * x264.h: x264 public header
  *****************************************************************************
- * Copyright (C) 2003-2016 x264 project
+ * Copyright (C) 2003-2017 x264 project
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
  *          Loren Merritt <lorenm@u.washington.edu>
@@ -45,7 +45,7 @@ extern "C" {
 
 #include "x264_config.h"
 
-#define X264_BUILD 148
+#define X264_BUILD 152
 
 /* Application developers planning to link against a shared library version of
  * libx264 from a Microsoft Visual Studio or similar development environment
@@ -119,39 +119,38 @@ typedef struct x264_nal_t
 /* CPU flags */
 
 /* x86 */
-#define X264_CPU_CMOV            0x0000001
-#define X264_CPU_MMX             0x0000002
-#define X264_CPU_MMX2            0x0000004  /* MMX2 aka MMXEXT aka ISSE */
-#define X264_CPU_MMXEXT          X264_CPU_MMX2
-#define X264_CPU_SSE             0x0000008
-#define X264_CPU_SSE2            0x0000010
-#define X264_CPU_SSE3            0x0000020
-#define X264_CPU_SSSE3           0x0000040
-#define X264_CPU_SSE4            0x0000080  /* SSE4.1 */
-#define X264_CPU_SSE42           0x0000100  /* SSE4.2 */
-#define X264_CPU_LZCNT           0x0000200  /* Phenom support for "leading zero count" instruction. */
-#define X264_CPU_AVX             0x0000400  /* AVX support: requires OS support even if YMM registers aren't used. */
-#define X264_CPU_XOP             0x0000800  /* AMD XOP */
-#define X264_CPU_FMA4            0x0001000  /* AMD FMA4 */
-#define X264_CPU_FMA3            0x0002000  /* FMA3 */
-#define X264_CPU_AVX2            0x0004000  /* AVX2 */
-#define X264_CPU_BMI1            0x0008000  /* BMI1 */
-#define X264_CPU_BMI2            0x0010000  /* BMI2 */
+#define X264_CPU_MMX                (1<<0)
+#define X264_CPU_MMX2               (1<<1)  /* MMX2 aka MMXEXT aka ISSE */
+#define X264_CPU_MMXEXT             X264_CPU_MMX2
+#define X264_CPU_SSE                (1<<2)
+#define X264_CPU_SSE2               (1<<3)
+#define X264_CPU_LZCNT              (1<<4)
+#define X264_CPU_SSE3               (1<<5)
+#define X264_CPU_SSSE3              (1<<6)
+#define X264_CPU_SSE4               (1<<7)  /* SSE4.1 */
+#define X264_CPU_SSE42              (1<<8)  /* SSE4.2 */
+#define X264_CPU_AVX                (1<<9)  /* Requires OS support even if YMM registers aren't used */
+#define X264_CPU_XOP                (1<<10) /* AMD XOP */
+#define X264_CPU_FMA4               (1<<11) /* AMD FMA4 */
+#define X264_CPU_FMA3               (1<<12)
+#define X264_CPU_BMI1               (1<<13)
+#define X264_CPU_BMI2               (1<<14)
+#define X264_CPU_AVX2               (1<<15)
+#define X264_CPU_AVX512             (1<<16) /* AVX-512 {F, CD, BW, DQ, VL}, requires OS support */
 /* x86 modifiers */
-#define X264_CPU_CACHELINE_32    0x0020000  /* avoid memory loads that span the border between two cachelines */
-#define X264_CPU_CACHELINE_64    0x0040000  /* 32/64 is the size of a cacheline in bytes */
-#define X264_CPU_SSE2_IS_SLOW    0x0080000  /* avoid most SSE2 functions on Athlon64 */
-#define X264_CPU_SSE2_IS_FAST    0x0100000  /* a few functions are only faster on Core2 and Phenom */
-#define X264_CPU_SLOW_SHUFFLE    0x0200000  /* The Conroe has a slow shuffle unit (relative to overall SSE performance) */
-#define X264_CPU_STACK_MOD4      0x0400000  /* if stack is only mod4 and not mod16 */
-#define X264_CPU_SLOW_CTZ        0x0800000  /* BSR/BSF x86 instructions are really slow on some CPUs */
-#define X264_CPU_SLOW_ATOM       0x1000000  /* The Atom is terrible: slow SSE unaligned loads, slow
+#define X264_CPU_CACHELINE_32       (1<<17) /* avoid memory loads that span the border between two cachelines */
+#define X264_CPU_CACHELINE_64       (1<<18) /* 32/64 is the size of a cacheline in bytes */
+#define X264_CPU_SSE2_IS_SLOW       (1<<19) /* avoid most SSE2 functions on Athlon64 */
+#define X264_CPU_SSE2_IS_FAST       (1<<20) /* a few functions are only faster on Core2 and Phenom */
+#define X264_CPU_SLOW_SHUFFLE       (1<<21) /* The Conroe has a slow shuffle unit (relative to overall SSE performance) */
+#define X264_CPU_STACK_MOD4         (1<<22) /* if stack is only mod4 and not mod16 */
+#define X264_CPU_SLOW_ATOM          (1<<23) /* The Atom is terrible: slow SSE unaligned loads, slow
                                              * SIMD multiplies, slow SIMD variable shifts, slow pshufb,
                                              * cacheline split penalties -- gather everything here that
                                              * isn't shared by other CPUs to avoid making half a dozen
                                              * new SLOW flags. */
-#define X264_CPU_SLOW_PSHUFB     0x2000000  /* such as on the Intel Atom */
-#define X264_CPU_SLOW_PALIGNR    0x4000000  /* such as on the AMD Bobcat */
+#define X264_CPU_SLOW_PSHUFB        (1<<24) /* such as on the Intel Atom */
+#define X264_CPU_SLOW_PALIGNR       (1<<25) /* such as on the AMD Bobcat */
 
 /* PowerPC */
 #define X264_CPU_ALTIVEC         0x0000001
@@ -209,10 +208,12 @@ static const char * const x264_b_pyramid_names[] = { "none", "strict", "normal",
 static const char * const x264_overscan_names[] = { "undef", "show", "crop", 0 };
 static const char * const x264_vidformat_names[] = { "component", "pal", "ntsc", "secam", "mac", "undef", 0 };
 static const char * const x264_fullrange_names[] = { "off", "on", 0 };
-static const char * const x264_colorprim_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "film", "bt2020", 0 };
+static const char * const x264_colorprim_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "film", "bt2020", "smpte428",
+                                                     "smpte431", "smpte432", 0 };
 static const char * const x264_transfer_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "linear", "log100", "log316",
-                                                    "iec61966-2-4", "bt1361e", "iec61966-2-1", "bt2020-10", "bt2020-12", 0 };
-static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", "", "fcc", "bt470bg", "smpte170m", "smpte240m", "YCgCo", "bt2020nc", "bt2020c", 0 };
+                                                    "iec61966-2-4", "bt1361e", "iec61966-2-1", "bt2020-10", "bt2020-12", "smpte2084", "smpte428", 0 };
+static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", "", "fcc", "bt470bg", "smpte170m", "smpte240m", "YCgCo", "bt2020nc", "bt2020c",
+                                                     "smpte2085", 0 };
 static const char * const x264_nal_hrd_names[] = { "none", "vbr", "cbr", 0 };
 
 /* Colorspace type */
@@ -225,13 +226,15 @@ static const char * const x264_nal_hrd_names[] = { "none", "vbr", "cbr", 0 };
 #define X264_CSP_I422           0x0005  /* yuv 4:2:2 planar */
 #define X264_CSP_YV16           0x0006  /* yvu 4:2:2 planar */
 #define X264_CSP_NV16           0x0007  /* yuv 4:2:2, with one y plane and one packed u+v */
-#define X264_CSP_V210           0x0008  /* 10-bit yuv 4:2:2 packed in 32 */
-#define X264_CSP_I444           0x0009  /* yuv 4:4:4 planar */
-#define X264_CSP_YV24           0x000a  /* yvu 4:4:4 planar */
-#define X264_CSP_BGR            0x000b  /* packed bgr 24bits   */
-#define X264_CSP_BGRA           0x000c  /* packed bgr 32bits   */
-#define X264_CSP_RGB            0x000d  /* packed rgb 24bits   */
-#define X264_CSP_MAX            0x000e  /* end of list */
+#define X264_CSP_YUYV           0x0008  /* yuyv 4:2:2 packed */
+#define X264_CSP_UYVY           0x0009  /* uyvy 4:2:2 packed */
+#define X264_CSP_V210           0x000a  /* 10-bit yuv 4:2:2 packed in 32 */
+#define X264_CSP_I444           0x000b  /* yuv 4:4:4 planar */
+#define X264_CSP_YV24           0x000c  /* yvu 4:4:4 planar */
+#define X264_CSP_BGR            0x000d  /* packed bgr 24bits */
+#define X264_CSP_BGRA           0x000e  /* packed bgr 32bits */
+#define X264_CSP_RGB            0x000f  /* packed rgb 24bits */
+#define X264_CSP_MAX            0x0010  /* end of list */
 #define X264_CSP_VFLIP          0x1000  /* the csp is vertically flipped */
 #define X264_CSP_HIGH_DEPTH     0x2000  /* the csp has a depth of 16 bits per pixel component */
 
@@ -550,7 +553,7 @@ typedef struct x264_param_t
      * NAL unit. This helps distinguish between nalu_process calls from different sources,
      * e.g. if doing multiple encodes in one process.
      */
-    void (*nalu_process) ( x264_t *h, x264_nal_t *nal, void *opaque );
+    void (*nalu_process)( x264_t *h, x264_nal_t *nal, void *opaque );
 } x264_param_t;
 
 void x264_nal_encode( x264_t *h, uint8_t *dst, x264_nal_t *nal );
@@ -561,19 +564,19 @@ void x264_nal_encode( x264_t *h, uint8_t *dst, x264_nal_t *nal );
 
 typedef struct x264_level_t
 {
-    int level_idc;
-    int mbps;        /* max macroblock processing rate (macroblocks/sec) */
-    int frame_size;  /* max frame size (macroblocks) */
-    int dpb;         /* max decoded picture buffer (mbs) */
-    int bitrate;     /* max bitrate (kbit/sec) */
-    int cpb;         /* max vbv buffer (kbit) */
-    int mv_range;    /* max vertical mv component range (pixels) */
-    int mvs_per_2mb; /* max mvs per 2 consecutive mbs. */
-    int slice_rate;  /* ?? */
-    int mincr;       /* min compression ratio */
-    int bipred8x8;   /* limit bipred to >=8x8 */
-    int direct8x8;   /* limit b_direct to >=8x8 */
-    int frame_only;  /* forbid interlacing */
+    uint8_t  level_idc;
+    uint32_t mbps;        /* max macroblock processing rate (macroblocks/sec) */
+    uint32_t frame_size;  /* max frame size (macroblocks) */
+    uint32_t dpb;         /* max decoded picture buffer (mbs) */
+    uint32_t bitrate;     /* max bitrate (kbit/sec) */
+    uint32_t cpb;         /* max vbv buffer (kbit) */
+    uint16_t mv_range;    /* max vertical mv component range (pixels) */
+    uint8_t  mvs_per_2mb; /* max mvs per 2 consecutive mbs. */
+    uint8_t  slice_rate;  /* ?? */
+    uint8_t  mincr;       /* min compression ratio */
+    uint8_t  bipred8x8;   /* limit bipred to >=8x8 */
+    uint8_t  direct8x8;   /* limit b_direct to >=8x8 */
+    uint8_t  frame_only;  /* forbid interlacing */
 } x264_level_t;
 
 /* all of the levels defined in the standard, terminated by .level_idc=0 */
@@ -905,7 +908,7 @@ int     x264_encoder_headers( x264_t *, x264_nal_t **pp_nal, int *pi_nal );
 int     x264_encoder_encode( x264_t *, x264_nal_t **pp_nal, int *pi_nal, x264_picture_t *pic_in, x264_picture_t *pic_out );
 /* x264_encoder_close:
  *      close an encoder handler */
-void    x264_encoder_close  ( x264_t * );
+void    x264_encoder_close( x264_t * );
 /* x264_encoder_delayed_frames:
  *      return the number of currently delayed (buffered) frames
  *      this should be used at the end of the stream, to know when you have all the encoded frames. */

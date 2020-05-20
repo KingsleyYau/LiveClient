@@ -404,7 +404,8 @@ bool AudioEncoderAAC::CreateContext() {
     bool bFlag = true;
     char errbuf[1024];
 
-    mCodec = avcodec_find_encoder(AV_CODEC_ID_AAC);
+//    mCodec = avcodec_find_encoder(AV_CODEC_ID_AAC);
+    mCodec = avcodec_find_encoder_by_name("libfdk_aac");
     if ( !mCodec ) {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
@@ -435,6 +436,7 @@ bool AudioEncoderAAC::CreateContext() {
         mContext->bit_rate = 64000;
         // AAC授权
         mContext->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
+        mContext->time_base = (AVRational){1, 30};
 
         AVDictionary* options = NULL;
         int ret = avcodec_open2(mContext, mCodec, &options);
@@ -510,7 +512,7 @@ void AudioEncoderAAC::DestroyContext() {
                  );
 
     if( mContext ) {
-        avcodec_close(mContext);
+//        avcodec_close(mContext);
         avcodec_free_context(&mContext);
         mContext = NULL;
     }

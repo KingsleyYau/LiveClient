@@ -49,7 +49,7 @@ public:
     
 public:
     void SetDecoderVideoFormat(VIDEO_FORMATE_TYPE type);
-  
+    
 protected:
     bool Start();
     void Stop();

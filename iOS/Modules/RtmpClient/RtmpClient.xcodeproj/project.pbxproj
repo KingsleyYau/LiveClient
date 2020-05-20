@@ -35,6 +35,7 @@
 		505591721EF3DF0D000AF03A /* VideoHardDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505591701EF3DF0D000AF03A /* VideoHardDecoder.cpp */; };
 		5059ABD91EF3A9FB0090F0F9 /* VideoRendererImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5059ABD71EF3A9FB0090F0F9 /* VideoRendererImp.cpp */; };
 		5059ABDC1EF3AEF40090F0F9 /* AudioRendererImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5059ABDA1EF3AEF40090F0F9 /* AudioRendererImp.cpp */; };
+		506228D02474D37E0060484F /* MediaFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506228CE2474D37E0060484F /* MediaFileReader.cpp */; };
 		506D67941EF10DF40022A666 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506D67921EF10DF40022A666 /* PlayerController.cpp */; };
 		50A050021EA89EC2009CF72C /* RtmpPublisher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A050001EA89EC2009CF72C /* RtmpPublisher.cpp */; };
 		50CD56971F1353AC00EC3C4A /* PublisherController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CD56951F1353AC00EC3C4A /* PublisherController.cpp */; };
@@ -115,6 +116,8 @@
 		5059ABD81EF3A9FB0090F0F9 /* VideoRendererImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRendererImp.h; sourceTree = "<group>"; };
 		5059ABDA1EF3AEF40090F0F9 /* AudioRendererImp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioRendererImp.cpp; sourceTree = "<group>"; };
 		5059ABDB1EF3AEF40090F0F9 /* AudioRendererImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRendererImp.h; sourceTree = "<group>"; };
+		506228CE2474D37E0060484F /* MediaFileReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MediaFileReader.cpp; sourceTree = "<group>"; };
+		506228CF2474D37E0060484F /* MediaFileReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaFileReader.h; sourceTree = "<group>"; };
 		506D67921EF10DF40022A666 /* PlayerController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerController.cpp; sourceTree = "<group>"; };
 		506D67931EF10DF40022A666 /* PlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerController.h; sourceTree = "<group>"; };
 		50A050001EA89EC2009CF72C /* RtmpPublisher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RtmpPublisher.cpp; sourceTree = "<group>"; };
@@ -148,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				504FAFB41F4D164500E08A6D /* audio */,
+				506228CE2474D37E0060484F /* MediaFileReader.cpp */,
+				506228CF2474D37E0060484F /* MediaFileReader.h */,
 				50CD56981F1356F000EC3C4A /* IAudioRenderer.h */,
 				503A70701EEF748A00BA8FF8 /* ICodec.h */,
 				500337231EA0D7560078D32D /* IDecoder.h */,
@@ -349,6 +354,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 50C994AF1E8F9281001E1355;
@@ -372,6 +378,7 @@
 				5005200C1E949B8500C45E22 /* RtmpDump.cpp in Sources */,
 				5059ABD91EF3A9FB0090F0F9 /* VideoRendererImp.cpp in Sources */,
 				504FAFDD1F4D164500E08A6D /* EncodeDecodeBuffer.cpp in Sources */,
+				506228D02474D37E0060484F /* MediaFileReader.cpp in Sources */,
 				504FAFE41F4D164500E08A6D /* VideoMuxer.cpp in Sources */,
 				504FAFDF1F4D164500E08A6D /* VideoDecoderH264.cpp in Sources */,
 				500337191EA0C9BD0078D32D /* RtmpPlayer.cpp in Sources */,

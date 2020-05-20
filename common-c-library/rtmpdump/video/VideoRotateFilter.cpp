@@ -17,7 +17,7 @@ extern "C" {
 #include <libswscale/swscale.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/opt.h>
-#include <libavfilter/avfiltergraph.h>
+//#include <libavfilter/avfiltergraph.h>
 #include <libavfilter/buffersink.h>
 #include <libavfilter/buffersrc.h>
 }
@@ -285,7 +285,7 @@ bool VideoRotateFilter::CreateFilter(VideoFrame* srcFrame) {
 					mWidth,
 					mHeight
 					);
-			AVFilter *buffersrc = avfilter_get_by_name("buffer");
+			const AVFilter *buffersrc = avfilter_get_by_name("buffer");
 			FileLevelLog(
 					"rtmpdump",
 					KLog::LOG_MSG,
@@ -339,7 +339,7 @@ bool VideoRotateFilter::CreateFilter(VideoFrame* srcFrame) {
 			}
 
 			snprintf(args, sizeof(args), "%d", angle);
-			AVFilter *transpose = avfilter_get_by_name("transpose");
+			const AVFilter *transpose = avfilter_get_by_name("transpose");
 			FileLevelLog(
 					"rtmpdump",
 					KLog::LOG_MSG,
@@ -365,7 +365,7 @@ bool VideoRotateFilter::CreateFilter(VideoFrame* srcFrame) {
 
 	if( bFlag ) {
 		if( !mBufferSinkCtx ) {
-			AVFilter *buffersink = avfilter_get_by_name("buffersink");
+			const AVFilter *buffersink = avfilter_get_by_name("buffersink");
 			FileLevelLog(
 					"rtmpdump",
 					KLog::LOG_ERR_USER,

@@ -61,6 +61,8 @@
  */
 - (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString * _Nullable)recordFilePath recordH264FilePath:(NSString * _Nullable)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
 
+- (BOOL)playFilePath:(NSString * _Nonnull)filePath;
+
 /**
  停止
  */

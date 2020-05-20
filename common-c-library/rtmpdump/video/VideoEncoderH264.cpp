@@ -156,7 +156,7 @@ bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameIn
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoEncoderH264::Create( "
-				 "this : %p "
+				 "this : %p, "
                  "[%s], "
                  "width : %d, "
                  "height : %d, "
@@ -448,7 +448,7 @@ bool VideoEncoderH264::CreateContext() {
     FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoEncoderH264::CreateContext( this : %p )", this);
     
     bool bFlag = true;
-    avcodec_register_all();
+//    avcodec_register_all();
 //    av_log_set_level(AV_LOG_ERROR);
     
     mCodec = avcodec_find_encoder(AV_CODEC_ID_H264);
@@ -456,9 +456,9 @@ bool VideoEncoderH264::CreateContext() {
         FileLevelLog(
         		"rtmpdump",
 				 KLog::LOG_ERR_SYS,
-				 "VideoDecoderH264::CreateContext( "
-				 "this : %p "
-				 "[Codec not found], "
+				 "VideoEncoderH264::CreateContext( "
+				 "this : %p, "
+				 "[Codec not found] "
 				 ")",
 				 this
 				 );
@@ -517,8 +517,8 @@ bool VideoEncoderH264::CreateContext() {
             		"rtmpdump",
 					KLog::LOG_MSG,
                     "VideoEncoderH264::CreateContext( "
-					"this : %p "
-                    "[Codec opened], "
+					"this : %p, "
+                    "[Codec opened] "
                     ")",
                     this
                     );

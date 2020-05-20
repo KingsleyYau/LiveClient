@@ -101,6 +101,7 @@ public:
     void SetRtmpDump(RtmpDump* rtmpDump);
     void SetCallback(RtmpPlayerCallback* callback);
     void SetCacheMS(int cacheMS);
+    void SetCacheNoLimit(bool bNoCacheLimit);
     
 public:
     void PlayVideoRunnableHandle();
@@ -178,6 +179,9 @@ private:
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;
+    
+    // 是否不限制内存
+    bool mbNoCacheLimit;
 };
 }
 #endif /* RtmpPlayer_h */

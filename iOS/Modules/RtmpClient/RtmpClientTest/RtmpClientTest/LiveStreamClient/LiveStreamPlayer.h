@@ -48,6 +48,11 @@
 @property (strong, readonly) NSString * _Nonnull url;
 
 /**
+ 当前播放Filepath
+ */
+@property (strong, readonly) NSString * _Nonnull filePath;
+
+/**
  *  获取实例
  *
  *  @return 实例
@@ -64,6 +69,8 @@
  @return 成功失败
  */
 - (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString * _Nullable)recordFilePath recordH264FilePath:(NSString * _Nullable)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
+
+- (BOOL)playFilePath:(NSString * _Nonnull)filePath;
 
 /**
  停止
