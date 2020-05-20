@@ -448,10 +448,11 @@ bool VideoEncoderH264::CreateContext() {
     FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoEncoderH264::CreateContext( this : %p )", this);
     
     bool bFlag = true;
-//    avcodec_register_all();
+    avcodec_register_all();
 //    av_log_set_level(AV_LOG_ERROR);
     
-    mCodec = avcodec_find_encoder(AV_CODEC_ID_H264);
+//    mCodec = avcodec_find_encoder(AV_CODEC_ID_H264);
+    mCodec = avcodec_find_encoder_by_name("libx264");
     if ( !mCodec ) {
         FileLevelLog(
         		"rtmpdump",
