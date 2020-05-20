@@ -127,7 +127,9 @@
 
 - (void)stop {
     NSLog(@"LiveStreamPlayer::stop( self : %p )", self);
-
+    
+    self.url = @"";
+    self.filePath = @"";
     [self cancel];
 }
 
