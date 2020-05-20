@@ -235,7 +235,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="MYk-W2-zpx"/>
                     </constraints>
-                    <state key="normal" title="PFile"/>
+                    <state key="normal" title="File"/>
                     <connections>
                         <action selector="playFile:" destination="-1" eventType="touchUpInside" id="kmx-vb-GvD"/>
                     </connections>
@@ -249,13 +249,15 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RM2-Fk-mCo" userLabel="StopPlay">
                     <rect key="frame" x="207" y="593" width="67.333333333333314" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <state key="normal" title="StopPlay"/>
                     <connections>
                         <action selector="stopPlay:" destination="-1" eventType="touchUpInside" id="X2Q-J9-LZ7"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jE1-rt-oIi" userLabel="StopPush">
-                    <rect key="frame" x="274.33333333333331" y="593" width="67.333333333333314" height="30"/>
+                    <rect key="frame" x="274.33333333333331" y="593" width="67.333333333333314" height="28"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <state key="normal" title="StopPush"/>
                     <connections>
                         <action selector="stopPush:" destination="-1" eventType="touchUpInside" id="hE5-dk-QhW"/>
