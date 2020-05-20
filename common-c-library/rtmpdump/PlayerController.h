@@ -19,6 +19,7 @@
 #include <rtmpdump/audio/AudioRecorderAAC.h>
 
 #include <rtmpdump/Statistics.h>
+#include <rtmpdump/MediaFileReader.h>
 
 #include <stdio.h>
 
@@ -35,7 +36,9 @@ class PlayerStatusCallback {
     virtual void OnPlayerOnDelayMaxTime(PlayerController *pc) = 0;
 };
 
-class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDecoderCallback, RtmpPlayerCallback {
+class PlayerController : public RtmpDumpCallback,
+VideoDecoderCallback, AudioDecoderCallback,
+RtmpPlayerCallback, MediaFileReaderCallback {
 
   public:
     PlayerController();
@@ -91,6 +94,13 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
     bool PlayUrl(const string &url, const string &recordFilePath, const string &recordH264FilePath, const string &recordAACFilePath);
 
     /**
+     播放文件
+     
+     @param filePath 文件路径
+     */
+    bool PlayFile(const string &filePath);
+    
+    /**
      停止
      */
     void Stop();
@@ -145,6 +155,10 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
                            const string &uuId,
                            const string &userName);
 
+    // 文件播放器回调
+    void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size);
+    void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type);
+    
   private:
     // 传输器
     RtmpDump mRtmpDump;
@@ -169,6 +183,10 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
     Statistics mStatistics;
     // 是否需要重置音频播放
     bool mbNeedResetAudioRenderer;
+    // 文件播放器
+    MediaFileReader mFileReader;
+    // 是否播放文件
+    bool mbIsPlayFile;
 };
 }
 

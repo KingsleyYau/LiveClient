@@ -76,7 +76,7 @@
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://192.168.88.133:4000/cdn_standard/max", nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 
-    [self play:nil];
+//    [self play:nil];
     //    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
     //        dispatch_async(dispatch_get_main_queue(), ^{
     //            if (!granted) {
@@ -168,14 +168,30 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    for (int i = 0; i < self.playerArray.count; i++) {
-        NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-        NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-        NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+//    for (int i = 0; i < self.playerArray.count; i++) {
+//        NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+//        NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+//        NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+//
+//        NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
+//        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+//    }
+    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
-        NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
-        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-    }
+    NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
+    [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+}
+
+- (IBAction)playFile:(id)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+
+    NSString *filePath = [NSString stringWithFormat:@"%@/input.mp4", cacheDir];
+    [self.playerArray[0] playFilePath:filePath];
 }
 
 - (IBAction)stopPlay:(id)sender {

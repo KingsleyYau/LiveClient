@@ -83,7 +83,7 @@ VideoDecoderH264::VideoDecoderH264()
     mbDropFrame = false;
     mbWaitForInterFrame = true;
     mbCanDropFrame = false;
-        
+    
     mpDecodeVideoRunnable = new DecodeVideoRunnable(this);
     mpConvertVideoRunnable = new ConvertVideoRunnable(this);
 }
@@ -195,9 +195,12 @@ void VideoDecoderH264::ReleaseVideoFrame(void* frame) {
                  );
     
     mFreeBufferList.lock();
-    mFreeBufferList.push_back(videoFrame);
+    if ( mFreeBufferList.size() >= DEFAULT_VIDEO_BUFFER_MAX_COUNT ) {
+        delete videoFrame;
+    } else {
+        mFreeBufferList.push_back(videoFrame);
+    }
     mFreeBufferList.unlock();
-    
 }
     
 bool VideoDecoderH264::Start() {
@@ -319,9 +322,9 @@ bool VideoDecoderH264::CreateContext() {
     
     if( bFlag ) {
         mContext = avcodec_alloc_context3(mCodec);
-        if( (mCodec->capabilities & CODEC_CAP_TRUNCATED) ) {
-            mContext->flags |= CODEC_FLAG_TRUNCATED;
-        }
+//        if( (mCodec->capabilities & CODEC_CAP_TRUNCATED) ) {
+//            mContext->flags |= CODEC_FLAG_TRUNCATED;
+//        }
         
         AVDictionary* options = NULL;
 //        av_dict_set(&options, "threads", "2", 0);
@@ -960,7 +963,7 @@ void VideoDecoderH264::DecodeVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "VideoDecoderH264::DecodeVideoHandle( "
-				"this : %,p "
+				"this : %p, "
                 "[Exit] "
                 ")",
                 this

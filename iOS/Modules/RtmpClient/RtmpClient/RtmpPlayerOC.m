@@ -256,6 +256,19 @@ private:
     return bFlag;
 }
 
+- (BOOL)playFilePath:(NSString * _Nonnull)filePath {
+    BOOL bFlag = YES;
+    
+    NSLog(@"RtmpPlayerOC::playFilePath( self : %p, filePath : %@ )", self, filePath);
+    
+    bFlag = self.player->PlayFile([filePath UTF8String]);
+    
+    if( bFlag ) {
+    }
+    
+    return bFlag;
+}
+
 - (void)stop {
     NSLog(@"RtmpPlayerOC::stop( self : %p )", self);
     

@@ -89,6 +89,8 @@ mPlayThreadMutex(KMutex::MutexType_Recursive)
 
     mpRtmpDump = rtmpDump;
     mpRtmpPlayerCallback = callback;
+    
+    mbNoCacheLimit = false;
 }
 
 RtmpPlayer::~RtmpPlayer() {
@@ -276,6 +278,10 @@ void RtmpPlayer::SetCacheMS(int cacheMS) {
     mCacheMS = cacheMS;
 }
     
+void RtmpPlayer::SetCacheNoLimit(bool bNoCacheLimit) {
+    mbNoCacheLimit = bNoCacheLimit;
+}
+
 void RtmpPlayer::PlayVideoRunnableHandle() {
 	PlayFrame(false);
 }
@@ -310,19 +316,19 @@ void RtmpPlayer::PushVideoFrame(void* frame, u_int32_t timestamp) {
         if( !frameBuffer ) {
             frameBuffer = new FrameBuffer();
             FileLevelLog(
-            		"rtmpdump",
-            		KLog::LOG_WARNING,
-            		"RtmpPlayer::PushVideoFrame( "
-					"this : %p, "
+                    "rtmpdump",
+                    KLog::LOG_WARNING,
+                    "RtmpPlayer::PushVideoFrame( "
+                    "this : %p, "
                     "[New Video Frame], "
                     "frame : %p, "
                     "timestamp : %u, "
-					"bufferListSize : %u "
+                    "bufferListSize : %u "
                     ")",
-					this,
-					frameBuffer,
+                    this,
+                    frameBuffer,
                     timestamp,
-					mVideoBufferList.size()
+                    mVideoBufferList.size()
                     );
         }
         
@@ -333,20 +339,22 @@ void RtmpPlayer::PushVideoFrame(void* frame, u_int32_t timestamp) {
         
         mVideoBufferList.lock();
 
-        if( mVideoBufferList.size() > VIDEO_WARN_FRAME_COUNT ) {
-            FileLevelLog(
-            		"rtmpdump",
-            		KLog::LOG_WARNING,
-            		"RtmpPlayer::PushVideoFrame( "
-					"this : %p, "
-                    "[Video Buffer Size Warning], "
-                    "timestamp : %u, "
-					"bufferListSize : %u "
-                    ")",
-					this,
-                    timestamp,
-					mVideoBufferList.size()
-                    );
+        if ( !mbNoCacheLimit ) {
+            if( mVideoBufferList.size() > VIDEO_WARN_FRAME_COUNT ) {
+                FileLevelLog(
+                        "rtmpdump",
+                        KLog::LOG_WARNING,
+                        "RtmpPlayer::PushVideoFrame( "
+                        "this : %p, "
+                        "[Video Buffer Size Warning], "
+                        "timestamp : %u, "
+                        "bufferListSize : %u "
+                        ")",
+                        this,
+                        timestamp,
+                        mVideoBufferList.size()
+                        );
+            }
         }
 
         mVideoBufferList.push_back(frameBuffer);
