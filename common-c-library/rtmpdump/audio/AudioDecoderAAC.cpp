@@ -318,10 +318,14 @@ void AudioDecoderAAC::ReleaseAudioFrame(void* frame) {
                  audioFrame->mTimestamp
                  );
     
+
     mFreeBufferList.lock();
-    mFreeBufferList.push_back(audioFrame);
+    if ( mFreeBufferList.size() >= DEFAULT_AUDIO_BUFFER_MAX_COUNT ) {
+        delete audioFrame;
+    } else {
+        mFreeBufferList.push_back(audioFrame);
+    }
     mFreeBufferList.unlock();
-    
 }
 
 void AudioDecoderAAC::ClearAudioFrame() {
