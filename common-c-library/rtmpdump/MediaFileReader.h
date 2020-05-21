@@ -65,14 +65,28 @@ class MediaFileReader {
     void MediaReaderHandle();
     
   private:
+    // 状态回调
+    MediaFileReaderCallback *mpCallback;
+    
     // 编码器句柄
     AVFormatContext *mContext;
 
+    // 视频流序号
     int mVideoStreamIndex;
+    // 视频开始时间戳
+    int mVideoStartTimestamp;
+    // 视频最新时间戳
+    int mVideoLastTimestamp;
+    
+    // 音频流序号
     int mAudioStreamIndex;
+    // 音频开始时间戳
+    int mAudioStartTimestamp;
+    // 音频最新时间戳
+    int mAudioLastTimestamp;
 
+    // 文件路径
     string mFilePath;
-    MediaFileReaderCallback *mpCallback;
     
     // 文件读取线程
     KThread mMediaReaderThread;

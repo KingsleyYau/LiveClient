@@ -10,12 +10,19 @@
 
 #include "MediaFileReader.h"
 
+#include <common/CommonFunc.h>
+
 extern "C" {
 #include <libavutil/imgutils.h>
 #include <libavutil/samplefmt.h>
 #include <libavutil/timestamp.h>
 #include <libavformat/avformat.h>
 }
+
+// 无效的Timestamp
+#define INVALID_TIMESTAMP 0xFFFFFFFF
+// 预加载时间
+#define PRE_READ_TIME_MS 3000
 
 namespace coollive {
 // 文件读取线程
@@ -40,6 +47,12 @@ class MediaReaderRunnable : public KRunnable {
 MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
     mContext = NULL;
     mpMediaReaderRunnable = new MediaReaderRunnable(this);
+    
+    mAudioStartTimestamp = INVALID_TIMESTAMP;
+    mAudioLastTimestamp = INVALID_TIMESTAMP;
+    
+    mVideoStartTimestamp = INVALID_TIMESTAMP;
+    mVideoLastTimestamp = INVALID_TIMESTAMP;
 }
 
 MediaFileReader::~MediaFileReader() {
@@ -62,6 +75,12 @@ bool MediaFileReader::PlayFile(const string &filePath) {
     mbRunning = true;
     mFilePath = filePath;
 
+    mAudioStartTimestamp = INVALID_TIMESTAMP;
+    mAudioLastTimestamp = INVALID_TIMESTAMP;
+    
+    mVideoStartTimestamp = INVALID_TIMESTAMP;
+    mVideoLastTimestamp = INVALID_TIMESTAMP;
+    
     // 开启文件读取线程
     mMediaReaderThread.Start(mpMediaReaderRunnable);
 
@@ -211,40 +230,93 @@ void MediaFileReader::MediaReaderHandle() {
         int ret = 0, got_frame = 0;
 
         bool bFinish = false;
+        bool bRead = true;
+        
+        // 开始播放时间
+        long long startTime = getCurrentTime();
+        long long now;
+        
         while (mbRunning) {
-            int ret = av_read_frame(mContext, &pkt);
+            now = getCurrentTime();
+            unsigned int diffTime = (unsigned int)(now - startTime);
+            unsigned int diffTimestamp = 0;
+            
+            if ( mVideoStartTimestamp == INVALID_TIMESTAMP || mAudioStartTimestamp == INVALID_TIMESTAMP ) {
+                bRead = true;
+            } else {
+                unsigned int diffAudioTS = mAudioLastTimestamp - mAudioStartTimestamp;
+                unsigned int diffVideoTS = mVideoLastTimestamp - mVideoStartTimestamp;
+                diffTimestamp = MIN(diffAudioTS, diffVideoTS);
+            }
+            
+            if ( diffTimestamp > diffTime + PRE_READ_TIME_MS ) {
+                bRead = false;
+            } else {
+                bRead = true;
+            }
+            
+            if ( bRead ) {
+                int ret = av_read_frame(mContext, &pkt);
 
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
-                         "MediaFileReader::MediaReaderHandle( "
-                         "this : %p, "
-                         "[Read Packet %s %s], "
-                         "pts : %d, "
-                         "size : %d, "
-                         "data : 0x%02x,%02x,%02x,%02x,%02x"
-                         ")",
-                         this,
-                         pkt.stream_index == mVideoStreamIndex ? "Video" : "Audio",
-                         (pkt.flags & AV_PKT_FLAG_KEY) ? "Key Frame" : "Frame",
-                         pkt.pts,
-                         pkt.size,
-                         pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_ERR_USER,
+                             "MediaFileReader::MediaReaderHandle( "
+                             "this : %p, "
+                             "[Read Packet %s %s], "
+                             "diffTime : %u, "
+                             "diffTimestamp : %u, "
+                             "pts : %d, "
+                             "dts : %d, "
+                             "size : %d, "
+                             "data : (Hex)%02x,%02x,%02x,%02x,%02x "
+                             ")",
+                             this,
+                             pkt.stream_index == mVideoStreamIndex ? "Video" : "Audio",
+                             (pkt.flags & AV_PKT_FLAG_KEY) ? "Key Frame" : "Frame",
+                             diffTime,
+                             diffTimestamp,
+                             pkt.pts,
+                             pkt.dts,
+                             pkt.size,
+                             pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
 
-            if (pkt.stream_index == mVideoStreamIndex) {
-                VideoFrameType video_type;
-                video_type = (pkt.flags & AV_PKT_FLAG_KEY) ? VFT_IDR : VFT_NOTIDR;
+                int timestamp = pkt.pts * 1000 * av_q2d(mContext->streams[pkt.stream_index]->time_base);
+                if (pkt.stream_index == mVideoStreamIndex) {
+                    VideoFrameType video_type;
+                    video_type = (pkt.flags & AV_PKT_FLAG_KEY) ? VFT_IDR : VFT_NOTIDR;
 
-                if (mpCallback) {
-                    int timestamp = pkt.pts * 1000 * av_q2d(mContext->streams[mVideoStreamIndex]->time_base);
-                    mpCallback->OnMediaFileReaderVideoFrame(this, (const char *)pkt.data, pkt.size, timestamp, video_type);
+                    if (mpCallback) {
+                        mpCallback->OnMediaFileReaderVideoFrame(this, (const char *)pkt.data, pkt.size, timestamp, video_type);
+                    }
+                    
+                    if ( mVideoStartTimestamp == INVALID_TIMESTAMP ) {
+                        mVideoStartTimestamp = timestamp;
+                    }
+                    mVideoLastTimestamp = timestamp;
+
+                } else if (pkt.stream_index == mAudioStreamIndex) {
+                    if ( mAudioStartTimestamp == INVALID_TIMESTAMP ) {
+                        mAudioStartTimestamp = timestamp;
+                    }
+                    mVideoLastTimestamp = timestamp;
                 }
 
-            } else if (pkt.stream_index == mAudioStreamIndex) {
-            }
-
-            if (ret < 0) {
-                bFinish = true;
-                break;
+                if (ret < 0) {
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_ERR_USER,
+                                 "MediaFileReader::MediaReaderHandle( "
+                                 "this : %p, "
+                                 "[Read Packet Finish], "
+                                 "ret : %d "
+                                 ")",
+                                 this,
+                                 ret);
+                    
+                    bFinish = true;
+                    break;
+                }
+            } else {
+                Sleep(1);
             }
         }
 
