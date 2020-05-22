@@ -1,6 +1,5 @@
- 
-        
-    
+
+
 //
 //  MediaFileReader.h
 //  RtmpClient
@@ -33,6 +32,11 @@ class MediaFileReaderCallback {
     virtual ~MediaFileReaderCallback(){};
     virtual void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size) = 0;
     virtual void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
+    virtual void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+                                             AudioFrameFormat format,
+                                             AudioFrameSoundRate sound_rate,
+                                             AudioFrameSoundSize sound_size,
+                                             AudioFrameSoundType sound_type) = 0;
 };
 
 class MediaFileReader {
@@ -58,16 +62,16 @@ class MediaFileReader {
      @param pc 状态回调
      */
     void SetMediaFileReaderCallback(MediaFileReaderCallback *callback);
-    
+
   private:
     // 文件读取线程实现体
     friend class MediaReaderRunnable;
     void MediaReaderHandle();
-    
+
   private:
     // 状态回调
     MediaFileReaderCallback *mpCallback;
-    
+
     // 编码器句柄
     AVFormatContext *mContext;
 
@@ -77,7 +81,7 @@ class MediaFileReader {
     int mVideoStartTimestamp;
     // 视频最新时间戳
     int mVideoLastTimestamp;
-    
+
     // 音频流序号
     int mAudioStreamIndex;
     // 音频开始时间戳
@@ -87,7 +91,7 @@ class MediaFileReader {
 
     // 文件路径
     string mFilePath;
-    
+
     // 文件读取线程
     KThread mMediaReaderThread;
     MediaReaderRunnable* mpMediaReaderRunnable;

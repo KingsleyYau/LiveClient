@@ -108,7 +108,7 @@ bool AudioDecoderAAC::Reset() {
 }
     
 void AudioDecoderAAC::Pause() {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Pause( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Pause( this : %p )", this);
     
     Stop();
 
@@ -200,17 +200,26 @@ bool AudioDecoderAAC::CreateContext() {
     bool bFlag = false;
     int ret = 0;
     
-    mCodec = avcodec_find_decoder(AV_CODEC_ID_AAC);
-//    mCodec = avcodec_find_decoder_by_name("libfdk_aac");
+//    mCodec = avcodec_find_decoder(AV_CODEC_ID_AAC);
+    mCodec = avcodec_find_decoder_by_name("libfdk_aac");
     if ( mCodec ) {
         bFlag = true;
-        
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "AudioDecoderAAC::CreateContext( "
+                     "this : %p, "
+                     "[Codec Found], "
+                     "%s "
+                     ")",
+                     this,
+                     mCodec->long_name
+                     );
     } else {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioDecoderAAC::CreateContext( "
 					 "this : %p, "
-                     "[Codec not found] "
+                     "[Codec Not Found] "
                      ")",
                      this
                      );
@@ -420,7 +429,7 @@ void AudioDecoderAAC::DecodeAudioFrame(
     int headerCapacity = audioFrame->GetBufferCapacity();
     int frameHeaderSize = 0;
     
-    bFlag = mAudioMuxer.GetADTS(size, format, sound_rate, sound_size, AFST_MONO, frame, headerCapacity, frameHeaderSize);
+    bFlag = mAudioMuxer.GetADTS(size, format, sound_rate, sound_size, sound_type, frame, headerCapacity, frameHeaderSize);
     if( bFlag ) {
         // 计算已用的ADTS
         audioFrame->mBufferLen = frameHeaderSize;
@@ -453,36 +462,38 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAu
 			NULL != newAudioFrame &&
 			NULL != mContext ) {
 
-		AVPacket packet = {0};
-		av_init_packet(&packet);
+		AVPacket pkt = {0};
+		av_init_packet(&pkt);
 
 		int bGotFrame = 0;
 
-	    packet.data = (uint8_t *)data;
-	    packet.size = size;
+	    pkt.data = (uint8_t *)data;
+	    pkt.size = size;
 
         AVFrame* decodeFrame = audioFrame->mpAVFrame;
-	    int ret = avcodec_decode_audio4(mContext, decodeFrame, &bGotFrame, &packet);
+	    int ret = avcodec_decode_audio4(mContext, decodeFrame, &bGotFrame, &pkt);
         
         // 计算处理时间
         long long now = getCurrentTime();
         long long handleTime = now - curTime;
 		FileLevelLog(
                      "rtmpdump",
-                     KLog::LOG_STAT,
+                     KLog::LOG_MSG,
                      "AudioDecoderAAC::DecodeAudioFrame( "
 					 "this : %p, "
                      "[Decode Frame], "
                      "ret : %d, "
                      "timestamp : %u, "
                      "handleTime : %lld, "
-                     "size : %d "
+                     "size : %d, "
+                     "data : (Hex)%02x,%02x,%02x,%02x,%02x "
                      ")",
                      this,
                      ret,
                      audioFrame->mTimestamp,
                      handleTime,
-                     size
+                     size,
+                     pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]
                      );
 
         if( ret >= 0 ) {

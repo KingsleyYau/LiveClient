@@ -406,16 +406,27 @@ bool AudioEncoderAAC::CreateContext() {
 
 //    mCodec = avcodec_find_encoder(AV_CODEC_ID_AAC);
     mCodec = avcodec_find_encoder_by_name("libfdk_aac");
-    if ( !mCodec ) {
+    if ( mCodec ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "AudioEncoderAAC::CreateContext( "
+                     "this : %p, "
+                     "[Codec Found], "
+                     "%s "
+                     ")",
+                     this,
+                     mCodec->long_name
+                     );
+        bFlag = true;
+    } else {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioEncoderAAC::CreateContext( "
-					 "this : %p, "
-                    "[Codec not found] "
-                    ")",
-                    this
-                    );
-
+                     "this : %p, "
+                     "[Codec Not Found] "
+                     ")",
+                     this
+                     );
         bFlag = false;
     }
 

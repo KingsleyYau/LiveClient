@@ -36,13 +36,13 @@ bool AudioMuxer::GetADTS(
            format == AFF_AAC &&
            sampleRate == AFSR_KHZ_44 &&
            bitPerChannel == AFSS_BIT_16
-//           && channels == AFST_MONO // 由于ffmpeg的rtmp固定发送AFST_STEREO, 强制转为AFST_MONO
+//           && channels == AFST_MONO // 由于ffmpeg的rtmp固定发送AFST_STEREO, 不作判断
            ) {
             int profile = 2;  // AAC LC
             
             int freqIdx = 4;  // 44.1KHz
             
-            int chanCfg = 1;  // MPEG-4 Audio Channel Configuration. 1 Channel front-center
+            int chanCfg = 2;  // MPEG-4 Audio Channel Configuration. 1 Channel front-center, 必须比实际数据大, 估计仅用作申请Buffer空间
             int fullSize = ADTS_HEADER_SIZE + frameSize;
             
             // Fill in ADTS data

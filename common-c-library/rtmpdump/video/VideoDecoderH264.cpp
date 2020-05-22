@@ -305,18 +305,27 @@ bool VideoDecoderH264::CreateContext() {
 //    av_log_set_level(AV_LOG_ERROR);
     
     mCodec = avcodec_find_decoder(AV_CODEC_ID_H264);
-    if ( !mCodec ) {
-        // codec not found
-    	FileLevelLog(
-    			"rtmpdump",
-				KLog::LOG_ERR_SYS,
-                "VideoDecoderH264::CreateContext( "
-				"this : %p, "
-                "[Codec not found] "
-                ")",
-                this
-                );
-        
+    if ( mCodec ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "VideoDecoderH264::CreateContext( "
+                     "this : %p, "
+                     "[Codec Found], "
+                     "%s "
+                     ")",
+                     this,
+                     mCodec->long_name
+                     );
+        bFlag = true;
+    } else {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_ERR_SYS,
+                     "VideoDecoderH264::CreateContext( "
+                     "this : %p, "
+                     "[Codec Not Found] "
+                     ")",
+                     this
+                     );
         bFlag = false;
     }
     

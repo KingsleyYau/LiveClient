@@ -26,9 +26,9 @@
 #define AUDIO_DIFF_VIDEO_TIMESTAMP 300
 
 // 视频警告缓冲(帧数)
-#define VIDEO_WARN_FRAME_COUNT 45
+#define VIDEO_WARN_FRAME_COUNT 90
 // 视频最大缓冲(帧数)
-#define VIDEO_MAX_FRAME_COUNT 100
+#define VIDEO_MAX_FRAME_COUNT 150
 // 音频警告缓冲(帧数)
 #define AUDIO_WARN_FRAME_COUNT 150
 // 音频最大缓冲(帧数)
@@ -1109,11 +1109,11 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         // 本地两帧播放时间差
                         int diffTime = (int)(curTime - preTime);
                         // 两帧时间差
-                        int diffms = frame->mTimestamp - preTimestamp;
+                        int diffms = (frame->mTimestamp - preTimestamp);
                         // 总播放时间差
                         int diffTotalTime = (int)(curTime - startTime);
                         // 总帧时间差
-                        int diffTotalms = frame->mTimestamp - startTimestamp;
+                        int diffTotalms = (frame->mTimestamp - startTimestamp);
                         // 是否丢帧
                         bool bDropFrame = false;
                         // 是否断开

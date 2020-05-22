@@ -33,7 +33,7 @@ PlayerController::PlayerController() {
 
     mbNeedResetAudioRenderer = false;
     mbIsPlayFile = false;
-    
+
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
     mRtmpPlayer.SetCallback(this);
@@ -171,7 +171,7 @@ bool PlayerController::PlayFile(const string &filePath) {
         mRtmpPlayer.SetCacheNoLimit(true);
         bFlag = mRtmpPlayer.PlayUrl("");
     }
-    
+
     mbIsPlayFile = true;
     bFlag = mFileReader.PlayFile(filePath);
 
@@ -201,6 +201,8 @@ void PlayerController::Stop() {
     mStatistics.Stop();
     // 停止网络
     mRtmpDump.Stop();
+    // 停止文件
+    mFileReader.Stop();
     // 停止解码
     if (mpVideoDecoder) {
         mpVideoDecoder->Pause();
@@ -517,7 +519,7 @@ void PlayerController::OnDelayMaxTime(RtmpPlayer *player) {
 }
 
 void PlayerController::OnOverMaxBufferFrameCount(RtmpPlayer *player) {
-    if ( !mbIsPlayFile ) {
+    if (!mbIsPlayFile) {
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
                      "PlayerController::OnOverMaxBufferFrameCount( "
@@ -574,6 +576,18 @@ void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const c
     // 解码视频帧
     if (mpVideoDecoder) {
         mpVideoDecoder->DecodeVideoFrame(data, size, timestamp, video_type);
+    }
+}
+
+void PlayerController::OnMediaFileReaderAudioFrame(
+                                                   MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+                                                   AudioFrameFormat format,
+                                                   AudioFrameSoundRate sound_rate,
+                                                   AudioFrameSoundSize sound_size,
+                                                   AudioFrameSoundType sound_type) {
+    // 解码音频帧
+    if (mpAudioDecoder) {
+        mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);
     }
 }
 }

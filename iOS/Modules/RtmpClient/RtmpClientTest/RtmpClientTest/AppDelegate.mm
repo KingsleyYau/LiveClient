@@ -21,8 +21,8 @@
     NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil];
     [urlConnection start];
     
-    KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_ERR_USER);
+    KLog::SetLogFileEnable(NO);
+    KLog::SetLogLevel(KLog::LOG_MSG);
     
     return YES;
 }

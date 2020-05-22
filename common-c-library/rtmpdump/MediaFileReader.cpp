@@ -181,7 +181,7 @@ void MediaFileReader::MediaReaderHandle() {
         av_dump_format(mContext, 0, mFilePath.c_str(), 0);
 
         mAudioStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
-        AVCodec *videoCodec = NULL;
+        AVCodecContext *audioCtx = mContext->streams[mAudioStreamIndex]->codec;
         mVideoStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
         unsigned char *extradata = (unsigned char *)mContext->streams[mVideoStreamIndex]->codec->extradata;
         extradata += 4;
@@ -240,7 +240,7 @@ void MediaFileReader::MediaReaderHandle() {
             now = getCurrentTime();
             unsigned int diffTime = (unsigned int)(now - startTime);
             unsigned int diffTimestamp = 0;
-            
+
             if ( mVideoStartTimestamp == INVALID_TIMESTAMP || mAudioStartTimestamp == INVALID_TIMESTAMP ) {
                 bRead = true;
             } else {
@@ -248,7 +248,7 @@ void MediaFileReader::MediaReaderHandle() {
                 unsigned int diffVideoTS = mVideoLastTimestamp - mVideoStartTimestamp;
                 diffTimestamp = MIN(diffAudioTS, diffVideoTS);
             }
-            
+
             if ( diffTimestamp > diffTime + PRE_READ_TIME_MS ) {
                 bRead = false;
             } else {
@@ -259,7 +259,7 @@ void MediaFileReader::MediaReaderHandle() {
                 int ret = av_read_frame(mContext, &pkt);
 
                 FileLevelLog("rtmpdump",
-                             KLog::LOG_ERR_USER,
+                             KLog::LOG_MSG,
                              "MediaFileReader::MediaReaderHandle( "
                              "this : %p, "
                              "[Read Packet %s %s], "
@@ -295,6 +295,11 @@ void MediaFileReader::MediaReaderHandle() {
                     mVideoLastTimestamp = timestamp;
 
                 } else if (pkt.stream_index == mAudioStreamIndex) {
+                    if (mpCallback) {
+                        mpCallback->OnMediaFileReaderAudioFrame(this, (const char *)pkt.data, pkt.size, timestamp,
+                                                                AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, (audioCtx->channels==2)?AFST_STEREO:AFST_MONO);
+                    }
+                    
                     if ( mAudioStartTimestamp == INVALID_TIMESTAMP ) {
                         mAudioStartTimestamp = timestamp;
                     }
