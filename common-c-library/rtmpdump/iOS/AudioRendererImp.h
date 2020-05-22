@@ -33,7 +33,7 @@ public:
     void SetMute(bool isMute);
     
 private:
-    bool Create();
+    bool Create(void *audioFrame = NULL);
     static void AudioQueueOutputCallback(
                                          void * __nullable                inUserData,
                                          AudioQueueRef _Nullable          inAQ,
@@ -43,6 +43,7 @@ private:
 protected:
     AudioQueueRef _Nullable mAudioQueue;
     list_lock<AudioQueueBufferRef> mAudioBufferList;
+    AudioStreamBasicDescription mAsbd;
     
     bool mIsMute;
 };

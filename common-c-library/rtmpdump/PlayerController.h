@@ -37,8 +37,10 @@ class PlayerStatusCallback {
 };
 
 class PlayerController : public RtmpDumpCallback,
-VideoDecoderCallback, AudioDecoderCallback,
-RtmpPlayerCallback, MediaFileReaderCallback {
+                         VideoDecoderCallback,
+                         AudioDecoderCallback,
+                         RtmpPlayerCallback,
+                         MediaFileReaderCallback {
 
   public:
     PlayerController();
@@ -99,7 +101,7 @@ RtmpPlayerCallback, MediaFileReaderCallback {
      @param filePath 文件路径
      */
     bool PlayFile(const string &filePath);
-    
+
     /**
      停止
      */
@@ -127,9 +129,9 @@ RtmpPlayerCallback, MediaFileReaderCallback {
 
     // 解码器回调
     void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp);
-    void OnDecodeVideoError(VideoDecoder* decoder);
+    void OnDecodeVideoError(VideoDecoder *decoder);
     void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp);
-    void OnDecodeAudioError(AudioDecoder* decoder);
+    void OnDecodeAudioError(AudioDecoder *decoder);
 
   private:
     // 播放器回调
@@ -144,7 +146,7 @@ RtmpPlayerCallback, MediaFileReaderCallback {
     void OnResetVideoStream(RtmpPlayer *player);
     void OnResetAudioStream(RtmpPlayer *player);
     void OnDelayMaxTime(RtmpPlayer *player);
-    void OnOverMaxBufferFrameCount(RtmpPlayer* player);
+    void OnOverMaxBufferFrameCount(RtmpPlayer *player);
 
     // 传输器回调
     void OnRecvCmdLogin(RtmpDump *rtmpDump,
@@ -158,7 +160,12 @@ RtmpPlayerCallback, MediaFileReaderCallback {
     // 文件播放器回调
     void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size);
     void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type);
-    
+    void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+                                     AudioFrameFormat format,
+                                     AudioFrameSoundRate sound_rate,
+                                     AudioFrameSoundSize sound_size,
+                                     AudioFrameSoundType sound_type);
+
   private:
     // 传输器
     RtmpDump mRtmpDump;

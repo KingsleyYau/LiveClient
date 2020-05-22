@@ -57,7 +57,9 @@ static LiveStreamSession *gSession = nil;
          * 1.必须使用AVAudioSessionCategoryPlayAndRecord, 然后audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO
          */
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+        [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
+                      withOptions:AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionAllowBluetoothA2DP
+                            error:nil];
         NSError *error = nil;
         [audioSession setActive:YES error:&error];
         if (error) {
@@ -87,9 +89,8 @@ static LiveStreamSession *gSession = nil;
             // 开启后台播放
             [[LiveStreamSession session] activeSession];
         }
-
         self.playingCount++;
-
+        
         if (self.capturingCount == 0) {
             // 没有在录制
             AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -246,12 +247,29 @@ static LiveStreamSession *gSession = nil;
 - (BOOL)useHeadphones {
     bool bFlag = NO;
     AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
-    for (AVAudioSessionPortDescription *desc in [route outputs]) {
-        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones]) {
+    NSArray *outputs = [route outputs];
+    for (AVAudioSessionPortDescription *desc in outputs) {
+        NSString *portType = [desc portType];
+        NSLog(@"LiveStreamSession::useHeadphones( portType : %@ )", portType);
+        if (
+            // 耳机
+            [portType isEqualToString:AVAudioSessionPortHeadphones] ||
+            // 蓝牙设备
+            [portType isEqualToString:AVAudioSessionPortBluetoothA2DP] ||
+            // 贴近耳朵
+            [portType isEqualToString:AVAudioSessionPortBuiltInReceiver]) {
             bFlag = YES;
             break;
         }
     }
+
+    bFlag = true;
+    if (bFlag) {
+        NSLog(@"LiveStreamSession::useHeadphones( [Using Headphones or Bluetooth Output] )");
+    } else {
+        NSLog(@"LiveStreamSession::useHeadphones( [Using Speaker] )");
+    }
+
     return bFlag;
 }
 
@@ -270,8 +288,8 @@ static LiveStreamSession *gSession = nil;
 }
 
 - (void)handleInterruption:(NSNotification *)notification {
-//    NSDictionary *dictionary = notification.userInfo;
-//    NSLog(@"LiveStreamSession::handleInterruption( dictionary : %@ )", dictionary);
+    NSDictionary *dictionary = notification.userInfo;
+    NSLog(@"LiveStreamSession::handleInterruption( dictionary : %@ )", dictionary);
 }
 
 @end

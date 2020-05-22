@@ -25,7 +25,7 @@ AudioRendererImp::AudioRendererImp() {
     mAudioQueue = NULL;
     mIsMute = false;
     
-    Create();
+//    Create();
 }
 
 AudioRendererImp::~AudioRendererImp() {
@@ -50,6 +50,10 @@ AudioRendererImp::~AudioRendererImp() {
         }
     }
     mAudioBufferList.unlock();
+    
+    if ( mAudioQueue ) {
+        AudioQueueDispose(mAudioQueue, YES);
+    }
 }
 
 void AudioRendererImp::RenderAudioFrame(void* frame) {
@@ -58,13 +62,13 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
     OSStatus status = noErr;
     
     // 创建播放器
-//    if( Create(audioFrame) ) {
+    if( Create(frame) ) {
         // 申请音频包内存
         AudioQueueBufferRef audioBuffer = NULL;
         mAudioBufferList.lock();
         if( mAudioBufferList.empty() ) {
             status = AudioQueueAllocateBuffer(mAudioQueue, AUDIO_BUFFER_SIZE, &audioBuffer);
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [No More Cache AudioBuffer], audioBuffer : %p )", audioBuffer);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [New More AudioBuffer], audioBuffer : %p )", audioBuffer);
             
         } else {
             audioBuffer = mAudioBufferList.front();
@@ -96,7 +100,7 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
         } else {
             FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [AudioQueueAllocateBuffer Fail], this : %p, status : %d )", this, (int)status);
         }
-//    }
+    }
 }
 
 bool AudioRendererImp::Start() {
@@ -168,39 +172,60 @@ void AudioRendererImp::SetMute(bool isMute) {
     mIsMute = isMute;
 }
 
-bool AudioRendererImp::Create() {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
-                 "AudioRendererImp::Create( "
-                 "this : %p "
-                 ")",
-                 this
-                 );
+bool AudioRendererImp::Create(void *frame) {
+    AudioFrame* audioFrame = (AudioFrame *)frame;
     
     bool bFlag = true;
+    
+    int channels = 1;
+    if ( audioFrame ) {
+        channels = (audioFrame->mSoundType==AFST_STEREO)?2:1;
+    }
     
     AudioStreamBasicDescription asbd;
     FillOutASBDForLPCM(asbd,
                        44100,   // Sample Rate
-                       1,       // Channels Per Frame
+                       channels,       // Channels Per Frame
                        16,      // Valid Bits Per Channel
                        16,      // Total Bits Per Channel
                        false,
                        false
                        );
     
-//    asbd.mSampleRate = 44100;
-//    asbd.mFormatID = kAudioFormatLinearPCM;
-//    asbd.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked;
-//    asbd.mFramesPerPacket = 1;
-//    asbd.mBitsPerChannel = 16;
-//    asbd.mChannelsPerFrame = 1;
-//    asbd.mBytesPerFrame = (asbd.mBitsPerChannel / 8) * asbd.mChannelsPerFrame;
-//    asbd.mBytesPerPacket = asbd.mBytesPerFrame * asbd.mFramesPerPacket;
-//    asbd.mReserved = 0;
+    if ( mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame ) {
+        if( mAudioQueue ) {
+            AudioQueueReset(mAudioQueue);
+            mAudioBufferList.lock();
+            while( !mAudioBufferList.empty() ) {
+                AudioQueueReset(mAudioQueue);
+                AudioQueueFlush(mAudioQueue);
+                AudioQueueBufferRef audioBuffer = mAudioBufferList.front();
+                if( audioBuffer != NULL ) {
+                    mAudioBufferList.pop_front();
+                    // 释放内存
+                    AudioQueueFreeBuffer(mAudioQueue, audioBuffer);
+                    
+                } else {
+                    break;
+                }
+            }
+            mAudioBufferList.unlock();
+            AudioQueueDispose(mAudioQueue, YES);
+            mAudioQueue = NULL;
+        }
+        mAsbd = asbd;
+    }
     
     // Create the audio queue
     if( !mAudioQueue ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "AudioRendererImp::Create( "
+                     "this : %p "
+                     ")",
+                     this
+                     );
+        
         bFlag = false;
         
         OSStatus status = noErr;
@@ -210,18 +235,18 @@ bool AudioRendererImp::Create() {
             Float32 gain = 1.0;
             AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, gain);
             
-            // 申请音频包内存
-            AudioQueueBufferRef audioBuffer;
-            for(int i = 0; i < AUDIO_BUFFER_COUNT; i++) {
-                status = AudioQueueAllocateBuffer(mAudioQueue, AUDIO_BUFFER_SIZE, &audioBuffer);
-                if( status == noErr ) {
-                    mAudioBufferList.lock();
-                    mAudioBufferList.push_back(audioBuffer);
-                    mAudioBufferList.unlock();
-                }
-            }
+//            // 申请音频包内存
+//            AudioQueueBufferRef audioBuffer;
+//            for(int i = 0; i < AUDIO_BUFFER_COUNT; i++) {
+//                status = AudioQueueAllocateBuffer(mAudioQueue, AUDIO_BUFFER_SIZE, &audioBuffer);
+//                if( status == noErr ) {
+//                    mAudioBufferList.lock();
+//                    mAudioBufferList.push_back(audioBuffer);
+//                    mAudioBufferList.unlock();
+//                }
+//            }
+            AudioQueueStart(mAudioQueue, NULL);
         }
-
     }
     
     return bFlag;
