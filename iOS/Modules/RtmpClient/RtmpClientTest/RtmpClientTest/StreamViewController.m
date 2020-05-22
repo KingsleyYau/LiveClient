@@ -225,8 +225,10 @@
 }
 
 - (IBAction)newPage:(id)sender {
-    PlayViewController *vc = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSString *playUrl = @"rtmp://172.25.32.133:1935/camshare/iOS";
+    [self.playerArray[0] playUrl:playUrl recordFilePath:@"" recordH264FilePath:@"" recordAACFilePath:@""];
+//    PlayViewController *vc = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - 静音

@@ -590,4 +590,16 @@ void PlayerController::OnMediaFileReaderAudioFrame(
         mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);
     }
 }
+
+bool PlayerController::SendCmdLogin(const string& userName, const string& password, const string& siteId) {
+    return mRtmpDump.SendCmdLogin(userName, password, siteId);
+}
+
+bool PlayerController::SendCmdMakeCall(const string& userName, const string& serverId, const string& siteId) {
+    return mRtmpDump.SendCmdMakeCall(userName, serverId, siteId);
+}
+
+bool PlayerController::SendCmdReceive() {
+    return mRtmpDump.SendCmdReceive();
+}
 }

@@ -100,7 +100,7 @@ bool MediaFileReader::PlayFile(const string &filePath) {
 
 void MediaFileReader::Stop() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_WARNING,
                  "MediaFileReader::Stop( "
                  "this : %p "
                  ")",
@@ -121,7 +121,7 @@ void MediaFileReader::Stop() {
     mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_WARNING,
                  "MediaFileReader::Stop( "
                  "this : %p, "
                  "[Success] "
@@ -146,7 +146,7 @@ void MediaFileReader::MediaReaderHandle() {
         /* open input file, and allocate format context */
         if (avformat_open_input(&mContext, mFilePath.c_str(), NULL, NULL) < 0) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_ERR_USER,
                          "MediaFileReader::MediaReaderHandle( "
                          "this : %p, "
                          "[Counld Open Input File], "
@@ -159,7 +159,7 @@ void MediaFileReader::MediaReaderHandle() {
 
         if (avformat_find_stream_info(mContext, NULL) >= 0) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_WARNING,
                          "MediaFileReader::MediaReaderHandle( "
                          "[Found Stream Info], "
                          "duration : %d second, "
@@ -170,7 +170,7 @@ void MediaFileReader::MediaReaderHandle() {
                          mContext->bit_rate);
         } else {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_WARNING,
                          "MediaFileReader::MediaReaderHandle( "
                          "this : %p, "
                          "[Could Not Found Stream Info] "
@@ -202,7 +202,7 @@ void MediaFileReader::MediaReaderHandle() {
         memcpy(pps, extradata, pps_data_size);
 
         FileLevelLog("rtmpdump",
-                     KLog::LOG_MSG,
+                     KLog::LOG_WARNING,
                      "MediaFileReader::MediaReaderHandle( "
                      "this : %p, "
                      "[Read Video SPS/PPS], "

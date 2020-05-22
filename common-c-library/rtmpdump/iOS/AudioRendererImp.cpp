@@ -105,7 +105,7 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 
 bool AudioRendererImp::Start() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioRendererImp::Start( "
                  "this : %p "
                  ")",
@@ -137,7 +137,7 @@ bool AudioRendererImp::Start() {
 
 void AudioRendererImp::Stop() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioRendererImp::Stop( "
                  "this : %p "
                  ")",
@@ -147,6 +147,15 @@ void AudioRendererImp::Stop() {
     if( mAudioQueue ) {
         AudioQueueStop(mAudioQueue, YES);
     }
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::Stop( "
+                 "this : %p, "
+                 "[Success] "
+                 ")",
+                 this
+                 );
 }
 
 void AudioRendererImp::Reset() {
@@ -162,6 +171,15 @@ void AudioRendererImp::Reset() {
         AudioQueueReset(mAudioQueue);
         AudioQueueFlush(mAudioQueue);
     }
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "AudioRendererImp::Reset( "
+                 "this : %p, "
+                 "[Success] "
+                 ")",
+                 this
+                 );
 }
 
 bool AudioRendererImp::GetMute() {
