@@ -314,7 +314,7 @@ bool VideoDecoderH264::CreateContext() {
                      "%s "
                      ")",
                      this,
-                     mCodec->long_name
+                     mCodec->name
                      );
         bFlag = true;
     } else {

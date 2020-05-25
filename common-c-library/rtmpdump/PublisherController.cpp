@@ -475,4 +475,13 @@ void PublisherController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                  userName.c_str());
 }
 /*********************************************** 传输器回调处理 End *****************************************************/
+
+bool PublisherController::SendCmdLogin(const string& userName, const string& password, const string& siteId) {
+    return mRtmpDump.SendCmdLogin(userName, password, siteId);
+}
+
+bool PublisherController::SendCmdMakeCall(const string& userName, const string& serverId, const string& siteId) {
+    return mRtmpDump.SendCmdMakeCall(userName, serverId, siteId);
+}
+
 }

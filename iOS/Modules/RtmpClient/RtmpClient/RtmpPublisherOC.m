@@ -31,24 +31,23 @@ class PublisherStatusCallbackImp;
 
 @interface RtmpPublisherOC () {
     BOOL _useHardEncoder;
-
 }
 
 #pragma mark - 传输模块
-@property (assign) PublisherController* publisher;
+@property (assign) PublisherController *publisher;
 
 #pragma mark - 状态回调
-@property (assign) PublisherStatusCallbackImp* statusCallback;
+@property (assign) PublisherStatusCallbackImp *statusCallback;
 
 #pragma mark - 编码器
-@property (assign) VideoEncoder* videoEncoder;
-@property (assign) AudioEncoder* audioEncoder;
+@property (assign) VideoEncoder *videoEncoder;
+@property (assign) AudioEncoder *audioEncoder;
 
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
-@property (nonatomic, strong) NSDate* enterBackgroundTime;
+@property (nonatomic, strong) NSDate *enterBackgroundTime;
 // 开始推流时间
-@property (nonatomic, strong) NSDate* startTime;
+@property (nonatomic, strong) NSDate *startTime;
 
 #pragma mark - 视频参数
 // 宽
@@ -78,32 +77,41 @@ class PublisherStatusCallbackImp;
 @property (assign) long long videoFramePauseTime;
 
 #pragma mark - 音频控制
-@property (assign) EncodeDecodeBuffer* mpMuteBuffer;
+@property (assign) EncodeDecodeBuffer *mpMuteBuffer;
 
 @end
 
 #pragma mark - RrmpPublisher回调
 class PublisherStatusCallbackImp : public PublisherStatusCallback {
-public:
-    PublisherStatusCallbackImp(RtmpPublisherOC* publisher) {
+  public:
+    PublisherStatusCallbackImp(RtmpPublisherOC *publisher) {
         mpPublisher = publisher;
     };
-    
+
     ~PublisherStatusCallbackImp(){};
-    
-    void OnPublisherConnect(PublisherController* pc) {
-        if( [mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnConnect:)] ) {
+
+    void OnPublisherConnect(PublisherController *pc) {
+        if ([mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnConnect:)]) {
             [mpPublisher.delegate rtmpPublisherOCOnConnect:mpPublisher];
         }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            mpPublisher.publisher->SendCmdLogin("MM1", "123456", "PC0");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                mpPublisher.publisher->SendCmdMakeCall("MM1", "PC64", "4");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                               });
+            });
+        });
     }
-    
-    void OnPublisherDisconnect(PublisherController* pc) {
-        if( [mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnDisconnect:)] ) {
+
+    void OnPublisherDisconnect(PublisherController *pc) {
+        if ([mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnDisconnect:)]) {
             [mpPublisher.delegate rtmpPublisherOCOnDisconnect:mpPublisher];
         }
     }
-    
-private:
+
+  private:
     __weak typeof(RtmpPublisherOC) *mpPublisher;
 };
 
@@ -116,8 +124,8 @@ private:
 
 - (instancetype)initWithWidthAndHeight:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate {
     NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %ld, height : %ld, fps : %ld, keyInterval : %ld, bitRate : %ld )", (long)width, (long)height, (long)fps, (long)keyInterval, (long)bitRate);
-    
-    if(self = [super init] ) {
+
+    if (self = [super init]) {
         // 初始化参数
         _width = (int)width;
         _height = (int)height;
@@ -125,27 +133,27 @@ private:
         _keyInterval = (int)keyInterval;
         _bitRate = (int)bitRate;
         _mute = NO;
-        
+
         self.videoFrameLastPushTime = 0;
         self.videoFrameStartPushTime = 0;
         self.videoFrameIndex = 0;
         self.videoFrameInterval = 1000.0 / fps;
-        
+
         self.videoPause = NO;
         self.videoResume = YES;
         self.videoFramePauseTime = 0;
-        
+
         self.startTime = [NSDate date];
-        
+
         // 创建流推送器
         self.publisher = new PublisherController();
         self.publisher->SetVideoParam(self.width, self.height, self.fps, self.keyInterval);
         self.statusCallback = new PublisherStatusCallbackImp(self);
         self.publisher->SetStatusCallback(self.statusCallback);
-        
+
         // 创建静音Buffer
         self.mpMuteBuffer = new EncodeDecodeBuffer();
-        
+
 #if TARGET_OS_SIMULATOR
         // 模拟器, 默认使用软编码
         _useHardEncoder = NO;
@@ -156,14 +164,13 @@ private:
 
         // 创建解码器和渲染器
         [self createEncoders];
-        
+
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-        
     }
-    
+
     return self;
 }
 
@@ -171,37 +178,37 @@ private:
     NSLog(@"RtmpPublisherOC::dealloc()");
     // 销毁编码器
     [self destroyEncoders];
-    
+
     // 销毁流推送器
-    if( self.publisher ) {
+    if (self.publisher) {
         delete self.publisher;
         self.publisher = NULL;
     }
-    
-    if( self.statusCallback ) {
+
+    if (self.statusCallback) {
         delete self.statusCallback;
         self.statusCallback = NULL;
     }
-    
+
     // 销毁影音Buffer
-    if( self.mpMuteBuffer ) {
+    if (self.mpMuteBuffer) {
         delete self.mpMuteBuffer;
         self.mpMuteBuffer = NULL;
     }
-    
+
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 #pragma mark - 对外接口
-- (BOOL)publishUrl:(NSString * _Nonnull)url
-recordH264FilePath:(NSString *)recordH264FilePath
- recordAACFilePath:(NSString * _Nullable)recordAACFilePath {
+- (BOOL)publishUrl:(NSString *_Nonnull)url
+    recordH264FilePath:(NSString *)recordH264FilePath
+     recordAACFilePath:(NSString *_Nullable)recordAACFilePath {
     BOOL bFlag = YES;
-    
+
     NSLog(@"RtmpPublisherOC::pushlishUrl( url : %@ )", url);
-    
+
     @synchronized(self) {
         self.videoPause = NO;
     }
@@ -221,7 +228,7 @@ recordH264FilePath:(NSString *)recordH264FilePath
 - (void)pushVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer {
     // 放到推流器
     CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-    char* data = (char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+    char *data = (char *)CVPixelBufferGetBaseAddress(pixelBuffer);
     int size = (int)CVPixelBufferGetDataSize(pixelBuffer);
     self.publisher->PushVideoFrame(data, size, (void *)pixelBuffer);
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
@@ -238,96 +245,95 @@ recordH264FilePath:(NSString *)recordH264FilePath
 }
 
 - (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer {
-    char* data = NULL;
+    char *data = NULL;
     size_t size = 0;
     OSStatus status = noErr;
-    
+
     CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
     status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &size, &data);
-    if( status == kCMBlockBufferNoErr ) {
-        void* buffer = data;
-        
-        if( _mute ) {
+    if (status == kCMBlockBufferNoErr) {
+        void *buffer = data;
+
+        if (_mute) {
             // 静音
             self.mpMuteBuffer->RenewBufferSize((int)size);
             self.mpMuteBuffer->FillBufferWithChar(0);
             buffer = (void *)self.mpMuteBuffer->GetBuffer();
-            
+
             CMBlockBufferReplaceDataBytes((const void *)buffer, blockBuffer, 0, size);
         }
-        
+
         self.publisher->PushAudioFrame(buffer, (int)size, (void *)sampleBuffer);
     }
 }
 
 - (void)setMute:(BOOL)mute {
-    if( _mute != mute ) {
+    if (_mute != mute) {
         _mute = mute;
     }
 }
 
 #pragma mark - 后台处理
-- (void)willEnterBackground:(NSNotification*)notification {
-    if( _isBackground == NO ) {
+- (void)willEnterBackground:(NSNotification *)notification {
+    if (_isBackground == NO) {
         _isBackground = YES;
-        
+
         // 销毁硬编码器
         self.videoEncoder->Pause();
-        
-//        self.enterBackgroundTime = [NSDate date];
+
+        //        self.enterBackgroundTime = [NSDate date];
     }
 }
 
-- (void)willEnterForeground:(NSNotification*)notification {
-    if( _isBackground == YES ) {
+- (void)willEnterForeground:(NSNotification *)notification {
+    if (_isBackground == YES) {
         _isBackground = NO;
-        
+
         // 重置视频编码器
         self.videoEncoder->Reset();
-        
-//        if( (self.startTime == [self.enterBackgroundTime earlierDate:self.startTime]) ) {
-//            // 开始时间比进入后台时间要早, 增加在后台的时间到视频的时间戳
-//            NSDate* now = [NSDate date];
-//            NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.enterBackgroundTime];
-//            NSUInteger timestamp = timeInterval * 1000;
-//
-//            self.publisher->AddVideoTimestamp((unsigned int)timestamp);
-//        }
 
+        //        if( (self.startTime == [self.enterBackgroundTime earlierDate:self.startTime]) ) {
+        //            // 开始时间比进入后台时间要早, 增加在后台的时间到视频的时间戳
+        //            NSDate* now = [NSDate date];
+        //            NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.enterBackgroundTime];
+        //            NSUInteger timestamp = timeInterval * 1000;
+        //
+        //            self.publisher->AddVideoTimestamp((unsigned int)timestamp);
+        //        }
     }
 }
 
 #pragma mark - 私有方法
 - (void)createEncoders {
-    if( _useHardEncoder ) {
+    if (_useHardEncoder) {
         // 硬编码
-        
+
         // 创建硬编码器
         self.videoEncoder = new VideoHardEncoder();
         self.audioEncoder = new AudioHardEncoder();
-        
+
     } else {
         // 软解码
         self.videoEncoder = new VideoEncoderH264();
         self.audioEncoder = new AudioEncoderAAC();
     }
-    
+
     // 替换编码器
     self.videoEncoder->Create(self.width, self.height, self.bitRate, self.keyInterval, self.fps, VIDEO_FORMATE_BGRA);
     self.publisher->SetVideoEncoder(self.videoEncoder);
-    
+
     self.audioEncoder->Create(44100, 1, 16);
     self.publisher->SetAudioEncoder(self.audioEncoder);
 }
 
 - (void)destroyEncoders {
-    if( self.videoEncoder ) {
+    if (self.videoEncoder) {
         delete self.videoEncoder;
         self.videoEncoder = nil;
         self.publisher->SetVideoEncoder(NULL);
     }
-    
-    if( self.audioEncoder ) {
+
+    if (self.audioEncoder) {
         delete self.audioEncoder;
         self.audioEncoder = nil;
         self.publisher->SetAudioEncoder(NULL);

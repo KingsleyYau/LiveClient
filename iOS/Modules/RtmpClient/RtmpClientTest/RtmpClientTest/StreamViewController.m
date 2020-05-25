@@ -225,8 +225,9 @@
 }
 
 - (IBAction)newPage:(id)sender {
-    NSString *playUrl = @"rtmp://172.25.32.133:1935/camshare/iOS";
-    [self.playerArray[0] playUrl:playUrl recordFilePath:@"" recordH264FilePath:@"" recordAACFilePath:@""];
+    NSString *url = @"rtmp://172.25.32.133:1935/camshare/iOS";
+//    [self.playerArray[0] playUrl:playUrl recordFilePath:@"" recordH264FilePath:@"" recordAACFilePath:@""];
+    [self.publisher pushlishUrl:url recordH264FilePath:@"" recordAACFilePath:@""];
 //    PlayViewController *vc = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
 //    [self.navigationController pushViewController:vc animated:YES];
 }

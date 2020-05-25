@@ -212,7 +212,7 @@ bool AudioDecoderAAC::CreateContext() {
                      "%s "
                      ")",
                      this,
-                     mCodec->long_name
+                     mCodec->name
                      );
     } else {
         FileLevelLog("rtmpdump",
