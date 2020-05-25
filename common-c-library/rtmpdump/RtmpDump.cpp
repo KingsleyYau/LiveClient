@@ -942,7 +942,7 @@ bool RtmpDump::SendCmdLogin(const string& userName, const string& password, cons
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpDump::SendCmdLogin( "
-                 "this : %p "
+                 "this : %p, "
                  "userName : %s, "
                  "password : %s, "
                  "siteId : %s "

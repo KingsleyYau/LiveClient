@@ -415,7 +415,7 @@ bool AudioEncoderAAC::CreateContext() {
                      "%s "
                      ")",
                      this,
-                     mCodec->long_name
+                     mCodec->name
                      );
         bFlag = true;
     } else {

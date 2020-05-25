@@ -63,8 +63,8 @@ bool AudioHardEncoder::Create(int sampleRate, int channelsPerFrame, int bitPerSa
     mTotalPresentationTime = 0;
 
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Create( "
-                                                "[%s], "
-                                                "this : %p "
+                                                "this : %p, "
+                                                "[%s] "
                                                 ")",
                  bFlag ? "Success" : "Fail",
                  this);

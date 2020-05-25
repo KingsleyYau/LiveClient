@@ -74,7 +74,7 @@ bool VideoHardDecoder::Create(VideoDecoderCallback* callback)
     
     ResetParam();
     
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Create( [Success], this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Create( this : %p, [Success] )", this);
     
     return result;
 }
@@ -105,8 +105,8 @@ bool VideoHardDecoder::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardDecoder::Reset( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+                 "[%s] "
                  ")",
                  bFlag?"Success":"Fail",
                  this
@@ -466,7 +466,7 @@ bool VideoHardDecoder::CreateContext() {
         }
     }
 
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::CreateContext( [%s], this : %p, mSession : %p, status : %d )", bFlag?"Success":"Fail", this, mSession, status);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::CreateContext( this : %p, [%s], mSession : %p, status : %d )", bFlag?"Success":"Fail", this, mSession, status);
     
     mRuningMutex.unlock();
     

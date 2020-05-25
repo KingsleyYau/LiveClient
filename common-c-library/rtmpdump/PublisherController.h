@@ -111,6 +111,19 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
      */
     void AddVideoTimestamp(u_int32_t timestamp);
 
+    /**
+     发送Login命令
+
+     @return 发送结果
+     */
+    bool SendCmdLogin(const string& userName, const string& password, const string& siteId);
+    /**
+     发送MakeCall命令
+
+     @return 发送结果
+     */
+    bool SendCmdMakeCall(const string& userName, const string& serverId, const string& siteId);
+    
   private:
     // 编码器回调
     void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t timestamp);
