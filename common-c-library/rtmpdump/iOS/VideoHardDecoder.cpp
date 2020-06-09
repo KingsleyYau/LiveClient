@@ -84,11 +84,13 @@ void VideoHardDecoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Pause( this : %p )", this);
     
     DestroyContext();
+    
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Pause( this : %p, [Success] )", this);
 }
     
 bool VideoHardDecoder::Reset() {
     bool bFlag = true;
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::Reset( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Reset( this : %p )", this);
     
     mRuningMutex.lock();
     if(
@@ -121,7 +123,7 @@ void VideoHardDecoder::ResetStream() {
     
 void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_STAT,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
                  "this : %p, "
                  "sps : %p, "

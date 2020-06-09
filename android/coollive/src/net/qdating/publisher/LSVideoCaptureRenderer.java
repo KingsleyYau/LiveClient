@@ -165,10 +165,38 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		bmpFilter.updateBmpFrame(bitmap);
 
 		if ( bmpFilter.getBitmap() != null ) {
+			Log.i(LSConfig.TAG,
+					String.format("LSVideoCaptureRenderer::setCaptureBitmap( "
+									+ "this : 0x%x, "
+									+ "[Set Capture Bitmap], "
+									+ "bitmap : 0x%x, "
+									+ "width : %d, "
+									+ "height : %d "
+									+ " )",
+							hashCode(),
+							bitmap.hashCode(),
+							bmpFilter.getBitmap().getWidth(),
+							bmpFilter.getBitmap().getHeight()
+					)
+			);
+
 			changeCropFilterSize(bmpFilter.getBitmap().getWidth(), bmpFilter.getBitmap().getHeight());
 			cameraFilter.setFilter(bmpFilter);
 			bmpFilter.setFilter(cropFilter);
 		} else {
+			Log.i(LSConfig.TAG,
+					String.format("LSVideoCaptureRenderer::setCaptureBitmap( "
+									+ "this : 0x%x, "
+									+ "[Clear Capture Bitmap], "
+									+ "width : %d, "
+									+ "height : %d "
+									+ " )",
+							hashCode(),
+							originalWidth,
+							originalHeight
+					)
+			);
+
 			changeCropFilterSize(originalWidth, originalHeight);
 			cameraFilter.setFilter(cropFilter);
 		}
@@ -200,7 +228,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 				)
 		);
 
-		if ( radioPreview == radioImage ) {
+		if ( inputHeight == 0 || publishConfig.videoHeight == 0 || radioPreview == radioImage ) {
 			// 不裁剪
 		} else if( radioPreview < radioImage ) {
 			// 剪裁左右

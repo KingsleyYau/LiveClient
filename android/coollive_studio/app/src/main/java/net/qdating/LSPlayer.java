@@ -102,8 +102,22 @@ public class LSPlayer implements ILSPlayerCallback {
 			LSPlayerJni.SetLogDir(filePath);
 			LSPlayerJni.SetJniLogLevel(LSConfig.LOG_LEVEL);
 		}
-		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::init( this : 0x%x )", hashCode()));
+
+		String freeMemory = Runtime.getRuntime().freeMemory() / 1024 + " K";
+		String totalMemory = Runtime.getRuntime().totalMemory() / 1024 + " K";
+		String maxMemory = Runtime.getRuntime().maxMemory() / 1024 + " K";
+
+		Log.w(LSConfig.TAG, String.format("LSPlayer::init( "
+						+ "this : 0x%x, "
+						+ "freeMemory : %s, "
+						+ "totalMemory : %s, "
+						+ "maxMemory : %s "
+						+ ")",
+				hashCode(),
+				freeMemory,
+				totalMemory,
+				maxMemory
+		));
 		
 		this.statusCallback = statusCallback;
 		
@@ -167,7 +181,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		}
 		
 		if( bFlag ) {
-			Log.i(LSConfig.TAG, String.format("LSPlayer::init( "
+			Log.w(LSConfig.TAG, String.format("LSPlayer::init( "
 							+ "this : 0x%x, "
 							+ "[Success with %s] "
 							+ ")",
@@ -192,7 +206,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * 反初始化流播放器
 	 */
 	public void uninit() {
-		Log.i(LSConfig.TAG, String.format("LSPlayer::uninit( "
+		Log.w(LSConfig.TAG, String.format("LSPlayer::uninit( "
 				+ "this : 0x%x "
 				+ ")",
 				hashCode()
@@ -201,6 +215,24 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		// 销毁播放器
 		player.Destroy();
+
+		String freeMemory = Runtime.getRuntime().freeMemory() / 1024 + " K";
+		String totalMemory = Runtime.getRuntime().totalMemory() / 1024 + " K";
+		String maxMemory = Runtime.getRuntime().maxMemory() / 1024 + " K";
+
+		Log.w(LSConfig.TAG, String.format("LSPlayer::uninit( "
+						+ "this : 0x%x, "
+						+ "[Success], "
+						+ "freeMemory : %s, "
+						+ "totalMemory : %s, "
+						+ "maxMemory : %s "
+						+ ")",
+				hashCode(),
+				freeMemory,
+				totalMemory,
+				maxMemory
+				)
+		);
 	}
 
 	public void setRendererBinder(LSPlayerRendererBinder rendererBinder) {
@@ -224,7 +256,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	public boolean playUrl(String url, String recordFilePath, String recordH264FilePath, String recordAACFilePath) {
 		boolean bFlag = false;
 		
-		Log.d(LSConfig.TAG, String.format("LSPlayer::playUrl( "
+		Log.w(LSConfig.TAG, String.format("LSPlayer::playUrl( "
 				+ "this : 0x%x, "
 				+ "url : %s "
 				+ ")",
@@ -258,7 +290,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	    	}
 	    }
 	    
-		Log.i(LSConfig.TAG, String.format("LSPlayer::playUrl( "
+		Log.w(LSConfig.TAG, String.format("LSPlayer::playUrl( "
 				+ "this : 0x%x, "
 				+ "[%s], "
 				+ "url : %s "
@@ -276,7 +308,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * 停止播放
 	 */
 	public void stop() {
-		Log.d(LSConfig.TAG, String.format("LSPlayer::stop( "
+		Log.w(LSConfig.TAG, String.format("LSPlayer::stop( "
 				+ "this : 0x%x "
 				+ ")",
 				hashCode()
@@ -293,7 +325,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		// 停止音频播放
 		audioPlayer.stop();
 		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::stop( "
+		Log.w(LSConfig.TAG, String.format("LSPlayer::stop( "
 				+ "this : 0x%x, "
 				+ "[Success] )",
 				hashCode()

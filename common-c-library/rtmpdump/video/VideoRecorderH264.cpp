@@ -77,57 +77,58 @@ bool VideoRecorderH264::RecordVideoKeyFrame(const char* sps, int sps_size, const
 bool VideoRecorderH264::RecordVideoFrame(const char* data, int size) {
     bool bFlag = false;
     
-    // Mux
-    Nalu naluArray[16];
-    int naluArraySize = _countof(naluArray);
-    bFlag = mVideoMuxer.GetNalus(data, size, mNaluHeaderSize, naluArray, naluArraySize);
-    if( bFlag && naluArraySize > 0 ) {
-        bFlag = false;
-        
-        FileLevelLog("rtmpdump",
-                     KLog::LOG_MSG,
-                     "VideoRecorderH264::RecordVideoFrame( "
-                     "[Got Nalu Array], "
-                     "size : %d, "
-                     "naluArraySize : %d "
-                     ")",
-                     size,
-                     naluArraySize
-                     );
-        
-        int naluIndex = 0;
-        while( naluIndex < naluArraySize ) {
-            Nalu* nalu = naluArray + naluIndex;
-            naluIndex++;
+    if( mpFile ) {
+        // Mux
+        Nalu naluArray[16];
+        int naluArraySize = _countof(naluArray);
+        bFlag = mVideoMuxer.GetNalus(data, size, mNaluHeaderSize, naluArray, naluArraySize);
+        if( bFlag && naluArraySize > 0 ) {
+            bFlag = false;
             
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "VideoRecorderH264::RecordVideoFrame( "
-                         "[Got Nalu], "
-                         "naluSize : %d, "
-                         "naluBodySize : %d, "
-                         "frameType : %d "
+                         "[Got Nalu Array], "
+                         "size : %d, "
+                         "naluArraySize : %d "
                          ")",
-                         nalu->GetNaluSize(),
-                         nalu->GetNaluBodySize(),
-                         nalu->GetNaluType()
+                         size,
+                         naluArraySize
                          );
             
-            // Write to H264 file
-            if( mpFile ) {
-                // Write NALU start code
-                fwrite(sync_bytes, 1, sizeof(sync_bytes), mpFile);
+            int naluIndex = 0;
+            while( naluIndex < naluArraySize ) {
+                Nalu* nalu = naluArray + naluIndex;
+                naluIndex++;
                 
-                // Write playload
-                fwrite(nalu->GetNaluBody(), 1, nalu->GetNaluBodySize(), mpFile);
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_MSG,
+                             "VideoRecorderH264::RecordVideoFrame( "
+                             "[Got Nalu], "
+                             "naluSize : %d, "
+                             "naluBodySize : %d, "
+                             "frameType : %d "
+                             ")",
+                             nalu->GetNaluSize(),
+                             nalu->GetNaluBodySize(),
+                             nalu->GetNaluType()
+                             );
                 
-                fflush(mpFile);
-                
-                bFlag = true;
+                // Write to H264 file
+                if( mpFile ) {
+                    // Write NALU start code
+                    fwrite(sync_bytes, 1, sizeof(sync_bytes), mpFile);
+                    
+                    // Write playload
+                    fwrite(nalu->GetNaluBody(), 1, nalu->GetNaluBodySize(), mpFile);
+                    
+                    fflush(mpFile);
+                    
+                    bFlag = true;
+                }
             }
         }
     }
-    
     return bFlag;
 }
     

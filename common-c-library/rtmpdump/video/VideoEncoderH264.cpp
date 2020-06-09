@@ -483,7 +483,7 @@ bool VideoEncoderH264::CreateContext() {
         // 调节编码速度和质量的平衡(ultrafast[fastest encoding]/veryslow[best compression])
         /**
          编码参数
-         ultrafast[不能用, iOS硬解会失败],superfast, veryfast, faster, fast, medium, slow, slower, veryslow, placebo
+         ultrafast[不能用, iOS硬解会失败], superfast, veryfast, faster, fast, medium, slow, slower, veryslow, placebo
          */
         av_opt_set(mContext->priv_data, "preset", "superfast", 0);
         /**
@@ -493,7 +493,7 @@ bool VideoEncoderH264::CreateContext() {
         /**
          * 设置不分片
          */
-        av_opt_set(mContext->priv_data, "x264-params", "sliced-threads=0", 0);
+        av_opt_set(mContext->priv_data, "x264-params", "slices-max=1", 0);
 
         /**
          @description https://trac.ffmpeg.org/wiki/Encode/H.264
@@ -509,8 +509,10 @@ bool VideoEncoderH264::CreateContext() {
          High	4.2	iPad Air and later, iPhone 5s and later	-profile:v high -level 4.2
          
          **/
-        av_opt_set(mContext->priv_data, "profile:v", "baseline", 0);
+        av_opt_set(mContext->priv_data, "profile", "baseline", 0);
         av_opt_set(mContext->priv_data, "level", "3.0", 0);
+        
+        mContext->profile = FF_PROFILE_H264_BASELINE;
         
         mContext->bit_rate = mBitRate;
         mContext->width = mWidth;
@@ -518,8 +520,10 @@ bool VideoEncoderH264::CreateContext() {
         mContext->time_base = (AVRational){1, mFPS};
         mContext->gop_size = mKeyFrameInterval;
         mContext->max_b_frames = 0;// optional param 可选参数，禁用B帧，设置 x264 参数 profile 值为 baseline 时，此参数失效
+        mContext->thread_type = FF_THREAD_FRAME;
         AVPixelFormat srcFormat = AV_PIX_FMT_YUV420P;
         mContext->pix_fmt = srcFormat;
+        
         
         AVDictionary* options = NULL;
         int ret = avcodec_open2(mContext, mCodec, &options);

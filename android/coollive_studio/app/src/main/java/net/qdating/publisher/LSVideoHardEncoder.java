@@ -285,11 +285,15 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 
 	public void pause() {
 		Log.i(LSConfig.TAG, String.format("LSVideoHardEncoder::pause( this : 0x%x )", hashCode()));
-		
-		if( videoCodec != null ) {
-			videoCodec.stop();
-			videoCodec.release();
-			videoCodec = null;
+
+		try {
+			if (videoCodec != null) {
+				videoCodec.stop();
+				videoCodec.release();
+				videoCodec = null;
+			}
+		} catch (IllegalStateException e) {
+			Log.e(LSConfig.TAG, String.format("LSVideoHardEncoder::pause( this : 0x%x, [Fail], error : %s )", hashCode(), e.toString()));
 		}
 	}
 	

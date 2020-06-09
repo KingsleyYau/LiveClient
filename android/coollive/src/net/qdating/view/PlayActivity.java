@@ -92,7 +92,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	// 推送相关
 //	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
-	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/maxa";
+	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
 //	private String publishUrl = "rtmp://172.25.32.133:8899/publish_standard/max0?token=ABC#123";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
@@ -130,8 +130,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
-		LSConfig.DEBUG = false;
-		LSConfig.LOG_LEVEL = android.util.Log.WARN;
+		LSConfig.DEBUG = true;
+		LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
 		LSConfig.LOGDIR = LSConfig.TAG;
 		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeAuto;
 
@@ -184,7 +184,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 			players[i] = new LSPlayer();
 
-			playerRenderderBinders[i] = new LSPlayerRendererBinder(surfaceViews[i], FillMode.FillModeAspectRatioFill);
+			playerRenderderBinders[i] = new LSPlayerRendererBinder(surfaceViews[i], FillMode.FillModeAspectRatioFit);
 			playerRenderderBinders[i].setCustomFilter(imageFilters[i]);
 			players[i].init(this);
 
@@ -233,7 +233,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					this,
 					surfaceViewPublish,
 					rotation,
-					FillMode.FillModeAspectRatioFill,
+					FillMode.FillModeAspectRatioFit,
 					this,
 					LSConfig.VideoConfigType.VideoConfigType480x640,
 					12,
@@ -274,15 +274,20 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 						publishPhotos[i] = demoBitmap;
 					}
 
-					publishPhotoIndex = 1;
-					publisher.setCaptureBitmap(publishPhotos[publishPhotoIndex]);
-					String buttonName = String.format("P%d", publishPhotoIndex);
-					photoButton.setText(buttonName);
+//					publishPhotoIndex = 1;
+//					publisher.setCaptureBitmap(publishPhotos[publishPhotoIndex]);
+//					String buttonName = String.format("P%d", publishPhotoIndex);
+//					photoButton.setText(buttonName);
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
+			publishPhotoIndex = publishPhotoCount;
+			String buttonName = String.format("C");
+			photoButton.setText(buttonName);
+			publisher.setCaptureBitmap(null);
 			publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 
 		} else {
@@ -738,10 +743,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
     protected void onResume() {
         super.onResume();
 
-//		Log.i(LSConfig.TAG, String.format("PlayActivity::onResume()"));
-//        if( surfaceView != null ) {
-//        	surfaceView.onResume();
-//        }
+		Log.i(LSConfig.TAG, String.format("PlayActivity::onResume()"));
 
 //		handler.postDelayed(new Runnable() {
 //			@Override

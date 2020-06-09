@@ -255,12 +255,15 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	public void pause() {
 		Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::pause( this : 0x%x )", hashCode()));
 
-		if( videoCodec != null ) {
-			videoCodec.stop();
-			videoCodec.release();
-            videoCodec = null;
+		try {
+			if (videoCodec != null) {
+				videoCodec.stop();
+				videoCodec.release();
+				videoCodec = null;
+			}
+		} catch (IllegalStateException e) {
+			Log.e(LSConfig.TAG, String.format("LSVideoHardDecoder::pause( this : 0x%x, [Fail], error : %s )", hashCode(), e.toString()));
 		}
-		
 	}
 	
 	@Override
@@ -527,7 +530,22 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	            );
 			} finally {
 				if( outputIndex >= 0 ) {
-					videoCodec.releaseOutputBuffer(outputIndex, false);
+					try {
+						videoCodec.releaseOutputBuffer(outputIndex, false);
+					} catch(Exception e) {
+						Log.d(LSConfig.TAG,
+								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+												+ "this : 0x%x, "
+												+ "[releaseOutputBuffer Fail, exception], "
+												+ "outputIndex : %d, "
+												+ "e : %s "
+												+ ")",
+										hashCode(),
+										outputIndex,
+										e.toString()
+								)
+						);
+					}
 				}
 			}
 

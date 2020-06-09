@@ -30,6 +30,11 @@
  */
 @property (nonatomic, assign) BOOL mute;
 
+/**
+ 是否使用硬解码
+ */
+@property (nonatomic, assign, readonly) BOOL useHardEncoder;
+
 #pragma mark - 获取实例
 /**
  获取实例

@@ -232,13 +232,14 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 						previewRotation = result;
 						mCamera.setDisplayOrientation(previewRotation);
 
+						final LSVideoCapture capture = this;
 						mCamera.setErrorCallback(new Camera.ErrorCallback() {
 							@Override
 							public void onError(int error, Camera camera) {
-							Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( this : 0x%x, [ErrorCallback], error : %d )", hashCode(), error));
-							// 停止录制
-							stop();
-							captureCallback.onVideoCaptureError(error);
+								Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( this : 0x%x, [ErrorCallback], error : %d )", capture.hashCode(), error));
+								// 停止录制
+								stop();
+								captureCallback.onVideoCaptureError(error);
 							}
 						});
 						if( captureCallback != null ) {

@@ -5,13 +5,13 @@ import net.qdating.utils.Log;
 /**
  * RTMP推拉流模块初始化配置
  * @author max
- * @version 1.9.4
+ * @version 2.0.2
  */
 public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	public final static String VERSION = "2.0.0";
+	public final static String VERSION = "2.0.2";
 	/**
 	 * 日志TAG
 	 */
