@@ -111,13 +111,13 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 
 		// 填充着色器-顶点采样器
 		if( getVertexBuffer() != null ) {
-			// 顶点每次读取2个值, 每4个元素(4 * 4 = 16byte)为下一组顶点开始
+			// 顶点每次读取2个值, 每4个元素,[跨过2个着色器](4 * 4byte = 16byte)为下一组顶点开始
 			getVertexBuffer().position(0);
 			GLES20.glVertexAttribPointer(aPosition, 2, GLES20.GL_FLOAT, false, 16, getVertexBuffer());
 			GLES20.glEnableVertexAttribArray(aPosition);
 
 			// 填充着色器-纹理坐标
-			// 纹理坐标每次读取2个值, 每4个元素(4 * 4 = 16byte)为下一组纹理坐标开始
+			// 纹理坐标每次读取2个值, 每4个元素,[跨过2个着色器](4 * 4byte = 16byte)为下一组纹理坐标开始
 			getVertexBuffer().position(2);
 			GLES20.glVertexAttribPointer(aTextureCoordinate, 2, GLES20.GL_FLOAT, false, 16, getVertexBuffer());
 			GLES20.glEnableVertexAttribArray(aTextureCoordinate);

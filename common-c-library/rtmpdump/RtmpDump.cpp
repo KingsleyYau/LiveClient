@@ -9,6 +9,7 @@
 #include "RtmpDump.h"
 
 #include <common/CommonFunc.h>
+#include <common/md5.h>
 
 #include <sys/time.h>
 
@@ -978,15 +979,19 @@ bool RtmpDump::SendCmdLogin(const string& userName, const string& password, cons
     index += size;
     srs_amf0_free(amfArgs);
 
-    char tmpUserName[2048] = {0};
-    snprintf(tmpUserName, sizeof(tmpUserName) - 1, "%s@%s", userName.c_str(), "172.25.32.133");
-    srs_amf0_t amfUserName = srs_amf0_create_string(tmpUserName);
+    char user[2048] = {0};
+    snprintf(user, sizeof(user) - 1, "%s@%s", userName.c_str(), "172.25.32.133");
+    srs_amf0_t amfUserName = srs_amf0_create_string(user);
     size = srs_amf0_size(amfUserName);
     srs_amf0_serialize(amfUserName, data + index, size);
     index += size;
     srs_amf0_free(amfUserName);
 
-    srs_amf0_t amfAuth = srs_amf0_create_string("md5(MM1@192.168.88.133:123456)");
+    char auth[2048] = {0};
+    snprintf(auth, sizeof(auth) - 1, "%s:%s", user, "123456");
+    char authMd5[2048] = {0};
+    GetMD5String(auth, authMd5);
+    srs_amf0_t amfAuth = srs_amf0_create_string(authMd5);
     size = srs_amf0_size(amfAuth);
     srs_amf0_serialize(amfAuth, data + index, size);
     index += size;
@@ -998,12 +1003,28 @@ bool RtmpDump::SendCmdLogin(const string& userName, const string& password, cons
     index += size;
     srs_amf0_free(amfSiteId);
 
-    srs_amf0_t amfCustom = srs_amf0_create_string("sid=123456&userType=1");
+    char sid[2048] = {0};
+    snprintf(sid, sizeof(sid) - 1, "sid=%s&userType=1", siteId.c_str());
+    srs_amf0_t amfCustom = srs_amf0_create_string(sid);
     size = srs_amf0_size(amfCustom);
     srs_amf0_serialize(amfCustom, data + index, size);
     index += size;
     srs_amf0_free(amfCustom);
 
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "RtmpDump::SendCmdLogin( "
+                 "this : %p, "
+                 "user : %s, "
+                 "auth : %s, "
+                 "sid : %s "
+                 ")",
+                 this,
+                 user,
+                 auth,
+                 sid
+                 );
+    
     int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
 
     return bFlag;
@@ -1073,7 +1094,7 @@ bool RtmpDump::SendCmdMakeCall(const string& userName, const string& serverId, c
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpDump::SendCmdMakeCall( "
-                 "this : %p "
+                 "this : %p, "
                  "userName : %s, "
                  "serverId : %s, "
                  "siteId : %s "

@@ -63,7 +63,7 @@
     self.playerArray = playerArray;
 
     // 初始化推送
-    self.publishUrl = @"rtmp://172.25.32.17:19351/live/maxi";
+    self.publishUrl = @"rtmp://172.25.32.133:4000/cdn_standard/max";
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
@@ -176,7 +176,7 @@
 //        NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
 //        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 //    }
-    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
@@ -224,12 +224,28 @@
     [self.publisher stopPreview];
 }
 
-- (IBAction)newPage:(id)sender {
+- (IBAction)CamPlay:(id)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    NSString *h264Path = @"";//[NSString stringWithFormat:@"%@/play.h264", recordDir];
+    
     NSString *url = @"rtmp://172.25.32.133:1935/camshare/iOS";
-//    [self.playerArray[0] playUrl:playUrl recordFilePath:@"" recordH264FilePath:@"" recordAACFilePath:@""];
-    [self.publisher pushlishUrl:url recordH264FilePath:@"" recordAACFilePath:@""];
+    [self.playerArray[0] playUrl:url recordFilePath:@"" recordH264FilePath:h264Path recordAACFilePath:@""];
 //    PlayViewController *vc = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
 //    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)CamPush:(id)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    NSString *h264Path = @"";//[NSString stringWithFormat:@"%@/publish.h264", recordDir];
+    
+    NSString *url = @"rtmp://172.25.32.133:1935/camshare/iOS";
+    [self.publisher pushlishUrl:url recordH264FilePath:h264Path recordAACFilePath:@""];
 }
 
 #pragma mark - 静音

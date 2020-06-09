@@ -125,7 +125,7 @@ bool VideoDecoderH264::Create(VideoDecoderCallback* callback) {
 
 bool VideoDecoderH264::Reset() {
     FileLevelLog("rtmpdump",
-                KLog::LOG_MSG,
+                KLog::LOG_WARNING,
                 "VideoDecoderH264::Reset( "
                 "this : %p "
                 ")",
@@ -149,7 +149,7 @@ bool VideoDecoderH264::Reset() {
 
 void VideoDecoderH264::Pause() {
 	FileLevelLog("rtmpdump",
-                KLog::LOG_MSG,
+                KLog::LOG_WARNING,
                 "VideoDecoderH264::Pause( "
                 "this : %p "
                 ")",

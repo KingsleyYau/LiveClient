@@ -133,9 +133,11 @@
         if (radioPreview < radioImage) {
             // 剪裁左右
             self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake((1 - radioImage) / 2, 0, radioImage, 1)];
-        } else {
+        } else if ( radioPreview > radioImage ) {
             // 剪裁上下
             self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, (1 - radioImage) / 2, 1, radioImage)];
+        } else {
+            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
         }
         // 创建输出处理
         self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(self.videoWidth, self.videoHeight) resultsInBGRAFormat:YES];

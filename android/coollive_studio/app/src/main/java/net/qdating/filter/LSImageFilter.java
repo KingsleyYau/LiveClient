@@ -277,7 +277,7 @@ public abstract class LSImageFilter {
 	 */
 	public int draw(int textureId, int width, int height) {
 		if( LSConfig.DEBUG ) {
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, className : [%s] )", hashCode(), textureId, glProgram, getClass().getName()));
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, width : %d, height : %d, className : [%s] )", hashCode(), textureId, glProgram, width, height, getClass().getName()));
 		}
 
 		if( glProgram != INVALID_PROGRAM ) {

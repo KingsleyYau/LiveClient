@@ -5,11 +5,16 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import net.qdating.filter.LSImageFilter;
+import net.qdating.filter.LSImageVibrateFilter;
+import net.qdating.player.ILSPlayerStatusCallback;
+import net.qdating.player.LSPlayerRendererBinder;
 import net.qdating.utils.Log;
 
 import net.qdating.LSConfig;
@@ -19,11 +24,12 @@ import net.qdating.LSPublisher;
 import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 
-public class TestActivity extends Activity {
+public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 	private String playH264File = "" ;
-	private String url = "rtmp://172.25.32.17:19351/live/max0";
-	
+
 	private LSPlayer player;
+	private LSPlayerRendererBinder playerRenderderBinder;
+	private LSImageFilter playerImageFilter;
 	private LSPublisher publisher;
 
 	private GLSurfaceView surfaceView;
@@ -40,42 +46,88 @@ public class TestActivity extends Activity {
 		
 		Log.i(LSConfig.TAG, String.format("TestActivity::onCreate()"));
 
-		webView = (WebView) this.findViewById(R.id.webView);
-		webView.getSettings().setDomStorageEnabled(true);
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-        });
-		webView.loadUrl("http://52.196.96.7:9876/video.html");//加载url
-//        webView.loadUrl("http://www.baidu.com");//加载url
-//		surfaceView = (GLSurfaceView) this.findViewById(R.id.surfaceView);
-//		surfaceView.setKeepScreenOn(true);
-//		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
-//		surfaceViewPublish.setKeepScreenOn(true);
+		surfaceView = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
+		surfaceView.setKeepScreenOn(true);
+		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
+		surfaceViewPublish.setKeepScreenOn(true);
 
 		// 播放相关
-//		player = new LSPlayer();
-//		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
-//		player.playUrl(String.format("%s", url), "", playH264File, "");
-		
-		// 推送相关
-//		final int rotation = getWindowManager().getDefaultDisplay()
-//	             .getRotation();
-//		publisher = new LSPublisher();
-//		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null, VideoConfigType.VideoConfigType240x240, 12, 12, 500 * 1000);
-//		publisher.publisherUrl(String.format("rtmp://172.25.32.17:19351/live/maxa"), "", "");
+		player = new LSPlayer();
+		player.init(this);
+		playerImageFilter = new LSImageVibrateFilter();
+		playerRenderderBinder = new LSPlayerRendererBinder(surfaceView, FillMode.FillModeAspectRatioFit);
+		playerRenderderBinder.setCustomFilter(playerImageFilter);
+		player.setRendererBinder(playerRenderderBinder);
 
-//		handler.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				// TODO Auto-generated method stub
-//				Log.i(LSConfig.TAG, String.format("TestActivity::handler( time up )"));
-//				finish();
-//			}
-//		}, 20000);
+		String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+		player.playUrl(playerUrl, "", "", "");
+
+		// 推送相关
+		final int rotation = getWindowManager().getDefaultDisplay()
+	             .getRotation();
+		publisher = new LSPublisher();
+		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFit, null, VideoConfigType.VideoConfigType480x640, 12, 12, 500 * 1000);
+		final String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+//		publisher.publisherUrl(publishUrl, "", "");
+
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+					case 0:{
+						if( publisher != null ) {
+							publisher.publisherUrl(publishUrl, "", "");
+						}
+						handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								Message msg = Message.obtain();
+								msg.what = 1;
+								handler.sendMessage(msg);
+							}
+						}, 3000);
+					}break;
+					case 1:{
+						if( publisher != null ) {
+							publisher.stop();
+						}
+						handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								Message msg = Message.obtain();
+								msg.what = 0;
+								handler.sendMessage(msg);
+							}
+						}, 1000);
+					}break;
+					default:
+						break;
+				}
+
+
+			}
+		};
+
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Message msg = Message.obtain();
+				msg.what = 0;
+				handler.sendMessage(msg);
+			}
+		});
+
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Log.i(LSConfig.TAG, String.format("TestActivity::handler( Time up )"));
+				finish();
+			}
+		}, 30000);
 	}
 	
 	@Override
@@ -84,7 +136,24 @@ public class TestActivity extends Activity {
 		super.onDestroy();
 		
 		Log.i(LSConfig.TAG, String.format("TestActivity::onDestroy()"));
+		handler.removeMessages(0);
+		handler.removeMessages(1);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if( player != null ) {
+					player.stop();
+					player.uninit();
+					player = null;
+				}
 
+				if( publisher != null ) {
+					publisher.stop();
+					publisher.uninit();
+					publisher = null;
+				}
+			}
+		}).start();
 //		if( player != null ) {
 //			player.stop();
 //			player.uninit();
@@ -96,7 +165,6 @@ public class TestActivity extends Activity {
 //			publisher.uninit();
 //			publisher = null;
 //		}
-
 	}
 
 	@Override
@@ -125,4 +193,14 @@ public class TestActivity extends Activity {
 //		surfaceView.onResume();
 //		surfaceViewPublish.onResume();
     }
+
+	@Override
+	public void onConnect(LSPlayer player) {
+
+	}
+
+	@Override
+	public void onDisconnect(LSPlayer player) {
+
+	}
 }

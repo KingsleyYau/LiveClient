@@ -92,6 +92,14 @@ void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
         
         // 设置每帧的Timestamp
         CMTime presentationTimeStamp = CMTimeMake(mEncodeFrameCount++, mFPS);
+        double second = (double)(1.0 * presentationTimeStamp.value / presentationTimeStamp.timescale);
+        FileLevelLog("rtmpdump", KLog::LOG_STAT,
+                     "VideoHardEncoder::EncodeVideoFrame( this : %p, frame : %p, value : %lld, timescale : %lld )",
+                     this,
+                     frame,
+                     presentationTimeStamp.value,
+                     presentationTimeStamp.timescale
+                     );
         OSStatus status = VTCompressionSessionEncodeFrame(
                                                           mVideoCompressionSession,
                                                           pixelBuffer,
@@ -133,6 +141,8 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
     CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
     double value = presentationTime.value;
     value /= presentationTime.timescale;
+    
+    CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
     
     // 第一帧, 或者时间被重置
     if( encoder->mLastPresentationTime == 0 || encoder->mLastPresentationTime > value ) {
@@ -309,6 +319,7 @@ bool VideoHardEncoder::CreateContext() {
             // 初始化时间戳
             mLastPresentationTime = 0;
             mEncodeStartTimestamp = 0;
+            mEncodeFrameCount = 0;
             
         } else {
             FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::CreateContext( this : %p, status : %d )", this, (int)status);

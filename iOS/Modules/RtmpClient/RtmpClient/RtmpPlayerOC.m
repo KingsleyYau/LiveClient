@@ -165,15 +165,15 @@ public:
         if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnConnect:)] ) {
             [mpRtmpPlayerOC.delegate rtmpPlayerOnConnect:mpRtmpPlayerOC];
         }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            mpRtmpPlayerOC.player->SendCmdLogin("MM11", "123456", "ServerId1");
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                mpRtmpPlayerOC.player->SendCmdMakeCall("MM1", "PC64", "4");
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    mpRtmpPlayerOC.player->SendCmdReceive();
-//                });
-//            });
-//        });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            mpRtmpPlayerOC.player->SendCmdLogin("MM201", "123456", "PC0");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                mpRtmpPlayerOC.player->SendCmdMakeCall("MM1", "PC64", "4");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    mpRtmpPlayerOC.player->SendCmdReceive();
+                });
+            });
+        });
     }
     
     void OnPlayerDisconnect(PlayerController* pc) {

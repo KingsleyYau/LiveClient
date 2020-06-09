@@ -146,15 +146,22 @@ public class LSPublisher {
 			LSPublisherJni.SetJniLogLevel(LSConfig.LOG_LEVEL);
 		}
 
-		Log.i(LSConfig.TAG,
+		String freeMemory = Runtime.getRuntime().freeMemory() / 1024 + " K";
+		String totalMemory = Runtime.getRuntime().totalMemory() / 1024 + " K";
+		String maxMemory = Runtime.getRuntime().maxMemory() / 1024 + " K";
+
+		Log.w(LSConfig.TAG,
 				String.format("LSPublisher::init( "
 								+ "this : 0x%x, "
 								+ "rotation : %d, "
 								+ "fillMode : %d, "
-								+ "videoConfigType : %d "
-								+ "fps : %d "
-								+ "keyFrameInterval : %d "
+								+ "videoConfigType : %d, "
+								+ "fps : %d, "
+								+ "keyFrameInterval : %d, "
 								+ "videoBitrate : %d "
+								+ "freeMemory : %s, "
+								+ "totalMemory : %s, "
+								+ "maxMemory : %s "
 								+ ")",
 						hashCode(),
 						rotation,
@@ -162,7 +169,10 @@ public class LSPublisher {
 						videoConfigType.ordinal(),
 						fps,
 						keyFrameInterval,
-						videoBitrate
+						videoBitrate,
+						freeMemory,
+						totalMemory,
+						maxMemory
 				)
 		);
 
@@ -305,7 +315,7 @@ public class LSPublisher {
 		}
 
 		if( bFlag ) {
-			Log.i(LSConfig.TAG, String.format("LSPublisher::init( "
+			Log.w(LSConfig.TAG, String.format("LSPublisher::init( "
 					+ "this : 0x%x, "
 					+ "[Success with %s] "
 					+ ")",
@@ -330,7 +340,7 @@ public class LSPublisher {
 	 * 反初始化流推送器
 	 */
 	public void uninit() {
-		Log.i(LSConfig.TAG,
+		Log.w(LSConfig.TAG,
 				String.format("LSPublisher::uninit( "
 						+ "this : 0x%x "
 						+ ")",
@@ -344,6 +354,24 @@ public class LSPublisher {
 		videoCapture.uninit();
 		// 销毁音频录制
 		audioRecorder.uninit();
+
+		String freeMemory = Runtime.getRuntime().freeMemory() / 1024 + " K";
+		String totalMemory = Runtime.getRuntime().totalMemory() / 1024 + " K";
+		String maxMemory = Runtime.getRuntime().maxMemory() / 1024 + " K";
+
+		Log.w(LSConfig.TAG, String.format("LSPublisher::uninit( "
+						+ "this : 0x%x, "
+						+ "[Success], "
+						+ "freeMemory : %s, "
+						+ "totalMemory : %s, "
+						+ "maxMemory : %s "
+						+ ")",
+				hashCode(),
+				freeMemory,
+				totalMemory,
+				maxMemory
+				)
+		);
 	}
 
     /**
@@ -381,7 +409,7 @@ public class LSPublisher {
 	public boolean publisherUrl(String url, String recordH264FilePath, String recordAACFilePath) {
 		boolean bFlag = false;
 		
-		Log.i(LSConfig.TAG, String.format("LSPublisher::publisherUrl( this : 0x%x, url : %s )", hashCode(), url));
+		Log.w(LSConfig.TAG, String.format("LSPublisher::publisherUrl( this : 0x%x, url : %s )", hashCode(), url));
 
 	    synchronized (this) {
 	    	if( !isRuning ) {
@@ -417,7 +445,17 @@ public class LSPublisher {
 	    
 	    if( !bFlag ) {
 			Log.e(LSConfig.TAG, String.format("LSPublisher::publisherUrl( this : 0x%x, [Fail], url : %s )", hashCode(), url));
-	    }
+	    } else {
+			Log.w(LSConfig.TAG, String.format("LSPublisher::publisherUrl( "
+							+ "this : 0x%x, "
+							+ "[Success], "
+							+ "url : %s "
+							+ ")",
+					hashCode(),
+					url
+					)
+			);
+		}
 		
 		return bFlag;
 	}
@@ -426,7 +464,7 @@ public class LSPublisher {
 	 * 停止推送
 	 */
 	public void stop() {
-		Log.i(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x )", hashCode()));
+		Log.w(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x )", hashCode()));
 		
 		synchronized(this) {
 			isRuning = false;
@@ -449,7 +487,7 @@ public class LSPublisher {
 			publisher.Stop();
 		}
 
-		Log.i(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x, [Success] )", hashCode()));
+		Log.w(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x, [Success] )", hashCode()));
 	}
 
 	/***

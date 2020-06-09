@@ -4,13 +4,28 @@
     android:layout_height="match_parent"
     android:background="@color/background_floating_material_dark"
     tools:context="${relativePackage}.${activityClass}" >
-
-	<WebView
-		android:id="@+id/webView"
+	<LinearLayout
+		android:id="@+id/layoutButtons0"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		>
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentTop="true"
+		android:gravity="left"
+		android:orientation="vertical">
 
-	</WebView>
- 	  
+		<android.opengl.GLSurfaceView
+			android:id="@+id/surfaceView0"
+			android:layout_width="match_parent"
+			android:layout_height="240dp"
+			android:layout_alignParentLeft="true"
+			android:visibility="visible" />
+
+		<android.opengl.GLSurfaceView
+			android:id="@+id/surfaceView1"
+			android:layout_width="match_parent"
+			android:layout_height="240dp"
+			android:layout_alignParentLeft="true"
+			android:visibility="visible" />
+
+	</LinearLayout>
 </RelativeLayout>

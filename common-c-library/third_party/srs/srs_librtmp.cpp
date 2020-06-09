@@ -35830,8 +35830,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         } else {
             skt->connected = true;
             
-            // Add by Max
-            /*deal with the tcp keepalive
+            /**
+             Add by Max
+             deal with the tcp keepalive
              iKeepAlive = 1 (check keepalive)
              iKeepIdle = 600 (active keepalive after socket has idled for 10 minutes)
              KeepInt = 60 (send keepalive every 1 minute after keepalive was actived)
@@ -35842,6 +35843,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPIDLE, (void*)&iKeepIdle, sizeof(iKeepIdle));
             setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPINTVL, (void *)&KeepInt, sizeof(KeepInt));
             setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPCNT, (void *)&iKeepCount, sizeof(iKeepCount));
+            int iSndBuf = 0;
+            setsockopt(skt->fd, SOL_SOCKET, SO_SNDBUF, (void *)&iSndBuf, sizeof(iSndBuf));
         }
         
         return ERROR_SUCCESS;

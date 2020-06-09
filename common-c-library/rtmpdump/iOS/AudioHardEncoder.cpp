@@ -66,8 +66,9 @@ bool AudioHardEncoder::Create(int sampleRate, int channelsPerFrame, int bitPerSa
                                                 "this : %p, "
                                                 "[%s] "
                                                 ")",
-                 bFlag ? "Success" : "Fail",
-                 this);
+                 this,
+                 bFlag ? "Success" : "Fail"
+                 );
 
     return bFlag;
 }
