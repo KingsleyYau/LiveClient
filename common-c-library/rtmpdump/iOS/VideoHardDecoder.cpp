@@ -223,7 +223,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
             int sliceArraySize = 0;
             int sliceIndex = 0;
             
-            if( nalu->GetNaluType() == VFT_NOTIDR || nalu->GetNaluType() == VFT_IDR ) {
+//            if( nalu->GetNaluType() == VFT_NOTIDR || nalu->GetNaluType() == VFT_IDR ) {
                 nalu->GetSlices(&sliceArray, sliceArraySize);
                 FileLevelLog("rtmpdump",
                              KLog::LOG_STAT,
@@ -252,7 +252,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
                     mVideoDecodeFrame.AddBuffer((const unsigned char *)&sliceLen, sizeof(sliceLen));
                     mVideoDecodeFrame.AddBuffer((const unsigned char *)slice->GetSlice(), slice->GetSliceSize());
                 }
-            }
+//            }
         }
     }
     
