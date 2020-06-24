@@ -17,44 +17,43 @@
 namespace coollive {
 class VideoEncoder;
 class VideoEncoderCallback {
-public:
+  public:
     virtual ~VideoEncoderCallback(){};
-    virtual void OnEncodeVideoFrame(VideoEncoder* encoder, char* data, int size, u_int32_t timestamp) = 0;
+    virtual void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t timestamp) = 0;
 };
-    
+
 class VideoEncoder {
-public:
+  public:
     virtual ~VideoEncoder(){};
     virtual bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) = 0;
-    virtual void SetCallback(VideoEncoderCallback* callback) = 0;
+    virtual void SetCallback(VideoEncoderCallback *callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
-    virtual void EncodeVideoFrame(void* data, int size, void* frame) = 0;
+    virtual void EncodeVideoFrame(void *data, int size, void *frame) = 0;
 };
 
 class AudioEncoder;
 class AudioEncoderCallback {
-public:
+  public:
     virtual ~AudioEncoderCallback(){};
-    virtual void OnEncodeAudioFrame(AudioEncoder* encoder,
+    virtual void OnEncodeAudioFrame(AudioEncoder *encoder,
                                     AudioFrameFormat format,
                                     AudioFrameSoundRate sound_rate,
                                     AudioFrameSoundSize sound_size,
                                     AudioFrameSoundType sound_type,
-                                    char* frame,
+                                    char *frame,
                                     int size,
-                                    u_int32_t timestamp
-                                    ) = 0;
+                                    u_int32_t timestamp) = 0;
 };
-    
+
 class AudioEncoder {
-public:
-	virtual ~AudioEncoder(){};
+  public:
+    virtual ~AudioEncoder(){};
     virtual bool Create(int sampleRate, int channelsPerFrame, int bitPerSample) = 0;
-    virtual void SetCallback(AudioEncoderCallback* callback) = 0;
+    virtual void SetCallback(AudioEncoderCallback *callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
-    virtual void EncodeAudioFrame(void* data, int size, void* frame) = 0;
+    virtual void EncodeAudioFrame(void *data, int size, void *frame) = 0;
 };
 }
 #endif /* RTMPDUMP_IENCODER_H_ */

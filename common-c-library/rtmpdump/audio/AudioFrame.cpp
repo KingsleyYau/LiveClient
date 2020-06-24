@@ -25,25 +25,25 @@ AudioFrame::AudioFrame() {
 }
 
 AudioFrame::~AudioFrame() {
-    if( mpAVFrame ) {
-    	av_frame_free(&mpAVFrame);
+    if (mpAVFrame) {
+        av_frame_free(&mpAVFrame);
         mpAVFrame = NULL;
     }
 }
 
-AudioFrame::AudioFrame(const AudioFrame& item)
-:EncodeDecodeBuffer(item) {
+AudioFrame::AudioFrame(const AudioFrame &item)
+    : EncodeDecodeBuffer(item) {
     mpAVFrame = av_frame_alloc();
 
     ResetFrame();
 
     mSoundFormat = item.mSoundFormat;
-    mSoundRate =  item.mSoundRate;
+    mSoundRate = item.mSoundRate;
     mSoundSize = item.mSoundSize;
     mSoundType = item.mSoundType;
 }
 
-AudioFrame& AudioFrame::operator=(const AudioFrame& item) {
+AudioFrame &AudioFrame::operator=(const AudioFrame &item) {
     if (this == &item) {
         return *this;
     }
@@ -59,20 +59,20 @@ AudioFrame& AudioFrame::operator=(const AudioFrame& item) {
 }
 
 void AudioFrame::ResetFrame() {
-	EncodeDecodeBuffer::ResetBuffer();
+    EncodeDecodeBuffer::ResetBuffer();
 
-	mSoundFormat = AFF_UNKNOWN;
+    mSoundFormat = AFF_UNKNOWN;
     mSoundRate = AFSR_UNKNOWN;
     mSoundSize = AFSS_UNKNOWN;
     mSoundType = AFST_UNKNOWN;
 }
 
 void AudioFrame::InitFrame(AudioFrameFormat format, AudioFrameSoundRate rate, AudioFrameSoundSize size, AudioFrameSoundType channel) {
-	mSoundFormat = format;
+    mSoundFormat = format;
     mSoundRate = rate;
     mSoundSize = size;
     mSoundType = channel;
-    
+
     RenewBufferSize(DEFAULT_AUDIO_FRAME_SIZE);
 }
 

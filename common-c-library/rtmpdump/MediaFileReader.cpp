@@ -15,7 +15,6 @@
 extern "C" {
 #include <libavutil/imgutils.h>
 #include <libavutil/samplefmt.h>
-#include <libavutil/timestamp.h>
 #include <libavformat/avformat.h>
 }
 
@@ -47,17 +46,17 @@ class MediaReaderRunnable : public KRunnable {
 MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
     mContext = NULL;
     mpMediaReaderRunnable = new MediaReaderRunnable(this);
-    
+
     mAudioStartTimestamp = INVALID_TIMESTAMP;
     mAudioLastTimestamp = INVALID_TIMESTAMP;
-    
+
     mVideoStartTimestamp = INVALID_TIMESTAMP;
     mVideoLastTimestamp = INVALID_TIMESTAMP;
 }
 
 MediaFileReader::~MediaFileReader() {
     Stop();
-    
+
     if (mpMediaReaderRunnable) {
         delete mpMediaReaderRunnable;
         mpMediaReaderRunnable = NULL;
@@ -77,10 +76,10 @@ bool MediaFileReader::PlayFile(const string &filePath) {
 
     mAudioStartTimestamp = INVALID_TIMESTAMP;
     mAudioLastTimestamp = INVALID_TIMESTAMP;
-    
+
     mVideoStartTimestamp = INVALID_TIMESTAMP;
     mVideoLastTimestamp = INVALID_TIMESTAMP;
-    
+
     // 开启文件读取线程
     mMediaReaderThread.Start(mpMediaReaderRunnable);
 
@@ -231,17 +230,17 @@ void MediaFileReader::MediaReaderHandle() {
 
         bool bFinish = false;
         bool bRead = true;
-        
+
         // 开始播放时间
         long long startTime = getCurrentTime();
         long long now;
-        
+
         while (mbRunning) {
             now = getCurrentTime();
             unsigned int diffTime = (unsigned int)(now - startTime);
             unsigned int diffTimestamp = 0;
 
-            if ( mVideoStartTimestamp == INVALID_TIMESTAMP || mAudioStartTimestamp == INVALID_TIMESTAMP ) {
+            if (mVideoStartTimestamp == INVALID_TIMESTAMP || mAudioStartTimestamp == INVALID_TIMESTAMP) {
                 bRead = true;
             } else {
                 unsigned int diffAudioTS = mAudioLastTimestamp - mAudioStartTimestamp;
@@ -249,13 +248,13 @@ void MediaFileReader::MediaReaderHandle() {
                 diffTimestamp = MIN(diffAudioTS, diffVideoTS);
             }
 
-            if ( diffTimestamp > diffTime + PRE_READ_TIME_MS ) {
+            if (diffTimestamp > diffTime + PRE_READ_TIME_MS) {
                 bRead = false;
             } else {
                 bRead = true;
             }
-            
-            if ( bRead ) {
+
+            if (bRead) {
                 int ret = av_read_frame(mContext, &pkt);
 
                 FileLevelLog("rtmpdump",
@@ -288,8 +287,8 @@ void MediaFileReader::MediaReaderHandle() {
                     if (mpCallback) {
                         mpCallback->OnMediaFileReaderVideoFrame(this, (const char *)pkt.data, pkt.size, timestamp, video_type);
                     }
-                    
-                    if ( mVideoStartTimestamp == INVALID_TIMESTAMP ) {
+
+                    if (mVideoStartTimestamp == INVALID_TIMESTAMP) {
                         mVideoStartTimestamp = timestamp;
                     }
                     mVideoLastTimestamp = timestamp;
@@ -297,10 +296,10 @@ void MediaFileReader::MediaReaderHandle() {
                 } else if (pkt.stream_index == mAudioStreamIndex) {
                     if (mpCallback) {
                         mpCallback->OnMediaFileReaderAudioFrame(this, (const char *)pkt.data, pkt.size, timestamp,
-                                                                AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, (audioCtx->channels==2)?AFST_STEREO:AFST_MONO);
+                                                                AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, (audioCtx->channels == 2) ? AFST_STEREO : AFST_MONO);
                     }
-                    
-                    if ( mAudioStartTimestamp == INVALID_TIMESTAMP ) {
+
+                    if (mAudioStartTimestamp == INVALID_TIMESTAMP) {
                         mAudioStartTimestamp = timestamp;
                     }
                     mVideoLastTimestamp = timestamp;
@@ -316,7 +315,7 @@ void MediaFileReader::MediaReaderHandle() {
                                  ")",
                                  this,
                                  ret);
-                    
+
                     bFinish = true;
                     break;
                 }

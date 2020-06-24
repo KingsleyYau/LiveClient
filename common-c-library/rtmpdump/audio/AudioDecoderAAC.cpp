@@ -23,68 +23,67 @@ extern "C" {
 namespace coollive {
 // 解码线程
 class DecodeAudioRunnable : public KRunnable {
-public:
+  public:
     DecodeAudioRunnable(AudioDecoderAAC *container) {
         mContainer = container;
     }
     virtual ~DecodeAudioRunnable() {
         mContainer = NULL;
     }
-protected:
+
+  protected:
     void onRun() {
         mContainer->DecodeAudioHandle();
     }
-    
-private:
+
+  private:
     AudioDecoderAAC *mContainer;
 };
-    
+
 AudioDecoderAAC::AudioDecoderAAC()
-:mRuningMutex(KMutex::MutexType_Recursive)
-    {
-	// TODO Auto-generated constructor stub
-	FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::AudioDecoderAAC( this : %p )", this);
-    
+    : mRuningMutex(KMutex::MutexType_Recursive) {
+    // TODO Auto-generated constructor stub
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::AudioDecoderAAC( this : %p )", this);
+
     avcodec_register_all();
-//    av_log_set_level(AV_LOG_TRACE);
-//    av_log_set_callback(ffmpeg_log_callbck);
-    
-	mCodec = NULL;
-	mContext = NULL;
+    //    av_log_set_level(AV_LOG_TRACE);
+    //    av_log_set_callback(ffmpeg_log_callbck);
+
+    mCodec = NULL;
+    mContext = NULL;
     mpCallback = NULL;
     mbRunning = false;
-        
+
     mpDecodeAudioRunnable = new DecodeAudioRunnable(this);
 }
 
 AudioDecoderAAC::~AudioDecoderAAC() {
-	// TODO Auto-generated destructor stub
-	FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::~AudioDecoderAAC( this : %p )", this);
-    
+    // TODO Auto-generated destructor stub
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::~AudioDecoderAAC( this : %p )", this);
+
     Stop();
-    
-    if( mpDecodeAudioRunnable ) {
+
+    if (mpDecodeAudioRunnable) {
         delete mpDecodeAudioRunnable;
         mpDecodeAudioRunnable = NULL;
     }
-    
-	DestroyContext();
+
+    DestroyContext();
 }
 
-bool AudioDecoderAAC::Create(AudioDecoderCallback* callback) {
+bool AudioDecoderAAC::Create(AudioDecoderCallback *callback) {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Create( this : %p )", this);
-    
+
     mpCallback = callback;
-    
+
     bool bFlag = true;
 
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Create( "
-    			 "this : %p, "
-                 "[%s] "
-                 ")",
-				 this,
-                 bFlag?"Success":"Fail"
-                 );
+                                                "this : %p, "
+                                                "[%s] "
+                                                ")",
+                 this,
+                 bFlag ? "Success" : "Fail");
 
     return bFlag;
 }
@@ -93,116 +92,111 @@ bool AudioDecoderAAC::Reset() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Reset( this : %p )", this);
 
     bool bFlag = Start();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioDecoderAAC::Reset( "
-				 "this : %p, "
+                 "this : %p, "
                  "[%s] "
                  ")",
-				 this,
-                 bFlag?"Success":"Fail"
-                 );
-    
+                 this,
+                 bFlag ? "Success" : "Fail");
+
     return bFlag;
 }
-    
+
 void AudioDecoderAAC::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Pause( this : %p )", this);
-    
+
     Stop();
 
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Pause( this : %p, [Success] )", this);
 }
-    
+
 bool AudioDecoderAAC::Start() {
     bool bFlag = true;
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::Start( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
+                 this);
+
     mRuningMutex.lock();
-    if( mbRunning ) {
+    if (mbRunning) {
         Stop();
     }
-    
+
     bFlag = CreateContext();
-    if( bFlag ) {
-        AudioFrame* frame = NULL;
+    if (bFlag) {
+        AudioFrame *frame = NULL;
         mFreeBufferList.lock();
-        for(int i = 0; i < DEFAULT_AUDIO_BUFFER_COUNT; i++) {
+        for (int i = 0; i < DEFAULT_AUDIO_BUFFER_COUNT; i++) {
             frame = new AudioFrame();
             frame->ResetFrame();
             mFreeBufferList.push_back(frame);
         }
         mFreeBufferList.unlock();
-        
+
         // 开启解码线程
         mDecodeAudioThread.Start(mpDecodeAudioRunnable);
     }
-    
+
     mbRunning = true;
-    
+
     mRuningMutex.unlock();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::Start( "
-				 "this : %p, "
+                 "this : %p, "
                  "[%s] "
                  ")",
-				 this,
-                 bFlag?"Success":"Fail"
-                 );
-    
+                 this,
+                 bFlag ? "Success" : "Fail");
+
     return bFlag;
 }
-    
+
 void AudioDecoderAAC::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::Stop( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
+                 this);
+
     mRuningMutex.lock();
-    if( mbRunning ) {
+    if (mbRunning) {
         mbRunning = false;
-        
+
         // 停止编码线程
         mDecodeAudioThread.Stop();
-        
+
         // 清空队列
         ClearAudioFrame();
-        
+
         DestroyContext();
     }
     mRuningMutex.unlock();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::Stop( "
                  "this : %p, "
-				 "[Success] "
+                 "[Success] "
                  ")",
-                 this
-                 );
+                 this);
 }
-    
+
 bool AudioDecoderAAC::CreateContext() {
     bool bFlag = false;
     int ret = 0;
-    
-//    mCodec = avcodec_find_decoder(AV_CODEC_ID_AAC);
+
+    //    mCodec = avcodec_find_decoder(AV_CODEC_ID_AAC);
     mCodec = avcodec_find_decoder_by_name("libfdk_aac");
-    if ( mCodec ) {
+    if (mCodec) {
         bFlag = true;
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
@@ -212,30 +206,28 @@ bool AudioDecoderAAC::CreateContext() {
                      "%s "
                      ")",
                      this,
-                     mCodec->name
-                     );
+                     mCodec->name);
     } else {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioDecoderAAC::CreateContext( "
-					 "this : %p, "
+                     "this : %p, "
                      "[Codec Not Found] "
                      ")",
-                     this
-                     );
+                     this);
     }
-    
-    if( bFlag ) {
+
+    if (bFlag) {
         bFlag = false;
-        
+
         mContext = avcodec_alloc_context3(mCodec);
-        
+
         ret = avcodec_open2(mContext, mCodec, NULL);
-        if ( ret == 0 ) {
+        if (ret == 0) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "AudioDecoderAAC::CreateContext( "
-						 "this : %p, "
+                         "this : %p, "
                          "[Codec opened], "
                          "sample_fmt : %d, "
                          "sample_rate : %d, "
@@ -252,69 +244,64 @@ bool AudioDecoderAAC::CreateContext() {
                          mContext->channels,
                          mContext->bit_rate,
                          mContext->frame_size,
-                         mContext->profile
-                         );
-            
+                         mContext->profile);
+
             bFlag = true;
-            
+
         } else {
             FileLevelLog("rtmpdump",
                          KLog::LOG_ERR_SYS,
                          "AudioDecoderAAC::CreateContext( "
-						 "this : %p, "
+                         "this : %p, "
                          "[Codec could not open], "
                          "ret : %d "
                          ")",
                          this,
-                         ret
-                         );
+                         ret);
         }
     }
-    
-    if( bFlag ) {
+
+    if (bFlag) {
         FileLevelLog("rtmpdump",
                      KLog::LOG_MSG,
                      "AudioDecoderAAC::CreateContext( "
-					 "this : %p, "
+                     "this : %p, "
                      "[Success] "
                      ")",
-                     this
-                     );
+                     this);
     } else {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioDecoderAAC::CreateContext( "
-					 "this : %p, "
+                     "this : %p, "
                      "[Fail] "
                      ")",
-                     this
-                     );
+                     this);
     }
-    
+
     return bFlag;
 }
-    
+
 void AudioDecoderAAC::DestroyContext() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::DestroyContext( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
-    if( mContext ) {
+                 this);
+
+    if (mContext) {
         avcodec_close(mContext);
         avcodec_free_context(&mContext);
         mContext = NULL;
     }
-    
+
     mCodec = NULL;
 }
-    
-void AudioDecoderAAC::ReleaseAudioFrame(void* frame) {
-    AudioFrame* audioFrame = (AudioFrame *)frame;
-    
+
+void AudioDecoderAAC::ReleaseAudioFrame(void *frame) {
+    AudioFrame *audioFrame = (AudioFrame *)frame;
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "AudioDecoderAAC::ReleaseAudioFrame( "
@@ -324,12 +311,10 @@ void AudioDecoderAAC::ReleaseAudioFrame(void* frame) {
                  ")",
                  this,
                  audioFrame,
-                 audioFrame->mTimestamp
-                 );
-    
+                 audioFrame->mTimestamp);
 
     mFreeBufferList.lock();
-    if ( mFreeBufferList.size() >= DEFAULT_AUDIO_BUFFER_MAX_COUNT ) {
+    if (mFreeBufferList.size() >= DEFAULT_AUDIO_BUFFER_MAX_COUNT) {
         delete audioFrame;
     } else {
         mFreeBufferList.push_back(audioFrame);
@@ -347,29 +332,28 @@ void AudioDecoderAAC::ClearAudioFrame() {
                  ")",
                  this,
                  mDecodeBufferList.size(),
-                 mFreeBufferList.size()
-                 );
-    
-    AudioFrame* frame = NULL;
+                 mFreeBufferList.size());
+
+    AudioFrame *frame = NULL;
     // 释放未解码Buffer
     mDecodeBufferList.lock();
-    while( !mDecodeBufferList.empty() ) {
-        frame = (AudioFrame* )mDecodeBufferList.front();
+    while (!mDecodeBufferList.empty()) {
+        frame = (AudioFrame *)mDecodeBufferList.front();
         mDecodeBufferList.pop_front();
-        if( frame != NULL ) {
+        if (frame != NULL) {
             delete frame;
         } else {
             break;
         }
     }
     mDecodeBufferList.unlock();
-    
+
     // 释放空闲Buffer
     mFreeBufferList.lock();
-    while( !mFreeBufferList.empty() ) {
-        frame = (AudioFrame* )mFreeBufferList.front();
+    while (!mFreeBufferList.empty()) {
+        frame = (AudioFrame *)mFreeBufferList.front();
         mFreeBufferList.pop_front();
-        if( frame != NULL ) {
+        if (frame != NULL) {
             delete frame;
         } else {
             break;
@@ -377,69 +361,67 @@ void AudioDecoderAAC::ClearAudioFrame() {
     }
     mFreeBufferList.unlock();
 }
-    
-void AudioDecoderAAC::DecodeAudioFormat(
-		AudioFrameFormat format,
-		AudioFrameSoundRate sound_rate,
-		AudioFrameSoundSize sound_size,
-		AudioFrameSoundType sound_type
-		) {
 
+void AudioDecoderAAC::DecodeAudioFormat(
+    AudioFrameFormat format,
+    AudioFrameSoundRate sound_rate,
+    AudioFrameSoundSize sound_size,
+    AudioFrameSoundType sound_type) {
 }
 
 void AudioDecoderAAC::DecodeAudioFrame(
-		AudioFrameFormat format,
-		AudioFrameSoundRate sound_rate,
-		AudioFrameSoundSize sound_size,
-		AudioFrameSoundType sound_type,
-		const char* data,
-		int size,
-		u_int32_t timestamp
-		) {
+    AudioFrameFormat format,
+    AudioFrameSoundRate sound_rate,
+    AudioFrameSoundSize sound_size,
+    AudioFrameSoundType sound_type,
+    const char *data,
+    int size,
+    u_int32_t timestamp) {
     bool bFlag = false;
-    
-	mFreeBufferList.lock();
-	AudioFrame* audioFrame = NULL;
-	if( !mFreeBufferList.empty() ) {
-		audioFrame = (AudioFrame *)mFreeBufferList.front();
-		mFreeBufferList.pop_front();
 
-	} else {
-		audioFrame = new AudioFrame();
-		FileLevelLog("rtmpdump",
-				KLog::LOG_WARNING,
-				"AudioDecoderAAC::DecodeAudioFrame( "
-				"this : %p, "
-				"[New Audio Frame], "
-				"frame : %p "
-				")",
-				this,
-				audioFrame
-				);
-	}
-	mFreeBufferList.unlock();
-    
+    mFreeBufferList.lock();
+    AudioFrame *audioFrame = NULL;
+    if (!mFreeBufferList.empty()) {
+        audioFrame = (AudioFrame *)mFreeBufferList.front();
+        mFreeBufferList.pop_front();
+
+    } else {
+        audioFrame = new AudioFrame();
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "AudioDecoderAAC::DecodeAudioFrame( "
+                     "this : %p, "
+                     "[New Audio Frame], "
+                     "frame : %p, "
+                     "timestamp : %u "
+                     ")",
+                     this,
+                     audioFrame,
+                     timestamp);
+    }
+    mFreeBufferList.unlock();
+
     // 更新数据格式
-	audioFrame->ResetFrame();
+    audioFrame->ResetFrame();
     audioFrame->mTimestamp = timestamp;
     audioFrame->InitFrame(format, sound_rate, sound_size, sound_type);
-    
+
     // 增加ADTS头部
-    char* frame = (char *)audioFrame->GetBuffer();
+    char *frame = (char *)audioFrame->GetBuffer();
     int headerCapacity = audioFrame->GetBufferCapacity();
     int frameHeaderSize = 0;
-    
+
     bFlag = mAudioMuxer.GetADTS(size, format, sound_rate, sound_size, sound_type, frame, headerCapacity, frameHeaderSize);
-    if( bFlag ) {
+    if (bFlag) {
         // 计算已用的ADTS
         audioFrame->mBufferLen = frameHeaderSize;
         // 计算帧大小是否足够
-        if( frameHeaderSize + size > headerCapacity ) {
+        if (frameHeaderSize + size > headerCapacity) {
             audioFrame->RenewBufferSize(frameHeaderSize + size);
         }
         // 增加帧内容
         audioFrame->AddBuffer((unsigned char *)data, size);
-        
+
         // 放进解码队列
         mDecodeBufferList.lock();
         mDecodeBufferList.push_back(audioFrame);
@@ -447,136 +429,132 @@ void AudioDecoderAAC::DecodeAudioFrame(
     }
 }
 
-bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAudioFrame) {
-	bool bFlag = false;
-    
+bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame *audioFrame, AudioFrame *newAudioFrame) {
+    bool bFlag = false;
+
     long long curTime = getCurrentTime();
-    const char* data = (const char *)audioFrame->GetBuffer();
+    const char *data = (const char *)audioFrame->GetBuffer();
     int size = audioFrame->mBufferLen;
-    
+
     // 更新帧参数
     *newAudioFrame = *audioFrame;
-    
-    if ( NULL != data &&
-    		size > 0 &&
-			NULL != newAudioFrame &&
-			NULL != mContext ) {
 
-		AVPacket pkt = {0};
-		av_init_packet(&pkt);
+    if (NULL != data &&
+        size > 0 &&
+        NULL != newAudioFrame &&
+        NULL != mContext) {
 
-		int bGotFrame = 0;
+        AVPacket pkt = {0};
+        av_init_packet(&pkt);
 
-	    pkt.data = (uint8_t *)data;
-	    pkt.size = size;
+        int bGotFrame = 0;
 
-        AVFrame* decodeFrame = audioFrame->mpAVFrame;
-	    int ret = avcodec_decode_audio4(mContext, decodeFrame, &bGotFrame, &pkt);
-        
+        pkt.data = (uint8_t *)data;
+        pkt.size = size;
+
+        AVFrame *decodeFrame = audioFrame->mpAVFrame;
+        int ret = avcodec_decode_audio4(mContext, decodeFrame, &bGotFrame, &pkt);
+
         // 计算处理时间
         long long now = getCurrentTime();
         long long handleTime = now - curTime;
-		FileLevelLog(
-                     "rtmpdump",
-                     KLog::LOG_MSG,
-                     "AudioDecoderAAC::DecodeAudioFrame( "
-					 "this : %p, "
-                     "[Decode Frame], "
-                     "ret : %d, "
-                     "timestamp : %u, "
-                     "handleTime : %lld, "
-                     "size : %d, "
-                     "data : (Hex)%02x,%02x,%02x,%02x,%02x "
-                     ")",
-                     this,
-                     ret,
-                     audioFrame->mTimestamp,
-                     handleTime,
-                     size,
-                     pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]
-                     );
+        FileLevelLog(
+            "rtmpdump",
+            KLog::LOG_MSG,
+            "AudioDecoderAAC::DecodeAudioFrame( "
+            "this : %p, "
+            "[Decode Frame], "
+            "ret : %d, "
+            "timestamp : %u, "
+            "handleTime : %lld, "
+            "size : %d, "
+            "data : (Hex)%02x,%02x,%02x,%02x,%02x "
+            ")",
+            this,
+            ret,
+            audioFrame->mTimestamp,
+            handleTime,
+            size,
+            pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
 
-        if( ret >= 0 ) {
-            if( bGotFrame ) {
+        if (ret >= 0) {
+            if (bGotFrame) {
                 // 解码成功后格式为 AV_SAMPLE_FMT_S16
                 int bufferSize = av_samples_get_buffer_size(
-                                                            NULL,
-                                                            decodeFrame->channels,
-                                                            decodeFrame->nb_samples,
-                                                            mContext->sample_fmt,
-                                                            1
-                                                            );
+                    NULL,
+                    decodeFrame->channels,
+                    decodeFrame->nb_samples,
+                    mContext->sample_fmt,
+                    1);
                 FileLevelLog(
-                             "rtmpdump",
-                             KLog::LOG_STAT,
-                             "AudioDecoderAAC::DecodeAudioFrame( "
-							 "this : %p, "
-                             "[Got Audio Frame], "
-                             "bufferSize : %d, "
-                             "sample_fmt : %d, "
-                             "sample_rate : %d, "
-                             "channels : %d, "
-                             "nb_samples : %d "
-                             ")",
-                             this,
-                             bufferSize,
-                             mContext->sample_fmt,
-                             decodeFrame->sample_rate,
-                             decodeFrame->channels,
-                             decodeFrame->nb_samples
-                             );
+                    "rtmpdump",
+                    KLog::LOG_STAT,
+                    "AudioDecoderAAC::DecodeAudioFrame( "
+                    "this : %p, "
+                    "[Got Audio Frame], "
+                    "bufferSize : %d, "
+                    "sample_fmt : %d, "
+                    "sample_rate : %d, "
+                    "channels : %d, "
+                    "nb_samples : %d "
+                    ")",
+                    this,
+                    bufferSize,
+                    mContext->sample_fmt,
+                    decodeFrame->sample_rate,
+                    decodeFrame->channels,
+                    decodeFrame->nb_samples);
                 // Copy解码Buffer
                 newAudioFrame->SetBuffer(decodeFrame->data[0], bufferSize);
-                
+
                 // 用解码器的参数覆盖协议解析的参数
                 newAudioFrame->mSoundRate = AFSR_KHZ_44;
-                newAudioFrame->mSoundType = (decodeFrame->channels == 2)?AFST_STEREO:AFST_MONO;
+                newAudioFrame->mSoundType = (decodeFrame->channels == 2) ? AFST_STEREO : AFST_MONO;
                 newAudioFrame->mSoundSize = AFSS_BIT_16;
-                
+
                 bFlag = true;
             }
-            
+
         } else {
             char errbuf[1024];
             av_strerror(ret, errbuf, sizeof(errbuf));
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "AudioDecoderAAC::DecodeAudioFrame( "
-						 "this : %p, "
+                         "this : %p, "
                          "[Fail], "
+                         "timestamp : %u, "
                          "ret : %d, "
                          "errbuf : %s "
                          ")",
                          this,
+                         audioFrame->mTimestamp,
                          ret,
-                         errbuf
-                         );
-
+                         errbuf);
         }
     }
 
     return bFlag;
 }
-    
+
 void AudioDecoderAAC::DecodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::DecodeAudioHandle( "
-				 "this : %p, "
+                 "this : %p, "
                  "[Start] "
                  ")",
-                 this
-                 );
-    
-    AudioFrame* srcFrame = NULL;
-    AudioFrame* dstFrame = NULL;
-    
-    while ( mbRunning ) {
+                 this);
+
+    AudioFrame *srcFrame = NULL;
+    AudioFrame *dstFrame = NULL;
+
+    while (mbRunning) {
         // 获取解码帧
         srcFrame = NULL;
-        
+
         mDecodeBufferList.lock();
-        if( !mDecodeBufferList.empty() ) {
+        if (!mDecodeBufferList.empty()) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_STAT,
                          "AudioDecoderAAC::DecodeAudioHandle( "
@@ -584,44 +562,42 @@ void AudioDecoderAAC::DecodeAudioHandle() {
                          "mDecodeBufferList.size() : %d "
                          ")",
                          this,
-                         mDecodeBufferList.size()
-                         );
-            
-            srcFrame = (AudioFrame* )mDecodeBufferList.front();
+                         mDecodeBufferList.size());
+
+            srcFrame = (AudioFrame *)mDecodeBufferList.front();
             mDecodeBufferList.pop_front();
         }
         mDecodeBufferList.unlock();
-        
-        if( srcFrame ) {
+
+        if (srcFrame) {
             // 获取空闲Buffer
             mFreeBufferList.lock();
-            if( !mFreeBufferList.empty() ) {
+            if (!mFreeBufferList.empty()) {
                 dstFrame = (AudioFrame *)mFreeBufferList.front();
                 mFreeBufferList.pop_front();
             } else {
                 dstFrame = new AudioFrame();
-        		FileLevelLog("rtmpdump",
-        				KLog::LOG_WARNING,
-        				"AudioDecoderAAC::DecodeAudioHandle( "
-        				"this : %p, "
-        				"[New Audio Frame], "
-        				"frame : %p "
-        				")",
-        				this,
-						dstFrame
-        				);
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_WARNING,
+                             "AudioDecoderAAC::DecodeAudioHandle( "
+                             "this : %p, "
+                             "[New Audio Frame], "
+                             "frame : %p "
+                             ")",
+                             this,
+                             dstFrame);
             }
             mFreeBufferList.unlock();
-            
+
             // 解码码帧
             bool bFlag = DecodeAudioFrame(srcFrame, dstFrame);
-            if( bFlag && mpCallback ) {
+            if (bFlag && mpCallback) {
                 mpCallback->OnDecodeAudioFrame(this, dstFrame, dstFrame->mTimestamp);
             } else {
                 // 释放空闲Buffer
                 ReleaseAudioFrame(dstFrame);
             }
-            
+
             // 释放待编码帧
             ReleaseAudioFrame(srcFrame);
         }

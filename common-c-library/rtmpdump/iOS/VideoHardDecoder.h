@@ -49,7 +49,7 @@ private:
                                      CMTime presentationDuration
                                      );
     // 硬解码回调
-    void DecodeCallbackProc(void* frame, u_int32_t timestamp);
+    void DecodeCallbackProc(void* frame, u_int32_t timestamp, bool bFlag = true);
     
 private:
     void ResetParam();
@@ -78,6 +78,8 @@ private:
     VideoFrame mVideoDecodeFrame;
     
     VideoMuxer mVideoMuxer;
+    
+    bool mbError;
 };
 }
 

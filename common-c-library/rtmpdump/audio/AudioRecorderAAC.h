@@ -19,30 +19,29 @@ using namespace std;
 
 namespace coollive {
 class AudioRecorderAAC {
-public:
+  public:
     AudioRecorderAAC();
     ~AudioRecorderAAC();
-    
-    bool Start(const string& filePath);
+
+    bool Start(const string &filePath);
     void Stop();
-    
+
     void ChangeAudioFormat(
-                           AudioFrameFormat format,
-                           AudioFrameSoundRate sound_rate,
-                           AudioFrameSoundSize sound_size,
-                           AudioFrameSoundType sound_type
-                           );
-    bool RecordAudioFrame(const char* data, int size);
-    
-private:
+        AudioFrameFormat format,
+        AudioFrameSoundRate sound_rate,
+        AudioFrameSoundSize sound_size,
+        AudioFrameSoundType sound_type);
+    bool RecordAudioFrame(const char *data, int size);
+
+  private:
     string mFilePath;
-    FILE* mpFile;
-    
+    FILE *mpFile;
+
     AudioFrameFormat mFormat;
     AudioFrameSoundRate mSoundRate;
     AudioFrameSoundSize mSoundSize;
     AudioFrameSoundType mSoundType;
-    
+
     AudioFrame mAudioFrame;
     AudioMuxer mAudioMuxer;
 };

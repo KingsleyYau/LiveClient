@@ -21,25 +21,24 @@
 struct AVFrame;
 
 namespace coollive {
-class AudioFrame : public EncodeDecodeBuffer
-{
-public:
+class AudioFrame : public EncodeDecodeBuffer {
+  public:
     AudioFrame();
     ~AudioFrame();
-    
-    AudioFrame(const AudioFrame& item);
-    AudioFrame& operator=(const AudioFrame& item);
+
+    AudioFrame(const AudioFrame &item);
+    AudioFrame &operator=(const AudioFrame &item);
 
     void ResetFrame();
     void InitFrame(AudioFrameFormat format, AudioFrameSoundRate rate, AudioFrameSoundSize size, AudioFrameSoundType channel);
 
-public:
+  public:
     AudioFrameFormat mSoundFormat;
     AudioFrameSoundRate mSoundRate;
     AudioFrameSoundSize mSoundSize;
     AudioFrameSoundType mSoundType;
 
-    AVFrame* mpAVFrame;
+    AVFrame *mpAVFrame;
 };
 }
 

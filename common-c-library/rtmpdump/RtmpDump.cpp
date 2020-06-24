@@ -392,10 +392,10 @@ void RtmpDump::RecvRunnableHandle() {
             }
         }
 
-//        free(frame);
-        if(frame) {
-        	delete[] frame;
-        	frame = NULL;
+        //        free(frame);
+        if (frame) {
+            delete[] frame;
+            frame = NULL;
         }
     }
 
@@ -867,7 +867,7 @@ void RtmpDump::CheckConnectRunnableHandle() {
                  this);
 
     while (mbRunning) {
-    	mConnectedMutex.lock();
+        mConnectedMutex.lock();
         if (mIsConnected) {
             // 已经连接上服务器, 标记退出线程
             bBreak = true;
@@ -913,7 +913,7 @@ void RtmpDump::RecvCmd(char *frame, int frame_size, u_int32_t timestamp) {
     int index = 0;
     int last = frame_size;
     int size = 0;
-    
+
     srs_amf0_t cmd = srs_amf0_parse(frame, last, &size);
     index += size;
     last -= size;
@@ -928,18 +928,18 @@ void RtmpDump::RecvCmd(char *frame, int frame_size, u_int32_t timestamp) {
                      ")",
                      this,
                      cmdString);
-        
+
         if (0 == strcmp(cmdString, "onLogin")) {
             RecvCmdLogin(frame + index, last, timestamp);
-            
+
         } else if (0 == strcmp(cmdString, "onMakeCall")) {
             RecvCmdMakeCall(frame + index, last, timestamp);
         }
     }
     srs_amf0_free(cmd);
 }
-    
-bool RtmpDump::SendCmdLogin(const string& userName, const string& password, const string& siteId) {
+
+bool RtmpDump::SendCmdLogin(const string &userName, const string &password, const string &siteId) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpDump::SendCmdLogin( "
@@ -951,8 +951,7 @@ bool RtmpDump::SendCmdLogin(const string& userName, const string& password, cons
                  this,
                  userName.c_str(),
                  password.c_str(),
-                 siteId.c_str()
-                 );
+                 siteId.c_str());
 
     bool bFlag = false;
 
@@ -1022,9 +1021,8 @@ bool RtmpDump::SendCmdLogin(const string& userName, const string& password, cons
                  this,
                  user,
                  auth,
-                 sid
-                 );
-    
+                 sid);
+
     int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
 
     return bFlag;
@@ -1082,15 +1080,14 @@ void RtmpDump::RecvCmdLogin(char *frame, int frame_size, u_int32_t timestamp) {
                  this,
                  bFlag ? "Success" : "Fail",
                  userNameString,
-                 serverAddressString
-                 );
-    
+                 serverAddressString);
+
     if (mpRtmpDumpCallback) {
         mpRtmpDumpCallback->OnRecvCmdLogin(this, bFlag, userNameString, serverAddressString);
     }
 }
 
-bool RtmpDump::SendCmdMakeCall(const string& userName, const string& serverId, const string& siteId) {
+bool RtmpDump::SendCmdMakeCall(const string &userName, const string &serverId, const string &siteId) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpDump::SendCmdMakeCall( "
@@ -1102,8 +1099,7 @@ bool RtmpDump::SendCmdMakeCall(const string& userName, const string& serverId, c
                  this,
                  userName.c_str(),
                  serverId.c_str(),
-                 siteId.c_str()
-                 );
+                 siteId.c_str());
 
     bool bFlag = false;
 
@@ -1153,26 +1149,26 @@ bool RtmpDump::SendCmdMakeCall(const string& userName, const string& serverId, c
     srs_amf0_serialize(makeCallObj, data + index, size);
     index += size;
     srs_amf0_free(makeCallObj);
-    
+
     int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
-    
+
     return bFlag;
 }
-    
-void RtmpDump::RecvCmdMakeCall(char* frame, int frame_size, u_int32_t timestamp) {
+
+void RtmpDump::RecvCmdMakeCall(char *frame, int frame_size, u_int32_t timestamp) {
     int index = 0;
     int last = frame_size;
     int size = 0;
     bool bFlag = false;
-    
+
     srs_amf0_t number = srs_amf0_parse(frame + index, last, &size);
     index += size;
     last -= size;
-    
+
     srs_amf0_t args = srs_amf0_parse(frame + index, last, &size);
     index += size;
     last -= size;
-    
+
     srs_amf0_t uuId = srs_amf0_parse(frame + index, last, &size);
     index += size;
     last -= size;
@@ -1180,7 +1176,7 @@ void RtmpDump::RecvCmdMakeCall(char* frame, int frame_size, u_int32_t timestamp)
     if (srs_amf0_is_string(uuId)) {
         uuIdString = srs_amf0_to_string(uuId);
     }
-    
+
     srs_amf0_t userName = srs_amf0_parse(frame + index, last, &size);
     index += size;
     last -= size;
@@ -1188,7 +1184,7 @@ void RtmpDump::RecvCmdMakeCall(char* frame, int frame_size, u_int32_t timestamp)
     if (srs_amf0_is_string(userName)) {
         userNameString = srs_amf0_to_string(userName);
     }
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::LOG_WARNING( "
@@ -1198,48 +1194,46 @@ void RtmpDump::RecvCmdMakeCall(char* frame, int frame_size, u_int32_t timestamp)
                  ")",
                  this,
                  uuIdString,
-                 userNameString
-                 );
-    
+                 userNameString);
+
     if (mpRtmpDumpCallback) {
         mpRtmpDumpCallback->OnRecvCmdMakeCall(this, uuIdString, userNameString);
     }
 }
-    
+
 bool RtmpDump::SendCmdReceive() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::SendCmdReceive( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
+                 this);
+
     bool bFlag = false;
-    
+
     char *data = new char[4096];
     memset(data, 0, 4096);
     int index = 0;
     int size = 0;
-    
+
     srs_amf0_t amfCmd = srs_amf0_create_string("receiveVideo");
     size = srs_amf0_size(amfCmd);
     srs_amf0_serialize(amfCmd, data + index, size);
     index += size;
     srs_amf0_free(amfCmd);
-    
+
     srs_amf0_t amfNumber = srs_amf0_create_number(0);
     size = srs_amf0_size(amfNumber);
     srs_amf0_serialize(amfNumber, data + index, size);
     index += size;
     srs_amf0_free(amfNumber);
-    
+
     srs_amf0_t amfArgs = srs_amf0_create_null();
     size = srs_amf0_size(amfArgs);
     srs_amf0_serialize(amfArgs, data + index, size);
     index += size;
     srs_amf0_free(amfArgs);
-    
+
     srs_amf0_t amfRecvVideo = srs_amf0_create_boolean(true);
     size = srs_amf0_size(amfRecvVideo);
     srs_amf0_serialize(amfRecvVideo, data + index, size);

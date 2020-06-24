@@ -18,7 +18,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libswscale/swscale.h>
 #include <libavutil/pixfmt.h>
-    
+
 #include <libavutil/opt.h>
 #include <libavcodec/avcodec.h>
 #include <libavutil/channel_layout.h>
@@ -26,51 +26,51 @@ extern "C" {
 #include <libavutil/imgutils.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/samplefmt.h>
-    
 }
 
 namespace coollive {
 // 重采样线程
 class ConvertEncodeVideoRunnable : public KRunnable {
-public:
+  public:
     ConvertEncodeVideoRunnable(VideoEncoderH264 *container) {
         mContainer = container;
     }
     virtual ~ConvertEncodeVideoRunnable() {
         mContainer = NULL;
     }
-protected:
+
+  protected:
     void onRun() {
         mContainer->ConvertVideoHandle();
     }
-    
-private:
+
+  private:
     VideoEncoderH264 *mContainer;
 };
-    
+
 // 编码线程
 class EncodeVideoRunnable : public KRunnable {
-public:
+  public:
     EncodeVideoRunnable(VideoEncoderH264 *container) {
         mContainer = container;
     }
     virtual ~EncodeVideoRunnable() {
         mContainer = NULL;
     }
-protected:
+
+  protected:
     void onRun() {
         mContainer->EncodeVideoHandle();
     }
-    
-private:
+
+  private:
     VideoEncoderH264 *mContainer;
 };
-    
+
 VideoEncoderH264::VideoEncoderH264()
-    :mRuningMutex(KMutex::MutexType_Recursive)
-{
+    : mRuningMutex(KMutex::MutexType_Recursive) {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoEncoderH264::VideoEncoderH264( this : %p )", this);
-    
+
     mbSpsChange = false;
     mpSps = NULL;
     mSpsSize = 0;
@@ -78,40 +78,39 @@ VideoEncoderH264::VideoEncoderH264()
     mpPps = NULL;
     mPpsSize = 0;
     mNaluHeaderSize = 0;
-    
+
     mpCallback = NULL;
     mWidth = 480;
     mHeight = 640;
     mBitRate = 1000000;
     mKeyFrameInterval = 20;
     mFPS = 20;
-    
+
     mbRunning = false;
-    
+
     mCodec = NULL;
     mContext = NULL;
-    
+
     mSrcFormat = VIDEO_FORMATE_NV21;
     mPts = 0;
-    
+
     mVideoFormatConverter.SetDstFormat(VIDEO_FORMATE_YUV420P);
-    
+
     mpConvertEncodeVideoRunnable = new ConvertEncodeVideoRunnable(this);
     mpEncodeVideoRunnable = new EncodeVideoRunnable(this);
-    
 }
 
 VideoEncoderH264::~VideoEncoderH264() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoEncoderH264::~VideoEncoderH264( this : %p )", this);
-    
+
     Stop();
-    
-    if( mpConvertEncodeVideoRunnable ) {
+
+    if (mpConvertEncodeVideoRunnable) {
         delete mpConvertEncodeVideoRunnable;
         mpConvertEncodeVideoRunnable = NULL;
     }
-    
-    if( mpEncodeVideoRunnable ) {
+
+    if (mpEncodeVideoRunnable) {
         delete mpEncodeVideoRunnable;
         mpConvertEncodeVideoRunnable = NULL;
     }
@@ -122,7 +121,7 @@ VideoEncoderH264::~VideoEncoderH264() {
 
 bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) {
     bool bFlag = true;
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Create( "
@@ -140,23 +139,22 @@ bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameIn
                  bitRate,
                  keyFrameInterval,
                  fps,
-				 type
-                 );
-    
+                 type);
+
     mWidth = width;
     mHeight = height;
     mBitRate = bitRate;
     mKeyFrameInterval = keyFrameInterval;
     mFPS = fps;
     mSrcFormat = type;
-    
+
     // 创建编码器
     bFlag = CreateContext();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoEncoderH264::Create( "
-				 "this : %p, "
+                 "this : %p, "
                  "[%s], "
                  "width : %d, "
                  "height : %d, "
@@ -165,151 +163,144 @@ bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameIn
                  "fps : %d, "
                  "type : %d "
                  ")",
-				 this,
-				 bFlag?"Success":"Fail",
+                 this,
+                 bFlag ? "Success" : "Fail",
                  width,
                  height,
                  bitRate,
                  keyFrameInterval,
                  fps,
-				 type
-                 );
-    
+                 type);
+
     return bFlag;
 }
 
-void VideoEncoderH264::SetCallback(VideoEncoderCallback* callback) {
+void VideoEncoderH264::SetCallback(VideoEncoderCallback *callback) {
     mpCallback = callback;
 }
-    
+
 bool VideoEncoderH264::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Reset( "
                  "this : %p "
                  ")",
-                 this
-                 );
+                 this);
 
     bool bFlag = Start();
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoEncoderH264::Reset( "
-				 "this : %p, "
+                 "this : %p, "
                  "[%s] "
                  ")",
-				 this,
-				 bFlag?"Success":"Fail"
-                 );
+                 this,
+                 bFlag ? "Success" : "Fail");
 
     return bFlag;
 }
 
 void VideoEncoderH264::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoEncoderH264::Pause( this : %p )", this);
-    
+
     Stop();
 
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoEncoderH264::Pause( this : %p, [Success] )", this);
 }
-    
-void VideoEncoderH264::EncodeVideoFrame(void* data, int size, void* frame) {
+
+void VideoEncoderH264::EncodeVideoFrame(void *data, int size, void *frame) {
     mRuningMutex.lock();
-    if( mbRunning ) {
-    	mFreeBufferList.lock();
-    	VideoFrame* srcFrame = NULL;
-    	if( !mFreeBufferList.empty() ) {
-    		srcFrame = (VideoFrame *)mFreeBufferList.front();
-    		mFreeBufferList.pop_front();
+    if (mbRunning) {
+        mFreeBufferList.lock();
+        VideoFrame *srcFrame = NULL;
+        if (!mFreeBufferList.empty()) {
+            srcFrame = (VideoFrame *)mFreeBufferList.front();
+            mFreeBufferList.pop_front();
 
-    	} else {
-    		srcFrame = new VideoFrame();
-        	FileLevelLog("rtmpdump",
-        				 KLog::LOG_WARNING,
-        				 "VideoEncoderH264::EncodeVideoFrame( "
-        				 "this : %p, "
-        				 "[New Video Frame], "
-        				 "frame : %p "
-        				 ")",
-        				 this,
-        				 srcFrame
-        				 );
-    	}
-    	mFreeBufferList.unlock();
+        } else {
+            srcFrame = new VideoFrame();
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "VideoEncoderH264::EncodeVideoFrame( "
+                         "this : %p, "
+                         "[New Video Frame], "
+                         "frame : %p "
+                         ")",
+                         this,
+                         srcFrame);
+        }
+        mFreeBufferList.unlock();
 
-    	srcFrame->SetBuffer((unsigned char *)data, size);
-    	srcFrame->InitFrame(mWidth, mHeight, mSrcFormat);
+        srcFrame->SetBuffer((unsigned char *)data, size);
+        srcFrame->InitFrame(mWidth, mHeight, mSrcFormat);
 
-    	FileLevelLog("rtmpdump",
-    				 KLog::LOG_STAT,
-    				 "VideoEncoderH264::EncodeVideoFrame( "
-    				 "this : %p, "
-    				 "srcFrame : %p, "
-    				 "frame : %p "
-    				 ")",
-    				 this,
-    				 srcFrame,
-    				 frame
-    				 );
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_STAT,
+                     "VideoEncoderH264::EncodeVideoFrame( "
+                     "this : %p, "
+                     "srcFrame : %p, "
+                     "frame : %p "
+                     ")",
+                     this,
+                     srcFrame,
+                     frame);
 
-    	// 放进采样转换队列
-    	mConvertBufferList.lock();
-    	mConvertBufferList.push_back(srcFrame);
-    	mConvertBufferList.unlock();
+        // 放进采样转换队列
+        mConvertBufferList.lock();
+        mConvertBufferList.push_back(srcFrame);
+        mConvertBufferList.unlock();
     }
     mRuningMutex.unlock();
 }
 
 bool VideoEncoderH264::Start() {
-	bool bFlag = false;
+    bool bFlag = false;
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
                  "this : %p "
                  ")",
-                 this
-                 );
+                 this);
 
     mRuningMutex.lock();
-    if( mbRunning ) {
+    if (mbRunning) {
         Stop();
     }
 
-	mbRunning = true;
-	mPts = 0;
+    mbRunning = true;
+    mPts = 0;
 
-	VideoFrame* frame = NULL;
-	mFreeBufferList.lock();
-	for(int i = 0; i < DEFAULT_VIDEO_BUFFER_COUNT; i++) {
-		frame = new VideoFrame();
-		frame->RenewBufferSize(DEFAULT_VIDEO_BUFFER_SIZE);
-		mFreeBufferList.push_back(frame);
-	}
-	mFreeBufferList.unlock();
+    VideoFrame *frame = NULL;
+    mFreeBufferList.lock();
+    for (int i = 0; i < DEFAULT_VIDEO_BUFFER_COUNT; i++) {
+        frame = new VideoFrame();
+        frame->RenewBufferSize(DEFAULT_VIDEO_BUFFER_SIZE);
+        mFreeBufferList.push_back(frame);
+    }
+    mFreeBufferList.unlock();
 
-	// 开启重采样线程
-	mConvertVideoThread.Start(mpConvertEncodeVideoRunnable);
+    // 开启重采样线程
+    mConvertVideoThread.Start(mpConvertEncodeVideoRunnable);
 
-	// 开启编码线程
-	mEncodeVideoThread.Start(mpEncodeVideoRunnable);
+    // 开启编码线程
+    mEncodeVideoThread.Start(mpEncodeVideoRunnable);
 
-	bFlag = true;
+    bFlag = true;
 
-	mRuningMutex.unlock();
+    mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
-				 "this : %p, "
+                 "this : %p, "
                  "[%s] "
                  ")",
-				 this,
-				 bFlag?"Success":"Fail"
-                 );
+                 this,
+                 bFlag ? "Success" : "Fail");
 
-	return bFlag;
+    return bFlag;
 }
 
 void VideoEncoderH264::Stop() {
@@ -318,40 +309,38 @@ void VideoEncoderH264::Stop() {
                  "VideoEncoderH264::Stop( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
+                 this);
+
     mRuningMutex.lock();
-    if( mbRunning ) {
+    if (mbRunning) {
         mbRunning = false;
-        
+
         // 停止重采样线程
         mConvertVideoThread.Stop();
-        
+
         // 停止编码线程
         mEncodeVideoThread.Stop();
-        
+
         // 清空队列
         ClearVideoFrame();
     }
     mRuningMutex.unlock();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Stop( "
                  "this : %p, "
-				 "[Success] "
+                 "[Success] "
                  ")",
-                 this
-                 );
+                 this);
 }
 
-bool VideoEncoderH264::ConvertVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFrame) {
+bool VideoEncoderH264::ConvertVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFrame) {
     bool bFlag = false;
-    
+
     // 转换采样帧格式
     bFlag = mVideoFormatConverter.ConvertFrame(srcFrame, dstFrame);
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "VideoEncoderH264::ConvertVideoFrame( "
@@ -361,99 +350,96 @@ bool VideoEncoderH264::ConvertVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFr
                  ")",
                  this,
                  srcFrame,
-                 dstFrame
-                 );
-    
+                 dstFrame);
+
     return bFlag;
 }
 
-bool VideoEncoderH264::EncodeVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFrame) {
+bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFrame) {
     bool bFlag = false;
 
     long long curTime = getCurrentTime();
-    
+
     // 编码帧
     AVPacket pkt = {0};
     av_init_packet(&pkt);
     pkt.data = NULL;
     pkt.size = 0;
-    
+
     // 更新timestamp
-    AVFrame* yuvFrame = srcFrame->mpAVFrame;
+    AVFrame *yuvFrame = srcFrame->mpAVFrame;
     yuvFrame->format = mContext->pix_fmt;
-    yuvFrame->width  = mContext->width;
+    yuvFrame->width = mContext->width;
     yuvFrame->height = mContext->height;
 
     yuvFrame->pts = mPts++;
     dstFrame->mTimestamp = (unsigned int)floor(1000.0 * yuvFrame->pts / mContext->time_base.den);
-    
+
     // 编码帧
     int bGotFrame = 0;
     int ret = avcodec_encode_video2(mContext, &pkt, yuvFrame, &bGotFrame);
-    
+
     // 计算处理时间
     long long now = getCurrentTime();
     long long handleTime = now - curTime;
     FileLevelLog(
-                 "rtmpdump",
-                 KLog::LOG_STAT,
-                 "VideoEncoderH264::EncodeVideoFrame( "
-                 "this : %p, "
-				 "[Encode Frame], "
-                 "srcFrame : %p, "
-                 "dstFrame : %p, "
-                 "timestamp : %u, "
-                 "handleTime : %lld "
-                 ")",
-                 this,
-                 srcFrame,
-                 dstFrame,
-                 dstFrame->mTimestamp,
-                 handleTime
-                 );
-    
-    if ( ret >= 0 && bGotFrame ) {
+        "rtmpdump",
+        KLog::LOG_STAT,
+        "VideoEncoderH264::EncodeVideoFrame( "
+        "this : %p, "
+        "[Encode Frame], "
+        "srcFrame : %p, "
+        "dstFrame : %p, "
+        "timestamp : %u, "
+        "handleTime : %lld "
+        ")",
+        this,
+        srcFrame,
+        dstFrame,
+        dstFrame->mTimestamp,
+        handleTime);
+
+    if (ret >= 0 && bGotFrame) {
         // 填充数据
         dstFrame->SetBuffer(pkt.data, pkt.size);
 
         FileLevelLog(
-                     "rtmpdump",
-                     KLog::LOG_STAT,
-                     "VideoEncoderH264::EncodeVideoFrame( "
-					 "this : %p, "
-                     "[Got Video Frame], "
-                     "srcFrame : %p, "
-                     "dstFrame : %p, "
-                     "timestamp : %u, "
-                     "frameSize : %d, "
-					 "handleTime : %lld "
-                     ")",
-                     this,
-                     srcFrame,
-                     dstFrame,
-                     dstFrame->mTimestamp,
-                     pkt.size,
-					 handleTime
-                     );
-        
+            "rtmpdump",
+            KLog::LOG_STAT,
+            "VideoEncoderH264::EncodeVideoFrame( "
+            "this : %p, "
+            "[Got Video Frame], "
+            "srcFrame : %p, "
+            "dstFrame : %p, "
+            "timestamp : %u, "
+            "frameSize : %d, "
+            "handleTime : %lld "
+            ")",
+            this,
+            srcFrame,
+            dstFrame,
+            dstFrame->mTimestamp,
+            pkt.size,
+            handleTime);
+
         av_free_packet(&pkt);
-        
+
         bFlag = true;
     }
-    
+
     return bFlag;
 }
-    
+
 bool VideoEncoderH264::CreateContext() {
     FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoEncoderH264::CreateContext( this : %p )", this);
-    
+
     bool bFlag = true;
     avcodec_register_all();
-//    av_log_set_level(AV_LOG_ERROR);
-    
-//    mCodec = avcodec_find_encoder(AV_CODEC_ID_H264);
+    //    av_log_set_level(AV_LOG_ERROR);
+
+    //    mCodec = avcodec_find_encoder(AV_CODEC_ID_H264);
     mCodec = avcodec_find_encoder_by_name("libx264");
-    if ( mCodec ) {
+    if (mCodec) {
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
                      "VideoEncoderH264::CreateContext( "
@@ -462,8 +448,7 @@ bool VideoEncoderH264::CreateContext() {
                      "%s "
                      ")",
                      this,
-                     mCodec->name
-                     );
+                     mCodec->name);
         bFlag = true;
     } else {
         FileLevelLog("rtmpdump",
@@ -472,12 +457,11 @@ bool VideoEncoderH264::CreateContext() {
                      "this : %p, "
                      "[Codec Not Found] "
                      ")",
-                     this
-                     );
+                     this);
         bFlag = false;
     }
-    
-    if( bFlag ) {
+
+    if (bFlag) {
         mContext = avcodec_alloc_context3(mCodec);
 
         // 调节编码速度和质量的平衡(ultrafast[fastest encoding]/veryslow[best compression])
@@ -511,60 +495,56 @@ bool VideoEncoderH264::CreateContext() {
          **/
         av_opt_set(mContext->priv_data, "profile", "baseline", 0);
         av_opt_set(mContext->priv_data, "level", "3.0", 0);
-        
+
         mContext->profile = FF_PROFILE_H264_BASELINE;
-        
+
         mContext->bit_rate = mBitRate;
         mContext->width = mWidth;
         mContext->height = mHeight;
         mContext->time_base = (AVRational){1, mFPS};
         mContext->gop_size = mKeyFrameInterval;
-        mContext->max_b_frames = 0;// optional param 可选参数，禁用B帧，设置 x264 参数 profile 值为 baseline 时，此参数失效
+        mContext->max_b_frames = 0; // optional param 可选参数，禁用B帧，设置 x264 参数 profile 值为 baseline 时，此参数失效
         mContext->thread_type = FF_THREAD_FRAME;
         AVPixelFormat srcFormat = AV_PIX_FMT_YUV420P;
         mContext->pix_fmt = srcFormat;
-        
-        
-        AVDictionary* options = NULL;
+
+        AVDictionary *options = NULL;
         int ret = avcodec_open2(mContext, mCodec, &options);
-        if ( ret == 0 ) {
+        if (ret == 0) {
             FileLevelLog(
-            		"rtmpdump",
-					KLog::LOG_MSG,
-                    "VideoEncoderH264::CreateContext( "
-					"this : %p, "
-                    "[Codec opened] "
-                    ")",
-                    this
-                    );
+                "rtmpdump",
+                KLog::LOG_MSG,
+                "VideoEncoderH264::CreateContext( "
+                "this : %p, "
+                "[Codec opened] "
+                ")",
+                this);
         } else {
             FileLevelLog("rtmpdump",
-                        KLog::LOG_ERR_SYS,
-                        "VideoEncoderH264::CreateContext( "
-						"this : %p, "
-                        "[Could not open codec], "
-                        "ret : %d "
-                        ")",
-                        this,
-                        ret
-                        );
+                         KLog::LOG_ERR_SYS,
+                         "VideoEncoderH264::CreateContext( "
+                         "this : %p, "
+                         "[Could not open codec], "
+                         "ret : %d "
+                         ")",
+                         this,
+                         ret);
             bFlag = false;
         }
     }
-    
-    if( !bFlag ) {
+
+    if (!bFlag) {
         DestroyContext();
-        
+
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "VideoEncoderH264::CreateContext( "
-					 "this : %p, "
+                     "this : %p, "
                      "[Fail] "
                      ")",
-                     this
-                     );
+                     this);
     }
-    
+
     return bFlag;
 }
 
@@ -574,19 +554,18 @@ void VideoEncoderH264::DestroyContext() {
                  "VideoEncoderH264::DestroyContext( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
-    if( mContext ) {
+                 this);
+
+    if (mContext) {
         avcodec_close(mContext);
         avcodec_free_context(&mContext);
         mContext = NULL;
     }
-    
+
     mCodec = NULL;
 }
 
-void VideoEncoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
+void VideoEncoderH264::ReleaseBuffer(VideoFrame *videoFrame) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "VideoEncoderH264::ReleaseBuffer( "
@@ -596,9 +575,8 @@ void VideoEncoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
                  ")",
                  this,
                  videoFrame,
-                 mFreeBufferList.size()
-                 );
-    
+                 mFreeBufferList.size());
+
     mFreeBufferList.lock();
     mFreeBufferList.push_back(videoFrame);
     mFreeBufferList.unlock();
@@ -614,19 +592,18 @@ void VideoEncoderH264::ClearVideoFrame() {
                  "mFreeBufferList.size() : %d "
                  ")",
                  this,
-				 mEncodeBufferList.size(),
+                 mEncodeBufferList.size(),
                  mConvertBufferList.size(),
-                 mFreeBufferList.size()
-                 );
-    
+                 mFreeBufferList.size());
+
     // 释放解码Buffer
-    VideoFrame* frame = NULL;
+    VideoFrame *frame = NULL;
 
     mEncodeBufferList.lock();
-    while( !mEncodeBufferList.empty() ) {
-        frame = (VideoFrame* )mEncodeBufferList.front();
+    while (!mEncodeBufferList.empty()) {
+        frame = (VideoFrame *)mEncodeBufferList.front();
         mEncodeBufferList.pop_front();
-        if( frame != NULL ) {
+        if (frame != NULL) {
             delete frame;
         } else {
             break;
@@ -636,10 +613,10 @@ void VideoEncoderH264::ClearVideoFrame() {
 
     // 释放转换Buffer
     mConvertBufferList.lock();
-    while( !mConvertBufferList.empty() ) {
-        frame = (VideoFrame* )mConvertBufferList.front();
+    while (!mConvertBufferList.empty()) {
+        frame = (VideoFrame *)mConvertBufferList.front();
         mConvertBufferList.pop_front();
-        if( frame != NULL ) {
+        if (frame != NULL) {
             delete frame;
         } else {
             break;
@@ -649,10 +626,10 @@ void VideoEncoderH264::ClearVideoFrame() {
 
     // 释放空闲Buffer
     mFreeBufferList.lock();
-    while( !mFreeBufferList.empty() ) {
-        frame = (VideoFrame* )mFreeBufferList.front();
+    while (!mFreeBufferList.empty()) {
+        frame = (VideoFrame *)mFreeBufferList.front();
         mFreeBufferList.pop_front();
-        if( frame != NULL ) {
+        if (frame != NULL) {
             delete frame;
         } else {
             break;
@@ -661,32 +638,32 @@ void VideoEncoderH264::ClearVideoFrame() {
     mFreeBufferList.unlock();
 }
 
-char* VideoEncoderH264::FindNalu(char* start, int size, int& startCodeSize) {
+char *VideoEncoderH264::FindNalu(char *start, int size, int &startCodeSize) {
     static const char naluStartCode[] = {0x00, 0x00, 0x00, 0x01};
     static const char sliceStartCode[] = {0x00, 0x00, 0x01};
     startCodeSize = 0;
-    char* nalu = NULL;
+    char *nalu = NULL;
     char frameType = *start & 0x1F;
-    
-    for(int i = 0; i < size; i++) {
+
+    for (int i = 0; i < size; i++) {
         // Only SPS or PPS need to seperate by slice start code
-        if( frameType == 0x07 || frameType == 0x08 ) {
-            if( i + sizeof(sliceStartCode) < size &&
-               memcmp(start + i, sliceStartCode, sizeof(sliceStartCode)) == 0 ) {
-            	startCodeSize = sizeof(sliceStartCode);
+        if (frameType == 0x07 || frameType == 0x08) {
+            if (i + sizeof(sliceStartCode) < size &&
+                memcmp(start + i, sliceStartCode, sizeof(sliceStartCode)) == 0) {
+                startCodeSize = sizeof(sliceStartCode);
                 nalu = start + i;
                 break;
             }
         }
-    
-        if ( i + sizeof(naluStartCode) < size &&
-            memcmp(start + i, naluStartCode, sizeof(naluStartCode)) == 0 ) {
-        	startCodeSize = sizeof(naluStartCode);
+
+        if (i + sizeof(naluStartCode) < size &&
+            memcmp(start + i, naluStartCode, sizeof(naluStartCode)) == 0) {
+            startCodeSize = sizeof(naluStartCode);
             nalu = start + i;
             break;
         }
     }
-    
+
     return nalu;
 }
 
@@ -694,107 +671,102 @@ void VideoEncoderH264::ConvertVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::ConvertVideoHandle( "
-				 "this : %p, "
+                 "this : %p, "
                  "[Start] "
                  ")",
-                 this
-                 );
-    
-    VideoFrame* srcFrame = NULL;
-    VideoFrame* dstFrame = NULL;
-    
-    while ( mbRunning ) {
+                 this);
+
+    VideoFrame *srcFrame = NULL;
+    VideoFrame *dstFrame = NULL;
+
+    while (mbRunning) {
         // 获取采样帧
         srcFrame = NULL;
         dstFrame = NULL;
-        
-        mConvertBufferList.lock();
-        if( !mConvertBufferList.empty() ) {
-            FileLevelLog("rtmpdump",
-                          KLog::LOG_MSG,
-                          "VideoEncoderH264::ConvertVideoHandle( "
-                          "this : %p, "
-                          "mConvertBufferList.size() : %d "
-                          ")",
-                          this,
-                          mConvertBufferList.size()
-                          );
 
-            srcFrame = (VideoFrame* )mConvertBufferList.front();
+        mConvertBufferList.lock();
+        if (!mConvertBufferList.empty()) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "VideoEncoderH264::ConvertVideoHandle( "
+                         "this : %p, "
+                         "mConvertBufferList.size() : %d "
+                         ")",
+                         this,
+                         mConvertBufferList.size());
+
+            srcFrame = (VideoFrame *)mConvertBufferList.front();
             mConvertBufferList.pop_front();
         }
         mConvertBufferList.unlock();
-        
-        if( srcFrame ) {
+
+        if (srcFrame) {
             // 获取空闲Buffer
             mFreeBufferList.lock();
-            if( !mFreeBufferList.empty() ) {
+            if (!mFreeBufferList.empty()) {
                 dstFrame = (VideoFrame *)mFreeBufferList.front();
                 mFreeBufferList.pop_front();
             } else {
                 dstFrame = new VideoFrame();
-            	FileLevelLog("rtmpdump",
-            				 KLog::LOG_WARNING,
-            				 "VideoEncoderH264::ConvertVideoHandle( "
-            				 "this : %p, "
-            				 "[New Video Frame], "
-            				 "frame : %p "
-            				 ")",
-            				 this,
-							 dstFrame
-            				 );
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_WARNING,
+                             "VideoEncoderH264::ConvertVideoHandle( "
+                             "this : %p, "
+                             "[New Video Frame], "
+                             "frame : %p "
+                             ")",
+                             this,
+                             dstFrame);
             }
             mFreeBufferList.unlock();
-            
+
             // 重新采样
-            if( ConvertVideoFrame(srcFrame, dstFrame) ) {
+            if (ConvertVideoFrame(srcFrame, dstFrame)) {
                 // 放到待编码队列
                 mEncodeBufferList.lock();
                 mEncodeBufferList.push_back(dstFrame);
                 mEncodeBufferList.unlock();
-                
+
             } else {
                 // 释放空闲视频帧
                 ReleaseBuffer(dstFrame);
             }
-            
+
             // 释放采样视频帧
             ReleaseBuffer(srcFrame);
         }
-        
+
         Sleep(1);
     }
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
-                "VideoEncoderH264::ConvertVideoHandle( "
-                "this : %p, "
-				"[Exit] "
-                ")",
-                this
-                );
+                 "VideoEncoderH264::ConvertVideoHandle( "
+                 "this : %p, "
+                 "[Exit] "
+                 ")",
+                 this);
 }
-    
+
 void VideoEncoderH264::EncodeVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
-                "VideoEncoderH264::EncodeVideoHandle( "
-                "[Start], "
-                "this : %p "
-                ")",
-                this
-                );
-    
-    VideoFrame* srcFrame = NULL;
+                 "VideoEncoderH264::EncodeVideoHandle( "
+                 "[Start], "
+                 "this : %p "
+                 ")",
+                 this);
+
+    VideoFrame *srcFrame = NULL;
     VideoFrame tmpFrame;
-    VideoFrame* dstFrame = &tmpFrame;
-    
-    while ( mbRunning ) {
+    VideoFrame *dstFrame = &tmpFrame;
+
+    while (mbRunning) {
         // 获取编码帧
         srcFrame = NULL;
-        
+
         mEncodeBufferList.lock();
-        if( !mEncodeBufferList.empty() ) {
+        if (!mEncodeBufferList.empty()) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "VideoEncoderH264::EncodeVideoHandle( "
@@ -802,51 +774,50 @@ void VideoEncoderH264::EncodeVideoHandle() {
                          "mEncodeBufferList.size() : %d "
                          ")",
                          this,
-                         mEncodeBufferList.size()
-                         );
+                         mEncodeBufferList.size());
 
-            srcFrame = (VideoFrame* )mEncodeBufferList.front();
+            srcFrame = (VideoFrame *)mEncodeBufferList.front();
             mEncodeBufferList.pop_front();
         }
         mEncodeBufferList.unlock();
-        
-        if( srcFrame ) {
+
+        if (srcFrame) {
             // 编码帧
-            if( EncodeVideoFrame(srcFrame, dstFrame) ) {
+            if (EncodeVideoFrame(srcFrame, dstFrame)) {
                 // 分离Nalu
                 bool bFinish = false;
-                char* buffer = (char *)dstFrame->GetBuffer();
+                char *buffer = (char *)dstFrame->GetBuffer();
                 int leftSize = dstFrame->mBufferLen;
                 int naluSize = 0;
-                
-                char* naluStart = NULL;
-                char* naluEnd = NULL;
-                
+
+                char *naluStart = NULL;
+                char *naluEnd = NULL;
+
                 int startCodeSize = 0;
 
                 // 找到第一帧
                 naluStart = FindNalu(buffer, dstFrame->mBufferLen, startCodeSize);
-                if( naluStart ) {
-                	naluStart += startCodeSize;
+                if (naluStart) {
+                    naluStart += startCodeSize;
                     leftSize -= (int)(naluStart - buffer);
                 }
-                
-                while( naluStart ) {
+
+                while (naluStart) {
                     naluSize = 0;
-                    
+
                     // 寻找Nalu
                     naluEnd = FindNalu(naluStart, leftSize, startCodeSize);
-                    if( naluEnd != NULL ) {
+                    if (naluEnd != NULL) {
                         // 找到Nalu
                         naluSize = (int)(naluEnd - naluStart);
-                        
+
                     } else {
                         // 最后一个Nalu
                         naluSize = leftSize;
-                        
+
                         bFinish = true;
                     }
-                    
+
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_STAT,
                                  "VideoEncoderH264::EncodeVideoHandle( "
@@ -861,19 +832,18 @@ void VideoEncoderH264::EncodeVideoHandle() {
                                  (*naluStart & 0x1f),
                                  naluSize,
                                  leftSize,
-                                 bFinish?"true":"false"
-                                 );
-                    
+                                 bFinish ? "true" : "false");
+
                     // 回调编码成功
                     if (NULL != mpCallback) {
                         mpCallback->OnEncodeVideoFrame(this, naluStart, naluSize, dstFrame->mTimestamp);
                     }
-                    
+
                     // 数据下标偏移
                     naluStart = naluEnd + startCodeSize;
                     leftSize -= naluSize;
-                    
-                    if( bFinish ) {
+
+                    if (bFinish) {
                         break;
                     }
                 }

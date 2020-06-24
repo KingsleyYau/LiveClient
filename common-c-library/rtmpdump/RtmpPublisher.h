@@ -21,17 +21,17 @@
 namespace coollive {
 class PublishRunnable;
 class RtmpPublisher {
-public:
-	RtmpPublisher();
+  public:
+    RtmpPublisher();
     ~RtmpPublisher();
-    
+
     /**
      发布流连接
      
      @return 成功／失败
      */
     bool PublishUrl();
-    
+
     /**
      停止
      */
@@ -43,8 +43,8 @@ public:
      @param data <#frame description#>
      @param size <#frame_size description#>
      */
-    void SendVideoFrame(char* data, int size, u_int32_t timestamp);
-  
+    void SendVideoFrame(char *data, int size, u_int32_t timestamp);
+
     /**
      发送原始音频帧
      
@@ -59,34 +59,33 @@ public:
                         AudioFrameSoundRate sound_rate,
                         AudioFrameSoundSize sound_size,
                         AudioFrameSoundType sound_type,
-                        char* data,
+                        char *data,
                         int size,
-                        u_int32_t timestamp
-                        );
-    
-public:
-    void SetRtmpDump(RtmpDump* rtmpDump);
-    
-private:
+                        u_int32_t timestamp);
+
+  public:
+    void SetRtmpDump(RtmpDump *rtmpDump);
+
+  private:
     friend class PublishRunnable;
     void PublishHandle();
-    
-private:
+
+  private:
     void Init();
     void InitBuffer();
-    
-private:
+
+  private:
     // Rtmp传输模块
-    RtmpDump* mpRtmpDump;
-    
+    RtmpDump *mpRtmpDump;
+
     // 状态锁
     KMutex mClientMutex;
     bool mbRunning;
-    
+
     // 发送线程
     KThread mPublishThread;
-    PublishRunnable* mpPublishRunnable;
-    
+    PublishRunnable *mpPublishRunnable;
+
     // 缓存Buffer列表
     EncodeDecodeBufferList mVideoBufferList;
     EncodeDecodeBufferList mAudioBufferList;

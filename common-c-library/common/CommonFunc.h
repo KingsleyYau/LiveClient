@@ -17,6 +17,10 @@ using namespace std;
 #define _countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 #endif
 
+#ifndef MIN
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 // 判断文件是否存在
 bool IsFileExist(const string& path);
 // 判断目录是否存在

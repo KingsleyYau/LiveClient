@@ -382,14 +382,13 @@ void PublisherController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sp
                  "sps_size : %d, "
                  "pps_size : %d, "
                  "naluHeaderSize : %d, "
-				 "timestamp : %u"
+                 "timestamp : %u"
                  ")",
                  this,
                  sps_size,
                  pps_size,
                  naluHeaderSize,
-				 timestamp
-				 );
+                 timestamp);
 }
 
 void PublisherController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {
@@ -476,7 +475,7 @@ void PublisherController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
 }
 /*********************************************** 传输器回调处理 End *****************************************************/
 
-bool PublisherController::SendCmdLogin(const string& userName, const string& password, const string& siteId) {
+bool PublisherController::SendCmdLogin(const string &userName, const string &password, const string &siteId) {
     return mRtmpDump.SendCmdLogin(userName, password, siteId);
 }
 

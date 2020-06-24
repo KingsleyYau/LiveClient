@@ -14,42 +14,42 @@
 #include <stdio.h>
 
 namespace coollive {
-    
+
 class Statistics {
-public:
+  public:
     Statistics();
     ~Statistics();
-    
+
     void Start();
     void Stop();
-    
+
     /**
      增加视频帧
      */
     void AddVideoRecvFrame();
     void AddVideoPlayFrame();
-    
+
     /**
      增加音频帧
      */
     void AddAudioRecvFrame();
     void AddAudioPlayFrame();
-    
+
     /**
      是否需要丢弃视频帧
 
      @return 是否
      */
     bool IsDropVideoFrame();
-    
+
     /**
      是否需要断开
 
      @return <#return value description#>
      */
     int IsDisconnect();
-    
-private:
+
+  private:
     /**
      是否接收视频帧
      
@@ -62,12 +62,12 @@ private:
      @return 是否
      */
     bool CanRecvAudio();
-    
-private:
+
+  private:
     // 状态锁
     KMutex mStatusMutex;
     bool mbRunning;
-    
+
     int mVideoRecvFrameCount;
     int mVideoPlayFrameCount;
     int mAudioRecvFrameCount;

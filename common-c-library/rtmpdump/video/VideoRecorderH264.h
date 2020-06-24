@@ -18,23 +18,23 @@ using namespace std;
 
 namespace coollive {
 class VideoRecorderH264 {
-public:
+  public:
     VideoRecorderH264();
     ~VideoRecorderH264();
-    
-    bool Start(const string& filePath);
+
+    bool Start(const string &filePath);
     void Stop();
-    
-    bool RecordVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize);
-    bool RecordVideoFrame(const char* data, int size);
-    bool RecordVideoNaluFrame(const char* data, int size);
-    
-private:
+
+    bool RecordVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize);
+    bool RecordVideoFrame(const char *data, int size);
+    bool RecordVideoNaluFrame(const char *data, int size);
+
+  private:
     string mFilePath;
-    FILE* mpFile;
-    
+    FILE *mpFile;
+
     int mNaluHeaderSize;
-    
+
     VideoMuxer mVideoMuxer;
 };
 }

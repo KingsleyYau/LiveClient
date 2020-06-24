@@ -137,20 +137,20 @@ class RtmpDump {
 
      @return 发送结果
      */
-    bool SendCmdLogin(const string& userName, const string& password, const string& siteId);
+    bool SendCmdLogin(const string &userName, const string &password, const string &siteId);
     /**
      发送MakeCall命令
 
      @return 发送结果
      */
-    bool SendCmdMakeCall(const string& userName, const string& serverId, const string& siteId);
+    bool SendCmdMakeCall(const string &userName, const string &serverId, const string &siteId);
     /**
      发送接收视频命令
 
      @return 发送结果
      */
     bool SendCmdReceive();
-    
+
   public:
     // 接收线程处理
     void RecvRunnableHandle();

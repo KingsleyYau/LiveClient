@@ -26,30 +26,30 @@ namespace coollive {
 
 class EncodeAudioRunnable;
 class AudioEncoderAAC : public AudioEncoder {
-public:
-	AudioEncoderAAC();
-	virtual ~AudioEncoderAAC();
+  public:
+    AudioEncoderAAC();
+    virtual ~AudioEncoderAAC();
 
-public:
+  public:
     bool Create(int sampleRate, int channelsPerFrame, int bitPerSample);
-    void SetCallback(AudioEncoderCallback* callback);
+    void SetCallback(AudioEncoderCallback *callback);
     bool Reset();
     void Pause();
-    void EncodeAudioFrame(void* data, int size, void* frame);
+    void EncodeAudioFrame(void *data, int size, void *frame);
 
-private:
+  private:
     bool Start();
     void Stop();
-    void ReleaseAudioFrame(AudioFrame* audioFrame);
-    bool EncodeAudioFrame(AudioFrame* srcFrame, AudioFrame* dstFrame);
+    void ReleaseAudioFrame(AudioFrame *audioFrame);
+    bool EncodeAudioFrame(AudioFrame *srcFrame, AudioFrame *dstFrame);
 
-private:
+  private:
     bool CreateContext();
     void DestroyContext();
     void ClearAudioFrame();
 
-private:
-    AudioEncoderCallback* mpCallback;
+  private:
+    AudioEncoderCallback *mpCallback;
 
     // 参数
     int mSampleRate;
@@ -76,7 +76,7 @@ private:
 
     // 编码线程实现体
     friend class EncodeAudioRunnable;
-    EncodeAudioRunnable* mpEncodeAudioRunnable;
+    EncodeAudioRunnable *mpEncodeAudioRunnable;
     void EncodeAudioHandle();
 
     // 编码线程

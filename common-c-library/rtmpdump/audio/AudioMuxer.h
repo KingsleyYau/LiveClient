@@ -15,10 +15,10 @@
 
 namespace coollive {
 class AudioMuxer {
-public:
+  public:
     AudioMuxer();
     ~AudioMuxer();
-    
+
     /**
      增加ADTS头部
      (Audio Data Transport Stream 音频数据传输流)
@@ -34,15 +34,14 @@ public:
      @return <#return value description#>
      */
     bool GetADTS(
-                 int frameSize,
-                 AudioFrameFormat format,
-                 AudioFrameSoundRate sampleRate,
-                 AudioFrameSoundSize bitPerChannel,
-                 AudioFrameSoundType channels,
-                 char *header,
-                 int headerCapacity,
-                 int &headerSize
-                 );
+        int frameSize,
+        AudioFrameFormat format,
+        AudioFrameSoundRate sampleRate,
+        AudioFrameSoundSize bitPerChannel,
+        AudioFrameSoundType channels,
+        char *header,
+        int headerCapacity,
+        int &headerSize);
 };
 }
 

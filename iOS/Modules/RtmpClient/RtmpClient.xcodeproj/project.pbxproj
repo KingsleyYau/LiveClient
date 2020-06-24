@@ -151,14 +151,14 @@
 			isa = PBXGroup;
 			children = (
 				504FAFB41F4D164500E08A6D /* audio */,
-				506228CE2474D37E0060484F /* MediaFileReader.cpp */,
-				506228CF2474D37E0060484F /* MediaFileReader.h */,
 				50CD56981F1356F000EC3C4A /* IAudioRenderer.h */,
 				503A70701EEF748A00BA8FF8 /* ICodec.h */,
 				500337231EA0D7560078D32D /* IDecoder.h */,
 				503A70711EEF748A00BA8FF8 /* IEncoder.h */,
 				5059ABCD1EF3A8BC0090F0F9 /* iOS */,
 				50CD56991F1356F000EC3C4A /* IVideoRenderer.h */,
+				506228CE2474D37E0060484F /* MediaFileReader.cpp */,
+				506228CF2474D37E0060484F /* MediaFileReader.h */,
 				506D67921EF10DF40022A666 /* PlayerController.cpp */,
 				506D67931EF10DF40022A666 /* PlayerController.h */,
 				50CD56951F1353AC00EC3C4A /* PublisherController.cpp */,

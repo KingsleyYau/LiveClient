@@ -13,117 +13,109 @@
 #include <rtmpdump/RtmpPlayer.h>
 
 namespace coollive {
-    
+
 typedef struct _tagDecodeItem {
-    VideoHardDecoder* decoder;
+    VideoHardDecoder *decoder;
     u_int32_t timestamp;
-    
+
     _tagDecodeItem() {
         decoder = NULL;
         timestamp = 0;
     }
 } DecodeItem;
-    
+
 VideoHardDecoder::VideoHardDecoder()
-    :mRuningMutex(KMutex::MutexType_Recursive)
-{
+    : mRuningMutex(KMutex::MutexType_Recursive) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::VideoHardDecoder( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
+                 this);
+
     mpCallback = NULL;
     mSession = NULL;
     mFormatDesc = NULL;
-    
+
     mpSps = NULL;
     mSpSize = 0;
     mpPps = NULL;
     mPpsSize = 0;
     mNaluHeaderSize = 0;
-    
 }
 
-VideoHardDecoder::~VideoHardDecoder()
-{
+VideoHardDecoder::~VideoHardDecoder() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::~VideoHardDecoder( "
                  "this : %p "
                  ")",
-                 this
-                 );
-    
+                 this);
+
     DestroyContext();
-    
+
     ResetParam();
 }
 
-bool VideoHardDecoder::Create(VideoDecoderCallback* callback)
-{
+bool VideoHardDecoder::Create(VideoDecoderCallback *callback) {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Create( this : %p )", this);
-    
+
     bool result = false;
     if (NULL != callback) {
         mpCallback = callback;
         result = true;
     }
-    
+
     ResetParam();
-    
+
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Create( this : %p, [Success] )", this);
-    
+
     return result;
 }
 
-    
 void VideoHardDecoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Pause( this : %p )", this);
-    
+
     DestroyContext();
-    
+
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Pause( this : %p, [Success] )", this);
 }
-    
+
 bool VideoHardDecoder::Reset() {
     bool bFlag = true;
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Reset( this : %p )", this);
-    
+
     mRuningMutex.lock();
-    if(
-       mpSps != NULL &&
-       mSpSize != 0 &&
-       mpPps != NULL &&
-       mPpsSize != 0 &&
-       mNaluHeaderSize != 0
-       ) {
+    if (
+        mpSps != NULL &&
+        mSpSize != 0 &&
+        mpPps != NULL &&
+        mPpsSize != 0 &&
+        mNaluHeaderSize != 0) {
         bFlag = CreateContext();
+        mbError = false;
     }
     mRuningMutex.unlock();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardDecoder::Reset( "
                  "this : %p, "
                  "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
-                 );
-    
+                 this,
+                 bFlag ? "Success" : "Fail");
+
     return bFlag;
 }
 
 void VideoHardDecoder::ResetStream() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::ResetStream( this : %p )", this);
 }
-    
-void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
+
+void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
+                 KLog::LOG_MSG,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
                  "this : %p, "
                  "sps : %p, "
@@ -139,24 +131,23 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
                  pps,
                  pps_size,
                  naluHeaderSize,
-                 timestamp
-                 );
-    
+                 timestamp);
+
     DestroyContext();
-    
+
     mRuningMutex.lock();
-    
+
     // 重新设置解码器变量
-    if( mpSps ) {
+    if (mpSps) {
         delete[] mpSps;
         mpSps = NULL;
     }
-    
+
     mSpSize = sps_size;
     mpSps = new char[mSpSize];
     memcpy(mpSps, sps, mSpSize);
-    
-    if( mpPps ) {
+
+    if (mpPps) {
         delete[] mpPps;
         mpPps = NULL;
     }
@@ -164,32 +155,31 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
     mPpsSize = pps_size;
     mpPps = new char[mPpsSize];
     memcpy(mpPps, pps, mPpsSize);
-    
+
     mNaluHeaderSize = naluHeaderSize;
 
-    if(
-       mpSps != NULL &&
-       mSpSize != 0 &&
-       mpPps != NULL &&
-       mPpsSize != 0 &&
-       mNaluHeaderSize != 0
-       ) {
+    if (
+        mpSps != NULL &&
+        mSpSize != 0 &&
+        mpPps != NULL &&
+        mPpsSize != 0 &&
+        mNaluHeaderSize != 0) {
         CreateContext();
     }
-    
+
     mRuningMutex.unlock();
 }
 
-void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
+void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {
     // 重置解码Buffer
     mVideoDecodeFrame.ResetFrame();
-    
+
     Nalu naluArray[16];
     int naluArraySize = _countof(naluArray);
     bool bFlag = mVideoMuxer.GetNalus(data, size, mNaluHeaderSize, naluArray, naluArraySize);
-    if( bFlag && naluArraySize > 0 ) {
+    if (bFlag && naluArraySize > 0) {
         FileLevelLog("rtmpdump",
-                     KLog::LOG_STAT,
+                     KLog::LOG_MSG,
                      "VideoHardDecoder::DecodeVideoFrame( "
                      "[Got Nalu Array], "
                      "timestamp : %u, "
@@ -198,16 +188,15 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
                      ")",
                      timestamp,
                      size,
-                     naluArraySize
-                     );
-        
+                     naluArraySize);
+
         int naluIndex = 0;
-        while( naluIndex < naluArraySize ) {
-            Nalu* nalu = naluArray + naluIndex;
+        while (naluIndex < naluArraySize) {
+            Nalu *nalu = naluArray + naluIndex;
             naluIndex++;
-            
+
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "VideoHardDecoder::DecodeVideoFrame( "
                          "[Got Nalu], "
                          "naluSize : %d, "
@@ -216,102 +205,110 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
                          ")",
                          nalu->GetNaluSize(),
                          nalu->GetNaluBodySize(),
-                         nalu->GetNaluType()
-                         );
-            
-            Slice* sliceArray = NULL;
+                         nalu->GetNaluType());
+
+            Slice *sliceArray = NULL;
             int sliceArraySize = 0;
             int sliceIndex = 0;
-            
-//            if( nalu->GetNaluType() == VFT_NOTIDR || nalu->GetNaluType() == VFT_IDR ) {
-                nalu->GetSlices(&sliceArray, sliceArraySize);
+
+            nalu->GetSlices(&sliceArray, sliceArraySize);
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "VideoHardDecoder::DecodeVideoFrame( "
+                         "[Got Slice Array], "
+                         "sliceArraySize : %d "
+                         ")",
+                         sliceArraySize);
+            while (sliceIndex < sliceArraySize) {
+                Slice *slice = sliceArray + sliceIndex;
+                sliceIndex++;
+
                 FileLevelLog("rtmpdump",
-                             KLog::LOG_STAT,
+                             KLog::LOG_MSG,
                              "VideoHardDecoder::DecodeVideoFrame( "
-                             "[Got Slice Array], "
-                             "sliceArraySize : %d "
+                             "[Got Slice], "
+                             "sliceSize : %d, "
+                             "isFirstSlice : %d "
                              ")",
-                             sliceArraySize
-                             );
-                while( sliceIndex < sliceArraySize ) {
-                    Slice* slice = sliceArray + sliceIndex;
-                    sliceIndex++;
-                    
-                    FileLevelLog("rtmpdump",
-                                 KLog::LOG_STAT,
-                                 "VideoHardDecoder::DecodeVideoFrame( "
-                                 "[Got Slice], "
-                                 "sliceSize : %d, "
-                                 "isFirstSlice : %d "
-                                 ")",
-                                 slice->GetSliceSize(),
-                                 slice->IsFirstSlice()
-                                 );
-                    
-                    int sliceLen = CFSwapInt32HostToBig(slice->GetSliceSize());
-                    mVideoDecodeFrame.AddBuffer((const unsigned char *)&sliceLen, sizeof(sliceLen));
-                    mVideoDecodeFrame.AddBuffer((const unsigned char *)slice->GetSlice(), slice->GetSliceSize());
-                }
-//            }
+                             slice->GetSliceSize(),
+                             slice->IsFirstSlice());
+
+                int sliceLen = CFSwapInt32HostToBig(slice->GetSliceSize());
+                mVideoDecodeFrame.AddBuffer((const unsigned char *)&sliceLen, sizeof(sliceLen));
+                mVideoDecodeFrame.AddBuffer((const unsigned char *)slice->GetSlice(), slice->GetSliceSize());
+            }
         }
     }
-    
+
     mRuningMutex.lock();
-    
+
     OSStatus status = noErr;
     CMBlockBufferRef blockBuffer = NULL;
     status = CMBlockBufferCreateWithMemoryBlock(
-                                                kCFAllocatorDefault,
-                                                (void *)mVideoDecodeFrame.GetBuffer(),
-                                                mVideoDecodeFrame.mBufferLen,
-                                                kCFAllocatorNull,
-                                                NULL,
-                                                0,
-                                                mVideoDecodeFrame.mBufferLen,
-                                                0,
-                                                &blockBuffer
-                                                );
-    if( status == kCMBlockBufferNoErr ) {
+        kCFAllocatorDefault,
+        (void *)mVideoDecodeFrame.GetBuffer(),
+        mVideoDecodeFrame.mBufferLen,
+        kCFAllocatorNull,
+        NULL,
+        0,
+        mVideoDecodeFrame.mBufferLen,
+        0,
+        &blockBuffer);
+    if (status == kCMBlockBufferNoErr) {
         CMSampleBufferRef sampleBuffer = NULL;
         const size_t sampleSizeArray[] = {mVideoDecodeFrame.mBufferLen};
         status = CMSampleBufferCreateReady(
-                                           kCFAllocatorDefault,
-                                           blockBuffer,
-                                           mFormatDesc,
-                                           1,
-                                           0,
-                                           NULL,
-                                           1,
-                                           sampleSizeArray,
-                                           &sampleBuffer
-                                           );
-        
-        if( status == kCMBlockBufferNoErr ) {
+            kCFAllocatorDefault,
+            blockBuffer,
+            mFormatDesc,
+            1,
+            0,
+            NULL,
+            1,
+            sampleSizeArray,
+            &sampleBuffer);
+
+        if (status == kCMBlockBufferNoErr) {
             VTDecodeFrameFlags flags = 0;
             VTDecodeInfoFlags flagOut = 0;
-            
+
             DecodeItem item;
             item.timestamp = timestamp;
             item.decoder = this;
-            
+
             status = VTDecompressionSessionDecodeFrame(
-                                                       mSession,
-                                                       sampleBuffer,
-                                                       flags,
-                                                       &item,
-                                                       &flagOut
-                                                       );
+                mSession,
+                sampleBuffer,
+                flags,
+                &item,
+                &flagOut);
+
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "VideoHardDecoder::DecodeVideoFrame( "
+                         "[Decode Video Result], "
+                         "status : %d, "
+                         "timestamp : %u "
+                         ")",
+                         status,
+                         timestamp);
             
+            if (status != noErr || mbError) {
+                DestroyContext();
+                CreateContext();
+                mbError = false;
+            }
+
             CFRelease(sampleBuffer);
         }
-        
+
         CFRelease(blockBuffer);
     }
-    
+
     mRuningMutex.unlock();
 }
 
-void VideoHardDecoder::ReleaseVideoFrame(void* frame) {
+void VideoHardDecoder::ReleaseVideoFrame(void *frame) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "VideoHardDecoder::ReleaseVideoFrame( "
@@ -319,52 +316,53 @@ void VideoHardDecoder::ReleaseVideoFrame(void* frame) {
                  "frame : %p "
                  ")",
                  this,
-                 frame
-                 );
-    
+                 frame);
+
     CVImageBufferRef imageBuffer = (CVImageBufferRef)frame;
     CFRelease(imageBuffer);
 }
-    
+
 void VideoHardDecoder::StartDropFrame() {
-    
 }
-    
+
 void VideoHardDecoder::ClearVideoFrame() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::ClearVideoFrame( "
                  "this : %p "
                  ")",
-                 this
-                 );
+                 this);
 }
-    
+
 // 硬解码callback
-void VideoHardDecoder::DecodeOutputCallback (
-                                         void* decompressionOutputRefCon,
-                                         void* sourceFrameRefCon,
-                                         OSStatus status,
-                                         VTDecodeInfoFlags infoFlags,
-                                         CVImageBufferRef imageBuffer,
-                                         CMTime presentationTimeStamp,
-                                         CMTime presentationDuration
-                                         )
-{
-    if( status == noErr ) {
-//        FileLevelLog("rtmpdump",
-//                     KLog::LOG_STAT,
-//                     "VideoHardDecoder::DecodeOutputCallback( "
-//                     "[Decode Video Success] "
-//                     ")"
-//                     );
-        
-        if( imageBuffer != NULL && sourceFrameRefCon != NULL ) {
-            DecodeItem* item = (DecodeItem*)sourceFrameRefCon;
-            if (NULL != item
-                && item->decoder) {
+void VideoHardDecoder::DecodeOutputCallback(
+    void *decompressionOutputRefCon,
+    void *sourceFrameRefCon,
+    OSStatus status,
+    VTDecodeInfoFlags infoFlags,
+    CVImageBufferRef imageBuffer,
+    CMTime presentationTimeStamp,
+    CMTime presentationDuration) {
+
+    DecodeItem *item = NULL;
+    u_int32_t timestamp = 0xFFFFFFFF;
+    if (sourceFrameRefCon != NULL) {
+        item = (DecodeItem *)sourceFrameRefCon;
+        timestamp = item->timestamp;
+    }
+
+    if (status == noErr) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_STAT,
+                     "VideoHardDecoder::DecodeOutputCallback( "
+                     "[Decode Video Success], "
+                     "timestamp : %u "
+                     ")",
+                     timestamp);
+
+        if (imageBuffer != NULL) {
+            if (NULL != item && item->decoder) {
                 CFRetain(imageBuffer);
-                
                 item->decoder->DecodeCallbackProc(imageBuffer, item->timestamp);
             }
         }
@@ -373,73 +371,83 @@ void VideoHardDecoder::DecodeOutputCallback (
                      KLog::LOG_WARNING,
                      "VideoHardDecoder::DecodeOutputCallback( "
                      "[Decode Video Error], "
-                     "status : %d "
+                     "status : %d, "
+                     "timestamp : %u "
                      ")",
-                     status
-                     );
+                     status,
+                     timestamp);
+        if (NULL != item && item->decoder) {
+            if (NULL != item && item->decoder) {
+                item->decoder->DecodeCallbackProc(NULL, item->timestamp, false);
+            }
+        }
     }
 }
 
 // 硬解码回调
-void VideoHardDecoder::DecodeCallbackProc(void* frame, u_int32_t timestamp)
-{
+void VideoHardDecoder::DecodeCallbackProc(void *frame, u_int32_t timestamp, bool bFlag) {
+    // 不用锁, 因为DecodeOutputCallback是VTDecompressionSessionDecodeFrame的同步回调(不同线程)
+    mbError = !bFlag;
     if (NULL != mpCallback) {
-        mpCallback->OnDecodeVideoFrame(this, frame, timestamp);
+        if (bFlag) {
+            mpCallback->OnDecodeVideoFrame(this, frame, timestamp);
+        } else {
+            //            mpCallback->OnDecodeVideoError(this);
+        }
     }
-    
-//        CIImage* ciImage = [CIImage imageWithCVPixelBuffer:imageBuffer];
-//
-//        CIContext *context = [CIContext contextWithOptions:nil];
-//        CGImageRef cgiimage = [context createCGImage:ciImage fromRect:ciImage.extent];
-//        UIImage* uiImage = [UIImage imageWithCGImage:cgiimage];
-//
-//        NSString* imageName = [NSString stringWithFormat:@"%.7d.png", item->timestamp];
-//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:imageName];
-//        NSData* dataImage = UIImagePNGRepresentation(uiImage);
-//        [dataImage writeToFile:filePath atomically:YES];
+
+    //        CIImage* ciImage = [CIImage imageWithCVPixelBuffer:imageBuffer];
+    //
+    //        CIContext *context = [CIContext contextWithOptions:nil];
+    //        CGImageRef cgiimage = [context createCGImage:ciImage fromRect:ciImage.extent];
+    //        UIImage* uiImage = [UIImage imageWithCGImage:cgiimage];
+    //
+    //        NSString* imageName = [NSString stringWithFormat:@"%.7d.png", item->timestamp];
+    //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:imageName];
+    //        NSData* dataImage = UIImagePNGRepresentation(uiImage);
+    //        [dataImage writeToFile:filePath atomically:YES];
 }
 
 void VideoHardDecoder::ResetParam() {
-    if( mpSps ) {
+    if (mpSps) {
         delete[] mpSps;
         mpSps = NULL;
     }
-    
-    if( mpPps ) {
+
+    if (mpPps) {
         delete[] mpPps;
         mpPps = NULL;
     }
-    
+
     mNaluHeaderSize = 0;
 }
-    
+
 bool VideoHardDecoder::CreateContext() {
     bool bFlag = false;
     OSStatus status = noErr;
-    
+
     mRuningMutex.lock();
-    
+
     if (NULL == mSession) {
         // 初始化Video格式
         const int parameterSetCount = 2;
-        const uint8_t* const parameterSetPointers[parameterSetCount] = {(const uint8_t*)mpSps, (const uint8_t*)mpPps};
+        const uint8_t *const parameterSetPointers[parameterSetCount] = {(const uint8_t *)mpSps, (const uint8_t *)mpPps};
         const size_t parameterSetSizes[parameterSetCount] = {mSpSize, mPpsSize};
         status = CMVideoFormatDescriptionCreateFromH264ParameterSets(
-                                                                     kCFAllocatorDefault,
-                                                                     parameterSetCount,
-                                                                     parameterSetPointers,
-                                                                     parameterSetSizes,
-                                                                     mNaluHeaderSize,
-                                                                     &mFormatDesc
-                                                                     );
-        
-        if( status == noErr ) {
+            kCFAllocatorDefault,
+            parameterSetCount,
+            parameterSetPointers,
+            parameterSetSizes,
+            mNaluHeaderSize,
+            &mFormatDesc);
+
+        if (status == noErr) {
             // 初始化回调参数
             VTDecompressionOutputCallbackRecord callBackRecord;
             callBackRecord.decompressionOutputCallback = DecodeOutputCallback;
             callBackRecord.decompressionOutputRefCon = this;
-            
+
             // 初始化输出视频格式参数
             const int iFormatType = kCVPixelFormatType_32BGRA;
             CFNumberRef formatType = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &iFormatType);
@@ -449,60 +457,59 @@ bool VideoHardDecoder::CreateContext() {
             const void *value[itemCount] = {formatType};
             // 生成参数
             CFDictionaryRef attributes = CFDictionaryCreate(kCFAllocatorDefault, key, value, itemCount, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-            
+
             // 创建解码器
             status = VTDecompressionSessionCreate(
-                                                  kCFAllocatorDefault,
-                                                  mFormatDesc,
-                                                  NULL,
-                                                  attributes,
-                                                  &callBackRecord,
-                                                  &mSession
-                                                  );
-            
+                kCFAllocatorDefault,
+                mFormatDesc,
+                NULL,
+                attributes,
+                &callBackRecord,
+                &mSession);
+
             // 回收参数
             CFRelease(attributes);
             CFRelease(formatType);
-            
+
             bFlag = (status == noErr);
         }
     }
 
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::CreateContext( this : %p, [%s], mSession : %p, status : %d )", bFlag?"Success":"Fail", this, mSession, status);
-    
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::CreateContext( this : %p, [%s], mSession : %p, status : %d )", this, bFlag ? "Success" : "Fail", mSession, status);
+
     mRuningMutex.unlock();
-    
+
     return bFlag;
 }
 
 void VideoHardDecoder::DestroyContext() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::DestroyContext( this : %p, mSession : %p )", this, mSession);
-    
+
     mRuningMutex.lock();
-    
-    if( mSession ) {
+
+    if (mSession) {
         VTDecompressionSessionInvalidate(mSession);
         CFRelease(mSession);
         mSession = NULL;
     }
-    
-    if( mFormatDesc != nil ) {
+
+    if (mFormatDesc != nil) {
         CFRelease(mFormatDesc);
         mFormatDesc = NULL;
     }
-    
+
     mRuningMutex.unlock();
 }
-    
-char* VideoHardDecoder::FindSlice(char* start, int size, int& sliceSize) {
+
+char *VideoHardDecoder::FindSlice(char *start, int size, int &sliceSize) {
     static const char sliceStartCode[] = {0x00, 0x00, 0x01};
-    
+
     sliceSize = 0;
-    char* slice = NULL;
-    
-    for(int i = 0; i < size; i++) {
-        if( i + sizeof(sliceStartCode) < size &&
-           memcmp(start + i, sliceStartCode, sizeof(sliceStartCode)) == 0 ) {
+    char *slice = NULL;
+
+    for (int i = 0; i < size; i++) {
+        if (i + sizeof(sliceStartCode) < size &&
+            memcmp(start + i, sliceStartCode, sizeof(sliceStartCode)) == 0) {
             sliceSize = sizeof(sliceStartCode);
             slice = start + i;
             break;

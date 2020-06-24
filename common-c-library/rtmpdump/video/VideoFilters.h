@@ -18,37 +18,37 @@
 namespace coollive {
 class VideoFilters;
 class VideoFiltersCallback {
-public:
+  public:
     virtual ~VideoFiltersCallback(){};
-    virtual void OnFilterVideoFrame(VideoFilters* filters, VideoFrame* videoFrame) = 0;
+    virtual void OnFilterVideoFrame(VideoFilters *filters, VideoFrame *videoFrame) = 0;
 };
 
 class FilterVideoRunnable;
 class VideoFilters {
-	typedef list_lock<VideoFilter*> FilterList;
+    typedef list_lock<VideoFilter *> FilterList;
 
-public:
-	VideoFilters();
-	virtual ~VideoFilters();
+  public:
+    VideoFilters();
+    virtual ~VideoFilters();
 
-public:
-	void SetFiltersCallback(VideoFiltersCallback *pVideoFiltersCallback);
+  public:
+    void SetFiltersCallback(VideoFiltersCallback *pVideoFiltersCallback);
 
-	bool Start();
-	void Stop();
+    bool Start();
+    void Stop();
 
-	void AddFilter(VideoFilter* filter);
-    void FilterFrame(void* data, int size, int width, int height, VIDEO_FORMATE_TYPE format);
+    void AddFilter(VideoFilter *filter);
+    void FilterFrame(void *data, int size, int width, int height, VIDEO_FORMATE_TYPE format);
 
-private:
-    bool FilterFrame(VideoFrame* srcFrame, VideoFrame* dstFrame);
-    void ReleaseVideoFrame(VideoFrame* videoFrame);
+  private:
+    bool FilterFrame(VideoFrame *srcFrame, VideoFrame *dstFrame);
+    void ReleaseVideoFrame(VideoFrame *videoFrame);
 
-private:
+  private:
     // 回调接口
     VideoFiltersCallback *mpVideoFiltersCallback;
     // 过滤器列表
-	FilterList mFilterList;
+    FilterList mFilterList;
 
     // 空闲帧队列
     EncodeDecodeBufferList mFreeBufferList;
@@ -57,11 +57,11 @@ private:
 
     // 过滤器Buffer
     VideoFrame mInputFrame;
-	VideoFrame mOutputFrame;
+    VideoFrame mOutputFrame;
 
     // 过滤器线程实现体
     friend class FilterVideoRunnable;
-    FilterVideoRunnable* mpFilterVideoRunnable;
+    FilterVideoRunnable *mpFilterVideoRunnable;
     void FilterVideoHandle();
     // 编码线程
     KThread mFilterVideoThread;

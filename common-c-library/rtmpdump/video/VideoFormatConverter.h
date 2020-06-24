@@ -20,25 +20,25 @@ struct SwsContext;
 namespace coollive {
 class VideoFrame;
 class VideoFormatConverter {
-public:
+  public:
     VideoFormatConverter();
     ~VideoFormatConverter();
 
-public:
+  public:
     void SetDstFormat(VIDEO_FORMATE_TYPE type);
-    bool ConvertFrame(VideoFrame* srcFrame, VideoFrame* dstFrame);
-    
-private:
-    bool ChangeContext(VideoFrame* srcFrame);
-    
-private:
+    bool ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame);
+
+  private:
+    bool ChangeContext(VideoFrame *srcFrame);
+
+  private:
     SwsContext *mImgConvertCtx;
-    
+
     int mWidth;
     int mHeight;
-    
+
     // 转换的格式
-	VIDEO_FORMATE_TYPE mDstFormat;
+    VIDEO_FORMATE_TYPE mDstFormat;
 };
 }
 #endif /* VideoFormatConverter_h */

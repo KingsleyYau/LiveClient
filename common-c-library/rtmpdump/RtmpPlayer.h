@@ -23,38 +23,37 @@ namespace coollive {
 
 class RtmpPlayer;
 class RtmpPlayerCallback {
-public:
+  public:
     virtual ~RtmpPlayerCallback(){};
-    
-    virtual void OnPlayVideoFrame(RtmpPlayer* player, void* frame) = 0;
-    virtual void OnDropVideoFrame(RtmpPlayer* player, void* frame) = 0;
-    virtual void OnPlayAudioFrame(RtmpPlayer* player, void* frame) = 0;
-    virtual void OnDropAudioFrame(RtmpPlayer* player, void* frame) = 0;
-    virtual void OnResetVideoStream(RtmpPlayer* player) = 0;
-    virtual void OnResetAudioStream(RtmpPlayer* player) = 0;
-    virtual void OnDelayMaxTime(RtmpPlayer* player) = 0;
-    virtual void OnOverMaxBufferFrameCount(RtmpPlayer* player) = 0;
+
+    virtual void OnPlayVideoFrame(RtmpPlayer *player, void *frame) = 0;
+    virtual void OnDropVideoFrame(RtmpPlayer *player, void *frame) = 0;
+    virtual void OnPlayAudioFrame(RtmpPlayer *player, void *frame) = 0;
+    virtual void OnDropAudioFrame(RtmpPlayer *player, void *frame) = 0;
+    virtual void OnResetVideoStream(RtmpPlayer *player) = 0;
+    virtual void OnResetAudioStream(RtmpPlayer *player) = 0;
+    virtual void OnDelayMaxTime(RtmpPlayer *player) = 0;
+    virtual void OnOverMaxBufferFrameCount(RtmpPlayer *player) = 0;
 };
 
 class PlayVideoRunnable;
 class PlayAudioRunnable;
 class RtmpPlayer {
-public:
+  public:
     RtmpPlayer();
     RtmpPlayer(
-               RtmpDump *rtmpDump,
-               RtmpPlayerCallback* callback
-    );
+        RtmpDump *rtmpDump,
+        RtmpPlayerCallback *callback);
     ~RtmpPlayer();
-    
+
     /**
      播放流连接
      
      @param recordFilePath flv录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& recordFilePath);
-    
+    bool PlayUrl(const string &recordFilePath);
+
     /**
      停止
      */
@@ -66,22 +65,22 @@ public:
      @param frame 视频帧
      @param timestamp 时间戳
      */
-    void PushVideoFrame(void* frame, u_int32_t timestamp);
-    
+    void PushVideoFrame(void *frame, u_int32_t timestamp);
+
     /**
      播放一个音频帧
 
      @param frame 音频帧
      @param timestamp 时间戳
      */
-    void PushAudioFrame(void* frame, u_int32_t timestamp);
-        
+    void PushAudioFrame(void *frame, u_int32_t timestamp);
+
     /**
      获取回调
 
      @return 回调
      */
-    RtmpPlayerCallback* GetCallback();
+    RtmpPlayerCallback *GetCallback();
 
     /**
      设置是否允许延迟丢帧
@@ -89,30 +88,30 @@ public:
      @param canDropFrame 是否允许延迟丢帧
      */
     void SetCanDropFrame(bool canDropFrame);
-    
+
     /**
      获取缓存视频数量
 
      @return <#return value description#>
      */
     size_t GetVideBufferSize();
-    
-public:
-    void SetRtmpDump(RtmpDump* rtmpDump);
-    void SetCallback(RtmpPlayerCallback* callback);
+
+  public:
+    void SetRtmpDump(RtmpDump *rtmpDump);
+    void SetCallback(RtmpPlayerCallback *callback);
     void SetCacheMS(int cacheMS);
     void SetCacheNoLimit(bool bNoCacheLimit);
-    
-public:
+
+  public:
     void PlayVideoRunnableHandle();
     void PlayAudioRunnableHandle();
-    
-private:
+
+  private:
     void Init();
     // 缓存时间是否足够
     bool IsCacheEnough();
     // 是否重置播放流
-    bool IsRestStream(FrameBuffer* frame, unsigned int preTimestamp);
+    bool IsRestStream(FrameBuffer *frame, unsigned int preTimestamp);
     // 是否开始播放
     bool IsPlay(bool isAudio);
     // 没有需要播放的Buffer
@@ -123,35 +122,35 @@ private:
     void PlayAudio();
 
     // 播放一个视频帧
-    void PlayVideoFrame(FrameBuffer* frame);
-    void DropVideoFrame(FrameBuffer* frame);
-    
+    void PlayVideoFrame(FrameBuffer *frame);
+    void DropVideoFrame(FrameBuffer *frame);
+
     // 播放一个音频帧
-    void PlayAudioFrame(FrameBuffer* frame);
-    void DropAudioFrame(FrameBuffer* frame);
-    
+    void PlayAudioFrame(FrameBuffer *frame);
+    void DropAudioFrame(FrameBuffer *frame);
+
     // 播放回调
-    RtmpPlayerCallback* mpRtmpPlayerCallback;
-    
+    RtmpPlayerCallback *mpRtmpPlayerCallback;
+
     // Rtmp传输模块
-    RtmpDump* mpRtmpDump;
-    
+    RtmpDump *mpRtmpDump;
+
     // 播放线程
     KThread mPlayVideoThread;
-    PlayVideoRunnable* mpPlayVideoRunnable;
+    PlayVideoRunnable *mpPlayVideoRunnable;
     KThread mPlayAudioThread;
-    PlayAudioRunnable* mpPlayAudioRunnable;
+    PlayAudioRunnable *mpPlayAudioRunnable;
 
     // 状态锁
     KMutex mClientMutex;
     bool mbRunning;
-    
+
     // 缓存Buffer列表
     FrameBufferList mVideoBufferList;
     FrameBufferList mAudioBufferList;
     // 空闲的Buffer列表
     CacheBufferQueue mCacheBufferQueue;
-    
+
     // 播放的缓存时间(毫秒)
     unsigned int mCacheMS;
 

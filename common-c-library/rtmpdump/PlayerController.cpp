@@ -14,7 +14,6 @@
 extern "C" {
 #include <libavutil/imgutils.h>
 #include <libavutil/samplefmt.h>
-#include <libavutil/timestamp.h>
 #include <libavformat/avformat.h>
 }
 
@@ -580,11 +579,11 @@ void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const c
 }
 
 void PlayerController::OnMediaFileReaderAudioFrame(
-                                                   MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
-                                                   AudioFrameFormat format,
-                                                   AudioFrameSoundRate sound_rate,
-                                                   AudioFrameSoundSize sound_size,
-                                                   AudioFrameSoundType sound_type) {
+    MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+    AudioFrameFormat format,
+    AudioFrameSoundRate sound_rate,
+    AudioFrameSoundSize sound_size,
+    AudioFrameSoundType sound_type) {
     // 解码音频帧
     if (mpAudioDecoder) {
         mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);

@@ -71,12 +71,13 @@
     self.publisher.customFilter = vibrateFilter;
 
 //    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.17:19351/live/max", nil];
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max", nil];
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.133:4000/cdn_standard/max", nil];
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max134", nil];
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max0", nil];
+//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.133:4000/cdn_standard/max0", nil];
 //    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://192.168.88.133:4000/cdn_standard/max", nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 
-//    [self play:nil];
+    [self play:nil];
     //    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
     //        dispatch_async(dispatch_get_main_queue(), ^{
     //            if (!granted) {

@@ -23,29 +23,28 @@
 struct AVFrame;
 namespace coollive {
 const static unsigned char sync_bytes[] = {0x0, 0x0, 0x0, 0x1};
-class VideoFrame : public EncodeDecodeBuffer
-{
-public:
+class VideoFrame : public EncodeDecodeBuffer {
+  public:
     VideoFrame();
     ~VideoFrame();
-    
-    VideoFrame(const VideoFrame& item);
-    VideoFrame& operator=(const VideoFrame& item);
 
-public:
+    VideoFrame(const VideoFrame &item);
+    VideoFrame &operator=(const VideoFrame &item);
+
+  public:
     static int GetPixelFormat(VIDEO_FORMATE_TYPE type);
 
-public:
+  public:
     void InitFrame(int width, int height, VIDEO_FORMATE_TYPE mFormat);
     void ResetFrame();
     int GetPixelFormat();
 
-public:
+  public:
     int mWidth;                 // 图像宽度
     int mHeight;                // 图像长度
     VideoFrameType mVideoType;  // 类型
     VIDEO_FORMATE_TYPE mFormat; // 视频帧采样格式
-    
+
     AVFrame* mpAVFrame;
 };
 }

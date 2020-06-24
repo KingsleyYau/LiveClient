@@ -19,60 +19,58 @@
 using namespace std;
 
 namespace coollive {
-    
+
 class VideoDecoder;
 class VideoDecoderCallback {
-public:
+  public:
     virtual ~VideoDecoderCallback(){};
-    virtual void OnDecodeVideoFrame(VideoDecoder* decoder, void* frame, u_int32_t timestamp) = 0;
-    virtual void OnDecodeVideoError(VideoDecoder* decoder) = 0;
+    virtual void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp) = 0;
+    virtual void OnDecodeVideoError(VideoDecoder *decoder) = 0;
 };
-    
+
 class VideoDecoder {
-public:
-    VideoDecoder() {};
+  public:
+    VideoDecoder(){};
     virtual ~VideoDecoder(){};
-    virtual bool Create(VideoDecoderCallback* callback) = 0;
+    virtual bool Create(VideoDecoderCallback *callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void ResetStream() = 0;
-    virtual void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) = 0;
-    virtual void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
-    virtual void ReleaseVideoFrame(void* frame) = 0;
+    virtual void DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) = 0;
+    virtual void DecodeVideoFrame(const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
+    virtual void ReleaseVideoFrame(void *frame) = 0;
     virtual void StartDropFrame() = 0;
     virtual void ClearVideoFrame() = 0;
 };
-    
+
 class AudioDecoder;
 class AudioDecoderCallback {
-public:
+  public:
     virtual ~AudioDecoderCallback(){};
-    virtual void OnDecodeAudioFrame(AudioDecoder* decoder, void* frame, u_int32_t timestamp) = 0;
-    virtual void OnDecodeAudioError(AudioDecoder* decoder) = 0;
+    virtual void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp) = 0;
+    virtual void OnDecodeAudioError(AudioDecoder *decoder) = 0;
 };
-    
+
 class AudioDecoder {
-public:
+  public:
     virtual ~AudioDecoder(){};
-    virtual bool Create(AudioDecoderCallback* callback) = 0;
+    virtual bool Create(AudioDecoderCallback *callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void DecodeAudioFormat(
-    		AudioFrameFormat format,
-			AudioFrameSoundRate sound_rate,
-			AudioFrameSoundSize sound_size,
-			AudioFrameSoundType sound_type
-			) = 0;
+        AudioFrameFormat format,
+        AudioFrameSoundRate sound_rate,
+        AudioFrameSoundSize sound_size,
+        AudioFrameSoundType sound_type) = 0;
     virtual void DecodeAudioFrame(
-    		AudioFrameFormat format,
-			AudioFrameSoundRate sound_rate,
-			AudioFrameSoundSize sound_size,
-			AudioFrameSoundType sound_type,
-			const char* data,
-			int size,
-			u_int32_t timestamp
-			) = 0;
-    virtual void ReleaseAudioFrame(void* frame) = 0;
+        AudioFrameFormat format,
+        AudioFrameSoundRate sound_rate,
+        AudioFrameSoundSize sound_size,
+        AudioFrameSoundType sound_type,
+        const char *data,
+        int size,
+        u_int32_t timestamp) = 0;
+    virtual void ReleaseAudioFrame(void *frame) = 0;
     virtual void ClearAudioFrame() = 0;
 };
 }

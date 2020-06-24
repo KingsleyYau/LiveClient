@@ -17,3 +17,5 @@ iOS/Modules/UIWidget/UIWidget.xcodeproj/xcuserdata/
 android/coollive/.classpath
 
 *.prefs
+
+*.a
