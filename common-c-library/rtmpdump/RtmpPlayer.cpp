@@ -30,9 +30,9 @@
 // 视频最大缓冲(帧数)
 #define VIDEO_MAX_FRAME_COUNT 150
 // 音频警告缓冲(帧数)
-#define AUDIO_WARN_FRAME_COUNT 300
+#define AUDIO_WARN_FRAME_COUNT 150
 // 音频最大缓冲(帧数)
-#define AUDIO_MAX_FRAME_COUNT 600
+#define AUDIO_MAX_FRAME_COUNT 300
 namespace coollive {
 class PlayVideoRunnable : public KRunnable {
   public:

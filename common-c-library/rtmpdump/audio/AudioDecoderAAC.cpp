@@ -582,10 +582,12 @@ void AudioDecoderAAC::DecodeAudioHandle() {
                              "AudioDecoderAAC::DecodeAudioHandle( "
                              "this : %p, "
                              "[New Audio Frame], "
-                             "frame : %p "
+                             "frame : %p, "
+                             "timestamp : %u "
                              ")",
                              this,
-                             dstFrame);
+                             dstFrame,
+                             srcFrame->mTimestamp);
             }
             mFreeBufferList.unlock();
 

@@ -68,7 +68,7 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
         mAudioBufferList.lock();
         if( mAudioBufferList.empty() ) {
             status = AudioQueueAllocateBuffer(mAudioQueue, AUDIO_BUFFER_SIZE, &audioBuffer);
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [New More AudioBuffer], audioBuffer : %p )", audioBuffer);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [New More AudioBuffer], audioBuffer : %p, timestamp : %u )", audioBuffer, audioFrame->mTimestamp);
             
         } else {
             audioBuffer = mAudioBufferList.front();
