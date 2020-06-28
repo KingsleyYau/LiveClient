@@ -56,6 +56,7 @@ private:
     bool CreateContext();
     void DestroyContext();
     char* FindSlice(char* start, int size, int& sliceSize);
+    bool CheckVideoSize();
     
 private:
     VideoDecoderCallback* mpCallback;
@@ -70,6 +71,8 @@ private:
     char* mpPps;
     int mPpsSize;
     int mNaluHeaderSize;
+    int mWidth;
+    int mHeight;
     
     // 状态锁
     KMutex mRuningMutex;

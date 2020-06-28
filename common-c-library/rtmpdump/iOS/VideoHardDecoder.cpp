@@ -24,6 +24,50 @@ typedef struct _tagDecodeItem {
     }
 } DecodeItem;
 
+static inline unsigned int UE(unsigned char *pBuff, unsigned int nLen, unsigned int &nstartBit) {
+    // 计算0bit的个数
+    unsigned int nZeroNum = 0;
+    while (nstartBit < nLen * 8) {
+        if (pBuff[nstartBit / 8] & (0x80 >> (nstartBit % 8))) {
+            break;
+        }
+        nZeroNum++;
+        nstartBit++;
+    }
+    nstartBit++;
+
+    unsigned int dwRet = 0;
+    for (unsigned int i = 0; i < nZeroNum; i++) {
+        dwRet <<= 1;
+        if (pBuff[nstartBit / 8] & (0x80 >> (nstartBit % 8))) {
+            dwRet += 1;
+        }
+        nstartBit++;
+    }
+    return (1 << nZeroNum) - 1 + dwRet;
+}
+
+static inline int SE(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit) {
+    int ueVal = UE(pBuff, nLen, nStartBit);
+    double k = ueVal;
+    int nValue = ceil(k / 2);
+    if (ueVal % 2 == 0)
+        nValue = -nValue;
+    return nValue;
+}
+
+static inline unsigned int U(unsigned int bitCount, unsigned char *buf, unsigned int &nstartBit) {
+    unsigned int dwRet = 0;
+    for (unsigned int i = 0; i < bitCount; i++) {
+        dwRet <<= 1;
+        if (buf[nstartBit / 8] & (0x80 >> (nstartBit % 8))) {
+            dwRet += 1;
+        }
+        nstartBit++;
+    }
+    return dwRet;
+}
+
 VideoHardDecoder::VideoHardDecoder()
     : mRuningMutex(KMutex::MutexType_Recursive) {
     FileLevelLog("rtmpdump",
@@ -165,6 +209,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
         mPpsSize != 0 &&
         mNaluHeaderSize != 0) {
         CreateContext();
+        CheckVideoSize();
     }
 
     mRuningMutex.unlock();
@@ -174,6 +219,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
     // 重置解码Buffer
     mVideoDecodeFrame.ResetFrame();
 
+    bool bChange = false;
     // 如果需要支持B帧, 需要自己根据dts做缓存和排序, 暂时不支持
     Nalu naluArray[16];
     int naluArraySize = _countof(naluArray);
@@ -234,14 +280,66 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                              slice->GetSliceSize(),
                              slice->IsFirstSlice());
 
+                unsigned char *sliceData = (unsigned char *)slice->GetSlice();
+                int sliceLenOriginal = slice->GetSliceSize();
                 int sliceLen = CFSwapInt32HostToBig(slice->GetSliceSize());
                 mVideoDecodeFrame.AddBuffer((const unsigned char *)&sliceLen, sizeof(sliceLen));
                 mVideoDecodeFrame.AddBuffer((const unsigned char *)slice->GetSlice(), slice->GetSliceSize());
+
+                if (nalu->GetNaluType() == VFT_SPS) {
+                    if ((mSpSize != sliceLenOriginal) || (0 != memcmp(mpSps, sliceData, sliceLenOriginal))) {
+                        if (mSpSize < sliceLenOriginal) {
+                            if (mpSps) {
+                                delete[] mpSps;
+                                mpSps = NULL;
+                            }
+                            mpSps = new char[sliceLenOriginal];
+                        }
+                        mSpSize = sliceLenOriginal;
+                        memcpy(mpSps, sliceData, mSpSize);
+
+                        FileLevelLog("rtmpdump",
+                                     KLog::LOG_MSG,
+                                     "VideoHardDecoder::DecodeVideoFrame( "
+                                     "[New SPS], "
+                                     "mSpSize : %d "
+                                     ")",
+                                     mSpSize
+                                     );
+                        bChange = CheckVideoSize();
+                    }
+                }
+
+                if (nalu->GetNaluType() == VFT_PPS) {
+                    if ((mPpsSize != sliceLenOriginal) || (0 != memcmp(mpPps, sliceData, sliceLenOriginal))) {
+                        if (mPpsSize < sliceLenOriginal) {
+                            if (mpPps) {
+                                delete[] mpPps;
+                                mpPps = NULL;
+                            }
+                            mpPps = new char[sliceLenOriginal];
+                        }
+                        mPpsSize = sliceLenOriginal;
+                        memcpy(mpPps, sliceData, mPpsSize);
+
+                        FileLevelLog("rtmpdump",
+                                     KLog::LOG_MSG,
+                                     "VideoHardDecoder::DecodeVideoFrame( "
+                                     "[New PPS], "
+                                     "mPpsSize : %d "
+                                     ")",
+                                     mPpsSize);
+                    }
+                }
             }
         }
     }
 
     mRuningMutex.lock();
+    if (bChange) {
+        DestroyContext();
+        CreateContext();
+    }
 
     OSStatus status = noErr;
     CMBlockBufferRef blockBuffer = NULL;
@@ -258,7 +356,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
     if (status == kCMBlockBufferNoErr) {
         CMSampleBufferRef sampleBuffer = NULL;
         const size_t sampleSizeArray[] = {mVideoDecodeFrame.mBufferLen};
-//        CMSampleTimingInfo timingInfo = {CMTimeMake(0, 0), CMTimeMake(timestamp, 15), CMTimeMake(timestamp, 15)};
+        //        CMSampleTimingInfo timingInfo = {CMTimeMake(0, 0), CMTimeMake(timestamp, 15), CMTimeMake(timestamp, 15)};
         status = CMSampleBufferCreateReady(
             kCFAllocatorDefault,
             blockBuffer,
@@ -296,7 +394,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                          status,
                          &item,
                          timestamp);
-            
+
             if (status != noErr || mbError) {
                 DestroyContext();
                 CreateContext();
@@ -350,7 +448,7 @@ void VideoHardDecoder::DecodeOutputCallback(
 
     Float64 ptTimestamp = CMTimeGetSeconds(presentationTimeStamp);
     Float64 ptDuration = CMTimeGetSeconds(presentationDuration);
-    
+
     DecodeItem *item = NULL;
     u_int32_t timestamp = 0xFFFFFFFF;
     if (sourceFrameRefCon != NULL) {
@@ -431,6 +529,8 @@ void VideoHardDecoder::ResetParam() {
         mpPps = NULL;
     }
 
+    mWidth = 0;
+    mHeight = 0;
     mNaluHeaderSize = 0;
 }
 
@@ -528,5 +628,101 @@ char *VideoHardDecoder::FindSlice(char *start, int size, int &sliceSize) {
     }
     
     return slice;
+}
+
+bool VideoHardDecoder::CheckVideoSize() {
+    bool bFlag = false;
+    
+    unsigned char *sliceData = (unsigned char *)mpSps;
+    int sliceLenOriginal = mSpSize;
+    
+    unsigned int startBit = 0;
+    int profile_idc = U(8, (unsigned char *)sliceData, startBit);
+    int constraint_set0_flag = U(1, (unsigned char *)sliceData, startBit);
+    int constraint_set1_flag = U(1, (unsigned char *)sliceData, startBit);
+    int constraint_set2_flag = U(1, (unsigned char *)sliceData, startBit);
+    int constraint_set3_flag = U(1, (unsigned char *)sliceData, startBit);
+    int reserved_zero_4bits = U(4, (unsigned char *)sliceData, startBit);
+    int level_idc = U(8, (unsigned char *)sliceData, startBit);
+    int seq_parameter_set_id = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+
+    if (profile_idc == 44 ||
+        profile_idc == 83 ||
+        profile_idc == 86 ||
+        profile_idc == 100 ||
+        profile_idc == 118 ||
+        profile_idc == 110 ||
+        profile_idc == 122 ||
+        profile_idc == 128 ||
+        profile_idc == 244) {
+        int chroma_format_idc = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        if (chroma_format_idc == 3)
+            int residual_colour_transform_flag = U(1, (unsigned char *)sliceData, startBit);
+        int bit_depth_luma_minus8 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int bit_depth_chroma_minus8 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int qpprime_y_zero_transform_bypass_flag = U(1, (unsigned char *)sliceData, startBit);
+        int seq_scaling_matrix_present_flag = U(1, (unsigned char *)sliceData, startBit);
+
+        int seq_scaling_list_present_flag[8];
+        if (seq_scaling_matrix_present_flag) {
+            for (int i = 0; i < 8; i++) {
+                seq_scaling_list_present_flag[i] = U(1, (unsigned char *)sliceData, startBit);
+            }
+        }
+    }
+    int log2_max_frame_num_minus4 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    int pic_order_cnt_type = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    if (pic_order_cnt_type == 0) {
+        int log2_max_pic_order_cnt_lsb_minus4 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    } else if (pic_order_cnt_type == 1) {
+        int delta_pic_order_always_zero_flag = U(1, (unsigned char *)sliceData, startBit);
+        int offset_for_non_ref_pic = SE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int offset_for_top_to_bottom_field = SE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int num_ref_frames_in_pic_order_cnt_cycle = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+
+        SE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        //                            int *offset_for_ref_frame = new int[num_ref_frames_in_pic_order_cnt_cycle];
+        //                            for (int i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++)
+        //                                offset_for_ref_frame[i] = SE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        //                            delete[] offset_for_ref_frame;
+    }
+    int num_ref_frames = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    int gaps_in_frame_num_value_allowed_flag = U(1, (unsigned char *)sliceData, startBit);
+    int pic_width_in_mbs_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    int pic_height_in_map_units_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+
+    int width = (pic_width_in_mbs_minus1 + 1) * 16;
+    int height = (pic_height_in_map_units_minus1 + 1) * 16;
+    int frame_mbs_only_flag = U(1, (unsigned char *)sliceData, startBit);
+    height *= (2 - frame_mbs_only_flag);
+    
+    if ( mWidth != 0 && mHeight != 0 ) {
+        if ( mWidth != width || mHeight != height ) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "VideoHardDecoder::CheckVideoSize( "
+                         "[New SPS], "
+                         "mSpSize : %d, "
+                         "profile_idc : %d, "
+                         "mWidth : %d, "
+                         "mHeight : %d, "
+                         "width : %d, "
+                         "height : %d "
+                         ")",
+                         mSpSize,
+                         profile_idc,
+                         mWidth,
+                         mHeight,
+                         width,
+                         height
+                         );
+            bFlag = true;
+        }
+    }
+    
+    mWidth = width;
+    mHeight = height;
+    
+    return bFlag;
 }
 }

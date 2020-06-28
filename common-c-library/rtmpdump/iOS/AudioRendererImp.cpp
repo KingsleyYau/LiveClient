@@ -125,11 +125,11 @@ bool AudioRendererImp::Start() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioRendererImp::Start( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+                 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -146,6 +146,8 @@ void AudioRendererImp::Stop() {
     
     if( mAudioQueue ) {
         AudioQueueStop(mAudioQueue, YES);
+        AudioQueueReset(mAudioQueue);
+        AudioQueueFlush(mAudioQueue);
     }
     
     FileLevelLog("rtmpdump",
