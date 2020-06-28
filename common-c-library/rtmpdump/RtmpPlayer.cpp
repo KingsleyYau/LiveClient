@@ -26,9 +26,9 @@
 #define AUDIO_DIFF_VIDEO_TIMESTAMP 300
 
 // 视频警告缓冲(帧数)
-#define VIDEO_WARN_FRAME_COUNT 90
+#define VIDEO_WARN_FRAME_COUNT 30
 // 视频最大缓冲(帧数)
-#define VIDEO_MAX_FRAME_COUNT 150
+#define VIDEO_MAX_FRAME_COUNT 60
 // 音频警告缓冲(帧数)
 #define AUDIO_WARN_FRAME_COUNT 150
 // 音频最大缓冲(帧数)
@@ -348,6 +348,16 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
         }
 
         mVideoBufferList.push_back(frameBuffer);
+//        if ( mVideoBufferList.empty() ) {
+//            mVideoBufferList.push_back(frameBuffer);
+//        } else {
+//            for(FrameBufferList::iterator itr = mVideoBufferList.begin(); itr != mVideoBufferList.end(); itr++ ) {
+//                if ( frameBuffer->mTimestamp > (*itr)->mTimestamp ) {
+//                    mVideoBufferList.insert(++itr, frameBuffer);
+//                    break;
+//                }
+//            }
+//        }
         mVideoFrontTimestamp = mVideoBufferList.front()->mTimestamp;
         mVideoBackTimestamp = mVideoBufferList.back()->mTimestamp;
         mVideoBufferList.unlock();

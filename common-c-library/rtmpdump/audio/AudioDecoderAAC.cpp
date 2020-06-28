@@ -132,6 +132,7 @@ bool AudioDecoderAAC::Start() {
     if (bFlag) {
         AudioFrame *frame = NULL;
         mFreeBufferList.lock();
+        mBufferListSize = 0;
         for (int i = 0; i < DEFAULT_AUDIO_BUFFER_COUNT; i++) {
             frame = new AudioFrame();
             frame->ResetFrame();
@@ -319,6 +320,7 @@ void AudioDecoderAAC::ReleaseAudioFrame(void *frame) {
     } else {
         mFreeBufferList.push_back(audioFrame);
     }
+    mBufferListSize--;
     mFreeBufferList.unlock();
 }
 
@@ -341,6 +343,7 @@ void AudioDecoderAAC::ClearAudioFrame() {
         frame = (AudioFrame *)mDecodeBufferList.front();
         mDecodeBufferList.pop_front();
         if (frame != NULL) {
+            mBufferListSize--;
             delete frame;
         } else {
             break;
@@ -393,12 +396,17 @@ void AudioDecoderAAC::DecodeAudioFrame(
                      "this : %p, "
                      "[New Audio Frame], "
                      "frame : %p, "
-                     "timestamp : %u "
+                     "timestamp : %u, "
+                     "bufferListSize : %u, "
+                     "mDecodeBufferList.size() : %d "
                      ")",
                      this,
                      audioFrame,
-                     timestamp);
+                     timestamp,
+                     mBufferListSize,
+                     mDecodeBufferList.size());
     }
+    mBufferListSize++;
     mFreeBufferList.unlock();
 
     // 更新数据格式

@@ -287,17 +287,19 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, 
     }
 }
 
-void PlayerController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {
+void PlayerController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t pts, u_int32_t dts, VideoFrameType video_type) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "PlayerController::OnRecvVideoFrame( "
                  "this : %p, "
-                 "timestamp : %u, "
+                 "pts : %u, "
+                 "dts : %u, "
                  "size : %d, "
                  "video_type : %d "
                  ")",
                  this,
-                 timestamp,
+                 pts,
+                 dts,
                  size,
                  video_type);
     // 增加分析处理
@@ -308,7 +310,7 @@ void PlayerController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, in
 
     // 解码视频帧
     if (mpVideoDecoder) {
-        mpVideoDecoder->DecodeVideoFrame(data, size, timestamp, video_type);
+        mpVideoDecoder->DecodeVideoFrame(data, size, pts, video_type);
     }
 }
 

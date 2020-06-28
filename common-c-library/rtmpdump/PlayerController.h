@@ -131,7 +131,7 @@ class PlayerController : public RtmpDumpCallback,
     void OnConnect(RtmpDump *rtmpDump);
     void OnDisconnect(RtmpDump *rtmpDump);
     void OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp);
-    void OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type);
+    void OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t pts, u_int32_t dts, VideoFrameType video_type);
     void OnChangeAudioFormat(RtmpDump *rtmpDump,
                              AudioFrameFormat format,
                              AudioFrameSoundRate sound_rate,

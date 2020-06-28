@@ -64,6 +64,7 @@
 
     // 初始化推送
     self.publishUrl = @"rtmp://172.25.32.133:4000/cdn_standard/max";
+//    self.publishUrl = @"rtmp://198.211.27.71:4000/cdn_standard/max";
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
@@ -71,10 +72,10 @@
     self.publisher.customFilter = vibrateFilter;
 
 //    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.17:19351/live/max", nil];
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max134", nil];
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/tester0", nil];
+//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max134", nil];
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/tester", nil];
 //    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.133:4000/cdn_standard/max0", nil];
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://192.168.88.133:4000/cdn_standard/max", nil];
+//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://198.211.27.71:4000/cdn_standard/max", nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 
     [self play:nil];
@@ -169,20 +170,20 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-//    for (int i = 0; i < self.playerArray.count; i++) {
-//        NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-//        NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-//        NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-//
-//        NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
-//        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-//    }
-    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+    for (int i = 0; i < self.playerArray.count; i++) {
+        NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+        NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+        NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
-    NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
-    [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+        NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
+        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    }
+//    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
+//    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
+//    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+//
+//    NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
+//    [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
 - (IBAction)playFile:(id)sender {

@@ -174,6 +174,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
     // 重置解码Buffer
     mVideoDecodeFrame.ResetFrame();
 
+    // 如果需要支持B帧, 需要自己根据dts做缓存和排序, 暂时不支持
     Nalu naluArray[16];
     int naluArraySize = _countof(naluArray);
     bool bFlag = mVideoMuxer.GetNalus(data, size, mNaluHeaderSize, naluArray, naluArraySize);
@@ -213,7 +214,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
 
             nalu->GetSlices(&sliceArray, sliceArraySize);
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "VideoHardDecoder::DecodeVideoFrame( "
                          "[Got Slice Array], "
                          "sliceArraySize : %d "
@@ -224,7 +225,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                 sliceIndex++;
 
                 FileLevelLog("rtmpdump",
-                             KLog::LOG_MSG,
+                             KLog::LOG_STAT,
                              "VideoHardDecoder::DecodeVideoFrame( "
                              "[Got Slice], "
                              "sliceSize : %d, "
@@ -257,6 +258,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
     if (status == kCMBlockBufferNoErr) {
         CMSampleBufferRef sampleBuffer = NULL;
         const size_t sampleSizeArray[] = {mVideoDecodeFrame.mBufferLen};
+//        CMSampleTimingInfo timingInfo = {CMTimeMake(0, 0), CMTimeMake(timestamp, 15), CMTimeMake(timestamp, 15)};
         status = CMSampleBufferCreateReady(
             kCFAllocatorDefault,
             blockBuffer,
@@ -288,9 +290,11 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                          "VideoHardDecoder::DecodeVideoFrame( "
                          "[Decode Video Result], "
                          "status : %d, "
+                         "item : %p, "
                          "timestamp : %u "
                          ")",
                          status,
+                         &item,
                          timestamp);
             
             if (status != noErr || mbError) {
@@ -344,6 +348,9 @@ void VideoHardDecoder::DecodeOutputCallback(
     CMTime presentationTimeStamp,
     CMTime presentationDuration) {
 
+    Float64 ptTimestamp = CMTimeGetSeconds(presentationTimeStamp);
+    Float64 ptDuration = CMTimeGetSeconds(presentationDuration);
+    
     DecodeItem *item = NULL;
     u_int32_t timestamp = 0xFFFFFFFF;
     if (sourceFrameRefCon != NULL) {
@@ -353,11 +360,13 @@ void VideoHardDecoder::DecodeOutputCallback(
 
     if (status == noErr) {
         FileLevelLog("rtmpdump",
-                     KLog::LOG_STAT,
+                     KLog::LOG_MSG,
                      "VideoHardDecoder::DecodeOutputCallback( "
                      "[Decode Video Success], "
+                     "item : %p, "
                      "timestamp : %u "
                      ")",
+                     item,
                      timestamp);
 
         if (imageBuffer != NULL) {
@@ -372,9 +381,11 @@ void VideoHardDecoder::DecodeOutputCallback(
                      "VideoHardDecoder::DecodeOutputCallback( "
                      "[Decode Video Error], "
                      "status : %d, "
+                     "item : %p, "
                      "timestamp : %u "
                      ")",
                      status,
+                     item,
                      timestamp);
         if (NULL != item && item->decoder) {
             if (NULL != item && item->decoder) {

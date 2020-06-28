@@ -831,7 +831,27 @@ bool RtmpDump::FlvVideo2H264(char *frame, int frame_size, u_int32_t timestamp) {
         if (mpSps && mpPps && mNaluHeaderSize != 0) {
             // Skip FLV video tag
             pStart = frame + 5;
-
+            
+            unsigned char *pCts = (unsigned char *)frame + 2;
+            u_int32_t cts = pCts[0] << 24;
+            cts |= pCts[1] << 16;
+            cts |= pCts[2];
+            
+            u_int32_t dts = timestamp - cts;
+            
+//            FileLevelLog("rtmpdump",
+//                         KLog::LOG_STAT,
+//                         "RtmpDump::FlvVideo2H264( "
+//                         "this : %p, "
+//                         "pts : %u, "
+//                         "dts : %u, "
+//                         "cts : %u "
+//                         ")",
+//                         this,
+//                         timestamp,
+//                         dts,
+//                         cts);
+            
             // Callback for Video
             if (mpRtmpDumpCallback) {
                 VideoFrameType type = VFT_UNKNOWN;
@@ -840,7 +860,7 @@ bool RtmpDump::FlvVideo2H264(char *frame, int frame_size, u_int32_t timestamp) {
                 } else if (srs_utils_flv_video_frame_type(frame, frame_size) == 0x02) {
                     type = VFT_NOTIDR;
                 }
-                mpRtmpDumpCallback->OnRecvVideoFrame(this, pStart, (int)(pEnd - pStart), timestamp, type);
+                mpRtmpDumpCallback->OnRecvVideoFrame(this, pStart, (int)(pEnd - pStart), timestamp, dts, type);
             }
         }
     }
