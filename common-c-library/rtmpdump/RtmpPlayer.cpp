@@ -351,9 +351,15 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
 //        if ( mVideoBufferList.empty() ) {
 //            mVideoBufferList.push_back(frameBuffer);
 //        } else {
-//            for(FrameBufferList::iterator itr = mVideoBufferList.begin(); itr != mVideoBufferList.end(); itr++ ) {
+//            /**
+//             rbegin = last element
+//             end = last element + 1
+//             rbegin.base = end
+//             */
+//            for(FrameBufferList::reverse_iterator itr = mVideoBufferList.rbegin(); itr != mVideoBufferList.rend(); itr++) {
 //                if ( frameBuffer->mTimestamp > (*itr)->mTimestamp ) {
-//                    mVideoBufferList.insert(++itr, frameBuffer);
+//                    FrameBufferList::iterator base = (itr).base();
+//                    mVideoBufferList.insert(base, frameBuffer);
 //                    break;
 //                }
 //            }
