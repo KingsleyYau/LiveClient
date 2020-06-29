@@ -26,9 +26,9 @@
 #define AUDIO_DIFF_VIDEO_TIMESTAMP 300
 
 // 视频警告缓冲(帧数)
-#define VIDEO_WARN_FRAME_COUNT 50
+#define VIDEO_WARN_FRAME_COUNT 45
 // 视频最大缓冲(帧数)
-#define VIDEO_MAX_FRAME_COUNT 80
+#define VIDEO_MAX_FRAME_COUNT 60
 // 音频警告缓冲(帧数)
 #define AUDIO_WARN_FRAME_COUNT 150
 // 音频最大缓冲(帧数)

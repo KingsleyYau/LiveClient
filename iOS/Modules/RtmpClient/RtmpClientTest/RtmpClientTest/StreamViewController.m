@@ -63,7 +63,8 @@
     self.playerArray = playerArray;
 
     // 初始化推送
-    self.publishUrl = @"rtmp://172.25.32.133:4000/cdn_standard/max";
+//    self.publishUrl = @"rtmp://172.25.32.133:4000/cdn_standard/max";
+    self.publishUrl = @"rtmp://52.196.96.7:4000/cdn_standard/max";
 //    self.publishUrl = @"rtmp://198.211.27.71:4000/cdn_standard/max";
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
