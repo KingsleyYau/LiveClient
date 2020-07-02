@@ -166,7 +166,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  "sps_size : %d, "
                  "pps : %p, "
                  "pps_size : %d, "
-                 "naluHeaderSize : %d "
+                 "naluHeaderSize : %d, "
                  "timestamp : %u "
                  ")",
                  this,
@@ -646,15 +646,11 @@ bool VideoHardDecoder::CheckVideoSize() {
     int level_idc = U(8, (unsigned char *)sliceData, startBit);
     int seq_parameter_set_id = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
 
-    if (profile_idc == 44 ||
-        profile_idc == 83 ||
-        profile_idc == 86 ||
-        profile_idc == 100 ||
-        profile_idc == 118 ||
-        profile_idc == 110 ||
-        profile_idc == 122 ||
-        profile_idc == 128 ||
-        profile_idc == 244) {
+    if (profile_idc == 100 || profile_idc == 110 ||
+        profile_idc == 122 || profile_idc == 244 || profile_idc == 44 ||
+        profile_idc == 83 || profile_idc == 86 || profile_idc == 118 ||
+        profile_idc == 128
+        ) {
         int chroma_format_idc = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
         if (chroma_format_idc == 3)
             int residual_colour_transform_flag = U(1, (unsigned char *)sliceData, startBit);

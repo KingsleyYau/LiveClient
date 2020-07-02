@@ -486,11 +486,11 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
         mConnectedMutex.lock();
         if (mIsConnected) {
             FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendVideoFrame( this : %p, Send h264 raw data failed, ret : %d )", this, ret);
-
             srs_rtmp_shutdown(mpRtmp);
-        }
+        } else {
+           FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, Drop video before connected, timestamp : %u )", this, mSendVideoFrameTimestamp);
+       }
         mConnectedMutex.unlock();
-
     } else {
         // 5bits, 7.3.1 NAL unit syntax,
         // H.264-AVC-ISO_IEC_14496-10.pdf, page 44.
@@ -561,10 +561,12 @@ bool RtmpDump::SendAudioFrame(
     mClientMutex.unlock();
 
     if (!bFlag) {
-        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send audio raw data failed. ret=%d, timestamp : %u )", this, ret, mSendAudioFrameTimestamp);
         mConnectedMutex.lock();
         if (mIsConnected) {
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send audio raw data failed. ret=%d, timestamp : %u )", this, ret, mSendAudioFrameTimestamp);
             srs_rtmp_shutdown(mpRtmp);
+        } else {
+            FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( this : %p, Drop audio before connected, timestamp : %u )", this, mSendAudioFrameTimestamp);
         }
         mConnectedMutex.unlock();
     }

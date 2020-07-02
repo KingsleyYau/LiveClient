@@ -505,6 +505,7 @@ bool VideoEncoderH264::CreateContext() {
         mContext->gop_size = mKeyFrameInterval;
         mContext->max_b_frames = 0; // optional param 可选参数，禁用B帧，设置 x264 参数 profile 值为 baseline 时，此参数失效
         mContext->thread_type = FF_THREAD_FRAME;
+//        mContext->thread_count = 1;
         AVPixelFormat srcFormat = AV_PIX_FMT_YUV420P;
         mContext->pix_fmt = srcFormat;
 

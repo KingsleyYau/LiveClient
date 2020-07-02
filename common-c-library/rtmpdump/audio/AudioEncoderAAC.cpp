@@ -435,7 +435,6 @@ bool AudioEncoderAAC::CreateContext() {
         mContext->bit_rate = 64000;
         // AAC授权
         mContext->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
-        mContext->time_base = (AVRational){1, 30};
 
         AVDictionary *options = NULL;
         int ret = avcodec_open2(mContext, mCodec, &options);
