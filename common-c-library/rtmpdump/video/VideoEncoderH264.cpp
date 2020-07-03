@@ -225,10 +225,15 @@ void VideoEncoderH264::EncodeVideoFrame(void *data, int size, void *frame) {
                          "VideoEncoderH264::EncodeVideoFrame( "
                          "this : %p, "
                          "[New Video Frame], "
-                         "frame : %p "
+                         "frame : %p, "
+                         "mConvertBufferList : %u, "
+                         "mEncodeBufferList : %u "
                          ")",
                          this,
-                         srcFrame);
+                         srcFrame,
+                         mConvertBufferList.size(),
+                         mEncodeBufferList.size()
+                         );
         }
         mFreeBufferList.unlock();
 
@@ -477,7 +482,7 @@ bool VideoEncoderH264::CreateContext() {
         /**
          * 设置不分片
          */
-        av_opt_set(mContext->priv_data, "x264-params", "slices-max=1", 0);
+        av_opt_set(mContext->priv_data, "x264-params", "no-sliced-threads", 0);
 
         /**
          @description https://trac.ffmpeg.org/wiki/Encode/H.264
@@ -496,16 +501,12 @@ bool VideoEncoderH264::CreateContext() {
         av_opt_set(mContext->priv_data, "profile", "baseline", 0);
         av_opt_set(mContext->priv_data, "level", "3.0", 0);
 
-        mContext->profile = FF_PROFILE_H264_BASELINE;
-
         mContext->bit_rate = mBitRate;
         mContext->width = mWidth;
         mContext->height = mHeight;
         mContext->time_base = (AVRational){1, mFPS};
         mContext->gop_size = mKeyFrameInterval;
         mContext->max_b_frames = 0; // optional param 可选参数，禁用B帧，设置 x264 参数 profile 值为 baseline 时，此参数失效
-        mContext->thread_type = FF_THREAD_FRAME;
-//        mContext->thread_count = 1;
         AVPixelFormat srcFormat = AV_PIX_FMT_YUV420P;
         mContext->pix_fmt = srcFormat;
 
@@ -688,7 +689,7 @@ void VideoEncoderH264::ConvertVideoHandle() {
         mConvertBufferList.lock();
         if (!mConvertBufferList.empty()) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "VideoEncoderH264::ConvertVideoHandle( "
                          "this : %p, "
                          "mConvertBufferList.size() : %d "
@@ -714,14 +715,20 @@ void VideoEncoderH264::ConvertVideoHandle() {
                              "VideoEncoderH264::ConvertVideoHandle( "
                              "this : %p, "
                              "[New Video Frame], "
-                             "frame : %p "
+                             "frame : %p, "
+                             "mConvertBufferList : %u, "
+                             "mEncodeBufferList : %u "
                              ")",
                              this,
-                             dstFrame);
+                             dstFrame,
+                             mConvertBufferList.size(),
+                             mEncodeBufferList.size()
+                             );
             }
             mFreeBufferList.unlock();
 
             // 重新采样
+            long long curTime = getCurrentTime();
             if (ConvertVideoFrame(srcFrame, dstFrame)) {
                 // 放到待编码队列
                 mEncodeBufferList.lock();
@@ -732,6 +739,26 @@ void VideoEncoderH264::ConvertVideoHandle() {
                 // 释放空闲视频帧
                 ReleaseBuffer(dstFrame);
             }
+            // 计算处理时间
+            long long now = getCurrentTime();
+            long long handleTime = now - curTime;
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "VideoEncoderH264::ConvertVideoHandle( "
+                         "this : %p, "
+                         "srcFrame : %p, "
+                         "dstFrame : %p, "
+                         "handleTime : %lld, "
+                         "mConvertBufferList : %u, "
+                         "mEncodeBufferList : %u "
+                         ")",
+                         this,
+                         srcFrame,
+                         dstFrame,
+                         handleTime,
+                         mConvertBufferList.size(),
+                         mEncodeBufferList.size()
+                         );
 
             // 释放采样视频帧
             ReleaseBuffer(srcFrame);
@@ -769,7 +796,7 @@ void VideoEncoderH264::EncodeVideoHandle() {
         mEncodeBufferList.lock();
         if (!mEncodeBufferList.empty()) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "VideoEncoderH264::EncodeVideoHandle( "
                          "this : %p, "
                          "mEncodeBufferList.size() : %d "
@@ -784,6 +811,7 @@ void VideoEncoderH264::EncodeVideoHandle() {
 
         if (srcFrame) {
             // 编码帧
+            long long curTime = getCurrentTime();
             if (EncodeVideoFrame(srcFrame, dstFrame)) {
                 // 分离Nalu
                 bool bFinish = false;
@@ -849,6 +877,27 @@ void VideoEncoderH264::EncodeVideoHandle() {
                     }
                 }
             }
+            
+            // 计算处理时间
+            long long now = getCurrentTime();
+            long long handleTime = now - curTime;
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "VideoEncoderH264::EncodeVideoHandle( "
+                         "this : %p, "
+                         "srcFrame : %p, "
+                         "dstFrame : %p, "
+                         "handleTime : %lld, "
+                         "mConvertBufferList : %u, "
+                         "mEncodeBufferList : %u "
+                         ")",
+                         this,
+                         srcFrame,
+                         dstFrame,
+                         handleTime,
+                         mConvertBufferList.size(),
+                         mEncodeBufferList.size()
+                         );
             
             // 释放待编码视频帧
             ReleaseBuffer(srcFrame);

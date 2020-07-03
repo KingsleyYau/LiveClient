@@ -24,6 +24,9 @@ typedef struct _tagDecodeItem {
     }
 } DecodeItem;
 
+/**
+ 无符号的指数哥伦布编码
+ */
 static inline unsigned int UE(unsigned char *pBuff, unsigned int nLen, unsigned int &nstartBit) {
     // 计算0bit的个数
     unsigned int nZeroNum = 0;
@@ -47,6 +50,9 @@ static inline unsigned int UE(unsigned char *pBuff, unsigned int nLen, unsigned 
     return (1 << nZeroNum) - 1 + dwRet;
 }
 
+/**
+有符号的指数哥伦布编码
+*/
 static inline int SE(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit) {
     int ueVal = UE(pBuff, nLen, nStartBit);
     double k = ueVal;
@@ -56,6 +62,9 @@ static inline int SE(unsigned char *pBuff, unsigned int nLen, unsigned int &nSta
     return nValue;
 }
 
+/**
+ 长度为N个bit的无符号数字
+ */
 static inline unsigned int U(unsigned int bitCount, unsigned char *buf, unsigned int &nstartBit) {
     unsigned int dwRet = 0;
     for (unsigned int i = 0; i < bitCount; i++) {
@@ -228,11 +237,13 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
         FileLevelLog("rtmpdump",
                      KLog::LOG_MSG,
                      "VideoHardDecoder::DecodeVideoFrame( "
+                     "this : %p, "
                      "[Got Nalu Array], "
                      "timestamp : %u, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
+                     this,
                      timestamp,
                      size,
                      naluArraySize);
@@ -245,11 +256,13 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "VideoHardDecoder::DecodeVideoFrame( "
+                         "this : %p, "
                          "[Got Nalu], "
                          "naluSize : %d, "
                          "naluBodySize : %d, "
                          "frameType : %d "
                          ")",
+                         this,
                          nalu->GetNaluSize(),
                          nalu->GetNaluBodySize(),
                          nalu->GetNaluType());
@@ -260,23 +273,28 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
 
             nalu->GetSlices(&sliceArray, sliceArraySize);
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "VideoHardDecoder::DecodeVideoFrame( "
+                         "this : %p, "
                          "[Got Slice Array], "
                          "sliceArraySize : %d "
                          ")",
-                         sliceArraySize);
+                         this,
+                         sliceArraySize
+                         );
             while (sliceIndex < sliceArraySize) {
                 Slice *slice = sliceArray + sliceIndex;
                 sliceIndex++;
 
                 FileLevelLog("rtmpdump",
-                             KLog::LOG_STAT,
+                             KLog::LOG_MSG,
                              "VideoHardDecoder::DecodeVideoFrame( "
+                             "this : %p, "
                              "[Got Slice], "
                              "sliceSize : %d, "
                              "isFirstSlice : %d "
                              ")",
+                             this,
                              slice->GetSliceSize(),
                              slice->IsFirstSlice());
 
@@ -301,9 +319,11 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_MSG,
                                      "VideoHardDecoder::DecodeVideoFrame( "
+                                     "this : %p, "
                                      "[New SPS], "
                                      "mSpSize : %d "
                                      ")",
+                                     this,
                                      mSpSize
                                      );
                         bChange = CheckVideoSize();
@@ -325,9 +345,11 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_MSG,
                                      "VideoHardDecoder::DecodeVideoFrame( "
+                                     "this : %p, "
                                      "[New PPS], "
                                      "mPpsSize : %d "
                                      ")",
+                                     this,
                                      mPpsSize);
                     }
                 }
@@ -386,11 +408,13 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "VideoHardDecoder::DecodeVideoFrame( "
+                         "this : %p, "
                          "[Decode Video Result], "
                          "status : %d, "
                          "item : %p, "
                          "timestamp : %u "
                          ")",
+                         this,
                          status,
                          &item,
                          timestamp);

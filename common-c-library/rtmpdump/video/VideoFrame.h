@@ -15,7 +15,7 @@
 #include <rtmpdump/util/EncodeDecodeBuffer.h>
 
 // 编解码器默认缓冲帧数
-#define DEFAULT_VIDEO_BUFFER_COUNT 15
+#define DEFAULT_VIDEO_BUFFER_COUNT 30
 #define DEFAULT_VIDEO_BUFFER_MAX_COUNT 150
 // 编解码器默认视频帧分辨率
 #define DEFAULT_VIDEO_BUFFER_SIZE 240 * 320 * 4

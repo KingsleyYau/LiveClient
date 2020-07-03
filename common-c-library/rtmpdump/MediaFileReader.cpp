@@ -180,46 +180,54 @@ void MediaFileReader::MediaReaderHandle() {
         av_dump_format(mContext, 0, mFilePath.c_str(), 0);
 
         mAudioStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
-        AVCodecContext *audioCtx = mContext->streams[mAudioStreamIndex]->codec;
-        mVideoStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
-        unsigned char *extradata = (unsigned char *)mContext->streams[mVideoStreamIndex]->codec->extradata;
-        extradata += 4;
-
-        int sps_byte_size = (*extradata++ & 0x3) + 1;
-        int sps_count = *extradata++ & 0x1f;
-        int sps_data_size = (extradata[0] << 8) | extradata[1];
-        extradata += 2;
-
-        char sps[1024] = {0};
-        memcpy(sps, extradata, sps_data_size);
-        extradata += sps_data_size;
-
-        int pps_count = *extradata++;
-        int pps_data_size = (extradata[0] << 8) | extradata[1];
-        extradata += 2;
-        char pps[1024] = {0};
-        memcpy(pps, extradata, pps_data_size);
-
-        FileLevelLog("rtmpdump",
-                     KLog::LOG_WARNING,
-                     "MediaFileReader::MediaReaderHandle( "
-                     "this : %p, "
-                     "[Read Video SPS/PPS], "
-                     "sps_count : %d, "
-                     "sps_data_size : %d, "
-                     "pps_count : %d, "
-                     "pps_data_size : %d "
-                     ")",
-                     this,
-                     sps_count,
-                     sps_data_size,
-                     pps_count,
-                     pps_data_size);
-
-        if (mpCallback) {
-            mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_data_size, (const char *)pps, pps_data_size);
+        AVCodecContext *audioCtx = NULL;
+        if ( mAudioStreamIndex >= 0 ) {
+            audioCtx = mContext->streams[mAudioStreamIndex]->codec;
         }
+        mVideoStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
+        if ( mVideoStreamIndex >= 0 ) {
+            AVCodecContext* videoCtx = mContext->streams[mVideoStreamIndex]->codec;
+            unsigned char *extradata = (unsigned char *)videoCtx->extradata;
+            if ( videoCtx->extradata_size > 0 ) {
+                extradata += 4;
 
+                int sps_byte_size = (*extradata++ & 0x3) + 1;
+                int sps_count = *extradata++ & 0x1f;
+                int sps_data_size = (extradata[0] << 8) | extradata[1];
+                extradata += 2;
+
+                char sps[1024] = {0};
+                memcpy(sps, extradata, sps_data_size);
+                extradata += sps_data_size;
+
+                int pps_count = *extradata++;
+                int pps_data_size = (extradata[0] << 8) | extradata[1];
+                extradata += 2;
+                char pps[1024] = {0};
+                memcpy(pps, extradata, pps_data_size);
+                
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_WARNING,
+                             "MediaFileReader::MediaReaderHandle( "
+                             "this : %p, "
+                             "[Read Video SPS/PPS], "
+                             "sps_count : %d, "
+                             "sps_data_size : %d, "
+                             "pps_count : %d, "
+                             "pps_data_size : %d "
+                             ")",
+                             this,
+                             sps_count,
+                             sps_data_size,
+                             pps_count,
+                             pps_data_size);
+                
+                if (mpCallback) {
+                    mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_data_size, (const char *)pps, pps_data_size);
+                }
+            }
+        }
+        
         AVPacket pkt;
         av_init_packet(&pkt);
         pkt.data = NULL;
@@ -271,7 +279,7 @@ void MediaFileReader::MediaReaderHandle() {
                              ")",
                              this,
                              pkt.stream_index == mVideoStreamIndex ? "Video" : "Audio",
-                             (pkt.flags & AV_PKT_FLAG_KEY) ? "Key Frame" : "Frame",
+                             (pkt.flags & AV_PKT_FLAG_KEY) ? "IDR Frame" : "Non-IDR Frame",
                              diffTime,
                              diffTimestamp,
                              pkt.pts,
@@ -319,6 +327,7 @@ void MediaFileReader::MediaReaderHandle() {
                     bFinish = true;
                     break;
                 }
+                Sleep(1);
             } else {
                 Sleep(1);
             }
