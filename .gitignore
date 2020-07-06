@@ -1,5 +1,5 @@
 
-*.xcworkspacedata
+#*.xcworkspacedata
 
 *.xcuserstate
 

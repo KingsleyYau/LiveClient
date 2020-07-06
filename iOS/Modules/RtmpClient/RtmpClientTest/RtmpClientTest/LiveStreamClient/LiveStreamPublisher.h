@@ -21,9 +21,10 @@
 typedef enum LiveStreamType {
     LiveStreamType_Audience_Private = 0, // 观众私密    240x320, 10fps, 10kfi, 400kbps
     LiveStreamType_Audience_Mutiple,     // 观众多人互动 240x240, 10fps, 10kfi, 400kbps
-    LiveStreamType_ShowHost_Public,      // 主播公开    320x320, 12fps, 10kfi, 700kbps
-    LiveStreamType_ShowHost_Private,     // 主播私密    240x320, 12fps, 10kfi, 700kbps
-    LiveStreamType_ShowHost_Mutiple,     // 主播多人互动 240x240, 12fps, 10kfi, 500kbps
+    LiveStreamType_ShowHost_Public,      // 主播公开    320x320, 12fps, 12kfi, 700kbps
+    LiveStreamType_ShowHost_Private,     // 主播私密    240x320, 12fps, 12kfi, 700kbps
+    LiveStreamType_ShowHost_Mutiple,     // 主播多人互动 240x240, 12fps, 12kfi, 500kbps
+    LiveStreamType_Camshare,             // Camshare 176x144, 6fps, 6kfi, 300kbps
 } LiveStreamType;
 
 @interface LiveStreamPublisher : NSObject

@@ -310,6 +310,13 @@
             self.videoKpi = 12;
             self.videoBitFate = 500 * 1000;
         }break;
+        case LiveStreamType_Camshare: {
+            self.videoWidth = 176;
+            self.videoHeight = 144;
+            self.videoFps = 6;
+            self.videoKpi = 6;
+            self.videoBitFate = 64 * 1000;
+        }break;
         default:
             break;
     }
