@@ -498,8 +498,11 @@ bool VideoEncoderH264::CreateContext() {
          High	4.2	iPad Air and later, iPhone 5s and later	-profile:v high -level 4.2
          
          **/
-        av_opt_set(mContext->priv_data, "profile", "baseline", 0);
-        av_opt_set(mContext->priv_data, "level", "3.0", 0);
+        /**
+         baseline的话iPhone6/iPhone6S用VideoToolBox解码会失败，原因未明
+         */
+//        av_opt_set(mContext->priv_data, "profile", "baseline", 0);
+//        av_opt_set(mContext->priv_data, "level", "3.0", 0);
 
         mContext->bit_rate = mBitRate;
         mContext->width = mWidth;
