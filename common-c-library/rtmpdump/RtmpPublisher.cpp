@@ -14,7 +14,7 @@
 // 发布休眠
 #define PUBLISH_SLEEP_TIME 1
 
-#define VIDEO_BUFFER_COUNT 50
+#define VIDEO_BUFFER_COUNT 90
 #define AUDIO_BUFFER_COUNT 250
 
 namespace coollive {
@@ -180,9 +180,12 @@ void RtmpPublisher::SendVideoFrame(char *data, int size, u_int32_t timestamp) {
                          KLog::LOG_WARNING,
                          "RtmpPublisher::SendVideoFrame( "
                          "this : %p, "
-                         "[Cache Video buffer is full, droped] "
+                         "[Cache Video buffer is full, droped], "
+                         "mVideoBufferList : %u "
                          ")",
-                         this);
+                         this,
+                         mVideoBufferList.size()
+                         );
         }
 
         if (videoFrame) {
@@ -216,9 +219,12 @@ void RtmpPublisher::SendAudioFrame(
                          KLog::LOG_WARNING,
                          "RtmpPublisher::SendAudioFrame( "
                          "this : %p, "
-                         "[Cache Audio buffer is full, droped] "
+                         "[Cache Audio buffer is full, droped], "
+                         "mAudioBufferList : %u "
                          ")",
-                         this);
+                         this,
+                         mAudioBufferList.size()
+                         );
         }
 
         if (audioFrame) {
@@ -259,18 +265,21 @@ void RtmpPublisher::PublishHandle() {
         // 发送视频帧
         if (videoFrame) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "RtmpPublisher::PublishHandle( "
                          "this : %p, "
                          "[Send Video Frame], "
                          "frame : %p, "
                          "timestamp : %u, "
-                         "frameType : 0x%x "
+                         "frameType : 0x%x, "
+                         "mVideoBufferList : %u "
                          ")",
                          this,
                          videoFrame,
                          videoFrame->mTimestamp,
-                         videoFrame->GetBuffer()[0]);
+                         videoFrame->GetBuffer()[0],
+                         mVideoBufferList.size()
+                         );
 
             if (mpRtmpDump) {
                 mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTimestamp);
@@ -303,16 +312,19 @@ void RtmpPublisher::PublishHandle() {
         // 发送音频帧
         if (audioFrame) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "RtmpPublisher::PublishHandle( "
                          "this : %p, "
                          "[Send Audio Frame], "
                          "frame : %p, "
-                         "timestamp : %u "
+                         "timestamp : %u, "
+                         "mAudioBufferList : %u "
                          ")",
                          this,
                          audioFrame,
-                         audioFrame->mTimestamp);
+                         audioFrame->mTimestamp,
+                         mAudioBufferList.size()
+                         );
 
             if (mpRtmpDump) {
                 mpRtmpDump->SendAudioFrame(audioFrame->mSoundFormat,
@@ -328,7 +340,7 @@ void RtmpPublisher::PublishHandle() {
             if (!mCacheAudioBufferQueue.PushBuffer(audioFrame)) {
                 // 归还失败，释放Buffer
                 FileLevelLog("rtmpdump",
-                             KLog::LOG_WARNING,
+                             KLog::LOG_MSG,
                              "RtmpPublisher::PublishHandle( "
                              "this : %p, "
                              "[Delete Audio frame], "

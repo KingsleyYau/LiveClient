@@ -326,10 +326,10 @@ void RtmpDump::RecvRunnableHandle() {
     if (bFlag) {
         mConnectedMutex.lock();
         mIsConnected = true;
-        mEncodeVideoTimestamp = 0;
-        mEncodeAudioTimestamp = 0;
-        mSendVideoFrameTimestamp = 0;
-        mSendAudioFrameTimestamp = 0;
+//        mEncodeVideoTimestamp = 0;
+//        mEncodeAudioTimestamp = 0;
+//        mSendVideoFrameTimestamp = 0;
+//        mSendAudioFrameTimestamp = 0;
         mConnectedMutex.unlock();
 
         FileLevelLog("rtmpdump",
@@ -424,6 +424,23 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
     char *sendFrame = frame;
     int sendSize = frame_size;
 
+    // 计算RTMP时间戳
+    int sendTimestamp = 0;
+
+    // 第一帧
+    if (mEncodeVideoTimestamp == 0) {
+        mEncodeVideoTimestamp = timestamp;
+    }
+
+    // 当前帧比上一帧时间戳大, 计算时间差
+    if (timestamp > mEncodeVideoTimestamp) {
+        sendTimestamp = timestamp - mEncodeVideoTimestamp;
+    }
+
+    // 生成RTMP相对时间戳
+    mSendVideoFrameTimestamp += sendTimestamp;
+    mEncodeVideoTimestamp = timestamp;
+    
     mClientMutex.lock();
     mConnectedMutex.lock();
     if (mbRunning && mpRtmp && mIsConnected) {
@@ -438,25 +455,8 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
         //            sendSize = sizeof(nalu) + frame_size;
         //        }
 
-        // 计算RTMP时间戳
-        int sendTimestamp = 0;
-
-        // 第一帧
-        if (mEncodeVideoTimestamp == 0) {
-            mEncodeVideoTimestamp = timestamp;
-        }
-
-        // 当前帧比上一帧时间戳大, 计算时间差
-        if (timestamp > mEncodeVideoTimestamp) {
-            sendTimestamp = timestamp - mEncodeVideoTimestamp;
-        }
-
-        // 生成RTMP相对时间戳
-        mSendVideoFrameTimestamp += sendTimestamp;
-        mEncodeVideoTimestamp = timestamp;
-
         // 因为没有B帧, 所以dts和pts一样就可以
-        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, timestamp : %u, size : %d, frameType : 0x%x )", this, mSendVideoFrameTimestamp, sendSize, sendFrame[0]);
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, timestamp : %u, mEncodeVideoTimestamp : %u, size : %d, frameType : 0x%x )", this, mSendVideoFrameTimestamp, mEncodeVideoTimestamp, sendSize, sendFrame[0]);
         ret = srs_h264_write_raw_frame_without_startcode(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
         //        ret = srs_h264_write_raw_frames(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
         if (ret != 0) {
@@ -532,26 +532,26 @@ bool RtmpDump::SendAudioFrame(
     bool bFlag = false;
     int ret = 0;
 
+    // 计算RTMP时间戳
+    int sendTimestamp = 0;
+
+    // 第一帧
+    if (mEncodeAudioTimestamp == 0) {
+        mEncodeAudioTimestamp = timestamp;
+    }
+
+    // 当前帧比上一帧时间戳大, 计算时间差
+    if (timestamp > mEncodeAudioTimestamp) {
+        sendTimestamp = timestamp - mEncodeAudioTimestamp;
+    }
+
+    // 生成RTMP相对时间戳
+    mSendAudioFrameTimestamp += sendTimestamp;
+    mEncodeAudioTimestamp = timestamp;
+    
     mClientMutex.lock();
     mConnectedMutex.lock();
     if (mbRunning && mpRtmp && mIsConnected) {
-        // 计算RTMP时间戳
-        int sendTimestamp = 0;
-
-        // 第一帧
-        if (mEncodeAudioTimestamp == 0) {
-            mEncodeAudioTimestamp = timestamp;
-        }
-
-        // 当前帧比上一帧时间戳大, 计算时间差
-        if (timestamp > mEncodeAudioTimestamp) {
-            sendTimestamp = timestamp - mEncodeAudioTimestamp;
-        }
-
-        // 生成RTMP相对时间戳
-        mSendAudioFrameTimestamp += sendTimestamp;
-        mEncodeAudioTimestamp = timestamp;
-
         FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( this : %p, timestamp : %u, size : %d )", this, mSendAudioFrameTimestamp, frame_size);
         if ((ret = srs_audio_write_raw_frame(mpRtmp, sound_format, sound_rate, sound_size, sound_type, frame, frame_size, mSendAudioFrameTimestamp)) == 0) {
             bFlag = true;
@@ -640,6 +640,11 @@ void RtmpDump::Destroy() {
         mpFlv = NULL;
     }
 
+    // 还原参数
+    mEncodeVideoTimestamp = 0;
+    mEncodeAudioTimestamp = 0;
+    mSendVideoFrameTimestamp = 0;
+    mSendAudioFrameTimestamp = 0;
     //    FileLog("rtmpdump", "RtmpDump::Destroy( "
     //            "[Success], "
     //            "this : %p "
