@@ -160,12 +160,11 @@ void MediaFileReader::MediaReaderHandle() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "MediaFileReader::MediaReaderHandle( "
+                         "this : %p, "
                          "[Found Stream Info], "
-                         "duration : %d second, "
-                         "bit_rate : %d kb/s "
+                         "bit_rate : %lld b/s "
                          ")",
                          this,
-                         mContext->duration,
                          mContext->bit_rate);
         } else {
             FileLevelLog("rtmpdump",
@@ -186,6 +185,20 @@ void MediaFileReader::MediaReaderHandle() {
         }
         mVideoStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
         if ( mVideoStreamIndex >= 0 ) {
+            AVStream *stream = mContext->streams[mVideoStreamIndex];
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "MediaFileReader::MediaReaderHandle( "
+                         "this : %p, "
+                         "[Video Stream Info], "
+                         "duration : %.3f s, "
+                         "nb_frames : %lld "
+                         ")",
+                         this,
+                         1.0 * stream->duration * stream->time_base.num / stream->time_base.den,
+                         stream->nb_frames
+                         );
+            
             AVCodecContext* videoCtx = mContext->streams[mVideoStreamIndex]->codec;
             unsigned char *extradata = (unsigned char *)videoCtx->extradata;
             if ( videoCtx->extradata_size > 0 ) {
@@ -245,18 +258,25 @@ void MediaFileReader::MediaReaderHandle() {
 
         while (mbRunning) {
             now = getCurrentTime();
-            unsigned int diffTime = (unsigned int)(now - startTime);
-            unsigned int diffTimestamp = 0;
+            unsigned int deltaTime = (unsigned int)(now - startTime);
+            unsigned int deltaTS = 0;
 
-            if (mVideoStartTimestamp == INVALID_TIMESTAMP || mAudioStartTimestamp == INVALID_TIMESTAMP) {
+            if (mVideoStartTimestamp == INVALID_TIMESTAMP && mAudioStartTimestamp == INVALID_TIMESTAMP) {
                 bRead = true;
             } else {
-                unsigned int diffAudioTS = mAudioLastTimestamp - mAudioStartTimestamp;
-                unsigned int diffVideoTS = mVideoLastTimestamp - mVideoStartTimestamp;
-                diffTimestamp = MIN(diffAudioTS, diffVideoTS);
+                unsigned int deltaAudioTS = mAudioLastTimestamp - mAudioStartTimestamp;
+                unsigned int deltaVideoTS = mVideoLastTimestamp - mVideoStartTimestamp;
+                
+                if ( mVideoStreamIndex >= 0 && mAudioStreamIndex >= 0 ) {
+                    deltaTS = MIN(deltaAudioTS, deltaVideoTS);
+                } else if ( mVideoStreamIndex >= 0 ) {
+                    deltaTS = deltaVideoTS;
+                } else if ( mAudioStreamIndex >= 0 ) {
+                    deltaTS = deltaAudioTS;
+                }
             }
 
-            if (diffTimestamp > diffTime + PRE_READ_TIME_MS) {
+            if (deltaTS > deltaTime + PRE_READ_TIME_MS) {
                 bRead = false;
             } else {
                 bRead = true;
@@ -265,25 +285,34 @@ void MediaFileReader::MediaReaderHandle() {
             if (bRead) {
                 int ret = av_read_frame(mContext, &pkt);
 
+                double time = 0;
+                if ( pkt.stream_index == mVideoStreamIndex ) {
+                    time = (pkt.pts - mVideoStartTimestamp) / 90000.0;
+                } else {
+                    time = (pkt.pts - mAudioStartTimestamp);
+                }
+                
                 FileLevelLog("rtmpdump",
                              KLog::LOG_MSG,
                              "MediaFileReader::MediaReaderHandle( "
                              "this : %p, "
                              "[Read Packet %s %s], "
-                             "diffTime : %u, "
-                             "diffTimestamp : %u, "
+                             "deltaTime : %u, "
+                             "deltaTS : %u, "
                              "pts : %d, "
                              "dts : %d, "
+                             "time : %.3f s, "
                              "size : %d, "
                              "data : (Hex)%02x,%02x,%02x,%02x,%02x "
                              ")",
                              this,
                              pkt.stream_index == mVideoStreamIndex ? "Video" : "Audio",
                              (pkt.flags & AV_PKT_FLAG_KEY) ? "IDR Frame" : "Non-IDR Frame",
-                             diffTime,
-                             diffTimestamp,
+                             deltaTime,
+                             deltaTS,
                              pkt.pts,
                              pkt.dts,
+                             time,
                              pkt.size,
                              pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
 

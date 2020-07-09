@@ -1087,23 +1087,23 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         }
 
                         // 本地两帧播放时间差
-                        int diffTime = (int)(curTime - preTime);
+                        int deltaTime = (int)(curTime - preTime);
                         // 两帧时间差
-                        int diffms = (frame->mTimestamp - preTimestamp);
+                        int deltams = (frame->mTimestamp - preTimestamp);
                         // 总播放时间差
-                        int diffTotalTime = (int)(curTime - startTime);
+                        int deltaTotalTime = (int)(curTime - startTime);
                         // 总帧时间差
-                        int diffTotalms = (frame->mTimestamp - startTimestamp);
+                        int deltaTotalms = (frame->mTimestamp - startTimestamp);
                         // 是否丢帧
                         bool bDropFrame = false;
                         // 是否断开
                         bool bDisconnect = false;
 
                         // 帧延迟(总播放时间 - 总帧时间差)
-                        int delay = diffTotalTime - diffTotalms;
+                        int delay = deltaTotalTime - deltaTotalms;
 
                         //                        if( !isAudio ) {
-                        if (diffms > 0) {
+                        if (deltams > 0) {
                             if (delay > 0) {
                                 // 播放延迟, 如果是解码能力或者网络不足, 可以通知服务器降低视频质量(码率/帧率/分辨率)
                                 if (delay > PLAY_DELAY_DROP_TIME) {
@@ -1126,15 +1126,15 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         //                                     KLog::LOG_MSG,
                         //                                     "RtmpPlayer::PlayFrame( "
                         //                                     "[Get %s Frame], "
-                        //                                     "diffTime : %d, "
-                        //                                     "diffms : %d, "
+                        //                                     "deltaTime : %d, "
+                        //                                     "deltams : %d, "
                         //                                     "delay : %d, "
                         //                                     "timestamp : %u, "
                         //                                     "bufferListSize : %d "
                         //                                     ")",
                         //                                     isAudio?"Audio":"Video",
-                        //                                     diffTime,
-                        //                                     diffms,
+                        //                                     deltaTime,
+                        //                                     deltams,
                         //                                     delay,
                         //                                     frame->mTimestamp,
                         //                                     bufferList->size()
@@ -1150,10 +1150,10 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             //                            } else {
                             //                                /**
                             //                                 * 判断是否到时间播放
-                            //                                 * 1.第一帧(diffms == 0)
+                            //                                 * 1.第一帧(deltams == 0)
                             //                                 * 2.(总播放时间 - 总帧时间戳 > 帧时间戳差)
                             //                                 */
-                            //                                if( (diffms == 0) || delay > diffms) {
+                            //                                if( (deltams == 0) || delay > deltams) {
                             //                                    PlayVideoFrame(frame);
                             //                                    bHandleFrame = true;
                             //                                }
@@ -1161,10 +1161,10 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
 
                             /**
                              * 判断是否到时间播放
-                             * 1.第一帧(diffms == 0)
+                             * 1.第一帧(deltams == 0)
                              * 2.(总播放时间 - 总帧时间戳 > 帧时间戳差)
                              */
-                            if ((diffms == 0) || (diffTime >= (diffms - delay)) /*delay > (diffms - 2 * PLAY_SLEEP_TIME)*/) {
+                            if ((deltams == 0) || (deltaTime >= (deltams - delay)) /*delay > (deltams - 2 * PLAY_SLEEP_TIME)*/) {
                                 // 播放帧
                                 if (isAudio) {
                                     PlayAudioFrame(frame);
@@ -1200,23 +1200,23 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "this : %p, "
                                              "[Play %s Frame], "
                                              "handleTime : %d, "
-                                             "diffTime : %d, "
-                                             "diffms : %d, "
+                                             "deltaTime : %d, "
+                                             "deltams : %d, "
                                              "delay : %d, "
                                              "timestamp : %u, "
-                                             "diffTotalTime : %d, "
-                                             "diffTotalms : %d, "
+                                             "deltaTotalTime : %d, "
+                                             "deltaTotalms : %d, "
                                              "bufferListSize : %d "
                                              ")",
                                              this,
                                              isAudio ? "Audio" : "Video",
                                              handleTime,
-                                             diffTime,
-                                             diffms,
+                                             deltaTime,
+                                             deltams,
                                              delay,
                                              frame->mTimestamp,
-                                             diffTotalTime,
-                                             diffTotalms,
+                                             deltaTotalTime,
+                                             deltaTotalms,
                                              bufferList->size());
                             } else {
                                 // 丢帧不需要休眠，直接处理下一帧数据
@@ -1226,35 +1226,35 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "this : %p, "
                                              "[Drop %s Frame], "
                                              "handleTime : %d, "
-                                             "diffTime : %d, "
-                                             "diffms : %d, "
+                                             "deltaTime : %d, "
+                                             "deltams : %d, "
                                              "delay : %d, "
                                              "timestamp : %u, "
-                                             "diffTotalTime : %d, "
-                                             "diffTotalms : %d, "
+                                             "deltaTotalTime : %d, "
+                                             "deltaTotalms : %d, "
                                              "bufferListSize : %d "
                                              ")",
                                              this,
                                              isAudio ? "Audio" : "Video",
                                              handleTime,
-                                             diffTime,
-                                             diffms,
+                                             deltaTime,
+                                             deltams,
                                              delay,
                                              frame->mTimestamp,
-                                             diffTotalTime,
-                                             diffTotalms,
+                                             deltaTotalTime,
+                                             deltaTotalms,
                                              bufferList->size());
                             }
 
                             // 比较处理用时和帧时长
-                            if (diffms > 0 && handleTime >= diffms) {
+                            if (deltams > 0 && handleTime >= deltams) {
                                 // 播放用时大于帧时长, 发生延迟
-                                handleDelay = handleTime - diffms;
+                                handleDelay = handleTime - deltams;
                             }
 
                             if (isAudio) {
                                 // 如果音频帧时间戳差大于30, 需要重置音频播放器, 否者iOS播放器有问题
-                                if (diffms > 30) {
+                                if (deltams > 30) {
                                     if (mpRtmpPlayerCallback) {
                                         mpRtmpPlayerCallback->OnResetAudioStream(this);
                                     }

@@ -595,6 +595,24 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame *videoFrame, VideoFrame *newV
             newVideoFrame->mHeight = pictureFrame->height;
 
             bFlag = true;
+        } else if ( useLen < 0 ) {
+            FileLevelLog(
+                "rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::DecodeVideoFrame( "
+                "this : %p, "
+                "[Decode Frame Error], "
+                "srcFrame : %p, "
+                "dstFrame : %p, "
+                "timestamp : %u, "
+                "error : %ld "
+                ")",
+                this,
+                videoFrame,
+                newVideoFrame,
+                newVideoFrame->mTimestamp,
+                useLen
+                );
         }
 
         // 计算处理时间
