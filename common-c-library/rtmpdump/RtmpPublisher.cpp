@@ -14,7 +14,7 @@
 // 发布休眠
 #define PUBLISH_SLEEP_TIME 1
 
-#define VIDEO_BUFFER_COUNT 90
+#define VIDEO_BUFFER_COUNT 60
 #define AUDIO_BUFFER_COUNT 250
 
 namespace coollive {
@@ -107,7 +107,7 @@ void RtmpPublisher::InitBuffer() {
         mCacheVideoBufferQueue.PushBuffer(videoFrame);
     }
 
-    for (int i = 0; i < VIDEO_BUFFER_COUNT; i++) {
+    for (int i = 0; i < AUDIO_BUFFER_COUNT; i++) {
         AudioFrame *audioFrame = new AudioFrame();
         mCacheAudioBufferQueue.PushBuffer(audioFrame);
     }
