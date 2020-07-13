@@ -31,7 +31,10 @@ static inline unsigned int UE(unsigned char *pBuff, unsigned int nLen, unsigned 
     // 计算0bit的个数
     unsigned int nZeroNum = 0;
     while (nstartBit < nLen * 8) {
-        if (pBuff[nstartBit / 8] & (0x80 >> (nstartBit % 8))) {
+        unsigned int index = nstartBit;
+        unsigned char byte = pBuff[index / 8];
+        unsigned char check = (0x80 >> (index % 8));
+        if (byte & check) {
             break;
         }
         nZeroNum++;
@@ -42,12 +45,18 @@ static inline unsigned int UE(unsigned char *pBuff, unsigned int nLen, unsigned 
     unsigned int dwRet = 0;
     for (unsigned int i = 0; i < nZeroNum; i++) {
         dwRet <<= 1;
-        if (pBuff[nstartBit / 8] & (0x80 >> (nstartBit % 8))) {
+        unsigned int index = nstartBit;
+        unsigned char byte = pBuff[index / 8];
+        unsigned char check = (0x80 >> (index % 8));
+        if (byte & check) {
             dwRet += 1;
         }
         nstartBit++;
     }
-    return (1 << nZeroNum) - 1 + dwRet;
+    unsigned int temp = 1 << nZeroNum;
+    temp -= 1;
+    temp += dwRet;
+    return temp;
 }
 
 /**
@@ -69,7 +78,10 @@ static inline unsigned int U(unsigned int bitCount, unsigned char *buf, unsigned
     unsigned int dwRet = 0;
     for (unsigned int i = 0; i < bitCount; i++) {
         dwRet <<= 1;
-        if (buf[nstartBit / 8] & (0x80 >> (nstartBit % 8))) {
+        unsigned int index = nstartBit;
+        unsigned char byte = buf[index / 8];
+        unsigned char check = (0x80 >> (index % 8));
+        if (byte & check) {
             dwRet += 1;
         }
         nstartBit++;
@@ -280,8 +292,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                          "sliceArraySize : %d "
                          ")",
                          this,
-                         sliceArraySize
-                         );
+                         sliceArraySize);
             while (sliceIndex < sliceArraySize) {
                 Slice *slice = sliceArray + sliceIndex;
                 sliceIndex++;
@@ -324,8 +335,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                                      "mSpSize : %d "
                                      ")",
                                      this,
-                                     mSpSize
-                                     );
+                                     mSpSize);
                         bChange = CheckVideoSize();
                     }
                 }
@@ -650,16 +660,16 @@ char *VideoHardDecoder::FindSlice(char *start, int size, int &sliceSize) {
             break;
         }
     }
-    
+
     return slice;
 }
 
 bool VideoHardDecoder::CheckVideoSize() {
     bool bFlag = false;
-    
-    unsigned char *sliceData = (unsigned char *)mpSps;
-    int sliceLenOriginal = mSpSize;
-    
+
+    unsigned char *sliceData = (unsigned char *)mpSps + 1;
+    int sliceLenOriginal = mSpSize - 1;
+
     unsigned int startBit = 0;
     int profile_idc = U(8, (unsigned char *)sliceData, startBit);
     int constraint_set0_flag = U(1, (unsigned char *)sliceData, startBit);
@@ -670,14 +680,15 @@ bool VideoHardDecoder::CheckVideoSize() {
     int level_idc = U(8, (unsigned char *)sliceData, startBit);
     int seq_parameter_set_id = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
 
+    int chroma_format_idc = -1;
     if (profile_idc == 100 || profile_idc == 110 ||
         profile_idc == 122 || profile_idc == 244 || profile_idc == 44 ||
         profile_idc == 83 || profile_idc == 86 || profile_idc == 118 ||
-        profile_idc == 128
-        ) {
-        int chroma_format_idc = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
-        if (chroma_format_idc == 3)
+        profile_idc == 128) {
+        chroma_format_idc = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        if (chroma_format_idc == 3) {
             int residual_colour_transform_flag = U(1, (unsigned char *)sliceData, startBit);
+        }
         int bit_depth_luma_minus8 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
         int bit_depth_chroma_minus8 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
         int qpprime_y_zero_transform_bypass_flag = U(1, (unsigned char *)sliceData, startBit);
@@ -701,27 +712,23 @@ bool VideoHardDecoder::CheckVideoSize() {
         int num_ref_frames_in_pic_order_cnt_cycle = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
 
         SE((unsigned char *)sliceData, sliceLenOriginal, startBit);
-        //                            int *offset_for_ref_frame = new int[num_ref_frames_in_pic_order_cnt_cycle];
-        //                            for (int i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++)
-        //                                offset_for_ref_frame[i] = SE((unsigned char *)sliceData, sliceLenOriginal, startBit);
-        //                            delete[] offset_for_ref_frame;
     }
     int num_ref_frames = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
     int gaps_in_frame_num_value_allowed_flag = U(1, (unsigned char *)sliceData, startBit);
     int pic_width_in_mbs_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
     int pic_height_in_map_units_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
-
+    int frame_mbs_only_flag = U(1, (unsigned char *)sliceData, startBit);
+    
     int width = (pic_width_in_mbs_minus1 + 1) * 16;
     int height = (pic_height_in_map_units_minus1 + 1) * 16;
-    int frame_mbs_only_flag = U(1, (unsigned char *)sliceData, startBit);
     height *= (2 - frame_mbs_only_flag);
-    
-    if ( mWidth != 0 && mHeight != 0 ) {
-        if ( mWidth != width || mHeight != height ) {
+
+    if (mWidth != 0 && mHeight != 0) {
+        if (mWidth != width || mHeight != height) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "VideoHardDecoder::CheckVideoSize( "
-                         "[New SPS], "
+                         "[New Video Size], "
                          "mSpSize : %d, "
                          "profile_idc : %d, "
                          "mWidth : %d, "
@@ -734,14 +741,80 @@ bool VideoHardDecoder::CheckVideoSize() {
                          mWidth,
                          mHeight,
                          width,
-                         height
-                         );
+                         height);
             bFlag = true;
         }
     }
-    
+
     mWidth = width;
     mHeight = height;
+
+    if (!frame_mbs_only_flag) {
+        int mb_adaptive_frame_field_flag = U(1, (unsigned char *)sliceData, startBit);
+    }
+    int direct_8x8_inference_flag = U(1, (unsigned char *)sliceData, startBit);
+    int frame_cropping_flag = U(1, (unsigned char *)sliceData, startBit);
+    if (frame_cropping_flag) {
+        int frame_crop_left_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int frame_crop_right_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int frame_crop_top_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int frame_crop_bottom_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        
+        int crop_unit_x = 0;
+        int crop_unit_y = 0;
+        
+        if ( chroma_format_idc == -1 ) {
+            // baseline
+            crop_unit_x = 2;
+            crop_unit_y = 2;
+        } else if (0 == chroma_format_idc) {
+            // monochrome
+            crop_unit_x = 1;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        } else if (1 == chroma_format_idc) {
+            // 4:2:0
+            crop_unit_x = 2;
+            crop_unit_y = 2 * (2 - frame_mbs_only_flag);
+        } else if (2 == chroma_format_idc) {
+            // 4:2:2
+            crop_unit_x = 2;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        } else {
+            // 4:4:4
+            crop_unit_x = 1;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        }
+
+        int displayWidth = mWidth - crop_unit_x * (frame_crop_left_offset + frame_crop_right_offset);
+        int displayHeight = mHeight - crop_unit_y * (frame_crop_top_offset + frame_crop_bottom_offset);
+        
+        if (bFlag) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "VideoHardDecoder::CheckVideoSize( "
+                         "[Crop], "
+                         "mWidth : %d, "
+                         "mHeight : %d, "
+                         "displayWidth : %d, "
+                         "displayHeight : %d, "
+                         "chroma_format_idc : %d, "
+                         "frame_crop_left_offset : %d, "
+                         "frame_crop_right_offset : %d, "
+                         "frame_crop_top_offset : %d, "
+                         "frame_crop_bottom_offset : %d "
+                         ")",
+                         mWidth,
+                         mHeight,
+                         displayWidth,
+                         displayHeight,
+                         chroma_format_idc,
+                         frame_crop_left_offset,
+                         frame_crop_right_offset,
+                         frame_crop_top_offset,
+                         frame_crop_bottom_offset
+                         );
+        }
+    }
     
     return bFlag;
 }
