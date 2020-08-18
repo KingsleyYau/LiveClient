@@ -165,6 +165,11 @@ public:
         if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnConnect:)] ) {
             [mpRtmpPlayerOC.delegate rtmpPlayerOnConnect:mpRtmpPlayerOC];
         }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            mpRtmpPlayerOC.player->SendCmdLogin("MM3", "123456", "4");
+//            mpRtmpPlayerOC.player->SendCmdMakeCall("MM1", "PC0", "4");
+//            mpRtmpPlayerOC.player->SendCmdReceive();
+//        });
     }
     
     void OnPlayerDisconnect(PlayerController* pc) {

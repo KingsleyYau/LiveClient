@@ -28,8 +28,6 @@
 		50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF96213641E900FB374D /* LiveStreamSession.m */; };
 		50DAEFAD2136468600FB374D /* common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50DAEFAC2136468600FB374D /* common.xcconfig */; };
 		50E5E69D2216978D00D66072 /* LSImageVibrateFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E5E69C2216978D00D66072 /* LSImageVibrateFilter.m */; };
-		50ED300B2473CD5A00BE89C7 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ED30092473CD3600BE89C7 /* libbz2.tbd */; };
-		50ED300C2473CD5F00BE89C7 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ED300A2473CD3E00BE89C7 /* libiconv.tbd */; };
 		50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BF81E94F46100116A4B /* VideoToolbox.framework */; };
 		50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BFA1E94F46A00116A4B /* AVFoundation.framework */; };
 		8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */; };
@@ -102,8 +100,6 @@
 		50DAEFAC2136468600FB374D /* common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
 		50E5E69B2216978D00D66072 /* LSImageVibrateFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSImageVibrateFilter.h; sourceTree = "<group>"; };
 		50E5E69C2216978D00D66072 /* LSImageVibrateFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSImageVibrateFilter.m; sourceTree = "<group>"; };
-		50ED30092473CD3600BE89C7 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
-		50ED300A2473CD3E00BE89C7 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		50F18BF81E94F46100116A4B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		50F18BFA1E94F46A00116A4B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RtmpClientTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,9 +118,7 @@
 				500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */,
 				50C995831E8F9E2E001E1355 /* libstdc++.tbd in Frameworks */,
 				50C995811E8F9E1B001E1355 /* libz.tbd in Frameworks */,
-				50ED300C2473CD5F00BE89C7 /* libiconv.tbd in Frameworks */,
 				8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */,
-				50ED300B2473CD5A00BE89C7 /* libbz2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,8 +205,6 @@
 		50C9957F1E8F9E1B001E1355 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				50ED300A2473CD3E00BE89C7 /* libiconv.tbd */,
-				50ED30092473CD3600BE89C7 /* libbz2.tbd */,
 				50F18BFA1E94F46A00116A4B /* AVFoundation.framework */,
 				50F18BF81E94F46100116A4B /* VideoToolbox.framework */,
 				50C995821E8F9E2E001E1355 /* libstdc++.tbd */,
@@ -310,7 +302,6 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
