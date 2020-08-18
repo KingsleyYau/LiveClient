@@ -31,16 +31,19 @@
     
     self.endTimeButton.layer.cornerRadius = 4;
     self.endTimeButton.layer.masksToBounds = YES;
-        
-    [self updateNewBeginTime];
 }
 
 - (void)updateNewBeginTime {
-    NSString * string = [[[LSPrePaidManager manager].dateArray firstObject] objectForKey:@"year"];
-    [self updateDate:string];
+    //只能选24小时后的时间
+    NSInteger time = [LSPrePaidManager manager].activityTime + 86400;
+    if ([LSPrePaidManager manager].zoneItem.summerTimeStart < time && time < [LSPrePaidManager manager].zoneItem.summerTimeEnd) {
+        time = time + 3600;
+    }
+    NSString * zoneTime = [[LSPrePaidManager manager] getTimeFromTimestamp:time timeFormat:@"MMM dd, yyyy-HH:00" andZone:[[LSPrePaidManager manager]getZone]];
     
-    NSString * time = [[LSPrePaidManager manager] getCurrentTimes];
-    [self updateBeginTime:time];
+    NSArray * array = [zoneTime componentsSeparatedByString:@"-"];
+    [self updateDate:[array firstObject]];
+    [self updateBeginTime:[array lastObject]];
 }
  
 
@@ -57,27 +60,23 @@
     [LSPrePaidManager manager].zoneItem = item;
     [self.timeZoneButton setTitle:[[LSPrePaidManager manager] getTimeZoneText:item] forState:UIControlStateNormal];
     
-    NSString *zone = [[LSPrePaidManager manager] getZone];
-    NSString * time = [[LSPrePaidManager manager] getNewTimeZoneDate:zone];
-    NSString * timeStr = [[time componentsSeparatedByString:@"-"] lastObject];
-    
-    [self updateBeginTime:timeStr];
+    [self updateNewBeginTime];
 }
 
 - (void)updateDate:(NSString *)str {
     [LSPrePaidManager manager].yaerStr = str;
     [self.timeButton setTitle:str forState:UIControlStateNormal];
     
-    NSString * endTime = [[LSPrePaidManager manager] getEndTime:[LSPrePaidManager manager].benginTime];
-    [self.endTimeButton setTitle:endTime forState:UIControlStateNormal];
-    
-    NSString * localTime = [NSString stringWithFormat:@"%@-%@",str,[LSPrePaidManager manager].benginTime];
-    NSString *zone = [[LSPrePaidManager manager] getZone];
-    [self updateLocalTime:localTime andZone:zone];
+    [self updateBeginTime:[LSPrePaidManager manager].benginTime];
 }
 
 - (void)updateBeginTime:(NSString *)time {
     if ([LSPrePaidManager manager].yaerStr.length > 0) {
+        
+        if (![[[LSPrePaidManager manager]getTimeArray] containsObject:time]) {
+            time = [[[LSPrePaidManager manager]getTimeArray] firstObject];
+        }
+        
         [LSPrePaidManager manager].benginTime = time;
         [self.beginTimeButton setTitle:time forState:UIControlStateNormal];
         
@@ -92,19 +91,17 @@
 
 - (void)updateLocalTime:(NSString *)time andZone:(NSString*)zone {
  
+    NSInteger timeS = [[LSPrePaidManager manager]timeSwitchTimestamp:time];
     
-    NSDate *date = [[LSPrePaidManager manager]stingDateToDate:time dateFormat:@"MMM dd,yyyy-HH:mm" andZone:zone];
+     if ([[LSPrePaidManager manager]nowtimeIsInBeginTime:time]) {
+         timeS = timeS-3600;
+     }
 
-    NSString *dateString = [[LSPrePaidManager manager]getNowDateFromatAnDate:date];
-    
-    
-    if ([[LSPrePaidManager manager]nowtimeIsInBeginTime:time]) {
-         dateString = [[LSPrePaidManager manager] daylightSavingBeginTime:dateString];
-    }
-    
+    NSString *dateString = [[LSPrePaidManager manager]getLocalTimeFromTimestamp:timeS timeFormat:@"MMM dd, yyyy-HH:mm"];
+ 
     NSArray * array = [dateString componentsSeparatedByString:@"-"];
     NSString * endTime = [[LSPrePaidManager manager] getEndTime:[array lastObject]];
-    self.localTimeLabel.text = [NSString stringWithFormat:@"Your local time :%@ - %@",[dateString stringByReplacingOccurrencesOfString:@"-" withString:@" "],endTime];
+    self.localTimeLabel.text = [NSString stringWithFormat:@"Your local time: %@ - %@",[dateString stringByReplacingOccurrencesOfString:@"-" withString:@" "],endTime];
 }
 
 - (void)updateCredits:(LSScheduleDurationItemObject *)item {
@@ -122,12 +119,19 @@
 }
 
 - (IBAction)buttonDid:(UIButton *)sender {
-  
     if ([self.delegate respondsToSelector:@selector(prepaidDateViewBtnDid:)]) {
         [self.delegate prepaidDateViewBtnDid:sender];
     }
 }
 
+- (void)resetBtnState {
+    self.countriesButton.selected = NO;
+    self.timeZoneButton.selected = NO;
+    self.timeButton.selected = NO;
+    self.beginTimeButton.selected = NO;
+    self.creditsButton.selected = NO;
+    self.endTimeButton.selected = NO;
+}
  
 
 @end

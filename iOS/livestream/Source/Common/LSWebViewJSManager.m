@@ -191,8 +191,11 @@
 
 - (void)webViewJsCallBackIsShowNavigation:(NSString *)isShow {
     NSLog(@"webViewJsCallBackIsShowNavigation isShow:%@", isShow);
-    if ([self.delegate respondsToSelector:@selector(jsManagerCallBackIsShowNavigation:)]) {
-        [self.delegate jsManagerCallBackIsShowNavigation:isShow];
+    if (isShow != nil && isShow.length > 0) {
+        int showNav = [isShow intValue];
+        if ([self.delegate respondsToSelector:@selector(jsManagerCallBackIsShowNavigation:)]) {
+            [self.delegate jsManagerCallBackIsShowNavigation:showNav];
+        }
     }
 }
 

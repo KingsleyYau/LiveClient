@@ -13,9 +13,9 @@
 /**
 *  17.4.接受预付费直播邀请接口
 *
-*  @param inviteId         邀请ID
-*  @param duration         分钟时长
-*  @param finishHandler            接口回调
+*  @inviteId         邀请ID
+*  @duration         分钟时长
+*  @finishHandler            接口回调
 *
 *  @return 成功请求Id
 */

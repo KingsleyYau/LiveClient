@@ -15,6 +15,7 @@
 #import "LSOutBoxViewController.h"
 #import "LSShadowView.h"
 #import "LSMailScheduleDetailViewController.h"
+#import "LSConfigManager.h"
 
 #define kFunctionViewHeight 88
 #define PageSize 20
@@ -27,6 +28,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *selectBoxBtn;
 
 @property (weak, nonatomic) IBOutlet MailTableView *tableView;
+
+@property (weak, nonatomic) IBOutlet UIView *bottomView;
 
 @property (nonatomic, strong) LSSelectBoxView *selectBoxView;
 
@@ -44,6 +47,9 @@
 @property (weak, nonatomic) IBOutlet LSHighlightedButton *noDataSearchBtn;
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, assign) int page;
+
+@property (weak, nonatomic) IBOutlet UILabel *bottomTipsLabel;
+
 @end
 
 @implementation LSMailViewController
@@ -69,6 +75,11 @@
     
     self.items = [NSMutableArray array];
     self.seesionRequestManager = [LSSessionRequestManager manager];
+    
+//    [LSConfigManager manager].item.anchorPage;
+    [self.bottomTipsLabel setFont:[UIFont fontWithName:@"ArialMT" size:12]];
+    [self.bottomTipsLabel setTextColor:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1/1.0]];
+    [self.bottomTipsLabel setText:[NSString stringWithFormat:@"Post stamp will be used in first than credits. %.0f stamp or %.1f credits for each mail read.",[LSConfigManager manager].item.mailTariff.mailReadBase.stampPrice,[LSConfigManager manager].item.mailTariff.mailReadBase.creditPrice]];
 
     self.noDataSearchBtn.layer.cornerRadius = 6.0f;
     self.noDataSearchBtn.layer.masksToBounds = YES;
@@ -127,7 +138,6 @@
 }
 
 - (void)hideNoMailTips {
-  
     self.noDataIcon.hidden = YES;
     self.noDataTips.hidden = YES;
     self.noDataSearchBtn.hidden = YES;
@@ -150,8 +160,10 @@
 - (void)reloadData:(BOOL)isReload {
     if (self.items.count == 0) {
         [self showNoMailTips];
+        [self.bottomView setHidden:YES];
     }else {
         [self hideNoMailTips];
+        [self.bottomView setHidden:NO];
     }
     self.tableView.mailType = self.mailType;
     self.tableView.items = self.items;
@@ -304,7 +316,10 @@
             if (creditTips != nil) {
                 [self mailListDidClickToPushMailDetail:model index:index];
             }else {
-                UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromSelf(@"Credits_Tips") preferredStyle:UIAlertControllerStyleAlert];
+                //使用同步资费标准替换固定提示文本
+                NSString *tipMsg = [NSString stringWithFormat:@"Post stamp will be used in first than credits. %.0f stamp or %.1f credits for each mail read.",[LSConfigManager manager].item.mailTariff.mailReadBase.stampPrice,[LSConfigManager manager].item.mailTariff.mailReadBase.creditPrice];
+//                UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromSelf(@"Credits_Tips") preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:nil message:tipMsg preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     [self mailListDidClickToPushMailDetail:model index:index];
                 }];
@@ -326,7 +341,6 @@
     }else if(self.mailType == LSEMFTYPE_OUTBOX) {
         [self outBoxListDidClickToPushMailDetail:model index:index];
     }
-    
 }
 
 // TODO: 接收预约邮件详情的代理方法 更新邮件未读
@@ -456,7 +470,7 @@
 }
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    self.failView.hidden = YES;
+    [super lsListViewControllerDidClick:sender];
     [self hideNoMailTips];
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
     [self.tableView startLSPullDown:YES];

@@ -43,10 +43,18 @@
     [self.collectionView reloadData];
 }
 
-- (void)updateUncount:(NSString*)count {
-    
-    [self.countItems removeLastObject];
-    [self.countItems addObject:count];
+- (void)updateUncount:(NSInteger)count {
+    if (count > 0) {
+        [self.countItems removeLastObject];
+        if (count > 99) {
+           [self.countItems addObject:@"..."];
+        }else {
+          [self.countItems addObject:[NSString stringWithFormat:@"%ld",count]];
+        }
+    }else {
+        self.countItems = [NSMutableArray arrayWithArray:@[@"",@"",@"",@""]];
+    }
+
     [self.collectionView reloadData];
 }
 

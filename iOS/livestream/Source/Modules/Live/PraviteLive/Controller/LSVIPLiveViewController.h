@@ -120,12 +120,10 @@
 @property (nonatomic, strong) LSPrepaidInfoView *prepaidInfoView;
 @property (nonatomic, strong) LSPrePaidPickerView *pickerView;
 @property (nonatomic, strong) LSPurchaseCreditsView *purchaseCreditView;
-@property (nonatomic, strong) LSLivePrepaidTipView *prepaidTipView;
 @property (nonatomic, strong) LSScheduleListView *scheduleListView;
-
-// 隐藏按钮
-@property (nonatomic, strong) UIButton *bgBtn;
-
+@property (nonatomic, strong) LSLivePrepaidTipView *prepaidTipView;
+// 隐藏预付费列表提示按钮
+@property (nonatomic, strong) UIButton *prepaidTipViewBgBtn;
 #pragma mark - 代理
 @property (nonatomic, weak) id<LSVIPLiveViewControllerDelegate> liveDelegate;
 

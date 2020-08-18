@@ -27,7 +27,7 @@
 @interface NewInvitesCell : UITableViewCell
 
 @property (weak, nonatomic) id<NewInvitesCellDelegate> delegate;
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subLabel;
 @property (weak, nonatomic) IBOutlet UIButton *comfirmBtn;

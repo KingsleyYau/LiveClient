@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface LSScheduleContentCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIView *bgView;
+
 /// 已确认预约时间数
 @property (weak, nonatomic) IBOutlet UILabel *minuteTime;
 /// 时间选择按钮

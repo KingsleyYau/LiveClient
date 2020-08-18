@@ -26,6 +26,20 @@
  - (void)awakeFromNib {
      [super awakeFromNib];
      
+     CGFloat size = 14.0f;
+     if (SCREEN_WIDTH == 320) {
+         size = 11.0f;
+     }
+     
+     self.titleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+     self.titleLabel.layer.shadowOffset = CGSizeMake(0, 1);
+     self.titleLabel.layer.shadowOpacity = 0.5;
+     
+     self.infoLabel.font = [UIFont fontWithName:@"ArialMT" size:size];
+     self.twoLabel.font = self.infoLabel.font;
+     self.threeLabel.font = self.infoLabel.font;
+     self.fourLabel.font = self.infoLabel.font;
+     
      self.purchaseView.layer.cornerRadius = 5;
      self.purchaseView.layer.masksToBounds = YES;
      
@@ -45,7 +59,7 @@
      NSString * title = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"TITLE"),upStr];
      
      NSMutableAttributedString * attr = [[NSMutableAttributedString alloc]initWithString:title];
-     [attr addAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],NSFontAttributeName : [UIFont boldSystemFontOfSize:14]} range:[title rangeOfString:upStr]];
+     [attr addAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],NSFontAttributeName : [UIFont boldSystemFontOfSize:size]} range:[title rangeOfString:upStr]];
      
      self.infoLabel.attributedText = attr;
  }

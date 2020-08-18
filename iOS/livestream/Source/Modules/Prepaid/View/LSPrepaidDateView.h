@@ -33,6 +33,7 @@
 - (void)updateCredits:(LSScheduleDurationItemObject *)item;
 - (void)updateDate:(NSString *)str;
 - (void)updateBeginTime:(NSString *)time;
+- (void)resetBtnState;
 @end
 
 

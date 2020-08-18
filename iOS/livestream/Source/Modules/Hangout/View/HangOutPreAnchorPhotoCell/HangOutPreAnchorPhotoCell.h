@@ -13,7 +13,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 
 - (void)setupCellDate:(IMLivingAnchorItemObject *)item;
 

@@ -31,6 +31,7 @@
 #import "LSConfigManager.h"
 #import "LSMinLiveManager.h"
 #import "LSPrePaidManager.h"
+#import "LSStreamSpeedManager.h"
 
 #import "DialogChoose.h"
 #import "DialogTip.h"
@@ -378,6 +379,8 @@
     self.preActivityView.hidden = YES;
     
     // 公开/私密直播间样式切换
+    self.scheduleBtn.layer.masksToBounds = YES;
+    self.scheduleBtn.layer.cornerRadius = self.scheduleBtn.tx_height / 2;
     if (self.liveRoom.roomType == LiveRoomType_Public) {
         self.scheduleBtnViewBottom.constant = 0;
         self.camBtnHeight.constant = 0;
@@ -396,12 +399,17 @@
             self.camBtnBottom.constant = 0;
         }
     }
+    
+    self.msgSuperViewH.constant = SCREEN_HEIGHT/2 - self.msgSuperViewBottom.constant;
+    self.msgTableViewTop.constant = self.msgSuperViewH.constant;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
   
     [self hideNavigationBar];
+    // 初始化预付费界面
+    [self setupPrepaidView];
     // 获取主播信息(更新预付费权限 显示btn用)
     [self.liveManager getLiveRoomAnchorInfo:self.liveRoom.userId];
     // 获取当前直播间预付费列表
@@ -411,7 +419,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    
     self.bigGiftArray = nil;
     [self.giftAnimationView removeFromSuperview];
     self.giftAnimationView = nil;
@@ -472,6 +479,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
+    [self removeAllCustonBox];
     // 停止计时器
     [self stopVideoBtnTimer];
 }
@@ -485,32 +493,27 @@
     // 初始化预览界面
     [self setupPreviewView];
     
-    // 初始化预付费界面
-    [self setupPrepaidView];
-    
     // 初始化预付费邀请没点界面
     [self setupPurchaseCreditView];
     
     // 初始化预付费列表选择界面
     [self setupPrepaidTipView];
-    
-    // 隐藏按钮
-    [self setupBackgroundBtn];
+}
+
+- (void)removeAllCustonBox {
+    [self.dialogView hidenDialog];
+    [self.dialogChoose hiddenCheckView];
+    [self.prepaidView removeFromSuperview];
+    self.prepaidView = nil;
+    [self.pickerView removeFromSuperview];
+    [self.scheduleListView removeFromSuperview];
+    [self.prepaidInfoView removeFromSuperview];
+    [self.purchaseCreditView removeShowCreditView];
 }
 
 - (void)bringSubviewToFrontFromView:(UIView *)view {
     [self.view bringSubviewToFront:self.giftView];
     [self.view insertSubview:view belowSubview:self.giftView];
-}
-
-- (void)setupBackgroundBtn {
-    self.bgBtn = [[UIButton alloc] init];
-    self.bgBtn.hidden = YES;
-    [self.bgBtn addTarget:self action:@selector(closeInputView:) forControlEvents:UIControlEventTouchUpInside];
-    [self.liveRoom.superView addSubview:self.bgBtn];
-    [self.bgBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.liveRoom.superView);
-    }];
 }
 
 - (void)setupPrepaidView {
@@ -520,6 +523,9 @@
     shadow.shadowColor = [UIColor whiteColor];
     NSAttributedString *shadowStr = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"LESSEN_TIP") attributes:@{NSShadowAttributeName:shadow}];
     self.lessenTipLabel.attributedText = shadowStr;
+    self.lessenTipLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.lessenTipLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    self.lessenTipLabel.layer.shadowOpacity = 0.5;
     
     self.scheduleLessenView.layer.masksToBounds = YES;
     self.scheduleLessenView.layer.cornerRadius = 5;
@@ -537,29 +543,40 @@
 - (void)setupPurchaseCreditView {
     self.purchaseCreditView = [[LSPurchaseCreditsView alloc] init];
     self.purchaseCreditView.delegate = self;
-    self.purchaseCreditView.hidden = YES;
-    [self.liveRoom.superView addSubview:self.purchaseCreditView];
-    [self.purchaseCreditView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.liveRoom.superView);
-    }];
-    [self.purchaseCreditView setupCreditView:self.liveRoom.photoUrl name:self.liveRoom.userName];
+    [self.purchaseCreditView setupCreditView:self.liveRoom.photoUrl];
 }
 
 - (void)setupPrepaidTipView {
+    self.prepaidTipViewBgBtn = [[UIButton alloc] init];
+    self.prepaidTipViewBgBtn.hidden = YES;
+    [self.prepaidTipViewBgBtn addTarget:self action:@selector(closeInputView:) forControlEvents:UIControlEventTouchUpInside];
+    [self.liveRoom.superView addSubview:self.prepaidTipViewBgBtn];
+    [self.prepaidTipViewBgBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.liveRoom.superView);
+    }];
+    
     self.prepaidTipView = [[LSLivePrepaidTipView alloc] init];
     self.prepaidTipView.delegate = self;
-    [self.liveRoom.superView addSubview:self.prepaidTipView];
-    self.prepaidTipView.hidden = YES;
+    [self.prepaidTipViewBgBtn addSubview:self.prepaidTipView];
+    CGFloat width = 281;
+    if (SCREEN_WIDTH < 375) {
+        width = 263;
+    }
+    [self.prepaidTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@(width));
+        make.height.equalTo(@(0));
+        make.right.equalTo(self.scheduleBtn.mas_left);
+        make.bottom.equalTo(self.scheduleBtn.mas_bottom).offset(75);
+    }];
 }
 
 - (void)setupScheduleListView:(InvitedStatus)invitedStatus array:(NSMutableArray *)array {
     self.scheduleListView = [[LSScheduleListView alloc] init];
     self.scheduleListView.delegate = self;
     self.scheduleListView.invitedStatus = invitedStatus;
-    [self.liveRoom.superView addSubview:self.scheduleListView];
-    [self.liveRoom.superView bringSubviewToFront:self.scheduleListView];
+    [self.navigationController.view addSubview:self.scheduleListView];
     [self.scheduleListView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.edges.equalTo(self.navigationController.view);
     }];
     [self.scheduleListView setListData:array];
 }
@@ -675,7 +692,7 @@
         NSString *tips = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_TIPS"), price];
         self.dialogChoose.tipsLabel.text = tips;
         WeakObject(self, weakSelf);
-        [self.dialogChoose showDialog:self.liveRoom.superView
+        [self.dialogChoose showDialog:self.navigationController.view
                           cancelBlock:^{
                               // 保存参数
                               [LSConfigManager manager].dontShow2WayVideoDialog = weakSelf.dialogChoose.checkBox.on;
@@ -744,15 +761,13 @@
 }
 
 - (IBAction)scheduleInvite:(id)sender {
-    [self.scheduleBtn setImage:[UIImage imageNamed:@"LS_Live_Schedule_Icon"] forState:UIControlStateNormal];
+    [self scheduleBtnAnimaiton:NO];
 
     if (self.scheduleCount > 0) {
         [self.liveManager getScheduleList];
         
-        self.bgBtn.hidden = NO;
-        [self.liveRoom.superView bringSubviewToFront:self.bgBtn];
-        self.prepaidTipView.hidden = NO;
-        [self.liveRoom.superView bringSubviewToFront:self.prepaidTipView];
+        self.prepaidTipViewBgBtn.hidden = NO;
+        [self.liveRoom.superView bringSubviewToFront:self.prepaidTipViewBgBtn];
     } else {
         if (!self.scheduleLessenView.isHidden) {
             self.scheduleLessenView.hidden = YES;
@@ -767,9 +782,24 @@
 }
 
 - (void)closeInputView:(id)sender {
-    self.bgBtn.hidden = YES;
-    
-    self.prepaidTipView.hidden = YES;
+    self.prepaidTipViewBgBtn.hidden = YES;
+}
+
+- (void)scheduleBtnAnimaiton:(BOOL)isStart {
+    if (isStart) {
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
+        animation.repeatCount = MAXFLOAT;
+        animation.autoreverses = YES;
+        animation.duration = 1;
+        animation.fromValue = (__bridge id _Nullable)(Color(0, 0, 0, 0.5).CGColor);
+        animation.toValue = (__bridge id _Nullable)(Color(255, 255, 0, 0.5).CGColor);
+        animation.removedOnCompletion = NO;
+        animation.fillMode = kCAFillModeForwards;
+        [self.scheduleBtn.layer addAnimation:animation forKey:@"backgroundColor"];
+    } else {
+        [self.scheduleBtn.layer removeAllAnimations];
+        [self.scheduleBtn setBackgroundColor:Color(0, 0, 0, 0.5)];
+    }
 }
 
 #pragma mark - 流[播放/推送]逻辑
@@ -895,6 +925,9 @@
 
 - (void)playerOnConnect:(LiveStreamPlayer * _Nonnull)player {
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 流媒体连接成功 上传拉流时间
+        [[LSStreamSpeedManager manager] requestPushPullLogs:self.liveRoom.roomId];
+        
         self.bgView.hidden = YES;
         [LSMinLiveManager manager].minView.loadingView.hidden = YES;
         
@@ -916,9 +949,20 @@
 - (void)publisherOnConnect:(LiveStreamPublisher * _Nonnull)publisher {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.shadowImageView.hidden = YES;
+        if (!self.preActivityView.isHidden) {
+            self.preActivityView.hidden = YES;
+        }
     });
     NSString *url = publisher.url;
     NSLog(@"LSVIPLiveViewController::publisherOnConnect( [推送流URL], url : %@)", url);
+}
+
+- (void)publisherOnDisconnect:(LiveStreamPublisher *)publisher {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.preActivityView.isHidden) {
+            self.preActivityView.hidden = NO;
+        }
+    });
 }
 
 #pragma mark - 关闭/开启直播间声音(LiveChat使用)
@@ -1241,8 +1285,7 @@
 }
 
 - (void)chatPrepaidViewDidSend:(LSScheduleInviteItem *)item {
-    [self.prepaidView removeFromSuperview];
-    
+    self.prepaidView.sendBtn.userInteractionEnabled = NO;
     LSScheduleInviteItem * inviteItem = [[LSScheduleInviteItem alloc]init];
     if (self.liveRoom.roomType == LiveRoomType_Public) {
         inviteItem.type = LSSCHEDULEINVITETYPE_PUBLICLIVE;
@@ -1271,10 +1314,10 @@
 - (void)removePrePaidPickerView {
     [self.pickerView removeFromSuperview];
     self.pickerView = nil;
+    [self.prepaidView.deteView resetBtnState];
 }
 
 - (void)prepaidPickerViewSelectedRow:(NSInteger)row {
-    [self removePrePaidPickerView];
     BOOL isShowPrepaidView = NO;
     for (UIView *view in self.navigationController.view.subviews) {
         if ([view isKindOfClass:[LSChatPrepaidView class]]) {
@@ -1300,10 +1343,12 @@
             }
         }
     }
+     [self removePrePaidPickerView];
 }
 
 #pragma mark - LSPurchaseCreditsViewDelegate
 - (void)purchaseDidAction {
+    [self.purchaseCreditView removeShowCreditView];
     if ([self.liveDelegate respondsToSelector:@selector(noCreditPushTo:)]) {
         [self.liveDelegate noCreditPushTo:self];
     }
@@ -1311,20 +1356,20 @@
 
 #pragma mark - LSLivePrepaidTipViewDelegate
 - (void)prepaidTipViewDidConfirm {
-    self.bgBtn.hidden = YES;
-    self.prepaidTipView.hidden = YES;
+    self.prepaidTipViewBgBtn.hidden = YES;
     [self setupScheduleListView:INVITEDSTATUS_CONFIRM array:self.paidManager.scheduleListConfirmedArray];
 }
 
 - (void)prepaidTipViewDidPending {
-    self.bgBtn.hidden = YES;
-    self.prepaidTipView.hidden = YES;
+    self.prepaidTipViewBgBtn.hidden = YES;
     [self setupScheduleListView:INVITEDSTATUS_PENDING array:self.paidManager.scheduleListPendingdArray];
 }
 
 - (void)prepaidTipViewDidSendRequest {
-    self.bgBtn.hidden = YES;
-    self.prepaidTipView.hidden = YES;
+    self.prepaidTipViewBgBtn.hidden = YES;
+    if (!self.scheduleLessenView.isHidden) {
+        self.scheduleLessenView.hidden = YES;
+    }
     [self.navigationController.view addSubview:self.prepaidView];
 }
 
@@ -1349,6 +1394,7 @@
 
 - (void)sendAcceptSchedule:(NSString *)inviteId duration:(int)duration item:(LSScheduleInviteItem *)item {
     [self closeScheduleListView];
+    item.refId = self.liveRoom.roomId;
     [self.liveManager sendAcceptScheduleInviteToAnchor:inviteId duration:duration infoObj:item];
 }
 
@@ -1793,6 +1839,7 @@
                 duration = item.scheduleMsg.msg.origintduration;
             }
             LSScheduleInviteItem *inviteItem = [[LSScheduleInviteItem alloc] init];
+            inviteItem.refId = self.liveRoom.roomId;
             inviteItem.origintduration = item.scheduleMsg.msg.origintduration;
             inviteItem.period = item.scheduleMsg.msg.period;
             inviteItem.gmtStartTime = item.scheduleMsg.msg.startTime;
@@ -1894,9 +1941,9 @@
     [[LiveModule module].serviceManager handleOpenURL:url];
 }
 
-// TODO: 请求开启双向视频
+#pragma mark - 双向视频
 - (void)sendVideoControl:(BOOL)start {
-    
+    // TODO: 请求开启双向视频
     self.preActivityView.hidden = NO;
     [self.preActivityView startAnimating];
     
@@ -2075,7 +2122,7 @@
         self.dialogView.tipsLabel.text = msgItem.text;
         
         if (self.viewIsAppear) {
-            [self.dialogView showDialogWarning:self.view.window actionBlock:nil];
+            [self.dialogView showDialogWarning:self.navigationController.view actionBlock:nil];
         }
     }
     // 插入到消息列表
@@ -2105,8 +2152,10 @@
 
 // TODO: 接收发送预付费直播邀请回调
 - (void)onRecvSendScheduleInviteToAnchor:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item {
+    self.prepaidView.sendBtn.userInteractionEnabled = YES;
     switch (errnum) {
         case HTTP_LCC_ERR_SUCCESS:{
+            [self.prepaidView removeFromSuperview];
             // 刷新列表数
             [self.liveManager getScheduleList];
             // 插入消息
@@ -2115,17 +2164,16 @@
         }break;
             
         case HTTP_LCC_ERR_SCHEDULE_NO_CREDIT:{
-            self.purchaseCreditView.creditLabel.text = [NSString stringWithFormat:@"%.2f",self.creditRebateManager.mCredit];
-            self.purchaseCreditView.tipLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ON_CREDIT_SEND_SCHEDULE"),self.liveRoom.userName];
-            self.purchaseCreditView.hidden = NO;
+            [self.purchaseCreditView setupCreditTipIsAccept:NO name:self.liveRoom.userName credit:self.creditRebateManager.mCredit];
+            [self.purchaseCreditView showLSCreditViewInView:self.navigationController.view];
         }break;
         case HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM:{
-            [self.prepaidView.deteView updateNewBeginTime];
-            [self.dialogProbationTip showDialogTip:self.liveRoom.superView tipText:errmsg];
+            [[LSPrePaidManager manager] getDateData];
+            [self.dialogProbationTip showDialogTip:self.navigationController.view tipText:errmsg];
         }
         break;
         default:{
-            [self.dialogProbationTip showDialogTip:self.liveRoom.superView tipText:errmsg];
+            [self.dialogProbationTip showDialogTip:self.navigationController.view tipText:errmsg];
         }break;
     }
 }
@@ -2149,9 +2197,8 @@
         }break;
         // 没信用点
         case HTTP_LCC_ERR_SCHEDULE_NO_CREDIT:{
-            self.purchaseCreditView.creditLabel.text = [NSString stringWithFormat:@"%.2f",self.creditRebateManager.mCredit];
-            self.purchaseCreditView.tipLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ON_CREDIT_ACCEPT_SCHEDULE"),self.liveRoom.userName];
-            self.purchaseCreditView.hidden = NO;
+            [self.purchaseCreditView setupCreditTipIsAccept:YES name:self.liveRoom.userName credit:self.creditRebateManager.mCredit];
+            [self.purchaseCreditView showLSCreditViewInView:self.navigationController.view];
             [self.msgTableView reloadData];
         }break;
             
@@ -2168,54 +2215,57 @@
     [self.liveManager getScheduleList];
     // 插入或更新预付费消息
     [self.liveManager addAncherSendScheduleMsg:item];
+    if (item.msg.status == IMSCHEDULESENDSTATUS_PENDING && self.prepaidTipViewBgBtn.isHidden) {
+        [self scheduleBtnAnimaiton:YES];
+    }
 }
 
 // TODO: 接收该直播预付费邀请列表数
-- (void)onRecvGetScheduleListCount:(NSInteger)maxCount confirms:(NSInteger)confirms pendings:(NSInteger)pendings {
-    self.scheduleCount = maxCount;
-    if (maxCount > 0) {
-        self.scheduleNumLabel.hidden = NO;
-        self.scheduleNumLabel.text = [NSString stringWithFormat:@"%ld",(long)maxCount];
-    } else {
-        self.scheduleNumLabel.hidden = YES;
-    }
-    // 改变预付费数量界面高度
-    [self.prepaidTipView updateCount:confirms pcount:pendings];
-    CGFloat viewH = 0;
-    if (confirms > 0 && pendings > 0) {
-        viewH = 335;
-        self.prepaidTipView.confirmViewHeight.constant = 34;
-        self.prepaidTipView.pendingViewHeight.constant = 34;
-    } else if (confirms > 0 && pendings <= 0){
-        viewH = 301;
-        self.prepaidTipView.confirmViewHeight.constant = 34;
-        self.prepaidTipView.pendingViewHeight.constant = 0;
-    }else if (confirms <= 0 && pendings > 0){
-        viewH = 301;
-        self.prepaidTipView.confirmViewHeight.constant = 0;
-        self.prepaidTipView.pendingViewHeight.constant = 34;
-    }
-    CGFloat width = 281;
-    if (SCREEN_WIDTH < 375) {
-        width = 263;
-    }
-    [self.prepaidTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(@(width));
-        make.height.equalTo(@(viewH));
-        make.right.equalTo(self.scheduleBtn.mas_left);
-        make.bottom.equalTo(self.scheduleBtn.mas_bottom).offset(75);
-    }];
-    // 设置按钮闪烁
-    if (pendings > 0 && self.prepaidTipView.isHidden) {
-        for (LSScheduleLiveInviteItemObject *item in self.paidManager.scheduleListPendingdArray) {
-            if (item.sendFlag == LSSCHEDULESENDFLAGTYPE_ANCHOR && item.status == LSSCHEDULEINVITESTATUS_PENDING) {
-                [self.scheduleBtn setImage:[UIImage imageNamed:@"LS_Shine_Schedule_Btn"] forState:UIControlStateNormal];
-                break;
+- (void)onRecvGetScheduleList:(BOOL)success maxCount:(NSInteger)maxCount confirms:(NSInteger)confirms pendings:(NSInteger)pendings {
+    if (success) {
+        self.scheduleCount = maxCount;
+        if (maxCount > 0) {
+            self.scheduleNumLabel.hidden = NO;
+            if (maxCount > 99) {
+                self.scheduleNumLabel.text = [NSString stringWithFormat:@"..."];
+            } else {
+                self.scheduleNumLabel.text = [NSString stringWithFormat:@"%ld",(long)maxCount];
+            }
+            
+        } else {
+            self.scheduleNumLabel.hidden = YES;
+        }
+        // 改变预付费数量界面高度
+        [self.prepaidTipView updateCount:confirms pcount:pendings];
+        CGFloat viewH = 0;
+        if (confirms > 0 && pendings > 0) {
+            viewH = 335;
+            self.prepaidTipView.confirmViewHeight.constant = 34;
+            self.prepaidTipView.pendingViewHeight.constant = 34;
+        } else if (confirms > 0 && pendings <= 0){
+            viewH = 301;
+            self.prepaidTipView.confirmViewHeight.constant = 34;
+            self.prepaidTipView.pendingViewHeight.constant = 0;
+        }else if (confirms <= 0 && pendings > 0){
+            viewH = 301;
+            self.prepaidTipView.confirmViewHeight.constant = 0;
+            self.prepaidTipView.pendingViewHeight.constant = 34;
+        } else {
+            if (!self.prepaidTipView.isHidden) {
+                viewH = 267;
+                self.prepaidTipView.confirmViewHeight.constant = 0;
+                self.prepaidTipView.pendingViewHeight.constant = 0;
             }
         }
+        [self.prepaidTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.equalTo(@(viewH));
+        }];
     }
 }
 
+- (void)onRecvScheduleGetDateData {
+     [self.prepaidView.deteView updateNewBeginTime];
+}
 // TODO: 接收获取男士/主播信息通知
 - (void)onRecvUserOrAnchorInfo:(LSUserInfoModel *)item {
     if (item.isAnchor) {
@@ -2405,7 +2455,7 @@
 }
 
 - (void)onRecvSendTalentNotice:(ImTalentReplyObject *)item {
-    NSLog(@"LSVIPLiveViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
+    NSLog(@"LSVIPLiveViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知], roomId : %@ )", item.roomId);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (item.status == TALENTSTATUS_AGREE && item.credit >= 0) {
@@ -2416,7 +2466,7 @@
 }
 
 - (void)onRecvTalentPromptNotice:(NSString *)roomId introduction:(NSString *)introduction {
-    NSLog(@"LSVIPLiveViewController::onRecvTalentPromptNotice( [接收直播间才艺点播提示公告通知] :%@)", introduction);
+    NSLog(@"LSVIPLiveViewController::onRecvTalentPromptNotice( [接收直播间才艺点播提示公告通知], roomId : %@, introduction : %@ )", roomId, introduction);
     
     //    dispatch_async(dispatch_get_main_queue(), ^{
     //        if ([self.liveRoom.roomId isEqualToString:roomId]) {
@@ -2625,8 +2675,8 @@
     self.liveRoom = nil;
     // 移除礼物通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GiftAnimationIsOver" object:nil];
-    // 关闭预付费邀请卡片
-    [self.prepaidView removeFromSuperview];
+    // 关闭所有自定义弹框
+    [self removeAllCustonBox];
 }
 
 // 直播结束停止推拉流并显示结束页

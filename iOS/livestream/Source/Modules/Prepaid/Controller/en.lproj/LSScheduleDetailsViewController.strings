@@ -6,3 +6,10 @@
 "Continue" = "Continue";
 
 "ON_CREDIT_ACCEPT_SCHEDULE" = "%@ is planning a One-on-One with you!";
+
+"DECLINED_SUCCESS" = "Schedule One-on-One request has been declined successfully.";
+"CANCEL_TIP" = "Are you sure you wish to cancel this schedule?";
+"CANCEL_MSG" = "Note: It may take a few minutes to refund your credits to your account.";
+"YES" = "YES";
+"NO" = "NO";
+"Accept_Schedule" = "Schedule One-on-One request has been accepted successfully.";

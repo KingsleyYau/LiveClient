@@ -16,7 +16,7 @@
 - (void)jsManagerCallbackCloseWebView;
 - (void)jsManagerCallbackWebReload;
 - (void)jsManagerCallBackAddCredit:(NSString *)error;
-- (void)jsManagerCallBackIsShowNavigation:(NSString *)isShow;
+- (void)jsManagerCallBackIsShowNavigation:(BOOL)isShow;
 @end
 
 @interface LSWebViewJSManager : NSObject

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="b5G-ns-ikj" customClass="LSTipsDialogView">
+            <rect key="frame" x="0.0" y="0.0" width="261" height="94"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SWq-jO-l20">
+                    <rect key="frame" x="0.0" y="0.0" width="261" height="94"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n88-5L-LuH">
+                            <rect key="frame" x="0.0" y="0.0" width="261" height="94"/>
+                            <color key="backgroundColor" red="0.94509803920000002" green="1" blue="0.94901960780000005" alpha="0.90194242290000004" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="n88-5L-LuH" firstAttribute="leading" secondItem="SWq-jO-l20" secondAttribute="leading" id="Qnu-Ia-cH1"/>
+                        <constraint firstItem="n88-5L-LuH" firstAttribute="top" secondItem="SWq-jO-l20" secondAttribute="top" id="aYN-WX-MXm"/>
+                        <constraint firstAttribute="bottom" secondItem="n88-5L-LuH" secondAttribute="bottom" id="kud-db-vk5"/>
+                        <constraint firstAttribute="trailing" secondItem="n88-5L-LuH" secondAttribute="trailing" id="p2l-R0-58K"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_AcceptIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Ibx-jD-w1j">
+                    <rect key="frame" x="118" y="23" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="Vcv-lw-PFK"/>
+                        <constraint firstAttribute="width" constant="25" id="a1y-Jj-7hy"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reminder sent!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rH1-Gf-3rj">
+                    <rect key="frame" x="20" y="53" width="221" height="18"/>
+                    <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="16"/>
+                    <color key="textColor" red="0.015686274509803921" green="0.76862745098039209" blue="0.33725490196078434" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="SWq-jO-l20" firstAttribute="leading" secondItem="Qk8-iA-oXl" secondAttribute="leading" id="3Qk-fM-ehx"/>
+                <constraint firstItem="Qk8-iA-oXl" firstAttribute="trailing" secondItem="SWq-jO-l20" secondAttribute="trailing" id="4CF-rI-mAd"/>
+                <constraint firstItem="rH1-Gf-3rj" firstAttribute="top" secondItem="Ibx-jD-w1j" secondAttribute="bottom" constant="5" id="8Xd-mv-svO"/>
+                <constraint firstItem="rH1-Gf-3rj" firstAttribute="centerX" secondItem="b5G-ns-ikj" secondAttribute="centerX" id="T3j-xA-IHQ"/>
+                <constraint firstItem="rH1-Gf-3rj" firstAttribute="leading" secondItem="b5G-ns-ikj" secondAttribute="leading" constant="20" id="UCD-Wz-Uw6"/>
+                <constraint firstItem="SWq-jO-l20" firstAttribute="top" secondItem="b5G-ns-ikj" secondAttribute="top" id="Vii-nx-Bzi"/>
+                <constraint firstItem="Ibx-jD-w1j" firstAttribute="top" secondItem="b5G-ns-ikj" secondAttribute="top" constant="23" id="ddy-xO-6p3"/>
+                <constraint firstAttribute="trailing" secondItem="rH1-Gf-3rj" secondAttribute="trailing" constant="20" id="l0a-wS-gIV"/>
+                <constraint firstAttribute="bottom" secondItem="SWq-jO-l20" secondAttribute="bottom" id="nar-PV-NFf"/>
+                <constraint firstItem="Ibx-jD-w1j" firstAttribute="centerX" secondItem="Qk8-iA-oXl" secondAttribute="centerX" id="sfa-Kn-jU3"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Qk8-iA-oXl"/>
+            <connections>
+                <outlet property="bgView" destination="SWq-jO-l20" id="KDz-P4-wgj"/>
+                <outlet property="iconImgView" destination="Ibx-jD-w1j" id="RxJ-k0-ZWY"/>
+                <outlet property="titleLabel" destination="rH1-Gf-3rj" id="neJ-dl-dbG"/>
+            </connections>
+            <point key="canvasLocation" x="-99" y="-95"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_Schedule_AcceptIcon" width="28" height="28"/>
+    </resources>
+</document>

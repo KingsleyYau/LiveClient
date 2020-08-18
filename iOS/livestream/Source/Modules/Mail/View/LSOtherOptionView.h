@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 代理 */
 @property (nonatomic, weak) id<LSOtherOptionViewDelegate> delegate;
 + (LSOtherOptionView *)ohterOptionWithDelegate:(id<LSOtherOptionViewDelegate>)delegate;
+- (void)setDetailDeclineBtnTitle;
 @end
 
 NS_ASSUME_NONNULL_END

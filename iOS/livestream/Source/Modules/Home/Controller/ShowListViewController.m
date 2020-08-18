@@ -288,6 +288,7 @@
 
 #pragma mark 失败界面点击事件
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
+    [super lsListViewControllerDidClick:sender];
     [self reloadBtnClick:sender];
 }
 

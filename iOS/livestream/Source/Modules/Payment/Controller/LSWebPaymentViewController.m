@@ -268,11 +268,11 @@
     }
 }
 
-- (void)jsManagerCallBackIsShowNavigation:(NSString *)isShow {
-    if ([isShow isEqualToString:HideNavigation]) {
-        [self hideNavigationBar];
-    } else if ([isShow isEqualToString:ShowNavigation]) {
+- (void)jsManagerCallBackIsShowNavigation:(BOOL)isShow {
+    if (isShow) {
         [self showNavigationBar];
+    } else {
+        [self hideNavigationBar];
     }
 }
 
@@ -309,7 +309,7 @@
 - (void)liveWebView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSURL *url = navigationAction.request.URL;
     NSString *urlStr = [url absoluteString];
-
+    //当前界面重新请求 防止web自己打开新网页时丢失cookies
     if (([urlStr hasPrefix:demoPaySuccess]
         || [urlStr hasPrefix:demoPayError]
         || [urlStr hasPrefix:demoPayError2]
@@ -329,7 +329,6 @@
     }else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }
-    
-
 }
+
 @end

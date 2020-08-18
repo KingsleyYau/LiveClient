@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *startOneOnOneBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *freeIcon;
 @property (weak, nonatomic) IBOutlet UIButton *declineBtn;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *anchorHeadImage;
 
 @property (nonatomic, strong) PrivateInviteItem *item;
 + (instancetype)initPrivateInviteView;

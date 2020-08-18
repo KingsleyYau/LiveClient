@@ -21,6 +21,7 @@
 
 @end
 @interface LSPrepaidAcceptCardView : UIView
+@property (weak, nonatomic) IBOutlet UILabel *bigTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet UIView *detailsTimeView;

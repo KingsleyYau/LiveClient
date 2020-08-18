@@ -17,11 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface LSPurchaseCreditsView : UIView
+@property (weak, nonatomic) IBOutlet UILabel *bigTitleLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *purchaseView;
 
 @property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *creditLabel;
@@ -33,8 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) id<LSPurchaseCreditsViewDelegate> delegate;
 
-- (void)setupCreditView:(NSString *)url name:(NSString *)name;
+- (void)showLSCreditViewInView:(UIView *)view;
+- (void)removeShowCreditView;
 
+- (void)setupCreditView:(NSString *)url;
+- (void)setupCreditTipIsAccept:(BOOL)isAccept name:(NSString *)name credit:(double)credit;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -40,4 +40,9 @@
 //是否对称 是否显示底部线
 
 - (void)updateBtnUnreadCount:(NSArray * )countArray;
+- (void)updateUnreadStatus:(NSArray *)showArray;
+
+-(void)setTitleFont:(UIFont *)font;
+-(void)setTitleSelectFont:(UIFont *)font;
+
 @end

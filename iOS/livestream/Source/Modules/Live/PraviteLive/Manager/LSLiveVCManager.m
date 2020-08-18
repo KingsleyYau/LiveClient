@@ -147,6 +147,13 @@
     [self.paidManager sendAcceptScheduleInvite:inviteId duration:duration infoObj:infoObj];
 }
 
+
+#pragma mark - 发送拒绝预付费邀请
+- (void)sendDeclinedScheduleInviteToAnchor:(NSString *)inviteId duration:(int)duration infoObj:(LSScheduleInviteItem *)infoObj {
+    self.paidManager.liveRoom = self.liveRoom;
+    [self.paidManager sendAcceptScheduleInvite:inviteId duration:duration infoObj:infoObj];
+}
+
 #pragma mark - 获取直播间预付费邀请列表
 - (void)getScheduleList {
     self.paidManager.liveRoom = self.liveRoom;
@@ -568,7 +575,7 @@
     msgItem.msgId = [self getMsgId];
     msgItem.msgType = MsgType_Schedule;
     msgItem.sendName = self.liveRoom.userName;
-    if (self.liveRoom.roomType == LiveRoomType_Public) {
+    if (self.liveRoom.roomType == LiveRoomType_Public && [item.msg.toNickName isEqualToString:self.loginManager.loginItem.nickName]) {
         msgItem.toName = [NSString stringWithFormat:@"@%@",item.msg.toNickName];
     } else {
         msgItem.toName = @"";
@@ -616,23 +623,29 @@
 
 #pragma mark - LSPrePaidManagerDelegate
 #pragma mark - 发送预付费邀请回调
-- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item {
-    if ([self.delegate respondsToSelector:@selector(onRecvSendScheduleInviteToAnchor:errmsg:item:)]) {
-        [self.delegate onRecvSendScheduleInviteToAnchor:errnum errmsg:errmsg item:item];
+- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item refId:(NSString *)refId {
+    if ([refId isEqualToString:self.liveRoom.roomId]) {
+        if ([self.delegate respondsToSelector:@selector(onRecvSendScheduleInviteToAnchor:errmsg:item:)]) {
+            [self.delegate onRecvSendScheduleInviteToAnchor:errnum errmsg:errmsg item:item];
+        }
     }
 }
 
 #pragma mark - 发送同意预付费邀请回调
 - (void)onRecvSendAcceptSchedule:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg statusUpdateTime:(NSInteger)statusUpdateTime scheduleInviteId:(NSString *)inviteId duration:(int)duration roomInfoItem:(ImScheduleRoomInfoObject *)roomInfoItem {
-    if ([self.delegate respondsToSelector:@selector(onRecvSendAcceptScheduleToAnchor:errmsg:statusUpdateTime:scheduleInviteId:duration:roomInfoItem:)]) {
-        [self.delegate onRecvSendAcceptScheduleToAnchor:errnum errmsg:errmsg statusUpdateTime:statusUpdateTime scheduleInviteId:inviteId duration:duration roomInfoItem:roomInfoItem];
+    if ([self.liveRoom.roomId isEqualToString:roomInfoItem.roomId]) {
+        if ([self.delegate respondsToSelector:@selector(onRecvSendAcceptScheduleToAnchor:errmsg:statusUpdateTime:scheduleInviteId:duration:roomInfoItem:)]) {
+            [self.delegate onRecvSendAcceptScheduleToAnchor:errnum errmsg:errmsg statusUpdateTime:statusUpdateTime scheduleInviteId:inviteId duration:duration roomInfoItem:roomInfoItem];
+        }
     }
 }
 
 #pragma mark - 获取直播间预付费列表个数回调
-- (void)onGetScheduleListCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount {
-    if ([self.delegate respondsToSelector:@selector(onRecvGetScheduleListCount:confirms:pendings:)]) {
-        [self.delegate onRecvGetScheduleListCount:maxCount confirms:count pendings:pCount];
+- (void)onGetScheduleList:(BOOL)success maxCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount refId:(NSString *)refId {
+    if ([refId isEqualToString:self.liveRoom.roomId]) {
+        if ([self.delegate respondsToSelector:@selector(onRecvGetScheduleList:maxCount:confirms:pendings:)]) {
+            [self.delegate onRecvGetScheduleList:success maxCount:maxCount confirms:count pendings:pCount];
+        }
     }
 }
 
@@ -645,5 +658,9 @@
     }
 }
 
-
+- (void)onRecvScheduleGetDateData {
+    if ([self.delegate respondsToSelector:@selector(onRecvScheduleGetDateData)]) {
+        [self.delegate onRecvScheduleGetDateData];
+    }
+}
 @end

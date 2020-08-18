@@ -44,7 +44,7 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backBtnTop;
 @property (weak, nonatomic) IBOutlet UIView *onlineView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
 // 文本提示
 @property (weak, nonatomic) IBOutlet YYLabel *infoTipLabel;
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;

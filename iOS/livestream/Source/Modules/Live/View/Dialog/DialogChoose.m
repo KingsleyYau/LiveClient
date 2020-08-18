@@ -42,9 +42,8 @@
 }
 
 - (void)hiddenCheckView {
-    self.checkBox.hidden = YES;
-    self.checkLabel.hidden = YES;
-    self.noBtnTop.constant = -16;
+    [self.backBtn removeFromSuperview];
+    [self removeFromSuperview];
 }
 
 - (void)showDialog:(UIView *)view cancelBlock:(void(^)())cancelBlock actionBlock:(void(^)())actionBlock {
@@ -84,8 +83,7 @@
     if( self.cancelBlock ) {
         self.cancelBlock();
     }
-    [self.backBtn removeFromSuperview];
-    [self removeFromSuperview];
+    [self hiddenCheckView];
 //    self.view.userInteractionEnabled = YES;
 }
 
@@ -93,8 +91,7 @@
     if( self.actionBlock ) {
         self.actionBlock();
     }
-    [self.backBtn removeFromSuperview];
-    [self removeFromSuperview];
+    [self hiddenCheckView];
 //    self.view.userInteractionEnabled = YES;
 }
 

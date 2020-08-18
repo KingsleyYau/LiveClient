@@ -41,5 +41,5 @@
 @property (nonatomic, assign) BOOL hasRead;
 @property (nonatomic, assign) BOOL hasReplied;
 @property (nonatomic, assign) BOOL hasSchedule;
-
+@property (nonatomic, assign) BOOL hasKey;//add by albert 20200731
 @end

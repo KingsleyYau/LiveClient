@@ -187,6 +187,7 @@ static LiveGobalManager *gManager = nil;
                 // 已经存在相同的VC
                 [nvc popToViewController:pvc animated:NO];
             } else {
+                nvc.interactivePopGestureRecognizer.enabled = NO;
                 // 推进新的VC
                 [nvc pushViewController:pvc animated:NO];
             }
@@ -212,6 +213,8 @@ static LiveGobalManager *gManager = nil;
         }
     });
 }
+
+
 
 - (void)popToRootVC {
     // TODO:主导航栏推出到主界面

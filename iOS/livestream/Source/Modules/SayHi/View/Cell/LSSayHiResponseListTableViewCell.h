@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LSSayHiResponseListTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *freeIcon;
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
 @property (weak, nonatomic) IBOutlet UIImageView *photoIcon;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *anchorName;

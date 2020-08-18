@@ -8,19 +8,18 @@
 
 #import "HotListAdManager.h"
 
-
 static HotListAdManager *gManager = nil;
 @implementation HotListAdManager
 
 + (instancetype)manager {
-    if( gManager == nil ) {
+    if (gManager == nil) {
         gManager = [[[self class] alloc] init];
     }
     return gManager;
 }
 
 - (id)init {
-    if( self = [super init] ) {
+    if (self = [super init]) {
         self.sessionManager = [LSSessionRequestManager manager];
     }
     return self;
@@ -29,21 +28,15 @@ static HotListAdManager *gManager = nil;
 - (void)getHotListAD {
     LSWomanListAdvertRequest *request = [[LSWomanListAdvertRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSWomanListAdItemObject *item) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([self.hotAdDelegate respondsToSelector:@selector(hotListADLoad:Success:)]) {
-                        [self.hotAdDelegate hotListADLoad:item Success:success];
-                    }
-                    if (success) {
-                        NSLog(@"HotListAdManager::LSWomanListAdvertRequest( 获取首页列表广告广告成功, advertId : %@)",item.advertId);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"HotListAdManager::LSWomanListAdvertRequest( [获取女士列表随机广告], %@, advertId : %@ )", BOOL2SUCCESS(success), item.advertId);
 
-                    } else {
-                        NSLog(@"HotListAdManager::LSWomanListAdvertRequest( 获取女士列表随机广告失败)");
-                    }
-                });
+            if ([self.hotAdDelegate respondsToSelector:@selector(hotListADLoad:Success:)]) {
+                [self.hotAdDelegate hotListADLoad:item Success:success];
+            }
+        });
     };
     [self.sessionManager sendRequest:request];
 }
 
-
 @end
-

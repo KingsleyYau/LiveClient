@@ -12,8 +12,8 @@
 "rg2-Pk-32G.text" = "Scheduling a One-on-One";
 
 /* Class = "UILabel"; text = "      cheduled One-one-one is an easy way to make One-on-One video call schedules with the broadcasters, at the same time saving up to 30% of your credits."; ObjectID = "soi-O8-jCu"; */
-"soi-O8-jCu.text" = "      cheduled One-one-one is an easy way to make One-on-One video call schedules with the broadcasters, at the same time saving up to 30% of your credits.";
+"soi-O8-jCu.text" = "      cheduled One-on-One is an easy way to make One-on-One video call schedules with the broadcasters, at the same time saving up to 30% of your credits.";
 
-"TITLE" = "      Scheduled One-one-one is an easy way to make One-on-One video call schedules with the broadcasters, at the same time %@ of your credits.";
+"TITLE" = "      Scheduled One-on-One is an easy way to make One-on-One video call schedules with the broadcasters, at the same time %@ of your credits.";
 
 "discount_num" = "save up to %ld%%";

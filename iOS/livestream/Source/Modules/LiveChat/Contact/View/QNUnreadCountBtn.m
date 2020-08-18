@@ -21,6 +21,11 @@
         self.noNumUnreadTips.layer.cornerRadius = self.noNumUnreadTips.frame.size.height/2.0;
         self.noNumUnreadTips.layer.masksToBounds = YES;
         self.unreadCountTips.userInteractionEnabled = YES;
+        
+        self.statusView.layer.cornerRadius = self.statusView.frame.size.height/2.0;
+        self.statusView.layer.masksToBounds = YES;
+        [self.statusView setHidden:YES];//默认隐藏
+        
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapUnreadCount)];
         [self addGestureRecognizer:tap];
     }
@@ -29,7 +34,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
 }
 
 
@@ -67,5 +71,11 @@
         }
     }
 }
+
+- (void)updateUnreadStatus:(BOOL)show
+{
+    [self.statusView setHidden:!show];
+}
+
 @end
 

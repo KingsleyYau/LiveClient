@@ -18,6 +18,9 @@
  * bookingNoreadNum             预约未读数量
  * backpackNoreadNum            背包未读数量
  * sayHiNoreadNum               sayhi未读数量
+ * schedulePendingUnreadNum     预付费邀请未读
+ * scheduleConfirmedUnreadNum   预付费确认未读
+ * videoNum                     精选视频未读
  */
 @property (nonatomic, assign) int ticketNoreadNum;
 @property (nonatomic, assign) int loiNoreadNum;
@@ -28,5 +31,6 @@
 @property (nonatomic, assign) int sayHiNoreadNum;
 @property (nonatomic, assign) int schedulePendingUnreadNum;
 @property (nonatomic, assign) int scheduleConfirmedUnreadNum;
+@property (nonatomic, assign) int videoNum;
 @property (nonatomic, assign) LSScheduleStatus scheduleStatus;
 @end

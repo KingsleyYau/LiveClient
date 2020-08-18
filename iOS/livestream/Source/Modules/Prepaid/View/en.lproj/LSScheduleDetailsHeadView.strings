@@ -80,9 +80,12 @@
 /* Class = "UILabel"; text = "Send: %@"; ObjectID = "z8t-3C-pE8"; */
 "z8t-3C-pE8.text" = "Send: %@";
 
+"TITLE_TIP" = "Request Sent To";
+
 "MINUTE" = "%d minutes";
 
-"PENDING_STATUS" = "Pending your confirmation";
+"PENDING_YOU" = "Pending your confirmation";
+"PENDING_HER" = "Pending her confirmation";
 "ACCEPT_STATUS" = "Comfirmed";
 "DECLINED_STATUS" = "Declined";
 "COMPLET_STATUS" = "Completed";
@@ -91,3 +94,6 @@
 "CANCEL_STATUS" = "Canceled";
 
 "CANCEL_BY" = "Canceled by %@";
+
+"PENDING_TIME" = "No confirmation time yet.";
+"EXPIRED_TIME" = "Request has expired";

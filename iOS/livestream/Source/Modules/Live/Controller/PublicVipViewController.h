@@ -12,7 +12,6 @@
 #import "LSVIPInputViewController.h"
 #import "LiveRoom.h"
 
-#import "LSUITapImageView.h"
 #import "VIPAudienceView.h"
 #import "LSUIImageViewTopFit.h"
 
@@ -32,7 +31,7 @@
 /**
  女士头像
  */
-@property (weak, nonatomic) IBOutlet UIImageView *laddyHeadImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *laddyHeadImageView;
 
 /**
  女士姓名

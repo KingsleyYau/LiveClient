@@ -126,7 +126,7 @@ static LiveModule *gModule = nil;
         // 初始化流媒体管理器
         self.liveGobalManager = [LiveGobalManager manager];
         // 初始化测速管理器
-        self.speedManager = [[LSStreamSpeedManager alloc] init];
+        self.speedManager = [LSStreamSpeedManager manager];
         // 初始化Http登陆管理器
         self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];

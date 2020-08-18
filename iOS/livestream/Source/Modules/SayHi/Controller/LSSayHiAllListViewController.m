@@ -229,7 +229,7 @@
 }
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    self.failView.hidden = YES;
+    [super lsListViewControllerDidClick:sender];
     [self hideNoSayHiTips];
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
     [self.tableView startLSPullDown:YES];

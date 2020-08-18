@@ -6,10 +6,10 @@
 "XPC-PP-6sv.text" = "Label";
 
 "REQUEST_CONFIRMED" = "Congrats! Request accepted!";
-"REQUEST_DECLINED" = "Sorry, request decline!";
+"REQUEST_DECLINED" = "Sorry, request declined!";
 
 "INVITE_CONFIRMED" = "Well Done!";
-"INVITE_DECLINED" = "Request decline!";
+"INVITE_DECLINED" = "Request declined!";
 
 "Request" = "Request";
 "ScheduleID" = " (ID:%@) ";

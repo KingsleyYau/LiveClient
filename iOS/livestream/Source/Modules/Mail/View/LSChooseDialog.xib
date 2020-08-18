@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,11 +15,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EVW-7i-CJq">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RfY-TR-Q6Q">
-                    <rect key="frame" x="20" y="345" width="374" height="216"/>
+                    <rect key="frame" x="20" y="341" width="374" height="214"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you sure you wish to decline this request?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oef-s7-rR2">
                             <rect key="frame" x="20" y="24" width="334" height="38.5"/>
@@ -28,9 +28,9 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jjG-iU-brj">
-                            <rect key="frame" x="20" y="152" width="160.5" height="44"/>
+                            <rect key="frame" x="20" y="150" width="160.5" height="44"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <state key="normal" title="YES, Deceline" backgroundImage="LSCommon_BgGray">
+                            <state key="normal" title="Yes, Decline" backgroundImage="LSCommon_BgGray">
                                 <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
@@ -38,9 +38,9 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n5D-rb-2l7">
-                            <rect key="frame" x="195.5" y="152" width="160.5" height="44"/>
+                            <rect key="frame" x="195.5" y="150" width="160.5" height="44"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <state key="normal" title="Not Now" backgroundImage="LSCommon_BgGray">
+                            <state key="normal" title="Not now" backgroundImage="LSCommon_BgGray">
                                 <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
@@ -48,9 +48,9 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please note that once you declined this request, it can not be undone." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMS-2f-bua">
-                            <rect key="frame" x="17" y="82.5" width="339" height="33.5"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <nil key="textColor"/>
+                            <rect key="frame" x="17" y="82.5" width="339" height="31.5"/>
+                            <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="14"/>
+                            <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
@@ -72,7 +72,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFM-iH-R2i">
-                    <rect key="frame" x="364" y="315" width="30" height="30"/>
+                    <rect key="frame" x="364" y="311" width="30" height="30"/>
                     <state key="normal" image="VIPLive_Close"/>
                     <connections>
                         <action selector="cancelCancel:" destination="iN0-l3-epB" eventType="touchUpInside" id="1Hp-aD-nl6"/>
@@ -81,15 +81,15 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="EVW-7i-CJq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7iB-E3-1l2"/>
+                <constraint firstAttribute="bottom" secondItem="EVW-7i-CJq" secondAttribute="bottom" id="Far-2v-LjA"/>
                 <constraint firstItem="RfY-TR-Q6Q" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Hqz-Xl-SBf"/>
                 <constraint firstItem="RfY-TR-Q6Q" firstAttribute="centerX" secondItem="EVW-7i-CJq" secondAttribute="centerX" id="L3r-s6-0ct"/>
                 <constraint firstItem="EVW-7i-CJq" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="VF0-0V-5fB"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="EVW-7i-CJq" secondAttribute="bottom" id="Vmk-l5-Rgv"/>
                 <constraint firstItem="RfY-TR-Q6Q" firstAttribute="top" secondItem="NFM-iH-R2i" secondAttribute="bottom" id="cJL-UY-fn7"/>
                 <constraint firstItem="RfY-TR-Q6Q" firstAttribute="centerY" secondItem="EVW-7i-CJq" secondAttribute="centerY" id="dpk-pG-2t4"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="EVW-7i-CJq" secondAttribute="trailing" id="fv4-UG-jPI"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="RfY-TR-Q6Q" secondAttribute="trailing" constant="20" id="fz3-qh-gZ5"/>
-                <constraint firstItem="EVW-7i-CJq" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="iUd-fP-BKe"/>
                 <constraint firstItem="NFM-iH-R2i" firstAttribute="trailing" secondItem="RfY-TR-Q6Q" secondAttribute="trailing" id="wWj-Ma-Zlh"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

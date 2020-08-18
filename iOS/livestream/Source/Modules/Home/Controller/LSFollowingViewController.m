@@ -168,7 +168,7 @@
 }
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    NSLog(@"%s", __func__);
+    [super lsListViewControllerDidClick:sender];
     [self reloadBtnClickAction:sender];
 }
 - (IBAction)viewHotlistDidClick:(id)sender {
@@ -279,7 +279,7 @@
 
                 [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSVoucherAvailableInfoItemObject *_Nonnull item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"LSFollowingViewController::getVouchersData(请求试聊券:[%@])", BOOL2SUCCESS(success));
+                        NSLog(@"LSFollowingViewController::getVouchersData( [请求试聊券], %@ )", BOOL2SUCCESS(success));
                         self.failView.hidden = YES;
                         if (self.pullDowning) {
                             [self.collectionView finishLSPullDown:YES];

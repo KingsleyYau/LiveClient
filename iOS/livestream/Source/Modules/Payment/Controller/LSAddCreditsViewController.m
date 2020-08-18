@@ -129,12 +129,12 @@ typedef enum : NSUInteger {
     label.numberOfLines = 0;
     label.font = [UIFont systemFontOfSize:14];
     label.textColor = Color(121, 121, 121, 1);
-    label.text = [NSString stringWithFormat:@"%@ Lean more", self.membershipItem.desc];
+    label.text = [NSString stringWithFormat:@"%@ Learn more", self.membershipItem.desc];
     [self.tableView setTableFooterView:label];
 
     NSMutableAttributedString *richText = [[NSMutableAttributedString alloc] initWithString:label.text];
-    [richText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:[label.text rangeOfString:@"Lean more"]]; //设置下划线
-    [richText addAttribute:NSForegroundColorAttributeName value:Color(0, 102, 255, 1) range:[label.text rangeOfString:@"Lean more"]];
+    [richText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:[label.text rangeOfString:@"Learn more"]]; //设置下划线
+    [richText addAttribute:NSForegroundColorAttributeName value:Color(0, 102, 255, 1) range:[label.text rangeOfString:@"Learn more"]];
     label.attributedText = richText;
 
     label.userInteractionEnabled = YES;

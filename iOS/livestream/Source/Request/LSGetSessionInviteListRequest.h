@@ -13,11 +13,11 @@
 /**
 *  17.9.获取某会话中预付费直播邀请列表接口
 *
-*   @param type             邀请来源类型（LSSCHEDULEINVITETYPE_EMF.emf  LSSCHEDULEINVITETYPE_LIVECHAT.livechat  LSSCHEDULEINVITETYPE_PUBLICLIVE.公开直播间  LSSCHEDULEINVITETYPE_PRIVATELIVE.私密直播间
-*  @param refId            关联的ID(信件ID、livechat邀请ID、场次ID等)
-*  @param finishHandler            接口回调
+*   type             邀请来源类型（LSSCHEDULEINVITETYPE_EMF.emf  LSSCHEDULEINVITETYPE_LIVECHAT.livechat  LSSCHEDULEINVITETYPE_PUBLICLIVE.公开直播间  LSSCHEDULEINVITETYPE_PRIVATELIVE.私密直播间
+*  refId            关联的ID(信件ID、livechat邀请ID、场次ID等)
+*  finishHandler            接口回调
 *
-*  @return 成功请求Id
+*  
 */
 @property (nonatomic, assign) LSScheduleInviteType type;
 @property (nonatomic, copy) NSString* _Nullable refId;

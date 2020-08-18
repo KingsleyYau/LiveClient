@@ -12,7 +12,7 @@
 #import "LiveUrlHandler.h"
 #import "IntroduceViewController.h"
 
-@protocol LSLiveWKWebViewManagerDelegate<NSObject>
+@protocol LSLiveWKWebViewManagerDelegate <NSObject>
 @optional
 
 /**
@@ -29,7 +29,6 @@
  界面跳转失败
  */
 - (void)webViewdidFailProvisionalNavigation;
-
 
 /**
  缓存过载
@@ -69,7 +68,7 @@
 
 @interface LSLiveWKWebViewManager : NSObject
 
-@property (nonatomic,weak) id<LSLiveWKWebViewManagerDelegate> delegate;
+@property (nonatomic, weak) id<LSLiveWKWebViewManagerDelegate> delegate;
 /**
  加载视图
  */

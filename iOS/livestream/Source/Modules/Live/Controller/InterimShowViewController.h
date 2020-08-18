@@ -14,7 +14,7 @@
 
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tipsLabel;
 @property (weak, nonatomic) IBOutlet UIButton *reloadBtn;

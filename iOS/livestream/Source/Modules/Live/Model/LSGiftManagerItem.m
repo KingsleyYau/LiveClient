@@ -8,11 +8,13 @@
 
 #import "LSGiftManagerItem.h"
 #import "LSFileCacheManager.h"
-#import "AFNetWorkHelpr.h"
 
-@interface LSGiftManagerItem() {
+@interface LSGiftManagerItem()<NSURLSessionDelegate,NSURLSessionDownloadDelegate,NSURLSessionTaskDelegate> {
     NSString *_giftId;
 }
+
+@property (nonatomic, strong) NSURLSession * session;
+@property (nonatomic, strong) NSURLSessionDownloadTask* downloadTask;
 
 @end
 
@@ -22,6 +24,20 @@
         _giftId = self.infoItem.giftId;
     }
     return _giftId;
+}
+
+- (void)stop {
+    if (self.session) {
+        [self.session invalidateAndCancel];
+        self.session = NULL;
+    }
+    if (self.downloadTask) {
+        [self.downloadTask cancel];
+        self.downloadTask = NULL;
+    }
+//    [self.timer invalidate];
+//    self.timer = nil;
+//    self.time = 0;
 }
 
 - (LSYYImage *)bigGiftImage {
@@ -114,38 +130,55 @@
 
         if (url && url.length > 0) {
             self.isDownloading = YES;
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-            NSURLSessionDownloadTask *downloadTask = [[AFNetWorkHelpr shareInstrue].manager downloadTaskWithRequest:request
-                progress:^(NSProgress *_Nonnull downloadProgress) {
-//                    float pargress = downloadProgress.completedUnitCount / downloadProgress.totalUnitCount;
-                }
-                destination:^NSURL *_Nonnull(NSURL *_Nonnull targetPath, NSURLResponse *_Nonnull response) {
-                    NSURL *documentsDirectoryURL = nil;
-                    if (self.bigGiftFilePath.length > 0) {
-                        documentsDirectoryURL = [NSURL fileURLWithPath:self.bigGiftFilePath];
-                    }
-                    return documentsDirectoryURL;
-                }
-                completionHandler:^(NSURLResponse *_Nonnull response, NSURL *_Nullable filePath, NSError *_Nullable error) {
-                    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                        NSInteger code = ((NSHTTPURLResponse *)response).statusCode;
-                        if (error == nil && (code == 200 || code == 304)) {
-                            NSLog(@"LSGiftManagerItem::downloadBigGift( [礼物WebP下载, 成功], giftId : %@, url : %@, fileName : %@ )", self.giftId, url, [filePath lastPathComponent]);
-                        } else {
-                            NSLog(@"LSGiftManagerItem::downloadBigGift( [礼物WebP下载, 失败], giftId : %@, code : %d, url : %@ )", self.giftId, (int)code, url);
-                        }
-                    } else {
-                        NSLog(@"LSGiftManagerItem::downloadBigGift( [礼物WebP下载, 失败], giftId : %@, url : %@ )", self.giftId, url);
-                    }
-                    
-                    self.isDownloading = NO;
-                    if ([self.delegate respondsToSelector:@selector(giftDownloadStateChange:)]) {
-                        [self.delegate giftDownloadStateChange:self];
-                    }
-                }];
-            // 开始下载
-            [downloadTask resume];
+            // alex
+             [self stop];
+                NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.giftId];
+                //系统根据当前性能自动处理后台任务的优先级
+                config.discretionary = YES;
+                  self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+            //    NSURL* url = [NSURL URLWithString:@"http://demo-mobile.chnlove.com/test/mp4/flash_to_mov_to_mp4.mp4"];
+                NSURL* strUrl = [NSURL URLWithString:url];
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:strUrl];
+
+                self.downloadTask = [self.session downloadTaskWithRequest:request];
+
+                [self.downloadTask resume];
+            
         }
     }
 }
+#pragma mark -delegate
+- (void)URLSession:(nonnull NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location {
+        [self stop];
+//    [self copyFileAtPath:[location relativePath] fromVId:self.vId];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSString *path = [location relativePath];
+    NSString *toPath = self.bigGiftFilePath;
+
+    if (![fileManager fileExistsAtPath:toPath]) {
+        [fileManager copyItemAtPath:path toPath:toPath error:&error];
+        if (error) {
+            NSLog(@"copy error--%@",error.description);
+            return;
+        }
+    }
+    
+    self.isDownloading = NO;
+    if ([self.delegate respondsToSelector:@selector(giftDownloadStateChange:)]) {
+        [self.delegate giftDownloadStateChange:self];
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error) {
+        [self stop];
+         self.isDownloading = NO;
+        if ([self.delegate respondsToSelector:@selector(giftDownloadStateChange:)]) {
+            [self.delegate giftDownloadStateChange:self];
+        }
+    }
+}
+
 @end

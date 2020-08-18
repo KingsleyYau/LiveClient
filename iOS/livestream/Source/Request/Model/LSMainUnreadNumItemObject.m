@@ -26,6 +26,7 @@
         self.schedulePendingUnreadNum = 0;
         self.scheduleConfirmedUnreadNum = 0;
         self.scheduleStatus = LSSCHEDULESTATUS_NOSCHEDULE;
+        self.requestReplyUnreadNum = 0;
     }
     return self;
 }
@@ -43,6 +44,7 @@
         self.schedulePendingUnreadNum = [coder decodeIntForKey:@"schedulePendingUnreadNum"];
         self.scheduleConfirmedUnreadNum = [coder decodeIntForKey:@"scheduleConfirmedUnreadNum"];
         self.scheduleStatus = [coder decodeIntForKey:@"scheduleStatus"];
+        self.requestReplyUnreadNum = [coder decodeIntForKey:@"requestReplyUnreadNum"];
     }
     return self;
 }
@@ -59,6 +61,7 @@
     [coder encodeInt:self.schedulePendingUnreadNum forKey:@"schedulePendingUnreadNum"];
     [coder encodeInt:self.scheduleConfirmedUnreadNum forKey:@"scheduleConfirmedUnreadNum"];
     [coder encodeInt:self.scheduleStatus forKey:@"scheduleStatus"];
+    [coder encodeInt:self.requestReplyUnreadNum forKey:@"requestReplyUnreadNum"];
 }
 
 @end

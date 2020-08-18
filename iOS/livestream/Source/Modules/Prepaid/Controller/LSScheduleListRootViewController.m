@@ -38,21 +38,25 @@
     LSScheduleListViewController * vc1 = [[LSScheduleListViewController alloc]initWithNibName:nil bundle:nil];
     vc1.view.frame = self.view.frame;
     vc1.type = ScheduleType_Pending;
+    vc1.isHideNavBottomLine = self.isHideNavBottomLine;
     [self addChildViewController:vc1];
     
     LSScheduleListViewController * vc2 = [[LSScheduleListViewController alloc]initWithNibName:nil bundle:nil];
     vc2.view.frame = self.view.frame;
     vc2.type = ScheduleType_Confirmed;
+    vc2.isHideNavBottomLine = self.isHideNavBottomLine;
     [self addChildViewController:vc2];
     
     LSScheduleListViewController * vc3 = [[LSScheduleListViewController alloc]initWithNibName:nil bundle:nil];
     vc3.view.frame = self.view.frame;
     vc3.type = ScheduleType_Declined;
+    vc3.isHideNavBottomLine = self.isHideNavBottomLine;
     [self addChildViewController:vc3];
     
     LSScheduleListViewController * vc4 = [[LSScheduleListViewController alloc]initWithNibName:nil bundle:nil];
     vc4.view.frame = self.view.frame;
     vc4.type = ScheduleType_Expired;
+    vc4.isHideNavBottomLine = self.isHideNavBottomLine;
     [self addChildViewController:vc4];
     
     self.viewControllers = [NSArray arrayWithObjects:vc1, vc2, vc3, vc4, nil];
@@ -70,6 +74,11 @@
     [self.view bringSubviewToFront:self.scheduleBtn];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getunreadCount) name:@"ReloadScheduleListCount" object:nil];
+}
+
+- (void)initCustomParam {
+    [super initCustomParam];
+    self.isHideNavBottomLine = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

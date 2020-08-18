@@ -8,6 +8,7 @@
 
 #import "LSPurchaseCreditsView.h"
 #import "LSImageViewLoader.h"
+#import "LiveGobalManager.h"
 
 @interface LSPurchaseCreditsView()
 
@@ -27,6 +28,10 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    self.bigTitleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.bigTitleLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    self.bigTitleLabel.layer.shadowOpacity = 0.5;
+    
     self.purchaseView.layer.masksToBounds = YES;
     self.purchaseView.layer.cornerRadius = 4;
     
@@ -44,11 +49,38 @@
     self.laterBtn.titleLabel.attributedText = str;
 }
 
-- (void)setupCreditView:(NSString *)url name:(NSString *)name {
+- (void)setupCreditView:(NSString *)url {
     LSImageViewLoader *loader = [[LSImageViewLoader alloc] init];
-    [loader loadImageFromCache:self.headImageView options:0 imageUrl:url placeholderImage:LADYDEFAULTIMG finishHandler:nil];
+    [loader loadImageWithImageView:self.headImageView options:0 imageUrl:url placeholderImage:LADYDEFAULTIMG finishHandler:nil];
+}
+
+- (void)setupCreditTipIsAccept:(BOOL)isAccept name:(NSString *)name credit:(double)credit {
+    self.creditLabel.text = [NSString stringWithFormat:@"%.2f",credit];
     
-    self.tipLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"mUZ-QF-KyS.text"),name];
+    if (isAccept) {
+        self.titleLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ON_CREDIT_ACCEPT_SCHEDULE"),name];
+        self.tipLabel.text = NSLocalizedStringFromSelf(@"ON_CREDIT_ACCEPT_TIP");
+    } else {
+        self.titleLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"mUZ-QF-KyS.text"),name];
+        self.tipLabel.text = NSLocalizedStringFromSelf(@"3KF-AJ-tOs.text");
+    }
+}
+
+- (void)showLSCreditViewInView:(UIView *)view {
+    [[LiveGobalManager manager] showPopupView:self withVc:nil];
+    [view addSubview:self];
+    [view bringSubviewToFront:self];
+    
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.leading.trailing.equalTo(view);
+        }];
+    }
+}
+
+- (void)removeShowCreditView {
+    [self removeFromSuperview];
+    [[LiveGobalManager manager] removeLiveRoomPopup];
 }
 
 - (IBAction)purchaseBtnDid:(id)sender {
@@ -58,7 +90,7 @@
 }
 
 - (IBAction)laterBtnDid:(id)sender {
-    self.hidden = YES;
+    [self removeShowCreditView];
 }
 
 

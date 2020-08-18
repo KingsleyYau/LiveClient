@@ -139,7 +139,7 @@
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender
 {
-    
+    self.failView.hidden = YES;
 }
 
 - (void)reloadFailViewFailTipsText:(NSString *)failTipsText failBtnText:(NSString *)failBtnText {

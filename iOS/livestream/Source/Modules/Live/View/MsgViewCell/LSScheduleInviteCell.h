@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *cardView;
 @property (weak, nonatomic) IBOutlet UIView *acceptView;
 @property (weak, nonatomic) IBOutlet UIButton *minimumBtn;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) id<LSScheduleInviteCellDelegate> delegate;
 
 @property (nonatomic, strong) LSPrepaidCardView *cardSubView;

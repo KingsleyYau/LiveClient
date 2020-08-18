@@ -21,7 +21,8 @@ typedef enum LSUnreadType {
     LSUnreadType_Booking = 6,
     LSUnreadType_Backpack = 7,
     LSUnreadType_MyContacts = 8,
-    LSUnreadType_Schedule = 9
+    LSUnreadType_Schedule = 9,
+    LSUnreadType_Video = 10
 } LSUnreadType;
 
 @protocol LSUserUnreadCountManagerDelegate <NSObject>

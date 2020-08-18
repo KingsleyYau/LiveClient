@@ -1,6 +1,6 @@
 
 /* Class = "UILabel"; text = "Pending her confimation"; ObjectID = "0xE-20-sGI"; */
-"0xE-20-sGI.text" = "Pending her confimation";
+"0xE-20-sGI.text" = "Pending her confirmation";
 
 /* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "1pT-ae-uHs"; */
 "1pT-ae-uHs.text" = "One-on-One Start Time:";
@@ -11,8 +11,8 @@
 /* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "7mN-JJ-Ys2"; */
 "7mN-JJ-Ys2.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
 
-/* Class = "UILabel"; text = "Request has benn sent to xxx"; ObjectID = "C74-d2-5VW"; */
-"C74-d2-5VW.text" = "Request has benn sent to xxx";
+/* Class = "UILabel"; text = "Request has been sent to xxx"; ObjectID = "C74-d2-5VW"; */
+"C74-d2-5VW.text" = "Request has been sent to xxx";
 
 /* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "Cc9-p4-mO9"; */
 "Cc9-p4-mO9.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
@@ -59,8 +59,8 @@
 /* Class = "UILabel"; text = "Note:"; ObjectID = "fnj-oO-b4w"; */
 "fnj-oO-b4w.text" = "Note:";
 
-/* Class = "UILabel"; text = "Sorry,request decline!"; ObjectID = "gAO-St-gVk"; */
-"gAO-St-gVk.text" = "Sorry,request decline!";
+/* Class = "UILabel"; text = "Sorry,request declined!"; ObjectID = "gAO-St-gVk"; */
+"gAO-St-gVk.text" = "Sorry,request declined!";
 
 /* Class = "UILabel"; text = "45 Minutes"; ObjectID = "jAJ-xo-kH6"; */
 "jAJ-xo-kH6.text" = "45 Minutes";
@@ -69,26 +69,26 @@
 "spS-pV-IbC.text" = "Time sent:Dec 22,12:30(GTMT)";
 
 
-"WAITING_TITLE" = "Request has benn sent to %@!";
+"WAITING_TITLE" = "Request has been sent to %@!";
 
 "ACCEPTED_TITLE" = "%@ has accepted your request.";
 
-"DECLINED_TITLE" = "%@ Declined your request.";
+"DECLINED_TITLE" = "%@ has declined your request.";
 
 "DECLINED_TITLE_ME" = "You have declined this request.";
 
 "ACCEPTED_TITLE_ME" = "You have accepted this request.";
 
 //状态
-"PENDING" = "Pending her confimation";
+"PENDING" = "Pending her confirmation";
 "CONFIRMED" = "Confirmed";
 "DECLINED" = "Declined";
 
 "NO_CONFIMATION" = "No confirmation time yet.";
-"TIME_CONFIRMED" = "Time Confirmed:%@ (GMT)";
-"TIME_DECLINED" = "Time Declined:%@ (GMT)";
+"TIME_CONFIRMED" = "Time Confirmed: %@ (GMT)";
+"TIME_DECLINED" = "Time Declined: %@ (GMT)";
 
-"SENT_TIME" = "Time Sent:%@ (GMT)";
+"SENT_TIME" = "Time Sent: %@ (GMT)";
 "DURATION" = "%d Minutes";
 
 "LOCAL_TIME" = "%@ - %@ (Your local time)";

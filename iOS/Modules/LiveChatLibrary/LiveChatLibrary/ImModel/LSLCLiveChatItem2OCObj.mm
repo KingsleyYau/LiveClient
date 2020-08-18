@@ -280,6 +280,9 @@
     else if (MT_Schedule == msgItem.m_msgType) {
         obj.scheduleMsg = [self getLiveChatScheduleInviteItemObject:msgItem.GetScheduleInviteItem()];
     }
+    else if (MT_ScheduleReply == msgItem.m_msgType){
+        obj.scheduleReplyMsg = [self getLiveChatScheduleReplyItemObject:msgItem.GetScheduleInviteReplyItem()];
+    }
     return obj;
 }
 
@@ -594,6 +597,10 @@
             LSLCScheduleInviteItem* scheduleItem = [LSLCLiveChatItem2OCObj getLiveChatScheduleInviteItem:msg.scheduleMsg];
             msgItem->SetScheduleInviteItem(scheduleItem);
         }
+        else if (MT_ScheduleReply == msg.msgType){
+            LSLCScheduleInviteReplyItem* scheduleReplyItem = [LSLCLiveChatItem2OCObj getLiveChatScheduleReplyItem:msg.scheduleReplyMsg];
+            msgItem->SetScheduleInviteReplyItem(scheduleReplyItem);
+        }
         else
         {
             delete msgItem;
@@ -796,6 +803,18 @@
         lcScheduleItem->m_timePeriod = scheduleItem.period != nil ? [scheduleItem.period UTF8String] : "";
         lcScheduleItem->m_actionGmtTime = scheduleItem.statusUpdateTime;
         lcScheduleItem->m_sendGmtTime = scheduleItem.sendTime;
+        
+    }
+    return lcScheduleItem;
+}
+
++ (LSLCScheduleInviteReplyItem* _Nullable)getLiveChatScheduleReplyItem:(LSLCLiveChatScheduleReplyItemObject*_Nonnull)scheduleReplyItem
+{
+    LSLCScheduleInviteReplyItem* lcScheduleItem = new LSLCScheduleInviteReplyItem;
+    if(NULL != lcScheduleItem && scheduleReplyItem != nil){
+        lcScheduleItem->m_scheduleId = scheduleReplyItem.scheduleId != nil ? [scheduleReplyItem.scheduleId UTF8String] : "";
+        lcScheduleItem->m_isScheduleAccept = scheduleReplyItem.isScheduleAccept;
+        lcScheduleItem->m_isScheduleFromMe  = scheduleReplyItem.isScheduleFromMe;
         
     }
     return lcScheduleItem;

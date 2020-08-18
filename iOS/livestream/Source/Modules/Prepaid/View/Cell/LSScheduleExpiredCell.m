@@ -42,7 +42,7 @@
 
 - (void)updateUI:(LSScheduleInviteListItemObject*)item {
     self.nameLabel.text = item.anchorInfo.nickName;
-    [self.imageLoader loadImageWithImageView:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageFromCache:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         
     }];
     
@@ -83,7 +83,7 @@
     
     self.startLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Start_Time"),startTime,item.timeZoneCity,item.timeZoneValue];
 
-   NSString *localTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm" isDaylightSaving:item.isSummerTime andZone:@""];
+   NSString *localTime = [[LSPrePaidManager manager] getLocalTimeBeginTiemAndEndTimeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm"];
    self.localLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Local_Time"),localTime];
 }
 

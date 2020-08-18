@@ -34,6 +34,7 @@
 #import "LSMyContactsViewController.h"
 #import "LSStoreMainViewController.h"
 #import "LSScheduleListRootViewController.h"
+#import "LSPremiumVideoViewController.h"
 #define HeadViewH 252
 
 @interface LSHomeSettingViewController ()<UITableViewDelegate,UITableViewDataSource, LSHomeSettingHaedViewDelegate,                  LSUserUnreadCountManagerDelegate>
@@ -93,43 +94,49 @@
     NSMutableArray *sectionFirstArray = [NSMutableArray array];
 
     if ([LSLoginManager manager].loginItem.userPriv.isSayHiPriv) {
-        LSHomeSetItemObject *item2 = [[LSHomeSetItemObject alloc] init];
-        item2.iconName = @"Setting_SayHi_Icon";
-        item2.titleName = @"SayHi";
-        item2.firstType = SettingFirstTypeSayHi;
-        [sectionFirstArray addObject:item2];
+        LSHomeSetItemObject *item1 = [[LSHomeSetItemObject alloc] init];
+        item1.iconName = @"Setting_SayHi_Icon";
+        item1.titleName = @"SayHi";
+        item1.firstType = SettingFirstTypeSayHi;
+        [sectionFirstArray addObject:item1];
     }
     
+    LSHomeSetItemObject *item2 = [[LSHomeSetItemObject alloc] init];
+    item2.iconName = @"Setting_Greetings_Icon";
+    item2.titleName = @"Greeting Mail";
+    item2.firstType = SettingFirstTypeGreeting;
+    [sectionFirstArray addObject:item2];
+    
     LSHomeSetItemObject *item3 = [[LSHomeSetItemObject alloc] init];
-    item3.iconName = @"Setting_Greetings_Icon";
-    item3.titleName = @"Greeting Mail";
-    item3.firstType = SettingFirstTypeGreeting;
+    item3.iconName = @"Setting_Mail_Icon";
+    item3.titleName = @"Mail";
+    item3.firstType = SettingFirstTypeMail;
     [sectionFirstArray addObject:item3];
     
-    LSHomeSetItemObject *item1 = [[LSHomeSetItemObject alloc] init];
-    item1.iconName = @"Setting_Mail_Icon";
-    item1.titleName = @"Mail";
-    item1.firstType = SettingFirstTypeMail;
-    [sectionFirstArray addObject:item1];
-    
-    LSHomeSetItemObject *item = [[LSHomeSetItemObject alloc] init];
-    item.iconName = @"Setting_Message_Icon";
-    item.titleName = @"Chat";
-    item.firstType = SettingFirstTypeChat;
-    [sectionFirstArray addObject:item];
+    LSHomeSetItemObject *item4 = [[LSHomeSetItemObject alloc] init];
+    item4.iconName = @"Setting_Message_Icon";
+    item4.titleName = @"Chat";
+    item4.firstType = SettingFirstTypeChat;
+    [sectionFirstArray addObject:item4];
     
     LSHomeSetItemObject *item5 = [[LSHomeSetItemObject alloc] init];
     item5.iconName = @"Setting_Schedule";
-    item5.titleName = @"Schedule One-on_One";
+    item5.titleName = @"Schedule One-on-One";
     item5.firstType = SettingFirstTypeSchedule;
     [sectionFirstArray addObject:item5];
     
+    LSHomeSetItemObject *item6 = [[LSHomeSetItemObject alloc] init];
+    item6.iconName = @"LS_Setting_Video";
+    item6.titleName = @"Premium Video";
+    item6.firstType = SettingFirstTypeVideo;
+    [sectionFirstArray addObject:item6];
+    
     if ([LSLoginManager manager].loginItem.userPriv.isGiftFlowerPriv && [LSLoginManager manager].loginItem.isGiftFlowerSwitch) {
-        LSHomeSetItemObject *item4 = [[LSHomeSetItemObject alloc] init];
-        item4.iconName = @"LS_Setting_Stroe";
-        item4.titleName = @"Gifts & Flowers";
-        item4.firstType = SettingFirstTypeStroe;
-        [sectionFirstArray addObject:item4];
+        LSHomeSetItemObject *item7 = [[LSHomeSetItemObject alloc] init];
+        item7.iconName = @"LS_Setting_Stroe";
+        item7.titleName = @"Gifts & Flowers";
+        item7.firstType = SettingFirstTypeStroe;
+        [sectionFirstArray addObject:item7];
     }
     
     self.oneArray = sectionFirstArray;
@@ -153,13 +160,6 @@
     self.twoArray = sectionSecondArray;
     
      NSMutableArray *sectionThreeArray = [NSMutableArray array];
-    
-//    LSHomeSetItemObject *sectionSecondItem1 = [[LSHomeSetItemObject alloc] init];
-//    sectionSecondItem1.iconName = @"Setting_Bookings_Icon";
-//    sectionSecondItem1.titleName = @"My Bookings";
-//    sectionSecondItem1.thirdType = SettingThirdTypeBooks;
-//    [sectionThreeArray addObject:sectionSecondItem1];
-    
     
     LSHomeSetItemObject *sectionSecondItem2 = [[LSHomeSetItemObject alloc] init];
     sectionSecondItem2.iconName = @"Setting_Ticket_Icon";
@@ -374,26 +374,19 @@
                 setCell.settingIcon.image = [UIImage imageNamed:item.iconName];
                 setCell.contentLabel.text = item.titleName;
                 setCell.offIcon.hidden = YES;
+                setCell.offIconW.constant = 0;
                 switch (item.firstType) {
-                    case SettingFirstTypeChat:{
-                        [setCell showChatListUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Private_Chat]];
-                    }break;
-                    case SettingFirstTypeMail:{
-                           [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_EMF]];
-                    }break;
                     case SettingFirstTypeSayHi:{
                            [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_SayHi]];
                     }break;
                     case SettingFirstTypeGreeting:{
                            [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Loi]];
                     }break;
-                    case SettingFirstTypeStroe:{
-                        if ([LiveModule module].flowersGift.length > 0) {
-                            setCell.offIcon.hidden = NO;
-                            // cell视图悬浮在最上层
-                            setCell.layer.zPosition = 1;
-                            [setCell.imageLoader loadImageWithImageView:setCell.offIcon options:0 imageUrl:[LiveModule module].flowersGift placeholderImage:nil finishHandler:nil];
-                        }
+                    case SettingFirstTypeMail:{
+                           [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_EMF]];
+                    }break;
+                    case SettingFirstTypeChat:{
+                        [setCell showChatListUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Private_Chat]];
                     }break;
                     case SettingFirstTypeSchedule:{
                        LSScheduleStatus status = [self.unreadManager getScheduleStatus];
@@ -415,6 +408,27 @@
                         }
                         
                     }break;
+                    case SettingFirstTypeVideo:{
+                        setCell.offIcon.hidden = NO;
+                        setCell.offIconW.constant = 22;
+                        setCell.offIconH.constant = 22;
+                        setCell.offIconY.constant = 2;
+                        setCell.offIcon.image = [UIImage imageNamed:@"LS_Setting_New"];
+                        [setCell showUnreadNum:[self.unreadManager getUnreadNum:LSUnreadType_Video]];
+                        
+                    }break;
+                    case SettingFirstTypeStroe:{
+                        if ([LiveModule module].flowersGift.length > 0) {
+                            setCell.offIcon.hidden = NO;
+                            setCell.offIconW.constant = 72;
+                            setCell.offIconH.constant = 38.5;
+                            setCell.offIconY.constant = -3.5;
+                            // cell视图悬浮在最上层
+                            setCell.layer.zPosition = 1;
+                            [setCell.imageLoader loadImageWithImageView:setCell.offIcon options:0 imageUrl:[LiveModule module].flowersGift placeholderImage:nil finishHandler:nil];
+                        }
+                    }break;
+
                     default:
                         break;
                 }
@@ -452,9 +466,6 @@
                     case SettingThirdTypeShow:{
                         [setCell showUnreadPoint:[self.unreadManager getUnreadNum:LSUnreadType_Ticket]];
                     }break;
-                    case SettingThirdTypeBooks:{
-                        [setCell showUnreadPoint:[self.unreadManager getUnreadNum:LSUnreadType_Booking]];
-                    }break;
                     case SettingThirdTypeBackpack:{
                         [setCell showUnreadPoint:[self.unreadManager getUnreadNum:LSUnreadType_Backpack]];
                     }break;
@@ -489,16 +500,6 @@
         case 0:{
             LSHomeSetItemObject *item = [self.oneArray objectAtIndex:indexPath.row];
             switch (item.firstType) {
-                case SettingFirstTypeChat:{
-                    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:[LiveModule module].moduleVC.navigationController]) {
-                        QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
-                        [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
-                    }
-                }break;
-                case SettingFirstTypeMail:{
-                    LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
-                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
-                }break;
                 case SettingFirstTypeSayHi:{
                     // TODO: sayhi界面
                     LSSayHiListViewController *vc = [[LSSayHiListViewController alloc] initWithNibName:nil bundle:nil];
@@ -509,15 +510,30 @@
                     LSGreetingsViewController *vc = [[LSGreetingsViewController alloc] initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
-                case SettingFirstTypeStroe:{
-                    LSStoreMainViewController * vc = [[LSStoreMainViewController alloc]initWithNibName:nil bundle:nil];
+                case SettingFirstTypeMail:{
+                    LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+                }break;
+                case SettingFirstTypeChat:{
+                    if (![[QNRiskControlManager manager]isRiskControlType:RiskType_livechat withController:[LiveModule module].moduleVC.navigationController]) {
+                        QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
+                        [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+                    }
                 }break;
                 case SettingFirstTypeSchedule:{
                     //TODO: 跳转预约列表页
                     LSScheduleListRootViewController * vc = [[LSScheduleListRootViewController alloc]initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
+                case SettingFirstTypeVideo:{
+                    LSPremiumVideoViewController * vc = [[LSPremiumVideoViewController alloc]initWithNibName:nil bundle:nil];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+                }break;
+                case SettingFirstTypeStroe:{
+                    LSStoreMainViewController * vc = [[LSStoreMainViewController alloc]initWithNibName:nil bundle:nil];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+                }break;
+
                 default:
                     break;
 
@@ -544,10 +560,6 @@
             switch (item.thirdType) {
                 case SettingThirdTypeShow:{
                     MyTicketPageViewController * vc = [[MyTicketPageViewController alloc] initWithNibName:nil bundle:nil];
-                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
-                }break;
-                case SettingThirdTypeBooks:{
-                    LSMyReservationsViewController *vc = [[LSMyReservationsViewController alloc] initWithNibName:nil bundle:nil];
                     [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
                 case SettingThirdTypeBackpack:{

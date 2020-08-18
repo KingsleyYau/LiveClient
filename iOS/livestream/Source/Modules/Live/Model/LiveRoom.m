@@ -11,6 +11,7 @@
 #import "LSRequestManager.h"
 #import "LSLoginManager.h"
 
+#define DEVICEID_TYPE_IOS "device_type=31"
 #define DEVICEID_KEY "deviceid"
 #define TOKEN_KEY "token"
 
@@ -221,7 +222,7 @@
     NSString *realUrl = @"";
     if (self.playUrlArray.count > 0) {
         NSString *url = [self.playUrlArray objectAtIndex:_playUrlIndex];
-        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_TYPE_IOS "&" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
     }
     return realUrl;
 }
@@ -247,7 +248,7 @@
     NSString *realUrl = @"";
     if (self.publishUrlArray.count > 0) {
         NSString *url = [self.publishUrlArray objectAtIndex:_publishUrlIndex];
-        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_TYPE_IOS "&" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
     }
     return realUrl;
 }

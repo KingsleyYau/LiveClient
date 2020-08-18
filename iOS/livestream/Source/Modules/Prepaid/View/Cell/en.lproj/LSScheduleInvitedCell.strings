@@ -6,7 +6,7 @@
 "8a4-jq-ShV.text" = "Status:";
 
 /* Class = "UILabel"; text = "Time Confirmed: %@"; ObjectID = "FTj-Su-Bwy"; */
-"FTj-Su-Bwy.text" = "No Confirmation time yet.";
+"FTj-Su-Bwy.text" = "No confirmation time yet.";
 
 /* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "Ikk-ik-3dO"; */
 "Ikk-ik-3dO.normalTitle" = "Accept";
@@ -17,7 +17,7 @@
 /* Class = "UILabel"; text = "Session Duration:"; ObjectID = "SOX-1y-9IN"; */
 "SOX-1y-9IN.text" = "Session Duration:";
 
-/* Class = "UILabel"; text = "One-on_One Start Time:"; ObjectID = "WsR-f6-bZf"; */
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "WsR-f6-bZf"; */
 "WsR-f6-bZf.text" = "One-on-One Start Time:";
 
 /* Class = "UIButton"; normalTitle = "30 Minutes - 13.50 Credits 15.00 Credits"; ObjectID = "dkr-iO-GQN"; */

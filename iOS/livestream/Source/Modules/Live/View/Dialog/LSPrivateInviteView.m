@@ -51,12 +51,8 @@
     }
     self.inviteMsg.text = [NSString stringWithFormat:@"%@ is inviting your to start One-on-One broadcast!",self.item.anchorName];
     
-    UIImageView *imageV = [[UIImageView alloc] init];
-    [[LSImageViewLoader loader] loadHDListImageWithImageView:imageV options:SDWebImageRefreshCached imageUrl:self.item.anchorPhotoUrl placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-               [self.anchorIcon setImage:image forState:UIControlStateNormal];
-        });
-    }];
+     
+    [[LSImageViewLoader loader] loadHDListImageWithImageView:self.anchorHeadImage options:SDWebImageRefreshCached imageUrl:self.item.anchorPhotoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
 
     // 是否有私密试聊卷
     BOOL isFree = NO;

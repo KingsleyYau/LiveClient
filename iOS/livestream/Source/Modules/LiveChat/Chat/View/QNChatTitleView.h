@@ -13,6 +13,7 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivity;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *loadingWidth;
+@property (weak, nonatomic) IBOutlet UIImageView *onlineIcon;
 
 @property (weak, nonatomic) IBOutlet UILabel *personName;
 @property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *personIcon;

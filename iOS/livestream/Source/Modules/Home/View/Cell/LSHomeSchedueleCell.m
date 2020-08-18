@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *scheduleNote;
 @property (weak, nonatomic) IBOutlet UIImageView *scheduleStatus;
+@property (nonatomic, copy) NSMutableAttributedString *tmpAtts;
+@property (nonatomic, strong) NSDictionary  *tmpDict;
 @end
 
 @implementation LSHomeSchedueleCell
@@ -24,6 +26,13 @@
     [super awakeFromNib];
     // Initialization code
     self.scheduleNote.delegate = self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    // 更新已保存的富文本属性 
+    self.scheduleNote.attributedText = self.tmpAtts;
+
 }
 
 
@@ -47,11 +56,12 @@
                                   };
             self.scheduleNote.linkAttributes = dic;
             self.scheduleNote.activeLinkAttributes = dic;
+            self.tmpDict = dic;
   
             self.backgroundColor = COLOR_WITH_16BAND_RGB(0xFF774B);
             self.scheduleStatus.image = [UIImage imageNamed:@"Home_BannerClockStart"];
 
-            NSString *title = [NSString stringWithFormat:@"You have %d scheduled One-on-One need to be started.Check and start now!",item.schedule.startNum];
+            NSString *title = [NSString stringWithFormat:@"You have %d scheduled One-on-One need to be started. Check and start now!",item.schedule.startNum];
             NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
                   NSForegroundColorAttributeName : [UIColor whiteColor],
                   NSFontAttributeName : [UIFont systemFontOfSize:14],
@@ -69,6 +79,8 @@
             NSRange tapRange = [title rangeOfString:@"Check and start now"];
             [atts addAttributes:@{
                 NSFontAttributeName : [UIFont systemFontOfSize:14],
+                NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle),
+                NSUnderlineColorAttributeName :  [UIColor whiteColor],
                 NSAttachmentAttributeName : attachment,
             } range:tapRange];
             
@@ -80,10 +92,11 @@
                     [self.scheduleNote addLinkToURL:attachment.url withRange:range];
                 }
             }];
-    
+            self.tmpAtts = atts;
+  
         }break;
         case ScheduleNoteTypeWillStart:{
-            [self.closeBtn setImage:[UIImage imageNamed:@"SayHi_Info_Close"] forState:UIControlStateNormal];
+            [self.closeBtn setImage:[UIImage imageNamed:@"Home_banner_Close_B"] forState:UIControlStateNormal];
             // 设置超链接属性
             NSDictionary *dic = @{
                                   NSFontAttributeName : [UIFont systemFontOfSize:14],
@@ -93,12 +106,13 @@
                                   };
             self.scheduleNote.linkAttributes = dic;
             self.scheduleNote.activeLinkAttributes = dic;
+            self.tmpDict = dic;
             self.backgroundColor = COLOR_WITH_16BAND_RGB(0xFFEB8E);
             self.scheduleStatus.image = [UIImage imageNamed:@"Home_BannerClock"];
             int startMinutes = item.schedule.leftTime;
             
             
-            NSString *title = [NSString stringWithFormat:@"You have %d scheduled One-on-One to be start within %d minutes.Check now!",item.schedule.willStartNum,startMinutes];
+            NSString *title = [NSString stringWithFormat:@"You have %d scheduled One-on-One to be started within %d minutes. Check now!",item.schedule.willStartNum,startMinutes];
             NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
                 NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x383838),
                 NSFontAttributeName : [UIFont systemFontOfSize:14],
@@ -121,6 +135,8 @@
             NSRange tapRange = [title rangeOfString:@"Check now"];
             [atts addAttributes:@{
                 NSFontAttributeName : [UIFont systemFontOfSize:14],
+                NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle),
+                NSUnderlineColorAttributeName :  COLOR_WITH_16BAND_RGB(0x383838),
                 NSAttachmentAttributeName : attachment,
             } range:tapRange];
             
@@ -132,6 +148,7 @@
                     [self.scheduleNote addLinkToURL:attachment.url withRange:range];
                 }
             }];
+            self.tmpAtts = atts;
 
         }break;
 

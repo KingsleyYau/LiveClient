@@ -1,5 +1,5 @@
 
-/* Class = "UILabel"; text = "One-on_One Start Time:"; ObjectID = "2sT-WW-OlY"; */
+/* Class = "UILabel"; text = "One-on-One Start Time:"; ObjectID = "2sT-WW-OlY"; */
 "2sT-WW-OlY.text" = "One-on-One Start Time:";
 
 /* Class = "UILabel"; text = "%@"; ObjectID = "AE4-a6-DuY"; */
@@ -42,4 +42,4 @@
 
 "Local_Time" = "%@ (Your local time)";
 
-"No_Confirmation" = "No Confirmation time yet.";
+"No_Confirmation" = "No confirmation time yet.";

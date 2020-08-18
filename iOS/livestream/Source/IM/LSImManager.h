@@ -200,11 +200,10 @@ typedef void (^GetIMInviteInfoHandler)(BOOL success, LCC_ERR_TYPE errType, NSStr
 /**
  *  7.9.观众通知服务器对预约操作（操作为发送、接受、拒绝预约）不管返回值都插入列表，所以不等回调
  *
- *  @param reqId                 请求序列号
  *  @param item                    预约的信息
  *
  */
-- (BOOL)sendHandleSchedule:(ImScheduleRoomInfoObject *_Nonnull)item;
+- (BOOL)sendHandleSchedule:(ImScheduleRoomInfoObject *)item;
 
 #pragma mark - 消息和礼物
 /**

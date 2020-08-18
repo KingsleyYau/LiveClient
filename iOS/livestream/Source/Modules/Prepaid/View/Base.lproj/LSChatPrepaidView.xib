@@ -29,15 +29,15 @@
                             <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Request_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="fOe-cj-muS" userLabel="Title Icon">
-                                    <rect key="frame" x="12" y="7.3333333333333428" width="27" height="29"/>
+                                    <rect key="frame" x="10" y="7.3333333333333428" width="27" height="29"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="29" id="FL5-JI-uWO"/>
                                         <constraint firstAttribute="width" constant="27" id="Nao-XG-apA"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Schedule One-on-One Request" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSV-tw-npM" userLabel="TitleLabel">
-                                    <rect key="frame" x="46" y="12" width="241" height="20"/>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send Schedule One-on-One Request" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSV-tw-npM" userLabel="TitleLabel">
+                                    <rect key="frame" x="42" y="13" width="279.33333333333331" height="18"/>
+                                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="16"/>
                                     <color key="textColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -48,8 +48,8 @@
                                 <constraint firstItem="qSV-tw-npM" firstAttribute="centerY" secondItem="bLQ-BT-x1p" secondAttribute="centerY" id="HfI-Pj-rHb"/>
                                 <constraint firstAttribute="height" constant="44" id="U62-cf-a5F"/>
                                 <constraint firstItem="fOe-cj-muS" firstAttribute="centerY" secondItem="bLQ-BT-x1p" secondAttribute="centerY" id="aqk-gR-UKm"/>
-                                <constraint firstItem="fOe-cj-muS" firstAttribute="leading" secondItem="bLQ-BT-x1p" secondAttribute="leading" constant="12" id="r8s-z4-BAg"/>
-                                <constraint firstItem="qSV-tw-npM" firstAttribute="leading" secondItem="fOe-cj-muS" secondAttribute="trailing" constant="7" id="tma-89-CVq"/>
+                                <constraint firstItem="fOe-cj-muS" firstAttribute="leading" secondItem="bLQ-BT-x1p" secondAttribute="leading" constant="10" id="r8s-z4-BAg"/>
+                                <constraint firstItem="qSV-tw-npM" firstAttribute="leading" secondItem="fOe-cj-muS" secondAttribute="trailing" constant="5" id="tma-89-CVq"/>
                             </constraints>
                         </view>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_ReqBg" translatesAutoresizingMaskIntoConstraints="NO" id="aR0-Ou-Cmc" userLabel="Background Shadow View">
@@ -230,6 +230,7 @@
                 <outlet property="lessenBtn" destination="4Rs-1e-VYJ" id="Ef6-Md-Wem"/>
                 <outlet property="sendBtn" destination="HW1-jJ-H5g" id="gXd-GE-Y3v"/>
                 <outlet property="subLabel" destination="jWg-VC-eLg" id="SNG-jC-10h"/>
+                <outlet property="titleLabel" destination="qSV-tw-npM" id="jFB-Dd-Xt8"/>
             </connections>
             <point key="canvasLocation" x="100" y="82.3088455772114"/>
         </view>

@@ -72,6 +72,11 @@
 #import "LSScheduleInviteDetailItemObject.h"
 #import "LSScheduleLiveInviteItemObject.h"
 #import "LSScheduleinviteStatusItemObject.h"
+#import "LSPremiumVideoTypeItemObject.h"
+#import "LSPremiumVideoinfoItemObject.h"
+#import "LSPremiumVideoDetailItemObject.h"
+#import "LSPremiumVideoAccessKeyItemObject.h"
+#import "LSPremiumVideoRecentlyWatchedItemObject.h"
 #include <httpcontroller/HttpRequestEnum.h>
 
 @interface LSRequestManager : NSObject
@@ -1385,12 +1390,14 @@ typedef void (^ServerSpeedFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum,
  *
  *  @param sid             流媒体服务器ID
  *  @param res             http请求完成时间（毫秒）
+ *  @param liveRoomId   直播间Id
  *  @param finishHandler   接口回调
  *
  *  @return 成功请求Id
  */
 - (NSInteger)serverSpeed:(NSString *)sid
                      res:(int)res
+              liveRoomId:(NSString *)liveRoomId
            finishHandler:(ServerSpeedFinishHandler)finishHandler;
 
 /**
@@ -1576,6 +1583,26 @@ typedef void (^PhoneInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, N
  */
 - (NSInteger)phoneInfo:(LSPhoneInfoObject *)phoneInfo
          finishHandler:(PhoneInfoFinishHandler)finishHandler;
+
+/**
+ *  6.26.提交上报当前拉流的时间接口回调
+ *
+ *  @param success  成功失败
+ *  @param errnum   错误码
+ *  @param errmsg   错误提示
+ */
+typedef void (^PushPullLogsFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
+
+/**
+ * 6.26.提交上报当前拉流的时间接口
+ *
+ *  @param liveRoomId   直播间Id
+ *  @param finishHandler   接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)pushPullLogs:(NSString *)liveRoomId
+           finishHandler:(PushPullLogsFinishHandler)finishHandler;
 
 #pragma mark - IOS买点
 /**
@@ -2373,6 +2400,27 @@ typedef void (^GetAnchorLetterPrivFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE
                    finishHandler:(GetAnchorLetterPrivFinishHandler)finishHandler;
 
 /**
+ *  13.10.获取EMF状态接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param hasRead     是否已读
+ */
+typedef void (^GetEmfStatusFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, bool hasRead);
+
+/**
+ *  13.10.获取EMF状态接口
+ *
+ *  @param emfId          信件ID
+ *  @param finishHandler     接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getEmfStatus:(NSString*)emfId
+            finishHandler:(GetEmfStatusFinishHandler)finishHandler;
+
+/**
  *  14.1.获取发送SayHi的主题和文本信息接口回调
  *
  *  @param success      成功失败
@@ -2958,8 +3006,9 @@ typedef void (^GetCountryTimeZoneListFinishHandler)(BOOL success, HTTP_LCC_ERR_T
  *  @param errnum           错误码
  *  @param errmsg           错误提示
  *  @param item             发送预付费邀请信息
+ *  @param activityTime 服务器的GMT时间戳
  */
-typedef void (^SendScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSendScheduleInviteItemObject* item);
+typedef void (^SendScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSendScheduleInviteItemObject* item, NSInteger activityTime);
 
 /**
  *  17.3.发送预付费直播邀请接口
@@ -2989,8 +3038,9 @@ typedef void (^SendScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE 
  *  @param errnum           错误码
  *  @param errmsg           错误提示
  *  @param statusUpdateTime      邀请状态改变时间
+ *  @param duration     时长
  */
-typedef void (^AcceptScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime);
+typedef void (^AcceptScheduleInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime, int duration);
 
 /**
  *  17.4.接受预付费直播邀请接口
@@ -3142,5 +3192,345 @@ typedef void (^GetScheduleInviteStatusFinishHandler)(BOOL success, HTTP_LCC_ERR_
  *  @return 成功请求Id
  */
 - (NSInteger)getScheduleInviteStatus:(GetScheduleInviteStatusFinishHandler)finishHandler;
+
+/**
+ *  17.11.获取服务器当前GMT时间戳接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param activityTime           当前服务器的GMT时间
+ */
+typedef void (^GetActivityTimeFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger activityTime);
+
+/**
+ *  17.11.获取服务器当前GMT时间戳接口
+ *
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getActivityTime:(GetActivityTimeFinishHandler)finishHandler;
+
+
+/**
+ *  18.1.获取付费视频分类列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array           付费视频分类
+ */
+typedef void (^GetPremiumVideoTypeListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSPremiumVideoTypeItemObject *> *array);
+
+/**
+ *  18.1.获取付费视频分类列表接口
+ *
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getPremiumVideoTypeList:(GetPremiumVideoTypeListFinishHandler)finishHandler;
+
+/**
+ *  18.2.获取付费视频列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param totalCount           总数
+ *  @param array                付费视频列表
+ */
+typedef void (^GetPremiumVideoListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int totalCount, NSArray<LSPremiumVideoinfoItemObject *> *array);
+
+/**
+ *  18.2.获取付费视频列表接口
+ *
+ * @paran typeIds                           分类ID（多个用’,’号分隔）
+ * @param start                         起始，用于分页，表示从第几个元素开始获取
+ * @param step                          步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getPremiumVideoList:(NSString*)typeIds
+                           start:(int)start
+                            step:(int)step
+                   finishHandler:(GetPremiumVideoListFinishHandler)finishHandler;
+
+
+/**
+ *  18.3.获取解码锁请求列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param totalCount           总数
+ *  @param array                付费视频解码锁列表
+ */
+typedef void (^GetPremiumVideoKeyRequestListinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int totalCount, NSArray<LSPremiumVideoAccessKeyItemObject *> *array);
+
+/**
+ *  18.3.获取解码锁请求列表接口
+ *
+ * @paran type                        解码锁回复类型（LSACCESSKEYTYPES_REPLY ： 已回复， LSACCESSKEYTYPE_UNREPLY：未回复）
+ * @param start                         起始，用于分页，表示从第几个元素开始获取
+ * @param step                          步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getPremiumVideoKeyRequestList:(LSAccessKeyType)type
+                                     start:(int)start
+                                      step:(int)step
+                             finishHandler:(GetPremiumVideoKeyRequestListinishHandler)finishHandler;
+
+/**
+ *  18.4.发送解码锁请求接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param videoId          视频ID
+ *  @param requestId      请求ID
+ */
+typedef void (^SendPremiumVideoKeyRequestFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *videoId, NSString *requestId);
+
+/**
+ *  18.4.发送解码锁请求接口
+ *
+ *  @paran videoId                           视频ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)sendPremiumVideoKeyRequest:(NSString*)videoId
+                          finishHandler:(SendPremiumVideoKeyRequestFinishHandler)finishHandler;
+
+
+/**
+ *  18.5.发送解码锁请求提醒接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param requestId      请求ID
+ *  @param currentTime  请求服务器当前时间（GMT时间戳）
+ *  @param limitSeconds  限制发送的间隔秒数（错误码为HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_LESS_ONEDAY_SEND 17615）
+ */
+typedef void (^RemindeSendPremiumVideoKeyRequestFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *requestId, NSInteger currentTime, int limitSeconds);
+
+/**
+ *  18.5.发送解码锁请求提醒接口
+ *
+ *  @paran  requestId                           请求ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)remindeSendPremiumVideoKeyRequest:(NSString*)requestId
+                          finishHandler:(RemindeSendPremiumVideoKeyRequestFinishHandler)finishHandler;
+
+
+/**
+ *  18.6.获取最近播放的视频列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param totalCount           总数
+ *  @param array                最近播放的视频列表
+ */
+typedef void (^GetPremiumVideoRecentlyWatchedListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int totalCount, NSArray<LSPremiumVideoRecentlyWatchedItemObject *> *array);
+
+/**
+ *  18.6.获取最近播放的视频列表接口
+ *
+ * @param start                         起始，用于分页，表示从第几个元素开始获取
+ * @param step                          步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getPremiumVideoRecentlyWatchedList:(int)start
+                                      step:(int)step
+                             finishHandler:(GetPremiumVideoRecentlyWatchedListFinishHandler)finishHandler;
+
+/**
+ *  18.7.删除最近播放的视频接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param watchedId          记录ID(列表返回的watched_id值，多个用’,’号分隔)
+ */
+typedef void (^DeletePremiumVideoRecentlyWatchedFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *watchedId);
+
+/**
+ *  18.7.删除最近播放的视频接口
+ *
+ * @param watchedId                       记录ID(列表返回的watched_id值，多个用’,’号分隔)
+ *  @param finishHandler            接口回调g
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)deletePremiumVideoRecentlyWatched:(NSString*)watchedId
+                            finishHandler:(DeletePremiumVideoRecentlyWatchedFinishHandler)finishHandler;
+
+/**
+ *  18.8.获取收藏的视频列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param totalCount           总数
+ *  @param array                付费视频列表
+ */
+typedef void (^GetInterestedPremiumVideoListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int totalCount, NSArray<LSPremiumVideoinfoItemObject *> *array);
+
+/**
+ *  18.8.获取收藏的视频列表接口
+ *
+ * @param start                         起始，用于分页，表示从第几个元素开始获取
+ * @param step                          步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler            接口回调g
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getInterestedPremiumVideoList:(int)start
+                                      step:(int)step
+                             finishHandler:(GetInterestedPremiumVideoListFinishHandler)finishHandler;
+
+/**
+ *  18.9.删除收藏的视频接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param videoId          视频ID
+ */
+typedef void (^DeleteInterestedPremiumVideoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *videoId);
+
+/**
+ *  18.9.删除收藏的视频接口
+ *
+ * @param videoId                         视频ID
+ *  @param finishHandler            接口回调g
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)deleteInterestedPremiumVideo:(NSString*)videoId
+                            finishHandler:(DeleteInterestedPremiumVideoFinishHandler)finishHandler;
+
+/**
+ *  18.10.添加收藏的视频接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param videoId          视频ID
+ */
+typedef void (^AddInterestedPremiumVideoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *videoId);
+
+/**
+ *  18.10.添加收藏的视频接口
+ *
+ * @param videoId                         视频ID
+ *  @param finishHandler            接口回调g
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)addInterestedPremiumVideo:(NSString*)videoId
+                         finishHandler:(AddInterestedPremiumVideoFinishHandler)finishHandler;
+
+/**
+ *  18.11.获取可能感兴趣的推荐视频列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param num          推荐数量
+ *  @param array                付费视频列表
+ */
+typedef void (^RecommendPremiumVideoListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, int num, NSArray<LSPremiumVideoinfoItemObject *> *array);
+
+/**
+ *  18.11.获取可能感兴趣的推荐视频列表接口
+ *
+ *  @param num                        推荐数量
+ *  @param finishHandler            接口回调g
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)recommendPremiumVideoList:(int)num
+                         finishHandler:(RecommendPremiumVideoListFinishHandler)finishHandler;
+
+/**
+ *  18.12.获取某主播的视频列表接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param array                付费视频列表
+ */
+typedef void (^GetAnchorPremiumVideoListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSPremiumVideoinfoItemObject *> *array);
+
+/**
+ *  18.12.获取某主播的视频列表接口
+ *
+ *  @param anchorId                        主播ID
+ *  @param finishHandler            接口回调g
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getAnchorPremiumVideoList:(NSString*)anchorId
+                         finishHandler:(GetAnchorPremiumVideoListFinishHandler)finishHandler;
+
+/**
+ *  18.13.获取视频详情接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param item           付费视频详情
+ */
+typedef void (^GetPremiumVideoDetailFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSPremiumVideoDetailItemObject* item);
+
+/**
+ *  18.13.获取视频详情接口
+ *
+ *  @paran videoId                           视频ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getPremiumVideoDetail:(NSString*)videoId
+                     finishHandler:(GetPremiumVideoDetailFinishHandler)finishHandler;
+
+/**
+ *  18.14.视频解锁接口回调
+ *
+ *  @param success          成功失败
+ *  @param errnum           错误码
+ *  @param errmsg           错误提示
+ *  @param videoId          视频ID
+ *  @param videoUrlFull 完整视频地址
+ */
+typedef void (^UnlockPremiumVideoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSString *videoId, NSString *videoUrlFull);
+
+/**
+ *  18.14.视频解锁接口
+ *
+ * @paran type                                解锁方式（LSUNLOCKACTIONTYPE_CREDIT：信用点解锁，LSUNLOCKACTIONTYPE_KEY：解锁码解锁
+ * @paran accessKey                      解锁码(type=LSUNLOCKACTIONTYPE_KEY时传值)
+ * @paran videoId                           视频ID
+ *  @param finishHandler            接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)unlockPremiumVideo:(LSUnlockActionType)type
+                      accessKey:(NSString*)accessKey
+                        videoId:(NSString*)videoId
+                  finishHandler:(UnlockPremiumVideoFinishHandler)finishHandler;
 
 @end

@@ -254,9 +254,12 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.collectionViewDelegate respondsToSelector:@selector(waterfallView:didSelectItem:)]) {
-
-        [self.collectionViewDelegate waterfallView:self didSelectItem:[self.items objectAtIndex:indexPath.row]];
+    if (indexPath.section != 0) {
+        if (indexPath.row < self.items.count) {
+            if ([self.collectionViewDelegate respondsToSelector:@selector(waterfallView:didSelectItem:)]) {
+                [self.collectionViewDelegate waterfallView:self didSelectItem:[self.items objectAtIndex:indexPath.row]];
+            }
+        }
     }
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
@@ -323,7 +326,7 @@
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
     if (section == 0) {
         if (self.noticeItems.count > 0) {
-            return UIEdgeInsetsMake(10, 0, 10, 0);
+            return UIEdgeInsetsMake(10, 0, 0, 0);
         } else {
             return UIEdgeInsetsMake(0, 0, 0, 0);
         }

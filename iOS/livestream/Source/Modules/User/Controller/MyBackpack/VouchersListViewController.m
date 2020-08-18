@@ -74,7 +74,7 @@
 
 #pragma mark 重新加载
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    self.failView.hidden = NO;
+    [super lsListViewControllerDidClick:sender];
     [self showLoading];
     [self loadAllVoucher];
 }

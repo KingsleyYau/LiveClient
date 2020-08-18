@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -121,8 +121,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jRr-dQ-7d0">
                     <rect key="frame" x="18" y="168" width="242" height="34"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sDS-3T-vU4">
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sDS-3T-vU4">
                             <rect key="frame" x="0.0" y="0.0" width="242" height="34"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                             <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="33" maxY="0.0"/>
                             <state key="normal" title="Requests Pending Confirmation" backgroundImage="LS_Prepaid_BtnBG_W">
@@ -146,11 +147,7 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
-                        <constraint firstItem="sDS-3T-vU4" firstAttribute="leading" secondItem="jRr-dQ-7d0" secondAttribute="leading" id="78O-zd-PMg"/>
                         <constraint firstAttribute="trailing" secondItem="454-Re-MLc" secondAttribute="trailing" constant="8" id="Fup-fi-GeK"/>
-                        <constraint firstItem="sDS-3T-vU4" firstAttribute="top" secondItem="jRr-dQ-7d0" secondAttribute="top" id="TzI-Vy-vgt"/>
-                        <constraint firstAttribute="trailing" secondItem="sDS-3T-vU4" secondAttribute="trailing" id="cfG-z0-rJj"/>
-                        <constraint firstAttribute="bottom" secondItem="sDS-3T-vU4" secondAttribute="bottom" id="jae-45-T0u"/>
                         <constraint firstItem="454-Re-MLc" firstAttribute="top" secondItem="jRr-dQ-7d0" secondAttribute="top" constant="9" id="mGw-T9-8GE"/>
                         <constraint firstAttribute="height" constant="34" id="x39-Lf-Ivv"/>
                     </constraints>
@@ -203,7 +200,6 @@
                 <constraint firstItem="1Tc-3r-W9y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="19" id="Yr2-KJ-bXt"/>
                 <constraint firstItem="VgD-fR-O5Q" firstAttribute="top" secondItem="NfK-gD-q69" secondAttribute="bottom" constant="8" id="ZTq-kj-2Sl"/>
                 <constraint firstItem="izi-B1-JGE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="avL-Q0-OTd"/>
-                <constraint firstItem="237-OL-FB0" firstAttribute="top" secondItem="jRr-dQ-7d0" secondAttribute="bottom" constant="16" id="cvc-jr-sw0"/>
                 <constraint firstItem="qos-hB-UHF" firstAttribute="top" secondItem="VgD-fR-O5Q" secondAttribute="bottom" constant="8" id="dZR-0v-Dp4"/>
                 <constraint firstAttribute="trailing" secondItem="45P-h7-O8n" secondAttribute="trailing" id="iAj-Ci-rvp"/>
                 <constraint firstAttribute="bottom" secondItem="qos-hB-UHF" secondAttribute="bottom" constant="30" id="jBl-3K-cUw"/>
@@ -214,6 +210,7 @@
                 <constraint firstAttribute="trailing" secondItem="NfK-gD-q69" secondAttribute="trailing" constant="18" id="r5h-H7-249"/>
                 <constraint firstItem="rJ4-Ho-sVe" firstAttribute="leading" secondItem="237-OL-FB0" secondAttribute="trailing" constant="-98" id="rOm-W5-dh1"/>
                 <constraint firstAttribute="bottom" secondItem="45P-h7-O8n" secondAttribute="bottom" id="ton-1p-yKk"/>
+                <constraint firstItem="jRr-dQ-7d0" firstAttribute="top" secondItem="Fco-0T-wnn" secondAttribute="bottom" constant="4" id="v6Z-bx-NL1"/>
                 <constraint firstItem="VgD-fR-O5Q" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="19" id="ytc-Xm-t3Z"/>
                 <constraint firstAttribute="trailing" secondItem="VgD-fR-O5Q" secondAttribute="trailing" constant="20" id="zHc-Bx-MB7"/>
                 <constraint firstItem="237-OL-FB0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="19" id="zhk-KF-4xw"/>
@@ -222,8 +219,10 @@
             <connections>
                 <outlet property="confirmUnCount" destination="qjp-nN-hZk" id="Oxv-sv-67L"/>
                 <outlet property="confirmView" destination="Fco-0T-wnn" id="AhP-0d-qAJ"/>
+                <outlet property="confirmViewHeight" destination="wM8-ac-C5T" id="zCW-1X-vSw"/>
                 <outlet property="pendingUnCount" destination="454-Re-MLc" id="hfW-ul-S4q"/>
                 <outlet property="pendingView" destination="jRr-dQ-7d0" id="GMA-0n-lWK"/>
+                <outlet property="pendingViewHeight" destination="x39-Lf-Ivv" id="2GD-Vg-dju"/>
                 <outlet property="sendBtn" destination="qos-hB-UHF" id="GLV-bs-Kdm"/>
             </connections>
             <point key="canvasLocation" x="145.59999999999999" y="252.77361319340332"/>

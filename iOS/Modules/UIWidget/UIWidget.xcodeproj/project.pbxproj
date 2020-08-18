@@ -13,7 +13,6 @@
 		254D0DF21EF27DAF00DDBC0B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DF11EF27DAF00DDBC0B /* Accelerate.framework */; };
 		254D0DF41EF27DBD00DDBC0B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DF31EF27DBD00DDBC0B /* MobileCoreServices.framework */; };
 		254D0DFC1EF2837900DDBC0B /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DFB1EF2837900DDBC0B /* WebP.framework */; };
-		25E8873D1F582EE2006E4639 /* LSUITapImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8873C1F582EE2006E4639 /* LSUITapImageView.m */; };
 		3E2D21822339CA0D00C802AC /* UINavigationSXFixSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E2D21802339CA0D00C802AC /* UINavigationSXFixSpace.m */; };
 		3E2D21852339CC2D00C802AC /* UIBarButtonItem+SXCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E2D21832339CC2D00C802AC /* UIBarButtonItem+SXCreate.m */; };
 		3E9F690A2227B23B00C69F0F /* TopLeftLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9F69092227B23B00C69F0F /* TopLeftLabel.m */; };
@@ -106,8 +105,6 @@
 		254D0DF31EF27DBD00DDBC0B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		254D0DF51EF27E8800DDBC0B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		254D0DFB1EF2837900DDBC0B /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
-		25E8873B1F582EE2006E4639 /* LSUITapImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUITapImageView.h; sourceTree = "<group>"; };
-		25E8873C1F582EE2006E4639 /* LSUITapImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUITapImageView.m; sourceTree = "<group>"; };
 		3E15EB4E20ABC6D200395074 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		3E2D21802339CA0D00C802AC /* UINavigationSXFixSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationSXFixSpace.m; sourceTree = "<group>"; };
 		3E2D21812339CA0D00C802AC /* UINavigationSXFixSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINavigationSXFixSpace.h; sourceTree = "<group>"; };
@@ -454,8 +451,6 @@
 				50A98C4B1F9485B000043448 /* LSUIImageFactory.m */,
 				50F1253F1D1BE4FA00435C12 /* LSUIImageViewTopFit.h */,
 				50F125401D1BE4FA00435C12 /* LSUIImageViewTopFit.m */,
-				25E8873B1F582EE2006E4639 /* LSUITapImageView.h */,
-				25E8873C1F582EE2006E4639 /* LSUITapImageView.m */,
 			);
 			path = UIImage;
 			sourceTree = "<group>";
@@ -779,7 +774,6 @@
 				3EEAFAB220AAFEBD00DEA419 /* CALayer+LSYYWebImage.m in Sources */,
 				CAF53835171FDB71005DCB49 /* LSPZPagingScrollView.m in Sources */,
 				3EEAFAB120AAFEBD00DEA419 /* _LSYYWebImageSetter.m in Sources */,
-				25E8873D1F582EE2006E4639 /* LSUITapImageView.m in Sources */,
 				52F65B762044F174007DA957 /* LSProgressView.m in Sources */,
 				CAF53836171FDB71005DCB49 /* LSPZPhotoView.m in Sources */,
 				50DA55451C76A75F001E1D98 /* LSButtonBar.m in Sources */,
@@ -981,7 +975,6 @@
 					"\"$(SRCROOT)/../NetworkWidget\"/**",
 					"\"$(SRCROOT)/../CommonWidget\"/**",
 					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
 					"\"$(SRCROOT)/../../Config\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1013,7 +1006,6 @@
 					"\"$(SRCROOT)/../NetworkWidget\"/**",
 					"\"$(SRCROOT)/../CommonWidget\"/**",
 					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
 					"\"$(SRCROOT)/../../Config\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

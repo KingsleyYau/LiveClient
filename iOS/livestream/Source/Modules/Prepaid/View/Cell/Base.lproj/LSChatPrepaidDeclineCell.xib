@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="height" constant="25" id="q91-88-8PY"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, request decline!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3f-t4-gqm">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry, request declined!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3f-t4-gqm">
                                 <rect key="frame" x="0.0" y="42" width="290" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="16" id="tiN-O4-lw4"/>
@@ -69,7 +69,7 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u5N-fc-eCa">
-                                <rect key="frame" x="10" y="122" width="272" height="25"/>
+                                <rect key="frame" x="12" y="122" width="270" height="25"/>
                                 <gestureRecognizers/>
                                 <attributedString key="attributedText">
                                     <fragment content="You can view all schedule One-on-One requests (in any status) in ">
@@ -113,7 +113,7 @@
                             <constraint firstItem="SD7-Vx-7rG" firstAttribute="top" secondItem="E3f-t4-gqm" secondAttribute="bottom" constant="7" id="JaH-HT-k0A"/>
                             <constraint firstItem="hmJ-Re-slj" firstAttribute="centerX" secondItem="aTe-gc-aqm" secondAttribute="centerX" constant="10" id="O4A-Jp-X56"/>
                             <constraint firstItem="hmJ-Re-slj" firstAttribute="leading" secondItem="SD7-Vx-7rG" secondAttribute="trailing" constant="5" id="Toe-Ab-Exm"/>
-                            <constraint firstItem="u5N-fc-eCa" firstAttribute="leading" secondItem="aTe-gc-aqm" secondAttribute="leading" constant="10" id="UZU-3a-tdX"/>
+                            <constraint firstItem="u5N-fc-eCa" firstAttribute="leading" secondItem="aTe-gc-aqm" secondAttribute="leading" constant="12" id="UZU-3a-tdX"/>
                             <constraint firstItem="ptC-cV-AHU" firstAttribute="centerX" secondItem="aTe-gc-aqm" secondAttribute="centerX" id="fxl-65-0wl"/>
                             <constraint firstAttribute="trailing" secondItem="u5N-fc-eCa" secondAttribute="trailing" constant="8" id="kSR-6U-ztg"/>
                             <constraint firstItem="aPs-aY-Sm0" firstAttribute="leading" secondItem="aTe-gc-aqm" secondAttribute="leading" constant="12" id="klj-hX-xv0"/>

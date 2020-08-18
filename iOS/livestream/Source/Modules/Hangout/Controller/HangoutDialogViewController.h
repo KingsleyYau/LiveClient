@@ -18,7 +18,7 @@
 /** 主播id */
 @property (nonatomic, copy) NSString *anchorId;
 @property (weak, nonatomic) IBOutlet UIButton *hangOutNowBtn;
-@property (weak, nonatomic) IBOutlet UIImageView *anchorImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *anchorImageView;
 @property (weak, nonatomic) IBOutlet UILabel *anchorInviteTips;
 @property (weak, nonatomic) IBOutlet LSCollectionView *friendView;
 @property (weak, nonatomic) IBOutlet UILabel *anchorNameFriend;

@@ -172,6 +172,11 @@
                     _mailScheduelDetailType = [listTypeString intValue];
                 }
             }break;
+            case LiveUrlTypePremiumVideoList:{
+            }break;
+            case LiveUrlTypePremiumVideoDetail:{
+                _videoId = [LSURLQueryParam urlParamForKey:@"videoid" url:url];
+            }break;
             default: {
             } break;
         }
@@ -275,6 +280,12 @@
         type = LiveUrlTypeScheduleMailDetail;
     }else if ([moduleString isEqualToString:@"scheduledetail"]) {
         type = LiveUrlTypeScheduleDetail;
+    }else if ([moduleString isEqualToString:@"sendschedulemail"]) {
+        type = LiveUrlTypeSendScheduleMail;
+    }else if ([moduleString isEqualToString:@"premiumvideo"]) {
+        type = LiveUrlTypePremiumVideoList;
+    }else if ([moduleString isEqualToString:@"premiumvideodetail"]){
+        type = LiveUrlTypePremiumVideoDetail;
     }
 
     return type;

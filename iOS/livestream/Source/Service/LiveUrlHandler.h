@@ -72,6 +72,10 @@
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openScheduleList:(LiveUrlScheduleListType)type;
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openScheduleDetail:(NSString *)inviteId refId:(NSString *)refId anchorId:(NSString *)anchorId;
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openScheduleMailDetail:(NSString *)loid anchorName:(NSString *)anchorName type:(LiveUrlScheduleMailDetailType)type;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openSendScheduleMail:(NSString *)anchorId;
+#pragma mark - 付费视频
+- (void)liveUrlHandlerOpenPremiumVideoList:(LiveUrlHandler *)handler;
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenPremiumVideoDetail:(NSString *)videoId andAnchor:(NSString *)anchorId;
 
 @end
 
@@ -256,4 +260,14 @@
 - (NSURL *)createScheduleDetail:(NSString *)inviteId anchorId:(NSString *)anchorId refId:(NSString *)refId;
 // 生成买点链接
 - (NSURL *)createBuyCredit;
+
+/// 生成发送预付费邮件
+/// @param anchorId 主播id
+- (NSURL *)createUrlToSendScheduleMail:(NSString *)anchorId;
+
+// 付费视频列表
+- (NSURL *)createPrmiumVideoList;
+
+// 付费视频详情
+- (NSURL *)createPrmiumVideoDetail:(NSString *)videoId andAnchor:(NSString *)anchorId;
 @end

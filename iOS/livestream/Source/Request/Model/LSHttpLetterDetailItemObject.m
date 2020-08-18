@@ -29,6 +29,7 @@
         self.hasRead = NO;
         self.hasReplied = NO;
         self.scheduleInfo = NULL;
+        self.accessKeyInfo = NULL;
     }
     return self;
 }
@@ -52,6 +53,7 @@
         self.letterImgList = [coder decodeObjectForKey:@"letterImgList"];
         self.letterVideoList = [coder decodeObjectForKey:@"letterVideoList"];
         self.scheduleInfo = [coder decodeObjectForKey:@"scheduleInfo"];
+        self.accessKeyInfo = [coder decodeObjectForKey:@"accessKeyInfo"];
     }
     return self;
 }
@@ -74,6 +76,7 @@
     [coder encodeObject:self.letterImgList forKey:@"letterImgList"];
     [coder encodeObject:self.letterVideoList forKey:@"letterVideoList"];
     [coder encodeObject:self.scheduleInfo forKey:@"scheduleInfo"];
+    [coder encodeObject:self.accessKeyInfo forKey:@"accessKeyInfo"];
 }
 
 @end

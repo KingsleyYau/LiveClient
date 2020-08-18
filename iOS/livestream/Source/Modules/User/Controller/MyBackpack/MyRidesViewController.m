@@ -109,7 +109,7 @@
 
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    self.failView.hidden = YES;
+    [super lsListViewControllerDidClick:sender];
     [self showLoading];
     [self getMyRidesData];
 }

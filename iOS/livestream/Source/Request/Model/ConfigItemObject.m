@@ -36,6 +36,9 @@
         
         self.scheduleSaveUp = 0;
         
+        self.mailTariff = NULL;
+        self.premiumVideoCredit = 0.0;
+        
         self.socketHost = @"";
         self.socketHostDomain = @"l";
         self.socketPort = 0;
@@ -43,6 +46,7 @@
         self.appSite = @"";
         self.chatVoiceHostUrl =  @"";
         self.minBalanceForChat = 0.0;
+        self.howItWorkUrl = @"";
     }
     return self;
 }
@@ -75,6 +79,9 @@
         self.minBalanceForChat = [coder decodeDoubleForKey:@"minBalanceForChat"];
         self.flowersGift = [coder decodeIntForKey:@"flowersGift"];
         self.scheduleSaveUp = [coder decodeIntForKey:@"scheduleSaveUp"];
+        self.mailTariff = [coder decodeObjectForKey:@"mailTariff"];
+        self.premiumVideoCredit = [coder decodeDoubleForKey:@"premiumVideoCredit"];
+        self.howItWorkUrl = [coder decodeObjectForKey:@"howItWorkUrl"];
     }
     return self;
 }
@@ -106,6 +113,9 @@
     [coder encodeDouble:self.minBalanceForChat forKey:@"minBalanceForChat"];
     [coder encodeInt:self.flowersGift forKey:@"flowersGift"];
     [coder encodeInt:self.scheduleSaveUp forKey:@"scheduleSaveUp"];
+    [coder encodeObject:self.mailTariff forKey:@"mailTariff"];
+    [coder encodeDouble:self.premiumVideoCredit forKey:@"premiumVideoCredit"];
+    [coder encodeObject:self.howItWorkUrl forKey:@"howItWorkUrl"];
 
 }
 

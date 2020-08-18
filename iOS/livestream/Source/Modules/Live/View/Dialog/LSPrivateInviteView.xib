@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,13 +20,15 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zXW-TV-UKQ">
                     <rect key="frame" x="54.666666666666657" y="287.66666666666669" width="266" height="237.00000000000006"/>
                     <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="HXb-uA-K4w" customClass="LSUIImageViewTopFit">
+                            <rect key="frame" x="99" y="20" width="68" height="68"/>
+                        </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HjS-ee-XXm">
                             <rect key="frame" x="99" y="20" width="68" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="68" id="E86-6i-bPV"/>
                                 <constraint firstAttribute="width" secondItem="HjS-ee-XXm" secondAttribute="height" multiplier="1:1" id="zth-ty-6ua"/>
                             </constraints>
-                            <state key="normal" image="Default_Img_Lady_Circyle"/>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S9b-JA-YUK">
                             <rect key="frame" x="10" y="108" width="246" height="28.666666666666657"/>
@@ -67,10 +69,13 @@ One-on-One broadcast!</string>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="mtQ-FY-VnR" secondAttribute="bottom" constant="10" id="0zY-sH-One"/>
+                        <constraint firstItem="HXb-uA-K4w" firstAttribute="trailing" secondItem="HjS-ee-XXm" secondAttribute="trailing" id="5QI-Cl-HST"/>
+                        <constraint firstItem="HXb-uA-K4w" firstAttribute="leading" secondItem="HjS-ee-XXm" secondAttribute="leading" id="74g-yx-dVa"/>
                         <constraint firstItem="HjS-ee-XXm" firstAttribute="centerX" secondItem="zXW-TV-UKQ" secondAttribute="centerX" id="9FT-oA-Oya"/>
                         <constraint firstItem="S9b-JA-YUK" firstAttribute="leading" secondItem="zXW-TV-UKQ" secondAttribute="leading" constant="10" id="BAt-TV-T14"/>
                         <constraint firstAttribute="trailing" secondItem="S9b-JA-YUK" secondAttribute="trailing" constant="10" id="BMl-zY-erC"/>
                         <constraint firstItem="oID-Rj-XAx" firstAttribute="centerX" secondItem="zXW-TV-UKQ" secondAttribute="centerX" id="BSk-Nv-Z9g"/>
+                        <constraint firstItem="HXb-uA-K4w" firstAttribute="top" secondItem="HjS-ee-XXm" secondAttribute="top" id="LJA-Yl-wjW"/>
                         <constraint firstItem="9Rx-dk-6qp" firstAttribute="top" secondItem="oID-Rj-XAx" secondAttribute="top" constant="-7" id="Rjj-qk-d8L"/>
                         <constraint firstItem="HjS-ee-XXm" firstAttribute="top" secondItem="zXW-TV-UKQ" secondAttribute="top" constant="20" id="SOa-7D-k5V"/>
                         <constraint firstItem="S9b-JA-YUK" firstAttribute="top" secondItem="HjS-ee-XXm" secondAttribute="bottom" constant="20" id="Se8-QS-Ipo"/>
@@ -81,6 +86,7 @@ One-on-One broadcast!</string>
                         <constraint firstItem="mtQ-FY-VnR" firstAttribute="top" secondItem="oID-Rj-XAx" secondAttribute="bottom" constant="10" id="c6Y-z8-dmB"/>
                         <constraint firstItem="mtQ-FY-VnR" firstAttribute="leading" secondItem="zXW-TV-UKQ" secondAttribute="leading" constant="10" id="iAA-K2-klb"/>
                         <constraint firstAttribute="width" secondItem="zXW-TV-UKQ" secondAttribute="height" multiplier="266:237" id="tYy-RI-C2u"/>
+                        <constraint firstItem="HXb-uA-K4w" firstAttribute="bottom" secondItem="HjS-ee-XXm" secondAttribute="bottom" id="wUY-P9-1uX"/>
                         <constraint firstItem="oID-Rj-XAx" firstAttribute="top" secondItem="S9b-JA-YUK" secondAttribute="bottom" constant="18" id="zVt-gk-p3h"/>
                     </constraints>
                 </view>
@@ -97,6 +103,7 @@ One-on-One broadcast!</string>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <connections>
+                <outlet property="anchorHeadImage" destination="HXb-uA-K4w" id="DuA-bc-vvZ"/>
                 <outlet property="anchorIcon" destination="HjS-ee-XXm" id="aHe-EN-E2l"/>
                 <outlet property="bgView" destination="WYk-o5-jWn" id="dpP-1r-Fjp"/>
                 <outlet property="contentView" destination="zXW-TV-UKQ" id="pRx-SC-iS4"/>

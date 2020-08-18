@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="YDR-qZ-cja" customClass="LSMailVideoKeyView">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="305"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4En-iP-tDo">
+                    <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
+                    <color key="backgroundColor" red="1" green="0.60392156862745094" blue="0.0039215686274509803" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="2xD-SD-hke"/>
+                    </constraints>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="Premium Video Access Key" image="LS_Videoplay_Icon_White"/>
+                    <state key="disabled" image="LS_Videoplay_Icon_White"/>
+                </button>
+                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_HangOut" translatesAutoresizingMaskIntoConstraints="NO" id="yxj-qz-V73" customClass="LSUIImageViewTopFit">
+                    <rect key="frame" x="102.5" y="54" width="130" height="97"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="130" id="80f-qN-HoF"/>
+                        <constraint firstAttribute="height" constant="97" id="ghJ-Ge-ZEK"/>
+                    </constraints>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u9i-XJ-4jz" customClass="LSDurationLabel">
+                    <rect key="frame" x="192.5" y="130" width="35" height="16"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="CB5-FU-4EB"/>
+                        <constraint firstAttribute="width" constant="35" id="phL-bL-auC"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dance with me tonight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0L9-La-sR9">
+                    <rect key="frame" x="10" y="156" width="315" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="fMT-XK-mo0"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                    <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Video_Used" translatesAutoresizingMaskIntoConstraints="NO" id="9au-QE-Xhp">
+                    <rect key="frame" x="217.5" y="178.5" width="60" height="46"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="46" id="07P-T1-l18"/>
+                        <constraint firstAttribute="width" constant="60" id="Z1g-DH-4jn"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="S F 2 7 4 5 G H" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3V8-GO-82F">
+                    <rect key="frame" x="10" y="189" width="315" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="doU-VU-T8x"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                    <color key="textColor" red="1" green="0.40000000000000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Valid until:Feb 20, 2020" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VcP-g1-rp7">
+                    <rect key="frame" x="10" y="214" width="315" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="14" id="xwH-tG-fQp"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v9a-lg-aLJ">
+                    <rect key="frame" x="20" y="245" width="295" height="40"/>
+                    <color key="backgroundColor" red="0.92941176470588238" green="0.93725490196078431" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="jka-av-HgK"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="View Video Now">
+                        <color key="titleColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="viewVideoBtnOnClicked:" destination="YDR-qZ-cja" eventType="touchUpInside" id="8ar-nK-2CJ"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="3V8-GO-82F" firstAttribute="top" secondItem="0L9-La-sR9" secondAttribute="bottom" constant="15" id="8UF-qs-cTv"/>
+                <constraint firstItem="9au-QE-Xhp" firstAttribute="centerY" secondItem="3V8-GO-82F" secondAttribute="centerY" id="8Wn-SO-hWO"/>
+                <constraint firstAttribute="bottom" secondItem="v9a-lg-aLJ" secondAttribute="bottom" constant="20" id="AYz-w6-QEL"/>
+                <constraint firstAttribute="trailing" secondItem="3V8-GO-82F" secondAttribute="trailing" constant="10" id="Coi-UK-lLz"/>
+                <constraint firstItem="4En-iP-tDo" firstAttribute="top" secondItem="YDR-qZ-cja" secondAttribute="top" id="DeT-QJ-Gr1"/>
+                <constraint firstAttribute="trailing" secondItem="4En-iP-tDo" secondAttribute="trailing" id="E6B-iz-jGj"/>
+                <constraint firstItem="yxj-qz-V73" firstAttribute="top" secondItem="4En-iP-tDo" secondAttribute="bottom" constant="10" id="FNp-zG-j2H"/>
+                <constraint firstItem="v9a-lg-aLJ" firstAttribute="leading" secondItem="YDR-qZ-cja" secondAttribute="leading" constant="20" id="Pqi-HL-Jcs"/>
+                <constraint firstAttribute="trailing" secondItem="0L9-La-sR9" secondAttribute="trailing" constant="10" id="SKf-Wo-XGx"/>
+                <constraint firstItem="u9i-XJ-4jz" firstAttribute="bottom" secondItem="yxj-qz-V73" secondAttribute="bottom" constant="-5" id="TEm-Tf-Vos"/>
+                <constraint firstItem="0L9-La-sR9" firstAttribute="leading" secondItem="YDR-qZ-cja" secondAttribute="leading" constant="10" id="TFO-7y-AMF"/>
+                <constraint firstAttribute="trailing" secondItem="v9a-lg-aLJ" secondAttribute="trailing" constant="20" id="U9T-Nw-ydq"/>
+                <constraint firstItem="4En-iP-tDo" firstAttribute="leading" secondItem="YDR-qZ-cja" secondAttribute="leading" id="UdF-zA-tIy"/>
+                <constraint firstItem="VcP-g1-rp7" firstAttribute="top" secondItem="3V8-GO-82F" secondAttribute="bottom" id="Vv4-66-hkr"/>
+                <constraint firstItem="yxj-qz-V73" firstAttribute="centerX" secondItem="YDR-qZ-cja" secondAttribute="centerX" id="cfq-9P-czJ"/>
+                <constraint firstItem="0L9-La-sR9" firstAttribute="top" secondItem="yxj-qz-V73" secondAttribute="bottom" constant="5" id="h7l-Eh-O2t"/>
+                <constraint firstItem="u9i-XJ-4jz" firstAttribute="trailing" secondItem="yxj-qz-V73" secondAttribute="trailing" constant="-5" id="ipT-no-Eak"/>
+                <constraint firstItem="3V8-GO-82F" firstAttribute="leading" secondItem="YDR-qZ-cja" secondAttribute="leading" constant="10" id="lZr-aU-TWM"/>
+                <constraint firstItem="VcP-g1-rp7" firstAttribute="leading" secondItem="YDR-qZ-cja" secondAttribute="leading" constant="10" id="lj2-hX-nl4"/>
+                <constraint firstItem="9au-QE-Xhp" firstAttribute="centerX" secondItem="YDR-qZ-cja" secondAttribute="centerX" constant="80" id="sHH-MK-8Zl"/>
+                <constraint firstAttribute="trailing" secondItem="VcP-g1-rp7" secondAttribute="trailing" constant="10" id="xaM-NR-EuU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="codeLabel" destination="3V8-GO-82F" id="isQ-FR-T4b"/>
+                <outlet property="coverImgView" destination="yxj-qz-V73" id="V8y-qf-vnh"/>
+                <outlet property="durationLabel" destination="u9i-XJ-4jz" id="t2t-gY-HRY"/>
+                <outlet property="titleBtn" destination="4En-iP-tDo" id="W12-uK-An8"/>
+                <outlet property="titleLabel" destination="0L9-La-sR9" id="zkY-yP-84V"/>
+                <outlet property="usedImgView" destination="9au-QE-Xhp" id="Dfd-O4-grZ"/>
+                <outlet property="validLabel" destination="VcP-g1-rp7" id="GA8-n9-AWt"/>
+                <outlet property="viewButton" destination="v9a-lg-aLJ" id="HSr-ri-Lci"/>
+            </connections>
+            <point key="canvasLocation" x="99" y="21"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Default_Img_Lady_HangOut" width="187.5" height="187.5"/>
+        <image name="LS_Video_Used" width="54" height="37"/>
+        <image name="LS_Videoplay_Icon_White" width="28" height="28"/>
+    </resources>
+</document>

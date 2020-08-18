@@ -13,13 +13,11 @@
 #import "LSFileCacheManager.h"
 #import "LSImageViewLoader.h"
 #import "LSYYImage.h"
-#import "AFNetWorkHelpr.h"
 
 #import "LSSessionRequestManager.h"
 #import "GiftListRequest.h"
 #import "GetGiftDetailRequest.h"
 #import "GetGiftListByUserIdRequest.h"
-
 
 @interface LSGiftManager () <LoginManagerDelegate, LSGiftManagerItemDownloadDelegate>
 // 登录管理器
@@ -78,12 +76,12 @@
         // 背包
         self.giftBackpackMutableArray = [[NSMutableArray alloc] init];
         self.giftRoomBackpackMutableArray = [[NSMutableArray alloc] init];
-        
+
         // 多人互动直播间
         self.buyforMutableArray = [[NSMutableArray alloc] init];
         self.normalMutableArray = [[NSMutableArray alloc] init];
         self.celebrationMutableArray = [[NSMutableArray alloc] init];
-        
+
         self.freeGiftArray = [NSMutableArray array];
     }
     return self;
@@ -99,7 +97,7 @@
             if (self.isFirstLogin) {
                 // 第一次登录成功, 获取所有礼物列表
                 NSLog(@"LSGiftManager::onLogin( [HTTP登陆, 成功(第一次), 获取背包礼物及所有礼物列表] )");
-                [self getAllGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+                [self getAllGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList){
                 }];
             }
         }
@@ -119,7 +117,7 @@
     // TODO:获取礼物列表
     NSLog(@"LSGiftManager::getAllGiftList( [获取所有礼物列表] )");
     if (self.giftMutableArray.count) {
-        NSLog(@"LSGiftManager::getAllGiftList( [获取所有礼物列表, Success], count : %u )", (unsigned int)self.giftMutableArray.count);
+        NSLog(@"LSGiftManager::getAllGiftList( [获取所有礼物列表], Success, count : %u )", (unsigned int)self.giftMutableArray.count);
 
         if (finshHandler) {
             finshHandler(YES, self.giftMutableArray);
@@ -129,7 +127,7 @@
         GetAllGiftListRequest *request = [[GetAllGiftListRequest alloc] init];
         request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<GiftInfoItemObject *> *_Nullable array) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"LSGiftManager::getAllGiftList( [获取所有礼物列表, %@], errnum : %ld, errmsg : %@, count : %u )", BOOL2SUCCESS(success), (long)errnum, errmsg, (unsigned int)array.count);
+                NSLog(@"LSGiftManager::getAllGiftList( [获取所有礼物列表], %@, errnum : %ld, errmsg : %@, count : %u )", BOOL2SUCCESS(success), (long)errnum, errmsg, (unsigned int)array.count);
                 if (success) {
                     // 清空旧数据
                     [self.giftMutableArray removeAllObjects];
@@ -167,63 +165,63 @@
 - (void)getRoomGiftList:(NSString *)roomId finshHandler:(GetGiftFinshtHandler)finshHandler {
     // TODO:获取直播间可发送礼物列表
     NSLog(@"LSGiftManager::getRoomGiftList( [获取直播间可发送礼物列表], roomId : %@ )", roomId);
-    
+
     [self getAllGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
         if (success) {
             if (self.giftRoomMutableArray.count > 0) {
-                NSLog(@"LSGiftManager::getRoomGiftList( [获取直播间可发送礼物列表, Success], roomId : %@, count : %u )", roomId, (unsigned int)self.giftRoomMutableArray.count);
-                
+                NSLog(@"LSGiftManager::getRoomGiftList( [获取直播间可发送礼物列表], Success, roomId : %@, count : %u )", roomId, (unsigned int)self.giftRoomMutableArray.count);
+
                 if (finshHandler) {
                     finshHandler(YES, self.giftRoomMutableArray);
                 }
-                
+
             } else {
                 // 发送请求
                 GetGiftListByUserIdRequest *request = [[GetGiftListByUserIdRequest alloc] init];
                 request.roomId = roomId;
-                request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg,NSArray<GiftWithIdItemObject *> *_Nullable array) {
+                request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<GiftWithIdItemObject *> *_Nullable array) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         // 只有当前请求才处理
-//                        if( self.giftRoomRequest == request ) {
-//                            self.giftRoomRequest = nil;
-                        
-                            // 清空旧数据
-                            [self.giftRoomMutableArray removeAllObjects];
-                            [self.freeGiftArray removeAllObjects];
-                            
-                            if (success) {
-                                // 增加新礼物
-                                for (GiftWithIdItemObject *item in array) {
-                                   // if (item.isShow) {
-                                        // 只返回可显示的礼物
-                                        LSGiftManagerItem *giftManagerItem = [self getGiftItemWithId:item.giftId];
-                                        giftManagerItem.roomInfoItem = item;
-                                        if (giftManagerItem.infoItem) {
-                                            [self.giftRoomMutableArray addObject:giftManagerItem];
-                                        }
-                                    //}
-//                                    if (item.isFree) {
-//                                        LSGiftManagerItem *giftManagerItem = [self getGiftItemWithId:item.giftId];
-//                                        giftManagerItem.roomInfoItem = item;
-//                                        if (giftManagerItem.infoItem) {
-//                                            [self.freeGiftArray addObject:giftManagerItem];
-//                                        }
-//                                    }
+                        //                        if( self.giftRoomRequest == request ) {
+                        //                            self.giftRoomRequest = nil;
+
+                        // 清空旧数据
+                        [self.giftRoomMutableArray removeAllObjects];
+                        [self.freeGiftArray removeAllObjects];
+
+                        if (success) {
+                            // 增加新礼物
+                            for (GiftWithIdItemObject *item in array) {
+                                // if (item.isShow) {
+                                // 只返回可显示的礼物
+                                LSGiftManagerItem *giftManagerItem = [self getGiftItemWithId:item.giftId];
+                                giftManagerItem.roomInfoItem = item;
+                                if (giftManagerItem.infoItem) {
+                                    [self.giftRoomMutableArray addObject:giftManagerItem];
                                 }
+                                //}
+                                //                                    if (item.isFree) {
+                                //                                        LSGiftManagerItem *giftManagerItem = [self getGiftItemWithId:item.giftId];
+                                //                                        giftManagerItem.roomInfoItem = item;
+                                //                                        if (giftManagerItem.infoItem) {
+                                //                                            [self.freeGiftArray addObject:giftManagerItem];
+                                //                                        }
+                                //                                    }
                             }
-                            
-                            NSLog(@"LSGiftManager::getRoomGiftList( [获取直播间可发送礼物列表, %@], roomId : %@, errnum : %ld, errmsg : %@, requestCount : %u, localCount : %u )", BOOL2SUCCESS(success), roomId, (long)errnum, errmsg, (unsigned int)array.count, (unsigned int)self.giftRoomMutableArray.count);
-                            
-                            if (finshHandler) {
-                                finshHandler(success, self.giftRoomMutableArray);
-                            }
-//                        }
+                        }
+
+                        NSLog(@"LSGiftManager::getRoomGiftList( [获取直播间可发送礼物列表], %@, roomId : %@, errnum : %ld, errmsg : %@, requestCount : %u, localCount : %u )", BOOL2SUCCESS(success), roomId, (long)errnum, errmsg, (unsigned int)array.count, (unsigned int)self.giftRoomMutableArray.count);
+
+                        if (finshHandler) {
+                            finshHandler(success, self.giftRoomMutableArray);
+                        }
+                        //                        }
                     });
                 };
-//                self.giftRoomRequest = request;
+                //                self.giftRoomRequest = request;
                 [self.sessionManager sendRequest:request];
             }
-        }else {
+        } else {
             if (finshHandler) {
                 finshHandler(NO, giftList);
             }
@@ -250,7 +248,7 @@
                      }
                  }
 
-                 NSLog(@"LSGiftManager::getRoomRandomGiftList( [获取直播间随机礼物列表, %@], roomId : %@, count : %u )", BOOL2SUCCESS(success), roomId, (unsigned int)giftPromptList.count);
+                 NSLog(@"LSGiftManager::getRoomRandomGiftList( [获取直播间随机礼物列表], %@, roomId : %@, count : %u )", BOOL2SUCCESS(success), roomId, (unsigned int)giftPromptList.count);
 
                  if (finshHandler) {
                      finshHandler(success, giftPromptList);
@@ -266,7 +264,7 @@
     [self getAllGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
         if (success) {
             if (self.giftBackpackMutableArray.count) {
-                NSLog(@"LSGiftManager::getAllBackpackGiftList( [获取所有背包礼物列表, Success], count : %u )", (unsigned int)self.giftBackpackMutableArray.count);
+                NSLog(@"LSGiftManager::getAllBackpackGiftList( [获取所有背包礼物列表], Success, count : %u )", (unsigned int)self.giftBackpackMutableArray.count);
 
                 if (finshHandler) {
                     finshHandler(YES, self.giftBackpackMutableArray);
@@ -278,8 +276,8 @@
                                           NSArray<BackGiftItemObject *> *_Nullable array, int totalCount) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         // 只有当前请求才处理
-                        if( self.giftRoomBackpackRequest == request ) {
-                            NSLog(@"LSGiftManager::getAllBackpackGiftList( [获取所有背包礼物列表, %@], errnum : %ld, errmsg : %@, totalCount : %d )", BOOL2SUCCESS(success), (long)errnum, errmsg, totalCount);
+                        if (self.giftRoomBackpackRequest == request) {
+                            NSLog(@"LSGiftManager::getAllBackpackGiftList( [获取所有背包礼物列表], %@, errnum : %ld, errmsg : %@, totalCount : %d )", BOOL2SUCCESS(success), (long)errnum, errmsg, totalCount);
                             if (success) {
                                 // 新增数据, 并根据Id做合并
                                 NSInteger time = [[NSDate date] timeIntervalSince1970];
@@ -296,7 +294,7 @@
                                     }
                                 }
                             }
-                            
+
                             if (finshHandler) {
                                 finshHandler(success, self.giftBackpackMutableArray);
                             }
@@ -324,11 +322,11 @@
                     [self.giftRoomBackpackMutableArray addObject:item];
                 }
             }
-        
+
             if (finshHandler) {
                 finshHandler(success, self.giftRoomBackpackMutableArray);
             }
-            
+
         } else {
             if (finshHandler) {
                 finshHandler(NO, nil);
@@ -340,42 +338,43 @@
 - (void)getPraviteRoomBackpackGiftList:(NSString *)roomId finshHandler:(GetGiftFinshtHandler)finshHandler {
     // TODO:获取私密直播间可显示的背包礼物列表
     NSLog(@"LSGiftManager::getPraviteRoomBackpackGiftList( [获取私密直播间可显示的背包礼物列表], roomId : %@ )", roomId);
-    [self getRoomGiftList:roomId finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-        NSLog(@"LSGiftManager::getPraviteRoomBackpackGiftList( [获取私密直播间可显示的背包礼物列表], success : %@, count : %lu)", BOOL2SUCCESS(success),(unsigned long)giftList.count);
-        if (giftList.count > 0) {
-            [self getAllBackpackGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                NSLog(@"LSGiftManager::getPraviteRoomBackpackGiftList( [获取私密直播间所有背包礼物列表], success : %@, count : %lu)", BOOL2SUCCESS(success),(unsigned long)giftList.count);
-                if (success) {
-                    // 清除旧数据
-                    [self.giftRoomBackpackMutableArray removeAllObjects];
-                    // 遍历所有背包礼物
-                    for (LSGiftManagerItem *item in self.giftBackpackMutableArray) {
-                        // 如果总数大于0 并且在直播间可发送礼物列表中 则显示
-                        if (item.backpackTotal > 0 && self.giftRoomMutableArray.count > 0) {
-                            for (LSGiftManagerItem *giftItem in self.giftRoomMutableArray) {
-                                if ([item.giftId isEqualToString:giftItem.giftId]) {
-                                    [self.giftRoomBackpackMutableArray addObject:item];
-                                }
-                            }
-                        }
-                    }
-                    
-                    if (finshHandler) {
-                        finshHandler(success, self.giftRoomBackpackMutableArray);
-                    }
-                    
-                } else {
-                    if (finshHandler) {
-                        finshHandler(NO, nil);
-                    }
-                }
-            }];
-        }else {
-            if (finshHandler) {
-                finshHandler(NO, nil);
-            }
-        }
-    }];
+    [self getRoomGiftList:roomId
+             finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+                 NSLog(@"LSGiftManager::getPraviteRoomBackpackGiftList( [获取私密直播间可显示的背包礼物列表], %@, count : %lu)", BOOL2SUCCESS(success), (unsigned long)giftList.count);
+                 if (giftList.count > 0) {
+                     [self getAllBackpackGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+                         NSLog(@"LSGiftManager::getPraviteRoomBackpackGiftList( [获取私密直播间所有背包礼物列表], %@, count : %lu)", BOOL2SUCCESS(success), (unsigned long)giftList.count);
+                         if (success) {
+                             // 清除旧数据
+                             [self.giftRoomBackpackMutableArray removeAllObjects];
+                             // 遍历所有背包礼物
+                             for (LSGiftManagerItem *item in self.giftBackpackMutableArray) {
+                                 // 如果总数大于0 并且在直播间可发送礼物列表中 则显示
+                                 if (item.backpackTotal > 0 && self.giftRoomMutableArray.count > 0) {
+                                     for (LSGiftManagerItem *giftItem in self.giftRoomMutableArray) {
+                                         if ([item.giftId isEqualToString:giftItem.giftId]) {
+                                             [self.giftRoomBackpackMutableArray addObject:item];
+                                         }
+                                     }
+                                 }
+                             }
+
+                             if (finshHandler) {
+                                 finshHandler(success, self.giftRoomBackpackMutableArray);
+                             }
+
+                         } else {
+                             if (finshHandler) {
+                                 finshHandler(NO, nil);
+                             }
+                         }
+                     }];
+                 } else {
+                     if (finshHandler) {
+                         finshHandler(NO, nil);
+                     }
+                 }
+             }];
 }
 
 - (void)getHangoutGiftList:(NSString *)roomId finshHandler:(GetHangoutGiftFinshHandler)finshHandler {
@@ -384,28 +383,28 @@
     BOOL haveBuyFor = self.buyforMutableArray.count > 0 ? YES : NO;
     BOOL haveNormal = self.normalMutableArray.count > 0 ? YES : NO;
     BOOL haveCelebration = self.celebrationMutableArray.count > 0 ? YES : NO;
-    
+
     [self getAllGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
         if (success) {
             if (haveBuyFor & haveNormal & haveCelebration) {
-                NSLog(@"LSGiftManager::getHangoutGiftList( [获取多人互动直播间可发送礼物列表, Success], roomId : %@, buyforCount : %u, normalCount : %u, celebrationCount : %u )", roomId, (unsigned int)self.buyforMutableArray.count, (unsigned int)self.normalMutableArray.count, (unsigned int)self.celebrationMutableArray.count);
-                
+                NSLog(@"LSGiftManager::getHangoutGiftList( [获取多人互动直播间可发送礼物列表], Success, roomId : %@, buyforCount : %u, normalCount : %u, celebrationCount : %u )", roomId, (unsigned int)self.buyforMutableArray.count, (unsigned int)self.normalMutableArray.count, (unsigned int)self.celebrationMutableArray.count);
+
                 if (finshHandler) {
                     finshHandler(YES, self.buyforMutableArray, self.normalMutableArray, self.celebrationMutableArray);
                 }
             } else {
                 LSGetHangoutGiftListRequest *request = [[LSGetHangoutGiftListRequest alloc] init];
                 request.roomId = roomId;
-                request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSHangoutGiftListObject * _Nonnull item) {
-                    NSLog(@"LSGiftManager::( [请求多人互动可发送礼物列表 %@], roomId : %@, errnum : %d, errmsg : %@, buyforList : %lu, normalList : %lu, celebrationList : %lu )",BOOL2SUCCESS(success) , roomId, errnum, errmsg, item.buyforList.count, item.normalList.count, item.celebrationList.count);
+                request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSHangoutGiftListObject *_Nonnull item) {
+                    NSLog(@"LSGiftManager::( [请求多人互动可发送礼物列表], %@, roomId : %@, errnum : %d, errmsg : %@, buyforList : %lu, normalList : %lu, celebrationList : %lu )", BOOL2SUCCESS(success), roomId, errnum, errmsg, item.buyforList.count, item.normalList.count, item.celebrationList.count);
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if( self.hangoutGiftListRequest == request ) {
+                        if (self.hangoutGiftListRequest == request) {
                             self.hangoutGiftListRequest = nil;
-                            
+
                             [self.buyforMutableArray removeAllObjects];
                             [self.normalMutableArray removeAllObjects];
                             [self.celebrationMutableArray removeAllObjects];
-                            
+
                             if (success) {
                                 for (NSString *giftId in item.buyforList) {
                                     // 吧台礼物
@@ -429,7 +428,7 @@
                                     }
                                 }
                             }
-                            
+
                             if (finshHandler) {
                                 finshHandler(success, self.buyforMutableArray, self.normalMutableArray, self.celebrationMutableArray);
                             }
@@ -443,13 +442,13 @@
     }];
 }
 
-- (void)getGiftTypeList:(NSInteger)roomType finshHandler:(GetGiftTypeListFinishHandler)finshHandler{
+- (void)getGiftTypeList:(NSInteger)roomType finshHandler:(GetGiftTypeListFinishHandler)finshHandler {
     //TODO:获取虚拟礼物分类列表
-    
-    LSGetGiftTypeListRequest * request = [[LSGetGiftTypeListRequest alloc]init];
-    request.roomType = roomType==1?LSGIFTROOMTYPE_PUBLIC:LSGIFTROOMTYPE_PRIVATE;
+
+    LSGetGiftTypeListRequest *request = [[LSGetGiftTypeListRequest alloc] init];
+    request.roomType = roomType == 1 ? LSGIFTROOMTYPE_PUBLIC : LSGIFTROOMTYPE_PRIVATE;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSGiftTypeItemObject *> *array) {
-        
+
         if (finshHandler) {
             finshHandler(success, errnum, errmsg, array);
         }
@@ -457,12 +456,12 @@
     [self.sessionManager sendRequest:request];
 }
 
-- (void)getGiftTypeContent:(NSString *)roomId typeID:(NSString *)typeId finshHandler:(GetGiftFinshtHandler)finshHandler{
-    
+- (void)getGiftTypeContent:(NSString *)roomId typeID:(NSString *)typeId finshHandler:(GetGiftFinshtHandler)finshHandler {
+
     [self getRoomGiftList:roomId
              finshHandler:^(BOOL success, NSArray *giftList) {
                  NSMutableArray *typeArray = [NSMutableArray array];
-                 
+
                  if (success) {
                      for (LSGiftManagerItem *item in giftList) {
                          if (item.roomInfoItem) {
@@ -472,9 +471,9 @@
                          }
                      }
                  }
-                 
-                 NSLog(@"LSGiftManager::getRoomGiftList( [根据礼物类型ID获取礼物列表, %@], roomId : %@, typeId:%@, count : %u )", BOOL2SUCCESS(success), roomId, typeId,(unsigned int)typeArray.count);
-                 
+
+                 NSLog(@"LSGiftManager::getRoomGiftList( [根据礼物类型ID获取礼物列表], %@, roomId : %@, typeId:%@, count : %u )", BOOL2SUCCESS(success), roomId, typeId, (unsigned int)typeArray.count);
+
                  if (finshHandler) {
                      finshHandler(success, typeArray);
                  }
@@ -483,7 +482,7 @@
 
 - (LSGiftManagerItem *)getGiftItemWithId:(NSString *)giftId {
     // TODO:获取单个礼物
-//    NSLog(@"LSGiftManager::getGiftItemWithId( [获取单个礼物], giftId : %@ )", giftId);
+    //    NSLog(@"LSGiftManager::getGiftItemWithId( [获取单个礼物], giftId : %@ )", giftId);
 
     LSGiftManagerItem *item = nil;
     // 本地查找
@@ -515,7 +514,7 @@
 - (void)removeAllGiftList {
     // TODO:清除所有缓存礼物列表
     NSLog(@"LSGiftManager::removeAllGiftList( [清除所有缓存礼物列表] )");
-    
+
     [self removeRoomGiftList];
     [self.giftMutableArray removeAllObjects];
 }
@@ -537,7 +536,7 @@
 
 - (void)removeHangoutGiftList {
     // TODO:清除多人互动直播间缓存礼物列表
-    
+
     self.hangoutGiftListRequest = nil;
     [self.buyforMutableArray removeAllObjects];
     [self.normalMutableArray removeAllObjects];

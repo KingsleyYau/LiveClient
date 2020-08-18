@@ -82,7 +82,7 @@
     self.startPeriod = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Start_Time"),self.startPeriod,item.timeZoneCity,item.timeZoneValue];
     self.startTimeLabel.text = self.startPeriod;
     
-    NSString *localTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm" isDaylightSaving:item.isSummerTime andZone:@""];
+    NSString *localTime = [[LSPrePaidManager manager] getLocalTimeBeginTiemAndEndTimeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm"];
     self.localTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Local_Time"),localTime];
     
     for (LSScheduleDurationItemObject *obj  in [LSPrePaidManager manager].creditsArray) {

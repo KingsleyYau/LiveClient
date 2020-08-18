@@ -29,6 +29,10 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    self.titleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.titleLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    self.titleLabel.layer.shadowOpacity = 0.5;
+    
     self.deteView.layer.cornerRadius = 4;
     self.deteView.layer.masksToBounds = YES;
     
@@ -107,38 +111,43 @@
 
 - (void)pickerViewSelectedRow:(NSInteger)row {
     if (self.deteView.countriesButton.isSelected) {
-        self.deteView.countriesButton.selected = NO;
-    
-        self.selectedRow = row;
-        LSCountryTimeZoneItemObject * item = [[LSPrePaidManager manager].countriesArray objectAtIndex:row];
-        [self.deteView updateCountries:item];
-        [self.deteView updateTimeZone:[item.timeZoneList firstObject]];
+        if ([LSPrePaidManager manager].countriesArray.count > row) {
+            self.deteView.countriesButton.selected = NO;
+            self.selectedRow = row;
+            LSCountryTimeZoneItemObject * item = [[LSPrePaidManager manager].countriesArray objectAtIndex:row];
+            [self.deteView updateCountries:item];
+            [self.deteView updateTimeZone:[item.timeZoneList firstObject]];
+        }
         
     }else if (self.deteView.timeZoneButton.isSelected) {
-        self.deteView.timeZoneButton.selected = NO;
-        
-         LSCountryTimeZoneItemObject * item = [[LSPrePaidManager manager].countriesArray objectAtIndex:self.selectedRow];
-        
-        LSTimeZoneItemObject * tiemItem = [item.timeZoneList objectAtIndex:row];
-        self.selectedZoneRow = row;
-        [self.deteView updateTimeZone:tiemItem];
+        if ([LSPrePaidManager manager].countriesArray.count > row) {
+            self.deteView.timeZoneButton.selected = NO;
+             LSCountryTimeZoneItemObject * item = [[LSPrePaidManager manager].countriesArray objectAtIndex:self.selectedRow];
+            LSTimeZoneItemObject * tiemItem = [item.timeZoneList objectAtIndex:row];
+            self.selectedZoneRow = row;
+            [self.deteView updateTimeZone:tiemItem];
+        }
     }else if (self.deteView.creditsButton.isSelected) {
-        self.deteView.creditsButton.selected = NO;
-        LSScheduleDurationItemObject * item = [[LSPrePaidManager manager].creditsArray objectAtIndex:row];
-        self.selectedDurationRow = row;
-        [self.deteView updateCredits:item];
+        if ([LSPrePaidManager manager].creditsArray.count > row) {
+            self.deteView.creditsButton.selected = NO;
+            LSScheduleDurationItemObject * item = [[LSPrePaidManager manager].creditsArray objectAtIndex:row];
+            self.selectedDurationRow = row;
+            [self.deteView updateCredits:item];
+        }
     }
     else if (self.deteView.timeButton.isSelected) {
-        self.deteView.timeButton.selected = NO;
-        self.selectedYearRow = row;
-        [self.deteView updateDate:[[[LSPrePaidManager manager]getYearArray] objectAtIndex:row]];
- 
-        
+        if ([[LSPrePaidManager manager]getYearArray].count > row) {
+            self.deteView.timeButton.selected = NO;
+            self.selectedYearRow = row;
+            [self.deteView updateDate:[[[LSPrePaidManager manager]getYearArray] objectAtIndex:row]];
+        }
     }else if (self.deteView.beginTimeButton.isSelected) {
-        self.deteView.beginTimeButton.selected = NO;
-        self.selectedBeginTimeRow = row;
-        NSArray * array = [[LSPrePaidManager manager]getTimeArray];
-        [self.deteView updateBeginTime:[array objectAtIndex:row]];
+        if ([[LSPrePaidManager manager]getTimeArray].count > row) {
+            self.deteView.beginTimeButton.selected = NO;
+            self.selectedBeginTimeRow = row;
+            NSArray * array = [[LSPrePaidManager manager]getTimeArray];
+            [self.deteView updateBeginTime:[array objectAtIndex:row]];
+        }
     }
 }
 
@@ -153,7 +162,11 @@
         self.selectedYearRow = [[[LSPrePaidManager manager]getYearArray] indexOfObject:button.titleLabel.text];
        return self.selectedYearRow;
     }else if ([button isEqual:self.deteView.beginTimeButton]) {
-         self.selectedBeginTimeRow = [[[LSPrePaidManager manager]getTimeArray] indexOfObject:button.titleLabel.text];
+        if ([[[LSPrePaidManager manager]getTimeArray] containsObject:button.titleLabel.text]) {
+           self.selectedBeginTimeRow = [[[LSPrePaidManager manager]getTimeArray] indexOfObject:button.titleLabel.text];
+        }else {
+            self.selectedBeginTimeRow = 0;
+        }
        return self.selectedBeginTimeRow;
     }
     return 0;

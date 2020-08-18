@@ -20,6 +20,7 @@
 #import "LSGetScheduleInviteDetailRequest.h"
 #import "LSGetSessionInviteListRequest.h"
 #import "LSCancelScheduleInviteRequest.h"
+#import "GetActivityTimeRequest.h"
 #import "LiveRoom.h"
 
 #import "LSLCLiveChatScheduleMsgItemObject.h"
@@ -27,7 +28,7 @@
 @protocol LSPrePaidManagerDelegate <NSObject>
 @optional;
 /* 接收发送预付费直播邀请回调 */
-- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item;
+- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item refId:(NSString *)refId;
 /* 接收接受预付费邀请回调 */
 - (void)onRecvSendAcceptSchedule:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg statusUpdateTime:(NSInteger)statusUpdateTime scheduleInviteId:(NSString*)inviteId duration:(int)duration roomInfoItem:(ImScheduleRoomInfoObject *)roomInfoItem;
 /* 接收拒绝预付费邀请回调 */
@@ -39,9 +40,11 @@
 /* 接收女士发送预付费消息通知 */
 - (void)onRecvAnchorSendScheduleNotice:(ImScheduleRoomInfoObject *)item;
 /* 接收预付费列表数 */
-- (void)onGetScheduleListCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount;
+- (void)onGetScheduleList:(BOOL)success maxCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount refId:(NSString *)refId;
 /* 接收取消预约回调 */
 - (void)onRecvSendScheduleInviteCancel:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg;
+/* 接收日期回调 */
+- (void)onRecvScheduleGetDateData;
 @end
 
 @interface LSPrePaidManager : NSObject
@@ -65,6 +68,8 @@
 //开始时间
 @property (nonatomic,copy) NSString * benginTime;
 
+@property (nonatomic, assign) NSInteger activityTime;
+
 @property (nonatomic, strong) LiveRoom *liveRoom;
 
 //某个会话/直播间/邮件的邀请列表数组
@@ -79,6 +84,7 @@
 
 - (void)removeScheduleListArray;
 - (void)getCountryData;
+- (void)getDateData;
 
 //获取时长价格数组
 - (NSArray *)getCreditArray;
@@ -95,13 +101,11 @@
 //获得时区  例：GMT+0000
 - (NSString*)getZone;
 
-//获取某个时区的当前时间
-- (NSString *)getNewTimeZoneDate:(NSString *)gmtTime;
-//根据其他时区获得当前时间
+//获取某个时区的24小时后时间
+- (NSString *)get24TimeZoneDate:(NSString *)gmtTime;
+//根据时间转换本地时间
 - (NSString *)getNowDateFromatAnDate:(NSDate *)anyDate;
-//获取当前系统时间
-- (NSString*)getCurrentTimes;
-
+ 
 //是否在夏令时时间内
 -(BOOL)nowtimeIsInBeginTime:(NSString *)time;
 //夏令时增加1个小时
@@ -124,13 +128,20 @@
 //时间戳转时间 format格式： MMM dd, HH:00,返回 MMM dd, HH:00 - HH:00 并判断是否夏令时 zone格式: @"GMT+0800"
 - (NSString *)getStartTimeAndEndTomeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format isDaylightSaving:(BOOL)isday andZone:(NSString*)zone;
 
+- (NSString*)getLocalTimeBeginTiemAndEndTimeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format ;
+
+//获取详情显示时间 format格式： MMM dd,YYYY HH:00,返回 MMM dd,YYYY HH:00 - HH:00 并判断是否夏令时 zone格式: @"GMT+0800"
+- (NSString *)getDetailStartAndEndTimestamp:(NSInteger)time timeFormat:(NSString *)format isDaylightSaving:(BOOL)isday andZone:(NSString*)zone;
+
+//根据时间转时间戳
+-(NSInteger)timeSwitchTimestamp:(NSString *)formatTime;
 
 //获取接口需要的时间格式数据
 - (NSString *)getSendRequestTime:(NSString *)format;
 // 发送预付费邀请
 - (void)sendScheduleInvite:(LSScheduleInviteItem *)inviteItem;
 // 接收预付费邀请
-- (void)sendAcceptScheduleInvite:(NSString *)inviteId duration:(int)duration infoObj:(LSScheduleInviteItem *)infoObj;
+- (void)sendAcceptScheduleInvite:(NSString *)inviteId duration:(int)time infoObj:(LSScheduleInviteItem *)infoObj;
 // 拒绝预付费邀请
 - (void)sendDeclinedScheduleInvite:(NSString *)inviteId;
 // 获取预付费邀请列表

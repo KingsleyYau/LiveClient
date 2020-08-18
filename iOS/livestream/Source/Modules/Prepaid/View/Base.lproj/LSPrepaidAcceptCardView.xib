@@ -35,7 +35,7 @@
                                 <constraint firstAttribute="height" constant="28" id="xiR-GO-tdy"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Schedule One-on-One Request" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iBx-eG-N33">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Schedule One-on-One Request" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="iBx-eG-N33">
                             <rect key="frame" x="30" y="5.5" width="214" height="17"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="17" id="l9K-Lh-l7R"/>
@@ -82,16 +82,16 @@ with me?”</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28,13:00 - 14:00 HKT(GMT - 6)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yTr-Ut-8hr">
-                                    <rect key="frame" x="8" y="20" width="254" height="21"/>
+                                    <rect key="frame" x="8" y="20" width="254" height="15"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="21" id="OYz-dq-c93"/>
+                                        <constraint firstAttribute="height" constant="15" id="OYz-dq-c93"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="12"/>
                                     <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session Duration:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OQS-ok-q0T">
-                                    <rect key="frame" x="8" y="59" width="254" height="15"/>
+                                    <rect key="frame" x="8" y="56" width="254" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="15" id="eVX-u3-JB6"/>
                                     </constraints>
@@ -100,21 +100,21 @@ with me?”</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28,13:00 - 14:00 (Your local time)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TWb-F5-dtc">
-                                    <rect key="frame" x="8" y="40" width="254" height="16"/>
+                                    <rect key="frame" x="8" y="35" width="254" height="13"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="16" id="6hO-EF-iMH"/>
+                                        <constraint firstAttribute="height" constant="13" id="6hO-EF-iMH"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G42-qR-HUb">
-                                    <rect key="frame" x="8" y="78" width="254" height="26"/>
+                                    <rect key="frame" x="8" y="75" width="254" height="26"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="26" id="LAs-wM-df3"/>
                                     </constraints>
-                                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                                     <state key="normal" backgroundImage="LS_Prepaid_TimeBtnBG">
                                         <attributedString key="attributedTitle">
                                             <fragment content="30 Minutes - 13.50 Credits ">
@@ -139,7 +139,7 @@ with me?”</string>
                                     </connections>
                                 </button>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="3Yp-QA-ntZ">
-                                    <rect key="frame" x="245" y="85" width="12" height="12"/>
+                                    <rect key="frame" x="245" y="82" width="12" height="12"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="12" id="oKG-vz-Lqu"/>
                                         <constraint firstAttribute="width" constant="12" id="zwg-B2-xN9"/>
@@ -148,14 +148,14 @@ with me?”</string>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
-                                <constraint firstItem="OQS-ok-q0T" firstAttribute="top" secondItem="TWb-F5-dtc" secondAttribute="bottom" constant="3" id="38z-tt-SMn"/>
+                                <constraint firstItem="OQS-ok-q0T" firstAttribute="top" secondItem="TWb-F5-dtc" secondAttribute="bottom" constant="8" id="38z-tt-SMn"/>
                                 <constraint firstAttribute="trailing" secondItem="G42-qR-HUb" secondAttribute="trailing" constant="8" id="93p-GB-bJO"/>
                                 <constraint firstAttribute="trailing" secondItem="OQS-ok-q0T" secondAttribute="trailing" constant="8" id="Evd-Gk-N6S"/>
                                 <constraint firstAttribute="trailing" secondItem="TWb-F5-dtc" secondAttribute="trailing" constant="8" id="Gpx-PU-CfP"/>
                                 <constraint firstAttribute="trailing" secondItem="qxc-9R-hue" secondAttribute="trailing" constant="8" id="HGV-V7-ZWj"/>
                                 <constraint firstItem="G42-qR-HUb" firstAttribute="leading" secondItem="1Bd-Ad-qvP" secondAttribute="leading" constant="8" id="IZI-Xe-r81"/>
                                 <constraint firstItem="qxc-9R-hue" firstAttribute="leading" secondItem="1Bd-Ad-qvP" secondAttribute="leading" constant="8" id="JbA-Po-dXV"/>
-                                <constraint firstItem="TWb-F5-dtc" firstAttribute="top" secondItem="qxc-9R-hue" secondAttribute="bottom" constant="19" id="S0c-fW-mtW"/>
+                                <constraint firstItem="TWb-F5-dtc" firstAttribute="top" secondItem="qxc-9R-hue" secondAttribute="bottom" constant="14" id="S0c-fW-mtW"/>
                                 <constraint firstItem="yTr-Ut-8hr" firstAttribute="leading" secondItem="1Bd-Ad-qvP" secondAttribute="leading" constant="8" id="SCY-OG-N1N"/>
                                 <constraint firstItem="yTr-Ut-8hr" firstAttribute="top" secondItem="1Bd-Ad-qvP" secondAttribute="top" constant="20" id="Ss9-hB-wh0"/>
                                 <constraint firstItem="G42-qR-HUb" firstAttribute="top" secondItem="OQS-ok-q0T" secondAttribute="bottom" constant="4" id="YZh-lA-h7m"/>
@@ -223,7 +223,7 @@ with me?”</string>
                             <rect key="frame" x="0.0" y="0.0" width="270" height="194"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ll-yL-hb3">
-                                    <rect key="frame" x="0.0" y="81" width="270" height="1"/>
+                                    <rect key="frame" x="0.0" y="79" width="270" height="1"/>
                                     <color key="backgroundColor" red="0.90980392160000001" green="0.76078431369999999" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="QEQ-jf-7UY"/>
@@ -245,16 +245,16 @@ with me?”</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time sent:Dec 22,12:30(GTMT)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSS-yS-ljc">
-                                    <rect key="frame" x="8" y="24" width="254" height="15"/>
+                                    <rect key="frame" x="8" y="21" width="254" height="13"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="15" id="yFZ-9s-fp6"/>
+                                        <constraint firstAttribute="height" constant="13" id="yFZ-9s-fp6"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SgC-WG-uNC">
-                                    <rect key="frame" x="8" y="43" width="40" height="15"/>
+                                    <rect key="frame" x="8" y="41" width="40" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="40" id="3kK-CA-Ko0"/>
                                     </constraints>
@@ -263,13 +263,13 @@ with me?”</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One-on-One Start Time:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqS-nG-RYw">
-                                    <rect key="frame" x="8" y="83" width="254" height="15"/>
+                                    <rect key="frame" x="8" y="88" width="254" height="15"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFM-l8-E61">
-                                    <rect key="frame" x="8" y="59" width="254" height="17"/>
+                                    <rect key="frame" x="8" y="57" width="254" height="17"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="17" id="YRE-tD-5jv"/>
                                     </constraints>
@@ -278,16 +278,16 @@ with me?”</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28,13:00 - 14:00 HKT(GMT - 6)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z36-xn-rgZ">
-                                    <rect key="frame" x="8" y="98" width="257" height="21"/>
+                                    <rect key="frame" x="8" y="103" width="257" height="15"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="21" id="KEp-u0-zcz"/>
+                                        <constraint firstAttribute="height" constant="15" id="KEp-u0-zcz"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="12"/>
                                     <color key="textColor" red="0.2470588235" green="0.2470588235" blue="0.2470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session Duration:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wyj-9O-i5Y">
-                                    <rect key="frame" x="8" y="144" width="100" height="15"/>
+                                    <rect key="frame" x="8" y="138" width="100" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="15" id="Yot-P8-DCV"/>
                                     </constraints>
@@ -296,119 +296,41 @@ with me?”</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28,13:00 - 14:00 (Your local time)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRg-W6-ZuF">
-                                    <rect key="frame" x="8" y="120" width="254" height="16"/>
+                                    <rect key="frame" x="8" y="118" width="254" height="15"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="16" id="DQI-H1-1cb"/>
+                                        <constraint firstAttribute="height" constant="15" id="DQI-H1-1cb"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending her confimation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeP-cG-poR">
-                                    <rect key="frame" x="51" y="43" width="147.5" height="15"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending her confirmation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeP-cG-poR">
+                                    <rect key="frame" x="51" y="41" width="153" height="15"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                     <color key="textColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ru2-X4-sHP">
-                                    <rect key="frame" x="8" y="162" width="254" height="26"/>
+                                    <rect key="frame" x="8" y="156" width="254" height="26"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="26" id="xZG-tE-WYW"/>
                                     </constraints>
-                                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                                     <state key="normal" backgroundImage="LS_Prepaid_TimeBtnBG">
                                         <attributedString key="attributedTitle">
                                             <fragment content="30 Minutes - 13.50 Credits ">
                                                 <attributes>
                                                     <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     <font key="NSFont" size="12" name="Helvetica-Bold"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                        <tabStops>
-                                                            <textTab alignment="left" location="28">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="56">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="84">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="112">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="140">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="168">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="196">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="224">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="252">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="280">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="308">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="336">
-                                                                <options/>
-                                                            </textTab>
-                                                        </tabStops>
-                                                    </paragraphStyle>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
                                             </fragment>
                                             <fragment content="15.00 Credits">
                                                 <attributes>
                                                     <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     <font key="NSFont" size="12" name="Helvetica-Bold"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                        <tabStops>
-                                                            <textTab alignment="left" location="28">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="56">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="84">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="112">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="140">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="168">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="196">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="224">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="252">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="280">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="308">
-                                                                <options/>
-                                                            </textTab>
-                                                            <textTab alignment="left" location="336">
-                                                                <options/>
-                                                            </textTab>
-                                                        </tabStops>
-                                                    </paragraphStyle>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                     <integer key="NSStrikethrough" value="1"/>
                                                     <color key="NSStrikethroughColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 </attributes>
@@ -420,16 +342,16 @@ with me?”</string>
                                     </connections>
                                 </button>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Arrow" translatesAutoresizingMaskIntoConstraints="NO" id="GQi-G2-Pje">
-                                    <rect key="frame" x="245" y="169" width="12" height="12"/>
+                                    <rect key="frame" x="245" y="163" width="12" height="12"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="12" id="Tav-9G-Pa9"/>
                                         <constraint firstAttribute="height" constant="12" id="yHe-o1-ssi"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xCf-Ue-TBx">
-                                    <rect key="frame" x="8" y="59" width="254" height="21"/>
+                                    <rect key="frame" x="8" y="55" width="254" height="14"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="21" id="d9R-RO-SLM"/>
+                                        <constraint firstAttribute="height" constant="14" id="d9R-RO-SLM"/>
                                     </constraints>
                                     <attributedString key="attributedText">
                                         <fragment content="No confirmation time yet.">
@@ -446,9 +368,9 @@ with me?”</string>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="SFM-l8-E61" secondAttribute="trailing" constant="8" id="091-YQ-f8W"/>
-                                <constraint firstItem="eeP-cG-poR" firstAttribute="top" secondItem="sSS-yS-ljc" secondAttribute="bottom" constant="4" id="0Eo-nL-fgZ"/>
+                                <constraint firstItem="eeP-cG-poR" firstAttribute="top" secondItem="sSS-yS-ljc" secondAttribute="bottom" constant="7" id="0Eo-nL-fgZ"/>
                                 <constraint firstItem="9xb-v7-ziB" firstAttribute="top" secondItem="YAo-Rm-RhG" secondAttribute="top" constant="6" id="2QR-Fz-xON"/>
-                                <constraint firstItem="sSS-yS-ljc" firstAttribute="top" secondItem="9xb-v7-ziB" secondAttribute="bottom" constant="3" id="2pu-gY-yF6"/>
+                                <constraint firstItem="sSS-yS-ljc" firstAttribute="top" secondItem="9xb-v7-ziB" secondAttribute="bottom" id="2pu-gY-yF6"/>
                                 <constraint firstItem="GQi-G2-Pje" firstAttribute="centerY" secondItem="ru2-X4-sHP" secondAttribute="centerY" id="3Tc-NW-K2X"/>
                                 <constraint firstItem="Z36-xn-rgZ" firstAttribute="top" secondItem="cqS-nG-RYw" secondAttribute="bottom" id="6bF-EM-Fft"/>
                                 <constraint firstItem="Z36-xn-rgZ" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="72F-EP-q71"/>
@@ -460,7 +382,7 @@ with me?”</string>
                                 <constraint firstItem="ru2-X4-sHP" firstAttribute="top" secondItem="Wyj-9O-i5Y" secondAttribute="bottom" constant="3" id="Hld-ms-adN"/>
                                 <constraint firstItem="SgC-WG-uNC" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="JoA-Qp-OGP"/>
                                 <constraint firstItem="SFM-l8-E61" firstAttribute="top" secondItem="SgC-WG-uNC" secondAttribute="bottom" constant="1" id="NUz-bp-8my"/>
-                                <constraint firstItem="cRg-W6-ZuF" firstAttribute="top" secondItem="Z36-xn-rgZ" secondAttribute="bottom" constant="1" id="NZS-KU-NbB"/>
+                                <constraint firstItem="cRg-W6-ZuF" firstAttribute="top" secondItem="Z36-xn-rgZ" secondAttribute="bottom" id="NZS-KU-NbB"/>
                                 <constraint firstItem="9xb-v7-ziB" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="Nev-xx-rGk"/>
                                 <constraint firstAttribute="height" constant="194" id="NtZ-3p-VyE"/>
                                 <constraint firstItem="GQi-G2-Pje" firstAttribute="trailing" secondItem="ru2-X4-sHP" secondAttribute="trailing" constant="-5" id="Q4z-cb-lnU"/>
@@ -468,18 +390,18 @@ with me?”</string>
                                 <constraint firstAttribute="trailing" secondItem="xCf-Ue-TBx" secondAttribute="trailing" constant="8" id="YDf-ya-s9W"/>
                                 <constraint firstItem="ru2-X4-sHP" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="YG9-cz-95o"/>
                                 <constraint firstAttribute="trailing" secondItem="cRg-W6-ZuF" secondAttribute="trailing" constant="8" id="YMt-XA-0BU"/>
-                                <constraint firstItem="Wyj-9O-i5Y" firstAttribute="top" secondItem="cRg-W6-ZuF" secondAttribute="bottom" constant="8" id="YiU-6g-yTe"/>
+                                <constraint firstItem="Wyj-9O-i5Y" firstAttribute="top" secondItem="cRg-W6-ZuF" secondAttribute="bottom" constant="5" id="YiU-6g-yTe"/>
                                 <constraint firstItem="eeP-cG-poR" firstAttribute="centerY" secondItem="SgC-WG-uNC" secondAttribute="centerY" id="Yv4-Iy-qhN"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Wyj-9O-i5Y" secondAttribute="trailing" constant="8" id="bPm-UT-751"/>
                                 <constraint firstItem="2ll-yL-hb3" firstAttribute="top" secondItem="SFM-l8-E61" secondAttribute="bottom" constant="5" id="c7L-NN-Dnw"/>
-                                <constraint firstItem="xCf-Ue-TBx" firstAttribute="top" secondItem="SgC-WG-uNC" secondAttribute="bottom" constant="1" id="dle-Ca-S6f"/>
+                                <constraint firstItem="xCf-Ue-TBx" firstAttribute="top" secondItem="SgC-WG-uNC" secondAttribute="bottom" constant="-1" id="dle-Ca-S6f"/>
                                 <constraint firstItem="SFM-l8-E61" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="e0l-oM-ZFH"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="eeP-cG-poR" secondAttribute="trailing" constant="8" id="fs8-Ci-zDl"/>
-                                <constraint firstItem="SgC-WG-uNC" firstAttribute="top" secondItem="sSS-yS-ljc" secondAttribute="bottom" constant="4" id="gnE-pj-Io4"/>
+                                <constraint firstItem="SgC-WG-uNC" firstAttribute="top" secondItem="sSS-yS-ljc" secondAttribute="bottom" constant="7" id="gnE-pj-Io4"/>
                                 <constraint firstItem="dkd-Ih-vsy" firstAttribute="centerY" secondItem="9xb-v7-ziB" secondAttribute="centerY" id="gzm-wC-rQ2"/>
                                 <constraint firstItem="sSS-yS-ljc" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="h3H-0O-b0c"/>
                                 <constraint firstAttribute="trailing" secondItem="cqS-nG-RYw" secondAttribute="trailing" constant="8" id="hcr-hl-4XG"/>
-                                <constraint firstItem="cqS-nG-RYw" firstAttribute="top" secondItem="2ll-yL-hb3" secondAttribute="bottom" constant="1" id="mDR-qX-lA4"/>
+                                <constraint firstItem="cqS-nG-RYw" firstAttribute="top" secondItem="2ll-yL-hb3" secondAttribute="bottom" constant="8" id="mDR-qX-lA4"/>
                                 <constraint firstItem="Wyj-9O-i5Y" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" constant="8" id="oOB-qN-c8K"/>
                                 <constraint firstItem="2ll-yL-hb3" firstAttribute="leading" secondItem="YAo-Rm-RhG" secondAttribute="leading" id="qph-F6-EAV"/>
                                 <constraint firstAttribute="trailing" secondItem="Z36-xn-rgZ" secondAttribute="trailing" constant="5" id="rmC-Ic-VAE"/>
@@ -550,7 +472,7 @@ with me?”</string>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qld-Ff-Z43">
-                            <rect key="frame" x="115" y="334" width="40" height="30"/>
+                            <rect key="frame" x="115" y="339" width="40" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="ToX-PJ-azy"/>
                                 <constraint firstAttribute="width" constant="40" id="iLd-uw-H3y"/>
@@ -589,7 +511,7 @@ with me?”</string>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3Dy-xW-a6r" secondAttribute="trailing" constant="8" id="gzD-qJ-zNb"/>
                         <constraint firstItem="c8J-EO-WgH" firstAttribute="top" secondItem="YAo-Rm-RhG" secondAttribute="bottom" constant="14" id="ltL-kF-KGP"/>
                         <constraint firstItem="oeq-0Z-Lr9" firstAttribute="leading" secondItem="Ydq-J9-GXz" secondAttribute="leading" id="pd4-wN-IGj"/>
-                        <constraint firstItem="qld-Ff-Z43" firstAttribute="top" secondItem="SSj-S5-eEN" secondAttribute="bottom" constant="5" id="xWO-3P-gga"/>
+                        <constraint firstItem="qld-Ff-Z43" firstAttribute="top" secondItem="SSj-S5-eEN" secondAttribute="bottom" constant="10" id="xWO-3P-gga"/>
                         <constraint firstItem="qld-Ff-Z43" firstAttribute="centerX" secondItem="Ydq-J9-GXz" secondAttribute="centerX" id="z4J-ON-Deh"/>
                     </constraints>
                 </view>
@@ -655,6 +577,7 @@ with me?”</string>
             <connections>
                 <outlet property="acceptBtn" destination="c8J-EO-WgH" id="SSh-ng-CqF"/>
                 <outlet property="arrowBtn" destination="qld-Ff-Z43" id="wlt-KS-2G9"/>
+                <outlet property="bigTitleLabel" destination="iBx-eG-N33" id="IWF-Uz-mX2"/>
                 <outlet property="defaultAcceptBtn" destination="jfr-Jq-jU0" id="kzJ-12-RGD"/>
                 <outlet property="defaultDurationBtn" destination="G42-qR-HUb" id="nc5-ND-RbR"/>
                 <outlet property="defaultLocalTimeLabel" destination="TWb-F5-dtc" id="IKH-Db-2hV"/>

@@ -12,6 +12,8 @@
 
 @property (nonatomic, copy) NSString *_Nonnull sid;
 @property (nonatomic, assign) int res;
+// liveRoomId直播间ID可无
+@property (nonatomic, copy) NSString *_Nullable liveRoomId;
 
 @property (nonatomic, strong) ServerSpeedFinishHandler _Nullable finishHandler;
 @end

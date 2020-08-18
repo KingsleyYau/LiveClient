@@ -37,6 +37,9 @@
 #import "LSShadowView.h"
 #import "GetLeftCreditRequest.h"
 #import "LSAnchorLetterPrivRequest.h"
+#import "LSMailVideoKeyView.h"
+#import "LSPremiumVideoDetailViewController.h"
+#import "LSMailAttachmentView.h"
 
 #define TAP_HERE_URL @"TAP_HERE_URL"
 #define MAXInputCount 6000
@@ -50,6 +53,8 @@
 #define PRIVATEPHOTO @"PRIVATEPHOTO"
 #define PRIVATEVIDEO @"PRIVATEVIDEO"
 
+#define KeyViewFixSpace (168.f + 305.f + 26.f + 10.f + 17.f) //168.f=顶部个人信息 305.f=视频解锁码高度 26.f=附件标题 10.f=间隔 17.f=发送时间label高度
+
 typedef enum : NSUInteger {
     AlertViewTypeDefault = 0,      //默认无操作
     AlertViewTypeBack,             //返回草稿
@@ -58,7 +63,7 @@ typedef enum : NSUInteger {
     AlertViewTypeNoSendPermissions //没有发信权限
 } AlertViewType;
 
-@interface LSMailDetailViewController () <WKNavigationDelegate, WKUIDelegate, LSMailAttachmentViewControllerDelegate, UITextViewDelegate, UIScrollViewDelegate, LSChatTextViewDelegate, LSOutOfPoststampViewDelegate, LSOutOfCreditsViewDelegate, UITableViewDelegate, UITableViewDataSource, LSMailDetailFreePhotoCellDelegate, LSMailDetailPrivatePhotoCellDelegate, LSMailPrivateVideoCellDelegate, LSSendMailViewControllerDelegate, UINavigationBarDelegate>
+@interface LSMailDetailViewController () <WKNavigationDelegate, WKUIDelegate, LSMailAttachmentViewControllerDelegate, UITextViewDelegate, UIScrollViewDelegate, LSChatTextViewDelegate, LSOutOfPoststampViewDelegate, LSOutOfCreditsViewDelegate, UITableViewDelegate, UITableViewDataSource, LSMailDetailFreePhotoCellDelegate, LSMailDetailPrivatePhotoCellDelegate, LSMailPrivateVideoCellDelegate, LSSendMailViewControllerDelegate, UINavigationBarDelegate, LSMailVideoKeyViewDelegate, LSMailAttachmentViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
@@ -83,6 +88,9 @@ typedef enum : NSUInteger {
 
 // 回复view
 @property (weak, nonatomic) IBOutlet LSChatTextView *replyTextView;
+
+// 回复view
+@property (weak, nonatomic) IBOutlet UIView *replyView;
 // textview阴影
 @property (weak, nonatomic) IBOutlet UIView *textShadowView;
 // 文本提示
@@ -127,10 +135,21 @@ typedef enum : NSUInteger {
 //邮票弹窗
 @property (nonatomic, strong) LSOutOfPoststampView *poststampView;
 
+//解锁码View
+@property (strong, nonatomic) LSMailVideoKeyView *videoKeyView;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoKeyViewH;
+
+@property (strong, nonatomic) LSMailAttachmentView *keyAttachmentView;
+
+@property (nonatomic, copy) NSString *videoTitle;
+@property (nonatomic, copy) NSString *videoId;
+@property (nonatomic, copy) NSString *accessKey;
 @property (nonatomic, assign) CGFloat freeCellHeight;
 @property (nonatomic, assign) CGFloat privateCellHeight;
 
 @property (nonatomic, assign) CGFloat scrollViewOffy;
+
+@property (nonatomic, assign) CGFloat keyAttachmentViewHeight;
 
 @property (nonatomic, strong) NSMutableArray *typeArray;
 @property (nonatomic, strong) NSMutableArray<LSMailAttachmentModel *> *freeImages;
@@ -206,6 +225,39 @@ typedef enum : NSUInteger {
     [self.navRightBtn addTarget:self action:@selector(replyAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navRightBtn setImage:[UIImage imageNamed:@"Mail_Detail_Reply"] forState:UIControlStateNormal];
     self.navRightBtn.frame = CGRectMake(0, 0, 44, 44);
+    
+    if (self.letterItem.hasKey) {
+        //解锁码邮件
+        //隐藏普通邮件内容
+        //[self.replyBtn setHidden:YES];
+        [self.attachmentsTip setHidden:YES];
+        [self.replySendBtn setHidden:YES];
+        [self.replyTextView setHidden:YES];
+        [self.replyView setHidden:YES];
+        [self.textShadowView setHidden:YES];
+        [self.infoTipLabel setHidden:YES];
+        [self.tableView setHidden:YES];
+
+        self.videoKeyView = [[LSMailVideoKeyView alloc] init];
+        [self.scrollView addSubview:self.videoKeyView];
+        self.videoKeyView.delegate = self;
+        [self.videoKeyView mas_updateConstraints:^(MASConstraintMaker *make){
+            make.left.equalTo(self.scrollView).offset(20);
+            make.right.equalTo(self.scrollView).offset(-20);
+            make.top.equalTo(self.sendTimeLabel.mas_bottom).offset(26);
+            make.height.equalTo(@305);
+        }];
+        
+        self.keyAttachmentView = [[LSMailAttachmentView alloc] initWithFrame:CGRectZero];
+        [self.scrollView addSubview:self.keyAttachmentView];
+        self.keyAttachmentView.delegate = self;
+        [self.keyAttachmentView mas_updateConstraints:^(MASConstraintMaker *make){
+            make.left.equalTo(self.scrollView).offset(20);
+            make.right.equalTo(self.scrollView).offset(-20);
+            make.top.equalTo(self.videoKeyView.mas_bottom);
+            //make.height.equalTo(@305);
+        }];
+    }
 
     [self setupTapLabelStyle];
     [self setupCornerRadius];
@@ -214,12 +266,7 @@ typedef enum : NSUInteger {
     self.wkWebView.scrollView.scrollEnabled = NO;
 
     // 头像
-    [[LSImageViewLoader loader] loadImageFromCache:self.headImageView
-                                           options:SDWebImageRefreshCached
-                                          imageUrl:self.letterItem.anchorAvatar
-                                  placeholderImage:LADYDEFAULTIMG
-                                     finishHandler:^(UIImage *image){
-                                     }];
+    [[LSImageViewLoader loader]loadImageWithImageView:self.headImageView options:0 imageUrl:self.letterItem.anchorAvatar placeholderImage:LADYDEFAULTIMG finishHandler:nil];
     // 姓名
     self.nameLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"FROM_ANCHOR"), self.letterItem.anchorNickName];
     // 发信时间信件ID
@@ -260,7 +307,10 @@ typedef enum : NSUInteger {
     self.navigationItem.leftBarButtonItem = leftButtonItem;
 
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.navRightBtn];
-    self.navigationItem.rightBarButtonItem = barButtonItem;
+    
+    //if (!self.letterItem.hasKey) {
+        self.navigationItem.rightBarButtonItem = barButtonItem;
+    //}
     
     self.navigationController.navigationBar.hidden = NO;
     [self setupAlphaStatus:self.scrollView];
@@ -669,6 +719,8 @@ typedef enum : NSUInteger {
 
                 // 设置已读
                 weakSelf.letterItem.hasRead = YES;
+                weakSelf.videoId = item.accessKeyInfo.videoId;
+                weakSelf.videoTitle = item.accessKeyInfo.title;
                 [weakSelf setupMailDetail:item];
                 // 刷新列表已读信息
                 if ([weakSelf.mailDetailDelegate
@@ -684,7 +736,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)setupMailDetail:(LSHttpLetterDetailItemObject *)item {
-    self.replyBtn.hidden = NO;
+    self.accessKey = item.accessKeyInfo.accessKey;
     self.nodataView.hidden = YES;
     // 在线状态
     if (item.onlineStatus) {
@@ -696,8 +748,31 @@ typedef enum : NSUInteger {
     NSString *contentStr = [item.letterContent stringByReplacingOccurrencesOfString:@"\n" withString:@"<br>"];
     [self loadMailContentWebView:contentStr];
 
+    if (self.letterItem.hasKey) {
+        self.keyAttachmentViewHeight = 0;//初始化附件高度
+        
+        [self.videoKeyView setVideoItem:item.accessKeyInfo];
+    }else{
+//        self.replyBtn.hidden = NO;
+    }
+    self.replyBtn.hidden = NO;
     // 显示邮件内容
     [self setupTableView:item];
+}
+
+-(void)setupKeyAttachments
+{
+    self.keyAttachmentViewHeight = 0;//初始化附件高度
+    
+    if (self.freeImages.count > 0) {
+        NSMutableArray *arr = [[NSMutableArray alloc] initWithCapacity:self.freeImages.count];
+        for (LSMailAttachmentModel *item in self.freeImages) {
+            [arr addObject:item.originImgUrl];
+        }
+        [self.keyAttachmentView reloadAttactments:arr];
+    }else{
+        [self.keyAttachmentView removeFromSuperview];
+    }
 }
 
 - (void)setupTableView:(LSHttpLetterDetailItemObject *)item {
@@ -904,6 +979,32 @@ typedef enum : NSUInteger {
     }
 }
 
+#pragma mark - LSMailAttachmentView 更新视频解锁码的高度
+- (void)mailVideoKeyViewUpdateHeight:(UIImageView *)imageV
+{
+    //更新layout
+    self.keyAttachmentViewHeight = imageV.frame.origin.y + imageV.frame.size.height+10.f;
+    [self.keyAttachmentView mas_updateConstraints:^(MASConstraintMaker *make){
+        make.height.equalTo([NSNumber numberWithFloat:self.keyAttachmentViewHeight]);
+    }];
+    CGFloat totalHeight = self.keyAttachmentViewHeight+self.contentViewHeight.constant + KeyViewFixSpace;
+
+    [self.keyAttachmentView layoutIfNeeded];
+    [self.scrollView layoutIfNeeded];
+    [self.scrollView setContentSize:CGSizeMake(self.scrollView.bounds.size.width, totalHeight)];
+}
+#pragma mark - LSMailVideoKeyViewDelegate
+- (void)mailVideoKeyViewGotoVideoDetail
+{
+    //打开视频详情
+    LSPremiumVideoDetailViewController *videoViewController = [[LSPremiumVideoDetailViewController alloc] initWithNibName:nil bundle:nil];
+    videoViewController.womanId = self.letterItem.anchorId;
+    videoViewController.videoId = self.videoId;
+    videoViewController.videoTitle = self.videoTitle;
+    videoViewController.videoKey = self.accessKey;
+    [self.navigationController pushViewController:videoViewController animated:YES];
+}
+
 #pragma mark - LSMailDetailFreePhotoCellDelegate/LSMailDetailPrivatePhotoCellDelegate/LSMailPrivateVideoCellDelegate
 - (void)freePhotoDidClick:(LSMailAttachmentModel *)model {
     [[LiveModule module].analyticsManager reportActionEvent:MailClickPhoto eventCategory:EventCategoryMail];
@@ -917,6 +1018,7 @@ typedef enum : NSUInteger {
                 vc.attachmentDelegate = self;
                 vc.photoIndex = index;
                 LSNavigationController * nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
+                nvc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
@@ -941,6 +1043,7 @@ typedef enum : NSUInteger {
                 vc.attachmentDelegate = self;
                 vc.photoIndex = index;
                 UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+                nvc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
@@ -965,6 +1068,7 @@ typedef enum : NSUInteger {
                 vc.attachmentDelegate = self;
                 vc.photoIndex = index;
                 UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+                nvc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
                 [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
                 [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
@@ -1069,14 +1173,17 @@ typedef enum : NSUInteger {
 #pragma mark - WKWebViewDelegate
 // 加载完webview (当main frame导航完成时，会回调)
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-    NSLog(@"LSMailDetailViewController::didFinishNavigation()");
+
       __block CGFloat webViewHeight;
     [self.wkWebView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result,NSError * _Nullable error) {
                  dispatch_async(dispatch_get_main_queue(), ^{
                      webViewHeight = [result doubleValue];
                     self.contentViewHeight.constant = webViewHeight;
                     self.wkWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, webViewHeight);
-                     
+
+                     if (self.letterItem.hasKey) {
+                         [self setupKeyAttachments];
+                     }
                  });
      }];
 }

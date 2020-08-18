@@ -52,7 +52,6 @@
 //    [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8617"];
 
     [[LiveModule module] setConfigUrl:@"https://demo.charmlive.com"];
-    
 
 }
 
@@ -125,7 +124,7 @@
     if (!_token || _token.length == 0) {
         _token = MAX_TOKEN;
     }
-    _token = MAX_TOKEN;
+    _token = IVY_TOKEN;
 }
 
 - (void)moduleOnLogin:(LiveModule *)module {

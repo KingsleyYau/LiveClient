@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,6 +23,7 @@
                 <outlet property="replyBtn" destination="bnk-41-Lvy" id="ymS-W5-6rZ"/>
                 <outlet property="replySendBtn" destination="Tt6-LC-R7L" id="4oq-Bt-GOt"/>
                 <outlet property="replyTextView" destination="7j3-F8-hq1" id="BqH-Tp-gPY"/>
+                <outlet property="replyView" destination="LAr-oa-1ME" id="W0u-EH-ZhI"/>
                 <outlet property="replyViewBottom" destination="0kn-Dr-Wap" id="7yN-tC-von"/>
                 <outlet property="replyViewHeight" destination="YBk-YN-zDr" id="fHT-sZ-Ilg"/>
                 <outlet property="scrollView" destination="quV-bO-7DR" id="v4a-Hi-fTx"/>
@@ -61,7 +62,7 @@
                                 <constraint firstAttribute="width" secondItem="AFS-jo-xZU" secondAttribute="height" multiplier="1:1" id="f9z-J6-u5x"/>
                             </constraints>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIl-eB-7zh" userLabel="Head Button">
+                        <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIl-eB-7zh" userLabel="Head Button">
                             <rect key="frame" x="150.5" y="47" width="74" height="74"/>
                             <connections>
                                 <action selector="headImageAction:" destination="-1" eventType="touchUpInside" id="vSe-JF-rFQ"/>

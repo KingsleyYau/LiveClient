@@ -28,6 +28,7 @@
 #import "LSRoomUserInfoManager.h"
 #import "LiveUrlHandler.h"
 #import "LSUserInfoManager.h"
+#import "LSStreamSpeedManager.h"
 
 #import "GetPromoAnchorListRequest.h"
 #import "LSGetUserInfoRequest.h"
@@ -695,6 +696,9 @@ typedef enum ButtonStatus {
         if (self.status != PreLiveStatus_Error) {
             if (success) {
                 // 请求进入成功
+                // 上传测速结果
+                [[LSStreamSpeedManager manager] requestSpeedResult:roomItem.roomId];
+
                 // 更新本地登录信息
                 [LSLoginManager manager].loginItem.level = roomItem.manLevel;
                 self.liveRoom.imLiveRoom = roomItem;

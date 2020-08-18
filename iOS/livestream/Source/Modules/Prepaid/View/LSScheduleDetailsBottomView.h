@@ -18,9 +18,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LSScheduleDetailsBottomView : UIView
 
+@property (weak, nonatomic) IBOutlet UILabel *onePromptLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *threePromptLabel;
+
 @property (nonatomic, weak) id<LSScheduleDetailsBottomViewDelegate> delegate;
 
 + (CGFloat)viewHeight;
+
+- (void)setupPrompt:(NSString *)name startTime:(NSInteger)startTime isSummerTime:(BOOL)isSummerTime;
 
 @end
 

@@ -13,7 +13,7 @@
 
 @interface HangoutInviteTableViewCell : UITableViewCell
 #pragma mark - 头像
-@property (nonatomic, weak) IBOutlet UIImageView *imageViewHeader;
+@property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewHeader;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 #pragma mark - 名字/简介
 @property (weak, nonatomic) IBOutlet UILabel *labelName;

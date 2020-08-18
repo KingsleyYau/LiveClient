@@ -37,6 +37,9 @@ typedef enum {
     LiveUrlTypeScheduleList,
     LiveUrlTypeScheduleMailDetail,
     LiveUrlTypeScheduleDetail,
+    LiveUrlTypeSendScheduleMail,
+    LiveUrlTypePremiumVideoList,
+    LiveUrlTypePremiumVideoDetail,
     LiveUrlTypeUnknow,
 } LiveUrlType;
 
@@ -218,6 +221,9 @@ typedef enum {
   预约列表类型
  */
 @property (assign, readonly) LiveUrlScheduleListType scheduleListType;
+
+#pragma mark - 付费视频参数
+@property (copy, readonly) NSString *videoId;
 #pragma mark - 协议解析
 + (int)mainListIndexWithType:(LiveUrlMainListType)type;
 

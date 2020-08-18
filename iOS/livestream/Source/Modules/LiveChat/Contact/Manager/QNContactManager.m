@@ -174,10 +174,10 @@ static QNContactManager *gManager = nil;
         
         LSLadyRecentContactObject *theRecent = [self getRecentWithId:user.userId];
         if (nil != theRecent) {
-            // 已存在，则更新数据
+            // 已存在,则更新数据
             [self updateRecentInfo:theRecent src:recentItem];
         } else {
-            // 不存在，则添加到列表
+            // 不存在,则添加到列表
             [self.items addObject:recentItem];
         }
     }
@@ -686,6 +686,17 @@ static QNContactManager *gManager = nil;
     });
 }
 
+- (void)onRecvScheduleInviteNotice:(LSLCLiveChatMsgItemObject *)item womanId:(NSString *)womanId scheduleReplyItem:(LSLCLiveChatMsgItemObject *)scheduleReplyItem {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"QNContactManager::onRecvScheduleInviteNotice( [收到预付费消息], fromId : %@ )", womanId);
+        if (scheduleReplyItem) {
+            [self reloadDataWithRecvMsg:scheduleReplyItem];
+        }else {
+            [self reloadDataWithRecvMsg:item];
+        }
+    });
+}
+
 - (void)reloadDataWithRecvMsg:(LSLCLiveChatMsgItemObject *)msg {
     NSLog(@"QNContactManager::reloadDataWithRecvMsg( [根据消息刷新联系人/邀请], fromId : %@, inviteType : %@ )", msg.fromId, (msg.inviteType == IniviteTypeCamshare)?@"Cam":@"Chat");
     
@@ -750,7 +761,7 @@ static QNContactManager *gManager = nil;
     LSLadyRecentContactObject *theRecent = [self getRecentWithId:userInfo.userId];
     if (theRecent) {
         bFlag = [theRecent updateRecentWithUserItem:userInfo];
-        NSLog(@"QNContactManager::updateRecentWithUserItem( [根据LiveChat接口更新联系人状态信息], userId : %@， bOnline : %@, userName : %@, bInChat : %@, photoURL : %@ )", theRecent.womanId, BOOL2YES(theRecent.isOnline), theRecent.firstname, BOOL2YES(theRecent.isInChat), theRecent.photoURL);
+        NSLog(@"QNContactManager::updateRecentWithUserItem( [根据LiveChat接口更新联系人状态信息], userId : %@, bOnline : %@, userName : %@, bInChat : %@, photoURL : %@ )", theRecent.womanId, BOOL2YES(theRecent.isOnline), theRecent.firstname, BOOL2YES(theRecent.isInChat), theRecent.photoURL);
     }
     
     return bFlag;
@@ -764,7 +775,7 @@ static QNContactManager *gManager = nil;
     if (theRecent) {
         bFlag = [theRecent updateRecentWithUserInfoItem:userInfo];
         
-        NSLog(@"QNContactManager::updateRecentWithUserInfoItem( [根据LiveChat接口更新联系人信息], userId : %@， bOnline : %@, userName : %@, photoURL : %@ )", theRecent.womanId, BOOL2YES(theRecent.isOnline), theRecent.firstname, theRecent.photoURL);
+        NSLog(@"QNContactManager::updateRecentWithUserInfoItem( [根据LiveChat接口更新联系人信息], userId : %@, bOnline : %@, userName : %@, photoURL : %@ )", theRecent.womanId, BOOL2YES(theRecent.isOnline), theRecent.firstname, theRecent.photoURL);
     }
     
     return bFlag;
@@ -775,10 +786,10 @@ static QNContactManager *gManager = nil;
     for (LSLadyRecentContactObject *recent in recents) {
         LSLadyRecentContactObject *theRecent = [self getRecentWithId:recent.womanId];
         if (nil != theRecent) {
-            // 已存在，则更新数据
+            // 已存在,则更新数据
             [self updateRecentInfo:theRecent src:recent];
         } else {
-            // 不存在，则添加到列表
+            // 不存在,则添加到列表
             [self.items addObject:recent];
         }
     }
@@ -835,7 +846,7 @@ NSInteger sortRecent(id obj1, id obj2, void *context) {
     if (lady) {
         bFlag = [lady updateRecentWithUserInfoItem:userInfo];
         
-        NSLog(@"QNContactManager::updateInviteWithUserInfoItem( [根据LiveChat接口更新邀请信息], userId : %@， bOnline : %@, userName : %@, photoURL : %@ )", lady.womanId, BOOL2YES(lady.isOnline), lady.firstname, lady.photoURL);
+        NSLog(@"QNContactManager::updateInviteWithUserInfoItem( [根据LiveChat接口更新邀请信息], userId : %@, bOnline : %@, userName : %@, photoURL : %@ )", lady.womanId, BOOL2YES(lady.isOnline), lady.firstname, lady.photoURL);
     }
     
     return bFlag;

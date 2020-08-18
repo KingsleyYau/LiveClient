@@ -53,7 +53,7 @@
                     <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your local time :Dec 28,2020 19:00 - 20:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlZ-v6-npQ">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your local time: Dec 28,2020 19:00 - 20:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlZ-v6-npQ">
                     <rect key="frame" x="10" y="133" width="300" height="16"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="300" id="fHg-g6-tzl"/>
@@ -81,7 +81,7 @@
                         <constraint firstAttribute="width" constant="118" id="fAl-Ts-fqf"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
-                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                     <state key="normal" title="United States" backgroundImage="LS_Prepaid_TimeBtnBG">
                         <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     </state>
@@ -103,7 +103,7 @@
                         <constraint firstAttribute="height" constant="32" id="SOB-xn-f0F"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
-                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                     <state key="normal" title="Dec 28，2020" backgroundImage="LS_Prepaid_TimeBtnBG">
                         <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     </state>
@@ -126,7 +126,7 @@
                         <constraint firstAttribute="width" constant="69" id="aLV-cU-KRc"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
-                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                     <state key="normal" title="00:00" backgroundImage="LS_Prepaid_TimeBtnBG">
                         <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     </state>
@@ -149,7 +149,7 @@
                         <constraint firstAttribute="width" constant="69" id="PvW-6p-KI9"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
-                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                     <state key="normal" title="00:00" backgroundImage="LS_Prepaid_TimeBtnBG">
                         <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     </state>
@@ -161,7 +161,7 @@
                         <constraint firstAttribute="height" constant="32" id="EWO-uD-p9e"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="13"/>
-                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="25" maxY="0.0"/>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="25" maxY="0.0"/>
                     <state key="normal" title="(GMT-6) US/Eastern" backgroundImage="LS_Prepaid_TimeBtnBG">
                         <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     </state>
@@ -182,7 +182,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="vd3-jn-6jz"/>
                     </constraints>
-                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                    <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                     <state key="normal" backgroundImage="LS_Prepaid_TimeBtnBG">
                         <attributedString key="attributedTitle">
                             <fragment content="30 Minutes - 13.50 Credits ">

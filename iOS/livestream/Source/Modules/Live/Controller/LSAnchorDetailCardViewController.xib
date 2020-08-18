@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,6 +11,7 @@
             <connections>
                 <outlet property="actionView" destination="KxG-JL-IXl" id="NsQ-XM-3If"/>
                 <outlet property="anchorDetail" destination="rl0-Sr-HBO" id="hNQ-C7-6bh"/>
+                <outlet property="anchorHeadImage" destination="Ckn-Sq-RMh" id="IvO-eh-iXx"/>
                 <outlet property="anchorIcon" destination="j2F-Jx-VZ7" id="sWv-tm-HcH"/>
                 <outlet property="anchorName" destination="shK-Lh-5sl" id="Vfq-qD-5SK"/>
                 <outlet property="anchorProfile" destination="bnL-er-nHz" id="It1-Qu-vHu"/>
@@ -32,13 +33,15 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWs-n6-Ctu">
                     <rect key="frame" x="73" y="329.5" width="268" height="237"/>
                     <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="Ckn-Sq-RMh" customClass="LSUIImageViewTopFit">
+                            <rect key="frame" x="100" y="20" width="68" height="68"/>
+                        </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j2F-Jx-VZ7">
                             <rect key="frame" x="100" y="20" width="68" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="j2F-Jx-VZ7" secondAttribute="height" multiplier="1:1" id="3kV-hR-AXk"/>
                                 <constraint firstAttribute="width" constant="68" id="nX1-yF-jcu"/>
                             </constraints>
-                            <state key="normal" image="Default_Img_Lady_Circyle"/>
                             <connections>
                                 <action selector="anchorIconAction:" destination="-1" eventType="touchUpInside" id="ZFf-cw-l9x"/>
                             </connections>
@@ -146,15 +149,19 @@
                         <constraint firstItem="shK-Lh-5sl" firstAttribute="centerX" secondItem="j2F-Jx-VZ7" secondAttribute="centerX" id="PZa-0P-kJN"/>
                         <constraint firstAttribute="trailing" secondItem="KxG-JL-IXl" secondAttribute="trailing" id="SjR-sj-S0O"/>
                         <constraint firstItem="SOV-10-PTt" firstAttribute="top" secondItem="mWs-n6-Ctu" secondAttribute="top" id="Smb-4k-d0B"/>
+                        <constraint firstItem="Ckn-Sq-RMh" firstAttribute="leading" secondItem="j2F-Jx-VZ7" secondAttribute="leading" id="UHu-FW-da3"/>
                         <constraint firstItem="shK-Lh-5sl" firstAttribute="top" secondItem="j2F-Jx-VZ7" secondAttribute="bottom" constant="14" id="b9L-lo-nKr"/>
+                        <constraint firstItem="Ckn-Sq-RMh" firstAttribute="trailing" secondItem="j2F-Jx-VZ7" secondAttribute="trailing" id="cfl-Ad-1OW"/>
                         <constraint firstItem="rl0-Sr-HBO" firstAttribute="top" secondItem="bnL-er-nHz" secondAttribute="bottom" constant="8" symbolic="YES" id="jCc-6f-10e"/>
                         <constraint firstAttribute="trailing" secondItem="rl0-Sr-HBO" secondAttribute="trailing" constant="20" id="kSx-Ms-HRT"/>
                         <constraint firstItem="KxG-JL-IXl" firstAttribute="top" secondItem="rl0-Sr-HBO" secondAttribute="bottom" constant="14" id="lgQ-fK-TEy"/>
                         <constraint firstAttribute="width" secondItem="mWs-n6-Ctu" secondAttribute="height" multiplier="266:235" id="mGk-Vm-y8t"/>
                         <constraint firstAttribute="trailing" secondItem="bnL-er-nHz" secondAttribute="trailing" constant="10" id="mOb-gb-G9M"/>
                         <constraint firstItem="bnL-er-nHz" firstAttribute="centerX" secondItem="shK-Lh-5sl" secondAttribute="centerX" id="nzA-5s-xNR"/>
+                        <constraint firstItem="Ckn-Sq-RMh" firstAttribute="top" secondItem="j2F-Jx-VZ7" secondAttribute="top" id="oAP-FW-mXa"/>
                         <constraint firstItem="KxG-JL-IXl" firstAttribute="top" secondItem="Z8R-96-r8s" secondAttribute="bottom" id="sIk-HQ-ydm"/>
                         <constraint firstItem="rl0-Sr-HBO" firstAttribute="centerX" secondItem="bnL-er-nHz" secondAttribute="centerX" id="vRs-tt-MdF"/>
+                        <constraint firstItem="Ckn-Sq-RMh" firstAttribute="bottom" secondItem="j2F-Jx-VZ7" secondAttribute="bottom" id="xLL-92-U5g"/>
                         <constraint firstAttribute="trailing" secondItem="SOV-10-PTt" secondAttribute="trailing" id="xtg-lh-CMW"/>
                         <constraint firstItem="j2F-Jx-VZ7" firstAttribute="centerX" secondItem="mWs-n6-Ctu" secondAttribute="centerX" id="zH0-dT-kXA"/>
                     </constraints>

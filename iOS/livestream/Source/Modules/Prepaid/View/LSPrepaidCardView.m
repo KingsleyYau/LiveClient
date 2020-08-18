@@ -41,6 +41,10 @@
     self.layer.cornerRadius = 8;
     self.layer.masksToBounds = YES;
     
+    self.titleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.titleLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    self.titleLabel.layer.shadowOpacity = 0.5;
+    
     self.wartingView.layer.cornerRadius = 2;
     self.wartingView.layer.masksToBounds = YES;
     LSShadowView * wView = [[LSShadowView alloc]init];
@@ -128,17 +132,17 @@
         self.acceptView.hidden = NO;
         
         if (isMeSent) {
-            self.acceptLabel.text = NSLocalizedStringFromSelf(@"LADY_ACCEPT");
+            self.acceptLabel.text = NSLocalizedStringFromSelf(@"ME_ACCEPT");
             self.acceptInfoLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPTED_TITLE"),name];
         }else {
-            self.acceptLabel.text = NSLocalizedStringFromSelf(@"ME_ACCEPT");
+            self.acceptLabel.text = NSLocalizedStringFromSelf(@"LADY_ACCEPT");
             self.acceptInfoLabel.text = NSLocalizedStringFromSelf(@"ACCEPTED_TITLE_ME");
         }
         
         self.statusLabel.textColor = COLOR_WITH_16BAND_RGB(0x04C456);
         self.statusLabel.text = NSLocalizedStringFromSelf(@"CONFIRMED");
         
-        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.statusUpdateTime timeFormat:@"MMM dd,HH:mm"];
+        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.statusUpdateTime timeFormat:@"MMM dd, HH:mm"];
         self.comfirmLabel.text = @"";
         self.updateTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"TIME_CONFIRMED"),updateTime];
         
@@ -149,19 +153,19 @@
        self.declineView.hidden = NO;
     
         if (isMeSent) {
-            self.declineLabel.text = NSLocalizedStringFromSelf(@"LADY_DECLINE");
+            self.declineLabel.text = NSLocalizedStringFromSelf(@"ME_DECLINE");
             self.declineInfoLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_TITLE"),name];
             
             
         }else {
-           self.declineLabel.text = NSLocalizedStringFromSelf(@"ME_DECLINE");
+           self.declineLabel.text = NSLocalizedStringFromSelf(@"LADY_DECLINE");
            self.declineInfoLabel.text = NSLocalizedStringFromSelf(@"DECLINED_TITLE_ME");
         }
         
         self.statusLabel.textColor = [UIColor redColor];
         self.statusLabel.text = NSLocalizedStringFromSelf(@"DECLINED");
         
-        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.statusUpdateTime timeFormat:@"MMM dd,HH:mm"];
+        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.statusUpdateTime timeFormat:@"MMM dd, HH:mm"];
         self.comfirmLabel.text = @"";
         self.updateTimeLabel.text =[NSString stringWithFormat:NSLocalizedStringFromSelf(@"TIME_DECLINED"),updateTime];
         
@@ -170,7 +174,7 @@
     
     self.scheduleIDLabel.text = msgItem.scheduleInviteId;
         
-     NSString * sentTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.sendTime timeFormat:@"MMM dd,HH:mm"];
+     NSString * sentTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.sendTime timeFormat:@"MMM dd, HH:mm"];
     self.timeSentLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SENT_TIME"),sentTime];
         
     NSString * startTime = [NSString stringWithFormat:@"%@ %@",msgItem.period,msgItem.timeZone];
@@ -244,7 +248,7 @@
         self.statusLabel.textColor = COLOR_WITH_16BAND_RGB(0x04C456);
         self.statusLabel.text = NSLocalizedStringFromSelf(@"CONFIRMED");
         
-        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.msg.statusUpdateTime timeFormat:@"MMM dd,HH:mm"];
+        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.msg.statusUpdateTime timeFormat:@"MMM dd, HH:mm"];
         self.comfirmLabel.text = @"";
         self.updateTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"TIME_CONFIRMED"),updateTime];
         
@@ -264,7 +268,7 @@
         self.statusLabel.textColor = [UIColor redColor];
         self.statusLabel.text = NSLocalizedStringFromSelf(@"DECLINED");
         
-        NSString * updateTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.msg.statusUpdateTime timeFormat:@"MMM dd,HH:mm"];
+        NSString * updateTime =  [[LSPrePaidManager manager] getGMTFromTimestamp:msgItem.msg.statusUpdateTime timeFormat:@"MMM dd, HH:mm"];
         self.comfirmLabel.text = @"";
         self.updateTimeLabel.text =[NSString stringWithFormat:NSLocalizedStringFromSelf(@"TIME_DECLINED"),updateTime];
         
@@ -273,13 +277,11 @@
     
     self.scheduleIDLabel.text = msgItem.msg.scheduleInviteId;
     
-     NSString * sentTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.msg.sendTime timeFormat:@"MMM dd,HH:mm"];
+     NSString * sentTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.msg.sendTime timeFormat:@"MMM dd, HH:mm"];
     self.timeSentLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SENT_TIME"),sentTime];
-        
-    NSString * startTime = [NSString stringWithFormat:@"%@",msgItem.msg.period];
     
-    self.startTimeViewLabel.text = startTime;
-    self.startTimeLabel.text = startTime;
+    self.startTimeViewLabel.text = msgItem.msg.period;
+    self.startTimeLabel.text = msgItem.msg.period;
     
     NSString * localBeginTime = [[LSPrePaidManager manager]getLocalTimeFromTimestamp:msgItem.msg.startTime timeFormat:@"MMM dd, HH:mm"];
     
@@ -291,7 +293,6 @@
     
     self.localTimeLabel.text = localTime;
     self.localTimeViewLabel.text = localTime;
-    
 }
 
 - (IBAction)subLabelDid:(UITapGestureRecognizer *)sender {

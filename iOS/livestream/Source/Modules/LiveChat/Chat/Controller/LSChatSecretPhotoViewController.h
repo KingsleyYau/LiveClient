@@ -9,7 +9,6 @@
 #import "LSLCLiveChatMsgItemObject.h"
 #import "LSLoginManager.h"
 #import "LSGoogleAnalyticsViewController.h"
-#import <AFNetworkReachabilityManager.h>
 
 @protocol LSChatSecretPhotoViewControllerDelegate <NSObject>
 

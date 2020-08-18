@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -90,17 +90,17 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w3y-gs-idb" customClass="BarrageView">
-                    <rect key="frame" x="0.0" y="78" width="375" height="54"/>
+                    <rect key="frame" x="0.0" y="68" width="375" height="32"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="54" id="3VF-7w-Wl0"/>
+                        <constraint firstAttribute="height" constant="32" id="3VF-7w-Wl0"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0RH-Ij-liN" userLabel="Gift View">
-                    <rect key="frame" x="0.0" y="170" width="375" height="115"/>
+                    <rect key="frame" x="0.0" y="103" width="375" height="110"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="115" id="gh1-DZ-MDR"/>
+                        <constraint firstAttribute="height" constant="110" id="gh1-DZ-MDR"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Js-tt-7HN" customClass="TableSuperView">
@@ -244,11 +244,8 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n0f-hk-VF7" userLabel="Schedule Button">
                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="n0f-hk-VF7" secondAttribute="height" multiplier="1:1" id="ISe-Lw-Cr4"/>
-                                <constraint firstAttribute="width" constant="48" id="RQz-Za-Zw7"/>
-                            </constraints>
-                            <state key="normal" backgroundImage="LS_Live_Schedule_Icon"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                            <state key="normal" image="LS_Schedule_Request_Icon"/>
                             <connections>
                                 <action selector="scheduleInvite:" destination="-1" eventType="touchUpInside" id="wiZ-wx-zVv"/>
                             </connections>
@@ -271,6 +268,7 @@
                         <constraint firstItem="n0f-hk-VF7" firstAttribute="top" secondItem="kte-5R-NdW" secondAttribute="top" id="LHk-P6-gjz"/>
                         <constraint firstItem="FoY-mE-NCE" firstAttribute="top" secondItem="n0f-hk-VF7" secondAttribute="top" constant="-6" id="WzI-Yd-aDY"/>
                         <constraint firstAttribute="trailing" secondItem="n0f-hk-VF7" secondAttribute="trailing" id="hnZ-B3-ej4"/>
+                        <constraint firstItem="FoY-mE-NCE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kte-5R-NdW" secondAttribute="leading" constant="20" symbolic="YES" id="jb8-HF-cve"/>
                         <constraint firstItem="n0f-hk-VF7" firstAttribute="leading" secondItem="kte-5R-NdW" secondAttribute="leading" id="kC3-Jc-52L"/>
                         <constraint firstAttribute="height" constant="48" id="pTh-u2-rFb"/>
                         <constraint firstAttribute="bottom" secondItem="n0f-hk-VF7" secondAttribute="bottom" id="qh0-zl-tQU"/>
@@ -363,11 +361,11 @@
                 <constraint firstItem="rgg-VN-yv9" firstAttribute="leading" secondItem="TsU-XM-EBu" secondAttribute="trailing" constant="31" id="YBx-dH-14P"/>
                 <constraint firstItem="0Js-tt-7HN" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="10" id="cru-Di-7JC"/>
                 <constraint firstItem="5FH-ol-GQH" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ehV-ST-g7X"/>
-                <constraint firstItem="0Js-tt-7HN" firstAttribute="top" secondItem="0RH-Ij-liN" secondAttribute="bottom" constant="42" id="etF-VV-wBc"/>
                 <constraint firstItem="51R-4l-OUB" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="fzf-KH-Coc"/>
                 <constraint firstItem="kAq-6e-dMI" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="gpJ-W2-EdE"/>
-                <constraint firstItem="w3y-gs-idb" firstAttribute="top" secondItem="kAq-6e-dMI" secondAttribute="bottom" constant="10" id="kdc-iP-yMk"/>
+                <constraint firstItem="w3y-gs-idb" firstAttribute="top" secondItem="kAq-6e-dMI" secondAttribute="bottom" id="kdc-iP-yMk"/>
                 <constraint firstItem="k4k-N2-J7b" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="msA-rh-3fk"/>
+                <constraint firstItem="0RH-Ij-liN" firstAttribute="top" secondItem="kAq-6e-dMI" secondAttribute="bottom" constant="35" id="o5K-K1-ucl"/>
                 <constraint firstItem="sE1-2i-UGJ" firstAttribute="centerX" secondItem="DGu-7F-mMb" secondAttribute="centerX" id="sBB-ZL-yTG"/>
                 <constraint firstItem="sE1-2i-UGJ" firstAttribute="top" secondItem="kte-5R-NdW" secondAttribute="bottom" constant="5" id="wTH-Ah-hJv"/>
                 <constraint firstItem="5FH-ol-GQH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="10" id="wed-Uj-P5G"/>
@@ -379,7 +377,6 @@
     </objects>
     <resources>
         <image name="LS_Boost_Schedule_Icon" width="24" height="24"/>
-        <image name="LS_Live_Schedule_Icon" width="56" height="56"/>
         <image name="LS_ScheduleRequest_TopBG" width="290" height="70"/>
         <image name="LS_Schedule_Request_Icon" width="27" height="29"/>
         <image name="Live_Chat_New_Msg" width="117" height="30"/>

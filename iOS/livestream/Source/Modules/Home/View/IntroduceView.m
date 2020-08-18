@@ -33,56 +33,54 @@
 #define LIVEAPP_TRANSFER_NOTIFYRESUME @"notifyResume()"
 //#define LIVEAPP_NOTIFYLIVEAPPUNREADCOUNT(a)  notifyLiveAppUnreadCount(a)
 
-@interface IntroduceView()<WKScriptMessageHandler>
+@interface IntroduceView () <WKScriptMessageHandler>
 
 @end
 
-
 @implementation IntroduceView
 
+- (instancetype)initWithCoder:(NSCoder *)coder {
 
-- (instancetype)initWithCoder:(NSCoder *)coder{
-    
     CGRect frame = [[UIScreen mainScreen] bounds];
 
     WKWebViewConfiguration *myConfiguration = [[WKWebViewConfiguration alloc] init];
-  //    在ios11上设置这属性可能会导致网页显示不全
-//    myConfiguration.preferences.minimumFontSize = 10;
-    
+    //    在ios11上设置这属性可能会导致网页显示不全
+    //    myConfiguration.preferences.minimumFontSize = 10;
+
     myConfiguration.preferences.javaScriptEnabled = YES;
     myConfiguration.allowsInlineMediaPlayback = YES;
-    myConfiguration.mediaPlaybackRequiresUserAction = NO;
-    myConfiguration.mediaPlaybackAllowsAirPlay = YES;
-    
+    myConfiguration.mediaTypesRequiringUserActionForPlayback = NO;
+    myConfiguration.allowsAirPlayForMediaPlayback = YES;
+
     myConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = true;
     //是否支持JavaScript
     [myConfiguration.preferences setValue:@YES forKey:@"allowFileAccessFromFileURLs"];
-    
+
     // 加载LiveApp.js的LiveApp类 WKUserScriptInjectionTimeAtDocumentStart在加载网页前插入js的 WKUserScriptInjectionTimeAtDocumentEnd在网页加载完成后才加入
-//    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[IntroduceView getJsString] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-//    [userContentController addUserScript:usrScript];
-//
-//    //通过JS与webView内容交互
-//    myConfiguration.userContentController = userContentController;
-//    //注入JS对象名称senderModel，当JS通过senderModel来调用时，我们可以在WKScriptMessageHandler代理中接收到
-//    [myConfiguration.userContentController addScriptMessageHandler:self name:LIVEAPP_JS];
-//
+    //    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[IntroduceView getJsString] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+    //    [userContentController addUserScript:usrScript];
+    //
+    //    //通过JS与webView内容交互
+    //    myConfiguration.userContentController = userContentController;
+    //    //注入JS对象名称senderModel，当JS通过senderModel来调用时，我们可以在WKScriptMessageHandler代理中接收到
+    //    [myConfiguration.userContentController addScriptMessageHandler:self name:LIVEAPP_JS];
+    //
     self = [super initWithFrame:frame configuration:myConfiguration];
-//    self.translatesAutoresizingMaskIntoConstraints = NO;
+    //    self.translatesAutoresizingMaskIntoConstraints = NO;
     return self;
 }
 
 // 将js文件变成NSString（里面就是LiveApp类的js，为了将这个js文件加载进web去，js才能调用OC）
-+ (NSString*)getJsString {
-    NSString *path =[[LiveBundle bundleForClass:[self class]] pathForResource:LIVEAPP_JS ofType:@"js"];
++ (NSString *)getJsString {
+    NSString *path = [[LiveBundle bundleForClass:[self class]] pathForResource:LIVEAPP_JS ofType:@"js"];
     NSString *handlerJS = [NSString stringWithContentsOfFile:path encoding:kCFStringEncodingUTF8 error:nil];
     handlerJS = [handlerJS stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     return handlerJS;
 }
 
 #pragma mark - WKScriptMessageHandler
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-    
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+
     // 判断是否是LiveApp类
     if ([message.name isEqualToString:LIVEAPP_JS]) {
         // 得到回调的函数名
@@ -106,22 +104,19 @@
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackWebReload:)]) {
                 [self.webViewJSDelegate webViewJSCallbackWebReload:error];
             }
-        }
-        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_AUTH_EXPIRED]) {
+        } else if ([methodName isEqualToString:LIVEAPP_CALLBACK_AUTH_EXPIRED]) {
             //身份验证失败
-             NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
+            NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallBackTokenTimeOut:)]) {
                 [self.webViewJSDelegate webViewJSCallBackTokenTimeOut:error];
             }
-        }
-        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_RECHANGE]) {
+        } else if ([methodName isEqualToString:LIVEAPP_CALLBACK_RECHANGE]) {
             NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
             //账号余额不足
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallBackAddCredit:)]) {
                 [self.webViewJSDelegate webViewJSCallBackAddCredit:error];
             }
-        }
-        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_APPPUBLiCGAEVENT]) {
+        } else if ([methodName isEqualToString:LIVEAPP_CALLBACK_APPPUBLiCGAEVENT]) {
             //节目GA跟踪
             NSString *category = message.body[LIVEAPP_CALLBACK_APPPUBLICGAEVENT_CATEGORY];
             NSString *event = message.body[LIVEAPP_CALLBACK_APPPUBLICGAEVENT_EVENT];
@@ -135,24 +130,30 @@
 
 #pragma mark - app调用JS接口
 - (void)webViewTransferResumeHandler:(JSFinshHandler)handler {
-    [self webViewTransferJSName:LIVEAPP_TRANSFER_NOTIFYRESUME handler:^(id  _Nullable response, NSError * _Nullable error) {
-        NSLog(@"IntroduceView::webViewTransferResumeHandler ([调用js界面回到前台事件, response : %@, error : %@])",response ,error);
-        handler(response, error);
-    }];
+    [self webViewTransferJSName:LIVEAPP_TRANSFER_NOTIFYRESUME
+                        handler:^(id _Nullable response, NSError *_Nullable error) {
+                            NSLog(@"IntroduceView::webViewTransferResumeHandler( [调用js界面回到前台事件, response : %@, error : %@] )", response, error);
+                            handler(response, error);
+                        }];
 }
 
 - (void)webViewTransferJSName:(NSString *)jsName handler:(JSFinshHandler)handler {
-    [self evaluateJavaScript:jsName completionHandler:^(id _Nullable response, NSError * _Nullable error) {
-        handler(response, error);
-    }];
+    [self evaluateJavaScript:jsName
+           completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+               handler(response, error);
+           }];
 }
 
 - (void)webViewNotifyLiveAppUnreadCount:(NSString *)unreadCount Handler:(JSFinshHandler)handler {
-//    NSString *jsName = LIVEAPP_NOTIFYLIVEAPPUNREADCOUNT(unreadCount);
-    NSString *jsName = [NSString stringWithFormat:@"notifyLiveAppUnreadCount('%@')",unreadCount];
-    [self webViewTransferJSName:jsName handler:^(id  _Nullable response, NSError * _Nullable error) {
-        NSLog(@"IntroduceView::webViewTransferResumeHandler ([调用js界面刷新未读事件, response : %@, error : %@])",response ,error);
-        handler(response, error);
-    }];
+    //增加延迟1s逻辑，防止未完全加载完网页就调用js，导致无法显示未读数
+    __weak typeof(self)weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+        NSString *jsName = [NSString stringWithFormat:@"notifyLiveAppUnreadCount('%@')",unreadCount];
+        [weakSelf webViewTransferJSName:jsName handler:^(id  _Nullable response, NSError * _Nullable error) {
+            NSLog(@"IntroduceView::webViewTransferResumeHandler( [调用js界面刷新未读事件, response : %@, error : %@] )",response ,error);
+            handler(response, error);
+        }];
+    });
 }
 @end

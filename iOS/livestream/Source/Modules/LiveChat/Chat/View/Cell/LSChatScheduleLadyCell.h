@@ -31,6 +31,9 @@
 @property (strong, nonatomic) LSPrepaidCardView *cardView;
 @property (strong, nonatomic) LSPrepaidAcceptCardView *acceptView;
 @property (weak, nonatomic) id<LSChatScheduleLadyCellDelegate> cellDelegate;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cardViewW;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *acceptViewW;
+
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(BOOL)isMore isAcceptView:(BOOL)isAccept;

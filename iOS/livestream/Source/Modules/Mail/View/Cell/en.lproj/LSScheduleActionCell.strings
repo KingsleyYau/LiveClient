@@ -1,0 +1,17 @@
+
+/* Class = "UIButton"; normalTitle = "Accept Request and Reply a Mail"; ObjectID = "WRI-n8-YON"; */
+"WRI-n8-YON.normalTitle" = "Accept Request and Reply a Mail";
+
+/* Class = "UIButton"; normalTitle = "Other options"; ObjectID = "cvV-qA-KoF"; */
+"cvV-qA-KoF.normalTitle" = "Other options";
+
+/* Class = "UIButton"; normalTitle = "Reply a mail"; ObjectID = "fxQ-y6-1Zi"; */
+"fxQ-y6-1Zi.normalTitle" = "Reply a mail";
+
+/* Class = "UIButton"; normalTitle = "Accept Request"; ObjectID = "p7a-3A-ci1"; */
+"p7a-3A-ci1.normalTitle" = "Accept Request";
+
+/* Class = "UIButton"; normalTitle = "Start One-on-One now "; ObjectID = "u8c-HK-jGy"; */
+"u8c-HK-jGy.normalTitle" = "Start One-on-One now ";
+
+"DETAIL_SEND_MAIL" = "Accept Request and Send a Mail";

@@ -25,5 +25,9 @@
 @property (nonatomic, weak) id<QNUnreadCountBtnDelegate> delegate;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *unreadLabelWidth;
 @property (weak, nonatomic) IBOutlet UILabel *noNumUnreadTips;
+
+@property (weak, nonatomic) IBOutlet UIView *statusView;
+
 - (void)updateUnreadCount:(NSString *)count;
+- (void)updateUnreadStatus:(BOOL)show;
 @end

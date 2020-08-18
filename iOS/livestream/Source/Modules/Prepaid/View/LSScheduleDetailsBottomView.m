@@ -7,6 +7,7 @@
 //
 
 #import "LSScheduleDetailsBottomView.h"
+#import "LSPrePaidManager.h"
 
 @implementation LSScheduleDetailsBottomView
 
@@ -31,6 +32,27 @@
         [self.delegate didHowWorkAction];
     }
 }
+
+- (void)setupPrompt:(NSString *)name startTime:(NSInteger)startTime isSummerTime:(BOOL)isSummerTime {
+    NSString *onePrompt = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SoC-EL-YXf.text"),name];
+    NSRange range1 = [onePrompt rangeOfString:name];
+    NSMutableAttributedString *oneAtrPrompt = [[NSMutableAttributedString alloc] initWithString:onePrompt attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12],
+        NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x666666)}];
+    [oneAtrPrompt setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)} range:range1];
+    
+    NSString *localTime = [[LSPrePaidManager manager] getDetailStartAndEndTimestamp:startTime timeFormat:@"MMM dd, YYYY HH:mm" isDaylightSaving:isSummerTime andZone:@""];
+    NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"gi5-6p-RgM.text"),localTime] attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12], NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x666666)}];
+    [oneAtrPrompt appendAttributedString:timeStr];
+    self.onePromptLabel.attributedText = oneAtrPrompt;
+    
+    NSString *threePrompt = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"vX5-kK-nKi.text"),name];
+    NSRange range2 = [threePrompt rangeOfString:name];
+    NSMutableAttributedString *threeAtrPrompt = [[NSMutableAttributedString alloc] initWithString:threePrompt attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12],
+        NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x666666)}];
+    [threeAtrPrompt setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)} range:range2];
+    self.threePromptLabel.attributedText = threeAtrPrompt;
+}
+
 
 
 @end

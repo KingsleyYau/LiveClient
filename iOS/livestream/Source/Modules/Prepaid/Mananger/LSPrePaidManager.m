@@ -10,7 +10,7 @@
 #import "LSImManager.h"
 #import "LSLoginManager.h"
 
-@interface LSPrePaidManager()<IMManagerDelegate,IMLiveRoomManagerDelegate>
+@interface LSPrePaidManager () <IMManagerDelegate, IMLiveRoomManagerDelegate>
 
 @end
 
@@ -37,6 +37,7 @@
             [self.delegates addObject:[NSValue valueWithNonretainedObject:delegate]];
             result = YES;
         }
+        [self getDateData];
     }
     return result;
 }
@@ -85,37 +86,55 @@
 
 //获取年月日
 - (void)getDateData {
-    NSMutableArray * dateArray = [NSMutableArray array];
-         for (int i = 1; i < 14; i++) {
-             NSInteger time = [[NSDate date] timeIntervalSince1970];
-             time= time + 86400 * i;
-              NSMutableArray * timeArray = [NSMutableArray array];
-             for (int j = 0; j < 24; j++) {
-                 NSString * str = @"";
-                 if (j<10) {
-                 str = [NSString stringWithFormat:@"0%d:00",j];
-                 }else {
-                     str = [NSString stringWithFormat:@"%d:00",j];
-                 }
-                 [timeArray addObject:str];
-             }
-             [dateArray addObject:@{@"year":[self getLocalTimeFromTimestamp:time timeFormat:@"MMM dd,yyyy"],@"time":timeArray}];
-         }
-    self.dateArray = dateArray;
+    GetActivityTimeRequest *request = [[GetActivityTimeRequest alloc] init];
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger activityTime) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                self.activityTime = activityTime;
+            }
+            NSMutableArray *dateArray = [NSMutableArray array];
+            for (int i = 0; i < 14; i++) {
+                NSInteger newTime = self.activityTime + 86400 * i;
+                NSMutableArray *timeArray = [NSMutableArray array];
+                for (int j = 0; j < 24; j++) {
+                    NSString *str = @"";
+                    if (j < 10) {
+                        str = [NSString stringWithFormat:@"0%d:00", j];
+                    } else {
+                        str = [NSString stringWithFormat:@"%d:00", j];
+                    }
+                    [timeArray addObject:str];
+                }
+                [dateArray addObject:@{ @"year" : [self getLocalTimeFromTimestamp:newTime timeFormat:@"MMM dd, yyyy"],
+                                        @"time" : timeArray }];
+            }
+            self.dateArray = dateArray;
+            @synchronized(self.delegates) {
+                for (NSValue *value in self.delegates) {
+                    id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
+                    if ([delegate respondsToSelector:@selector(onRecvScheduleGetDateData)]) {
+                        [delegate onRecvScheduleGetDateData];
+                    }
+                }
+            }
+
+        });
+    };
+    [[LSSessionRequestManager manager] sendRequest:request];
 }
 
 - (NSArray *)getCreditArray {
-    NSMutableArray * array = [NSMutableArray array];
-    for (LSScheduleDurationItemObject * item in self.creditsArray) {
-        
+    NSMutableArray *array = [NSMutableArray array];
+    for (LSScheduleDurationItemObject *item in self.creditsArray) {
+
         if (item.credit != item.originalCredit) {
-            NSString * str = [NSString stringWithFormat:@"%d Minutes - %0.2f Credits %0.2f Credits",item.duration,item.credit,item.originalCredit];
-            NSString * str1 = [NSString stringWithFormat:@"%0.2f Credits",item.originalCredit];
-             NSMutableAttributedString * attrStr =  [self newCreditsStr:str credits:str1];
+            NSString *str = [NSString stringWithFormat:@"%d Minutes - %0.2f Credits %0.2f Credits", item.duration, item.credit, item.originalCredit];
+            NSString *str1 = [NSString stringWithFormat:@"%0.2f Credits", item.originalCredit];
+            NSMutableAttributedString *attrStr = [self newCreditsStr:str credits:str1];
             [array addObject:attrStr];
-        }else {
-            NSString * str = [NSString stringWithFormat:@"%d Minutes - %0.2f Credits",item.duration,item.credit];
-             NSMutableAttributedString * attrStr =  [self newCreditsStr:str credits:@""];
+        } else {
+            NSString *str = [NSString stringWithFormat:@"%d Minutes - %0.2f Credits", item.duration, item.credit];
+            NSMutableAttributedString *attrStr = [self newCreditsStr:str credits:@""];
             [array addObject:attrStr];
         }
     }
@@ -123,8 +142,8 @@
 }
 
 - (NSArray *)getYearArray {
-    NSMutableArray * array = [NSMutableArray array];
-    for (NSDictionary * dic in self.dateArray) {
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSDictionary *dic in self.dateArray) {
         if ([dic objectForKey:@"year"]) {
             [array addObject:[dic objectForKey:@"year"]];
         }
@@ -133,22 +152,22 @@
 }
 
 - (NSArray *)getTimeArray {
-    NSMutableArray * array = [NSMutableArray array];
-    for (int i = 0; i<self.dateArray.count; i++) {
-        NSDictionary * dic = self.dateArray[i];
-        NSString * year = [dic objectForKey:@"year"];
+    NSMutableArray *array = [NSMutableArray array];
+    for (int i = 0; i < self.dateArray.count; i++) {
+        NSDictionary *dic = self.dateArray[i];
+        NSString *year = [dic objectForKey:@"year"];
         if ([year isEqualToString:self.yaerStr]) {
             [array addObjectsFromArray:[dic objectForKey:@"time"]];
             break;
         }
     }
-    
+
     return [self isDaylightSavingBenginTime:array];
 }
 
 #pragma mark - 请求数据
 - (void)getCreditsData {
-    LSGetScheduleDurationListRequest * request = [[LSGetScheduleDurationListRequest alloc]init];
+    LSGetScheduleDurationListRequest *request = [[LSGetScheduleDurationListRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSScheduleDurationItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
@@ -156,12 +175,11 @@
             }
         });
     };
-    [[LSSessionRequestManager manager]sendRequest:request];
+    [[LSSessionRequestManager manager] sendRequest:request];
 }
 
-
 - (void)getCountryData {
-    LSGetCountryTimeZoneListRequest * request = [[LSGetCountryTimeZoneListRequest alloc]init];
+    LSGetCountryTimeZoneListRequest *request = [[LSGetCountryTimeZoneListRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSCountryTimeZoneItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
@@ -170,10 +188,8 @@
         });
     };
     [[LSSessionRequestManager manager] sendRequest:request];
-    
+
     [self getCreditsData];
-    
-    [self getDateData];
 }
 
 #pragma mark - 发送预付费邀请
@@ -185,11 +201,11 @@
     request.timeZoneId = inviteItem.timeZoneItem.zoneId;
     request.startTime = inviteItem.startTime;
     request.duration = inviteItem.duration;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSendScheduleInviteItemObject *item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSSendScheduleInviteItemObject *item, NSInteger activityTime) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSPrePaidManager::LSSendScheduleInviteRequest( [发送预付费直播邀请] success: %@, errnum: %d, errmsg: %@, inviteId: %@, isSummerTime: %d )",BOOL2SUCCESS(success),errnum,errmsg,item.inviteId,item.isSummerTime);
-            
-            if (self.liveRoom && success) {
+            NSLog(@"LSPrePaidManager::LSSendScheduleInviteRequest( [发送预付费直播邀请], %@, errnum: %d, errmsg: %@, inviteId: %@, isSummerTime: %d )", BOOL2SUCCESS(success), errnum, errmsg, item.inviteId, item.isSummerTime);
+
+            if ([self.liveRoom.roomId isEqualToString:inviteItem.refId] && success) {
                 ImScheduleMsgObject *msg = [[ImScheduleMsgObject alloc] init];
                 msg.scheduleInviteId = item.inviteId;
                 msg.status = IMSCHEDULESENDSTATUS_PENDING;
@@ -197,7 +213,7 @@
                 msg.duration = inviteItem.duration;
                 msg.origintduration = inviteItem.duration;
                 NSString *period = [self getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:00" isDaylightSaving:item.isSummerTime andZone:inviteItem.timeZoneItem.value];
-                period = [NSString stringWithFormat:@"%@ %@(GMT %@)",period,inviteItem.timeZoneItem.city,inviteItem.timeZoneItem.value];
+                period = [NSString stringWithFormat:@"%@ %@(GMT %@)", period, inviteItem.timeZoneItem.city, inviteItem.timeZoneItem.value];
                 msg.period = period;
                 msg.startTime = item.startTime;
                 msg.statusUpdateTime = item.addTime;
@@ -205,22 +221,22 @@
                 msg.nickName = [LSLoginManager manager].loginItem.nickName;
                 msg.fromId = [LSLoginManager manager].loginItem.userId;
                 msg.toNickName = self.liveRoom.userName;
-                
+
                 ImScheduleRoomInfoObject *infoItem = [[ImScheduleRoomInfoObject alloc] init];
                 infoItem.roomId = self.liveRoom.roomId;
-                infoItem.nickName = self.liveRoom.userName;
+                infoItem.nickName = [LSLoginManager manager].loginItem.nickName;
                 infoItem.toId = self.liveRoom.userId;
                 infoItem.privScheId = item.inviteId;
                 infoItem.msg = msg;
                 [self sendScheduleNoticeServer:infoItem];
             }
             item.duration = inviteItem.duration;
-            
-            @synchronized (self.delegates) {
+
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
-                    if ([delegate respondsToSelector:@selector(onRecvSendScheduleInvite:errmsg:item:)]) {
-                        [delegate onRecvSendScheduleInvite:errnum errmsg:errmsg item:item];
+                    if ([delegate respondsToSelector:@selector(onRecvSendScheduleInvite:errmsg:item:refId:)]) {
+                        [delegate onRecvSendScheduleInvite:errnum errmsg:errmsg item:item refId:inviteItem.refId];
                     }
                 }
             }
@@ -230,39 +246,45 @@
 }
 
 #pragma mark - 接受预付费邀请
-- (void)sendAcceptScheduleInvite:(NSString *)inviteId duration:(int)duration infoObj:(LSScheduleInviteItem *)infoObj {
+- (void)sendAcceptScheduleInvite:(NSString *)inviteId duration:(int)time infoObj:(LSScheduleInviteItem *)infoObj {
     LSAcceptScheduleInviteRequest *request = [[LSAcceptScheduleInviteRequest alloc] init];
     request.inviteId = inviteId;
-    request.duration = duration;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime) {
+    request.duration = time;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime, int duration) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSPrePaidManager::LSAcceptScheduleInviteRequest( [接收预付费直播邀请] success : %@, errnum : %d, errmsg : %@, statusUpdateTime : %ld)",BOOL2SUCCESS(success), errnum, errmsg, (long)statusUpdateTime);
-            
+            NSLog(@"LSPrePaidManager::LSAcceptScheduleInviteRequest( [接收预付费直播邀请], %@, errnum : %d, errmsg : %@, statusUpdateTime : %ld)", BOOL2SUCCESS(success), errnum, errmsg, (long)statusUpdateTime);
+
             ImScheduleRoomInfoObject *infoItem = [[ImScheduleRoomInfoObject alloc] init];
-            if (self.liveRoom && success) {
-                ImScheduleMsgObject *msg = [[ImScheduleMsgObject alloc] init];
-                msg.scheduleInviteId = inviteId;
-                msg.status = IMSCHEDULESENDSTATUS_CONFIRMED;
-                msg.sendFlag = LSSCHEDULESENDFLAGTYPE_MAN;
-                msg.duration = duration;
-                msg.origintduration = infoObj.origintduration;
-                msg.period = infoObj.period;
-                msg.startTime = infoObj.gmtStartTime;
-                msg.statusUpdateTime = statusUpdateTime;
-                msg.sendTime = infoObj.sendTime;
-                msg.nickName = [LSLoginManager manager].loginItem.nickName;
-                msg.fromId = [LSLoginManager manager].loginItem.userId;
-                msg.toNickName = self.liveRoom.userName;
-                
-                infoItem.roomId = self.liveRoom.roomId;
-                infoItem.nickName = self.liveRoom.userName;
-                infoItem.toId = self.liveRoom.userId;
-                infoItem.privScheId = inviteId;
-                infoItem.msg = msg;
-                [self sendScheduleNoticeServer:infoItem];
+            infoItem.roomId = infoObj.refId;
+            infoItem.nickName = [LSLoginManager manager].loginItem.nickName;
+            infoItem.toId = self.liveRoom.userId;
+            infoItem.privScheId = inviteId;
+
+            ImScheduleMsgObject *msg = [[ImScheduleMsgObject alloc] init];
+            msg.scheduleInviteId = inviteId;
+            msg.status = IMSCHEDULESENDSTATUS_CONFIRMED;
+            msg.sendFlag = LSSCHEDULESENDFLAGTYPE_MAN;
+            msg.duration = duration;
+            msg.origintduration = infoObj.origintduration;
+            msg.period = infoObj.period;
+            msg.startTime = infoObj.gmtStartTime;
+            msg.statusUpdateTime = statusUpdateTime;
+            msg.sendTime = infoObj.sendTime;
+            msg.nickName = [LSLoginManager manager].loginItem.nickName;
+            msg.fromId = [LSLoginManager manager].loginItem.userId;
+            msg.toNickName = self.liveRoom.userName;
+
+            infoItem.msg = msg;
+            if ([self.liveRoom.roomId isEqualToString:infoObj.refId]) {
+                if (success || errnum == HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED) {
+                    [self sendScheduleNoticeServer:infoItem];
+                } else if (errnum == HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED) {
+                    infoItem.msg.status = IMSCHEDULESENDSTATUSE_DECLINED;
+                    [self sendScheduleNoticeServer:infoItem];
+                }
             }
-            
-            @synchronized (self.delegates) {
+
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onRecvSendAcceptSchedule:errmsg:statusUpdateTime:scheduleInviteId:duration:roomInfoItem:)]) {
@@ -281,8 +303,8 @@
     request.inviteId = inviteId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSInteger statusUpdateTime) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSPrePaidManager::LSDeclinedScheduleInviteRequest( [拒绝预付费直播邀请] success : %@, errnum : %d, errmsg : %@, statusUpdateTime : %ld)",BOOL2SUCCESS(success), errnum, errmsg, (long)statusUpdateTime);
-            @synchronized (self.delegates) {
+            NSLog(@"LSPrePaidManager::LSDeclinedScheduleInviteRequest( [拒绝预付费直播邀请] success : %@, errnum : %d, errmsg : %@, statusUpdateTime : %ld)", BOOL2SUCCESS(success), errnum, errmsg, (long)statusUpdateTime);
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onRecvSendDeclinedSchedule:errmsg:statusUpdateTime:)]) {
@@ -296,7 +318,7 @@
 }
 
 #pragma mark - 获取预付费直播列表
-- (void)getScheduleList:(LSScheduleInviteStatus)status sendFlag:(LSScheduleSendFlagType)sendFlag anchorId:(NSString *)anchorId start:(int)start step:(int)step  {
+- (void)getScheduleList:(LSScheduleInviteStatus)status sendFlag:(LSScheduleSendFlagType)sendFlag anchorId:(NSString *)anchorId start:(int)start step:(int)step {
     LSGetScheduleInviteListRequest *request = [[LSGetScheduleInviteListRequest alloc] init];
     request.status = status;
     request.sendFlag = sendFlag;
@@ -305,8 +327,8 @@
     request.step = step;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSScheduleInviteListItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSPrePaidManager::getScheduleList( [获取预付费直播列表] success : %@, errnum : %d, errmsg : %@, array : %lu)",BOOL2SUCCESS(success), errnum, errmsg, (unsigned long)array.count);
-            @synchronized (self.delegates) {
+            NSLog(@"LSPrePaidManager::getScheduleList( [获取预付费直播列表], %@, errnum : %d, errmsg : %@, array : %lu)", BOOL2SUCCESS(success), errnum, errmsg, (unsigned long)array.count);
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onRecvGetScheduleList:array:)]) {
@@ -325,8 +347,8 @@
     request.inviteId = inviteId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSScheduleInviteDetailItemObject *item) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSPrePaidManager::getScheduleList( [获取预付费直播列表] success : %@, errnum : %d, errmsg : %@, anchorId : %@)",BOOL2SUCCESS(success), errnum, errmsg, item.anchorId);
-            @synchronized (self.delegates) {
+            NSLog(@"LSPrePaidManager::getScheduleList( [获取预付费直播列表], %@, errnum : %d, errmsg : %@, anchorId : %@)", BOOL2SUCCESS(success), errnum, errmsg, item.anchorId);
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onRecvGetScheduleDetail:item:)]) {
@@ -345,8 +367,8 @@
     request.inviteId = inviteId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSPrePaidManager::sendCancelScheduleInvite( [取消预付费预约] success : %@, errnum : %d, errmsg : %@)",BOOL2SUCCESS(success), errnum, errmsg);
-            @synchronized (self.delegates) {
+            NSLog(@"LSPrePaidManager::sendCancelScheduleInvite( [取消预付费预约], %@, errnum : %d, errmsg : %@)", BOOL2SUCCESS(success), errnum, errmsg);
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onRecvSendScheduleInviteCancel:errmsg:)]) {
@@ -366,10 +388,10 @@
 
 #pragma mark - 接收预付费通知
 - (void)onRecvHandleScheduleNotice:(ImScheduleRoomInfoObject *)item {
-    NSLog(@"LSPrePaidManager::onRecvHandleScheduleNotice( [接收预付费操作] roomid : %@, privScheId : %@, sendFlag : %d, status : %d)",item.roomId, item.privScheId, item.msg.sendFlag, item.msg.status);
+    NSLog(@"LSPrePaidManager::onRecvHandleScheduleNotice( [接收预付费操作], roomId : %@, privScheId : %@, sendFlag : %d, status : %d )", item.roomId, item.privScheId, item.msg.sendFlag, item.msg.status);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (item.msg.sendFlag == LSSCHEDULESENDFLAGTYPE_ANCHOR && [item.roomId isEqualToString:self.liveRoom.roomId]) {
-            @synchronized (self.delegates) {
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onRecvAnchorSendScheduleNotice:)]) {
@@ -377,44 +399,45 @@
                     }
                 }
             }
+        } else {
+            NSLog(@"LSPrePaidManager::onRecvHandleScheduleNotice( [接收预付费操作, 非法的IM推送, 不处理], roomId : %@, privScheId : %@, sendFlag : %d, status : %d )", item.roomId, item.privScheId, item.msg.sendFlag, item.msg.status);
         }
     });
 }
 
 #pragma mark - 获取某会话中预付费直播邀请列表
-- (void)getScheduleRequestsList:(LSScheduleInviteType)type refId:(NSString *)refId{
+- (void)getScheduleRequestsList:(LSScheduleInviteType)type refId:(NSString *)refId {
     if (refId.length == 0) {
         return;
     }
-    LSGetSessionInviteListRequest * request = [[LSGetSessionInviteListRequest alloc]init];
+    LSGetSessionInviteListRequest *request = [[LSGetSessionInviteListRequest alloc] init];
     request.refId = refId;
     request.type = type;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, NSArray<LSScheduleLiveInviteItemObject *> *array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-             NSLog(@"LSPrePaidManager::getScheduleRequestsList( [获取某会话中预付费直播邀请列表] success : %@, errnum : %d, errmsg : %@)",BOOL2SUCCESS(success), errnum, errmsg);
-             
+            NSLog(@"LSPrePaidManager::getScheduleRequestsList( [获取某会话中预付费直播邀请列表], %@, errnum : %d, errmsg : %@)", BOOL2SUCCESS(success), errnum, errmsg);
+
             NSInteger count = 0;
             NSInteger pcount = 0;
             if (array.count > 0 && success) {
                 [self.scheduleListConfirmedArray removeAllObjects];
                 [self.scheduleListPendingdArray removeAllObjects];
-                for (LSScheduleLiveInviteItemObject * item in array) {
+                for (LSScheduleLiveInviteItemObject *item in array) {
                     if (item.status == LSSCHEDULEINVITESTATUS_CONFIRMED) {
                         count++;
                         [self.scheduleListConfirmedArray addObject:item];
-                    }else if (item.status == LSSCHEDULEINVITESTATUS_PENDING){
+                    } else if (item.status == LSSCHEDULEINVITESTATUS_PENDING) {
                         pcount++;
                         [self.scheduleListPendingdArray addObject:item];
-                    }else {
-                        
+                    } else {
                     }
                 }
             }
-            @synchronized (self.delegates) {
+            @synchronized(self.delegates) {
                 for (NSValue *value in self.delegates) {
                     id<LSPrePaidManagerDelegate> delegate = (id<LSPrePaidManagerDelegate>)value.nonretainedObjectValue;
-                    if ([delegate respondsToSelector:@selector(onGetScheduleListCount:confirmCount:pendingCount:)]) {
-                        [delegate onGetScheduleListCount:count+pcount confirmCount:count pendingCount:pcount];
+                    if ([delegate respondsToSelector:@selector(onGetScheduleList:maxCount:confirmCount:pendingCount:refId:)]) {
+                        [delegate onGetScheduleList:success maxCount:count + pcount confirmCount:count pendingCount:pcount refId:refId];
                     }
                 }
             }
@@ -423,147 +446,160 @@
     [[LSSessionRequestManager manager] sendRequest:request];
 }
 #pragma mark - 时间逻辑
-//获取某个时区的当前时间
-- (NSString *)getNewTimeZoneDate:(NSString *)gmtTime {
-    NSDateFormatter *dateFormat=[[NSDateFormatter alloc]init];
-    [dateFormat setDateFormat:@"MMM dd,yyyy-HH:00"];
+//获取某个时区的24小时后时间
+- (NSString *)get24TimeZoneDate:(NSString *)gmtTime {
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"MMM dd, yyyy-HH:00"];
     dateFormat.timeZone = [NSTimeZone timeZoneWithAbbreviation:gmtTime];
-    NSString * string = [dateFormat stringFromDate:[NSDate new]];
-    
+    NSString *string = [dateFormat stringFromDate:[NSDate new]];
+
+    NSInteger nowTime = [self timeSwitchTimestamp:string];
+    nowTime = nowTime + 86400;
     if ([self nowtimeIsInBeginTime:string]) {
-         NSInteger nowTime = [self timeSwitchTimestamp:string] + 3600;
-        string= [self getTimeFromTimestamp:nowTime timeFormat:@"MMM dd,yyyy-HH:00" andZone:gmtTime];
+        nowTime = nowTime + 3600;
     }
+    string = [self getTimeFromTimestamp:nowTime timeFormat:@"MMM dd, yyyy-HH:00" andZone:gmtTime];
     return string;
 }
 
 //时间转字符串
-- (NSDate *)stingDateToDate:(NSString *)string dateFormat:(NSString *)format andZone:(NSString*)zone{
+- (NSDate *)stingDateToDate:(NSString *)string dateFormat:(NSString *)format andZone:(NSString *)zone {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:format];
     formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:zone];
-    return  [formatter dateFromString:string];
+    return [formatter dateFromString:string];
 }
 
 //根据时间转换本地时间
 - (NSString *)getNowDateFromatAnDate:(NSDate *)anyDate {
-     NSDateFormatter *format = [[NSDateFormatter alloc] init];
-     format.dateFormat = @"MMM dd,yyyy-HH:mm";
-     format.timeZone = [NSTimeZone localTimeZone];
-     NSString *dateString = [format stringFromDate:anyDate];
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    format.dateFormat = @"MMM dd, yyyy-HH:mm";
+    format.timeZone = [NSTimeZone localTimeZone];
+    NSString *dateString = [format stringFromDate:anyDate];
     return dateString;
 }
- 
+
 //时区格式
-- (NSString *)getTimeZoneText:(LSTimeZoneItemObject*)item  {
-    return [NSString stringWithFormat:@"(%@ %@)/%@",item.cityCode,item.value,item.city];
-}
-
-//获取本地时间戳
-- (NSString *)getTimestampFromTime{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"MMM dd,yyyy-HH:mm:ss"];
-    NSTimeZone *timeZone = [NSTimeZone systemTimeZone]; // 获得当前系统的时区
-    [formatter setTimeZone:timeZone];
-    NSDate *datenow = [NSDate date];
-    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[datenow timeIntervalSince1970]];
-    return timeSp;
-}
-
-//获取当前时间
-- (NSString*)getCurrentTimes{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"HH:00"];
-    NSDate *datenow = [NSDate date];
-    NSString *currentTimeString = [formatter stringFromDate:datenow];
-    return currentTimeString;
+- (NSString *)getTimeZoneText:(LSTimeZoneItemObject *)item {
+    return [NSString stringWithFormat:@"(GMT %@)/%@", item.value, item.city];
 }
 
 //获取结束时间
-- (NSString *)getEndTime:(NSString*)time {
-    
+- (NSString *)getEndTime:(NSString *)time {
+    if (time.length == 0) {
+        return @"";
+    }
     NSArray *array = [time componentsSeparatedByString:@":"];
-    
+
     int beginTime = [[array firstObject] intValue] + 1;
-    NSString * endTime = @"";
+    NSString *endTime = @"";
     if (beginTime == 24) {
         beginTime = 0;
     }
     if (beginTime < 10) {
-        endTime = [NSString stringWithFormat:@"0%d:%@",beginTime,[array lastObject]];
-    }else {
-        endTime = [NSString stringWithFormat:@"%d:%@",beginTime,[array lastObject]];
+        endTime = [NSString stringWithFormat:@"0%d:%@", beginTime, [array lastObject]];
+    } else {
+        endTime = [NSString stringWithFormat:@"%d:%@", beginTime, [array lastObject]];
     }
     return endTime;
 }
 
 //获取开始时间
-- (NSString *)getBeginTime:(NSString*)time {
+- (NSString *)getBeginTime:(NSString *)time {
+    if (time.length == 0) {
+        return @"";
+    }
     NSArray *array = [time componentsSeparatedByString:@":"];
     int beginTime = [[array firstObject] intValue] - 1;
-    NSString * endTime = @"";
+    NSString *endTime = @"";
     if (beginTime < 0) {
-        beginTime = 0;
+        beginTime = 23;
     }
     if (beginTime < 10) {
-        endTime = [NSString stringWithFormat:@"0%d:%@",beginTime,[array lastObject]];
-    }else {
-        endTime = [NSString stringWithFormat:@"%d:%@",beginTime,[array lastObject]];
+        endTime = [NSString stringWithFormat:@"0%d:%@", beginTime, [array lastObject]];
+    } else {
+        endTime = [NSString stringWithFormat:@"%d:%@", beginTime, [array lastObject]];
     }
     return endTime;
 }
 
-//时间戳转时间 zone不传默认0时区 
-- (NSString *)getTimeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format andZone:(NSString*)zone{
-    NSDate * myDate=[NSDate dateWithTimeIntervalSince1970:time];
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
+//时间戳转时间 zone不传默认0时区
+- (NSString *)getTimeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format andZone:(NSString *)zone {
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:time];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:format];
     if (zone.length > 0) {
         formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:zone];
     }
-    NSString *timeStr=[formatter stringFromDate:myDate];
+    NSString *timeStr = [formatter stringFromDate:myDate];
     return timeStr;
 }
 
 //时间戳转本地时间
-- (NSString *)getLocalTimeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format{
-    NSDate * myDate=[NSDate dateWithTimeIntervalSince1970:time];
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
+- (NSString *)getLocalTimeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format {
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:time];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = format;
     formatter.timeZone = [NSTimeZone localTimeZone];
-    NSString *timeStr=[formatter stringFromDate:myDate];
+    NSString *timeStr = [formatter stringFromDate:myDate];
     return timeStr;
 }
 
 //时间戳转GMT时间
-- (NSString *)getGMTFromTimestamp:(NSInteger)time timeFormat:(NSString *)format{
-    NSDate * myDate=[NSDate dateWithTimeIntervalSince1970:time];
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
+- (NSString *)getGMTFromTimestamp:(NSInteger)time timeFormat:(NSString *)format {
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:time];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = format;
     formatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    NSString *timeStr=[formatter stringFromDate:myDate];
+    NSString *timeStr = [formatter stringFromDate:myDate];
     return timeStr;
 }
 
-- (NSString *)getStartTimeAndEndTomeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format isDaylightSaving:(BOOL)isday andZone:(NSString*)zone {
-    
+- (NSString *)getStartTimeAndEndTomeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format isDaylightSaving:(BOOL)isday andZone:(NSString *)zone {
+
     zone = [self getGMTTimeZone:zone];
-    NSString * localBeginTime = [self getLocalTimeFromTimestamp:time timeFormat:format];
+    NSString *localBeginTime = [self getLocalTimeFromTimestamp:time timeFormat:format];
     if (zone.length > 0) {
         localBeginTime = [self getTimeFromTimestamp:time timeFormat:format andZone:zone];
     }
-    
-    NSArray * array = [localBeginTime componentsSeparatedByString:@", "];
-    NSString * endTime = [self getEndTime:[array lastObject]];
+
+    NSArray *array = [localBeginTime componentsSeparatedByString:@", "];
+    NSString *endTime = [self getEndTime:[array lastObject]];
     if (!isday) {
-        return [NSString stringWithFormat:@"%@ - %@",localBeginTime,endTime];
+        return [NSString stringWithFormat:@"%@ - %@", localBeginTime, endTime];
     }
-    
-    localBeginTime = [NSString stringWithFormat:@"%@, %@",[array firstObject],endTime];
-     NSString * dayEndTime = [self getEndTime:endTime];
-    return  [NSString stringWithFormat:@"%@ - %@",localBeginTime,dayEndTime];
+
+    localBeginTime = [NSString stringWithFormat:@"%@, %@", [array firstObject], endTime];
+    NSString *dayEndTime = [self getEndTime:endTime];
+    return [NSString stringWithFormat:@"%@ - %@", localBeginTime, dayEndTime];
+}
+
+- (NSString *)getLocalTimeBeginTiemAndEndTimeFromTimestamp:(NSInteger)time timeFormat:(NSString *)format {
+
+    NSString *localTime = [[LSPrePaidManager manager] getLocalTimeFromTimestamp:time timeFormat:format];
+
+    NSArray *array = [localTime componentsSeparatedByString:@", "];
+    NSString *endTime = [[LSPrePaidManager manager] getEndTime:[array lastObject]];
+    return [NSString stringWithFormat:@"%@ - %@", [localTime stringByReplacingOccurrencesOfString:@"-" withString:@" "], endTime];
+}
+
+- (NSString *)getDetailStartAndEndTimestamp:(NSInteger)time timeFormat:(NSString *)format isDaylightSaving:(BOOL)isday andZone:(NSString *)zone {
+
+    zone = [self getGMTTimeZone:zone];
+    NSString *localBeginTime = [self getLocalTimeFromTimestamp:time timeFormat:format];
+    if (zone.length > 0) {
+        localBeginTime = [self getTimeFromTimestamp:time timeFormat:format andZone:zone];
+    }
+
+    NSArray *array = [localBeginTime componentsSeparatedByString:@" "];
+    NSString *endTime = [self getEndTime:[array lastObject]];
+    if (!isday) {
+        return [NSString stringWithFormat:@"%@ - %@", localBeginTime, endTime];
+    }
+
+    localBeginTime = [NSString stringWithFormat:@"%@, %@", [array firstObject], endTime];
+    NSString *dayEndTime = [self getEndTime:endTime];
+    return [NSString stringWithFormat:@"%@ - %@", localBeginTime, dayEndTime];
 }
 
 // 拼接时区
@@ -573,9 +609,9 @@
         return timeZone;
     }
     if (![zone containsString:@"GMT"]) {
-        timeZone = [NSString stringWithFormat:@"GMT%@",zone];
+        timeZone = [NSString stringWithFormat:@"GMT%@", zone];
     }
-    
+
     if ([timeZone containsString:@":"]) {
         [timeZone stringByReplacingOccurrencesOfString:@":" withString:@""];
     }
@@ -584,19 +620,19 @@
 
 //是否夏令时开始
 - (NSArray *)isDaylightSavingBenginTime:(NSMutableArray *)array {
-    
-    NSMutableArray * dateArray = [NSMutableArray array];
-    for (NSString * str in array) {
-        [dateArray addObject:[NSString stringWithFormat:@"%@-%@",self.yaerStr,str]];
+
+    NSMutableArray *dateArray = [NSMutableArray array];
+    for (NSString *str in array) {
+        [dateArray addObject:[NSString stringWithFormat:@"%@-%@", self.yaerStr, str]];
     }
-    
+
     NSString *zone = [self getZone];
-    NSDate * myDate=[NSDate dateWithTimeIntervalSince1970:self.zoneItem.summerTimeStart];
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"MMM dd,yyyy-HH:00"];
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:self.zoneItem.summerTimeStart];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MMM dd, yyyy-HH:00"];
     formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:zone];
-    NSString *timeStr=[formatter stringFromDate:myDate];
-    
+    NSString *timeStr = [formatter stringFromDate:myDate];
+
     if ([dateArray containsObject:timeStr]) {
         NSInteger row = [dateArray indexOfObject:timeStr];
         [array removeObjectAtIndex:row];
@@ -605,85 +641,85 @@
 }
 
 - (NSString *)getSendRequestTime:(NSString *)format {
-    NSString * time = [NSString stringWithFormat:@"%@-%@",self.yaerStr,self.benginTime];
-    NSDate * date = [self stingDateToDate:time dateFormat:@"MMM dd,yyyy-HH:00" andZone:[self getZone]];
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
+    NSString *time = [NSString stringWithFormat:@"%@-%@", self.yaerStr, self.benginTime];
+    NSDate *date = [self stingDateToDate:time dateFormat:@"MMM dd, yyyy-HH:00" andZone:[self getZone]];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:format];
     formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:[self getZone]];
-    NSString *timeStr=[formatter stringFromDate:date];
-    
+    NSString *timeStr = [formatter stringFromDate:date];
+
     return timeStr;
-    
 }
 
 - (NSString *)daylightSavingBeginTime:(NSString *)str {
-    NSArray * array = [str componentsSeparatedByString:@"-"];
-    str = [NSString stringWithFormat:@"%@-%@",[array firstObject],[self getBeginTime:[array lastObject]]];
-    
+    NSArray *array = [str componentsSeparatedByString:@"-"];
+    str = [NSString stringWithFormat:@"%@-%@", [array firstObject], [self getBeginTime:[array lastObject]]];
+
     return str;
 }
 
 //获取时区
-- (NSString*)getZone {
+- (NSString *)getZone {
     NSString *zone = [self.zoneItem.value stringByReplacingOccurrencesOfString:@":" withString:@""];
-    zone = [NSString stringWithFormat:@"GMT%@",zone];
+    zone = [NSString stringWithFormat:@"GMT%@", zone];
     return zone;
 }
 
 //根据时间转时间戳
--(NSInteger)timeSwitchTimestamp:(NSString *)formatTime{
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"MMM dd,yyyy-HH:mm"];
+- (NSInteger)timeSwitchTimestamp:(NSString *)formatTime {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MMM dd, yyyy-HH:mm"];
     formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:[self getZone]];
-    NSDate* date = [formatter dateFromString:formatTime];
+    NSDate *date = [formatter dateFromString:formatTime];
     NSInteger timeSp = [[NSNumber numberWithDouble:[date timeIntervalSince1970]] integerValue];
     return timeSp;
 }
 
--(BOOL)nowtimeIsInBeginTime:(NSString *)time {
+- (BOOL)nowtimeIsInBeginTime:(NSString *)time {
     NSInteger nowTime = [self timeSwitchTimestamp:time];
     if (self.zoneItem.summerTimeStart < nowTime && nowTime < self.zoneItem.summerTimeEnd) {
         return YES;
-    }else {
+    } else {
         return NO;
     }
 }
 
-
 #pragma mark - 富文本
 - (NSMutableAttributedString *)newTimeStr:(NSString *)str {
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc]initWithString:str attributes:@{
-    NSForegroundColorAttributeName:
-        [UIColor blackColor],
-    NSFontAttributeName: [UIFont boldSystemFontOfSize:14]
-    }];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str
+                                                                                attributes:@{
+                                                                                    NSForegroundColorAttributeName :
+                                                                                        [UIColor blackColor],
+                                                                                    NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                                                                }];
     return attrStr;
 }
 
-- (NSMutableAttributedString *)newCreditsStr:(NSString *)str credits:(NSString*)creditsStr {
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc]initWithString:str];
+- (NSMutableAttributedString *)newCreditsStr:(NSString *)str credits:(NSString *)creditsStr {
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
     if (creditsStr.length > 0) {
         [attrStr addAttributes:@{
-                                NSStrikethroughStyleAttributeName:@(NSUnderlineStyleThick),
-                                 NSForegroundColorAttributeName:
-                                     [UIColor lightGrayColor],
-                                 NSBaselineOffsetAttributeName:
-                                     @(0),
-                                 NSFontAttributeName: [UIFont fontWithName:@"Arial-BoldMT" size:14]
-                                 } range:[str rangeOfString:creditsStr options:NSBackwardsSearch]];
+            NSStrikethroughStyleAttributeName : @(NSUnderlineStyleThick),
+            NSForegroundColorAttributeName :
+                [UIColor lightGrayColor],
+            NSBaselineOffsetAttributeName :
+                @(0),
+            NSFontAttributeName : [UIFont fontWithName:@"Arial-BoldMT" size:14]
+        }
+                         range:[str rangeOfString:creditsStr options:NSBackwardsSearch]];
     }
     return attrStr;
 }
 
 //发送Item
 - (LSLCLiveChatScheduleMsgItemObject *)newSendMsgItemForm:(LSSendScheduleInviteItemObject *)item {
-    LSLCLiveChatScheduleMsgItemObject * msgItem = [[LSLCLiveChatScheduleMsgItemObject alloc]init];
+    LSLCLiveChatScheduleMsgItemObject *msgItem = [[LSLCLiveChatScheduleMsgItemObject alloc] init];
     msgItem.scheduleInviteId = item.inviteId;
     msgItem.type = SCHEDULEINVITE_PENDING;
-    msgItem.timeZone = [NSString stringWithFormat:@"%@ (%@)",self.zoneItem.cityCode,self.zoneItem.value];
+    msgItem.timeZone = [NSString stringWithFormat:@"%@ (GMT %@)", self.zoneItem.cityCode, self.zoneItem.value];
     msgItem.origintduration = item.duration;
     msgItem.startTime = item.startTime;
-    msgItem.period = [NSString stringWithFormat:@"%@ - %@",[self getSendRequestTime:@"MMM dd, HH:00"], [self getEndTime:self.benginTime]];
+    msgItem.period = [NSString stringWithFormat:@"%@ - %@", [self getSendRequestTime:@"MMM dd, HH:00"], [self getEndTime:self.benginTime]];
     msgItem.sendTime = item.addTime;
     return msgItem;
 }
@@ -695,16 +731,16 @@
     msgItem.nickName = self.liveRoom.userName;
     msgItem.toId = self.liveRoom.userId;
     msgItem.privScheId = item.inviteId;
-    
+
     ImScheduleMsgObject *msg = [[ImScheduleMsgObject alloc] init];
     msg.scheduleInviteId = item.inviteId;
     msg.status = IMSCHEDULESENDSTATUS_PENDING;
     msg.origintduration = item.duration;
     msg.startTime = item.startTime;
     msg.sendTime = item.addTime;
-    NSString *timeZone = [NSString stringWithFormat:@"%@ (%@)",self.zoneItem.cityCode,self.zoneItem.value];
+    NSString *timeZone = [NSString stringWithFormat:@"%@(GMT %@)",self.zoneItem.cityCode,self.zoneItem.value];
     NSString *period = [NSString stringWithFormat:@"%@ - %@",[self getSendRequestTime:@"MMM dd, HH:00"], [self getEndTime:self.benginTime]];
-    msg.period = [NSString stringWithFormat:@"%@%@",period,timeZone];
+    msg.period = [NSString stringWithFormat:@"%@ %@",period,timeZone];
     
     msgItem.msg = msg;
     return msgItem;;

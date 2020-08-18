@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -81,7 +78,7 @@
                         <action selector="inviteAction:" destination="-1" eventType="touchUpInside" id="5Uv-VC-oaJ"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="xLr-pH-5ki" userLabel="Liver Head View">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="xLr-pH-5ki" userLabel="Liver Head View" customClass="LSUIImageViewTopFit">
                     <rect key="frame" x="145" y="493.5" width="85" height="85"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="xLr-pH-5ki" secondAttribute="height" multiplier="1:1" id="bb8-sH-ray"/>
@@ -89,7 +86,7 @@
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6fA-Vg-Tua" userLabel="Tip Message View">
-                    <rect key="frame" x="112.5" y="594.5" width="151.5" height="19.5"/>
+                    <rect key="frame" x="112" y="594.5" width="151.5" height="19.5"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Liver_Invite_To_1" translatesAutoresizingMaskIntoConstraints="NO" id="BDa-Qj-BrH" userLabel="Tip Icon Image View">
                             <rect key="frame" x="0.0" y="3" width="14" height="14"/>
@@ -171,6 +168,7 @@
                 <constraint firstItem="Fao-PN-lS8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="zYw-Fw-P8U"/>
                 <constraint firstAttribute="bottom" secondItem="4rb-PB-Qyw" secondAttribute="bottom" constant="5" id="zv5-k3-Vpe"/>
             </constraints>
+            <point key="canvasLocation" x="138" y="155"/>
         </view>
     </objects>
     <resources>
@@ -178,7 +176,7 @@
         <image name="Hangout_LiveRoom_First_Anchor" width="24" height="24"/>
         <image name="Live_Invite_HangOut" width="35" height="35"/>
         <image name="Live_Liver_Invite_To_1" width="10" height="10"/>
-        <image name="Live_Loading_Video_HangOut" width="187" height="187"/>
-        <image name="Live_Name_Shadow_HangOut" width="3" height="51"/>
+        <image name="Live_Loading_Video_HangOut" width="187.5" height="187.5"/>
+        <image name="Live_Name_Shadow_HangOut" width="3.5" height="51"/>
     </resources>
 </document>

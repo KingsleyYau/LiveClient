@@ -56,10 +56,11 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="cardCellView" destination="S1q-dn-m6j" id="PwP-ps-YdL"/>
+                <outlet property="cardViewW" destination="G08-23-Mfe" id="0fc-eY-83t"/>
                 <outlet property="loadingActivity" destination="7rk-Um-5Nk" id="efA-Uc-a0h"/>
                 <outlet property="retryBtn" destination="1rC-UC-fEr" id="4sy-ay-vge"/>
             </connections>
-            <point key="canvasLocation" x="92" y="191"/>
+            <point key="canvasLocation" x="-53" y="183"/>
         </tableViewCell>
     </objects>
     <resources>

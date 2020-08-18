@@ -24,7 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIView *nodataView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineImageView;
 @property (nonatomic, strong) UILabel *navTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;

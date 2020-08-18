@@ -43,7 +43,9 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="acceptCellView" destination="QrO-6t-BQi" id="bWq-rm-9z6"/>
+                <outlet property="acceptViewW" destination="MLQ-TK-DCD" id="eau-hD-12e"/>
                 <outlet property="cardCellView" destination="5Kc-D7-lao" id="vuN-nK-AUe"/>
+                <outlet property="cardViewW" destination="G0r-98-nKN" id="5Ew-JO-6dh"/>
             </connections>
             <point key="canvasLocation" x="90.579710144927546" y="190.84821428571428"/>
         </tableViewCell>

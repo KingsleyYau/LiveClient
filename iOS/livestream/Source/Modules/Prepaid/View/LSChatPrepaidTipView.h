@@ -19,6 +19,8 @@
 
 @property (weak, nonatomic) IBOutlet UIView *confirmView;
 @property (weak, nonatomic) IBOutlet UIView *pendingView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *confirmViewHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *pendingViewHeight;
 @property (weak, nonatomic) IBOutlet UILabel *confirmUnCount;
 @property (weak, nonatomic) IBOutlet UILabel *pendingUnCount;
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;

@@ -33,7 +33,7 @@ typedef enum : NSUInteger {
     AlertViewTypeDefault = 0,      //默认无操作
     AlertViewTypeSendTip,          //发送二次确认提示
 } AlertViewType;
-@interface LSSendScheduleViewController ()<UIScrollViewDelegate, LSChatTextViewDelegate, LSOutOfPoststampViewDelegate, LSOutOfCreditsViewDelegate,UITextViewDelegate,LSPrepaidDateViewDelegate,LSPrePaidPickerViewDelegate,LSPurchaseCreditsViewDelegate>
+@interface LSSendScheduleViewController ()<UIScrollViewDelegate, LSChatTextViewDelegate, LSOutOfPoststampViewDelegate, LSOutOfCreditsViewDelegate,UITextViewDelegate,LSPrepaidDateViewDelegate,LSPrePaidPickerViewDelegate,LSPurchaseCreditsViewDelegate,LSPrePaidManagerDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, assign) CGFloat scrollViewOffy;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrollViewBottomDistance;
@@ -76,9 +76,13 @@ typedef enum : NSUInteger {
 
 @implementation LSSendScheduleViewController
 
+- (void)dealloc {
+    [[LSPrePaidManager manager] removeDelegate:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    [[LSPrePaidManager manager] addDelegate:self];
     self.sessionManager = [LSSessionRequestManager manager];
     [LSSendMailDraftManager manager];
     self.scrollView.delegate = self;
@@ -118,9 +122,7 @@ typedef enum : NSUInteger {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
     
-    NSString *content = [[LSSendMailDraftManager manager] getScheduleMailDraft:self.anchorId];
-    self.textCount.text = [NSString stringWithFormat:@"%d", (int)(maxCount - content.length)];
-    self.mailTextView.text = content;
+
     [self setupScheduleInfo];
     [self setupUserInfo];
 
@@ -148,31 +150,34 @@ typedef enum : NSUInteger {
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSString *content = [[LSSendMailDraftManager manager] getScheduleMailDraft:self.anchorId];
+    self.textCount.text = [NSString stringWithFormat:@"%d", (int)(maxCount - content.length)];
+    self.mailTextView.text = content;
+}
+
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.purchaseCreditView removeShowCreditView];
+}
 
 // 初始化预约没点弹层
 - (void)setupPurchaseCreditView:(NSString *)photoUrl anchorName:(NSString *)anchorName{
     self.purchaseCreditView = [[LSPurchaseCreditsView alloc] init];
     self.purchaseCreditView.delegate = self;
-    self.purchaseCreditView.hidden = YES;
-    [self.view addSubview:self.purchaseCreditView];
-    [self.purchaseCreditView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.navigationController.view);
-    }];
-    [self.purchaseCreditView setupCreditView:photoUrl name:anchorName];
+    [self.purchaseCreditView setupCreditView:photoUrl];
 }
 
-
 - (void)showCreditView {
-    // 由于添加导航栏的view上,导航栏的消失会导致view的偏离,重新更新下约束
-    [self.purchaseCreditView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.navigationController.view);
-    }];
-    self.purchaseCreditView.hidden = NO;
+    [self.purchaseCreditView setupCreditTipIsAccept:NO name:self.anchorName credit:[LiveRoomCreditRebateManager creditRebateManager].mCredit];
+    [self.purchaseCreditView showLSCreditViewInView:self.navigationController.view];
 }
 
 - (void)setupUserInfo {
@@ -325,6 +330,7 @@ typedef enum : NSUInteger {
                     [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"UNAVAILABLE")];
                 }else if (errnum == HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM){
                        // 发送预付费直播:开始时间离现在不足24小时或超过14天
+                    [[LSPrePaidManager manager]getDateData];
                     [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"OUT_OF_TIME")];
                 }else if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT){
                        // 发送预付费直播:男士信用点不足
@@ -336,6 +342,10 @@ typedef enum : NSUInteger {
         });
     };
     [self.sessionManager sendRequest:request];
+}
+
+- (void)onRecvScheduleGetDateData {
+    [self.prepaidDateView updateNewBeginTime];
 }
 #pragma mark - AlertView回调
 - (void)showAlertViewMsg:(NSString *)titleMsg cancelBtnMsg:(NSString *)cancelMsg otherBtnMsg:(NSString *)otherMsg alertViewType:(AlertViewType)type{
@@ -464,7 +474,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)purchaseDidAction {
-    self.purchaseCreditView.hidden = YES;
+    [self.purchaseCreditView removeShowCreditView];
     [self addCreditsBtnDid:nil];
 }
 
@@ -635,14 +645,7 @@ typedef enum : NSUInteger {
         return array;
     }
     else if ([button isEqual:self.prepaidDateView.creditsButton]) {
-        NSMutableArray * array = [NSMutableArray array];
-        for (LSScheduleDurationItemObject * item in [LSPrePaidManager manager].creditsArray) {
-            NSString * str = [NSString stringWithFormat:@"%d Minutes - %0.2f Credits %0.2f Credits",item.duration,item.credit,item.originalCredit];
-            NSString * str1 = [NSString stringWithFormat:@"%0.2f Credits",item.originalCredit];
-             NSMutableAttributedString * attrStr =  [[LSPrePaidManager manager] newCreditsStr:str credits:str1];
-            [array addObject:attrStr];
-        }
-        return array;
+        return [[LSPrePaidManager manager] getCreditArray];
     }else if ([button isEqual:self.prepaidDateView.timeButton]) {
          return [[LSPrePaidManager manager]getYearArray];
     }else if ([button isEqual:self.prepaidDateView.beginTimeButton]) {
@@ -655,6 +658,7 @@ typedef enum : NSUInteger {
 - (void)removePrePaidPickerView {
     [self.pickerView removeFromSuperview];
     self.pickerView = nil;
+    [self.prepaidDateView resetBtnState];
 }
 
 - (void)prepaidPickerViewSelectedRow:(NSInteger)row {

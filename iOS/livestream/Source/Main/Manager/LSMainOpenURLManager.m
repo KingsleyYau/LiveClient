@@ -43,7 +43,9 @@
 #import "LSMailScheduleDetailViewController.h"
 #import "LSScheduleListRootViewController.h"
 #import "LSScheduleDetailsViewController.h"
-
+#import "LSSendScheduleViewController.h"
+#import "LSPremiumVideoViewController.h"
+#import "LSPremiumVideoDetailViewController.h"
 @interface LSMainOpenURLManager () <LiveUrlHandlerDelegate, LiveUrlHandlerParseDelegate>
 /** 链接跳转管理器 */
 @property (nonatomic, strong) LiveUrlHandler *handler;
@@ -593,8 +595,8 @@
             break;
     }
     NSLog(@"LSMainOpenURLManager::openScheduleList( [URL跳转,跳转预约列表], type : %d, index : %d )", type, index);
-    [self showMinLiveView];
-    [[LiveGobalManager manager] popToRootVC];
+//    [self showMinLiveView];
+//    [[LiveGobalManager manager] popToRootVC];
     [self reportScreenForce];
 
     LSScheduleListRootViewController *vc = [[LSScheduleListRootViewController alloc] initWithNibName:nil bundle:nil];
@@ -626,6 +628,33 @@
     letterItem.letterId = loid;
     vc.letterItem = letterItem;
     vc.isInBoxSheduleDetail = isInbox;
+    [[LiveGobalManager manager] pushWithNVCFromVC:self.mainVC toVC:vc];
+}
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openSendScheduleMail:(NSString *)anchorId {
+    // TODO:跳转预付费发信页面
+    NSLog(@"LSMainOpenURLManager::openSendScheduleMail( [URL跳转, 跳转预付费发信页面详情], anchorId : %@)",anchorId);
+    LSSendScheduleViewController *vc = [[LSSendScheduleViewController alloc] initWithNibName:nil bundle:nil];
+    vc.anchorId = anchorId;
+    [[LiveGobalManager manager] pushWithNVCFromVC:self.mainVC toVC:vc];
+}
+
+#pragma mark - 付费视频
+- (void)liveUrlHandlerOpenPremiumVideoList:(LiveUrlHandler *)handler {
+    // TODO:跳转付费视频列表页面
+    NSLog(@"LSMainOpenURLManager::liveUrlHandlerOpenPremiumVideoList( [URL跳转, 跳转付费视频列表])");
+    [[LiveGobalManager manager] popToRootVC];
+    LSPremiumVideoViewController * vc = [[LSPremiumVideoViewController alloc]initWithNibName:nil bundle:nil];
+    [[LiveGobalManager manager] pushWithNVCFromVC:self.mainVC toVC:vc];
+}
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler didOpenPremiumVideoDetail:(NSString *)videoId andAnchor:(NSString *)anchorId {
+    // TODO:跳转付费视频详情页面
+    NSLog(@"LSMainOpenURLManager::didOpenPremiumVideoDetail( [URL跳转, 跳转付费视频详情], videoId : %@ ,anchorId : %@)",videoId ,anchorId);
+    
+    LSPremiumVideoDetailViewController * vc = [[LSPremiumVideoDetailViewController alloc]initWithNibName:nil bundle:nil];
+    vc.videoId = videoId;
+    vc.womanId = anchorId;
     [[LiveGobalManager manager] pushWithNVCFromVC:self.mainVC toVC:vc];
 }
 

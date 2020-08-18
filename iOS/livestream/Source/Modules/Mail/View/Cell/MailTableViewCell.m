@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *receiveImageIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *receiveVideoIcon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *receiveVideoIconTrailing;
+@property (weak, nonatomic) IBOutlet UIImageView *receiveKeyIcon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *receiveKeyIconWidth;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *receiveVideoIconWidth;
@@ -58,6 +61,7 @@
     self.timeLabel.text = @"";
     self.anchorNameLabel.text = @"";
     self.contentLabel.text = @"";
+    self.onlineImageViewWidth.constant = 0;
     
     self.redLabel.layer.cornerRadius = self.redLabel.frame.size.height / 2;
     self.redLabel.layer.masksToBounds = YES;
@@ -77,7 +81,6 @@
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
-    
     return cell;
 }
 
@@ -110,16 +113,29 @@
     
     self.replyImage.hidden = obj.hasReplied ? NO : YES;
     self.receiveImageIcon.hidden = obj.hasImg ? NO : YES;
-    self.receiveVideoIcon.hidden = obj.hasVideo ? NO : YES;
+//    self.receiveVideoIcon.hidden = obj.hasVideo ? NO : YES;
     self.followImageView.hidden = obj.isFollow ? NO : YES;
     self.onlineImageViewWidth.constant = obj.onlineStatus ? 40 : 0;
-
+    
+    
     if (obj.hasVideo) {
+        self.receiveVideoIcon.hidden = NO;
         self.receiveVideoIconWidth.constant = 12;
         self.receiveVideoIconLeft.constant = 5;
     } else {
+        self.receiveVideoIcon.hidden = YES;
         self.receiveVideoIconWidth.constant = 0;
         self.receiveVideoIconLeft.constant = 0;
+    }
+    
+    if (obj.hasKey) {
+        self.receiveKeyIcon.hidden = NO;
+        self.receiveKeyIconWidth.constant = 12;
+        self.receiveVideoIconTrailing.constant = 5;
+    } else {
+        self.receiveKeyIcon.hidden = YES;
+        self.receiveKeyIconWidth.constant = 0;
+        self.receiveVideoIconTrailing.constant = 0;
     }
     
     if (obj.hasSchedule) {
@@ -149,15 +165,29 @@
     
     self.replyImage.hidden = YES;
     self.receiveImageIcon.hidden = obj.hasImg ? NO : YES;
-    self.receiveVideoIcon.hidden = obj.hasVideo ? NO : YES;
+    //self.receiveVideoIcon.hidden = obj.hasVideo ? NO : YES;
     self.followImageView.hidden = obj.isFollow ? NO : YES;
-    
+    self.onlineImageViewWidth.constant = obj.onlineStatus ? 40 : 0;
+        
     if (obj.hasVideo) {
+        self.receiveVideoIcon.hidden = NO;
         self.receiveVideoIconWidth.constant = 12;
         self.receiveVideoIconLeft.constant = 5;
     } else {
+        self.receiveVideoIcon.hidden = YES;
         self.receiveVideoIconWidth.constant = 0;
         self.receiveVideoIconLeft.constant = 0;
+    }
+    
+    //发件箱是否需要处理hasKey字段？？？
+    if (obj.hasKey) {
+        self.receiveKeyIcon.hidden = NO;
+        self.receiveKeyIconWidth.constant = 12;
+        self.receiveVideoIconTrailing.constant = 5;
+    } else {
+        self.receiveKeyIcon.hidden = YES;
+        self.receiveKeyIconWidth.constant = 0;
+        self.receiveVideoIconTrailing.constant = 0;
     }
     
     if (obj.hasSchedule) {

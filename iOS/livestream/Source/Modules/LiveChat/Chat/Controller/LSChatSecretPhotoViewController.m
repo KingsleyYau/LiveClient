@@ -28,16 +28,12 @@ typedef enum : NSUInteger {
 /** 还没开始下载标识 */
 @property (nonatomic,assign) BOOL downloadPhoto;
 
-/** afn网络网络管理 */
-@property (nonatomic,strong) AFNetworkReachabilityManager *networkManager;
-
 @end
 
 @implementation LSChatSecretPhotoViewController
 
 - (void)dealloc {
     [self.liveChatManager removeDelegate:self];
-    [self.networkManager stopMonitoring];
 }
 
 - (void)viewDidLoad {
@@ -159,8 +155,6 @@ typedef enum : NSUInteger {
     [super initCustomParam];
     self.liveChatManager = [LSLiveChatManagerOC manager];
     [self.liveChatManager addDelegate:self];
-//    self.networkManager  = [AFNetworkReachabilityManager sharedManager];
-//    [self AFNReachability];
     self.isShowNavBar = NO;
 }
 
@@ -353,30 +347,6 @@ typedef enum : NSUInteger {
 
 - (void)photoViewDidDoubleTwoFingerTap:(LSPZPhotoView *)photoView {
     
-}
-
-
-//使用AFN来检测网络状态的改变
--(void)AFNReachability {
-    
-    //监听网络状态的改变
-    __weak typeof(self) weakSelf = self;
-    [self.networkManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        switch (status) {
-            case AFNetworkReachabilityStatusUnknown:
-            case AFNetworkReachabilityStatusNotReachable:
-            case AFNetworkReachabilityStatusReachableViaWWAN:
-            case AFNetworkReachabilityStatusReachableViaWiFi:{
-                [weakSelf reloadPhoto];
-            }break;
-                
-            default:
-                break;
-        }
-    }];
-    
-    //开始监听
-    [self.networkManager startMonitoring];
 }
 
 @end

@@ -7,11 +7,11 @@
 "OUTBOX" = "Outbox";
 
 
-"Credits_Tips" = "1 stamp (or 0.8 credits) for each mail read. If you have no stamps, credits will be used instead.";
+//"Credits_Tips" = "1 stamp (or 0.8 credits) for each mail read. If you have no stamps, credits will be used instead.";
+"Credits_Tips" = "Post stamp will be used in first than credits. 1 stamp or 0.8 credits for each mail read.";
+
 "Not_Again" = "Don't Ask Again";
 
 "NO_INBOX_TIP" = "You haven't received any Mails.";
 
 "NO_OUTBOX_TIP" = "You haven't send any Mails.";
-
-

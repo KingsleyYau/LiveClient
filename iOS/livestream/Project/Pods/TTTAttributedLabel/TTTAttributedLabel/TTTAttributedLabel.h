@@ -77,7 +77,7 @@ extern NSString * const kTTTBackgroundCornerRadiusAttributeName;
 @property (nonatomic, copy) IBInspectable id text;
 @end
 
-IB_DESIGNABLE
+//IB_DESIGNABLE
 
 /**
  `TTTAttributedLabel` is a drop-in replacement for `UILabel` that supports `NSAttributedString`, as well as automatically-detected and manually-added links to URLs, addresses, phone numbers, and dates.
@@ -161,11 +161,7 @@ IB_DESIGNABLE
  */
 @property (nonatomic, assign) UIEdgeInsets linkBackgroundEdgeInset;
 
-/**
- Indicates if links will be detected within an extended area around the touch
- to emulate the link detection behaviour of UIWebView. 
- Default value is NO. Enabling this may adversely impact performance.
- */
+
 @property (nonatomic, assign) BOOL extendsLinkTouchArea;
 
 ///---------------------------------------

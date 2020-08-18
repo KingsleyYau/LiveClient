@@ -1,0 +1,17 @@
+
+/* Class = "UILabel"; text = "2. Deduction of your pre-paid minutes will start as soon as the one-on-one session starts successfully during the scheduled period."; ObjectID = "0rz-R1-eR1"; */
+"0rz-R1-eR1.text" = "2. Deduction of your pre-paid minutes will start as soon as the one-on-one session starts successfully during the scheduled period.";
+
+/* Class = "UILabel"; text = "1. Start a one-on-one with Ann by either inviting her or accepting her request during the scheduled period (Dec 12 23:00 - Dec 13 00:00 your local time)."; ObjectID = "SoC-EL-YXf"; */
+"SoC-EL-YXf.text" = "1. Start a one-on-one with %@ by either inviting her or accepting her request during the scheduled period ";
+
+/* Class = "UILabel"; text = "4. If the session exceeds your pre-paid minutes, the extra minutes will be billed as usual."; ObjectID = "hVC-kj-Kww"; */
+"hVC-kj-Kww.text" = "4. If the session exceeds your pre-paid minutes, the extra minutes will be billed as usual.";
+
+/* Class = "UILabel"; text = "How to Start Schedule One-on-One?"; ObjectID = "hYf-jV-eN0"; */
+"hYf-jV-eN0.text" = "How to Start Schedule One-on-One?";
+
+/* Class = "UILabel"; text = "3. Once the session with Ann has started, you can end and resume it as many times as you wish, as long as the total interval between does not exceed 30 minutes. The intervals between each restart are not billed."; ObjectID = "vX5-kK-nKi"; */
+"vX5-kK-nKi.text" = "3. Once the session with %@ has started, you can end and resume it as many times as you wish, as long as the total interval between does not exceed 30 minutes. The intervals between each restart are not billed.";
+
+"gi5-6p-RgM.text" = "(%@ Your local time)";

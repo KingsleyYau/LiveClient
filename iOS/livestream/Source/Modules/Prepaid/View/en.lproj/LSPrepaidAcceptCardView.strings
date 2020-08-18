@@ -39,7 +39,7 @@
 "dkd-Ih-vsy.text" = "XXXXXXX";
 
 /* Class = "UILabel"; text = "Pending her confimation"; ObjectID = "eeP-cG-poR"; */
-"eeP-cG-poR.text" = "Pending her confimation";
+"eeP-cG-poR.text" = "Pending her confirmation";
 
 /* Class = "UILabel"; text = "Schedule One-on-One Request"; ObjectID = "h92-eY-b7e"; */
 "h92-eY-b7e.text" = "Schedule One-on-One Request";
@@ -56,7 +56,7 @@
 /* Class = "UILabel"; text = "Dec 28,13:00 - 14:00 HKT(GMT - 6)"; ObjectID = "yTr-Ut-8hr"; */
 "yTr-Ut-8hr.text" = "Dec 28,13:00 - 14:00 HKT(GMT - 6)";
 
-"PENDING" = "Pending your confimation";
+"PENDING" = "Pending your confirmation";
 
 "NO_CONFIMATION" = "No confirmation time yet.";
 
@@ -64,4 +64,4 @@
 
 "LOCAL_TIME" = "%@ - %@ (Your local time)";
 
-"SENT_TIME" = "Time Sent:%@ (GMT)";
+"SENT_TIME" = "Time Sent: %@ (GMT)";

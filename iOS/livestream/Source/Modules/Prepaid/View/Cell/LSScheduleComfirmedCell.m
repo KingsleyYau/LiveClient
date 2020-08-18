@@ -52,7 +52,6 @@
     self.imageLoader = [LSImageViewLoader loader];
     
     [self.scheduleIDBtn setImage:nil forState:UIControlStateNormal];
-    self.scheduleIDWidth.constant = 80;
     
     self.startBtn.layer.cornerRadius = self.startBtn.tx_height/2;
     self.startBtn.layer.masksToBounds = YES;
@@ -74,7 +73,6 @@
     
     self.nameLabel.text = item.anchorInfo.nickName;
     [self.imageLoader loadImageWithImageView:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
-        
     }];
     
     self.idLabel.text = item.inviteId;
@@ -92,30 +90,24 @@
      
      self.startLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Start_Time"),startTime,item.timeZoneCity,item.timeZoneValue];
 
-    NSString *localTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm" isDaylightSaving:item.isSummerTime andZone:@""];
+    NSString *localTime = [[LSPrePaidManager manager] getLocalTimeBeginTiemAndEndTimeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm"];
     self.localLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Local_Time"),localTime];
     
     if (item.isActive) {
-        
         [self.scheduleIDBtn setImage:[UIImage imageNamed:@"LS_Schedule_Start"] forState:UIControlStateNormal];
-        self.scheduleIDWidth.constant = 110;
-        
-        
+
     }else {
         //可以激活
         if (item.startTime - [[NSDate new]timeIntervalSince1970] < 0) {
              [self.scheduleIDBtn setImage:[UIImage imageNamed:@"Setting_Clock"] forState:UIControlStateNormal];
-             self.scheduleIDWidth.constant = 110;
-            
             self.startBtn.hidden = NO;
         }
         //即将激活
-        else if (item.startTime - [[NSDate new]timeIntervalSince1970] < 1800) {
+        else if (item.startTime - [[NSDate new]timeIntervalSince1970] < 1799) {
              [self.scheduleIDBtn setImage:[UIImage imageNamed:@"Setting_Soon"] forState:UIControlStateNormal];
-             self.scheduleIDWidth.constant = 110;
             
             self.willLabel.hidden = NO;
-            int time = (item.startTime - [[NSDate new]timeIntervalSince1970])/60;
+            int time = (item.startTime - [[NSDate new]timeIntervalSince1970])/60 + 1;
             if (time < 1) {
                 time = 1;
             }
@@ -123,16 +115,12 @@
             NSMutableAttributedString * attr = [[NSMutableAttributedString alloc]initWithString:willTime];
             [attr addAttributes:@{NSForegroundColorAttributeName:[UIColor systemYellowColor],NSFontAttributeName:[UIFont boldSystemFontOfSize:14]} range:[willTime rangeOfString:[NSString stringWithFormat:@"%d",time]]];
             self.willLabel.attributedText = attr;
-            
         }
         else{
-            
             if (!item.hasRead) {
                 [self.scheduleIDBtn setImage:[UIImage imageNamed:@"LS_ScheduleList_New"] forState:UIControlStateNormal];
-                self.scheduleIDWidth.constant = 120;
             }else {
                 [self.scheduleIDBtn setImage:nil forState:UIControlStateNormal];
-                self.scheduleIDWidth.constant = 85;
             }
         }
     }

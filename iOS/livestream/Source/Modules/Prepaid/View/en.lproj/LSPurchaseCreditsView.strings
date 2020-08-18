@@ -17,4 +17,7 @@
 /* Class = "UILabel"; text = "Wish to schedule a One-on-One with %@?"; ObjectID = "mUZ-QF-KyS"; */
 "mUZ-QF-KyS.text" = "Wish to schedule a One-on-One with %@?";
 
+"ON_CREDIT_ACCEPT_SCHEDULE" = "%@ is planning a One-on-One with you!";
+"ON_CREDIT_ACCEPT_TIP" = "You have insufficient credits to accept this schedule. Please add more credits and try again.";
+
 "LATER" = "Later";

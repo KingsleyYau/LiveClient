@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,7 +12,7 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LSScheduleContentCell" rowHeight="426" id="KGk-i7-Jjw" customClass="LSScheduleContentCell">
             <rect key="frame" x="0.0" y="0.0" width="363" height="426"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+            <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="363" height="426"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -171,13 +170,13 @@
                                 <color key="textColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N84-0j-FQz">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N84-0j-FQz">
                                 <rect key="frame" x="11" y="188" width="280" height="26"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="l6b-s5-yxL"/>
                                 </constraints>
-                                <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="20" maxY="0.0"/>
                                 <state key="normal" backgroundImage="LS_Prepaid_TimeBtnBG">
                                     <attributedString key="attributedTitle">
                                         <fragment content="30 Minutes - 13.50 Credits ">
@@ -220,11 +219,15 @@
                                     <action selector="cancelInfoAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="dNX-Tr-Fsp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MFo-GW-g05">
-                                <rect key="frame" x="125.66666666666666" y="17" width="146.99999999999997" height="37"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MFo-GW-g05">
+                                <rect key="frame" x="117.66666666666666" y="22" width="144.99999999999997" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="Nyd-MF-Ww6"/>
+                                    <constraint firstAttribute="width" constant="145" id="WSi-SX-QmN"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="8"/>
-                                <state key="normal" title="Canceled by CharmLive" backgroundImage="Mail_ScheduleCancelInfoBg">
+                                <state key="normal" title="  Canceled by you   " backgroundImage="Mail_ScheduleCancelInfoBg">
                                     <color key="titleColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                             </button>
@@ -258,7 +261,7 @@
                             <constraint firstAttribute="trailing" secondItem="DKH-fG-Uct" secondAttribute="trailing" constant="8" id="azg-iu-2Qn"/>
                             <constraint firstItem="CpD-uE-3fc" firstAttribute="leading" secondItem="rrj-23-d0X" secondAttribute="trailing" constant="5" id="bJ6-Hh-uXV"/>
                             <constraint firstItem="y7X-7g-GU7" firstAttribute="centerY" secondItem="N84-0j-FQz" secondAttribute="centerY" id="bLm-yF-5us"/>
-                            <constraint firstItem="MFo-GW-g05" firstAttribute="leading" secondItem="eos-lc-7ch" secondAttribute="leading" id="bUS-9v-GGg"/>
+                            <constraint firstItem="MFo-GW-g05" firstAttribute="leading" secondItem="eos-lc-7ch" secondAttribute="leading" constant="-8" id="bUS-9v-GGg"/>
                             <constraint firstItem="DKH-fG-Uct" firstAttribute="leading" secondItem="7Rq-62-Pe2" secondAttribute="leading" constant="8" id="bvd-7p-ZPn"/>
                             <constraint firstItem="lO6-cl-VaN" firstAttribute="top" secondItem="rrj-23-d0X" secondAttribute="bottom" constant="5" id="e8H-9F-8Yb"/>
                             <constraint firstItem="xQE-En-W7N" firstAttribute="leading" secondItem="7Rq-62-Pe2" secondAttribute="leading" constant="8" id="eSc-K6-IeF"/>
@@ -309,8 +312,8 @@
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-            <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
             <connections>
+                <outlet property="bgView" destination="NpK-LB-5Yp" id="cUl-0D-GAd"/>
                 <outlet property="cancelInfoBtn" destination="eos-lc-7ch" id="521-bN-V63"/>
                 <outlet property="cancelInfoTipNote" destination="MFo-GW-g05" id="agd-0n-NEP"/>
                 <outlet property="chooseItem" destination="y7X-7g-GU7" id="M8R-rg-3fw"/>
@@ -339,6 +342,6 @@
         <image name="LS_Prepaid_TimeBtnBG" width="8.3333330154418945" height="8.3333330154418945"/>
         <image name="LS_Schedule_Arrow" width="12" height="12"/>
         <image name="Mail_ScheduleCancelInfo" width="18" height="18"/>
-        <image name="Mail_ScheduleCancelInfoBg" width="147" height="37"/>
+        <image name="Mail_ScheduleCancelInfoBg" width="33" height="37"/>
     </resources>
 </document>

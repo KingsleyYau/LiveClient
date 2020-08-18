@@ -13,7 +13,8 @@ typedef enum SettingFirstType {
     SettingFirstTypeSayHi = 2,
     SettingFirstTypeGreeting = 3,
     SettingFirstTypeStroe = 4,
-    SettingFirstTypeSchedule = 5
+    SettingFirstTypeSchedule = 5,
+    SettingFirstTypeVideo = 6
 } SettingFirstType;
 
 typedef enum SettingSecondType {
@@ -23,7 +24,6 @@ typedef enum SettingSecondType {
 
 typedef enum SettingThirdType {
     SettingThirdTypeShow = 0,
-    SettingThirdTypeBooks = 1,
     SettingThirdTypeBackpack = 2,
 } SettingThirdType;
 

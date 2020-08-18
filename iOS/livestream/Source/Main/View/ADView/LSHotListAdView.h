@@ -35,7 +35,7 @@ typedef enum {
 @property (nonatomic, assign) URLOpenType openType;
 @property (nonatomic, copy) NSString * apptitle;
 @property (nonatomic, copy) NSString * loadedURL;
-@property (nonatomic, assign) UIWebViewNavigationType navType;
+@property (nonatomic, assign) WKNavigationType navType;
 
 - (void)loadURL:(NSString *)webSiteUrl;
 - (void)loadUrlRequest:(NSMutableURLRequest *)request;

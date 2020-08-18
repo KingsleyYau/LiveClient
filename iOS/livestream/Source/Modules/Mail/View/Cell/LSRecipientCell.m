@@ -29,7 +29,9 @@
 }
 
 - (void)setupUI:(LSRecepientItem *)item {
-    [self.imageLoader loadImageFromCache:self.anchorPhoto options:SDWebImageRefreshCached imageUrl:item.anchorPhoto placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+    [self.imageLoader loadImageWithImageView:self.anchorPhoto options:0 imageUrl:item.anchorPhoto placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_HangOut"] finishHandler:^(UIImage *image) {
+        
+    }];
     self.anchorName.text = item.anchorName;
 }
 

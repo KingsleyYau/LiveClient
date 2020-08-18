@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsPageViewController.h"
  
 
 
-@interface LSScheduleListRootViewController : LSGoogleAnalyticsViewController
+@interface LSScheduleListRootViewController : LSGoogleAnalyticsPageViewController
  
 @property (nonatomic, assign) NSInteger curIndex;
  

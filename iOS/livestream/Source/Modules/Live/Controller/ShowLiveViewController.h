@@ -12,7 +12,6 @@
 #import "LSVIPInputViewController.h"
 #import "LiveRoom.h"
 
-#import "LSUITapImageView.h"
 #import "VIPAudienceView.h"
 
 @interface ShowLiveViewController : LSGoogleAnalyticsViewController
@@ -32,7 +31,7 @@
 /**
  女士头像
  */
-@property (weak, nonatomic) IBOutlet UIImageView *laddyHeadImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *laddyHeadImageView;
 
 /**
  女士姓名
@@ -48,11 +47,6 @@
  底部背景
  */
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
-/**
- 直播间类型资费提示(暂时不用)
- */
-@property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
-
 
 /**
  观众席

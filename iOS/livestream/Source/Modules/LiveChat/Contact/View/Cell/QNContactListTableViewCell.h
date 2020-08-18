@@ -20,7 +20,7 @@
 
 
 @property (weak, nonatomic) IBOutlet UIView *onlineImage;
-@property (weak, nonatomic) IBOutlet UIImageView *ladyImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *ladyImage;
 @property (weak, nonatomic) IBOutlet UILabel *ladyName;
 @property (weak, nonatomic) IBOutlet UILabel *ladyLastContact;
 @property (nonatomic, strong) LSImageViewLoader* imageViewLoader;

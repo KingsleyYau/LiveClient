@@ -15,7 +15,7 @@
 @end
 
 @interface HangoutListFriendCollectionViewCell : UICollectionViewCell
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageView;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (weak, nonatomic) id<HangoutListFriendCollectionViewCellDelegate> friendCellDelegate;
 + (NSString *)cellIdentifier;

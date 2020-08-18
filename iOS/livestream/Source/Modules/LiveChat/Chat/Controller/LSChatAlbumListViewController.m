@@ -10,14 +10,12 @@
 #import "LSChatPhotoDataManager.h"
 #import "LSChatPhoneAlbumPhoto.h"
 #import "LSChatPhotoCollectionViewCell.h"
-#import "QNChatTitleView.h"
 #import "LSImageViewLoader.h"
 #import "Masonry.h"
 #import "LSChatPhotoPreviewViewController.h"
 @interface LSChatAlbumListViewController ()<UICollectionViewDelegate, UICollectionViewDataSource,ChatPhotoDataManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet LSCollectionView *collectionView;
-@property (nonatomic, strong) QNChatTitleView *titleView;
 @property (nonatomic, strong) NSArray * array;
 @end
 

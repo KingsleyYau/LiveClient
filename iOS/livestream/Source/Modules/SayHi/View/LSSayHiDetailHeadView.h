@@ -16,7 +16,7 @@
 @end
 
 @interface LSSayHiDetailHeadView : UIView 
-@property (weak, nonatomic) IBOutlet UIImageView *ladyHead;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *ladyHead;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *noteBtn;

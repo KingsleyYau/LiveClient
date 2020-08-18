@@ -12,7 +12,6 @@
 #import "LSVIPInputViewController.h"
 #import "LiveRoom.h"
 
-#import "LSUITapImageView.h"
 #import "RoomTypeIsFirstManager.h"
 
 @class PrivateViewController;
@@ -50,7 +49,7 @@
 
 #pragma mark - 女士头像(控件)
 @property (weak, nonatomic) IBOutlet UIView *ladyHeadView;
-@property (weak, nonatomic) IBOutlet LSUITapImageView *ladyImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *ladyImageView;
 @property (weak, nonatomic) IBOutlet UILabel *laddyNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ladyIdLabel;
 

@@ -60,7 +60,7 @@
 #import "QNContactManager.h"
 //#import "MonthFeeManager.h"
 
-//#import "LadyDetailMsgManager.h"
+#import "LiveRoomCreditRebateManager.h"
 #import "LSImageViewLoader.h"
 #import "LSLCLiveChatMsgItemObject.h"
 
@@ -83,7 +83,6 @@
 #import "LSChatPrepaidTipView.h"
 #import "LSPurchaseCreditsView.h"
 #import "LSScheduleListView.h"
-#import "LSPurchaseCreditsView.h"
 #import "LiveUrlHandler.h"
 
 #define ADD_CREDIT_URL @"ADD_CREDIT_URL"
@@ -122,7 +121,7 @@ typedef enum AlertPayType {
 @interface QNChatViewController () <ChatTextSelfDelegate, LSLiveChatManagerListenerDelegate, LSCheckButtonDelegate,         ChatEmotionChooseViewDelegate, TTTAttributedLabelDelegate, ChatTextViewDelegate, ChatPhotoViewDelegate, ChatPhotoDataManagerDelegate, ChatPhotoLadyTableViewCellDelegate,
                                     ChatPhotoSelfTableViewCellDelegate, ChatMoonFeeTableViewCellDelegate,
                                     ChatLargeEmotionSelfTableViewCellDelegate, ChatEmotionKeyboardViewDelegate, ChatSmallEmotionViewDelegate, ChatSmallEmotionSelfTableViewCellDelegate, ChatNormalSmallEmotionViewDelegate, UIScrollViewDelegate,
-                                    ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCellDelegate, ChatAudioPlayerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ChatVideoLadyTableViewCellDelegate,LSChatInputToolViewDelegate,LSChatPrepaidViewDelegate,LSPrePaidPickerViewDelegate,LSPrePaidManagerDelegate,LSChatPrepaidTipViewDelegate,LSChatScheduleManCellDelegate,
+                                    ChatVoiceViewDelegate, ChatVoiceSelfTableViewCellDelegate, ChatVoiceTableViewCellDelegate, ChatAudioPlayerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ChatVideoLadyTableViewCellDelegate,LSChatInputToolViewDelegate,LSChatPrepaidViewDelegate,LSPrePaidPickerViewDelegate,LSPrePaidManagerDelegate,LSChatPrepaidTipViewDelegate,LSChatScheduleManCellDelegate,
 LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewDelegate> {
     CGRect _orgFrame;
 }
@@ -212,7 +211,7 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
 @property (nonatomic, assign) NSInteger scheduleItemRow;
 @property (nonatomic, assign) NSInteger scheduleCount;
 @property (nonatomic, strong) LSChatNavRightView * rightView;
-
+@property (nonatomic, assign) BOOL isShowPerpaidView;
 @end
 
 @implementation QNChatViewController
@@ -223,14 +222,8 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
     [self.titleViewLoader stop];
     [self.audioPlayer removNotification];
     [self.audioPlayer removDelegate];
-
+    [self hidenAllPrepaidView];
     [[LSChatPhotoDataManager manager] removeDelegate:self];
-    
-    [self removePrePaidPickerView];
-    
-    [[LSPrePaidManager manager]removeScheduleListArray];
-    
-    [[LSPrePaidManager manager] removeDelegate:self];
 }
 
 - (void)viewDidLoad {
@@ -249,7 +242,6 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
                                                       }
                                                   }];
     
-    [self getScheduleList];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -294,6 +286,9 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
     [[QNContactManager manager] updateReadMsg:self.womanId];
     self.tableView.contentInset = UIEdgeInsetsZero;
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+    
+    [self setPrepaidView];
+    [self getScheduleList];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -305,8 +300,7 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
     // 关闭输入框
     [self closeAllInputView];
     [self hideButtonBar];
-    [self hidenAllPrepaidView];
- 
+   
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -317,6 +311,8 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
     [self.audioPlayer stopSound];
     
     self.ladyInviteMsg = @"";
+    
+    [self removePrepaidView];
 }
 
 - (void)reflashNavigationBar {
@@ -356,8 +352,6 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
 
     [[LSChatPhotoDataManager manager] addDelegate:self];
     [[LSChatPhotoDataManager manager] getAllAssetInPhotoAblumWithAscending:NO];
-    
-    [[LSPrePaidManager manager] addDelegate:self];
 }
 
 - (NSString *)identification {
@@ -413,9 +407,10 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
     self.titleViewLoader = [LSImageViewLoader loader];
     [[LSUserInfoManager manager] getUserInfo:weakSelf.womanId
                                finishHandler:^(LSUserInfoModel *_Nonnull item) {
-                                   [weakSelf.titleViewLoader loadImageWithImageView:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
+                                   [weakSelf.titleViewLoader loadImageFromCache:weakSelf.titleView.personIcon options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
                                    weakSelf.titleView.personName.text = item.nickName;
                                    weakSelf.firstName = item.nickName;
+                                   weakSelf.photoURL = item.photoUrl;
                                }];
 }
 
@@ -425,7 +420,6 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
     [self setupInputView];
     [self setupEmotionInputView];
     [self setupPhotoView];
-    [self setPrepaidView];
 
     self.audioPlayer = [QNChatAudioPlayer sharedInstance];
     self.audioPlayer.delegate = self;
@@ -1214,6 +1208,9 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
             case MessageTypeVoice: {
                 [self sendVoice:msg.liveChatMsgItemObject.voiceMsg.filePath time:msg.liveChatMsgItemObject.voiceMsg.timeLength];
             } break;
+            case MessageTypeSchedule:{
+                [self sendSchedule:msg.liveChatMsgItemObject.scheduleMsg];
+            }break;
             default:
                 break;
         }
@@ -1488,13 +1485,23 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
         default:
             break;
     }
-    
- 
 }
+
 #pragma mark - 录音按钮事件
 // 录音按钮按下
 - (void)voiceButtonTouchDown {
-    [self closeAllInputView];
+    
+    if (IS_IPHONE_X) {
+        if (self.inputMessageViewBottom.constant < -35) {
+             [self closeAllInputView];
+            return;
+         }
+    }else {
+        if (self.inputMessageViewBottom.constant < 0) {
+             [self closeAllInputView];
+            return;
+         }
+    }
     
     CGRect cellRect = [self.chatInputToolView.collectionView convertRect:CGRectMake(SCREEN_WIDTH - ((SCREEN_WIDTH/4)*2), 0, SCREEN_WIDTH/4, self.chatInputToolView.collectionView.tx_height) toView:self.chatInputToolView.collectionView];
     //cell在当前屏幕的位置
@@ -2049,6 +2056,7 @@ LSChatScheduleLadyCellDelegate,LSPurchaseCreditsViewDelegate,LSScheduleListViewD
 #pragma mark - 买点和月费逻辑
 - (void)addCreditsViewShow {
     // TODO:显示买点
+    [self.prepaidCreditsView removeShowCreditView];
     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -3335,36 +3343,6 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 }
 
 
-#pragma mark - 弹窗
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.cancelButtonIndex != buttonIndex) {
-//        if (!AppShareDelegate().isNetwork) {
-//            [self showHUDIcon:@"" message:NSLocalizedStringFromSelf(@"NoNetwork") isToast:YES];
-//            return;
-//        }
-
-        if (self.isEndChat) {
-            if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
-                 [self.liveChatManager endTalk:self.womanId];
-                 [[QNContactManager manager]removeChatLastMsg:self.womanId];
-            }
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            if ([self.liveChatManager isChatingUserInChatState:self.womanId]) {
-                [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"InChat_Tip")];
-            } else {
-                if ([self.liveChatManager isInManInviteCanCancel:self.womanId]) {
-                    [self.liveChatManager endTalk:self.womanId];
-                    [[QNContactManager manager]removeChatLastMsg:self.womanId];
-                    [self.navigationController popViewControllerAnimated:YES];
-                } else {
-                    [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"on2min")];
-                }
-            }
-        }
-    }
-}
-
 #pragma mark - 视频逻辑
 - (void)onRecvVideo:(LSLCLiveChatMsgItemObject *)msgItem {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -3457,6 +3435,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 #pragma mark - 预付费逻辑
 
 - (void)setPrepaidView {
+    [[LSPrePaidManager manager] addDelegate:self];
     self.perpaidView = [[LSChatPrepaidView alloc]init];
     self.perpaidView.delegate = self;
     self.perpaidView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -3475,10 +3454,28 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     
     self.prepaidCreditsView = [[LSPurchaseCreditsView alloc]init];
     self.prepaidCreditsView.delegate = self;
-    self.prepaidCreditsView.hidden = YES;
-    [self.navigationController.view addSubview:self.prepaidCreditsView];
-    self.prepaidCreditsView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    [self.prepaidCreditsView setupCreditView:self.photoURL name:self.firstName];
+}
+
+- (void)removePrepaidView {
+    [[LSPrePaidManager manager]removeScheduleListArray];
+    [[LSPrePaidManager manager] removeDelegate:self];
+    
+    [self.perpaidView removeFromSuperview];
+    self.perpaidView = nil;
+    
+    [self.prepaidTipView removeFromSuperview];
+    self.prepaidTipView = nil;
+    
+    [self.prepaidCreditsView removeShowCreditView];
+    
+    [self.scheduleListView removeFromSuperview];
+    self.scheduleListView = nil;
+    
+    [self.perpaidInfoView removeFromSuperview];
+    self.perpaidInfoView = nil;
+    
+    [self.pickerView removeFromSuperview];
+    self.pickerView = nil;
 }
 
 - (void)showPrepaidView {
@@ -3497,8 +3494,8 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 
 - (void)hidenAllPrepaidView {
     self.perpaidView.hidden = YES;
-    self.prepaidCreditsView.hidden = YES;
     self.prepaidTipView.hidden = YES;
+    [self.prepaidCreditsView removeShowCreditView];
 }
 
 - (void)showPrepaidTipView {
@@ -3512,8 +3509,11 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     self.prepaidTipView.hidden = YES;
 }
 
-- (void)showPrepaidCreditsView {
-    self.prepaidCreditsView.hidden = NO;
+- (void)showPrepaidCreditsView:(BOOL)isSend {
+    [self.view endEditing:YES];
+    [self.prepaidCreditsView setupCreditView:self.photoURL];
+    [self.prepaidCreditsView setupCreditTipIsAccept:!isSend name:self.firstName credit:[LiveRoomCreditRebateManager creditRebateManager].mCredit];
+    [self.prepaidCreditsView showLSCreditViewInView:self.navigationController.view];
 }
 
 - (void)chatPrepaidViewDidHowWork {
@@ -3542,12 +3542,16 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 }
 
 - (void)chatPrepaidViewDidTimeBtn:(UIButton *)button {
-    self.pickerView = [[LSPrePaidPickerView alloc]init];
-    self.pickerView.delegate = self;
-    [self.view.window addSubview:self.pickerView];
-    self.pickerView.selectTimeRow = [self.perpaidView getSelectedRow:button];
-    self.pickerView.items = [self.perpaidView getPickerData:button];
-    [self.pickerView reloadData];
+    if (button.titleLabel.text.length == 0) {
+        [[LSPrePaidManager manager]getDateData];
+    }else {
+        self.pickerView = [[LSPrePaidPickerView alloc]init];
+        self.pickerView.delegate = self;
+        [self.view.window addSubview:self.pickerView];
+        self.pickerView.selectTimeRow = [self.perpaidView getSelectedRow:button];
+        self.pickerView.items = [self.perpaidView getPickerData:button];
+        [self.pickerView reloadData];
+    }
 }
 
 - (void)prepaidTipViewDidConfirm {
@@ -3565,10 +3569,10 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 - (void)removePrePaidPickerView {
     [self.pickerView removeFromSuperview];
     self.pickerView = nil;
+    [self.perpaidView.deteView resetBtnState];
 }
 
 - (void)prepaidPickerViewSelectedRow:(NSInteger)row {
-    [self removePrePaidPickerView];
     if (!self.perpaidView.isHidden) {
         [self.perpaidView pickerViewSelectedRow:row];
     }else if (self.scheduleListView){
@@ -3583,6 +3587,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         msgItem.liveChatMsgItemObject.scheduleMsg.duration = item.duration;
         [self.tableView reloadData];
     }
+    [self removePrePaidPickerView];
 }
 
 - (void)prepaidTipViewDidSendRequest {
@@ -3600,11 +3605,12 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 
 #pragma mark - 预付费IM回调
 //直播发送预约Schedule邀请（包含发送，接受，拒绝）
-- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(NSString *)errMsg item:(LSLCLiveChatMsgItemObject *)item msgReplyItem:(LSLCLiveChatMsgItemObject *)msgReplyItem {
+- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(NSString *)errMsg womanId:(NSString *)womanId item:(LSLCLiveChatMsgItemObject *)item msgReplyItem:(LSLCLiveChatMsgItemObject *)msgReplyItem {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
-        if ([item.toId isEqualToString:self.womanId]) {
+        if ([womanId isEqualToString:self.womanId]) {
             NSLog(@"QNChatViewController::onSendScheduleInvite( 直播发送预约Schedule邀请 type:%d)",item.scheduleMsg.type);
+          [[QNContactManager manager] updateReadMsg:self.womanId];
           [self getScheduleList];
           [self updataMessageData:item scrollToEnd:NO animated:NO];
                  
@@ -3615,13 +3621,13 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     });
 }
 
-//直播接收预约Schedule邀请（包含接收，接受，拒绝）
+//主播接收预约Schedule邀请（包含接收，接受，拒绝）
 - (void)onRecvScheduleInviteNotice:(LSLCLiveChatMsgItemObject *)item womanId:(NSString *)womanId scheduleReplyItem:(LSLCLiveChatMsgItemObject *)scheduleReplyItem {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 当前聊天女士才显示
         if ([womanId isEqualToString:self.womanId]) {
             NSLog(@"QNChatViewController::onRecvScheduleInviteNotice( 直播接收预约Schedule邀请 type:%d)",item.scheduleMsg.type);
-            
+            [[QNContactManager manager] updateReadMsg:self.womanId];
             [self getScheduleList];
             if (item.scheduleMsg.type !=SCHEDULEINVITE_PENDING) {
                 [self updataMessageData:item scrollToEnd:NO animated:NO];
@@ -3636,7 +3642,7 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 }
 
 #pragma mark - 接口回调
-- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item {
+- (void)onRecvSendScheduleInvite:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg item:(LSSendScheduleInviteItemObject *)item refId:(NSString *)refId {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.perpaidView.sendBtn.userInteractionEnabled = YES;
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
@@ -3647,9 +3653,9 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         } else {
             //无信用点
             if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
-                [self showPrepaidCreditsView];
+                [self showPrepaidCreditsView:YES];
             } else if (errnum == HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM) {
-                [self.perpaidView.deteView updateNewBeginTime];
+             [[LSPrePaidManager manager]getDateData];
              [[DialogTip dialogTip] showDialogTip:self.view.window tipText:errmsg];
             }else {
              [[DialogTip dialogTip] showDialogTip:self.view.window tipText:errmsg];
@@ -3663,19 +3669,24 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
             [self getScheduleList];
             [self updateScheduleStatusTime:statusUpdateTime scheduleInviteId:inviteId duration:duration status:SCHEDULEINVITE_CONFIRMED];
+            [self closeScheduleListView];
         } else {
-            [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
             //已接受
             if (errnum == HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED) {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
                [self updateScheduleStatusTime:statusUpdateTime scheduleInviteId:inviteId duration:duration status:SCHEDULEINVITE_CONFIRMED];
             }
             //已拒绝
-            if (errnum == HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED) {
+           else if (errnum == HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED) {
+               [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
                 [self updateScheduleStatusTime:statusUpdateTime scheduleInviteId:inviteId duration:duration status:SCHEDULEINVITE_DECLINED];
             }
             //无信用点
-            if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
-                 [self showPrepaidCreditsView];
+           else if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
+                [self showPrepaidCreditsView:NO];
+            }
+            else {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
             }
              [self.tableView reloadData];
         }
@@ -3699,36 +3710,52 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     }
 }
 
-- (void)onGetScheduleListCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount {
+- (void)onGetScheduleList:(BOOL)success maxCount:(NSInteger)maxCount confirmCount:(NSInteger)count pendingCount:(NSInteger)pCount refId:(NSString *)refId {
+    if (!success) {
+        return;
+    }
     self.scheduleCount = maxCount;
-    if (maxCount > 0) {
-        [self.chatInputToolView updateUncount:[NSString stringWithFormat:@"%ld",maxCount]];
-        [self.rightView updateCount:maxCount];
+    [self.chatInputToolView updateUncount:maxCount];
+    [self.rightView updateCount:maxCount];
         
         [self.prepaidTipView updateCount:count pcount:pCount];
         CGFloat viewH = 0;
         if (count > 0 && pCount > 0) {
+            viewH = 353;
+            self.prepaidTipView.confirmViewHeight.constant = 34;
+            self.prepaidTipView.pendingViewHeight.constant = 34;
             self.prepaidTipView.confirmView.hidden = NO;
             self.prepaidTipView.pendingView.hidden = NO;
-            viewH = 353;
-        } else if (count > 0 && pCount == 0){
+        } else if (count > 0 && pCount <= 0){
             viewH = 315;
+            self.prepaidTipView.confirmViewHeight.constant = 34;
+            self.prepaidTipView.pendingViewHeight.constant = 0;
             self.prepaidTipView.confirmView.hidden = NO;
             self.prepaidTipView.pendingView.hidden = YES;
-        }else if (count == 0 && pCount > 0){
+        }else if (count <= 0 && pCount > 0){
             viewH = 315;
+            self.prepaidTipView.confirmViewHeight.constant = 0;
+            self.prepaidTipView.pendingViewHeight.constant = 34;
             self.prepaidTipView.confirmView.hidden = YES;
             self.prepaidTipView.pendingView.hidden = NO;
-        }else {
-            
+        } else {
+            if (!self.prepaidTipView.isHidden) {
+                viewH = 267;
+                self.prepaidTipView.confirmViewHeight.constant = 0;
+                self.prepaidTipView.pendingViewHeight.constant = 0;
+                self.prepaidTipView.confirmView.hidden = YES;
+                self.prepaidTipView.pendingView.hidden = YES;
+            }
         }
         
         [self.prepaidTipView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.equalTo(@(viewH));
         }];
-    }
 }
  
+- (void)onRecvScheduleGetDateData {
+     [self.perpaidView.deteView updateNewBeginTime];
+}
 
 #pragma mark - ChatScheduleManCellDelegate
 - (void)chatScheduleManCellHidenDetalis:(NSInteger)row {
@@ -3841,10 +3868,9 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
     self.scheduleListView = [[LSScheduleListView alloc] init];
     self.scheduleListView.delegate = self;
     self.scheduleListView.invitedStatus = invitedStatus;
-    [self.view addSubview:self.scheduleListView];
-    [self.view bringSubviewToFront:self.scheduleListView];
+    [self.navigationController.view addSubview:self.scheduleListView];
     [self.scheduleListView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.edges.equalTo(self.navigationController.view);
     }];
     [self.scheduleListView setListData:array];
 }
@@ -3869,7 +3895,6 @@ NSInteger sortSmallThumbEmotion(id _Nonnull obj1, id _Nonnull obj2, void *_Nulla
 }
 
 - (void)sendAcceptSchedule:(NSString *)inviteId duration:(int)duration item:(LSScheduleInviteItem *)item {
-    [self closeScheduleListView];
      [[LSPrePaidManager manager]sendAcceptScheduleInvite:inviteId duration:duration infoObj:nil];
 }
 

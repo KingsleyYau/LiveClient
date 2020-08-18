@@ -138,6 +138,7 @@
 }
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
+    [super lsListViewControllerDidClick:sender];
     [self reloadBtnClick:sender];
 }
 
@@ -349,12 +350,12 @@
     // 调用接口
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"LSHotViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
+            NSLog(@"LSHotViewController::getListRequest( [请求女士列表], %@, loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
                 //请求试聊券接口
                 [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, LSVoucherAvailableInfoItemObject *_Nonnull item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"LSHotViewController::getVouchersData(请求试聊券:[%@])", BOOL2SUCCESS(success));
+                        NSLog(@"LSHotViewController::getVouchersData( [请求试聊券], %@ )", BOOL2SUCCESS(success));
                         [HomeVouchersManager manager].item = item;
                         self.failView.hidden = YES;
                         //                        if (self.pullDowning) {

@@ -51,11 +51,19 @@
     
     if (count > 0) {
         self.confirmUnCount.hidden = NO;
-        self.confirmUnCount.text = [NSString stringWithFormat:@"%ld",count];
+        if (count > 99 ) {
+            self.confirmUnCount.text = [NSString stringWithFormat:@"..."];
+        } else {
+            self.confirmUnCount.text = [NSString stringWithFormat:@"%ld",(long)count];
+        }
     }
-    if (pcount) {
+    if (pcount > 0) {
         self.pendingUnCount.hidden = NO;
-        self.pendingUnCount.text = [NSString stringWithFormat:@"%ld",pcount];
+        if (pcount > 99 ) {
+            self.pendingUnCount.text = [NSString stringWithFormat:@"..."];
+        } else {
+            self.pendingUnCount.text = [NSString stringWithFormat:@"%ld",(long)pcount];
+        }
     }
 }
 

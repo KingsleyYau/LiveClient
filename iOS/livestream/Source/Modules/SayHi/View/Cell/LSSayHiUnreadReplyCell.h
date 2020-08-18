@@ -15,7 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *photoIcon;
-@property (weak, nonatomic) IBOutlet UIImageView *ladyHead;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *ladyHead;
 @property (weak, nonatomic) IBOutlet UILabel *unreadIcon;
 @property (weak, nonatomic) IBOutlet UILabel *freeIcon;
 @property (nonatomic, strong) LSImageViewLoader * imageLoader;

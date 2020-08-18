@@ -227,6 +227,22 @@ static LiveUrlHandler *gInstance = nil;
                 [self.parseDelegate liveUrlHandler:self openScheduleMailDetail:item.loiId anchorName:item.anchorName type:item.mailScheduelDetailType];
             }
         }break;
+        case LiveUrlTypeSendScheduleMail: {
+            // TODO:进入发送预付费信件
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openSendScheduleMail:)]) {
+                [self.parseDelegate liveUrlHandler:self openSendScheduleMail:item.anchorId];
+            }
+        }break;
+        case LiveUrlTypePremiumVideoList:{
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandlerOpenPremiumVideoList:)]) {
+                [self.parseDelegate liveUrlHandlerOpenPremiumVideoList:self];
+            }
+        }break;
+        case LiveUrlTypePremiumVideoDetail:{
+            if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:didOpenPremiumVideoDetail:andAnchor:)]) {
+                [self.parseDelegate liveUrlHandler:self didOpenPremiumVideoDetail:item.videoId andAnchor:item.anchorId];
+            }
+        }break;
         default: {
             // 进入主界面
             if ([self.parseDelegate respondsToSelector:@selector(liveUrlHandler:openMainType:)]) {
@@ -446,10 +462,31 @@ static LiveUrlHandler *gInstance = nil;
     return url;
 }
 
+- (NSURL *)createUrlToSendScheduleMail:(NSString *)anchorId {
+    NSString *codeAnchorId = anchorId.length > 0 ? anchorId : @"";
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=sendschedulemail&anchorid=%@", codeAnchorId];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
 
 - (NSURL *)createBuyCredit {
     NSString *urlString = @"qpidnetwork://app/open?service=live&module=buycredit";
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
+
+// 付费视频列表
+- (NSURL *)createPrmiumVideoList {
+    NSString *urlString = @"qpidnetwork://app/open?service=live&module=premiumvideo";
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+// 付费视频详情
+- (NSURL *)createPrmiumVideoDetail:(NSString *)videoId andAnchor:(NSString *)anchorId{
+     NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=premiumvideodetail&videoid=%@&anchorid=%@",videoId,anchorId];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
 @end

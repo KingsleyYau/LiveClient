@@ -13,7 +13,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLbael;
 @property (weak, nonatomic) IBOutlet UILabel *msgLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *headView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UIView *unreadView;
 @property (weak, nonatomic) IBOutlet UILabel *unreadLabel;

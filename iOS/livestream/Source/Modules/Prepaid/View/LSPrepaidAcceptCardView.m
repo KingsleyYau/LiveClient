@@ -43,6 +43,10 @@
     self.layer.cornerRadius = 8;
     self.layer.masksToBounds = YES;
     
+    self.bigTitleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.bigTitleLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    self.bigTitleLabel.layer.shadowOpacity = 0.5;
+    
     self.defaultTimeView.layer.cornerRadius = 4;
     self.defaultTimeView.layer.masksToBounds = YES;
     LSShadowView * view1 = [[LSShadowView alloc]init];
@@ -103,7 +107,7 @@
         }
     }
     
-     NSString * sentTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.sendTime timeFormat:@"MMM dd,HH:mm"];
+     NSString * sentTime =  [[LSPrePaidManager manager]getGMTFromTimestamp:msgItem.sendTime timeFormat:@"MMM dd, HH:mm"];
     self.timeSentLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SENT_TIME"),sentTime];
     
     self.statusLabel.text = NSLocalizedStringFromSelf(@"PENDING");

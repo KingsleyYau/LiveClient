@@ -241,11 +241,11 @@
     }
 }
 
-- (void)jsManagerCallBackIsShowNavigation:(NSString *)isShow {
-    if ([isShow isEqualToString:HideNavigation]) {
-        [self hideNavigationBar];
-    } else if ([isShow isEqualToString:ShowNavigation]) {
+- (void)jsManagerCallBackIsShowNavigation:(BOOL)isShow {
+    if (isShow) {
         [self showNavigationBar];
+    } else {
+        [self hideNavigationBar];
     }
 }
 

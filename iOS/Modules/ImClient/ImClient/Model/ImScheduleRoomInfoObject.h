@@ -19,7 +19,7 @@
 /**
  * 私密直播预付费信息
  * roomId            直播间id （http的refId）
- * nickName       名称
+ * nickName       发送者名称
  * toId                 接收者id
  * privScheId      预付费id
  * msg                 发送内容

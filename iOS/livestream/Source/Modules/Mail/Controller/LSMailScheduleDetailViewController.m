@@ -28,7 +28,8 @@
 #import "LSChooseDialog.h"
 #import "LSDecelineDialog.h"
 #import "LSScheduleTipsCell.h"
-
+#import "LiveRoomCreditRebateManager.h"
+#import "LSAddCreditsViewController.h"
 
 #define ROW_TYPE @"ROW_TYPE"
 #define ROW_SIZE @"ROW_SIZE"
@@ -44,8 +45,11 @@ typedef enum {
     RowTypeFoot,
 } RowType;
 
-@interface LSMailScheduleDetailViewController ()<UITableViewDataSource,UITableViewDelegate,LSScheduleFootCellDelegate,LSScheduleActionCellDelegate,UIScrollViewDelegate,LSOtherOptionViewDelegate,LSPrePaidPickerViewDelegate,LSScheduleContentCellDelegate,LSPrePaidManagerDelegate,LSDecelineDialogDelegate,LSAcceptDiaglogDelegate>
+@interface LSMailScheduleDetailViewController ()<UITableViewDataSource,UITableViewDelegate,LSScheduleFootCellDelegate,LSScheduleActionCellDelegate,UIScrollViewDelegate,LSOtherOptionViewDelegate,LSPrePaidPickerViewDelegate,LSScheduleContentCellDelegate,LSPrePaidManagerDelegate,LSDecelineDialogDelegate,LSAcceptDiaglogDelegate,LSPurchaseCreditsViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIView *errorView;
+@property (weak, nonatomic) IBOutlet UIView *noCreditsView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *errorViewY;
 @property (nonatomic, strong) NSMutableArray *typeArray;
 @property (nonatomic, strong) LSPrepaidInfoView *perpaidInfoView;
 @property (nonatomic, copy) NSString *noteContent;
@@ -54,6 +58,7 @@ typedef enum {
 @property (nonatomic, strong) LSHttpLetterDetailItemObject *item;
 @property (nonatomic, strong) LSOtherOptionView *otherOptionView;
 @property (nonatomic, strong) LSPrePaidPickerView * pickerView;
+@property (nonatomic, strong) LSPurchaseCreditsView *purchaseCreditView;
 /** 是否发送邮件 */
 @property (nonatomic, assign) BOOL isReplyMail;
 /** 是否接受 */
@@ -89,73 +94,92 @@ typedef enum {
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    self.navTitleLabel = [[UILabel alloc] init];
-    self.navTitleLabel.text = NSLocalizedStringFromSelf(@"TITLE");
-    self.navTitleLabel.frame = CGRectMake(0, 0, 100, 44);
-    self.navTitleLabel.textAlignment = NSTextAlignmentCenter;
-    self.navTitleLabel.font = [UIFont systemFontOfSize:19];
-
+ 
     self.navLeftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.navLeftBtn addTarget:self action:@selector(backToAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navLeftBtn setImage:[UIImage imageNamed:@"LS_Nav_Back_b"] forState:UIControlStateNormal];
-    self.navLeftBtn.frame = CGRectMake(0, 0, 30, 44);
+    if (IS_IPHONE_X) {
+      self.navLeftBtn.frame = CGRectMake(0, 44, 30, 44);
+    }else {
+        self.navLeftBtn.frame = CGRectMake(0, 20, 30, 44);
+    }
+    [self.view addSubview:self.navLeftBtn];
     
     [[LSPrePaidManager manager] addDelegate:self];
+    
+    self.isShowNavBar = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+    }];
     [self getMailDetail:self.letterItem.letterId isUpdate:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    self.navigationItem.titleView = self.navTitleLabel;
-
-    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.navLeftBtn];
-    self.navigationItem.leftBarButtonItem = leftButtonItem;
-
-    self.navigationController.navigationBar.hidden = NO;
-    if(@available(iOS 13.0, *)) {
-        self.navigationController.navigationBar.standardAppearance.backgroundColor = [UIColor clearColor];
-    }
-    [self setupAlphaStatus:self.tableView];
 }
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [self.purchaseCreditView removeShowCreditView];
+}
+
+// 初始化预约没点弹层
+- (void)setupPurchaseCreditView:(NSString *)photoUrl anchorName:(NSString *)anchorName{
+    self.purchaseCreditView = [[LSPurchaseCreditsView alloc] init];
+    self.purchaseCreditView.delegate = self;
+    [self.purchaseCreditView setupCreditView:photoUrl];
+}
+
+- (void)showPurchaseCreditView {
+    [self.purchaseCreditView setupCreditTipIsAccept:YES name:self.item.anchorNickName credit:[LiveRoomCreditRebateManager creditRebateManager].mCredit];
+    [self.purchaseCreditView showLSCreditViewInView:self.navigationController.view];
+}
+
+- (void)purchaseDidAction {
+    [self.purchaseCreditView removeShowCreditView];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 - (void)getMailDetail:(NSString *)mailId isUpdate:(BOOL)isUpdate {
     [self showAndResetLoading];
-    WeakObject(self, weakSelf);
     LSGetEmfDetailRequest *request = [[LSGetEmfDetailRequest alloc] init];
     request.emfId = mailId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSHttpLetterDetailItemObject *item) {
         NSLog(@"LSMailScheduleDetailViewController::getMailDeatail (请求预约信件详情 success : %@, errnum : %d, errmsg : %@, letterId : %@)", BOOL2SUCCESS(success), errnum, errmsg, item.letterId);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf hideAndResetLoading];
+            [self hideAndResetLoading];
             if (success) {
+                [self setupPurchaseCreditView:item.anchorAvatar anchorName:item.anchorNickName];
                 self.noteContent = self.isInBoxSheduleDetail ? [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Anchor_Description"),item.anchorNickName] : [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Your_Description"),item.anchorNickName];
-                weakSelf.item = item;
-                [weakSelf reloadData:YES];
-                weakSelf.letterItem.hasRead = YES;
+                self.item = item;
+                [self reloadData:YES];
+                self.letterItem.hasRead = YES;
                 // 刷新列表已读信息
-                if ([weakSelf.scheduleDetailDelegate
+                if ([self.scheduleDetailDelegate
                         respondsToSelector:@selector(lsMailScheduleDetailViewController:haveReadScheduleDetailMail:index:)]) {
-                    [weakSelf.scheduleDetailDelegate lsMailScheduleDetailViewController:self haveReadScheduleDetailMail:self.letterItem index:self.mailIndex];
+                    [self.scheduleDetailDelegate lsMailScheduleDetailViewController:self haveReadScheduleDetailMail:self.letterItem index:self.mailIndex];
                 }
                 // 是否接受和拒绝更新状态
                 if (isUpdate) {
                     // 是否直接发信
-                    if (weakSelf.isReplyMail) {
+                    if (self.isReplyMail) {
                         // 直接接收和拒绝显示dialog后,1秒后才跳转
                         NSString *dialogTips = self.isAccept ? NSLocalizedStringFromSelf(@"Accept_Schedule") : NSLocalizedStringFromSelf(@"Decelined_Schedule");
                         [[DialogTip dialogTip] showDialogTip:self.view tipText:dialogTips];
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            [weakSelf sendMailAction];
+                            [self sendMailAction];
                         });
                 
                     }else {
                         // 接受和拒绝弹窗
-                        if (weakSelf.isAccept) {
+                        if (self.isAccept) {
                             LSAcceptDiaglog *acceptDialog = [LSAcceptDiaglog dialog];
                             acceptDialog.acceptDelegate = self;
                             [acceptDialog showAcceptDiaglog:self.navigationController.view];
@@ -169,8 +193,14 @@ typedef enum {
                     }
                 }
             } else {
-                [[DialogTip dialogTip] showDialogTip:weakSelf.view tipText:errmsg];
-                [self reloadData:YES];
+                if (errnum ==HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP) {
+                    self.noCreditsView.hidden = NO;
+                }else{
+                    self.noCreditsView.hidden = YES;
+                   [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
+                }
+               
+                [self reloadData:NO];
                 
             }
         });
@@ -179,72 +209,86 @@ typedef enum {
 }
 
 
+- (IBAction)addCreditsBtnDid:(id)sender {
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
-- (void)reloadData:(BOOL)isReload {
+- (void)reloadData:(BOOL)isSuccess {
     // 主tableView
     NSMutableArray *array = [NSMutableArray array];
-    
     NSMutableDictionary *dictionary = nil;
     CGSize viewSize;
     NSValue *rowSize;
-    
-    
-    // 邮件
-    dictionary = [NSMutableDictionary dictionary];
-    viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleMailHeadCell cellHeight]);
-    rowSize = [NSValue valueWithCGSize:viewSize];
-    [dictionary setValue:rowSize forKey:ROW_SIZE];
-    [dictionary setValue:[NSNumber numberWithInteger:RowTypeHead] forKey:ROW_TYPE];
-    [array addObject:dictionary];
-    
-    // sayhi
-    dictionary = [NSMutableDictionary dictionary];
-    viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleNoteCell cellHeight:screenSize.width detailString:self.noteContent]);
-    rowSize = [NSValue valueWithCGSize:viewSize];
-    [dictionary setValue:rowSize forKey:ROW_SIZE];
-    [dictionary setValue:[NSNumber numberWithInteger:RowTypeNote] forKey:ROW_TYPE];
-    [array addObject:dictionary];
-    
-    dictionary = [NSMutableDictionary dictionary];
-    viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleContentCell cellHeight:screenSize.width detailString:self.item.letterContent]);
-    rowSize = [NSValue valueWithCGSize:viewSize];
-    [dictionary setValue:rowSize forKey:ROW_SIZE];
-    [dictionary setValue:[NSNumber numberWithInteger:RowTypeContent] forKey:ROW_TYPE];
-    [array addObject:dictionary];
-    
-    
-    if (self.isInBoxSheduleDetail) {
-        dictionary = [NSMutableDictionary dictionary];
-        CGFloat cellHeight = self.item.scheduleInfo.status != LSSCHEDULEINVITESTATUS_PENDING ?[LSScheduleActionCell cellOneBtnHeight]:[LSScheduleActionCell cellTotalHeight];
-        viewSize = CGSizeMake(self.tableView.frame.size.width,cellHeight);
-        rowSize = [NSValue valueWithCGSize:viewSize];
-        [dictionary setValue:rowSize forKey:ROW_SIZE];
-        [dictionary setValue:[NSNumber numberWithInteger:RowTypeAction] forKey:ROW_TYPE];
-        [array addObject:dictionary];
+    if (isSuccess) {
+        self.errorView.hidden = YES;
+        self.tableView.scrollEnabled = YES;
+        // 头部
+         dictionary = [NSMutableDictionary dictionary];
+         viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleMailHeadCell cellHeight]);
+         rowSize = [NSValue valueWithCGSize:viewSize];
+         [dictionary setValue:rowSize forKey:ROW_SIZE];
+         [dictionary setValue:[NSNumber numberWithInteger:RowTypeHead] forKey:ROW_TYPE];
+         [array addObject:dictionary];
+         
+         // 提示
+         dictionary = [NSMutableDictionary dictionary];
+         viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleNoteCell cellHeight:screenSize.width detailString:self.noteContent]);
+         rowSize = [NSValue valueWithCGSize:viewSize];
+         [dictionary setValue:rowSize forKey:ROW_SIZE];
+         [dictionary setValue:[NSNumber numberWithInteger:RowTypeNote] forKey:ROW_TYPE];
+         [array addObject:dictionary];
+         
+         dictionary = [NSMutableDictionary dictionary];
+         viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleContentCell cellHeight:screenSize.width detailString:self.item.letterContent]);
+         rowSize = [NSValue valueWithCGSize:viewSize];
+         [dictionary setValue:rowSize forKey:ROW_SIZE];
+         [dictionary setValue:[NSNumber numberWithInteger:RowTypeContent] forKey:ROW_TYPE];
+         [array addObject:dictionary];
+         
+         
+         if (self.isInBoxSheduleDetail) {
+             dictionary = [NSMutableDictionary dictionary];
+             CGFloat cellHeight = self.item.scheduleInfo.status != LSSCHEDULEINVITESTATUS_PENDING ?[LSScheduleActionCell cellOneBtnHeight]:[LSScheduleActionCell cellTotalHeight];
+             viewSize = CGSizeMake(self.tableView.frame.size.width,cellHeight);
+             rowSize = [NSValue valueWithCGSize:viewSize];
+             [dictionary setValue:rowSize forKey:ROW_SIZE];
+             [dictionary setValue:[NSNumber numberWithInteger:RowTypeAction] forKey:ROW_TYPE];
+             [array addObject:dictionary];
+             
+             dictionary = [NSMutableDictionary dictionary];
+             viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleTipsCell cellHeight]);
+             rowSize = [NSValue valueWithCGSize:viewSize];
+             [dictionary setValue:rowSize forKey:ROW_SIZE];
+             [dictionary setValue:[NSNumber numberWithInteger:RowTypeScheduleTips] forKey:ROW_TYPE];
+             [array addObject:dictionary];
+         }
+
+         dictionary = [NSMutableDictionary dictionary];
+         viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleFootCell cellHeight]);
+         rowSize = [NSValue valueWithCGSize:viewSize];
+         [dictionary setValue:rowSize forKey:ROW_SIZE];
+         [dictionary setValue:[NSNumber numberWithInteger:RowTypeFoot] forKey:ROW_TYPE];
+         [array addObject:dictionary];
+    }else {
+        // 头部
+         dictionary = [NSMutableDictionary dictionary];
+         viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleMailHeadCell cellHeight]);
+         rowSize = [NSValue valueWithCGSize:viewSize];
+         [dictionary setValue:rowSize forKey:ROW_SIZE];
+         [dictionary setValue:[NSNumber numberWithInteger:RowTypeHead] forKey:ROW_TYPE];
+         [array addObject:dictionary];
+        
+        self.errorView.hidden = NO;
+        CGFloat y = 20;
+        if (IS_IPHONE_X) {
+            y = 44;
+        }
+        self.tableView.scrollEnabled = NO;
+        self.errorViewY.constant = y + [LSScheduleMailHeadCell cellHeight];
     }
-    
-
-    dictionary = [NSMutableDictionary dictionary];
-    viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleTipsCell cellHeight]);
-    rowSize = [NSValue valueWithCGSize:viewSize];
-    [dictionary setValue:rowSize forKey:ROW_SIZE];
-    [dictionary setValue:[NSNumber numberWithInteger:RowTypeScheduleTips] forKey:ROW_TYPE];
-    [array addObject:dictionary];
-
-    
-    dictionary = [NSMutableDictionary dictionary];
-    viewSize = CGSizeMake(self.tableView.frame.size.width, [LSScheduleFootCell cellHeight]);
-    rowSize = [NSValue valueWithCGSize:viewSize];
-    [dictionary setValue:rowSize forKey:ROW_SIZE];
-    [dictionary setValue:[NSNumber numberWithInteger:RowTypeFoot] forKey:ROW_TYPE];
-    [array addObject:dictionary];
-    
-    
     self.typeArray = array;
-    if (isReload) {
-        [self.tableView reloadData];
-    }
-
+    [self.tableView reloadData];
 }
 
 
@@ -288,8 +332,23 @@ typedef enum {
     switch (type) {
         case RowTypeHead:{
             LSScheduleMailHeadCell *cell = [LSScheduleMailHeadCell getUITableViewCell:tableView];
-            [[LSImageViewLoader loader] loadHDListImageWithImageView:cell.headImageView options:SDWebImageRefreshCached imageUrl:self.item.anchorAvatar placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
-            cell.nameLabel.text = self.isInBoxSheduleDetail ? [NSString stringWithFormat:@"From: %@",self.item.anchorNickName] : [NSString stringWithFormat:@"To: %@",self.item.anchorNickName];
+            NSString * url = @"";
+            NSString * name = @"";
+            if (self.item.anchorAvatar.length > 0) {
+                url = self.item.anchorAvatar;
+            }
+            if (self.letterItem.anchorAvatar.length > 0) {
+                url = self.letterItem.anchorAvatar;
+            }
+            if (self.item.anchorNickName.length >0) {
+                name = self.item.anchorNickName;
+            }
+            if (self.letterItem.anchorNickName.length > 0) {
+                name = self.letterItem.anchorNickName;
+            }
+            [[LSImageViewLoader loader] loadHDListImageWithImageView:cell.headImageView options:SDWebImageRefreshCached imageUrl:url placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:nil];
+            cell.nameLabel.text = self.isInBoxSheduleDetail ? [NSString stringWithFormat:@"From: %@",name] : [NSString stringWithFormat:@"To: %@",name];
+            cell.onlineView.hidden = !self.item.onlineStatus;
             result = cell;
         }break;
         case RowTypeNote: {
@@ -372,6 +431,7 @@ typedef enum {
     // 同意预约
     self.isReplyMail = NO;
     self.isAccept = YES;
+    [self showLoading];
     [[LSPrePaidManager manager]sendAcceptScheduleInvite:self.item.scheduleInfo.inviteId duration:self.item.scheduleInfo.duration infoObj:nil];
 }
 
@@ -380,15 +440,22 @@ typedef enum {
     // 同意预约并发邮件
     self.isReplyMail = YES;
     self.isAccept = YES;
+    [self showLoading];
     [[LSPrePaidManager manager] sendAcceptScheduleInvite:self.item.scheduleInfo.inviteId duration:self.item.scheduleInfo.duration infoObj:nil];
 }
 
 - (void)onRecvSendAcceptSchedule:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg statusUpdateTime:(NSInteger)statusUpdateTime scheduleInviteId:(NSString *)inviteId duration:(int)duration roomInfoItem:(ImScheduleRoomInfoObject *)roomInfoItem {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideLoading];
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
             [self getMailDetail:self.letterItem.letterId isUpdate:YES];
         }else {
-            [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
+            if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
+                [self showPurchaseCreditView];
+            }else {
+                [[DialogTip dialogTip] showDialogTip:self.view tipText:errmsg];
+            }
+
         }
 
     });
@@ -412,6 +479,7 @@ typedef enum {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.isReplyMail = NO;
             self.isAccept = NO;
+            [self showLoading];
             [[LSPrePaidManager manager] sendDeclinedScheduleInvite:self.item.scheduleInfo.inviteId];
         });
         
@@ -426,8 +494,9 @@ typedef enum {
         
     } actionBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
-              // 拒绝并发邮件
             self.isReplyMail = YES;
+            self.isAccept = NO;
+            [self showLoading];
             [[LSPrePaidManager manager] sendDeclinedScheduleInvite:self.item.scheduleInfo.inviteId];
         });
         
@@ -437,6 +506,7 @@ typedef enum {
 
 - (void)onRecvSendDeclinedSchedule:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg statusUpdateTime:(NSInteger)statusUpdateTime {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideLoading];
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
             // 重新更新状态
             [self getMailDetail:self.letterItem.letterId isUpdate:YES];

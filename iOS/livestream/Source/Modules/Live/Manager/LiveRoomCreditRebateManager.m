@@ -132,7 +132,7 @@
 
 // 设置信用点
 - (void)setCredit:(double)credit {
-    NSLog(@"LiveRoomCreditRebateManager::setCredit credit:%@", @(credit));
+    NSLog(@"LiveRoomCreditRebateManager::setCredit( credit : %@ )", @(credit));
     @synchronized(self) {
         self.mCredit = credit;
         for (NSValue *value in self.delegates) {

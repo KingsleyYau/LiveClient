@@ -54,7 +54,7 @@ typedef enum {
 
 @property (weak, nonatomic) IBOutlet UIButton *inviteButton;
 
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *headImageViewWidth;
 
 @property (weak, nonatomic) IBOutlet UIView *tipMessageView;

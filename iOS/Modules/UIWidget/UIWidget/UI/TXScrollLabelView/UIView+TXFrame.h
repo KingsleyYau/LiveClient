@@ -30,4 +30,6 @@
 @property (assign, nonatomic) CGFloat tx_centerY;
 /** 设置bottom */
 @property (assign, nonatomic) CGFloat tx_bottom;
+/** 设置right */
+@property (assign, nonatomic) CGFloat tx_right;
 @end

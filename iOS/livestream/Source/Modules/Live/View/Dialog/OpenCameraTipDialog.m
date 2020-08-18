@@ -12,8 +12,8 @@
 #import "LSImageViewLoader.h"
 #import "LSLoginManager.h"
 @interface OpenCameraTipDialog ()
-@property (weak, nonatomic) IBOutlet UIImageView *ladyHeadImage;
-@property (weak, nonatomic) IBOutlet UIImageView *meHeadImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *ladyHeadImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *meHeadImage;
 @property (weak, nonatomic) IBOutlet UIButton *yesBtn;
 @property (weak, nonatomic) IBOutlet UIButton *noBtn;
 @property (nonatomic, strong) LSImageViewLoader * ladyImageLoader;

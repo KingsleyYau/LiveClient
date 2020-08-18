@@ -13,6 +13,7 @@
     if (self = [super init]) {
         self.sid = @"";
         self.res = 0;
+        self.liveRoomId = @"";
     }
     
     return self;
@@ -25,7 +26,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager serverSpeed:self.sid res:self.res finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+        NSInteger request = [self.manager serverSpeed:self.sid res:self.res liveRoomId:self.liveRoomId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入SessionRequestManager处理

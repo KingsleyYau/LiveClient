@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LSAnchorInfoItemObject.h"
+#import "LSFansiInfoItemObject.h"
 @interface LSUserInfoItemObject : NSObject
 /**
  * 指定观众/主播信息结构体
@@ -21,6 +22,7 @@
  * isAnchor         是否主播（0：否，1：是）
  * leftCredit       观众剩余信用点
  * anchorInfo       主播信息
+ * fansiInfo        观众信息
  */
 @property (nonatomic, copy) NSString* _Nonnull userId;
 @property (nonatomic, copy) NSString* _Nonnull nickName;
@@ -32,5 +34,6 @@
 @property (nonatomic, assign) BOOL isAnchor;
 @property (nonatomic, assign) double leftCredit;
 @property (nonatomic, strong) LSAnchorInfoItemObject * _Nullable anchorInfo;
+@property (nonatomic, strong) LSFansiInfoItemObject * _Nullable fansiInfo;
 
 @end

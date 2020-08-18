@@ -27,12 +27,12 @@
         if (isAccept) {
             height = 317;
             if (isMore) {
-                height = SCREEN_WIDTH < 375 ? 500 : 480;
+                height = SCREEN_WIDTH < 375 ? 515 : 500;
             }
         } else {
             height = 294;
             if (isMore) {
-                height = SCREEN_WIDTH < 375 ? 500 : 480;
+                height = SCREEN_WIDTH < 375 ? 515 : 500;
             }
         }
     }
@@ -63,6 +63,10 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+    self.titleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.titleLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    self.titleLabel.layer.shadowOpacity = 0.5;
     
     self.nameView.layer.cornerRadius = 5;
     self.nameView.layer.masksToBounds = YES;
@@ -124,9 +128,9 @@
 - (IBAction)minimumDid:(id)sender {
     self.isMinimum = !self.isMinimum;
     if (self.isMinimum) {
-        self.minimumBtn.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+        [self.minimumBtn setTransform:CGAffineTransformMakeRotation(M_PI)];
     } else {
-        self.minimumBtn.imageView.transform = CGAffineTransformIdentity;
+        [self.minimumBtn setTransform:CGAffineTransformIdentity];
     }
     if ([self.delegate respondsToSelector:@selector(liveScheduleInviteCellDidMinimum:isMinimum:)]) {
         [self.delegate liveScheduleInviteCellDidMinimum:self isMinimum:self.isMinimum];

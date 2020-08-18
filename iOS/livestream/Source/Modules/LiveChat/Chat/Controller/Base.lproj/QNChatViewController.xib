@@ -45,10 +45,10 @@
                             </connections>
                         </textView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHC-rh-XVA" customClass="LSChatInputToolView">
-                            <rect key="frame" x="0.0" y="52" width="414" height="40"/>
+                            <rect key="frame" x="0.0" y="44" width="414" height="48"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="40" id="V5X-ih-PMU"/>
+                                <constraint firstAttribute="height" constant="48" id="V5X-ih-PMU"/>
                             </constraints>
                         </view>
                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LS_ChatVoiceButtonBG" translatesAutoresizingMaskIntoConstraints="NO" id="1h8-EY-Z4J">
@@ -67,7 +67,7 @@
                         <constraint firstItem="EFt-1o-4IJ" firstAttribute="leading" secondItem="ba0-ac-ER3" secondAttribute="leading" id="aaD-az-woh"/>
                         <constraint firstItem="EFt-1o-4IJ" firstAttribute="trailing" secondItem="ba0-ac-ER3" secondAttribute="trailing" id="h5j-Gu-vyr"/>
                         <constraint firstItem="GwF-bs-gdh" firstAttribute="leading" secondItem="ba0-ac-ER3" secondAttribute="leading" constant="10" id="iwI-Ma-piR"/>
-                        <constraint firstItem="KHC-rh-XVA" firstAttribute="top" secondItem="GwF-bs-gdh" secondAttribute="bottom" constant="8" id="kIL-wV-Bmm"/>
+                        <constraint firstItem="KHC-rh-XVA" firstAttribute="top" secondItem="GwF-bs-gdh" secondAttribute="bottom" id="kIL-wV-Bmm"/>
                         <constraint firstAttribute="trailing" secondItem="GwF-bs-gdh" secondAttribute="trailing" constant="10" id="vUW-Mj-dIx"/>
                     </constraints>
                 </view>

@@ -21,4 +21,5 @@
 @property (nonatomic, assign) int mailIndex;
 /** 代理 */
 @property (nonatomic, weak) id<LSMailDetailViewControllerrDelegate> mailDetailDelegate;
+
 @end

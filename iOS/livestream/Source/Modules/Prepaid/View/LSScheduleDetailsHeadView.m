@@ -46,20 +46,27 @@
 - (void)updateSentTime:(LSScheduleInviteDetailItemObject *)item {
     self.statusView.hidden = NO;
     self.cancelStatuView.hidden = YES;
+    self.arrowIcon.hidden = YES;
     self.durationLabel.hidden = NO;
     self.durationBtn.hidden = NO;
     self.durationBtnHeight.constant = 0;
     self.cancelBtnWidth.constant = 0;
     self.furtherViewHeight.constant = 0;
     
+    if (item.sendFlag == LSSCHEDULESENDFLAGTYPE_MAN) {
+        self.titleLabel.text = NSLocalizedStringFromSelf(@"TITLE_TIP");
+    } else {
+        self.titleLabel.text = NSLocalizedStringFromSelf(@"uxa-nc-dd9.text");
+    }
+    
     NSString *zone = [NSString stringWithFormat:@"%@(%@)",item.timeZoneCity,item.timeZoneValue];
     self.timeZoneLabel.text = zone;
     
-    NSString *startTime =[[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd,YYYY HH:00" isDaylightSaving:item.isSummerTime andZone:item.timeZoneValue];
+    NSString *startTime =[[LSPrePaidManager manager] getDetailStartAndEndTimestamp:item.startTime timeFormat:@"MMM dd, YYYY HH:00" isDaylightSaving:item.isSummerTime andZone:item.timeZoneValue];
     self.startTimeLabel.text = startTime;
     
-    NSString *localTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd,YYYY HH:mm" isDaylightSaving:item.isSummerTime andZone:@""];
-    self.localTimeLabel.text = localTime;
+    NSString *localTime = [[LSPrePaidManager manager] getDetailStartAndEndTimestamp:item.startTime timeFormat:@"MMM dd, YYYY HH:mm" isDaylightSaving:item.isSummerTime andZone:@""];
+    self.localTimeLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"gi5-6p-RgM.text"),localTime];
     
     NSString *duration = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"MINUTE"),item.duration];
     self.durationLabel.text = duration;
@@ -68,18 +75,22 @@
     switch (item.status) {
         // Pending
         case LSSCHEDULEINVITESTATUS_PENDING:{
-            self.statusLabel.text = NSLocalizedStringFromSelf(@"PENDING_STATUS");
             self.statusLabel.textColor =  COLOR_WITH_16BAND_RGB(0xFF8837);
-            self.durationLabel.hidden = YES;
-            self.durationBtnHeight.constant = 26;
-            for (int i = 0;i<[LSPrePaidManager manager].creditsArray.count;i++) {
-                LSScheduleDurationItemObject * cItem = [LSPrePaidManager manager].creditsArray[i];
-                if (cItem.duration == item.duration) {
-                    [self setDurationData:cItem];
-                    break;
+            if (item.sendFlag == LSSCHEDULESENDFLAGTYPE_MAN) {
+                self.statusLabel.text = NSLocalizedStringFromSelf(@"PENDING_HER");
+            } else if (item.sendFlag == LSSCHEDULESENDFLAGTYPE_ANCHOR) {
+                self.statusLabel.text = NSLocalizedStringFromSelf(@"PENDING_YOU");
+                self.durationLabel.hidden = YES;
+                self.arrowIcon.hidden = NO;
+                self.durationBtnHeight.constant = 26;
+                for (int i = 0;i<[LSPrePaidManager manager].creditsArray.count;i++) {
+                    LSScheduleDurationItemObject * cItem = [LSPrePaidManager manager].creditsArray[i];
+                    if (cItem.duration == item.duration) {
+                        [self setDurationData:cItem];
+                        break;
+                    }
                 }
             }
-            statusStr = [NSString stringWithFormat:@"%@: ",NSLocalizedStringFromSelf(@"ACCEPT_STATUS")];
         }break;
         // Confirmed
         case LSSCHEDULEINVITESTATUS_CONFIRMED:{
@@ -127,7 +138,7 @@
         // Expired
         case LSSCHEDULEINVITESTATUS_EXPIRED:{
             self.statusLabel.text = NSLocalizedStringFromSelf(@"EXPIR_STATUS");
-            self.statusLabel.textColor =  COLOR_WITH_16BAND_RGB(0x383838);
+            self.statusLabel.textColor =  COLOR_WITH_16BAND_RGB(0xFE6903);
         }break;
         // Completed
         case LSSCHEDULEINVITESTATUS_COMPLETED:{
@@ -146,27 +157,36 @@
         }break;
     }
     if (statusStr.length > 0) {
-          self.updateTimeLabel.text = [NSString stringWithFormat:@"%@%@",statusStr,[[LSPrePaidManager manager] getLocalTimeFromTimestamp:item.statusUpdateTime timeFormat:@"MMM dd, HH:mm"]];
-    }else{
-        self.updateTimeLabel.text = @"Request has expired";
+        self.updateTimeLabel.text = [NSString stringWithFormat:@"%@%@",statusStr,[[LSPrePaidManager manager] getGMTFromTimestamp:item.statusUpdateTime timeFormat:@"MMM dd, HH:mm"]];
+    } else {
+        if (item.status == LSSCHEDULEINVITESTATUS_PENDING) {
+            self.updateTimeLabel.text = NSLocalizedStringFromSelf(@"PENDING_TIME");
+        } else {
+            self.updateTimeLabel.text = NSLocalizedStringFromSelf(@"EXPIRED_TIME");
+        }
     }
-    self.sentTimeLabel.text = [NSString stringWithFormat:@"Sent:%@",[[LSPrePaidManager manager] getLocalTimeFromTimestamp:item.addTime timeFormat:@"MMM dd, HH:mm"]];
+    self.sentTimeLabel.text = [NSString stringWithFormat:@"Sent:%@",[[LSPrePaidManager manager] getGMTFromTimestamp:item.addTime timeFormat:@"MMM dd, HH:mm"]];
 }
  
 - (void)updateUI:(LSScheduleInviteListItemObject *)item {
+    self.chatBtnWidth.constant = 25;
+    self.chatBtnRight.constant = 12;
+    
     self.idLabel.text = [NSString stringWithFormat:@"ID:%@",item.inviteId];
-    
-    self.nameLabel.text = item.anchorInfo.nickName;
+    self.nameLabel.attributedText = [[NSAttributedString alloc] initWithString:item.anchorInfo.nickName attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:16],
+                    NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x2D89F9),
+                    NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}];
     self.ladyIDLabel.text = [NSString stringWithFormat:@"(%@)",item.anchorInfo.anchorId];
-    
-    [self.imageViewLoader loadImageWithImageView:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageViewLoader loadImageFromCache:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         
     }];
-    
     self.yrsLabel.text = [NSString stringWithFormat:@"%dyrs / %@",item.anchorInfo.age,item.anchorInfo.country];
-    
     if (item.anchorInfo.onlineStatus == ONLINE_STATUS_LIVE) {
         self.onlineIcon.hidden = NO;
+    } else {
+        self.onlineIcon.hidden = YES;
+        self.chatBtnWidth.constant = 0;
+        self.chatBtnRight.constant = 0;
     }
 }
 
@@ -183,6 +203,11 @@
     }
 }
 
+- (IBAction)nameAndHeadDid:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(scheduleDetailsHeadViewDidHeadAndNameBtn)]) {
+        [self.delegate scheduleDetailsHeadViewDidHeadAndNameBtn];
+    }
+}
  
 - (IBAction)giftBtnDid:(id)sender {
     if ([self.delegate respondsToSelector:@selector(scheduleDetailsHeadViewDidGfitBtn)]) {

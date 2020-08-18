@@ -44,7 +44,7 @@ typedef void (^LSImageViewLoaderCallBack)(UIImage *image);
 - (void)loadImageWithImageView:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage finishHandler:(LSImageViewLoaderCallBack)finishHandler;
 
 /**
- 加载图片(仅用于需要处理304的链接)
+ 加载图片(仅用于需要处理304的链接)用于全局主播头像
 
  @param imageView 加载图片view
  @param url 图片URL

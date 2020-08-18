@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSMailScheduleDetailViewController">
             <connections>
+                <outlet property="errorView" destination="SfB-bc-2d4" id="ZYz-0a-LPe"/>
+                <outlet property="errorViewY" destination="Wtg-vz-J4m" id="TuH-iK-mZa"/>
+                <outlet property="noCreditsView" destination="1Cn-YP-PIE" id="i7x-Sp-9hU"/>
                 <outlet property="tableView" destination="WWM-ac-QMs" id="Z5T-Rn-xpu"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,19 +22,82 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WWM-ac-QMs">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" red="0.93333333330000001" green="0.86666666670000003" blue="0.79215686269999996" alpha="1" colorSpace="calibratedRGB"/>
                 </tableView>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SfB-bc-2d4">
+                    <rect key="frame" x="0.0" y="200" width="414" height="696"/>
+                    <subviews>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Cn-YP-PIE" userLabel="No Credits View">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Can't wait to read this mail?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lF-ae-f4Z">
+                                    <rect key="frame" x="77.5" y="105" width="259" height="19.5"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="259" id="6YS-5Q-VY3"/>
+                                        <constraint firstAttribute="height" constant="19.5" id="Jwf-xi-sKV"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Just purchase credits and continue." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l0b-mX-Qgh">
+                                    <rect key="frame" x="77.5" y="126.5" width="259" height="19.5"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="19.5" id="rK3-36-r70"/>
+                                        <constraint firstAttribute="width" constant="259" id="vDM-ct-DNA"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J9Y-vZ-u8E">
+                                    <rect key="frame" x="81.5" y="186" width="251" height="52"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="251" id="3jE-Pf-ZHr"/>
+                                        <constraint firstAttribute="height" constant="52" id="aLw-hf-722"/>
+                                    </constraints>
+                                    <state key="normal" title="Add Credits" backgroundImage="LS_BtnBG_O"/>
+                                    <connections>
+                                        <action selector="addCreditsBtnDid:" destination="-1" eventType="touchUpInside" id="3go-VV-InU"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="l0b-mX-Qgh" firstAttribute="top" secondItem="7lF-ae-f4Z" secondAttribute="bottom" constant="2" id="Fzh-HA-li9"/>
+                                <constraint firstItem="7lF-ae-f4Z" firstAttribute="top" secondItem="1Cn-YP-PIE" secondAttribute="top" constant="105" id="I70-47-0hz"/>
+                                <constraint firstItem="J9Y-vZ-u8E" firstAttribute="centerX" secondItem="1Cn-YP-PIE" secondAttribute="centerX" id="OlS-E1-fXp"/>
+                                <constraint firstItem="l0b-mX-Qgh" firstAttribute="centerX" secondItem="1Cn-YP-PIE" secondAttribute="centerX" id="dQX-2L-Fte"/>
+                                <constraint firstItem="J9Y-vZ-u8E" firstAttribute="top" secondItem="l0b-mX-Qgh" secondAttribute="bottom" constant="40" id="mdz-j0-d1p"/>
+                                <constraint firstItem="7lF-ae-f4Z" firstAttribute="centerX" secondItem="1Cn-YP-PIE" secondAttribute="centerX" id="ptm-NI-a6j"/>
+                                <constraint firstAttribute="height" constant="300" id="zgr-TG-EFZ"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="1Cn-YP-PIE" secondAttribute="trailing" id="izy-hy-Ns3"/>
+                        <constraint firstItem="1Cn-YP-PIE" firstAttribute="top" secondItem="SfB-bc-2d4" secondAttribute="top" id="y9W-w4-yck"/>
+                        <constraint firstItem="1Cn-YP-PIE" firstAttribute="leading" secondItem="SfB-bc-2d4" secondAttribute="leading" id="yR4-2o-XRq"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="T9Z-HV-9Yv" firstAttribute="bottom" secondItem="WWM-ac-QMs" secondAttribute="bottom" id="YIw-mZ-UQR"/>
-                <constraint firstItem="WWM-ac-QMs" firstAttribute="leading" secondItem="T9Z-HV-9Yv" secondAttribute="leading" id="d1f-Hh-iMD"/>
-                <constraint firstItem="T9Z-HV-9Yv" firstAttribute="trailing" secondItem="WWM-ac-QMs" secondAttribute="trailing" id="dqK-zt-pWO"/>
-                <constraint firstItem="WWM-ac-QMs" firstAttribute="top" secondItem="T9Z-HV-9Yv" secondAttribute="top" id="tqu-De-gx5"/>
+                <constraint firstAttribute="bottom" secondItem="SfB-bc-2d4" secondAttribute="bottom" id="F8f-QU-bjr"/>
+                <constraint firstItem="SfB-bc-2d4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VeB-cR-ZnC"/>
+                <constraint firstItem="SfB-bc-2d4" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="200" id="Wtg-vz-J4m"/>
+                <constraint firstAttribute="bottom" secondItem="WWM-ac-QMs" secondAttribute="bottom" id="YIw-mZ-UQR"/>
+                <constraint firstItem="WWM-ac-QMs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="d1f-Hh-iMD"/>
+                <constraint firstAttribute="trailing" secondItem="WWM-ac-QMs" secondAttribute="trailing" id="dqK-zt-pWO"/>
+                <constraint firstAttribute="trailing" secondItem="SfB-bc-2d4" secondAttribute="trailing" id="hgD-2f-Gd2"/>
+                <constraint firstItem="WWM-ac-QMs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="tqu-De-gx5"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="T9Z-HV-9Yv"/>
-            <point key="canvasLocation" x="139" y="91"/>
+            <point key="canvasLocation" x="137.68115942028987" y="90.401785714285708"/>
         </view>
     </objects>
+    <resources>
+        <image name="LS_BtnBG_O" width="20.5" height="52"/>
+    </resources>
 </document>

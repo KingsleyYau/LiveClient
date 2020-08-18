@@ -36,7 +36,7 @@
     self.declineView.layer.cornerRadius = 4;
     self.declineView.layer.masksToBounds = YES;
     
-    self.declineView.layer.borderColor = COLOR_WITH_16BAND_RGB(0xFF8837).CGColor;
+    self.declineView.layer.borderColor = COLOR_WITH_16BAND_RGB(0xF7D2C0).CGColor;
     self.declineView.layer.borderWidth = 1;
 }
 

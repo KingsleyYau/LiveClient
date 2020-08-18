@@ -18,7 +18,7 @@
 
 @interface HangoutCreditView : UIView
 
-@property (weak, nonatomic) IBOutlet UIImageView *userHeadImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *userHeadImageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 

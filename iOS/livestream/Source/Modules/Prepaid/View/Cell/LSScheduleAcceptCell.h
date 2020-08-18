@@ -34,7 +34,7 @@
 @property (weak, nonatomic) id<LSScheduleAcceptCellDelegate> cellDelegate;
 
 + (NSString *)cellIdentifier;
-+ (NSInteger)cellHeight;
++ (NSInteger)cellHeight:(LSScheduleInviteListItemObject*)item;
 + (id)getUITableViewCell:(UITableView*)tableView;
 
 - (void)updateUI:(LSScheduleInviteListItemObject*)item;

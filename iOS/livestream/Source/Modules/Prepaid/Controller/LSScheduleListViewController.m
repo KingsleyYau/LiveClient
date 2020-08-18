@@ -16,18 +16,24 @@
 #import "LiveUrlHandler.h"
 #import "LiveModule.h"
 #import "LSScheduleDetailsViewController.h"
-@interface LSScheduleListViewController ()<LSPrePaidManagerDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewRefreshDelegate,LSScheduleAcceptCellDelegate,LSScheduleComfirmedCellDelegate>
+#import "LSPurchaseCreditsView.h"
+#import "LSAddCreditsViewController.h"
+#import "LiveRoomCreditRebateManager.h"
+@interface LSScheduleListViewController ()<LSPrePaidManagerDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewRefreshDelegate,LSScheduleAcceptCellDelegate,LSScheduleComfirmedCellDelegate,LSPurchaseCreditsViewDelegate>
 @property (nonatomic, strong) NSArray * titleArray;
 @property (nonatomic, assign) NSInteger selectRow;
 @property (nonatomic, strong) NSArray * dataArray;
 @property (nonatomic, assign) BOOL isRequstData;
 @property (nonatomic, strong) NSTimer * timer;
+@property (nonatomic, strong) UIButton * tapBtn;
+@property (nonatomic, strong) LSScheduleInviteListItemObject * selectItem;
+@property (nonatomic, strong) LSPurchaseCreditsView * prepaidCreditsView;
 @end
 
 @implementation LSScheduleListViewController
 
 - (void)dealloc {
-    [[LSPrePaidManager manager] removeDelegate:self];
+    
 }
 
 - (void)viewDidLoad {
@@ -41,6 +47,11 @@
     self.dataArray = [NSArray array];
     
     [self.tableView setupPullRefresh:self pullDown:YES pullUp:NO];
+    
+    self.tapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.tapBtn addTarget:self action:@selector(tapBG) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.tapBtn];
+    self.tapBtn.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -57,6 +68,19 @@
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadData) userInfo:nil repeats:YES];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.isRequstData = NO;
+    [self.timer invalidate];
+    self.timer = nil;
+    if (self.type == ScheduleType_Pending || self.type == ScheduleType_Confirmed) {
+        [self hideTopTypeView];
+    }
+    [self.prepaidCreditsView removeShowCreditView];
+    [[LSPrePaidManager manager] removeDelegate:self];
+}
+
 - (void)loadData
 {
     [self.timer invalidate];
@@ -64,14 +88,6 @@
     if (self.isRequstData) {
         [self getListData];
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    self.isRequstData = NO;
-    [self.timer invalidate];
-    self.timer = nil;
 }
 
 - (void)setupContainView {
@@ -127,9 +143,18 @@
            }];
        }
        self.topViewH.constant = self.titleArray.count * 44;
-    }
+    
+  
+    self.tapBtn.frame = CGRectMake(0, self.topView.tx_bottom * self.titleArray.count, SCREEN_WIDTH, SCREEN_HEIGHT);
+    self.tapBtn.hidden = NO;
+}
+
+- (void)tapBG {
+    [self hideTopTypeView];
+}
 
 - (void)hideTopTypeView {
+    self.tapBtn.hidden = YES;
     self.topViewH.constant = 44;
     self.tableViewY.constant = 44;
     [self.topView removeAllSubviews];
@@ -215,7 +240,7 @@
                      NSMutableArray * tableArray = [NSMutableArray array];
                      
                      if (aArray.count > 0) {
-                         [tableArray addObject:@{@"title":NSLocalizedStringFromSelf(@"STARTED_TITLE"),@"titleBGColor":COLOR_WITH_16BAND_RGB(0xB752B6),@"TextColor":COLOR_WITH_16BAND_RGB(0xB752B6)}];
+                         [tableArray addObject:@{@"title":NSLocalizedStringFromSelf(@"STARTED_TITLE"),@"titleBGColor":COLOR_WITH_16BAND_RGB(0xFFE2FF),@"TextColor":COLOR_WITH_16BAND_RGB(0xB752B6)}];
                         [tableArray addObjectsFromArray:aArray];
                      }
                      if (bArray.count > 0) {
@@ -257,10 +282,47 @@
         if (errnum == HTTP_LCC_ERR_SUCCESS) {
             [self getListData];
             [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedStringFromSelf(@"ACCEPT_TIP")];
-        } else {
+        } else if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_READ_BEFORE){
+            WeakObject(self, weakSelf);
+            [self showNoReadTip:errmsg enterStr:NSLocalizedStringFromSelf(@"Read") completionHandler:^{
+                [weakSelf showNoReadTip:NSLocalizedStringFromSelf(@"Emf_Tip") enterStr:NSLocalizedStringFromSelf(@"Continue") completionHandler:^{
+                    NSURL *url = [[LiveUrlHandler shareInstance] createScheduleMailDetail:self.selectItem.refId anchorName:self.selectItem.anchorInfo.nickName type:LiveUrlScheduleMailDetailTypeInbox];
+                    [[LiveModule module].serviceManager handleOpenURL:url];
+                }];
+            }];
+        }else if (errnum == HTTP_LCC_ERR_SCHEDULE_NO_CREDIT) {
+            [self showPrepaidCreditsView:NO];
+        }
+        else {
             [[DialogTip dialogTip]showDialogTip:self.view tipText:errmsg];
         }
     });
+}
+
+- (void)showPrepaidCreditsView:(BOOL)isSend {
+    self.prepaidCreditsView = [[LSPurchaseCreditsView alloc]init];
+    self.prepaidCreditsView.delegate = self;
+    [self.prepaidCreditsView setupCreditView:self.selectItem.anchorInfo.avatarImg];
+    [self.prepaidCreditsView setupCreditTipIsAccept:!isSend name:self.selectItem.anchorInfo.nickName credit:[LiveRoomCreditRebateManager creditRebateManager].mCredit];
+    [self.prepaidCreditsView showLSCreditViewInView:self.navigationController.view];
+}
+
+- (void)purchaseDidAction {
+    [self.prepaidCreditsView removeShowCreditView];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showNoReadTip:(NSString *)title enterStr:(NSString *)enterStr completionHandler:(void (^)(void))completionHandler {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromSelf(@"Later")
+        style:UIAlertActionStyleCancel handler:^(UIAlertAction *_Nonnull action) {
+                                                          
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:enterStr style:UIAlertActionStyleDefault handler:^(UIAlertAction *_Nonnull action) {
+        completionHandler();
+    }]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - PullRefreshView回调
@@ -284,9 +346,10 @@
 {
     CGFloat cellH = 0;
     switch (self.type) {
-        case ScheduleType_Pending:
-             cellH = [LSScheduleAcceptCell cellHeight];
-            break;
+        case ScheduleType_Pending:{
+            LSScheduleInviteListItemObject * item = self.dataArray[indexPath.row];
+            cellH = [LSScheduleAcceptCell cellHeight:item];
+        }break;
         case ScheduleType_Confirmed: {
             id item = self.dataArray[indexPath.row];
             if ([item isKindOfClass:[NSDictionary class]]) {
@@ -367,24 +430,19 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (self.topViewH.constant != 44) {
-        [self hideTopTypeView];
-    }else {
-        id item = self.dataArray[indexPath.row];
-        if (![item isKindOfClass:[NSDictionary class]]) {
-           LSScheduleInviteListItemObject * item = self.dataArray[indexPath.row];
-            LSScheduleDetailsViewController * vc = [[LSScheduleDetailsViewController alloc]initWithNibName:nil bundle:nil];
-            vc.listItem = item;
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+    id item = self.dataArray[indexPath.row];
+    if (![item isKindOfClass:[NSDictionary class]]) {
+       LSScheduleInviteListItemObject * item = self.dataArray[indexPath.row];
+        LSScheduleDetailsViewController * vc = [[LSScheduleDetailsViewController alloc]initWithNibName:nil bundle:nil];
+        vc.listItem = item;
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
 - (void)scheduleAcceptCellDidAcceptBtn:(NSInteger)row {
-    LSScheduleInviteListItemObject * item = self.dataArray[row];
+    self.selectItem = self.dataArray[row];
     [self showLoading];
-    [[LSPrePaidManager manager]sendAcceptScheduleInvite:item.inviteId duration:item.duration infoObj:nil];
+    [[LSPrePaidManager manager]sendAcceptScheduleInvite:self.selectItem.inviteId duration:self.selectItem.duration infoObj:nil];
 }
 
 - (void)scheduleAcceptCellDidViewBtn:(NSInteger)row {

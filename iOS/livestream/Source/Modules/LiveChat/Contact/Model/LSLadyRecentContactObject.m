@@ -289,6 +289,27 @@
             NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
             self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LS_Schedule_Request_Icon"];
         }
+        else if (msg.msgType == MT_ScheduleReply) {
+            NSAttributedString *attributeString = nil;
+            //是否接受
+            if (msg.scheduleReplyMsg.isScheduleAccept) {
+                //是否男生回复
+                if (msg.scheduleReplyMsg.isScheduleFromMe) {
+                     attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE_MAN_ACCEPT", nil),self.firstname] font:[UIFont systemFontOfSize:14]];
+                }else {
+                   attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE_LADY_ACCEPT", nil),self.firstname] font:[UIFont systemFontOfSize:14]];
+                }
+            }else {
+                //是否男生回复
+                if (msg.scheduleReplyMsg.isScheduleFromMe) {
+                    attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE_MAN_DECLINE", nil),self.firstname] font:[UIFont systemFontOfSize:14]];
+                }else {
+                    attributeString = [self parseMessageTextEmotion:[NSString stringWithFormat:NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE_LADY_DECLINE", nil),self.firstname] font:[UIFont systemFontOfSize:14]];
+                }
+            }
+            NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithAttributedString:attributeString];
+            self.lastInviteMessage = [self addShowIconImageText:string withImage:@"LS_Schedule_Request_Icon"];
+        }
         else {
             // 如果消息被清空,当前联系还是保存之前的内容,需要置空
             self.lastInviteMessage = [[NSMutableAttributedString alloc] initWithString:@""];

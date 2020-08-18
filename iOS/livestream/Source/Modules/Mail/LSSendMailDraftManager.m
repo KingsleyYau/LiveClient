@@ -70,7 +70,11 @@ static LSSendMailDraftManager *sendMailDraftManager = nil;
 }
 
 - (NSString *)getScheduleMailDraft:(NSString *)ladyId {
-    return  [self.userDictionary objectForKey:[NSString stringWithFormat:@"ScheduleDraft_%@",ladyId]];
+    NSString *content = [self.userDictionary objectForKey:[NSString stringWithFormat:@"ScheduleDraft_%@",ladyId]];
+    if (!content) {
+        content = @"";
+    }
+    return content;
 }
 
 - (void)saveScheduleMailDraftFromLady:(NSString *)ladyId content:(NSString *)text {

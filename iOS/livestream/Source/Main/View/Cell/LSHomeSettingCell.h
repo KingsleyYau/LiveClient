@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView * offIcon;
 @property (nonatomic, strong) LSImageViewLoader * imageLoader;
 @property (weak, nonatomic) IBOutlet UIImageView *logoIcon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *offIconW;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *offIconH;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *offIconY;
 + (id)getUITableViewCell:(UITableView*)tableView;
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

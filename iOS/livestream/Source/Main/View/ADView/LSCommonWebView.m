@@ -20,8 +20,8 @@
 //    myConfiguration.preferences.minimumFontSize = 10;
     myConfiguration.preferences.javaScriptEnabled = YES;
     myConfiguration.allowsInlineMediaPlayback = YES;
-    myConfiguration.mediaPlaybackRequiresUserAction = NO;
-    myConfiguration.mediaPlaybackAllowsAirPlay = YES;
+    myConfiguration.mediaTypesRequiringUserActionForPlayback = NO;
+    myConfiguration.allowsAirPlayForMediaPlayback = YES;
     
 
     self.backgroundColor = [UIColor clearColor];

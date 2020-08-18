@@ -47,11 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
 /* 接收发送同意预付费邀请回调 */
 - (void)onRecvSendAcceptScheduleToAnchor:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg statusUpdateTime:(NSInteger)statusUpdateTime scheduleInviteId:(NSString *)inviteId duration:(int)duration roomInfoItem:(ImScheduleRoomInfoObject *)roomInfoItem;
 /* 接收直播间预付费列表数 */
-- (void)onRecvGetScheduleListCount:(NSInteger)maxCount confirms:(NSInteger)confirms pendings:(NSInteger)pendings;
+- (void)onRecvGetScheduleList:(BOOL)success maxCount:(NSInteger)maxCount confirms:(NSInteger)confirms pendings:(NSInteger)pendings;
 /* 接收女士发送预付费消息通知 */
 - (void)onRecvAnchorSendScheduleToMeNotice:(ImScheduleRoomInfoObject *)item;
 /* 接收获取男士/主播信息通知 */
 - (void)onRecvUserOrAnchorInfo:(LSUserInfoModel *)item;
+
+- (void)onRecvScheduleGetDateData;
 @end
 
 @interface LSLiveVCManager : NSObject
@@ -118,6 +120,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param duration 时长
 /// @param infoObj 消息Item
 - (void)sendAcceptScheduleInviteToAnchor:(NSString *)inviteId duration:(int)duration infoObj:(LSScheduleInviteItem *)infoObj;
+
+// 发送拒绝预付费邀请
+- (void)sendDeclinedScheduleInviteToAnchor:(NSString *)inviteId duration:(int)duration infoObj:(LSScheduleInviteItem *)infoObj;
 
 /// 获取直播间预付费邀请列表
 - (void)getScheduleList;

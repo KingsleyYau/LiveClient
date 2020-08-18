@@ -192,4 +192,6 @@
 
 + (LSLCScheduleInviteItem* _Nullable)getLiveChatScheduleInviteItem:(LSLCLiveChatScheduleMsgItemObject*_Nonnull)scheduleItem;
 
++ (LSLCScheduleInviteReplyItem* _Nullable)getLiveChatScheduleReplyItem:(LSLCLiveChatScheduleReplyItemObject*_Nonnull)scheduleReplyItem;
+
 @end

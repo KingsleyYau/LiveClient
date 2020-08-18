@@ -23,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIView *onGingView;
 @property (weak, nonatomic) IBOutlet UILabel *onGingLabel;
 @property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *showBGView;
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *subButton;

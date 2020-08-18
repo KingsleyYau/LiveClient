@@ -59,7 +59,7 @@
 
 - (void)loadUI:(LSSayHiDetailResponseListItemObject *)obj {
     self.contentLabel.text = obj.simpleContent;
-    self.titleLabel.text =[NSString stringWithFormat:@"ID:%@ %@",obj.responseId,[self getTime:obj.responseTime type:@"dd MMM,yyyy"]];
+    self.titleLabel.text =[NSString stringWithFormat:@"ID:%@ %@",obj.responseId,[self getTime:obj.responseTime type:@"dd MMM, yyyy"]];
     
     [self setIsPhoto:obj.hasImg];
     
@@ -88,7 +88,7 @@
         self.freeIcon.hidden = YES;
     }
     
-    [self.imageLoader loadImageWithImageView:self.ladyHead options:0 imageUrl:self.url placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageFromCache:self.ladyHead options:0 imageUrl:self.url placeholderImage:LADYDEFAULTIMG finishHandler:^(UIImage *image) {
         
     }];
 }

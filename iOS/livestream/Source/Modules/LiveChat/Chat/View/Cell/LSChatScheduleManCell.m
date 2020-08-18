@@ -16,7 +16,7 @@
 
 + (NSInteger)cellHeight:(BOOL)isMore{
     if (isMore) {
-        return 480;
+        return SCREEN_WIDTH == 320?490:480;
     }
     return 286;
 }
@@ -34,6 +34,12 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+    if (SCREEN_WIDTH == 320) {
+        self.cardViewW.constant = 260;
+    }else {
+        self.cardViewW.constant = 290;
+    }
 
       self.cardView = [[LSPrepaidCardView alloc]init];
       [self.cardCellView addSubview:self.cardView];

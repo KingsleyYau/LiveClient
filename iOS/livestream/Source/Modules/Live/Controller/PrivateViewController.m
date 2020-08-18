@@ -290,12 +290,6 @@
     self.ladyImageView.layer.borderColor = [UIColor whiteColor].CGColor;
     
     self.ladyIdLabel.text = self.liveRoom.userId;
-    
-    WeakObject(self, weakSelf);
-    // 女士头像点击
-    [self.ladyImageView addTapBlock:^(id obj) {
-        [weakSelf pushToAnchorPersonal:nil];
-    }];
 }
 
 #pragma mark - 按钮事件

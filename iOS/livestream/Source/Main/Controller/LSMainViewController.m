@@ -197,6 +197,10 @@ typedef enum AlertType {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:
+     @{NSFontAttributeName : [UIFont systemFontOfSize:18],
+       NSForegroundColorAttributeName : [UIColor blackColor]}];
 
     if ([LSPrePaidManager manager].countriesArray.count == 0) {
         [[LSPrePaidManager manager] getCountryData];

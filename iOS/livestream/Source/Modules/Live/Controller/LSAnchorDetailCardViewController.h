@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *anchorName;
 @property (weak, nonatomic) IBOutlet UILabel *anchorProfile;
 @property (weak, nonatomic) IBOutlet UILabel *anchorDetail;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *anchorHeadImage;
 
 @property (weak, nonatomic) IBOutlet UIView *actionView;
 

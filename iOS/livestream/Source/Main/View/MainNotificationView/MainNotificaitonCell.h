@@ -15,10 +15,10 @@
 @property (weak, nonatomic) IBOutlet UIView *chatNotificationView;
 @property (weak, nonatomic) IBOutlet UILabel *chatName;
 @property (weak, nonatomic) IBOutlet TopLeftLabel *chatMsg;
-@property (weak, nonatomic) IBOutlet UIImageView *chatHead;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *chatHead;
 @property (weak, nonatomic) IBOutlet UIView *liveNotificationView;
-@property (weak, nonatomic) IBOutlet UIImageView *liveHead;
-@property (weak, nonatomic) IBOutlet UIImageView *liveFriendHead;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *liveHead;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *liveFriendHead;
 @property (weak, nonatomic) IBOutlet UILabel *liveName;
 @property (weak, nonatomic) IBOutlet TopLeftLabel *liveMsg;
 @property (nonatomic, assign) NSInteger time;

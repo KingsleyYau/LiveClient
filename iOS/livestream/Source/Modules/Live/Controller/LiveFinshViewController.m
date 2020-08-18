@@ -39,7 +39,7 @@ typedef enum ButtonStatus {
 @interface LiveFinshViewController () <UICollectionViewDelegate, UICollectionViewDataSource, RecommendCollectionViewCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 

@@ -35,7 +35,7 @@
     self.acceptView.layer.cornerRadius = 4;
     self.acceptView.layer.masksToBounds = YES;
     
-    self.acceptView.layer.borderColor = COLOR_WITH_16BAND_RGB(0x04C456).CGColor;
+    self.acceptView.layer.borderColor = COLOR_WITH_16BAND_RGB(0xBAF2B4).CGColor;
     self.acceptView.layer.borderWidth = 1;
 }
 

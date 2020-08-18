@@ -186,7 +186,18 @@ static const int HTTPErrorTypeArray[] = {
     HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED,          // 接受预付费直播:该邀请已接受（17505）（用于17.4.接受预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED,          // 接受预付费直播:该邀请已拒绝（17506）（用于17.4.接受预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_CANCEL_LESS_OR_EXPIRED,          // // 没有阅读前不能接受或拒绝（This request was sent by mail.Please read this mail before accept or decline this request）（17507）（用于17.4.接受预付费直播邀请 用于17.5.拒绝预付费直播邀请
-    HTTP_LCC_ERR_SCHEDULE_NO_READ_BEFORE,
+    HTTP_LCC_ERR_SCHEDULE_NO_READ_BEFORE,                // 没有阅读前不能接受或拒绝（This request was sent by mail.Please read this mail before accept or decline this request）（17507）（用于17.4.接受预付费直播邀请 用于17.5.拒绝预付费直播邀请）
+    
+    /* 付费视频 */
+    HTTP_LCC_ERR_PREMIUMVIDEO_MAN_NO_PRIV,          // 男士无权限（Sorry, we can not process your request at the moment. Please try again later.）（17600）（用于18.4.发送解码锁请求 用于18.5.发送解码锁请求提醒 用于18.14.视频解锁）
+    HTTP_LCC_ERR_PREMIUMVIDEO_VIDEO_DELETE_OR_EXIST,          // 视频删除或不存在（The video you are looking for is already deleted or suspended due to certain reasons）（17601）（用于18.4.发送解码锁请求 用于18.5.发送解码锁请求提醒 用于18.10.添加感兴趣的视频 用于18.13.获取视频详情 用于18.14.视频解锁）
+    HTTP_LCC_ERR_PREMIUMVIDEO_LIMIT_NUM_DAY,               // 每天发送数量限制（Can not send the request because you have already reached the daily quota）(17611)(用于18.4.发送解码锁请求)
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_ALREADY_SEND,               // 已发送过-客户端当发送成功处理 (17612)(用于18.4.发送解码锁请求)
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_ALREADY_REPLY,               // 请求已回复 （This request has been granted. Please view your Access Key Granted list and get the access key by reading the mail）(17613)(用于18.4.发送解码锁请求 用于18.5.发送解码锁请求提醒)
+    
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_OUTTIME,               // 请求已过期 （This request has expired. Please try to resend a new request to the broadcaster.）(17614)(用于18.5.发送解码锁请求提醒)
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_LESS_ONEDAY_SEND,               // 24小时内已发送过-客户端当发送成功处理 (17615)(用于18.5.发送解码锁请求提醒)
+    HTTP_LCC_ERR_PREMIUMVIDEO_ACCESSKEY_INVLID,               // 解锁码无效 （Oops, the access key you entered is incorrect or has expired. Please confirm .）(17621)(用于18.14.视频解锁)
     
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE,                       // 强制更新，这里时本地返回的，仅用于ios
@@ -241,7 +252,7 @@ static LSRequestManager *gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_OFF);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
@@ -2732,6 +2743,22 @@ RequestGetChatVoucherListCallbackImp gRequestGetChatVoucherListCallbackImp;
 }
 
 #pragma mark - 其它
+LSMailPriceItemObject* getLSMailPriceItemObjectWithC(const HttpLetterPriceItem& item) {
+    LSMailPriceItemObject* obj = [[LSMailPriceItemObject alloc] init];
+    obj.creditPrice = item.creditPrice;
+    obj.stampPrice = item.stampPrice;
+    return obj;
+}
+
+LSMailTariffItemObject* getLSMailTariffItemObjectWithC(const HttpMailTariffItem& item) {
+    LSMailTariffItemObject* obj = [[LSMailTariffItemObject alloc] init];
+    obj.mailSendBase = getLSMailPriceItemObjectWithC(item.mailSendBase);
+    obj.mailReadBase = getLSMailPriceItemObjectWithC(item.mailReadBase);
+    obj.mailPhotoAttachBase = getLSMailPriceItemObjectWithC(item.mailPhotoAttachBase);
+    obj.mailPhotoBuyBase = getLSMailPriceItemObjectWithC(item.mailPhotoBuyBase);
+    obj.mailVideoBuyBase = getLSMailPriceItemObjectWithC(item.mailVideoBuyBase);
+    return obj;
+}
 
 class RequestGetConfigCallbackImp : public IRequestGetConfigCallback {
 public:
@@ -2770,6 +2797,10 @@ public:
         obj.sendLetter = [NSString stringWithUTF8String:configItem.sendLetter.c_str()];
         obj.flowersGift = configItem.flowersGift;
         obj.scheduleSaveUp = configItem.scheduleSaveUp;
+        obj.mailTariff = getLSMailTariffItemObjectWithC(configItem.mailTariff);
+        obj.premiumVideoCredit = configItem.premiumVideoCredit;
+        obj.howItWorkUrl = [NSString stringWithUTF8String:configItem.howItWorkUrl.c_str()];
+        
         
         GetConfigFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -3083,12 +3114,17 @@ public:
 RequestServerSpeedCallbackImp gRequestServerSpeedCallbackImp;
 - (NSInteger)serverSpeed:(NSString *_Nonnull)sid
                      res:(int)res
+              liveRoomId:(NSString *_Nullable)liveRoomId
            finishHandler:(ServerSpeedFinishHandler _Nullable)finishHandler {
     string strSid = "";
     if (nil != sid) {
         strSid = [sid UTF8String];
     }
-    NSInteger request = (NSInteger)mHttpRequestController.ServerSpeed(&mHttpRequestManager, strSid, res, &gRequestServerSpeedCallbackImp);
+    string strLiveRoomId = "";
+    if (nil != liveRoomId) {
+        strLiveRoomId = [liveRoomId UTF8String];
+    }
+    NSInteger request = (NSInteger)mHttpRequestController.ServerSpeed(&mHttpRequestManager, strSid, res, strLiveRoomId, &gRequestServerSpeedCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@(request)];
@@ -3157,6 +3193,11 @@ public:
         anchorPriv.scheduleOneOnOneSendPriv = userItem.anchorInfo.anchorPriv.scheduleOneOnOneSendPriv;
         anchorItem.anchorPriv = anchorPriv;
         item.anchorInfo = anchorItem;
+        LSFansiInfoItemObject * fansiItem = [[LSFansiInfoItemObject alloc] init];
+        LSFansiPrivItemObject * fansiPriv = [[LSFansiPrivItemObject alloc] init];
+        fansiPriv.premiumVideoPriv = userItem.fansiInfo.fansiPriv.premiumVideoPriv;
+        fansiItem.fansiPriv = fansiPriv;
+        item.fansiInfo = fansiItem;
 
         GetUserInfoFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -3207,6 +3248,7 @@ public:
         obj.schedulePendingUnreadNum = item.schedulePendingUnreadNum;
         obj.scheduleConfirmedUnreadNum = item.scheduleConfirmedUnreadNum;
         obj.scheduleStatus = item.scheduleStatus;
+        obj.requestReplyUnreadNum = item.requestReplyUnreadNum;
         
         GetTotalNoreadNumFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -3509,6 +3551,47 @@ RequestPhoneInfoCallbackImp gRequestPhoneInfoCallbackImp;
                                                           phoneInfo.networkType,
                                                           phoneInfo.deviceId != nil ? [phoneInfo.deviceId UTF8String] : "",
                                                           &gRequestPhoneInfoCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestPushPullLogsCallbackImp : public IRequestPushPullLogsCallback {
+public:
+    RequestPushPullLogsCallbackImp(){};
+    ~RequestPushPullLogsCallbackImp(){};
+    void OnPushPullLogs(HttpPushPullLogsTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"LSRequestManager::OnPushPullLogs( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        PushPullLogsFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+
+RequestPushPullLogsCallbackImp gRequestPushPullLogsCallbackImp;
+
+- (NSInteger)pushPullLogs:(NSString *)liveRoomId
+            finishHandler:(PushPullLogsFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strLiveRoomId = "";
+    if (nil != liveRoomId) {
+        strLiveRoomId = [liveRoomId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.PushPullLogs(&mHttpRequestManager, strLiveRoomId, &gRequestPushPullLogsCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
@@ -4641,6 +4724,7 @@ RequestSetPushConfigCallbackImp gRequestSetPushConfigCallbackImp;
         item.hasReplied = (*iter).hasItem.hasReplied;
         item.onlineStatus = (*iter).hasItem.onlineStatus;
         item.hasSchedule = (*iter).hasItem.hasSchedule;
+        item.hasKey = (*iter).hasItem.hasAccessKey;
         [array addObject:item];
     }
     return array;
@@ -4855,6 +4939,20 @@ public:
             giftItem.refId = [NSString stringWithUTF8String:detailEmfItem.scheduleInfo.refId.c_str()];
             giftItem.isActive = detailEmfItem.scheduleInfo.isActive;
             obj.scheduleInfo = giftItem;
+        }
+        
+        if (!detailEmfItem.accessKeyInfo.videoId.empty()) {
+            LSAccessKeyinfoItemObject* keyItem = [[LSAccessKeyinfoItemObject alloc] init];
+            keyItem.videoId = [NSString stringWithUTF8String:detailEmfItem.accessKeyInfo.videoId.c_str()];
+            keyItem.title = [NSString stringWithUTF8String:detailEmfItem.accessKeyInfo.title.c_str()];
+            keyItem.describe = [NSString stringWithUTF8String:detailEmfItem.accessKeyInfo.description.c_str()];
+            keyItem.duration = detailEmfItem.accessKeyInfo.duration;
+            keyItem.coverUrlPng = [NSString stringWithUTF8String:detailEmfItem.accessKeyInfo.coverUrlPng.c_str()];
+            keyItem.coverUrlGif = [NSString stringWithUTF8String:detailEmfItem.accessKeyInfo.coverUrlGif.c_str()];
+            keyItem.accessKey = [NSString stringWithUTF8String:detailEmfItem.accessKeyInfo.accessKey.c_str()];
+            keyItem.accessKeyStatus = detailEmfItem.accessKeyInfo.accessKeyStatus;
+            keyItem.validTime = detailEmfItem.accessKeyInfo.validTime;
+            obj.accessKeyInfo = keyItem;
         }
 
         
@@ -5131,6 +5229,49 @@ RequestCanSendEmfCallbackImp gRequestCanSendEmfCallbackImp;
     request = (NSInteger)mHttpRequestController.CanSendEmf(&mHttpRequestManager,
                                                                  strAnchorId,
                                                                  &gRequestCanSendEmfCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetEmfStatusCallbackImp : public IRequestGetEmfStatusCallback {
+public:
+    RequestGetEmfStatusCallbackImp(){};
+    ~RequestGetEmfStatusCallbackImp(){};
+    void OnGetEmfStatus(HttpGetEmfStatusTask* task, bool success, int errnum, const string& errmsg, bool hasRead) {
+        NSLog(@"LSRequestManager::OnGetEmfStatus( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        GetEmfStatusFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], hasRead);
+        }
+    }
+};
+
+RequestGetEmfStatusCallbackImp gRequestGetEmfStatusCallbackImp;
+
+- (NSInteger)getEmfStatus:(NSString*)emfId
+            finishHandler:(GetEmfStatusFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string stremfId = "";
+    if (emfId != nil) {
+        stremfId = [emfId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetEmfStatus(&mHttpRequestManager,
+                                                                 stremfId,
+                                                                 &gRequestGetEmfStatusCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
@@ -6653,7 +6794,7 @@ class RequestSendScheduleInviteCallbackImp : public IRequestSendScheduleInviteCa
 public:
     RequestSendScheduleInviteCallbackImp(){};
     ~RequestSendScheduleInviteCallbackImp(){};
-    void OnSendScheduleInvite(HttpSendScheduleInviteTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteItem& item) {
+    void OnSendScheduleInvite(HttpSendScheduleInviteTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteItem& item, long long activityTime) {
         NSLog(@"LSRequestManager::OnSendScheduleInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         LSSendScheduleInviteItemObject* obj = [[LSSendScheduleInviteItemObject alloc] init];
@@ -6670,7 +6811,7 @@ public:
         }
         
         if (handler) {
-            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj, activityTime);
         }
     }
 };
@@ -6727,7 +6868,7 @@ class RequestAcceptScheduleInviteCallbackImp : public IRequestAcceptScheduleInvi
 public:
     RequestAcceptScheduleInviteCallbackImp(){};
     ~RequestAcceptScheduleInviteCallbackImp(){};
-    void OnAcceptScheduleInvite(HttpAcceptScheduleInviteTask* task, bool success, int errnum, const string& errmsg, long long starusUpdateTime) {
+    void OnAcceptScheduleInvite(HttpAcceptScheduleInviteTask* task, bool success, int errnum, const string& errmsg, long long starusUpdateTime, int duration) {
         NSLog(@"LSRequestManager::OnAcceptScheduleInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         AcceptScheduleInviteFinishHandler handler = nil;
@@ -6738,7 +6879,7 @@ public:
         }
         
         if (handler) {
-            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], (NSInteger)starusUpdateTime);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], (NSInteger)starusUpdateTime, duration);
         }
     }
 };
@@ -7087,6 +7228,772 @@ RequestGetScheduleInviteStatusCallbackImp gRequestGetScheduleInviteStatusCallbac
     
     request = (NSInteger)mHttpRequestController.GetScheduleInviteStatus(&mHttpRequestManager,
                                                                         &gRequestGetScheduleInviteStatusCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetActivityTimeCallbackImp : public IRequestGetActivityTimeCallback {
+public:
+    RequestGetActivityTimeCallbackImp(){};
+    ~RequestGetActivityTimeCallbackImp(){};
+    void OnGetActivityTime(HttpGetActivityTimeTask* task, bool success, int errnum, const string& errmsg, long long activityTime) {
+        NSLog(@"LSRequestManager::OnGetActivityTime( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        GetActivityTimeFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], activityTime);
+        }
+    }
+};
+RequestGetActivityTimeCallbackImp gRequestGetActivityTimeCallbackImp;
+
+- (NSInteger)getActivityTime:(GetActivityTimeFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetActivityTime(&mHttpRequestManager,
+                                                                        &gRequestGetActivityTimeCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetPremiumVideoTypeListCallbackImp : public IRequestGetPremiumVideoTypeListCallback {
+public:
+    RequestGetPremiumVideoTypeListCallbackImp(){};
+    ~RequestGetPremiumVideoTypeListCallbackImp(){};
+    void OnGetPremiumVideoTypeList(HttpGetPremiumVideoTypeListTask* task, bool success, int errnum, const string& errmsg, const PremiumVideoTypeList& list) {
+        NSLog(@"LSRequestManager::OnGetPremiumVideoTypeList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoTypeList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoTypeItemObject* item = [[LSPremiumVideoTypeItemObject alloc] init];
+            item.typeId = [NSString stringWithUTF8String:(*iter).typeId.c_str()];
+            item.typeName = [NSString stringWithUTF8String:(*iter).typeName.c_str()];
+            item.isDefault = (*iter).isDefault;
+            [array addObject:item];
+        }
+        
+        GetPremiumVideoTypeListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetPremiumVideoTypeListCallbackImp gRequestGetPremiumVideoTypeListCallbackImp;
+
+- (NSInteger)getPremiumVideoTypeList:(GetPremiumVideoTypeListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetPremiumVideoTypeList(&mHttpRequestManager,
+                                                                        &gRequestGetPremiumVideoTypeListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+LSPremiumVideoinfoItemObject* getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem(const HttpPremiumVideoBaseInfoItem& item) {
+    LSPremiumVideoinfoItemObject* obj = [[LSPremiumVideoinfoItemObject alloc] init];
+    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+    obj.anchorAge = item.anchorAge;
+    obj.anchorNickname = [NSString stringWithUTF8String:item.anchorNickname.c_str()];
+    obj.anchorAvatarImg = [NSString stringWithUTF8String:item.anchorAvatarImg.c_str()];
+    obj.onlineStatus = item.onlineStatus;
+    obj.videoId = [NSString stringWithUTF8String:item.videoId.c_str()];
+    obj.title = [NSString stringWithUTF8String:item.title.c_str()];
+    obj.describe = [NSString stringWithUTF8String:item.description.c_str()];
+    obj.duration = item.duration;
+    obj.coverUrlPng = [NSString stringWithUTF8String:item.coverUrlPng.c_str()];
+    obj.coverUrlGif = [NSString stringWithUTF8String:item.coverUrlGif.c_str()];
+    obj.isInterested = item.isInterested;
+    return obj;
+}
+
+class RequestGetPremiumVideoListCallbackImp : public IRequestGetPremiumVideoListCallback {
+public:
+    RequestGetPremiumVideoListCallbackImp(){};
+    ~RequestGetPremiumVideoListCallbackImp(){};
+    void OnGetPremiumVideoList(HttpGetPremiumVideoListTask* task, bool success, int errnum, const string& errmsg, int totalCount, const PremiumVideoBaseInfoList& list) {
+        NSLog(@"LSRequestManager::OnGetPremiumVideoTypeList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoBaseInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoinfoItemObject* item = getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem((*iter));//[[LSPremiumVideoinfoItemObject alloc] init];
+//            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+//            item.anchorAge = (*iter).anchorAge;
+//            item.anchorNickname = [NSString stringWithUTF8String:(*iter).anchorNickname.c_str()];
+//            item.anchorAvatarImg = [NSString stringWithUTF8String:(*iter).anchorAvatarImg.c_str()];
+//            item.onlineStatus = (*iter).onlineStatus;
+//            item.videoId = [NSString stringWithUTF8String:(*iter).videoId.c_str()];
+//            item.title = [NSString stringWithUTF8String:(*iter).title.c_str()];
+//            item.describe = [NSString stringWithUTF8String:(*iter).description.c_str()];
+//            item.duration = (*iter).duration;
+//            item.coverUrlPng = [NSString stringWithUTF8String:(*iter).coverUrlPng.c_str()];
+//            item.coverUrlGif = [NSString stringWithUTF8String:(*iter).coverUrlGif.c_str()];
+//            item.isInterested = (*iter).isInterested;
+            [array addObject:item];
+        }
+        
+        GetPremiumVideoListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], totalCount, array);
+        }
+    }
+};
+RequestGetPremiumVideoListCallbackImp gRequestGetPremiumVideoListCallbackImp;
+
+- (NSInteger)getPremiumVideoList:(NSString*)typeIds
+                           start:(int)start
+                            step:(int)step
+                   finishHandler:(GetPremiumVideoListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strtypeIds = "";
+    if (typeIds != nil) {
+        strtypeIds = [typeIds UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetPremiumVideoList(&mHttpRequestManager,
+                                                                    strtypeIds,
+                                                                    start,
+                                                                    step,
+                                                                    &gRequestGetPremiumVideoListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetPremiumVideoKeyRequestListCallbackImp : public IRequestGetPremiumVideoKeyRequestListCallback {
+public:
+    RequestGetPremiumVideoKeyRequestListCallbackImp(){};
+    ~RequestGetPremiumVideoKeyRequestListCallbackImp(){};
+    void OnGetPremiumVideoKeyRequestList(HttpGetPremiumVideoKeyRequestListTask* task, bool success, int errnum, const string& errmsg, int totalCount, const PremiumVideoAccessKeyList& list) {
+        NSLog(@"LSRequestManager::OnGetPremiumVideoKeyRequestList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoAccessKeyList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoAccessKeyItemObject* item = [[LSPremiumVideoAccessKeyItemObject alloc] init];
+            item.requestId = [NSString stringWithUTF8String:(*iter).requestId.c_str()];
+            LSPremiumVideoinfoItemObject* premiumVideoInfo = getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem((*iter).premiumVideoInfo);
+            item.premiumVideoInfo = premiumVideoInfo;
+            item.emfId = [NSString stringWithUTF8String:(*iter).emfId.c_str()];
+            item.emfReadStatus = (*iter).emfReadStatus;
+            item.validTime = (*iter).validTime;
+            item.lastSendTime = (*iter).lastSendTime;
+            item.currentTime = (*iter).currentTime;
+            [array addObject:item];
+        }
+        
+        GetPremiumVideoKeyRequestListinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], totalCount, array);
+        }
+    }
+};
+RequestGetPremiumVideoKeyRequestListCallbackImp gRequestGetPremiumVideoKeyRequestListCallbackImp;
+
+- (NSInteger)getPremiumVideoKeyRequestList:(LSAccessKeyType)type
+                                     start:(int)start
+                                      step:(int)step
+                             finishHandler:(GetPremiumVideoKeyRequestListinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetPremiumVideoKeyRequestList(&mHttpRequestManager,
+                                                                    type,
+                                                                    start,
+                                                                    step,
+                                                                    &gRequestGetPremiumVideoKeyRequestListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestSendPremiumVideoKeyRequestCallbackImp : public IRequestSendPremiumVideoKeyRequestCallback {
+public:
+    RequestSendPremiumVideoKeyRequestCallbackImp(){};
+    ~RequestSendPremiumVideoKeyRequestCallbackImp(){};
+    void OnSendPremiumVideoKeyRequest(HttpSendPremiumVideoKeyRequestTask* task, bool success, int errnum, const string& errmsg, const string& videoId, const string& requestId){
+        NSLog(@"LSRequestManager::OnSendPremiumVideoKeyRequest( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        SendPremiumVideoKeyRequestFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:videoId.c_str()], [NSString stringWithUTF8String:requestId.c_str()]);
+        }
+    }
+};
+RequestSendPremiumVideoKeyRequestCallbackImp gRequestSendPremiumVideoKeyRequestCallbackImp;
+
+- (NSInteger)sendPremiumVideoKeyRequest:(NSString*)videoId
+                          finishHandler:(SendPremiumVideoKeyRequestFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strvideoId = "";
+    if (videoId != nil) {
+        strvideoId = [videoId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.SendPremiumVideoKeyRequest(&mHttpRequestManager,
+                                                                    strvideoId,
+                                                                    &gRequestSendPremiumVideoKeyRequestCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestRemindeSendPremiumVideoKeyRequestCallbackImp : public IRequestRemindeSendPremiumVideoKeyRequestCallback {
+public:
+    RequestRemindeSendPremiumVideoKeyRequestCallbackImp(){};
+    ~RequestRemindeSendPremiumVideoKeyRequestCallbackImp(){};
+    void OnRemindeSendPremiumVideoKeyRequest(HttpRemindeSendPremiumVideoKeyRequestTask* task, bool success, int errnum, const string& errmsg, const string& requestId, long long currentTime, int limitSecodns) {
+        NSLog(@"LSRequestManager::OnRemindeSendPremiumVideoKeyRequest( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        RemindeSendPremiumVideoKeyRequestFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:requestId.c_str()], currentTime, limitSecodns);
+        }
+    }
+};
+RequestRemindeSendPremiumVideoKeyRequestCallbackImp gRequestRemindeSendPremiumVideoKeyRequestCallbackImp;
+
+- (NSInteger)remindeSendPremiumVideoKeyRequest:(NSString*)requestId
+                          finishHandler:(RemindeSendPremiumVideoKeyRequestFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strrequestId = "";
+    if (requestId != nil) {
+        strrequestId = [requestId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.RemindeSendPremiumVideoKeyRequest(&mHttpRequestManager,
+                                                                    strrequestId,
+                                                                    &gRequestRemindeSendPremiumVideoKeyRequestCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetPremiumVideoRecentlyWatchedListCallbackImp : public IRequestGetPremiumVideoRecentlyWatchedListCallback {
+public:
+    RequestGetPremiumVideoRecentlyWatchedListCallbackImp(){};
+    ~RequestGetPremiumVideoRecentlyWatchedListCallbackImp(){};
+    void OnGetPremiumVideoRecentlyWatchedList(HttpGetPremiumVideoRecentlyWatchedListTask* task, bool success, int errnum, const string& errmsg, int totalCount, const PremiumVideoRecentlyWatchedList& list) {
+        NSLog(@"LSRequestManager::OnGetPremiumVideoRecentlyWatchedList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoRecentlyWatchedList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoRecentlyWatchedItemObject* item = [[LSPremiumVideoRecentlyWatchedItemObject alloc] init];
+            item.watchedId = [NSString stringWithUTF8String:(*iter).watchedId.c_str()];
+            LSPremiumVideoinfoItemObject* premiumVideoInfo = getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem((*iter).premiumVideoInfo);
+            item.premiumVideoInfo = premiumVideoInfo;
+            item.addTime = (*iter).addTime;
+            [array addObject:item];
+        }
+        
+        GetPremiumVideoRecentlyWatchedListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], totalCount, array);
+        }
+    }
+};
+RequestGetPremiumVideoRecentlyWatchedListCallbackImp gRequestGetPremiumVideoRecentlyWatchedListCallbackImp;
+
+- (NSInteger)getPremiumVideoRecentlyWatchedList:(int)start
+                                           step:(int)step
+                                  finishHandler:(GetPremiumVideoRecentlyWatchedListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetPremiumVideoRecentlyWatchedList(&mHttpRequestManager,
+                                                                    start,
+                                                                    step,
+                                                                    &gRequestGetPremiumVideoRecentlyWatchedListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestDeletePremiumVideoRecentlyWatchedCallbackImp : public IRequestDeletePremiumVideoRecentlyWatchedCallback {
+public:
+    RequestDeletePremiumVideoRecentlyWatchedCallbackImp(){};
+    ~RequestDeletePremiumVideoRecentlyWatchedCallbackImp(){};
+    void OnDeletePremiumVideoRecentlyWatched(HttpDeletePremiumVideoRecentlyWatchedTask* task, bool success, int errnum, const string& errmsg, const string& watchedId) {
+        NSLog(@"LSRequestManager::OnDeletePremiumVideoRecentlyWatched( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        DeletePremiumVideoRecentlyWatchedFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:watchedId.c_str()]);
+        }
+    }
+};
+RequestDeletePremiumVideoRecentlyWatchedCallbackImp gRequestDeletePremiumVideoRecentlyWatchedCallbackImp;
+
+- (NSInteger)deletePremiumVideoRecentlyWatched:(NSString*)watchedId
+                          finishHandler:(DeletePremiumVideoRecentlyWatchedFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strwatchedId= "";
+    if (watchedId != nil) {
+        strwatchedId = [watchedId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.DeletePremiumVideoRecentlyWatched(&mHttpRequestManager,
+                                                                    strwatchedId,
+                                                                    &gRequestDeletePremiumVideoRecentlyWatchedCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+
+class RequestGetInterestedPremiumVideoListCallbackImp : public IRequestGetInterestedPremiumVideoListCallback {
+public:
+    RequestGetInterestedPremiumVideoListCallbackImp(){};
+    ~RequestGetInterestedPremiumVideoListCallbackImp(){};
+    void OnGetInterestedPremiumVideoList(HttpGetInterestedPremiumVideoListTask* task, bool success, int errnum, const string& errmsg, int totalCount, const PremiumVideoBaseInfoList& list) {
+        NSLog(@"LSRequestManager::OnGetInterestedPremiumVideoList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoBaseInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoinfoItemObject* item = getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem((*iter));//[[LSPremiumVideoinfoItemObject alloc] init];
+//            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+//            item.anchorAge = (*iter).anchorAge;
+//            item.anchorNickname = [NSString stringWithUTF8String:(*iter).anchorNickname.c_str()];
+//            item.anchorAvatarImg = [NSString stringWithUTF8String:(*iter).anchorAvatarImg.c_str()];
+//            item.onlineStatus = (*iter).onlineStatus;
+//            item.videoId = [NSString stringWithUTF8String:(*iter).videoId.c_str()];
+//            item.title = [NSString stringWithUTF8String:(*iter).title.c_str()];
+//            item.describe = [NSString stringWithUTF8String:(*iter).description.c_str()];
+//            item.duration = (*iter).duration;
+//            item.coverUrlPng = [NSString stringWithUTF8String:(*iter).coverUrlPng.c_str()];
+//            item.coverUrlGif = [NSString stringWithUTF8String:(*iter).coverUrlGif.c_str()];
+//            item.isInterested = (*iter).isInterested;
+            [array addObject:item];
+        }
+        
+        GetInterestedPremiumVideoListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], totalCount, array);
+        }
+    }
+};
+RequestGetInterestedPremiumVideoListCallbackImp gRequestGetInterestedPremiumVideoListCallbackImp;
+
+- (NSInteger)getInterestedPremiumVideoList:(int)start
+                                      step:(int)step
+                             finishHandler:(GetInterestedPremiumVideoListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.GetInterestedPremiumVideoList(&mHttpRequestManager,
+                                                                    start,
+                                                                    step,
+                                                                    &gRequestGetInterestedPremiumVideoListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestDeleteInterestedPremiumVideoCallbackImp : public IRequestDeleteInterestedPremiumVideoCallback {
+public:
+    RequestDeleteInterestedPremiumVideoCallbackImp(){};
+    ~RequestDeleteInterestedPremiumVideoCallbackImp(){};
+    void OnDeleteInterestedPremiumVideo(HttpDeleteInterestedPremiumVideoTask* task, bool success, int errnum, const string& errmsg, const string& videoId) {
+        NSLog(@"LSRequestManager::OnDeleteInterestedPremiumVideo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        DeleteInterestedPremiumVideoFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:videoId.c_str()]);
+        }
+    }
+};
+RequestDeleteInterestedPremiumVideoCallbackImp gRequestDeleteInterestedPremiumVideoCallbackImp;
+
+- (NSInteger)deleteInterestedPremiumVideo:(NSString*)videoId
+                          finishHandler:(DeleteInterestedPremiumVideoFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strvideoId= "";
+    if (videoId != nil) {
+        strvideoId = [videoId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.DeleteInterestedPremiumVideo(&mHttpRequestManager,
+                                                                    strvideoId,
+                                                                    &gRequestDeleteInterestedPremiumVideoCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestAddInterestedPremiumVideoCallbackImp : public IRequestAddInterestedPremiumVideoCallback {
+public:
+    RequestAddInterestedPremiumVideoCallbackImp(){};
+    ~RequestAddInterestedPremiumVideoCallbackImp(){};
+    void OnAddInterestedPremiumVideo(HttpAddInterestedPremiumVideoTask* task, bool success, int errnum, const string& errmsg, const string& videoId) {
+        NSLog(@"LSRequestManager::OnDeleteInterestedPremiumVideo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        AddInterestedPremiumVideoFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:videoId.c_str()]);
+        }
+    }
+};
+RequestAddInterestedPremiumVideoCallbackImp gRequestAddInterestedPremiumVideoCallbackImp;
+
+- (NSInteger)addInterestedPremiumVideo:(NSString*)videoId
+                         finishHandler:(AddInterestedPremiumVideoFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strvideoId= "";
+    if (videoId != nil) {
+        strvideoId = [videoId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.AddInterestedPremiumVideo(&mHttpRequestManager,
+                                                                    strvideoId,
+                                                                    &gRequestAddInterestedPremiumVideoCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestRecommendPremiumVideoListCallbackImp : public IRequestRecommendPremiumVideoListCallback {
+public:
+    RequestRecommendPremiumVideoListCallbackImp(){};
+    ~RequestRecommendPremiumVideoListCallbackImp(){};
+    void OnRecommendPremiumVideoList(HttpRecommendPremiumVideoListTask* task, bool success, int errnum, const string& errmsg, int num, const PremiumVideoBaseInfoList& list) {
+        NSLog(@"LSRequestManager::OnRecommendPremiumVideoList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoBaseInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoinfoItemObject* item = getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem((*iter));//[[LSPremiumVideoinfoItemObject alloc] init];
+//            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+//            item.anchorAge = (*iter).anchorAge;
+//            item.anchorNickname = [NSString stringWithUTF8String:(*iter).anchorNickname.c_str()];
+//            item.anchorAvatarImg = [NSString stringWithUTF8String:(*iter).anchorAvatarImg.c_str()];
+//            item.onlineStatus = (*iter).onlineStatus;
+//            item.videoId = [NSString stringWithUTF8String:(*iter).videoId.c_str()];
+//            item.title = [NSString stringWithUTF8String:(*iter).title.c_str()];
+//            item.describe = [NSString stringWithUTF8String:(*iter).description.c_str()];
+//            item.duration = (*iter).duration;
+//            item.coverUrlPng = [NSString stringWithUTF8String:(*iter).coverUrlPng.c_str()];
+//            item.coverUrlGif = [NSString stringWithUTF8String:(*iter).coverUrlGif.c_str()];
+//            item.isInterested = (*iter).isInterested;
+            [array addObject:item];
+        }
+        
+        RecommendPremiumVideoListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], num, array);
+        }
+    }
+};
+RequestRecommendPremiumVideoListCallbackImp gRequestRecommendPremiumVideoListCallbackImp;
+
+- (NSInteger)recommendPremiumVideoList:(int)num
+                         finishHandler:(RecommendPremiumVideoListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    request = (NSInteger)mHttpRequestController.RecommendPremiumVideoList(&mHttpRequestManager,
+                                                                    num,
+                                                                    &gRequestRecommendPremiumVideoListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetAnchorPremiumVideoListCallbackImp : public IRequestGetAnchorPremiumVideoListCallback {
+public:
+    RequestGetAnchorPremiumVideoListCallbackImp(){};
+    ~RequestGetAnchorPremiumVideoListCallbackImp(){};
+    void OnGetAnchorPremiumVideoList(HttpGetAnchorPremiumVideoListTask* task, bool success, int errnum, const string& errmsg, const PremiumVideoBaseInfoList& list) {
+        NSLog(@"LSRequestManager::OnGetAnchorPremiumVideoList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoBaseInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSPremiumVideoinfoItemObject* item = getPremiumVideoinfoItemObjectWithPremiumVideoBaseInfoItem((*iter));//[[LSPremiumVideoinfoItemObject alloc] init];
+//            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+//            item.anchorAge = (*iter).anchorAge;
+//            item.anchorNickname = [NSString stringWithUTF8String:(*iter).anchorNickname.c_str()];
+//            item.anchorAvatarImg = [NSString stringWithUTF8String:(*iter).anchorAvatarImg.c_str()];
+//            item.onlineStatus = (*iter).onlineStatus;
+//            item.videoId = [NSString stringWithUTF8String:(*iter).videoId.c_str()];
+//            item.title = [NSString stringWithUTF8String:(*iter).title.c_str()];
+//            item.describe = [NSString stringWithUTF8String:(*iter).description.c_str()];
+//            item.duration = (*iter).duration;
+//            item.coverUrlPng = [NSString stringWithUTF8String:(*iter).coverUrlPng.c_str()];
+//            item.coverUrlGif = [NSString stringWithUTF8String:(*iter).coverUrlGif.c_str()];
+//            item.isInterested = (*iter).isInterested;
+            [array addObject:item];
+        }
+        
+        GetAnchorPremiumVideoListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetAnchorPremiumVideoListCallbackImp gRequestGetAnchorPremiumVideoListCallbackImp;
+
+- (NSInteger)getAnchorPremiumVideoList:(NSString*)anchorId
+                         finishHandler:(GetAnchorPremiumVideoListFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string stranchorId = "";
+    if (anchorId != nil) {
+        stranchorId = [anchorId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetAnchorPremiumVideoList(&mHttpRequestManager,
+                                                                    stranchorId,
+                                                                    &gRequestGetAnchorPremiumVideoListCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetPremiumVideoDetailCallbackImp : public IRequestGetPremiumVideoDetailCallback {
+public:
+    RequestGetPremiumVideoDetailCallbackImp(){};
+    ~RequestGetPremiumVideoDetailCallbackImp(){};
+    void OnGetPremiumVideoDetail(HttpGetPremiumVideoDetailTask* task, bool success, int errnum, const string& errmsg, const HttpPremiumVideoDetailItem& item) {
+        NSLog(@"LSRequestManager::OnGetPremiumVideoDetail( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        LSPremiumVideoDetailItemObject* obj = [[LSPremiumVideoDetailItemObject alloc] init];
+        obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+        obj.videoId = [NSString stringWithUTF8String:item.videoId.c_str()];
+        NSMutableArray* array = [NSMutableArray array];
+        for(PremiumVideoTypeList::const_iterator iter = item.typeList.begin(); iter != item.typeList.end(); iter++) {
+            LSPremiumVideoTypeItemObject* item = [[LSPremiumVideoTypeItemObject alloc] init];
+            item.typeId = [NSString stringWithUTF8String:(*iter).typeId.c_str()];
+            item.typeName = [NSString stringWithUTF8String:(*iter).typeName.c_str()];
+            item.isDefault = (*iter).isDefault;
+            [array addObject:item];
+        }
+        obj.typeList = array;
+        obj.title = [NSString stringWithUTF8String:item.title.c_str()];
+        obj.describe = [NSString stringWithUTF8String:item.description.c_str()];
+        obj.duration = item.duration;
+        obj.coverUrlPng = [NSString stringWithUTF8String:item.coverUrlPng.c_str()];
+        obj.coverUrlGif = [NSString stringWithUTF8String:item.coverUrlGif.c_str()];
+        obj.videoUrlShort = [NSString stringWithUTF8String:item.videoUrlShort.c_str()];
+        obj.videoUrlFull = [NSString stringWithUTF8String:item.videoUrlFull.c_str()];
+        obj.isInterested = item.isInterested;
+        obj.lockStatus = item.lockStatus;
+        obj.requestId = [NSString stringWithUTF8String:item.requestId.c_str()];
+        obj.requestLastTime = item.requestLastTime;
+        obj.emfId = [NSString stringWithUTF8String:item.emfId.c_str()];
+        obj.unlockTime = item.unlockTime;
+        obj.currentTime = item.currentTime;
+        
+        GetPremiumVideoDetailFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+RequestGetPremiumVideoDetailCallbackImp gRequestGetPremiumVideoDetailCallbackImp;
+
+- (NSInteger)getPremiumVideoDetail:(NSString*)videoId
+                     finishHandler:(GetPremiumVideoDetailFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string strvideoId = "";
+    if (videoId != nil) {
+        strvideoId = [videoId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.GetPremiumVideoDetail(&mHttpRequestManager,
+                                                                    strvideoId,
+                                                                    &gRequestGetPremiumVideoDetailCallbackImp);
+    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestUnlockPremiumVideoCallbackImp : public IRequestUnlockPremiumVideoCallback {
+public:
+    RequestUnlockPremiumVideoCallbackImp(){};
+    ~RequestUnlockPremiumVideoCallbackImp(){};
+    void OnUnlockPremiumVideo(HttpUnlockPremiumVideoTask* task, bool success, int errnum, const string& errmsg, const string& videoId, const string& videoUrlFull) {
+        NSLog(@"LSRequestManager::OnUnlockPremiumVideo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        UnlockPremiumVideoFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:videoId.c_str()], [NSString stringWithUTF8String:videoUrlFull.c_str()]);
+        }
+    }
+};
+RequestUnlockPremiumVideoCallbackImp gRequestUnlockPremiumVideoCallbackImp;
+
+- (NSInteger)unlockPremiumVideo:(LSUnlockActionType)type
+                      accessKey:(NSString*)accessKey
+                        videoId:(NSString*)videoId
+                  finishHandler:(UnlockPremiumVideoFinishHandler)finishHandler {
+    NSInteger request = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    string straccessKey = "";
+    if (accessKey != nil) {
+        straccessKey = [accessKey UTF8String];
+    }
+    
+    string strvideoId = "";
+    if (videoId != nil) {
+        strvideoId = [videoId UTF8String];
+    }
+    
+    request = (NSInteger)mHttpRequestController.UnlockPremiumVideo(&mHttpRequestManager,
+                                                                      type,
+                                                                      straccessKey,
+                                                                      strvideoId,
+                                                                      &gRequestUnlockPremiumVideoCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];

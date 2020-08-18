@@ -206,7 +206,6 @@
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
-    
 }
 
 - (void)viewDidLayoutSubviews {

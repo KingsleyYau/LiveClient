@@ -11,10 +11,10 @@
 
 @protocol LSPZPagingScrollViewDelegate;
 @interface LSPZPagingScrollView : UIScrollView
-@property (assign, nonatomic) IBOutlet id<LSPZPagingScrollViewDelegate> pagingViewDelegate;
+@property (weak, nonatomic) id<LSPZPagingScrollViewDelegate> pagingViewDelegate;
 @property (readonly) UIView *visiblePageView;
 @property (assign) BOOL suspendTiling;
-@property (assign, readonly) NSUInteger currentPagingIndex;
+@property (assign, nonatomic) NSUInteger currentPagingIndex;
 
 - (void)displayPagingViewAtIndex:(NSUInteger)index animated:(BOOL)animated;
 - (void)resetDisplay;

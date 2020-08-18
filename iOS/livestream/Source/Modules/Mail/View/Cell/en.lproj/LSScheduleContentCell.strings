@@ -15,7 +15,7 @@
 "DKH-fG-Uct.text" = "No confirmation time yet.";
 
 /* Class = "UILabel"; text = "Pending her confimation"; ObjectID = "RTC-ep-iCG"; */
-"RTC-ep-iCG.text" = "Pending her confimation";
+"RTC-ep-iCG.text" = "Pending her confirmation";
 
 /* Class = "UILabel"; text = "Status:"; ObjectID = "SKE-2Z-JDG"; */
 "SKE-2Z-JDG.text" = "Status:";
@@ -66,7 +66,7 @@
 
 "Missed" = "Missed";
 
-"CanceledByWho" = "canceled by %@";
+"CanceledByWho" = "  canceled by %@  ";
 
 "NO_CONFIMATION" = "No confirmation time yet.";
 "TIME_DECLINED" = "Time Declined: %@ (GMT)";

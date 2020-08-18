@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LSMyCartCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImageView;
 @property (weak, nonatomic) IBOutlet LSTableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *shopBtn;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutBtn;

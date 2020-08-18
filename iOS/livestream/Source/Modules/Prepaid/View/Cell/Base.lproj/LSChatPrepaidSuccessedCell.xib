@@ -76,7 +76,7 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ERO-1I-O8u">
-                                <rect key="frame" x="10" y="122" width="272" height="25"/>
+                                <rect key="frame" x="12" y="122" width="270" height="25"/>
                                 <gestureRecognizers/>
                                 <attributedString key="attributedText">
                                     <fragment content="You can view all schedule One-on-One requests (in any status) in ">
@@ -108,14 +108,14 @@
                                 </connections>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.93333333333333335" green="1" blue="0.93725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.94509803921568625" green="1" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="D38-YA-4tr" firstAttribute="leading" secondItem="5hZ-Hl-LHb" secondAttribute="leading" id="2gw-tn-LBa"/>
                             <constraint firstAttribute="bottom" secondItem="ERO-1I-O8u" secondAttribute="bottom" constant="8" id="3HU-Zb-Olf"/>
                             <constraint firstItem="Mht-LX-erx" firstAttribute="centerX" secondItem="5hZ-Hl-LHb" secondAttribute="centerX" id="8MX-p4-I6A"/>
                             <constraint firstItem="nO3-3A-Puv" firstAttribute="centerX" secondItem="5hZ-Hl-LHb" secondAttribute="centerX" id="FBB-iO-7Pe"/>
                             <constraint firstAttribute="trailing" secondItem="D38-YA-4tr" secondAttribute="trailing" id="FgJ-ea-W3u"/>
-                            <constraint firstItem="ERO-1I-O8u" firstAttribute="leading" secondItem="5hZ-Hl-LHb" secondAttribute="leading" constant="10" id="Oea-OP-VeX"/>
+                            <constraint firstItem="ERO-1I-O8u" firstAttribute="leading" secondItem="5hZ-Hl-LHb" secondAttribute="leading" constant="12" id="Oea-OP-VeX"/>
                             <constraint firstItem="DEu-SF-i6F" firstAttribute="top" secondItem="qg0-06-V3F" secondAttribute="bottom" constant="8" id="Oiz-Tu-70e"/>
                             <constraint firstAttribute="trailing" secondItem="ERO-1I-O8u" secondAttribute="trailing" constant="8" id="Pau-cF-98p"/>
                             <constraint firstItem="5qT-IY-ep8" firstAttribute="leading" secondItem="COl-bO-l8C" secondAttribute="trailing" constant="4" id="QQ0-Xx-H0r"/>

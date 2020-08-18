@@ -11,6 +11,10 @@
 @implementation LSUIImageViewTopFit
 
 - (void)setImage:(UIImage *)image {
+    
+    if (![[image class] isKindOfClass:[UIImage class]]) {
+         image = [UIImage imageWithCGImage:[image CGImage]];
+     }
     UIImage *scaleImage = image;
 
     // 改变填充方式, 等比全显示

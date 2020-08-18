@@ -21,7 +21,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) id<LSChatInputToolViewDelegate> delegate;
 
-- (void)updateUncount:(NSString *)count;
+- (void)updateUncount:(NSInteger)count;
 @end
 
  

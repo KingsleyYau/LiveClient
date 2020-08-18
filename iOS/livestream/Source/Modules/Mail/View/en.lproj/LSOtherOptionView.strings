@@ -1,0 +1,11 @@
+
+/* Class = "UIButton"; normalTitle = "Decline request"; ObjectID = "Pds-6L-9di"; */
+"Pds-6L-9di.normalTitle" = "Decline request";
+
+/* Class = "UIButton"; normalTitle = "Not decided yet send a mail first"; ObjectID = "QAE-9J-nO1"; */
+"QAE-9J-nO1.normalTitle" = "Not decided yet send a mail first";
+
+/* Class = "UIButton"; normalTitle = "Decline request and reply a mail"; ObjectID = "ch0-br-LK5"; */
+"ch0-br-LK5.normalTitle" = "Decline request and reply a mail";
+
+"DETAIL_SEND_MAIL" = "Decline request and send a mail";

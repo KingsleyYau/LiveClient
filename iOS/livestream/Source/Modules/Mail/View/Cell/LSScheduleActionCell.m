@@ -107,7 +107,8 @@
 // 更新预约详情内容
 - (void)updateScheduelDetailUI:(LSScheduleInviteDetailItemObject *)item {
     self.detailItem = item;
-    if (item.status == LSSCHEDULEINVITESTATUS_PENDING) {
+    [self.acceptReplyBtn setTitle:NSLocalizedStringFromSelf(@"DETAIL_SEND_MAIL") forState:UIControlStateNormal];
+    if (item.status == LSSCHEDULEINVITESTATUS_PENDING && item.sendFlag == LSSCHEDULESENDFLAGTYPE_ANCHOR) {
         self.acceptBtn.hidden = NO;
         self.acceptReplyBtn.hidden = NO;
         self.otherAction.hidden = NO;

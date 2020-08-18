@@ -49,7 +49,6 @@
  */
 @property (nonatomic, copy) NSString *requestUrl;
 
-
 @end
 
 @implementation LSLiveWKWebViewManager
@@ -69,7 +68,6 @@
         self.sessionManager = [LSSessionRequestManager manager];
         self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
-
     }
     return self;
 }
@@ -125,11 +123,9 @@
         [self.liveWKWebView.configuration.userContentController addUserScript:cookieScript];
 
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-
     }
     NSDictionary *cookieHeaders = [NSHTTPCookie requestHeaderFieldsWithCookies:[NSHTTPCookieStorage sharedHTTPCookieStorage].cookies];
     [request setAllHTTPHeaderFields:cookieHeaders];
-
 
     if (self.liveWKWebView.webViewJSDelegate != nil) {
         self.liveWKWebView.webViewJSDelegate = nil;
@@ -150,7 +146,7 @@
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *_Nullable))completionHandler {
 
     NSLog(@"LSLiveWKWebViewManager::didReceiveAuthenticationChallenge %s", __func__);
-    //AFNetworking中的处理方式
+  
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     __block NSURLCredential *credential = nil;
 
@@ -196,12 +192,12 @@
 // 加载完webview (当main frame导航完成时，会回调)
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     NSLog(@"LSLiveWKWebViewManager::didFinishNavigation()");
-//    页面加载完成之后调用需要重新给WKWebView设置Cookie防止因为a标签跳转，导致下一次跳转的时候Cookie丢失。
+    //    页面加载完成之后调用需要重新给WKWebView设置Cookie防止因为a标签跳转，导致下一次跳转的时候Cookie丢失。
     //取出cookie
     NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     //js函数
     NSString *JSFuncString =
-    @"function setCookie(name,value,expires)\
+        @"function setCookie(name,value,expires)\
     {\
     var oDate=new Date();\
     oDate.setDate(oDate.getDate()+expires);\
@@ -226,13 +222,13 @@
         NSString *excuteJSString = [NSString stringWithFormat:@"setCookie('%@', '%@', 1);", cookie.name, cookie.value];
         [JSCookieString appendString:excuteJSString];
     }
-    NSLog(@"JSCookieString %@",JSCookieString);
+    NSLog(@"LSLiveWKWebViewManager::didFinishNavigation(), JSCookieString: %@", JSCookieString);
     //执行js
-    [webView evaluateJavaScript:JSCookieString completionHandler:^(id obj, NSError * _Nullable error) {
-        NSLog(@"JSCookieString error %@",error);
-    }];
-    
-    
+    [webView evaluateJavaScript:JSCookieString
+              completionHandler:^(id obj, NSError *_Nullable error) {
+                  NSLog(@"LSLiveWKWebViewManager::didFinishNavigation(), JSCookieString error: %@ ", error);
+              }];
+
     if ([self.delegate respondsToSelector:@selector(webViewDidFinishNavigation)]) {
         [self.delegate webViewDidFinishNavigation];
     }
@@ -240,20 +236,20 @@
 
 - (void)setStatusBarBackgroundColor:(UIColor *)color {
     if (@available(iOS 13.0, *)) {
-           UIView *statusBar = [[UIView alloc]initWithFrame:[UIApplication sharedApplication].keyWindow.windowScene.statusBarManager.statusBarFrame] ;
+        UIView *statusBar = [[UIView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.windowScene.statusBarManager.statusBarFrame];
+        statusBar.backgroundColor = color;
+        [[UIApplication sharedApplication].keyWindow addSubview:statusBar];
+    } else {
+        UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
+        if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {
             statusBar.backgroundColor = color;
-            [[UIApplication sharedApplication].keyWindow addSubview:statusBar];
-        } else {
-            UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
-            if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {
-                statusBar.backgroundColor = color;
-            }
         }
+    }
 }
 
 //页面跳转失败 (当main frame开始加载数据失败时，会回调)
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-    NSLog(@"LSLiveWKWebViewManager::didFailProvisionalNavigation() error:%@", error);
+    NSLog(@"LSLiveWKWebViewManager::didFailProvisionalNavigation(), error:%@", error);
     if ([self.delegate respondsToSelector:@selector(webViewdidFailProvisionalNavigation)]) {
         [self.delegate webViewdidFailProvisionalNavigation];
     }
@@ -276,20 +272,16 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
     NSLog(@"LSLiveWKWebViewManager::decidePolicyForNavigationResponse()");
     NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
-    NSArray *cookies =[NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+    NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
     for (NSHTTPCookie *cookie in cookies) {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
     }
-//    NSArray *cookies = [self.requestManager getCookies];
-//    for (NSHTTPCookie *cookie in cookies) {
-//        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-//    }
-    
+    //    NSArray *cookies = [self.requestManager getCookies];
+    //    for (NSHTTPCookie *cookie in cookies) {
+    //        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    //    }
 
     decisionHandler(WKNavigationResponsePolicyAllow);
-
-    
-
 }
 
 // 在收到服务器的响应头，根据response相关信息，决定是否跳转。decisionHandler必须调用，来决定是否跳转，参数WKNavigationActionPolicyCancel取消跳转，WKNavigationActionPolicyAllow允许跳转
@@ -302,50 +294,50 @@
     NSString *qpidLiveJump = QpidLive;
     NSURL *url = navigationAction.request.URL;
     NSString *urlStr = [url absoluteString];
- 
+
     if ([self.delegate respondsToSelector:@selector(liveWebView:decidePolicyForNavigationAction:decisionHandler:)]) {
         [self.delegate liveWebView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
         return;
     }
-    
-//    NSMutableURLRequest *request = (NSMutableURLRequest *)navigationAction.request;
-//    NSDictionary *cookieHeaders = request.allHTTPHeaderFields;
-//    NSString *cookie =  request.allHTTPHeaderFields[@"Cookie"];
-//    NSLog(@"url = %@  %@",urlStr,cookie);
-//    if (cookie == nil) {
-//        decisionHandler(WKNavigationActionPolicyCancel);
-//        self.requestUrl = urlStr;
-//        [self requestWebview];
-//        return;
-//    }
-    
-//    if (![self.requestUrl isEqualToString:urlStr]) {
-//         self.requestUrl = urlStr;
-//         [self requestWebview];
-//         decisionHandler(WKNavigationActionPolicyCancel);
-//     }else {
-//         decisionHandler(WKNavigationActionPolicyAllow);
-//     }
-//    NSArray *cookies = [self.requestManager getCookies];
-//    for (NSHTTPCookie *cookie in cookies) {
-//        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-//    }
-//    NSDictionary *cookieHeaders = [NSHTTPCookie requestHeaderFieldsWithCookies:[NSHTTPCookieStorage sharedHTTPCookieStorage].cookies];
-//    [request setAllHTTPHeaderFields:cookieHeaders];
 
-//    if ([urlStr isEqualToString:@"http://demo.qpidnetwork.com/payment/payment_success.php"]) {
-//        if (!self.test) {
-//                  self.test = YES;
-//              decisionHandler(WKNavigationActionPolicyCancel);
-//              self.requestUrl = urlStr;
-//              [self requestWebview];
-//
-//        }else {
-//            decisionHandler(WKNavigationActionPolicyAllow);
-//        }
-//
-//        return;
-//    }
+    //    NSMutableURLRequest *request = (NSMutableURLRequest *)navigationAction.request;
+    //    NSDictionary *cookieHeaders = request.allHTTPHeaderFields;
+    //    NSString *cookie =  request.allHTTPHeaderFields[@"Cookie"];
+    //    NSLog(@"url = %@  %@",urlStr,cookie);
+    //    if (cookie == nil) {
+    //        decisionHandler(WKNavigationActionPolicyCancel);
+    //        self.requestUrl = urlStr;
+    //        [self requestWebview];
+    //        return;
+    //    }
+
+    //    if (![self.requestUrl isEqualToString:urlStr]) {
+    //         self.requestUrl = urlStr;
+    //         [self requestWebview];
+    //         decisionHandler(WKNavigationActionPolicyCancel);
+    //     }else {
+    //         decisionHandler(WKNavigationActionPolicyAllow);
+    //     }
+    //    NSArray *cookies = [self.requestManager getCookies];
+    //    for (NSHTTPCookie *cookie in cookies) {
+    //        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    //    }
+    //    NSDictionary *cookieHeaders = [NSHTTPCookie requestHeaderFieldsWithCookies:[NSHTTPCookieStorage sharedHTTPCookieStorage].cookies];
+    //    [request setAllHTTPHeaderFields:cookieHeaders];
+
+    //    if ([urlStr isEqualToString:@"http://demo.qpidnetwork.com/payment/payment_success.php"]) {
+    //        if (!self.test) {
+    //                  self.test = YES;
+    //              decisionHandler(WKNavigationActionPolicyCancel);
+    //              self.requestUrl = urlStr;
+    //              [self requestWebview];
+    //
+    //        }else {
+    //            decisionHandler(WKNavigationActionPolicyAllow);
+    //        }
+    //
+    //        return;
+    //    }
     NSLog(@"LSLiveWKWebViewManager::decidePolicyForNavigationAction( [url : %@] )", urlStr);
 
     if ([urlStr isEqualToString:closeUrl]) {
@@ -354,8 +346,8 @@
         }
         result = NO;
     }
-    
-    if ([urlStr containsString:@"video"]&&[urlStr containsString:@".mp4"]) {
+
+    if ([urlStr containsString:@"video"] && [urlStr containsString:@".mp4"]) {
         NSLog(@"LSLiveWKWebViewManager::Play Video");
         if ([self.delegate respondsToSelector:@selector(webViewOpenVideo)]) {
             [self.delegate webViewOpenVideo];
@@ -369,7 +361,7 @@
         // 服务冲突判断
         if (item.type == LiveUrlTypeHangoutDialog) {
             [[LiveUrlHandler shareInstance] handleOpenURL:url];
-        }else {
+        } else {
             [[LiveModule module].serviceManager handleOpenURL:url];
         }
         result = NO;
@@ -403,8 +395,7 @@
             result = NO;
         }
     }
-   
-    
+
     if (result) {
         if (![self.requestUrl isEqualToString:urlStr]) {
             self.requestUrl = urlStr;
@@ -420,7 +411,7 @@
             }
         }
         decisionHandler(WKNavigationActionPolicyAllow);
-   
+
     } else {
         decisionHandler(WKNavigationActionPolicyCancel);
     }

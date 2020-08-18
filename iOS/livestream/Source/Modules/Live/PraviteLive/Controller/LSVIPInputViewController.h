@@ -64,7 +64,7 @@
 @property (weak, nonatomic) IBOutlet LSHighlightedButton *inviteBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *inviteBtnWidth;
 
-@property (nonatomic, weak) IBOutlet UIView * inputView;
+@property (nonatomic, weak) IBOutlet UIView * inputBGView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewRight;
 
 /** 发送栏 **/

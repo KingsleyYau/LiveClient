@@ -63,7 +63,6 @@
 #import "UIImage+ImageEffects.h"
 #import "LSUIImageFactory.h"
 #import "LSUIImageViewTopFit.h"
-#import "LSUITapImageView.h"
 
 #pragma mark - ViewController
 #import "LSViewController.h"

@@ -27,6 +27,7 @@
         self.hasRead = NO;
         self.hasReplied = NO;
         self.hasSchedule = NO;
+        self.hasKey = NO;
     }
     return self;
 }
@@ -46,6 +47,7 @@
         self.hasRead = [coder decodeBoolForKey:@"hasRead"];
         self.hasReplied = [coder decodeBoolForKey:@"hasReplied"];
         self.hasSchedule = [coder decodeBoolForKey:@"hasSchedule"];
+        self.hasKey = [coder decodeBoolForKey:@"hasKey"];
     }
     return self;
 }
@@ -64,6 +66,7 @@
     [coder encodeBool:self.hasRead forKey:@"hasRead"];
     [coder encodeBool:self.hasReplied forKey:@"hasReplied"];
     [coder encodeBool:self.hasSchedule forKey:@"hasSchedule"];
+    [coder encodeBool:self.hasKey forKey:@"hasKey"];
 }
 
 @end

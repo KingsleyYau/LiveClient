@@ -15,7 +15,7 @@
     [super awakeFromNib];
     // Initialization code
     
-
+    self.layer.zPosition = 1;
 }
 
 + (NSInteger)cellHeight:(CGFloat)width detailString:(NSString *)detailString {
@@ -78,12 +78,13 @@
     cell.timeViewBorder.layer.borderColor = COLOR_WITH_16BAND_RGB(0xC6C6C6).CGColor;
     cell.timeViewBorder.layer.borderWidth = 1;
     cell.timeViewBorder.layer.cornerRadius = 4;
-    cell.timeViewBorder.layer.masksToBounds = YES;
+//    cell.timeViewBorder.layer.masksToBounds = YES;
     
     cell.cancelInfoTipNote.userInteractionEnabled = NO;
     cell.cancelInfoTipNote.hidden = YES;
 
-
+    cell.bgView.layer.cornerRadius = 4;
+    cell.bgView.layer.masksToBounds = YES;
 
     return cell;
 }
@@ -107,7 +108,7 @@
     // 发送时间为gtm时间
     NSString *sendTime =  [[LSPrePaidManager manager] getGMTFromTimestamp:item.scheduleInfo.addTime timeFormat:@"MMM dd, HH:mm"];
     self.schdeduleTimeSend.text = [NSString stringWithFormat:@"Time Sent: %@",[sendTime stringByAppendingString:@" (GMT)"]];
-    self.scheduleStatusNote.textColor = COLOR_WITH_16BAND_RGB(0x3F3F3F);
+    self.scheduleStatusNote.textColor = COLOR_WITH_16BAND_RGB(0x999999);
     self.scheduleStatusNote.font = [UIFont systemFontOfSize:14];
     self.cancelInfoBtn.hidden = YES;
     NSString *infoTipNote = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"CanceledByWho"),item.scheduleInfo.cancelerName];
@@ -118,7 +119,6 @@
             self.scheduleStatus.text = isInbox ? NSLocalizedStringFromSelf(@"Pending_Inbox") : NSLocalizedStringFromSelf(@"Pending_Outbox");
             self.scheduleStatus.textColor = COLOR_WITH_16BAND_RGB(0xFF8837);
             self.scheduleStatusNote.text = NSLocalizedStringFromSelf(@"NO_CONFIMATION");
-            self.scheduleStatusNote.textColor = COLOR_WITH_16BAND_RGB(0x3F3F3F);
             self.scheduleStatusNote.font = [UIFont italicSystemFontOfSize:14];
             if (isInbox) {
                 [self showTimeChooseView];
@@ -185,7 +185,7 @@
     NSString *startTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.scheduleInfo.startTime timeFormat:@"MMM dd, HH:mm" isDaylightSaving:item.scheduleInfo.isSummerTime andZone:item.scheduleInfo.timeZoneValue];
     self.scheduleGMTTime.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Start_Time"),startTime,item.scheduleInfo.timeZoneCity,item.scheduleInfo.timeZoneValue];
     
-    NSString *localTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.scheduleInfo.startTime timeFormat:@"MMM dd, HH:mm" isDaylightSaving:item.scheduleInfo.isSummerTime andZone:@""];
+    NSString *localTime = [[LSPrePaidManager manager] getLocalTimeBeginTiemAndEndTimeFromTimestamp:item.scheduleInfo.startTime timeFormat:@"MMM dd, HH:mm"];
     self.scheduleLocalTime.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Local_Time"),localTime];
     
     self.minuteTime.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Minutes"),item.scheduleInfo.duration];

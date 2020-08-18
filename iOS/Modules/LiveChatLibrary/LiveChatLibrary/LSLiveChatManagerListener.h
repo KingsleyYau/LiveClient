@@ -234,10 +234,11 @@
  *
  *  @param errNo    结果类型
  *  @param errMsg   结果描述
+ *  @param womanId 女士ID
  *  @param item       预约信息
  *  @param msgReplyItem  预付费回复信息
  */
-- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(NSString *_Nonnull)errMsg item:(LSLCLiveChatMsgItemObject *_Nonnull)item msgReplyItem:(LSLCLiveChatMsgItemObject *_Nullable)msgReplyItem;
+- (void)onSendScheduleInvite:(LSLIVECHAT_LCC_ERR_TYPE)errNo errMsg:(NSString *_Nonnull)errMsg womanId:(NSString *_Nonnull)womanId item:(LSLCLiveChatMsgItemObject *_Nonnull)item msgReplyItem:(LSLCLiveChatMsgItemObject *_Nullable)msgReplyItem;
 
 /**
  *  直播接收预约Schedule邀请（包含接收，接受，拒绝）

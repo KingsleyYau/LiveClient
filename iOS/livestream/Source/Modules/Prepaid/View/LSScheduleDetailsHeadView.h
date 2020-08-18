@@ -12,7 +12,7 @@
 #import "LSImageViewLoader.h"
 
 @protocol LSScheduleDetailsHeadViewDelegate <NSObject>
-
+- (void)scheduleDetailsHeadViewDidHeadAndNameBtn;
 - (void)scheduleDetailsHeadViewDidCancelBtn;
 - (void)scheduleDetailsHeadViewDidGfitBtn;
 - (void)scheduleDetailsHeadViewDidMailBtn;
@@ -20,7 +20,9 @@
 - (void)scheduleDetailsHeadViewDidDurationBtn;
 @end
 
-@interface LSScheduleDetailsHeadView : UIView 
+@interface LSScheduleDetailsHeadView : UIView
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
 @property (weak, nonatomic) IBOutlet UILabel *idLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sentTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *updateTimeLabel;
@@ -42,6 +44,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *giftBtn;
 @property (weak, nonatomic) IBOutlet UIButton *mailBtn;
 @property (weak, nonatomic) IBOutlet UIButton *chatBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatBtnWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatBtnRight;
 
 @property (weak, nonatomic) IBOutlet UIView *informationView;
 @property (weak, nonatomic) IBOutlet UILabel *timeZoneLabel;
@@ -50,6 +54,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *durationLabel;
 @property (weak, nonatomic) IBOutlet UIButton *durationBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *durationBtnHeight;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowIcon;
 
 
 @property (weak, nonatomic) IBOutlet UIView *furtherView;

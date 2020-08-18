@@ -20,6 +20,7 @@
 @end
 
 @interface LSPrepaidCardView : UIView
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *wartingView;
 @property (weak, nonatomic) IBOutlet UIView *wartingInfoView;
 @property (weak, nonatomic) IBOutlet UIView *declineView;
@@ -32,8 +33,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *declineInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *acceptInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *updateTimeLabel;
-
-
 @property (weak, nonatomic) IBOutlet UIView *timeView;
 @property (weak, nonatomic) IBOutlet UILabel *scheduleIDLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeSentLabel;

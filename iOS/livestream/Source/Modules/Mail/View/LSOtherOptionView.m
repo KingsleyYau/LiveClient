@@ -32,6 +32,9 @@
     return view;
 }
 
+- (void)setDetailDeclineBtnTitle {
+    [self.declineSendMailBtn setTitle:NSLocalizedStringFromSelf(@"DETAIL_SEND_MAIL") forState:UIControlStateNormal];
+}
 
 - (IBAction)declineAndSendMailAction:(UIButton *)sender {
     [self removeFromSuperview];

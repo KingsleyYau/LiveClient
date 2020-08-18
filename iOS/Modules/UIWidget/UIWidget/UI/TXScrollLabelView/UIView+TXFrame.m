@@ -108,4 +108,13 @@
     self.frame = frame;
 }
 
+- (CGFloat)tx_right{
+    return self.frame.origin.x + self.frame.size.width;
+}
+- (void)setTx_right:(CGFloat)tx_right{
+    CGRect frame = self.frame;
+    frame.origin.x = tx_right - self.frame.size.width;
+    self.frame = frame;
+}
+
 @end

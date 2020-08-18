@@ -20,7 +20,7 @@
 @property (nonatomic, weak) IBOutlet UILabel* handleCountDownLabel;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
-@property (nonatomic, weak) IBOutlet UIImageView *ladyImageView;
+@property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *ladyImageView;
 @property (nonatomic, weak) IBOutlet UILabel* ladyNameLabel;
 @property (nonatomic, weak) IBOutlet UILabel* tipsLabel;
 

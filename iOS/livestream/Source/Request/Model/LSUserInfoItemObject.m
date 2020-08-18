@@ -24,6 +24,7 @@
         self.isOnline = NO;
         self.isAnchor = NO;
         self.leftCredit = 0.0;
+        
     }
     return self;
 }
@@ -40,6 +41,7 @@
         self.isAnchor = [coder decodeBoolForKey:@"isAnchor"];
         self.leftCredit = [coder decodeDoubleForKey:@"leftCredit"];
         self.anchorInfo = [coder decodeObjectForKey:@"anchorInfo"];
+        self.fansiInfo = [coder decodeObjectForKey:@"fansiInfo"];
         
     }
     return self;
@@ -56,6 +58,7 @@
     [coder encodeBool:self.isAnchor forKey:@"isAnchor"];
     [coder encodeDouble:self.leftCredit forKey:@"leftCredit"];
     [coder encodeObject:self.anchorInfo forKey:@"anchorInfo"];
+    [coder encodeObject:self.fansiInfo forKey:@"fansiInfo"];
 }
 
 @end

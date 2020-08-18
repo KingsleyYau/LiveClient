@@ -1,0 +1,13 @@
+
+/* Class = "UIButton"; normalTitle = "Request to View and unlocked Videos"; ObjectID = "AN0-md-3an"; */
+"AN0-md-3an.normalTitle" = "Request to View and unlocked Videos";
+
+/* Class = "UILabel"; text = "Premium videos are the wonderful moments of the broadcaster with their personalities to life. Click here to see How it Works."; ObjectID = "ha0-eL-eCv"; */
+"ha0-eL-eCv.text" = "Premium videos are the wonderful moments of the broadcaster with their personalities to life. Click here to see How it Works.";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "wlu-ry-2gt"; */
+"wlu-ry-2gt.text" = "0";
+
+
+"LS_VideoVC_TopDec_LineStr" = "Click here";
+"LS_VideoVC_TopDec" = "Premium videos are the wonderful moments of the broadcaster with their personalities to life. Click here to see How it Works.";

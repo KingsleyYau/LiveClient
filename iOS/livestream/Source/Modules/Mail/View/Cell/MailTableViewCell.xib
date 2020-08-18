@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -52,9 +52,6 @@
                         <color key="textColor" red="0.14901960784313725" green="0.14901960784313725" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Image" translatesAutoresizingMaskIntoConstraints="NO" id="OCU-pu-bUD">
-                        <rect key="frame" x="331" y="39" width="12" height="12"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yesterday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fve-yd-4y3">
                         <rect key="frame" x="304" y="18.5" width="56" height="14.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -74,8 +71,18 @@
                             <constraint firstAttribute="width" constant="14" id="ZGj-Hd-Ek4"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Video" translatesAutoresizingMaskIntoConstraints="NO" id="hrY-rj-d3t">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Image" translatesAutoresizingMaskIntoConstraints="NO" id="OCU-pu-bUD">
+                        <rect key="frame" x="314" y="39" width="12" height="12"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Video_Tip_Key" translatesAutoresizingMaskIntoConstraints="NO" id="VcB-do-NbD">
                         <rect key="frame" x="348" y="39" width="12" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="VcB-do-NbD" secondAttribute="height" multiplier="1:1" id="7SR-xp-SBX"/>
+                            <constraint firstAttribute="width" constant="12" id="Xrh-tA-TJa"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Receive_Video" translatesAutoresizingMaskIntoConstraints="NO" id="hrY-rj-d3t">
+                        <rect key="frame" x="331" y="39" width="12" height="12"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="12" id="6yH-mi-pSu"/>
                             <constraint firstAttribute="width" secondItem="hrY-rj-d3t" secondAttribute="height" multiplier="1:1" id="sI9-el-bna"/>
@@ -101,17 +108,19 @@
                     <constraint firstAttribute="trailing" secondItem="6Xr-Ki-dmQ" secondAttribute="trailing" constant="12" id="Klq-3f-XQm"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MHB-mb-oV2" secondAttribute="trailing" constant="100" id="PQm-Wq-kZE"/>
                     <constraint firstItem="MHB-mb-oV2" firstAttribute="centerY" secondItem="nQb-eE-xme" secondAttribute="centerY" id="RIV-D2-lYs"/>
+                    <constraint firstItem="VcB-do-NbD" firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" id="SZV-NV-Wq7"/>
                     <constraint firstItem="vwU-gl-H2f" firstAttribute="top" secondItem="nyH-We-fIh" secondAttribute="bottom" constant="4" id="V8C-Dp-x0l"/>
                     <constraint firstItem="nQb-eE-xme" firstAttribute="centerY" secondItem="nyH-We-fIh" secondAttribute="centerY" id="W57-0Q-gdN"/>
                     <constraint firstItem="xCJ-i6-hgv" firstAttribute="leading" secondItem="iMR-JE-eeF" secondAttribute="trailing" constant="10" id="YP2-KU-wch"/>
                     <constraint firstItem="MHB-mb-oV2" firstAttribute="centerY" secondItem="nQb-eE-xme" secondAttribute="centerY" id="ZeA-wO-Mfy"/>
                     <constraint firstItem="fve-yd-4y3" firstAttribute="centerY" secondItem="nyH-We-fIh" secondAttribute="centerY" id="Zv6-J6-84w"/>
+                    <constraint firstItem="VcB-do-NbD" firstAttribute="top" secondItem="fve-yd-4y3" secondAttribute="bottom" constant="6" id="gTW-Ei-k2T"/>
                     <constraint firstItem="iMR-JE-eeF" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="nRI-gI-BWe"/>
                     <constraint firstItem="6Xr-Ki-dmQ" firstAttribute="top" secondItem="fve-yd-4y3" secondAttribute="bottom" constant="6" id="ugi-dG-6Ra"/>
                     <constraint firstItem="xCJ-i6-hgv" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="uum-1C-McX"/>
                     <constraint firstItem="BYb-TB-t3R" firstAttribute="leading" secondItem="iMR-JE-eeF" secondAttribute="leading" constant="-1" id="w8S-qT-VeI"/>
                     <constraint firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" constant="15" id="x6d-qd-550"/>
-                    <constraint firstItem="hrY-rj-d3t" firstAttribute="trailing" secondItem="fve-yd-4y3" secondAttribute="trailing" id="xeR-DR-83Q"/>
+                    <constraint firstItem="VcB-do-NbD" firstAttribute="leading" secondItem="hrY-rj-d3t" secondAttribute="trailing" constant="5" id="y5u-wE-qbe"/>
                     <constraint firstItem="nyH-We-fIh" firstAttribute="leading" secondItem="xCJ-i6-hgv" secondAttribute="trailing" constant="16" id="z5n-Fc-Mvy"/>
                     <constraint firstItem="hrY-rj-d3t" firstAttribute="top" secondItem="OCU-pu-bUD" secondAttribute="top" id="zUB-rg-Xa5"/>
                     <constraint firstItem="vwU-gl-H2f" firstAttribute="leading" secondItem="nyH-We-fIh" secondAttribute="leading" id="zxm-jg-sWZ"/>
@@ -125,8 +134,11 @@
                 <outlet property="onLineImageView" destination="nQb-eE-xme" id="cvC-Ai-pdc"/>
                 <outlet property="onlineImageViewWidth" destination="5D5-jI-HNm" id="7du-Bd-V6i"/>
                 <outlet property="receiveImageIcon" destination="OCU-pu-bUD" id="w6b-hl-UBS"/>
+                <outlet property="receiveKeyIcon" destination="VcB-do-NbD" id="qG6-nw-OJc"/>
+                <outlet property="receiveKeyIconWidth" destination="Xrh-tA-TJa" id="AKg-16-llO"/>
                 <outlet property="receiveVideoIcon" destination="hrY-rj-d3t" id="Ycr-Bu-ghW"/>
                 <outlet property="receiveVideoIconLeft" destination="DtF-Ln-arz" id="mhq-1G-1hQ"/>
+                <outlet property="receiveVideoIconTrailing" destination="y5u-wE-qbe" id="7hb-Bw-arg"/>
                 <outlet property="receiveVideoIconWidth" destination="6yH-mi-pSu" id="t2t-BR-ZC1"/>
                 <outlet property="redLabel" destination="iMR-JE-eeF" id="cX1-ds-gG8"/>
                 <outlet property="replyImage" destination="BYb-TB-t3R" id="cyE-rh-58B"/>
@@ -139,6 +151,7 @@
     <resources>
         <image name="Default_Img_Lady_HangOut" width="187.5" height="187.5"/>
         <image name="LS_Chat_Schedule" width="24" height="25"/>
+        <image name="LS_Video_Tip_Key" width="12" height="12"/>
         <image name="Mail_Is_Reply" width="16" height="16"/>
         <image name="Mail_Receive_Follow" width="14" height="14"/>
         <image name="Mail_Receive_Image" width="12" height="12"/>

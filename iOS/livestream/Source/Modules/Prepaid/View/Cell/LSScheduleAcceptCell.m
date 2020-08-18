@@ -15,8 +15,14 @@
     return @"LSScheduleAcceptCell";
 }
 
-+ (NSInteger)cellHeight{
-    return 234;
++ (NSInteger)cellHeight:(LSScheduleInviteListItemObject*)item{
+    CGFloat h = 0;
+    if (item.sendFlag == LSSCHEDULESENDFLAGTYPE_MAN) {
+        h = 168;
+    }else{
+        h = 234;
+    }
+    return h;
 }
 
 + (id)getUITableViewCell:(UITableView*)tableView {
@@ -58,7 +64,7 @@
 
 - (void)updateUI:(LSScheduleInviteListItemObject*)item {
     self.nameLabel.text = item.anchorInfo.nickName;
-    [self.imageLoader loadImageWithImageView:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
+    [self.imageLoader loadImageFromCache:self.headImage options:0 imageUrl:item.anchorInfo.avatarImg placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"] finishHandler:^(UIImage *image) {
         
     }];
     
@@ -69,16 +75,20 @@
     if (item.sendFlag == LSSCHEDULESENDFLAGTYPE_MAN) {
         self.fromLabel.text = @"To";
         self.statusLabel.text = NSLocalizedStringFromSelf(@"STATUS_TIP_HER");
+        self.acceptBtn.hidden = YES;
+        self.viewBtn.hidden = YES;
     }else{
         self.statusLabel.text = NSLocalizedStringFromSelf(@"STATUS_TIP_YOUR");
         self.fromLabel.text = @"From";
+        self.acceptBtn.hidden = NO;
+        self.viewBtn.hidden = NO;
     }
   
     NSString * startTime =[[LSPrePaidManager manager]getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:00" isDaylightSaving:item.isSummerTime andZone:item.timeZoneValue];
     
     self.startLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Start_Time"),startTime,item.timeZoneCity,item.timeZoneValue];
 
-   NSString *localTime = [[LSPrePaidManager manager] getStartTimeAndEndTomeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm" isDaylightSaving:item.isSummerTime andZone:@""];
+   NSString *localTime = [[LSPrePaidManager manager] getLocalTimeBeginTiemAndEndTimeFromTimestamp:item.startTime timeFormat:@"MMM dd, HH:mm"];
    self.localLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"Local_Time"),localTime];
     
     self.durationLabel.text = [NSString stringWithFormat:@"%d Minutes",item.duration];

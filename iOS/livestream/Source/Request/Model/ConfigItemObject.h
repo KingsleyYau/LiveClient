@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LSMailTariffItemObject.h"
 
 @interface ConfigItemObject : NSObject
 /**
@@ -30,6 +31,9 @@
  * sendLetter                 发送信件页URL
  * flowersGift                鲜花礼品的优惠价
  * scheduleSaveUp      预付费最大优惠折扣
+ * mailTariff                   信件资费相关
+ * premiumVideoCredit  付费视频信用点
+ * howItWorkUrl
  */
 @property (nonatomic, copy) NSString *_Nonnull imSvrUrl;
 @property (nonatomic, copy) NSString *_Nonnull httpSvrUrl;
@@ -50,6 +54,9 @@
 @property (nonatomic, copy) NSString *_Nonnull sendLetter;
 @property (nonatomic, assign) int flowersGift;
 @property (nonatomic, assign) int scheduleSaveUp;
+@property (nonatomic, strong) LSMailTariffItemObject *_Nullable mailTariff;
+@property (nonatomic, assign) double premiumVideoCredit;
+@property (nonatomic, copy) NSString *_Nonnull howItWorkUrl;
 
 /*
      test QNLiveChat

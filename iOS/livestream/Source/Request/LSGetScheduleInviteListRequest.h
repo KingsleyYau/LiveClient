@@ -13,18 +13,18 @@
 /**
 *  17.7.获取预付费直播邀请列表接口
 *
-*  @param status           邀请状态(    LSSCHEDULEINVITESTATUS_PENDING: Pending
+*  @status           邀请状态(    LSSCHEDULEINVITESTATUS_PENDING: Pending
 LSSCHEDULEINVITESTATUS_CONFIRMED :  Confirmed
 LSSCHEDULEINVITESTATUS_CANCELED :  Canceled
 LSSCHEDULEINVITESTATUS_EXPIRED: Expired
 LSSCHEDULEINVITESTATUS_COMPLETED:  Completed
 LSSCHEDULEINVITESTATUS_DECLINED:  Declined
 LSSCHEDULEINVITESTATUS_MISSED : Missed)
-*  @param sendFlag     发起方(LSSCHEDULESENDFLAGTYPE_ALL:全部(默认) LSSCHEDULESENDFLAGTYPE_MAN:男士 LSSCHEDULESENDFLAGTYPE_ANCHOR:主播)
-*  @param anchorId         主播ID
-*  @param start            起始数
-*  @param step             步长
-*  @param finishHandler            接口回调
+*  @sendFlag     发起方(LSSCHEDULESENDFLAGTYPE_ALL:全部(默认) LSSCHEDULESENDFLAGTYPE_MAN:男士 LSSCHEDULESENDFLAGTYPE_ANCHOR:主播)
+*  @anchorId         主播ID
+*  @start            起始数
+*  @step             步长
+*  @finishHandler            接口回调
 *
 *  @return 成功请求Id
 */

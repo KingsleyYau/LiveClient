@@ -36,7 +36,7 @@
 @property (nonatomic, assign) BOOL isSummerTime;
 @property (nonatomic, assign) NSInteger startTime;
 @property (nonatomic, assign) NSInteger endTime;
-@property (nonatomic, assign) NSString* timeZoneValue;
+@property (nonatomic, copy) NSString* timeZoneValue;
 @property (nonatomic, copy) NSString* timeZoneCity;
 @property (nonatomic, assign) int duration;
 @property (nonatomic, assign) LSScheduleInviteStatus status;

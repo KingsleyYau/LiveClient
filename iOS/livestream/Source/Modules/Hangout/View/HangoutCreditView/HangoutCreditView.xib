@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,18 +13,18 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="234"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="gB8-RO-OH8">
-                    <rect key="frame" x="152" y="18" width="70" height="70"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="gB8-RO-OH8" customClass="LSUIImageViewTopFit">
+                    <rect key="frame" x="152.5" y="18" width="70" height="70"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="btY-HE-wrU"/>
                         <constraint firstAttribute="width" secondItem="gB8-RO-OH8" secondAttribute="height" multiplier="1:1" id="itd-L7-fJb"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User_leave_10" translatesAutoresizingMaskIntoConstraints="NO" id="Cq5-OG-YZd">
-                    <rect key="frame" x="174" y="77" width="26" height="11"/>
+                    <rect key="frame" x="174.5" y="77" width="26" height="11"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hq9-Da-eJO" userLabel="Name ID LV View">
-                    <rect key="frame" x="155.5" y="102" width="65.5" height="24"/>
+                    <rect key="frame" x="155" y="102" width="65.5" height="24"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brady" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MKS-L0-i6l">
                             <rect key="frame" x="0.0" y="3.5" width="41" height="17"/>
@@ -36,7 +33,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZCy-OW-j0e">
-                            <rect key="frame" x="50" y="5.5" width="15.5" height="14.5"/>
+                            <rect key="frame" x="50" y="5" width="15.5" height="14.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -53,27 +50,27 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJf-6x-PrQ">
-                    <rect key="frame" x="108.5" y="136" width="159.5" height="17"/>
+                    <rect key="frame" x="108" y="136" width="159.5" height="17"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <attributedString key="attributedText">
                         <fragment content="My Balance:">
                             <attributes>
                                 <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                                <font key="NSFont" metaFont="menu" size="14"/>
                             </attributes>
                         </fragment>
                         <fragment content=" ">
                             <attributes>
                                 <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                                <font key="NSFont" metaFont="menu" size="14"/>
                             </attributes>
                         </fragment>
                         <fragment content="0.00 credits">
                             <attributes>
                                 <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="NSColor" red="1" green="0.44313725490196076" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                                <font key="NSFont" metaFont="menu" size="14"/>
                             </attributes>
                         </fragment>
                     </attributedString>
@@ -137,7 +134,7 @@
     </objects>
     <resources>
         <image name="Default_Img_Man_Circyle" width="75" height="75"/>
-        <image name="Live_Btn_Cancel" width="17" height="17"/>
+        <image name="Live_Btn_Cancel" width="17.5" height="17.5"/>
         <image name="User_leave_10" width="26" height="11"/>
     </resources>
 </document>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSMailViewController">
             <connections>
+                <outlet property="bottomTipsLabel" destination="wzd-GW-7gm" id="cWh-9s-nGM"/>
+                <outlet property="bottomView" destination="B6i-oD-nK5" id="zZB-pd-kVU"/>
                 <outlet property="noDataIcon" destination="Yuz-qM-A8V" id="kN4-WX-5Mn"/>
                 <outlet property="noDataNote" destination="yoj-N3-G8w" id="Lhy-tr-bBJ"/>
                 <outlet property="noDataSearchBtn" destination="kQm-CI-cJB" id="Mop-tn-NNY"/>
@@ -53,10 +55,29 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GsX-CL-mS3" customClass="MailTableView">
-                    <rect key="frame" x="0.0" y="46" width="375" height="621"/>
+                    <rect key="frame" x="0.0" y="46" width="375" height="567"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <inset key="separatorInset" minX="82" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B6i-oD-nK5">
+                    <rect key="frame" x="0.0" y="613" width="375" height="54"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post stamp will be used in first than credits. 1 stamp or 0.8 credits for each mail read." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzd-GW-7gm">
+                            <rect key="frame" x="20" y="0.0" width="335" height="54"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.9882352941176471" green="0.94509803921568625" blue="0.91764705882352937" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="wzd-GW-7gm" secondAttribute="trailing" constant="20" id="6Xa-ZF-gKl"/>
+                        <constraint firstItem="wzd-GW-7gm" firstAttribute="top" secondItem="B6i-oD-nK5" secondAttribute="top" id="Ect-qe-eAl"/>
+                        <constraint firstItem="wzd-GW-7gm" firstAttribute="leading" secondItem="B6i-oD-nK5" secondAttribute="leading" constant="20" id="VQt-HX-pIF"/>
+                        <constraint firstAttribute="bottom" secondItem="wzd-GW-7gm" secondAttribute="bottom" id="XcW-Pw-67y"/>
+                        <constraint firstAttribute="height" constant="54" id="ccq-3F-jD3"/>
+                    </constraints>
+                </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_No_eMail" translatesAutoresizingMaskIntoConstraints="NO" id="Yuz-qM-A8V" userLabel="No Data Icon">
                     <rect key="frame" x="145.5" y="154" width="84" height="84"/>
                 </imageView>
@@ -90,18 +111,21 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="Yuz-qM-A8V" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="154" id="1Ky-la-fXL"/>
+                <constraint firstAttribute="bottom" secondItem="B6i-oD-nK5" secondAttribute="bottom" id="B71-a4-QqJ"/>
                 <constraint firstAttribute="trailing" secondItem="GsX-CL-mS3" secondAttribute="trailing" id="CKD-bj-O4W"/>
+                <constraint firstItem="B6i-oD-nK5" firstAttribute="top" secondItem="GsX-CL-mS3" secondAttribute="bottom" id="DhU-ld-a5g"/>
                 <constraint firstItem="TRb-O9-TcT" firstAttribute="top" secondItem="Yuz-qM-A8V" secondAttribute="bottom" constant="20" id="E9f-3Y-aNF"/>
-                <constraint firstAttribute="bottom" secondItem="GsX-CL-mS3" secondAttribute="bottom" id="SfP-8I-y4a"/>
                 <constraint firstAttribute="trailing" secondItem="SGr-Io-jLk" secondAttribute="trailing" id="U9A-Me-0do"/>
                 <constraint firstItem="TRb-O9-TcT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="UD2-zB-Poa"/>
                 <constraint firstItem="Yuz-qM-A8V" firstAttribute="centerX" secondItem="GsX-CL-mS3" secondAttribute="centerX" id="Wth-Lq-KGx"/>
+                <constraint firstItem="B6i-oD-nK5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="XmM-lu-kTT"/>
                 <constraint firstItem="yoj-N3-G8w" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Z5M-rO-k6f"/>
                 <constraint firstAttribute="trailing" secondItem="TRb-O9-TcT" secondAttribute="trailing" constant="20" id="bLA-7j-QLl"/>
                 <constraint firstItem="kQm-CI-cJB" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="bM4-d2-taD"/>
                 <constraint firstItem="kQm-CI-cJB" firstAttribute="top" secondItem="yoj-N3-G8w" secondAttribute="bottom" constant="40" id="h3r-1J-BpO"/>
                 <constraint firstItem="SGr-Io-jLk" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="h7z-7e-jQv"/>
                 <constraint firstItem="SGr-Io-jLk" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="k7X-Ce-Uta"/>
+                <constraint firstAttribute="trailing" secondItem="B6i-oD-nK5" secondAttribute="trailing" id="odx-DV-7FG"/>
                 <constraint firstItem="GsX-CL-mS3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="oq3-MD-bOK"/>
                 <constraint firstItem="yoj-N3-G8w" firstAttribute="top" secondItem="TRb-O9-TcT" secondAttribute="bottom" constant="10" id="x9r-6m-m2W"/>
                 <constraint firstItem="GsX-CL-mS3" firstAttribute="top" secondItem="SGr-Io-jLk" secondAttribute="bottom" id="xQc-kR-wth"/>

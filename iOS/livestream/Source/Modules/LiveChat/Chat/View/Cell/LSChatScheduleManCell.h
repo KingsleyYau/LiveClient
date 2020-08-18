@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivity;
 @property (strong, nonatomic) LSPrepaidCardView *cardView;
 @property (weak, nonatomic) id<LSChatScheduleManCellDelegate> cellDelegate;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cardViewW;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(BOOL)isMore;

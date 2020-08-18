@@ -19,6 +19,7 @@
 #import "LiveModule.h"
 #import "LSPrepaidInfoView.h"
 #import "LSShadowView.h"
+#import "LiveUrlHandler.h"
 #define PageSize 20
 typedef enum : NSUInteger {
     SegmentTypeContact = 0,
@@ -26,6 +27,7 @@ typedef enum : NSUInteger {
 } SegmentType;
 
 @interface LSSeclectSendScheduleViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextFieldDelegate,LSTypeSegmentDelegate>
+@property (weak, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UITextField *anchorTextField;
 @property (weak, nonatomic) IBOutlet UILabel *wrongTipsNote;
@@ -33,7 +35,6 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet UIView *recipientView;
 @property (nonatomic, strong) LSTypeSegment *segment;
 @property (weak, nonatomic) IBOutlet UIView *topSegmentView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomDistance;
 @property (nonatomic, strong) NSMutableArray *recepientItems;
 @property (weak, nonatomic) IBOutlet UILabel *emptyTips;
 /** 主播id */
@@ -43,6 +44,9 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet UIButton *howItWorkBtn;
 @property (weak, nonatomic) IBOutlet UIButton *retryBtn;
 @property (nonatomic, assign) SegmentType type;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerDistance;
+@property (weak, nonatomic) IBOutlet UILabel *requestTips;
+@property (weak, nonatomic) IBOutlet UILabel *cardTitle;
 /** 刷新中 */
 @property (nonatomic, assign) BOOL isRefresh;
 @property (nonatomic, strong) LSPrepaidInfoView * perpaidInfoView;
@@ -51,6 +55,10 @@ typedef enum : NSUInteger {
 @end
 
 @implementation LSSeclectSendScheduleViewController
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)initCustomParam {
     [super initCustomParam];
@@ -66,6 +74,8 @@ typedef enum : NSUInteger {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldTextDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+    
     self.anchorTextField.layer.borderColor = COLOR_WITH_16BAND_RGB(0xDCDCDC).CGColor;
     self.anchorTextField.layer.borderWidth = 1;
     self.anchorTextField.delegate = self;
@@ -79,24 +89,38 @@ typedef enum : NSUInteger {
     self.recipientView.layer.masksToBounds = YES;
     self.recipientView.layer.cornerRadius = 4.0f;
     
+    self.cardTitle.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.cardTitle.layer.shadowOffset = CGSizeMake(0, 1);
+    self.cardTitle.layer.shadowOpacity = 0.5;
+    
     self.continueBtn.layer.cornerRadius = self.continueBtn.frame.size.height * 0.5f;
     self.continueBtn.layer.masksToBounds = YES;
     
     LSShadowView *shadow = [[LSShadowView alloc] init];
     [shadow showShadowAddView:self.continueBtn];
     
+    self.contentView.layer.cornerRadius = 8;
+    self.contentView.layer.masksToBounds = YES;
+    
+    UIFont *font = [UIFont systemFontOfSize:14];
+    UIFont *boldFont = [UIFont boldSystemFontOfSize:14];
+    if (screenSize.width == 320) {
+        font = [UIFont systemFontOfSize:12];
+        boldFont = [UIFont boldSystemFontOfSize:12];
+    }
     NSString *title = [NSString stringWithFormat:@"Send a Schedule One-on-One request, have your One-on-One organized and save up to %d%% of credits!",[LSConfigManager manager].item.scheduleSaveUp];
     NSMutableAttributedString *atts = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
         NSForegroundColorAttributeName : COLOR_WITH_16BAND_RGB(0x383838),
+        NSFontAttributeName : font,
         
     }];
     NSRange timeRange = [title rangeOfString:[NSString stringWithFormat:@"save up to %d%%",[LSConfigManager manager].item.scheduleSaveUp]];
     [atts addAttributes:@{
         NSForegroundColorAttributeName : [UIColor redColor],
-        NSFontAttributeName : [UIFont boldSystemFontOfSize:14],
+        NSFontAttributeName : boldFont,
     } range:timeRange];
     self.dicountTips.attributedText = atts;
-    
+    self.requestTips.font = font;
     
     NSString *howItWorkTitle = @"Learn how Schedule One-on-One works";
     NSMutableAttributedString *howItWorkTitleAtts = [[NSMutableAttributedString alloc] initWithString:howItWorkTitle attributes:@{
@@ -141,9 +165,9 @@ typedef enum : NSUInteger {
     }else {
         // 没输入内容,选择了指定主播则直接跳转
         if (self.anchorId.length > 0) {
-            LSSendScheduleViewController *vc = [[LSSendScheduleViewController alloc] initWithNibName:nil bundle:nil];
-            vc.anchorId = self.anchorId;
-            [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:NO];
+            self.continueBtn.userInteractionEnabled = NO;
+            NSURL * url = [[LiveUrlHandler shareInstance] createUrlToSendScheduleMail:self.anchorId];
+            [[LiveModule module].serviceManager handleOpenURL:url];
         }else {
             // 否则显示未输入内容错误提示
             self.wrongTipsNote.hidden = NO;
@@ -186,6 +210,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)segmentControlSelectedTag:(NSInteger)tag {
+    self.selectIndex = -99;
     self.emptyTips.hidden = YES;
     self.retryBtn.hidden = YES;
     if (tag == 0) {
@@ -199,31 +224,23 @@ typedef enum : NSUInteger {
 
 - (void)reloadCollectionViewData {
     
-    if (self.items.count > 0) {
-        self.emptyTips.hidden = YES;
-    }else {
-        self.emptyTips.hidden = NO;
-        if (self.type == SegmentTypeContact) {
-            self.emptyTips.text = @"Your contact list is empty.";
-        }else {
-            self.emptyTips.text = @"You have not followed anyone yet.";
-        }
-    }
+
     [self.collectionView reloadData];
     
 }
 
 #pragma mark - 接口
 - (void)checkAnchorExist:(NSString *)anchorId {
+    [self showLoading];
     LSGetUserInfoRequest *request = [[LSGetUserInfoRequest alloc] init];
     request.userId = anchorId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *errmsg, LSUserInfoItemObject *userInfoItem) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self hideLoading];
             if (success) {
                 NSLog(@"LSSeclectSendScheduleViewController::getUserInfoWithRequest( userId : %@, nickName : %@, photoUrl : %@ )", userInfoItem.userId, userInfoItem.nickName, userInfoItem.photoUrl);
-                LSSendScheduleViewController *vc = [[LSSendScheduleViewController alloc] initWithNibName:nil bundle:nil];
-                vc.anchorId = self.anchorId;
-                [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:NO];
+                NSURL * url = [[LiveUrlHandler shareInstance] createUrlToSendScheduleMail:self.anchorId];
+                [[LiveModule module].serviceManager handleOpenURL:url];
             }else {
                 self.wrongTipsNote.hidden = NO;
             }
@@ -249,12 +266,21 @@ typedef enum : NSUInteger {
                     [recepientArray addObject:recepientItem];
                 }
                 self.items = recepientArray;
-                [self reloadCollectionViewData];
-                
+                if (self.items.count > 0) {
+                    self.emptyTips.hidden = YES;
+                }else {
+                    self.emptyTips.hidden = NO;
+                    self.emptyTips.text = @"Your contact list is empty.";
+                }
+ 
             }
             else {
+                // 失败清除数据
+                self.items = [NSArray array];
                 self.retryBtn.hidden = NO;
+          
             }
+            [self reloadCollectionViewData];
         });
     };
     [[LSSessionRequestManager manager] sendRequest:request];
@@ -297,10 +323,19 @@ typedef enum : NSUInteger {
                     [self addItemIfNotExist:recepientItem];
                 }
                 self.items = self.recepientItems;
-                [self reloadCollectionViewData];
+                if (self.items.count > 0) {
+                    self.emptyTips.hidden = YES;
+                }else {
+                    self.emptyTips.hidden = NO;
+                    self.emptyTips.text = @"You have not followed anyone yet.";
+                    
+                }
             }else {
+                // 失败清除数据
+                self.items = [NSArray array];
                 self.retryBtn.hidden = NO;
             }
+            [self reloadCollectionViewData];
         });
     };
     
@@ -351,6 +386,12 @@ typedef enum : NSUInteger {
 #pragma mark - delegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.items.count) {
+        // 选中则取消输入内容
+        self.anchorTextField.text = @"";
+        if (self.selectIndex > 0) {
+            LSRecipientCell *cell = (LSRecipientCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectIndex inSection:0]];
+            cell.anchorPhoto.layer.borderWidth = 0;
+        }
         self.selectIndex = (int)indexPath.row;
         LSRecepientItem *item = [self.items objectAtIndex:indexPath.row];
         self.anchorId = item.anchorId;
@@ -405,11 +446,12 @@ typedef enum : NSUInteger {
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
     if (height != 0) {
         // 弹出键盘
-        self.bottomDistance.constant = height;
+//        self.bottomDistance.constant = height;
+        self.centerDistance.constant = -80;
         
     } else {
         // 收起键盘
-        self.bottomDistance.constant = 56;
+        self.centerDistance.constant = 0;
     }
     
     [UIView animateWithDuration:duration
@@ -437,6 +479,9 @@ typedef enum : NSUInteger {
 
 
 #pragma mark - UITextField
+- (void)textFieldTextDidChange:(NSNotification *)notifi {
+    self.anchorTextField.text = [self.anchorTextField.text uppercaseString];//大写
+}
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     self.wrongTipsNote.hidden = YES;
@@ -448,6 +493,7 @@ typedef enum : NSUInteger {
             LSRecipientCell *cell = (LSRecipientCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectIndex inSection:0]];
             self.selectIndex = -99;
             cell.anchorPhoto.layer.borderWidth = 0;
+            self.anchorId = @"";
         }
     }
     return YES;

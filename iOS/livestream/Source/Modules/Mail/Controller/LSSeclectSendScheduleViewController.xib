@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,13 +11,16 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSSeclectSendScheduleViewController">
             <connections>
                 <outlet property="anchorTextField" destination="62X-8n-G5w" id="Fkc-h7-5eN"/>
-                <outlet property="bottomDistance" destination="WIz-qo-D80" id="Qiq-hH-qUK"/>
+                <outlet property="cardTitle" destination="GOE-5s-Do2" id="kyS-ph-WaI"/>
+                <outlet property="centerDistance" destination="F8b-9E-v6y" id="fux-Up-8LL"/>
                 <outlet property="collectionView" destination="6aj-bM-87f" id="1zP-qL-gPX"/>
+                <outlet property="contentView" destination="t6l-qY-PGC" id="ri8-Ck-PhE"/>
                 <outlet property="continueBtn" destination="SnC-BS-Te2" id="yc1-49-LOy"/>
                 <outlet property="dicountTips" destination="njt-qK-8QF" id="f1f-T2-AJq"/>
                 <outlet property="emptyTips" destination="MAS-Tl-7IK" id="G3t-Fm-gtK"/>
                 <outlet property="howItWorkBtn" destination="TDr-79-xdh" id="ftv-hg-RzR"/>
                 <outlet property="recipientView" destination="hMN-d1-9OQ" id="2s9-Bz-eKu"/>
+                <outlet property="requestTips" destination="OIn-Qj-maN" id="Ma2-ql-hkQ"/>
                 <outlet property="retryBtn" destination="pa7-bS-gln" id="TJY-k4-Rkk"/>
                 <outlet property="topSegmentView" destination="AOA-lh-7Ls" id="jZW-Y4-BF3"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -26,31 +29,35 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="udM-jo-om7">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6OC-av-1Zv">
-                    <rect key="frame" x="376.5" y="288" width="17.5" height="22"/>
+                    <rect key="frame" x="277" y="0.5" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Gxn-Cs-d3T"/>
+                        <constraint firstAttribute="width" secondItem="6OC-av-1Zv" secondAttribute="height" multiplier="1:1" id="l1C-AE-vqJ"/>
+                    </constraints>
                     <state key="normal" image="Live_Btn_Cancel"/>
                     <connections>
                         <action selector="closeAction:" destination="-1" eventType="touchUpInside" id="nr8-lf-1uy"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t6l-qY-PGC">
-                    <rect key="frame" x="20" y="310" width="374" height="498"/>
+                    <rect key="frame" x="20" y="25.5" width="280" height="523"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Request_Bg" translatesAutoresizingMaskIntoConstraints="NO" id="2vy-SW-fe5">
-                            <rect key="frame" x="0.0" y="0.0" width="374" height="498"/>
+                            <rect key="frame" x="0.0" y="0.0" width="280" height="523"/>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Live_Schedule_Title" translatesAutoresizingMaskIntoConstraints="NO" id="ptz-y5-NBI">
-                            <rect key="frame" x="0.0" y="0.0" width="374" height="92"/>
+                            <rect key="frame" x="0.0" y="0.0" width="280" height="92"/>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_ReqBg" translatesAutoresizingMaskIntoConstraints="NO" id="pr4-I2-gA0" userLabel="Background Shadow View">
-                            <rect key="frame" x="0.0" y="44" width="374" height="454"/>
+                            <rect key="frame" x="0.0" y="44" width="280" height="479"/>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Schedule_Request_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="ZdS-p6-ew2">
                             <rect key="frame" x="10" y="5" width="28" height="28"/>
@@ -59,48 +66,42 @@
                                 <constraint firstAttribute="width" constant="28" id="ag0-l3-huB"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send Schedule One-on-One Request" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOE-5s-Do2">
-                            <rect key="frame" x="48" y="10" width="316" height="18"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send Schedule One-on-One Request" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="GOE-5s-Do2">
+                            <rect key="frame" x="48" y="10" width="222" height="18"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                             <color key="textColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send a Schedule One-on-One request, have your One-on-One organized and save up to 30% of credits!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="njt-qK-8QF">
-                            <rect key="frame" x="13" y="51" width="352" height="33.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send a Schedule One-on-One request, have your One-on-One organized and save up to 30% of credits!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="njt-qK-8QF">
+                            <rect key="frame" x="13" y="51" width="258" height="50.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This request will be sent via mail service, normal mail change will be applied." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OIn-Qj-maN">
-                            <rect key="frame" x="13" y="87.5" width="352" height="33.5"/>
+                            <rect key="frame" x="13" y="104.5" width="258" height="50.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a recipient below:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZvE-eH-oaW">
-                            <rect key="frame" x="13" y="131" width="200.5" height="20.5"/>
+                            <rect key="frame" x="13" y="165" width="200.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Or find by ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BgX-gh-dIP">
-                            <rect key="frame" x="60.5" y="331.5" width="75" height="14"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hMN-d1-9OQ">
-                            <rect key="frame" x="10" y="157.5" width="354" height="141"/>
+                            <rect key="frame" x="10" y="191.5" width="260" height="141"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AOA-lh-7Ls">
-                                    <rect key="frame" x="0.0" y="0.0" width="354" height="28"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="260" height="28"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="28" id="svb-Od-L2r"/>
                                     </constraints>
                                 </view>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="6aj-bM-87f">
-                                    <rect key="frame" x="0.0" y="28" width="354" height="113"/>
+                                    <rect key="frame" x="0.0" y="28" width="260" height="113"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="113" id="T4c-qn-bFF"/>
@@ -113,13 +114,13 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your contact list is empty." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAS-Tl-7IK">
-                                    <rect key="frame" x="83.5" y="60.5" width="187" height="20"/>
+                                    <rect key="frame" x="36.5" y="60.5" width="187" height="20"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pa7-bS-gln">
-                                    <rect key="frame" x="117" y="71.5" width="120" height="26"/>
+                                    <rect key="frame" x="70" y="71.5" width="120" height="26"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="120" id="yDy-6P-apP"/>
                                     </constraints>
@@ -149,8 +150,17 @@
                                 <constraint firstAttribute="bottom" secondItem="6aj-bM-87f" secondAttribute="bottom" id="xNB-yF-S32"/>
                             </constraints>
                         </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Or find by ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BgX-gh-dIP">
+                            <rect key="frame" x="13" y="363.5" width="75" height="14"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="75" id="10B-va-uan"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder=" Broadcaster ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="62X-8n-G5w">
-                            <rect key="frame" x="150.5" y="320.5" width="160" height="36"/>
+                            <rect key="frame" x="103" y="352.5" width="160" height="36"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="160" id="ghM-dM-3WO"/>
@@ -159,14 +169,14 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter a valid broadcaster’s ID." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WEa-UA-6LZ">
-                            <rect key="frame" x="150.5" y="359.5" width="209.5" height="14.5"/>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter a valid broadcaster’s ID." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="WEa-UA-6LZ">
+                            <rect key="frame" x="103" y="391.5" width="163" height="14.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="1" green="0.27843137254901962" blue="0.27843137254901962" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SnC-BS-Te2">
-                            <rect key="frame" x="69.5" y="400" width="235" height="40"/>
+                            <rect key="frame" x="22.5" y="432" width="235" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="EPr-T4-iEW"/>
                                 <constraint firstAttribute="width" constant="235" id="IGF-vC-2Ud"/>
@@ -180,14 +190,14 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c7K-7G-ebm">
-                            <rect key="frame" x="10" y="379" width="354" height="1"/>
+                            <rect key="frame" x="10" y="411" width="260" height="1"/>
                             <color key="backgroundColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="1" id="TQz-1c-V0u"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDr-79-xdh">
-                            <rect key="frame" x="73" y="462" width="228" height="18"/>
+                            <rect key="frame" x="26" y="490" width="228" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                             <state key="normal" title="Learn how Schedule One-on-One works" image="Mail_TipsHowWork">
                                 <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -207,6 +217,7 @@
                         <constraint firstItem="WEa-UA-6LZ" firstAttribute="leading" secondItem="62X-8n-G5w" secondAttribute="leading" id="4Eb-JN-SoG"/>
                         <constraint firstItem="hMN-d1-9OQ" firstAttribute="top" secondItem="ZvE-eH-oaW" secondAttribute="bottom" constant="6" id="7Lq-LJ-Zq6"/>
                         <constraint firstItem="ZdS-p6-ew2" firstAttribute="leading" secondItem="t6l-qY-PGC" secondAttribute="leading" constant="10" id="8E8-84-uv7"/>
+                        <constraint firstItem="BgX-gh-dIP" firstAttribute="leading" secondItem="t6l-qY-PGC" secondAttribute="leading" constant="13" id="Au5-iC-igk"/>
                         <constraint firstItem="OIn-Qj-maN" firstAttribute="trailing" secondItem="njt-qK-8QF" secondAttribute="trailing" id="CbW-5c-9k4"/>
                         <constraint firstAttribute="bottom" secondItem="2vy-SW-fe5" secondAttribute="bottom" id="Fru-Uh-l2g"/>
                         <constraint firstItem="BgX-gh-dIP" firstAttribute="centerY" secondItem="62X-8n-G5w" secondAttribute="centerY" id="H9A-Wh-899"/>
@@ -218,16 +229,16 @@
                         <constraint firstItem="WEa-UA-6LZ" firstAttribute="top" secondItem="62X-8n-G5w" secondAttribute="bottom" constant="3" id="QkE-nw-rr5"/>
                         <constraint firstItem="2vy-SW-fe5" firstAttribute="top" secondItem="t6l-qY-PGC" secondAttribute="top" id="SYt-t3-8Hw"/>
                         <constraint firstAttribute="trailing" secondItem="WEa-UA-6LZ" secondAttribute="trailing" constant="14" id="WQe-nA-JgZ"/>
-                        <constraint firstAttribute="bottom" secondItem="TDr-79-xdh" secondAttribute="bottom" constant="18" id="Wlz-Xn-fz9"/>
+                        <constraint firstAttribute="bottom" secondItem="TDr-79-xdh" secondAttribute="bottom" constant="15" id="Wlz-Xn-fz9"/>
                         <constraint firstItem="ptz-y5-NBI" firstAttribute="top" secondItem="t6l-qY-PGC" secondAttribute="top" id="a4T-sA-pfh"/>
                         <constraint firstItem="TDr-79-xdh" firstAttribute="centerX" secondItem="SnC-BS-Te2" secondAttribute="centerX" id="aVI-L9-j67"/>
                         <constraint firstAttribute="trailing" secondItem="ptz-y5-NBI" secondAttribute="trailing" id="cb7-Ji-rfk"/>
-                        <constraint firstItem="TDr-79-xdh" firstAttribute="top" secondItem="SnC-BS-Te2" secondAttribute="bottom" constant="22" id="dUY-Ug-i77"/>
+                        <constraint firstItem="TDr-79-xdh" firstAttribute="top" secondItem="SnC-BS-Te2" secondAttribute="bottom" constant="18" id="dUY-Ug-i77"/>
                         <constraint firstItem="GOE-5s-Do2" firstAttribute="leading" secondItem="ZdS-p6-ew2" secondAttribute="trailing" constant="10" id="dcg-61-plv"/>
                         <constraint firstItem="OIn-Qj-maN" firstAttribute="top" secondItem="njt-qK-8QF" secondAttribute="bottom" constant="3" id="fuE-8r-a5H"/>
                         <constraint firstAttribute="trailing" secondItem="hMN-d1-9OQ" secondAttribute="trailing" constant="10" id="hW7-x5-Hf4"/>
                         <constraint firstItem="njt-qK-8QF" firstAttribute="leading" secondItem="t6l-qY-PGC" secondAttribute="leading" constant="13" id="hcN-00-wRH"/>
-                        <constraint firstItem="62X-8n-G5w" firstAttribute="top" secondItem="hMN-d1-9OQ" secondAttribute="bottom" constant="22" id="jBK-Uk-ydA"/>
+                        <constraint firstItem="62X-8n-G5w" firstAttribute="top" secondItem="hMN-d1-9OQ" secondAttribute="bottom" constant="20" id="jBK-Uk-ydA"/>
                         <constraint firstItem="c7K-7G-ebm" firstAttribute="top" secondItem="WEa-UA-6LZ" secondAttribute="bottom" constant="5" id="oBe-5q-g4m"/>
                         <constraint firstItem="pr4-I2-gA0" firstAttribute="leading" secondItem="t6l-qY-PGC" secondAttribute="leading" id="ozo-gg-wL8"/>
                         <constraint firstItem="OIn-Qj-maN" firstAttribute="leading" secondItem="njt-qK-8QF" secondAttribute="leading" id="pby-ag-wgn"/>
@@ -246,14 +257,14 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="t6l-qY-PGC" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="0iC-Ux-hba"/>
-                <constraint firstItem="6OC-av-1Zv" firstAttribute="trailing" secondItem="t6l-qY-PGC" secondAttribute="trailing" id="6Xp-QK-4g1"/>
+                <constraint firstItem="6OC-av-1Zv" firstAttribute="trailing" secondItem="t6l-qY-PGC" secondAttribute="trailing" constant="7" id="6Xp-QK-4g1"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="t6l-qY-PGC" secondAttribute="trailing" constant="20" id="BO2-iu-IS2"/>
+                <constraint firstItem="t6l-qY-PGC" firstAttribute="centerY" secondItem="Q5M-cg-NOt" secondAttribute="centerY" constant="3" id="F8b-9E-v6y"/>
                 <constraint firstItem="udM-jo-om7" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="TnI-IJ-F9j"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="t6l-qY-PGC" secondAttribute="bottom" constant="54" id="WIz-qo-D80"/>
                 <constraint firstItem="udM-jo-om7" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="Y3Z-Kj-0f8"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="udM-jo-om7" secondAttribute="bottom" id="bYn-ix-2FT"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="udM-jo-om7" secondAttribute="trailing" id="boi-6W-7zJ"/>
-                <constraint firstItem="t6l-qY-PGC" firstAttribute="top" secondItem="6OC-av-1Zv" secondAttribute="bottom" id="vMx-2D-zJX"/>
+                <constraint firstItem="t6l-qY-PGC" firstAttribute="top" secondItem="6OC-av-1Zv" secondAttribute="bottom" constant="-5" id="vMx-2D-zJX"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
             <point key="canvasLocation" x="136.80000000000001" y="89.505247376311857"/>

@@ -12,7 +12,7 @@
 #import "LiveModule.h"
 @interface ShowAddCreditsView ()
 @property (weak, nonatomic) IBOutlet UIView *bgView;
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *creditsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *noteLabel;

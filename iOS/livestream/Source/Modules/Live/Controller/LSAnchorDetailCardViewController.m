@@ -94,10 +94,7 @@
     
     self.anchorProfile.text = [NSString stringWithFormat:@"ID: %@",self.item.userId];
     
-    UIImageView *imageV = [[UIImageView alloc] init];
-    [self.loader loadImageWithImageView:imageV options:SDWebImageRefreshCached imageUrl:self.item.photoUrl placeholderImage:[UIImage imageNamed:@""] finishHandler:^(UIImage *image) {
-        [self.anchorIcon setImage:image forState:UIControlStateNormal];
-    }];
+    [self.loader loadImageFromCache:self.anchorHeadImage options:SDWebImageRefreshCached imageUrl:self.item.photoUrl placeholderImage:[UIImage imageNamed:@""] finishHandler:nil];
     
     if (self.item.imLiveRoom.favorite) {
         self.favouriteBtn.selected = YES;

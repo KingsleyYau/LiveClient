@@ -261,7 +261,7 @@
 
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender {
-    self.failView.hidden = YES;
+    [super lsListViewControllerDidClick:sender];
     [self getListDataIsLoadMore:NO];
 }
 
@@ -305,7 +305,7 @@
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
         
-        [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
+        [cell.imageViewLoader loadImageFromCache:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:LADYDEFAULTIMG finishHandler:nil];
         
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];

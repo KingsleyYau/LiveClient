@@ -179,7 +179,7 @@
     cell.friendCellDelegate = self;
     //    [cell setHighlightButtonTag:indexPath.row];
     [cell.imageViewLoader stop];
-    [cell.imageViewLoader loadImageWithImageView:cell.imageView
+    [cell.imageViewLoader loadImageFromCache:cell.imageView
                                          options:0
                                         imageUrl:item.anchorImg
                                 placeholderImage:LADYDEFAULTIMG

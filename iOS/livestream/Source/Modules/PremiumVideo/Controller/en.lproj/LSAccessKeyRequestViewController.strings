@@ -1,0 +1,13 @@
+
+/* Class = "UIButton"; normalTitle = "Pending Response"; ObjectID = "bV5-u0-lYM"; */
+"bV5-u0-lYM.normalTitle" = "Pending Response";
+
+/* Class = "UILabel"; text = "You have not sent any video access key request yet."; ObjectID = "jyT-Rf-KNI"; */
+"jyT-Rf-KNI.text" = "You have not sent any video access key request yet.";
+
+/* Class = "UIButton"; normalTitle = "Access Key Granted"; ObjectID = "vkY-74-avr"; */
+"vkY-74-avr.normalTitle" = "Access Key Granted";
+
+"Credits_Tips" = "Post stamp will be used in first than credits. 1 stamp or 0.8 credits for each mail read.";
+
+"Not_Again" = "Don't Ask Again";

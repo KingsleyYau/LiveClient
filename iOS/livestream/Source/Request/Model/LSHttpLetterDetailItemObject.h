@@ -10,6 +10,7 @@
 #import "LSHttpLetterImgItemObject.h"
 #import "LSHttpLetterVideoItemObject.h"
 #import "LSScheduleInviteDetailItemObject.h"
+#import "LSAccessKeyinfoItemObject.h"
 
 @interface LSHttpLetterDetailItemObject : NSObject
 {
@@ -51,6 +52,6 @@
 @property (nonatomic, strong) NSMutableArray<LSHttpLetterImgItemObject *>* _Nonnull letterImgList;
 @property (nonatomic, strong) NSMutableArray<LSHttpLetterVideoItemObject *>* _Nonnull letterVideoList;
 @property (nonatomic, strong) LSScheduleInviteDetailItemObject *_Nullable scheduleInfo;
-
+@property (nonatomic, strong) LSAccessKeyinfoItemObject *_Nullable accessKeyInfo;
 
 @end

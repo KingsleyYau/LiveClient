@@ -70,9 +70,14 @@
     });
 }
 
+//主播接收预约Schedule邀请（包含接收，接受，拒绝）
 - (void)onRecvScheduleInviteNotice:(LSLCLiveChatMsgItemObject *)item womanId:(NSString *)womanId scheduleReplyItem:(LSLCLiveChatMsgItemObject *)scheduleReplyItem {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self pushMessageFromLady:item];
+        if (scheduleReplyItem) {
+            [self pushMessageFromLady:scheduleReplyItem];
+        }else {
+            [self pushMessageFromLady:item];
+        }
     });
 }
 
@@ -91,8 +96,16 @@
     } else if (msgObj.msgType == MT_MagicIcon) {
         message = [NSString stringWithFormat:@"%@", NSLocalizedString(@"NOTICE_MESSAGE_PREMIUM_STICKER", nil)];
     }else if (msgObj.msgType == MT_Schedule) {
-         message = [NSString stringWithFormat:@"%@", NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE", nil)];
-    }else {
+         message = [NSString stringWithFormat:@"%@ %@",name, NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE", nil)];
+    }
+    else if (msgObj.msgType == MT_ScheduleReply) {
+        if (msgObj.scheduleReplyMsg.isScheduleAccept) {
+            message = [NSString stringWithFormat:NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE_LADY_ACCEPT", nil),name];
+        }else {
+            message = [NSString stringWithFormat:NSLocalizedString(@"NOTICE_MESSAGE_SCHEDULE_LADY_DECLINE", nil),name];
+        }
+    }
+    else {
         message = [NSString stringWithFormat:@"%@", NSLocalizedString(@"NOTICE_MESSAGE_TEXT", nil)];
     }
     return message;
