@@ -16,6 +16,7 @@ using namespace std;
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
 #include "HttpLoginItem.h"
+#include "HttpMailTariffItem.h"
 
 class HttpConfigItem {
 public:
@@ -188,6 +189,22 @@ public:
                 scheduleSaveUp = root[LIVEROOM_SCHEDULE_SAVE_UP].asInt();
             }
             
+            /* mailTariff */
+            if (root[LIVEROOM_MAIL_TARIFF].isObject()) {
+                mailTariff.Parse(root[LIVEROOM_MAIL_TARIFF]);
+            }
+            
+            /* premiumVideoCredit */
+            if (root[LIVEROOM_PREMIUM_VIDEO_CREDIT].isNumeric()) {
+                premiumVideoCredit = root[LIVEROOM_PREMIUM_VIDEO_CREDIT].asDouble();
+            }
+            
+            /* howItWorkUrl */
+            if (root[LIVEROOM_HOWITWORKURL].isString()) {
+                howItWorkUrl = root[LIVEROOM_HOWITWORKURL].asString();
+            }
+        
+            
         }
 
         result = true;
@@ -227,6 +244,8 @@ public:
         sendLetter = "";
         flowersGift = 0;
         scheduleSaveUp = 0;
+        premiumVideoCredit = 0.0;
+        howItWorkUrl = "";
     }
     
     virtual ~HttpConfigItem() {
@@ -266,6 +285,9 @@ public:
      * sendLetter                   发送信件页URL
      * flowersGift                  鲜花礼品的优惠价
      * scheduleSaveUp        预付费最大优惠折扣
+     * mailTariff                   信件资费相关
+     * premiumVideoCredit  付费视频信用点
+     * howItWorkUrl
      */
     string imSvrUrl;
     string httpSvrUrl;
@@ -299,6 +321,9 @@ public:
     string sendLetter;
     int flowersGift;
     int scheduleSaveUp;
+    HttpMailTariffItem mailTariff;
+    double premiumVideoCredit;
+    string howItWorkUrl;
 };
 
 #endif /* HTTPCONFIGITEM_H_*/

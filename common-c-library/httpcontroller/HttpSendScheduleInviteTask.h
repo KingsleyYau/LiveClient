@@ -18,7 +18,7 @@ class HttpSendScheduleInviteTask;
 class IRequestSendScheduleInviteCallback {
 public:
 	virtual ~IRequestSendScheduleInviteCallback(){};
-	virtual void OnSendScheduleInvite(HttpSendScheduleInviteTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteItem& item) = 0;
+	virtual void OnSendScheduleInvite(HttpSendScheduleInviteTask* task, bool success, int errnum, const string& errmsg, const HttpScheduleInviteItem& item, long long activityTime) = 0;
 };
       
 class HttpSendScheduleInviteTask : public HttpRequestTask {

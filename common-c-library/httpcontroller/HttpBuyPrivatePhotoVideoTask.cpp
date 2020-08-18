@@ -77,12 +77,12 @@ bool HttpBuyPrivatePhotoVideoTask::ParseData(const string& url, bool bFlag, cons
         // 公共解
         Json::Value dataJson;
         Json::Value errDataJson;
-        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson, &errDataJson) ) {
-            if(dataJson.isObject()) {
-                item.Parse(dataJson);
-            }
-            
+        ParseLiveCommon(buf, size, errnum, errmsg, &dataJson, &errDataJson);
+        if(dataJson.isObject()) {
+            item.Parse(dataJson);
         }
+            
+
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
         

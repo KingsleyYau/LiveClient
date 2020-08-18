@@ -267,3 +267,7 @@ static const int CamshareLadySoundTypeArray[] = {
 	CamshareLadySoundType_Off	// 声音关闭
 };
 int CamshareLadySoundTypeToInt(CamshareLadySoundType type);
+
+// 预付费邀请操作类型转换
+SCHEDULEINVITE_TYPE IntToScheduleInviteType(int value);
+int ScheduleInviteTypeToInt(SCHEDULEINVITE_TYPE type);

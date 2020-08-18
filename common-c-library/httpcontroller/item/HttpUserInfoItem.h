@@ -15,6 +15,7 @@ using namespace std;
 #include <json/json/json.h>
 
 #include "HttpAnchorInfoItem.h"
+#include "HttpFansiInfoItem.h"
 
 class HttpUserInfoItem {
 public:
@@ -70,6 +71,10 @@ public:
                 anchorInfo.Parse(root[LIVEROOM_GETUSERINFO_ANCHORINFO]);
             }
             
+            if (root[LIVEROOM_GETUSERINFO_FANSIINFO].isObject()) {
+                fansiInfo.Parse(root[LIVEROOM_GETUSERINFO_FANSIINFO]);
+            }
+            
         }
 	}
 
@@ -100,6 +105,7 @@ public:
      * isAnchor         是否主播（0：否，1：是）
      * leftCredit       观众剩余信用点
      * anchorInfo       主播信息
+     * fansiInfo       观众信息
      */
 	string userId;
 	string nickName;
@@ -111,6 +117,7 @@ public:
     bool isAnchor;
     double leftCredit;
     HttpAnchorInfoItem anchorInfo;
+    HttpFansiInfoItem fansiInfo;
 };
 
 #endif /* HTTPUSERINFOITEM_H_ */

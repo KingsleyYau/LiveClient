@@ -62,12 +62,15 @@ bool HttpDeclinedScheduleInviteTask::ParseData(const string& url, bool bFlag, co
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;
-        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+        //if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+        ParseLiveCommon(buf, size, errnum, errmsg, &dataJson);
+        if (dataJson.isObject()) {
             if (dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].isNumeric()) {
                 starusUpdateTime = dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].asLong();
             }
-            
         }
+            
+        //}
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
         

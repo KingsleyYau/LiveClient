@@ -47,6 +47,11 @@ public:
             if (root[LETTER_HAS_SCHEDULE].isNumeric()) {
                 hasSchedule = root[LETTER_HAS_SCHEDULE].asInt() == 0 ? false : true;
             }
+            
+            /* hasAccessKey */
+            if (root[LETTER_HAS_ACCESS_KEY].isNumeric()) {
+                hasAccessKey = root[LETTER_HAS_ACCESS_KEY].asInt() == 0 ? false : true;
+            }
 
         }
         result = true;
@@ -60,6 +65,7 @@ public:
         hasReplied = false;
         onlineStatus = false;
         hasSchedule = false;
+        hasAccessKey = false;
     }
     
     virtual ~HttpLetterHasItem() {
@@ -73,6 +79,7 @@ public:
      * hasRead        是否已读
      * hasReplied     是否已回复
      * onlineStatus   是否在线
+     * hasAccessKey  是否有视频解锁码
      */
     bool    hasImg;
     bool    hasVideo;
@@ -80,6 +87,7 @@ public:
     bool    hasReplied;
     bool    onlineStatus;
     bool    hasSchedule;
+    bool    hasAccessKey;
 };
 
 

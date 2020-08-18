@@ -18,7 +18,7 @@ class HttpAcceptScheduleInviteTask;
 class IRequestAcceptScheduleInviteCallback {
 public:
 	virtual ~IRequestAcceptScheduleInviteCallback(){};
-	virtual void OnAcceptScheduleInvite(HttpAcceptScheduleInviteTask* task, bool success, int errnum, const string& errmsg, long long starusUpdateTime) = 0;
+	virtual void OnAcceptScheduleInvite(HttpAcceptScheduleInviteTask* task, bool success, int errnum, const string& errmsg, long long starusUpdateTime, int duration) = 0;
 };
       
 class HttpAcceptScheduleInviteTask : public HttpRequestTask {
@@ -46,6 +46,7 @@ protected:
     
 protected:
 	IRequestAcceptScheduleInviteCallback* mpCallback;
+    int mduration;
 
 };
 

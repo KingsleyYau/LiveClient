@@ -2034,13 +2034,14 @@ long long HttpRequestController::ServerSpeed(
                                              HttpRequestManager *pHttpRequestManager,
                                              const string& sid,
                                              int res,
+                                             const string& liveRoomId,
                                              IRequestServerSpeedCallback* callback
                                              ) {
     long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
     
     HttpServerSpeedTask* task = new HttpServerSpeedTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(sid, res);
+    task->SetParam(sid, res, liveRoomId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -2539,6 +2540,37 @@ long long HttpRequestController::PhoneInfo(
     return requestId;
 }
 
+long long HttpRequestController::PushPullLogs(
+                                           HttpRequestManager *pHttpRequestManager,
+                                           const string& liveRoomId,
+                                           IRequestPushPullLogsCallback* callback
+                                           ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpPushPullLogsTask* task = new HttpPushPullLogsTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(liveRoomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
 
 
 long long HttpRequestController::PremiumMembership(
@@ -2782,6 +2814,37 @@ long long HttpRequestController::MobilePayGoto(
     return requestId;
 }
 
+long long HttpRequestController::GetPostStampsPriceList(
+                                                        HttpRequestManager *pHttpRequestManager,
+                                                        IRequestGetPostStampsPriceListCallback* callback
+                                                        ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPostStampsPriceListTask* task = new HttpGetPostStampsPriceListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::GetAppPay(
                                            HttpRequestManager *pHttpRequestManager,
                                            const string& number,
@@ -2896,6 +2959,43 @@ long long HttpRequestController::UploadFailPayInfo(
     HttpUploadFailPayInfoTask* task = new HttpUploadFailPayInfoTask();
     task->Init(pHttpRequestManager);
     task->SetParam(manid, orderNo, number, errNo, errMsg);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::OrderExpiredReport(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    string manid,
+                                                    string deviceId,
+                                                    string deviceModel,
+                                                    string system,
+                                                    string appSdk,
+                                                    OrderExpiredList list,
+                                                    IRequestOrderExpiredReportCallback* callback
+                                                    ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpOrderExpiredReportTask* task = new HttpOrderExpiredReportTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(manid, deviceId, deviceModel, system, appSdk, list);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -3973,6 +4073,38 @@ long long HttpRequestController::CanSendEmf(
     HttpCanSendEmfTask* task = new HttpCanSendEmfTask();
     task->Init(pHttpRequestManager);
     task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetEmfStatus(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              const string& emfId,
+                                              IRequestGetEmfStatusCallback* callback
+                                              ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetEmfStatusTask* task = new HttpGetEmfStatusTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(emfId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -5089,6 +5221,494 @@ long long HttpRequestController::GetScheduleInviteStatus(
     HttpGetScheduleInviteStatusTask* task = new HttpGetScheduleInviteStatusTask();
     task->Init(pHttpRequestManager);
     task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetActivityTime(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 IRequestGetActivityTimeCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetActivityTimeTask* task = new HttpGetActivityTimeTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPremiumVideoTypeList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 IRequestGetPremiumVideoTypeListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPremiumVideoTypeListTask* task = new HttpGetPremiumVideoTypeListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::GetPremiumVideoList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     const string& typeIds,
+                                                     int start,
+                                                     int step,
+                                                 IRequestGetPremiumVideoListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPremiumVideoListTask* task = new HttpGetPremiumVideoListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(typeIds, start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPremiumVideoKeyRequestList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     LSAccessKeyType type,
+                                                     int start,
+                                                     int step,
+                                                 IRequestGetPremiumVideoKeyRequestListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPremiumVideoKeyRequestListTask* task = new HttpGetPremiumVideoKeyRequestListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SendPremiumVideoKeyRequest(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     const string& videoId,
+                                                 IRequestSendPremiumVideoKeyRequestCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSendPremiumVideoKeyRequestTask* task = new HttpSendPremiumVideoKeyRequestTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(videoId );
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::RemindeSendPremiumVideoKeyRequest(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     const string& keyRequestId,
+                                                 IRequestRemindeSendPremiumVideoKeyRequestCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpRemindeSendPremiumVideoKeyRequestTask* task = new HttpRemindeSendPremiumVideoKeyRequestTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(keyRequestId );
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPremiumVideoRecentlyWatchedList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     int start,
+                                                     int step,
+                                                 IRequestGetPremiumVideoRecentlyWatchedListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPremiumVideoRecentlyWatchedListTask* task = new HttpGetPremiumVideoRecentlyWatchedListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::DeletePremiumVideoRecentlyWatched(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& watchedId,
+                                                 IRequestDeletePremiumVideoRecentlyWatchedCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpDeletePremiumVideoRecentlyWatchedTask* task = new HttpDeletePremiumVideoRecentlyWatchedTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(watchedId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetInterestedPremiumVideoList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     int start,
+                                                     int step,
+                                                 IRequestGetInterestedPremiumVideoListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetInterestedPremiumVideoListTask* task = new HttpGetInterestedPremiumVideoListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::DeleteInterestedPremiumVideo(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& videoId,
+                                                 IRequestDeleteInterestedPremiumVideoCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpDeleteInterestedPremiumVideoTask* task = new HttpDeleteInterestedPremiumVideoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(videoId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::AddInterestedPremiumVideo(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& videoId,
+                                                 IRequestAddInterestedPremiumVideoCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAddInterestedPremiumVideoTask* task = new HttpAddInterestedPremiumVideoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(videoId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::RecommendPremiumVideoList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 int num,
+                                                 IRequestRecommendPremiumVideoListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpRecommendPremiumVideoListTask* task = new HttpRecommendPremiumVideoListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(num);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetAnchorPremiumVideoList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string& anchorId,
+                                                 IRequestGetAnchorPremiumVideoListCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetAnchorPremiumVideoListTask* task = new HttpGetAnchorPremiumVideoListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(anchorId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPremiumVideoDetail(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                     const string& videoId,
+                                                 IRequestGetPremiumVideoDetailCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPremiumVideoDetailTask* task = new HttpGetPremiumVideoDetailTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(videoId );
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时b  ::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::UnlockPremiumVideo(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                LSUnlockActionType type,
+                                                const string& accessKey,
+                                                const string& videoId,
+                                                 IRequestUnlockPremiumVideoCallback* callback
+                                                 ) {
+    long long requestId = LS_HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpUnlockPremiumVideoTask* task = new HttpUnlockPremiumVideoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, accessKey, videoId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

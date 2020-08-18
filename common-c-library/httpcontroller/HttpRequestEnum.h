@@ -203,13 +203,24 @@ typedef enum {
     /*预付费直播*/
     HTTP_LCC_ERR_SCHEDULE_ANCHOR_NO_PRIV = 17501,          // 发送预付费直播:主播无权限（17501）（用于17.3.发送预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_NOTENOUGH_OR_OVER_TIEM = 17502,          // 发送预付费直播:开始时间离现在不足24小时或超过14天（17502）（用于17.3.发送预付费直播邀请）
-    HTTP_LCC_ERR_SCHEDULE_NO_CREDIT = 17302,          // 发送预付费直播:男士信用点不足（17302）（用于17.3.发送预付费直播邀请 用于17.4.接受预付费直播邀请）
+    HTTP_LCC_ERR_SCHEDULE_NO_CREDIT = 17302,          // 发送预付费直播:男士信用点不足（17302）（用于17.3.发送预付费直播邀请 用于17.4.接受预付费直播邀请 用于18.14.视频解锁）
     
     HTTP_LCC_ERR_SCHEDULE_ACCEPTED_LESS_OR_EXPIRED = 17503,          // 接受预付费直播:开始时间离现在不足6小时或已过期（17503）（用于17.4.接受预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_HAS_ACCEPTED = 17505,          // 接受预付费直播:该邀请已接受（17505）（用于17.4.接受预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_HAS_DECLINED = 17506,          // 接受预付费直播:该邀请已拒绝（17506）（用于17.4.接受预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_CANCEL_LESS_OR_EXPIRED = 17504,          // 取消预付费直播:开始时间离现在不足6小时（17504）（用于17.6.取消预付费直播邀请）
     HTTP_LCC_ERR_SCHEDULE_NO_READ_BEFORE = 17507,          // 没有阅读前不能接受或拒绝（This request was sent by mail.Please read this mail before accept or decline this request）（17507）（用于17.4.接受预付费直播邀请 用于17.5.拒绝预付费直播邀请）
+    
+    /* 付费视频 */
+    HTTP_LCC_ERR_PREMIUMVIDEO_MAN_NO_PRIV = 17600,          // 男士无权限（Sorry, we can not process your request at the moment. Please try again later.）（17600）（用于18.4.发送解码锁请求 用于18.5.发送解码锁请求提醒 用于18.14.视频解锁）
+    HTTP_LCC_ERR_PREMIUMVIDEO_VIDEO_DELETE_OR_EXIST = 17601,          // 视频删除或不存在（The video you are looking for is already deleted or suspended due to certain reasons）（17601）（用于18.4.发送解码锁请求 用于18.5.发送解码锁请求提醒 用于18.10.添加感兴趣的视频 用于18.13.获取视频详情 用于18.14.视频解锁）
+    HTTP_LCC_ERR_PREMIUMVIDEO_LIMIT_NUM_DAY = 17611,               // 每天发送数量限制（Can not send the request because you have already reached the daily quota）(17611)(用于18.4.发送解码锁请求)
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_ALREADY_SEND = 17612,               // 已发送过-客户端当发送成功处理 (17612)(用于18.4.发送解码锁请求)
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_ALREADY_REPLY = 17613,               // 请求已回复 （This request has been granted. Please view your Access Key Granted list and get the access key by reading the mail）(17613)(用于18.4.发送解码锁请求 用于18.5.发送解码锁请求提醒)
+    
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_OUTTIME = 17614,               // 请求已过期 （This request has expired. Please try to resend a new request to the broadcaster.）(17614)(用于18.5.发送解码锁请求提醒)
+    HTTP_LCC_ERR_PREMIUMVIDEO_REQUEST_LESS_ONEDAY_SEND = 17615,               // 24小时内已发送过-客户端当发送成功处理 (17615)(用于18.5.发送解码锁请求提醒)
+    HTTP_LCC_ERR_PREMIUMVIDEO_ACCESSKEY_INVLID = 17621,               // 解锁码无效 （Oops, the access key you entered is incorrect or has expired. Please confirm .）(17621)(用于18.14.视频解锁)
     
     /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
@@ -1270,6 +1281,66 @@ typedef enum LSScheduleStatus {
 inline LSScheduleStatus GetIntToLSScheduleStatus(int value) {
     return LSSCHEDULESTATUS_BEGIN <= value && value <= LSSCHEDULESTATUS_END ? (LSScheduleStatus)value : LSSCHEDULESTATUS_NOSCHEDULE;
 }
+
+typedef enum LSAccessKeyType {
+    LSACCESSKEYTYPE_UNKOWN = 0,                // 未知
+    LSACCESSKEYTYPES_REPLY = 1,        // 已回复
+    LSACCESSKEYTYPE_UNREPLY = 2,          // 未回复
+    LSACCESSKEYTYPE_BEGIN = LSACCESSKEYTYPE_UNKOWN,
+    LSACCESSKEYTYPE_END = LSACCESSKEYTYPE_UNREPLY
+}LSAccessKeyType;
+
+inline int GetLSAccessKeyTypeToInt(LSAccessKeyType type) {
+    int result = 1;
+    switch (type) {
+        case LSACCESSKEYTYPE_UNKOWN:
+            result = 1;
+            break;
+        case LSACCESSKEYTYPES_REPLY:
+            result = 1;
+            break;
+        case LSACCESSKEYTYPE_UNREPLY:
+            result = 2;
+            break;
+            
+        default:
+            break;
+    }
+    return result;
+}
+
+typedef enum LSLockStatus {
+    LSLOCKSTATUS_UNKOWN = 0,                // 未知
+    LSLOCKSTATUS_LOCK_NOREQUEST = 1,        // 未解锁，未发过解锁请求
+    LSLOCKSTATUS_LOCK_UNREPLY = 2,          // 未解锁，解锁请求未回复
+    LSLOCKSTATUS_LOCK_REPLY = 3,            // 未解锁，解锁请求已回复
+    LSLOCKSTATUS_UNLOCK = 4,                // 已解锁
+    LSLOCKSTATUS_BEGIN = LSLOCKSTATUS_UNKOWN,
+    LSLOCKSTATUS_END = LSLOCKSTATUS_UNLOCK
+}LSLockStatus;
+
+// int 转换 UserType
+inline LSLockStatus GetIntToLSLockStatus(int value) {
+    return LSLOCKSTATUS_BEGIN < value && value <= LSLOCKSTATUS_END ? (LSLockStatus)value : LSLOCKSTATUS_LOCK_NOREQUEST;
+}
+
+typedef enum LSAccessKeyStatus {
+    LSACCESSKEYSTATUS_UNKOWN = 0,                // 未知
+    LSACCESSKEYSTATUS_NOUSE = 1,        // 未使用
+    LSACCESSKEYSTATUS_USED = 2,          // 已使用
+    LSACCESSKEYSTATUS_BEGIN = LSACCESSKEYSTATUS_UNKOWN,
+    LSACCESSKEYSTATUS_END = LSACCESSKEYSTATUS_USED
+}LSAccessKeyStatus;
+
+// int 转换 UserType
+inline LSAccessKeyStatus GetIntToLSAccessKeyStatus(int value) {
+    return LSACCESSKEYSTATUS_BEGIN < value && value <= LSACCESSKEYSTATUS_END ? (LSAccessKeyStatus)value : LSACCESSKEYSTATUS_NOUSE;
+}
+
+typedef enum LSUnlockActionType {
+    LSUNLOCKACTIONTYPE_CREDIT = 0,     // 信用点解锁
+    LSUNLOCKACTIONTYPE_KEY = 1        // 解锁码解锁
+}LSUnlockActionType;
 
 #endif
 

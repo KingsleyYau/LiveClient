@@ -36,23 +36,23 @@ void HttpSendScheduleInviteTask::SetParam(
     
     snprintf(temp, sizeof(temp), "%d", GetLSScheduleInviteTypeToInt(type));
     mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_TYPE, temp);
-    
+
     if (refId.length() > 0) {
         mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_REF_ID, refId.c_str());
     }
-    
+
     if (anchorId.length() > 0) {
         mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_ANCHOR_ID, anchorId.c_str());
     }
-    
+
     if (timeZoneId.length() > 0) {
         mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_TIME_ZONE_ID, timeZoneId.c_str());
     }
 
     if (startTime.length() > 0) {
-        mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_START_TIME, startTime.c_str());
+       mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_START_TIME, startTime.c_str());
     }
-    
+
     snprintf(temp, sizeof(temp), "%d", duration);
     mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEINVITE_DURATION, temp);
     
@@ -91,6 +91,7 @@ bool HttpSendScheduleInviteTask::ParseData(const string& url, bool bFlag, const 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
+    long long activityTime = 0;
     HttpScheduleInviteItem item;
     if ( bFlag ) {
         // 公共解析
@@ -98,6 +99,11 @@ bool HttpSendScheduleInviteTask::ParseData(const string& url, bool bFlag, const 
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             item.Parse(dataJson);
             
+        }
+        if (dataJson.isObject()) {
+            if (dataJson[LIVEROOM_SENDSCHEDULELIVEINVITE_TIME].isNumeric()) {
+                activityTime = dataJson[LIVEROOM_SENDSCHEDULELIVEINVITE_TIME].asLong();
+            }
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
@@ -109,7 +115,7 @@ bool HttpSendScheduleInviteTask::ParseData(const string& url, bool bFlag, const 
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnSendScheduleInvite(this, bParse, errnum, errmsg, item);
+        mpCallback->OnSendScheduleInvite(this, bParse, errnum, errmsg, item, activityTime);
     }
     
     return bParse;

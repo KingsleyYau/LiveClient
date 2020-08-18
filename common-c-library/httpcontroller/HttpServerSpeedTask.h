@@ -35,7 +35,8 @@ public:
      */
     void SetParam(
                     const string& sid,
-                    int res
+                    int res,
+                    const string& liveRoomId
                   );
     
     // 流媒体服务器ID
@@ -53,6 +54,8 @@ protected:
     string mSid;
     // http请求完成时间（毫秒）
     int mRes;
+    // 直播间ID
+    string mLiveRoomId;
 };
 
 #endif /* HttpServerSpeedTask_H_ */

@@ -3389,7 +3389,7 @@ void LSLiveChatManManager::OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, con
     }
     if (NULL != m_listener && NULL != msgItem) {
 
-        m_listener->OnSendScheduleInvite(err, errmsg, msgItem, msgReplyItem);
+        m_listener->OnSendScheduleInvite(err, errmsg, item.womanId, msgItem, msgReplyItem);
     }
         FileLog("LiveChatManager", "LiveChatManager::OnSendScheduleInvite() end, manId:%s, womanId:%s"
                 , item.manId.c_str(),  item.womanId.c_str());

@@ -13,6 +13,7 @@ HttpServerSpeedTask::HttpServerSpeedTask() {
 	mPath = LIVEROOM_SUBMITSERVERVELOMETER;
     mSid = "";
     mRes = 0;
+    mLiveRoomId = "";
 }
 
 HttpServerSpeedTask::~HttpServerSpeedTask() {
@@ -25,7 +26,8 @@ void HttpServerSpeedTask::SetCallback(IRequestServerSpeedCallback* callback) {
 
 void HttpServerSpeedTask::SetParam(
                                    const string& sid,
-                                   int res
+                                   int res,
+                                   const string& liveRoomId
                                    ) {
 
 	mHttpEntiy.Reset();
@@ -42,11 +44,22 @@ void HttpServerSpeedTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_SUBMITSERVERVELOMETER_RES, temp);
     mRes = res;
     
+    if( liveRoomId.length() > 0 ) {
+        mHttpEntiy.AddContent(LIVEROOM_SUBMITSERVERVELOMETER_LIVEROOMID, liveRoomId.c_str());
+        mLiveRoomId = liveRoomId;
+    }
+    
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpServerSpeedTask::SetParam( "
             "task : %p, "
+            "sid : %s, "
+            "res : %d, "
+            "liveRoomId : %s"
             ")",
-            this
+            this,
+            sid.c_str(),
+            res,
+            liveRoomId.c_str()
             );
 }
 

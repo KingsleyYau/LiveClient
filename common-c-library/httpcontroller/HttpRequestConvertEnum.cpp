@@ -366,6 +366,20 @@ string GetLetterComsumeTypeStr(LSLetterComsumeType type) {
     return handleLetterComsumeType;
 }
 
+static const char* HandUnlock_Action_TYPE_ARRAY[] = {
+    "unlockByCredit",
+    "unlockByKey"
+};
+// 将解锁类型转为字符串
+string GetUnlockActionTypStr(LSUnlockActionType type) {
+    string handUnlockActionTyp = HandUnlock_Action_TYPE_ARRAY[0];
+    if (LSUNLOCKACTIONTYPE_CREDIT <= type && type < _countof(HandUnlock_Action_TYPE_ARRAY))
+    {
+        handUnlockActionTyp = HandUnlock_Action_TYPE_ARRAY[type];
+    }
+    return handUnlockActionTyp;
+}
+
 HTTP_LCC_ERR_TYPE GetStringToHttpErrorType(const string& code) {
     HTTP_LCC_ERR_TYPE type = HTTP_LCC_ERR_FAIL;
     if (code.length() <= 0) {

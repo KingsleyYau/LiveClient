@@ -58,19 +58,21 @@ bool HttpGetAppPayTask::ParseData(const string& url, bool bFlag, const char* buf
 
     string errmsg = "";
     string code = "";
-    string orderNo = "";
-    string productId = "";
+    HttpGooglePayOrderItem item;
     bool bParse = false;
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;
         bParse = ParseAndroidPaid(buf, size, code, errmsg, &dataJson);
-        if (dataJson[LIVEROOM_APPPAY_ORDERNO].isString()) {
-            orderNo = dataJson[LIVEROOM_APPPAY_ORDERNO].asString();
+        if (dataJson.isObject()) {
+            item.Parse(dataJson);
         }
-        if (dataJson[LIVEROOM_APPPAY_PRODUCTID].isString()) {
-            productId = dataJson[LIVEROOM_APPPAY_PRODUCTID].asString();
-        }
+//        if (dataJson[LIVEROOM_APPPAY_ORDERNO].isString()) {
+//            orderNo = dataJson[LIVEROOM_APPPAY_ORDERNO].asString();
+//        }
+//        if (dataJson[LIVEROOM_APPPAY_PRODUCTID].isString()) {
+//            productId = dataJson[LIVEROOM_APPPAY_PRODUCTID].asString();
+//        }
         
         // bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
@@ -81,7 +83,7 @@ bool HttpGetAppPayTask::ParseData(const string& url, bool bFlag, const char* buf
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGetAppPay(this, bParse, code, errmsg, orderNo, productId);
+        mpCallback->OnGetAppPay(this, bParse, code, errmsg, item);
     }
     
     return bParse;

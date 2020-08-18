@@ -18,6 +18,7 @@ using namespace std;
 #include "HttpEmfImgItem.h"
 #include "HttpEmfVideoItem.h"
 #include "HttpScheduleInviteDetailItem.h"
+#include "HttpAccessKeyInfoItem.h"
 
 class HttpDetailEmfItem {
 public:
@@ -71,6 +72,11 @@ public:
                 scheduleInfo.Parse(root[LETTER_SCHEDULE_INFO]);
             }
 
+            /* accessKeyInfo */
+            if (root[LETTER_ACCESS_KEY_INFO].isObject()) {
+                accessKeyInfo.Parse(root[LETTER_ACCESS_KEY_INFO]);
+            }
+
         }
         result = true;
         return result;
@@ -99,6 +105,7 @@ public:
      * hasRead          是否已读
      * hasReplied       是否已回复
      * scheduleInfo    预约信息
+     * accessKeyInfo 视频解锁码信息
      */
     HttpLetterDetailAnchorItem oppAnchor;
     string      emfId;
@@ -109,6 +116,7 @@ public:
     bool hasRead;
     bool hasReplied;
     HttpScheduleInviteDetailItem scheduleInfo;
+    HttpAccessKeyInfoItem accessKeyInfo;
 };
 
 

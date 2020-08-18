@@ -73,6 +73,11 @@ public:
             if (root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULESTATUS].isNumeric()) {
                 scheduleStatus = GetIntToLSScheduleStatus(root[LIVEROOM_GETTOTALNOREADNUM_SCHEDULESTATUS].asInt());
             }
+            
+            /* requestReplyUnreadNum */
+            if (root[LIVEROOM_GETTOTALNOREADNUM_REQUESTREPLYUNREADNUM].isNumeric()) {
+                requestReplyUnreadNum = root[LIVEROOM_GETTOTALNOREADNUM_REQUESTREPLYUNREADNUM].asInt();
+            }
         }
 
         result = true;
@@ -92,6 +97,7 @@ public:
         schedulePendingUnreadNum = 0;
         scheduleConfirmedUnreadNum = 0;
         scheduleStatus = LSSCHEDULESTATUS_NOSCHEDULE;
+        requestReplyUnreadNum = 0;
     }
     
     virtual ~HttpMainNoReadNumItem() {
@@ -110,6 +116,7 @@ public:
      * schedulePendingUnreadNum     预付费直播-男士待确定未读数
      * scheduleConfirmedUnreadNum   预付费直播-男主播接受未读数
      * scheduleStatus           预付费直播状态（LSSCHEDULESTATUS_NOSCHEDULE：无预约 LSSCHEDULESTATUS_SHOWED：可开播 LSSCHEDULESTATUS_SHOWING：在30分钟内即将开播）
+     * requestReplyUnreadNum   解锁码请求回复未读数
      */
     int showTicketUnreadNum;
     int loiUnreadNum;
@@ -122,6 +129,7 @@ public:
     int schedulePendingUnreadNum;
     int scheduleConfirmedUnreadNum;
     LSScheduleStatus scheduleStatus;
+    int requestReplyUnreadNum;
     
 };
 

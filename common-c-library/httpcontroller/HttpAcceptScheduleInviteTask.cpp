@@ -11,6 +11,7 @@
 HttpAcceptScheduleInviteTask::HttpAcceptScheduleInviteTask() {
 	// TODO Auto-generated constructor stub
 	mPath = LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE;
+    mduration = 0;
 }
 
 HttpAcceptScheduleInviteTask::~HttpAcceptScheduleInviteTask() {
@@ -36,6 +37,7 @@ void HttpAcceptScheduleInviteTask::SetParam(
     
     snprintf(temp, sizeof(temp), "%d", duration);
     mHttpEntiy.AddContent(LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_DURATION, temp);
+    mduration = duration;
     
     FileLog(LIVESHOW_HTTP_LOG,
             "HttpAcceptScheduleInviteTask::SetParam( "
@@ -69,10 +71,22 @@ bool HttpAcceptScheduleInviteTask::ParseData(const string& url, bool bFlag, cons
         // 公共解析
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
-            if (dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].isNumeric()) {
-                starusUpdateTime = dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].asLong();
+        //ParseLiveCommon(buf, size, errnum, errmsg, &dataJson);
+            if (dataJson.isObject()) {
+                if (dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].isNumeric()) {
+                    starusUpdateTime = dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].asLong();
+                }
             }
             
+        } else {
+            if (dataJson.isObject()) {
+                if (dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].isNumeric()) {
+                    starusUpdateTime = dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_STATUSUPDATETIME].asLong();
+                }
+                if (dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_DURATION].isNumeric()) {
+                    mduration = dataJson[LIVEROOM_SENDSCHEDULELIVEACCEPTINVITE_DURATION].asInt();
+                }
+            }
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
@@ -84,7 +98,7 @@ bool HttpAcceptScheduleInviteTask::ParseData(const string& url, bool bFlag, cons
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnAcceptScheduleInvite(this, bParse, errnum, errmsg, starusUpdateTime);
+        mpCallback->OnAcceptScheduleInvite(this, bParse, errnum, errmsg, starusUpdateTime, mduration);
     }
     
     return bParse;

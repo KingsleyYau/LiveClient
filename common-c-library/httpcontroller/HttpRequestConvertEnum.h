@@ -37,6 +37,8 @@ HTTP_LCC_ERR_TYPE GetStringToHttpErrorType(const string& code);
 
 // 将支付类型转为字符串
 string GetLetterComsumeTypeStr(LSLetterComsumeType type);
+// 将解锁类型转为字符串
+string GetUnlockActionTypStr(LSUnlockActionType type);
 
 #endif
 

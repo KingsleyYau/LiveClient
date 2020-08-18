@@ -12,13 +12,14 @@
 #include "HttpRequestTask.h"
 #include "HttpLoginProtocol.h"
 #include "HttpRequestEnum.h"
+#include "item/HttpGooglePayOrderItem.h"
 
 class HttpGetAppPayTask;
 
 class IRequestGetAppPayCallback {
 public:
 	virtual ~IRequestGetAppPayCallback(){};
-	virtual void OnGetAppPay(HttpGetAppPayTask* task, bool success, const string& code, const string& errmsg, const string& orderNo, const string& productId) = 0;
+	virtual void OnGetAppPay(HttpGetAppPayTask* task, bool success, const string& code, const string& errmsg, const HttpGooglePayOrderItem& item) = 0;
 };
       
 class HttpGetAppPayTask : public HttpRequestTask {

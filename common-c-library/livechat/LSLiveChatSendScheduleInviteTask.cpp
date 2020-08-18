@@ -135,7 +135,7 @@ void LSLiveChatSendScheduleInviteTask::GetHandleResult(LSLIVECHAT_LCC_ERR_TYPE& 
 bool LSLiveChatSendScheduleInviteTask::InitParam(const LSLCScheduleInfoItem& item)
 {
 	bool result = false;
-	if (!item.manId.empty() && !item.womanId.empty()) {
+	if (!item.womanId.empty()) {
 		m_scheduleItem = item;
 
 		result = true;

@@ -28,6 +28,7 @@
 //LiveChatSessionInfoItem
 #define LIVECHAT_SESSIONINFO_CLASS		"com/qpidnetwork/livemodule/livechat/jni/LiveChatSessionInfoItem"
 
+
 /*
  *manmanager
  *
@@ -56,5 +57,8 @@
 #define LIVECHAT_AUTOINVITEITEM_CLASS		"com/qpidnetwork/livemodule/livechat/LCAutoInviteItem"
 // LCNotifyItem
 #define LIVECHAT_NOTIFYITEM_CLASS			"com/qpidnetwork/livemodule/livechat/LCNotifyItem"
+
+//LCScheduleInviteMsgItem
+#define LIVECHAT_LCSCHEDULEINVITEMSG_CLASS   "com/qpidnetwork/livemodule/livechat/LCScheduleInviteMsgItem"
 
 #endif /* LIVECHATJNICALLBACKITEMDEF_H_ */

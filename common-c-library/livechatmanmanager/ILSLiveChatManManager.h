@@ -63,7 +63,7 @@ public:
 	virtual void OnGetUsersHistoryMessage(bool success, const string& errNo, const string& errMsg, const LCUserList& userList) = 0;
     
     // Alex, 发送预约邀请
-    virtual void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, LSLCMessageItem* msgItem, LSLCMessageItem* msgReplyItem) = 0;
+    virtual void OnSendScheduleInvite(LSLIVECHAT_LCC_ERR_TYPE err, const string& errmsg, const string& womanId, LSLCMessageItem* msgItem, LSLCMessageItem* msgReplyItem) = 0;
     virtual void OnRecvScheduleInviteNotice(const string& womanId, LSLCMessageItem* msgItem, LSLCMessageItem* msgReplyItem) = 0;
 
 	// ------- emotion listener -------

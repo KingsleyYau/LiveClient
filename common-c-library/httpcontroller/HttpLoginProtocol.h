@@ -1041,6 +1041,16 @@
 #define LIVEROOM_SEND_LETTER                    "send_letter"
 #define LIVEROOM_FLOWERS_GIFT                   "flowers_gift"
 #define LIVEROOM_SCHEDULE_SAVE_UP               "schedule_save_up"
+#define LIVEROOM_MAIL_TARIFF                    "mail_tariff"
+#define LIVEROOM_MAIL_TATIFF_MAIL_SEND_BASE             "mail_send_base"
+#define LIVEROOM_MAIL_TATIFF_MAIL_SEND_BASE_CREDIT_PRICE             "credit_price"
+#define LIVEROOM_MAIL_TATIFF_MAIL_SEND_BASE_STAMP_PRICE              "stamp_price"
+#define LIVEROOM_MAIL_TATIFF_MAIL_READ_BASE             "mail_read_base"
+#define LIVEROOM_MAIL_TATIFF_MAIL_PHOTO_ATTACH_BASE     "mail_photo_attach_base"
+#define LIVEROOM_MAIL_TATIFF_MAIL_PHOTO_BUY_BASE        "mail_photo_buy_base"
+#define LIVEROOM_MAIL_TATIFF_MAIL_VIDEO_BUY_BASE        "mail_video_buy_base"
+#define LIVEROOM_PREMIUM_VIDEO_CREDIT                   "premium_video_credit"
+#define LIVEROOM_HOWITWORKURL                    "howItWorkUrl"
 
 /* 6.2.获取账号余额 */
 /* 接口路径 */
@@ -1111,6 +1121,7 @@
  */
 #define LIVEROOM_SUBMITSERVERVELOMETER_SID                          "sid"
 #define LIVEROOM_SUBMITSERVERVELOMETER_RES                          "res"
+#define LIVEROOM_SUBMITSERVERVELOMETER_LIVEROOMID                   "live_room_id"
 
 /* 6.9.获取Hot/Following列表头部广告 */
 /* 接口路径 */
@@ -1153,6 +1164,9 @@
 #define LIVEROOM_GETUSRRINFO_ANCHORINFO_PRIV                    "priv"
 #define LIVEROOM_GETUSRRINFO_ANCHORINFO_PRIV_SCHEDULE_ONEONONE         "schedule_oneonone"
 #define LIVEROOM_GETUSRRINFO_ANCHORINFO_PRIV_SCHEDULE_ONEONONE_SEND    "schedule_oneonone_send"
+#define LIVEROOM_GETUSERINFO_FANSIINFO                 "fansi_info"
+#define LIVEROOM_GETUSRRINFO_FANSIINFO_PRIV                   "priv"
+#define LIVEROOM_GETUSRRINFO_FANSIINFO_PRIV_PREMIUM_VIDEO           "premium_video"
 
 /* 6.11.获取分享链接 */
 /* 接口路径 */
@@ -1247,6 +1261,7 @@
 #define LIVEROOM_GETTOTALNOREADNUM_SCHEDULEPENDINGUNREADNUM       "schedule_pending_unread_num"
 #define LIVEROOM_GETTOTALNOREADNUM_SCHEDULECONFIRMEDUNREADNUM     "schedule_confirmed_unread_num"
 #define LIVEROOM_GETTOTALNOREADNUM_SCHEDULESTATUS                 "schedule_status"
+#define LIVEROOM_GETTOTALNOREADNUM_REQUESTREPLYUNREADNUM          "request_reply_unread_num"
 
 /* 6.18.查询个人信息 */
 /* 接口路径 */
@@ -1366,6 +1381,16 @@
 #define LIVEROOM_PHONEINFO_SIMOPERATOR                  "SimOperator"
 #define LIVEROOM_PHONEINFO_SIMCOUNTRYISO                "simCountryIso"
 #define LIVEROOM_PHONEINFO_SIMSTATE                     "SimState"
+
+
+/* 6.26.提交上报当前拉流的时间 */
+/* 接口路径 */
+#define LIVEROOM_PUSHPULLLOGS                             "/pman/live/svr/pushPullLogs"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_PUSHPULLLOGS_LIVEROOMID                   "live_room_id"
 
 
 /* ########################   支付 模块  ######################## */
@@ -1495,6 +1520,21 @@
  *  返回
  */
 #define LIVEROOM_MOBILEPAYGOTO_REDIRECT                         "redirect"
+
+/* 7.9.获取我司邮票产品列表（仅Android */
+/* 接口路径 */
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_PATH                            "/share/LiveProject/getPostStampsPriceList"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_ITEMCODE                           "item_code"
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_ITEMNAME                           "item_name"
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_ORIGINALPRICE                      "original_price"
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_DISCOUNTPRICE                      "discount_price"
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_SAVEDESC                           "save_desc"
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_POSTSTAMPSNUM                      "poststamps_num"
+#define LIVEROOM_GETPOSTSTAMPSPRICELIST_ISDEFAULT                          "is_default"
 
 
 /* ########################   多人互动模块  ######################## */
@@ -1857,6 +1897,7 @@
 #define LETTER_HAS_READ                         "has_read"
 #define LETTER_HAS_REPLIED                      "has_replied"
 #define LETTER_HAS_SCHEDULE                     "has_schedule"
+#define LETTER_HAS_ACCESS_KEY                   "has_access_key"
 #define LETTER_LOI_CONTENT                      "loi_content"
 #define LETTER_LOI_IMG_LIST                     "loi_img_list"
 #define LETTER_ORIGIN_IMG                       "origin_img"
@@ -1893,6 +1934,15 @@
 #define LETTER_TIME_ZONE_ID                     "time_zone_id"
 #define LETTER_START_TIME                       "start_time"
 #define LETTER_DURATION                         "duration"
+#define LETTER_ACCESS_KEY_INFO                  "access_key_info"
+#define LETTER_VIDEO_ID                         "video_id"
+#define LETTER_TITLE                            "title"
+#define LETTER_DESCRIPTION                      "description"
+#define LETTER_COVER_URL_PNG                    "cover_url_png"
+#define LETTER_COVER_URL_GIF                    "cover_url_gif"
+#define LETTER_ACCESS_KEY                       "access_key"
+#define LETTER_ACCESS_KEY_STATUS                "access_key_status"
+#define LETTER_VALID_TIME                       "valid_time"
 
 /* 13.1.获取意向信列表 */
 /* 接口路径 */
@@ -1951,6 +2001,20 @@
  */
 #define LIVEROOM_CANSENDEMF_USER_CAN_SEND                 "user_can_send"
 #define LIVEROOM_CANSENDEMF_ANCHOR_CAN_SEND               "anchor_can_send"
+
+/* 13.10.获取EMF状态 */
+/* 接口路径 */
+#define LIVEROOM_GETEMFSTATUS                       "/pman/emf/api/getEmfStatus"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETEMFSTATUS_EMF_ID                       "emf_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETEMFSTATUS_HAS_READ                      "has_read"
 
 /**************************** SayHi *****************************/
 /* 14.1.获取发送SayHi的主题和文本信息 */
@@ -2461,6 +2525,8 @@
  */
 #define LIVEROOM_APPPAY_ORDERNO                           "orderno"
 #define LIVEROOM_APPPAY_PRODUCTID                         "product_id"
+#define LIVEROOM_APPPAY_ORDERTIME                         "ordertime"
+#define LIVEROOM_APPPAY_SERVERTIME                        "servertime"
 
 /* 16.2.获取商品列表（仅Android） */
 /* 接口路径 */
@@ -2481,7 +2547,7 @@
 #define LIVEROOM_ANDROIDCALLBACK_DATA                           "data"
 #define LIVEROOM_ANDROIDCALLBACK_SIGN                           "sign"
 
-/* 16.3.购买成功上传校验送点（仅Android） */
+/* 16.4.购买成功上传校验送点（仅Android） */
 /* 接口路径 */
 #define LIVEROOM_ANDROIDPAIDLOGS                               "/payment/gpay/report.php"
 
@@ -2490,6 +2556,21 @@
 #define LIVEROOM_ANDROIDPAIDLOGS_NUMBER                         "number"
 #define LIVEROOM_ANDROIDPAIDLOGS_ERRNO                          "errno"
 #define LIVEROOM_ANDROIDPAIDLOGS_ERRMSG                         "errmsg"
+
+/* 16.5.Google失效订单列表上传（仅Android） */
+/* 接口路径 */
+#define LIVEROOM_ORDEREXPIREDREPORT                               "/payment/gpay/orders_expired_report.php"
+
+#define LIVEROOM_ORDEREXPIREDREPORT_MANID                          "manid"
+#define LIVEROOM_ORDEREXPIREDREPORT_DEVICEID                       "deviceid"
+#define LIVEROOM_ORDEREXPIREDREPORT_DEVICEMODEL                    "device_model"
+#define LIVEROOM_ORDEREXPIREDREPORT_SYSTEM                         "system"
+#define LIVEROOM_ORDEREXPIREDREPORT_APPSDK                         "app_sdk"
+#define LIVEROOM_ORDEREXPIREDREPORT_ORDERINFOS                     "orderinfo"
+#define LIVEROOM_ORDEREXPIREDREPORT_ORDERINFOS_ORDERNO                     "orderno"
+#define LIVEROOM_ORDEREXPIREDREPORT_ORDERINFOS_ORDERTIME                   "ordertime"
+#define LIVEROOM_ORDEREXPIREDREPORT_SIGN                            "sign"
+
 
 /* 17.1.获取时长价格配置列表*/
 /* 接口路径 */
@@ -2531,6 +2612,7 @@
 #define LIVEROOM_SENDSCHEDULELIVEINVITE_INVITE_ID                           "invite_id"
 #define LIVEROOM_SENDSCHEDULELIVEINVITE_IS_SUMMER_TIME                      "is_summer_time"
 #define LIVEROOM_SENDSCHEDULELIVEINVITE_ADD_TIME                            "add_time"
+#define LIVEROOM_SENDSCHEDULELIVEINVITE_TIME                                "time"
 
 
 /* 17.4.接受预付费直播邀请*/
@@ -2651,5 +2733,111 @@
 #define LIVEROOM_GETINVITESTATUS_BESTARTNUM                             "be_start_num"
 #define LIVEROOM_GETINVITESTATUS_BESTARTTIME                            "be_start_time"
 #define LIVEROOM_GETINVITESTATUS_STARTLEFTNUM                           "start_left_seconds"
+
+/* 17.11.获取服务器当前GMT时间戳*/
+/* 接口路径 */
+#define LIVEROOM_GETACTIVITYTIME                              "/share/v1/getActivityTime?is_ajax=1"
+
+/* 返回 */
+#define LIVEROOM_GETACTIVITYTIME_TIME                         "time"
+
+/* ------ 18.付费视频 ---------*/
+#define LIVEROOM_PREMIUMVIDEO_TYPE_ID                           "type_id"
+#define LIVEROOM_PREMIUMVIDEO_TYPE_NAME                         "type_name"
+#define LIVEROOM_PREMIUMVIDEO_IS_DEFAULT                        "is_default"
+#define LIVEROOM_PREMIUMVIDEO_START                             "start"
+#define LIVEROOM_PREMIUMVIDEO_STEP                              "step"
+#define LIVEROOM_PREMIUMVIDEO_TOTAL_COUNT                       "total_count"
+#define LIVEROOM_PREMIUMVIDEO_LIST                              "list"
+#define LIVEROOM_PREMIUMVIDEO_ANCHOR_ID                         "anchor_id"
+#define LIVEROOM_PREMIUMVIDEO_ANCHOR_AGE                        "anchor_age"
+#define LIVEROOM_PREMIUMVIDEO_ANCHOR_NICKNAME                   "anchor_nickname"
+#define LIVEROOM_PREMIUMVIDEO_ANCHOR_AVATAR_IMG                 "anchor_avatar_img"
+#define LIVEROOM_PREMIUMVIDEO_ONLINE_STATUS                     "online_status"
+#define LIVEROOM_PREMIUMVIDEO_VIDEO_ID                          "video_id"
+#define LIVEROOM_PREMIUMVIDEO_TITLE                             "title"
+#define LIVEROOM_PREMIUMVIDEO_DESCRIPTION                       "description"
+#define LIVEROOM_PREMIUMVIDEO_DURATION                          "duration"
+#define LIVEROOM_PREMIUMVIDEO_COVER_URL_PNG                     "cover_url_png"
+#define LIVEROOM_PREMIUMVIDEO_COVER_URL_GIF                     "cover_url_gif"
+#define LIVEROOM_PREMIUMVIDEO_IS_INTERSTED                      "is_interested"
+#define LIVEROOM_PREMIUMVIDEO_TYPE                              "type"
+#define LIVEROOM_PREMIUMVIDEO_REQUEST_ID                        "request_id"
+#define LIVEROOM_PREMIUMVIDEO_EMF_ID                            "emf_id"
+#define LIVEROOM_PREMIUMVIDEO_EMF_READ_STATUS                   "emf_read_status"
+#define LIVEROOM_PREMIUMVIDEO_VALID_TIME                        "valid_time"
+#define LIVEROOM_PREMIUMVIDEO_LAST_SEND_TIME                    "last_send_time"
+#define LIVEROOM_PREMIUMVIDEO_CURRENT_TIME                      "current_time"
+#define LIVEROOM_PREMIUMVIDEO_LIMIT_SECONDS                     "limit_seconds"
+#define LIVEROOM_PREMIUMVIDEO_WATCHED_ID                        "watched_id"
+#define LIVEROOM_PREMIUMVIDEO_ADD_TIME                          "add_time"
+#define LIVEROOM_PREMIUMVIDEO_ID                                "id"
+#define LIVEROOM_PREMIUMVIDEO_NUM                               "num"
+#define LIVEROOM_PREMIUMVIDEO_TYPE_LIST                         "type_list"
+#define LIVEROOM_PREMIUMVIDEO_VIDEO_URL_SHORT                   "video_url_short"
+#define LIVEROOM_PREMIUMVIDEO_VIDEO_URL_FULL                    "video_url_full"
+#define LIVEROOM_PREMIUMVIDEO_LOCK_STATUS                       "lock_status"
+#define LIVEROOM_PREMIUMVIDEO_REQUEST_LAST_TIME                 "request_last_time"
+#define LIVEROOM_PREMIUMVIDEO_UNLOCK_TIME                       "unlock_time"
+#define LIVEROOM_PREMIUMVIDEO_ACTION                            "action"
+#define LIVEROOM_PREMIUMVIDEO_ACCESS_KEY                        "access_key"
+
+/* 18.1.获取付费视频分类列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_GETTYPELIST_PATH                  "/pman/premiumVideo/api/getTypeList"
+
+/* 18.2.获取付费视频列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_GETVIDEOLIST_PATH                 "/pman/premiumVideo/api/getVideoList"
+
+/* 18.3.获取解码锁请求列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_ACCESSKEYREQUESTLIST_PATH         "/pman/premiumVideo/api/accessKeyRequestList"
+
+/* 18.4.发送解码锁请求 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_SENDKEYREQUEST_PATH               "/pman/premiumVideo/api/sendKeyRequest"
+
+/* 18.5.发送解码锁请求提醒 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_SENDKEYREQUESTREMINDE_PATH        "/pman/premiumVideo/api/sendKeyRequestReminder"
+
+/* 18.6.获取最近播放的视频列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_RECENTLYWATCHEDLIST_PATH          "/pman/premiumVideo/api/recentlyWatchedList"
+
+/* 18.7.删除最近播放的视频 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_DELETERECENTLYWATCHED_PATH        "/pman/premiumVideo/api/deleteRecentlyWatched"
+
+/* 18.8.获取收藏的视频列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_INTERESTEDLIST_PATH               "/pman/premiumVideo/api/interestedList"
+
+/* 18.9.删除收藏的视频 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_DELETEINTERESTED_PATH             "/pman/premiumVideo/api/deleteInterested"
+
+/* 18.10.添加收藏的视频 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_ADDINTERESTED_PATH                "/pman/premiumVideo/api/addInterested"
+
+/* 18.11.获取可能感兴趣的推荐视频列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_MAYBEINTERESTEDLIST_PATH          "/pman/premiumVideo/api/mayBeInterestedList"
+
+/* 18.12.获取某主播的视频列表 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_ANCHORVIDEOLIST_PATH              "/pman/premiumVideo/api/anchorVideoList"
+
+/* 18.13.获取视频详情 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_GETVIDEODETAIL_PATH               "/pman/premiumVideo/api/getVideoDetail"
+
+/* 18.14.视频解锁 */
+/* 接口路径 */
+#define LIVEROOM_PREMIUMVIDEO_UNLOCKVIDEO_PATH                  "/pman/premiumVideo/api/unlockVideo"
+
+
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

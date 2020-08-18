@@ -163,6 +163,25 @@
 #include "HttpSendScheduleInviteTask.h"
 #include "HttpGetCountryTimeZoneListTask.h"
 #include "HttpGetScheduleDurationListTask.h"
+#include "HttpGetActivityTimeTask.h"
+#include "HttpPushPullLogsTask.h"
+#include "HttpGetPostStampsPriceListTask.h"
+#include "HttpOrderExpiredReportTask.h"
+#include "HttpGetPremiumVideoTypeListTask.h"
+#include "HttpGetPremiumVideoListTask.h"
+#include "HttpGetPremiumVideoDetailTask.h"
+#include "HttpSendPremiumVideoKeyRequestTask.h"
+#include "HttpGetPremiumVideoKeyRequestListTask.h"
+#include "HttpRemindeSendPremiumVideoKeyRequestTask.h"
+#include "HttpGetInterestedPremiumVideoListTask.h"
+#include "HttpDeleteInterestedPremiumVideoTask.h"
+#include "HttpAddInterestedPremiumVideoTask.h"
+#include "HttpRecommendPremiumVideoListTask.h"
+#include "HttpGetAnchorPremiumVideoListTask.h"
+#include "HttpUnlockPremiumVideoTask.h"
+#include "HttpGetPremiumVideoRecentlyWatchedListTask.h"
+#include "HttpDeletePremiumVideoRecentlyWatchedTask.h"
+#include "HttpGetEmfStatusTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -1216,6 +1235,7 @@ public:
      * @param pHttpRequestManager           http管理器
      * @param sid                           流媒体服务器ID
      * @param res                           http请求完成时间（毫秒）
+     * @param liveRoomId          直播间ID
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -1224,6 +1244,7 @@ public:
                         HttpRequestManager *pHttpRequestManager,
                         const string& sid,
                         int res,
+                        const string& liveRoomId = "",
                         IRequestServerSpeedCallback* callback = NULL
                         );
     
@@ -1469,6 +1490,21 @@ public:
                         IRequestPhoneInfoCallback* callback = NULL
                       );
     
+    /**
+     * 6.26.提交上报当前拉流的时间
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param liveRoomId               直播间Id
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long PushPullLogs(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string& liveRoomId,
+                           IRequestPushPullLogsCallback* callback = NULL
+                           );
+    
     
     /**
      * 7.1.获取买点信息（仅独立）（仅iOS）
@@ -1610,6 +1646,20 @@ public:
                            );
     
     /**
+     * 7.9.获取我司邮票产品列表（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPostStampsPriceList(
+                           HttpRequestManager *pHttpRequestManager,
+                           IRequestGetPostStampsPriceListCallback* callback = NULL
+                           );
+    
+    
+    /**
      * 16.1.获取我司订单号（仅Android）
      *
      * @param pHttpRequestManager           http管理器
@@ -1683,6 +1733,31 @@ public:
                                 string errNo,
                                 string errMsg,
                                 IRequestUploadFailPayInfoCallback* callback = NULL
+                                  );
+    
+    /**
+     * 16.5.Google失效订单列表上传（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * manid            男士ID
+     * deviceId          设备唯一标识
+     * deviceModel     制造厂商
+     * system            设备型号（格式：设备型号-系统版本号）
+     * appSdk           SDK版本号
+     * list                 失效订单列表（Json字符串）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OrderExpiredReport(
+                                HttpRequestManager *pHttpRequestManager,
+                                string manid,
+                                string deviceId,
+                                string deviceModel,
+                                string system,
+                                string appSdk,
+                                OrderExpiredList list,
+                                IRequestOrderExpiredReportCallback* callback = NULL
                                   );
     
     
@@ -2235,6 +2310,21 @@ public:
                          );
     
     /**
+     * 13.10.获取EMF状态
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param emfId                     信件ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetEmfStatus(
+                         HttpRequestManager *pHttpRequestManager,
+                         const string& emfId,
+                         IRequestGetEmfStatusCallback* callback = NULL
+                         );
+    
+    /**
      * 14.1.获取发送SayHi的主题和文本信息
      *
      * @param pHttpRequestManager           http管理器
@@ -2777,6 +2867,242 @@ public:
     long long GetScheduleInviteStatus(
                                 HttpRequestManager *pHttpRequestManager,
                                 IRequestGetScheduleInviteStatusCallback* callback = NULL
+                                      );
+   
+    /**
+     * 17.11.获取服务器当前GMT时间戳
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetActivityTime(
+                                HttpRequestManager *pHttpRequestManager,
+                                IRequestGetActivityTimeCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.1.获取付费视频分类列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPremiumVideoTypeList(
+                                HttpRequestManager *pHttpRequestManager,
+                                IRequestGetPremiumVideoTypeListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.2.获取付费视频列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @paran typeIds                           分类ID（多个用’,’号分隔）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPremiumVideoList(
+                                HttpRequestManager *pHttpRequestManager,
+                                  const string& typeIds,
+                                  int start,
+                                  int step,
+                                IRequestGetPremiumVideoListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.3.获取解码锁请求列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @paran type                              解码锁回复类型（LSACCESSKEYTYPES_REPLY ： 已回复， LSACCESSKEYTYPE_UNREPLY：未回复）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPremiumVideoKeyRequestList(
+                                            HttpRequestManager *pHttpRequestManager,
+                                            LSAccessKeyType type,
+                                            int start,
+                                            int step,
+                                            IRequestGetPremiumVideoKeyRequestListCallback* callback = NULL
+                                      );
+   
+    /**
+     * 18.4.发送解码锁请求
+     *
+     * @param pHttpRequestManager           http管理器
+     * @paran videoId                           视频ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SendPremiumVideoKeyRequest(
+                                HttpRequestManager *pHttpRequestManager,
+                                  const string& videoId,
+                                IRequestSendPremiumVideoKeyRequestCallback* callback = NULL
+                                      );
+    /**
+     * 18.5.发送解码锁请求提醒
+     *
+     * @param pHttpRequestManager           http管理器
+     * @paran keyRequestId                          请求ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long RemindeSendPremiumVideoKeyRequest(
+                                HttpRequestManager *pHttpRequestManager,
+                                  const string& keyRequestId,
+                                IRequestRemindeSendPremiumVideoKeyRequestCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.6.获取最近播放的视频列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPremiumVideoRecentlyWatchedList(
+                                            HttpRequestManager *pHttpRequestManager,
+                                            int start,
+                                            int step,
+                                            IRequestGetPremiumVideoRecentlyWatchedListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.7.删除最近播放的视频
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param watchedId                   记录ID(列表返回的watched_id值，多个用’,’号分隔)
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long DeletePremiumVideoRecentlyWatched(
+                                            HttpRequestManager *pHttpRequestManager,
+                                            const string& watchedId,
+                                            IRequestDeletePremiumVideoRecentlyWatchedCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.8.获取收藏的视频列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetInterestedPremiumVideoList(
+                                HttpRequestManager *pHttpRequestManager,
+                                  int start,
+                                  int step,
+                                IRequestGetInterestedPremiumVideoListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.9.删除收藏的视频
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param videoId                         视频ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long DeleteInterestedPremiumVideo(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& videoId,
+                                IRequestDeleteInterestedPremiumVideoCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.10.添加收藏的视频
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param videoId                         视频ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AddInterestedPremiumVideo(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& videoId,
+                                IRequestAddInterestedPremiumVideoCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.11.获取可能感兴趣的推荐视频列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param num                                  推荐数量
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long RecommendPremiumVideoList(
+                                HttpRequestManager *pHttpRequestManager,
+                                int num = 4,
+                                IRequestRecommendPremiumVideoListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.12.获取某主播的视频列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                                 主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetAnchorPremiumVideoList(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& anchorId,
+                                IRequestGetAnchorPremiumVideoListCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.13.获取视频详情
+     *
+     * @param pHttpRequestManager           http管理器
+     * @paran videoId                           视频ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPremiumVideoDetail(
+                                HttpRequestManager *pHttpRequestManager,
+                                  const string& videoId,
+                                IRequestGetPremiumVideoDetailCallback* callback = NULL
+                                      );
+    
+    /**
+     * 18.14.视频解锁
+     *
+     * @param pHttpRequestManager           http管理器
+     * @paran type                                解锁方式（LSUNLOCKACTIONTYPE_CREDIT：信用点解锁，LSUNLOCKACTIONTYPE_KEY：解锁码解锁
+     * @paran accessKey                      解锁码(type=LSUNLOCKACTIONTYPE_KEY时传值)
+     * @paran videoId                           视频ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long UnlockPremiumVideo(
+                                HttpRequestManager *pHttpRequestManager,
+                                LSUnlockActionType type,
+                                const string& accessKey,
+                                const string& videoId,
+                                IRequestUnlockPremiumVideoCallback* callback = NULL
                                       );
     
 private:
