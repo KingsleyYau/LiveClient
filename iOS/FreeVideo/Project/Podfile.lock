@@ -14,8 +14,8 @@ PODS:
   - AFNetworking/Serialization (3.0.4)
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
-  - GCDWebServer/Core (3.5.2)
-  - GCDWebServer/WebDAV (3.5.2):
+  - GCDWebServer/Core (3.5.4)
+  - GCDWebServer/WebDAV (3.5.4):
     - GCDWebServer/Core
   - GPUImage (0.1.7)
   - libwebp (0.6.1):
@@ -43,7 +43,7 @@ PODS:
     - libwebp/core
   - libwebp/webp (0.6.1)
   - Masonry (0.6.4)
-  - MJRefresh (3.1.16)
+  - MJRefresh (3.1.17)
   - SDWebImage (4.3.1):
     - SDWebImage/Core (= 4.3.1)
   - SDWebImage/Core (4.3.1)
@@ -65,7 +65,7 @@ DEPENDENCIES:
   - YYText (= 1.0.7)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - AFNetworking
     - GCDWebServer
     - GPUImage
@@ -78,15 +78,15 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
-  GCDWebServer: ead88cd14596dd4eae4f5830b8877c87c8728990
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
-  MJRefresh: 7798e16e53a5ef7f332dd05b27664db4e29530fd
+  MJRefresh: ee5b68f639775462faba4db0fd243baf4d42c2cf
   SDWebImage: 09808bac78357b39f8db4ea360c7b5534d785ef4
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
 
 PODFILE CHECKSUM: 014bf5f4969857fb5b8888f87a0d35969ed94fc5
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.9.1

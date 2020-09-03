@@ -2680,23 +2680,6 @@ class RequestServerSpeedCallbackImp : public IRequestServerSpeedCallback {
         }
     }
 };
-RequestServerSpeedCallbackImp gRequestServerSpeedCallbackImp;
-- (NSInteger)serverSpeed:(NSString *_Nonnull)sid
-                     res:(int)res
-           finishHandler:(ServerSpeedFinishHandler _Nullable)finishHandler {
-    string strSid = "";
-    if (nil != sid) {
-        strSid = [sid UTF8String];
-    }
-    NSInteger request = (NSInteger)mHttpRequestController.ServerSpeed(&mHttpRequestManager, strSid, res, &gRequestServerSpeedCallbackImp);
-    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
-        @synchronized(self.delegateDictionary) {
-            [self.delegateDictionary setObject:finishHandler forKey:@(request)];
-        }
-    }
-
-    return request;
-}
 
 class RequestBannerCallbackImp : public IRequestBannerCallback {
   public:
@@ -4332,72 +4315,6 @@ RequestGetEmfDetailCallbackImp gRequestGetEmfDetailCallbackImp;
         strEmfId = [emfId UTF8String];
     }
     NSInteger request = (NSInteger)mHttpRequestController.GetEmfDetail(&mHttpRequestManager, strEmfId, &gRequestGetEmfDetailCallbackImp);
-    if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
-        @synchronized(self.delegateDictionary) {
-            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
-        }
-    }
-
-    return request;
-}
-
-class RequestSendEmfCallbackImp : public IRequestSendEmfCallback {
-  public:
-    RequestSendEmfCallbackImp(){};
-    ~RequestSendEmfCallbackImp(){};
-    void OnSendEmf(HttpSendEmfTask *task, bool success, int errnum, const string &errmsg) {
-        NSLog(@"LSRequestManager::OnSendEmf( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
-        SendEmfFinishHandler handler = nil;
-        LSRequestManager *manager = [LSRequestManager manager];
-        @synchronized(manager.delegateDictionary) {
-            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
-            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
-        }
-
-        if (handler) {
-            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
-        }
-    }
-};
-RequestSendEmfCallbackImp gRequestSendEmfCallbackImp;
-- (NSInteger)sendEmf:(NSString *)anchorId
-               loiId:(NSString *)loiId
-               emfId:(NSString *)emfId
-             content:(NSString *)content
-             imgList:(NSArray<NSString *> *)imgList
-         comsumeType:(LSLetterComsumeType)comsumeType
-     sayHiResponseId:(NSString *)sayHiResponseId
-       finishHandler:(SendEmfFinishHandler)finishHandler {
-    string stranchorId = "";
-    if (anchorId != nil) {
-        stranchorId = [anchorId UTF8String];
-    }
-    string strloiId = "";
-    if (loiId != nil) {
-        strloiId = [loiId UTF8String];
-    }
-    string stremfId = "";
-    if (emfId != nil) {
-        stremfId = [emfId UTF8String];
-    }
-    string strcontent = "";
-    if (content != nil) {
-        strcontent = [content UTF8String];
-    }
-    list<string> list;
-    if (imgList != nil) {
-        for (NSString *str in imgList) {
-            string pStr = [str UTF8String];
-            list.push_back(pStr);
-        }
-    }
-
-    string strSayHiResponseId = "";
-    if (sayHiResponseId != nil) {
-        strSayHiResponseId = [sayHiResponseId UTF8String];
-    }
-
-    NSInteger request = (NSInteger)mHttpRequestController.SendEmf(&mHttpRequestManager, stranchorId, strloiId, stremfId, strcontent, list, comsumeType, strSayHiResponseId, &gRequestSendEmfCallbackImp);
     if (request != LS_HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
