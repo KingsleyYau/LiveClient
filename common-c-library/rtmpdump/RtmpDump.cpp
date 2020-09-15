@@ -784,7 +784,7 @@ bool RtmpDump::FlvVideo2H264(char *frame, int frame_size, u_int32_t timestamp) {
                 bool bPpsChange = true;
                 if (mpPps != NULL) {
                     if (mPpsSize == ppsLen) {
-                        if (0 != memcmp(mpPps, pStart, spsLen)) {
+                        if (0 != memcmp(mpPps, pStart, ppsLen)) {
                             bPpsChange = true;
 
                         } else {

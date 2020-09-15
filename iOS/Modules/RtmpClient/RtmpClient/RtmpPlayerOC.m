@@ -165,11 +165,11 @@ public:
         if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnConnect:)] ) {
             [mpRtmpPlayerOC.delegate rtmpPlayerOnConnect:mpRtmpPlayerOC];
         }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            mpRtmpPlayerOC.player->SendCmdLogin("MM3", "123456", "4");
-//            mpRtmpPlayerOC.player->SendCmdMakeCall("MM1", "PC0", "4");
-//            mpRtmpPlayerOC.player->SendCmdReceive();
-//        });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            mpRtmpPlayerOC.player->SendCmdLogin("MM201", "123456", "4");
+            mpRtmpPlayerOC.player->SendCmdMakeCall("WW0", "PC4", "4");
+            mpRtmpPlayerOC.player->SendCmdReceive();
+        });
     }
     
     void OnPlayerDisconnect(PlayerController* pc) {
@@ -214,7 +214,7 @@ private:
         _useHardDecoder = NO;
 #else
         // 真机, 默认使用硬解码
-        _useHardDecoder = YES;
+        _useHardDecoder = NO;
 #endif
         
         // 创建解码器和渲染器
