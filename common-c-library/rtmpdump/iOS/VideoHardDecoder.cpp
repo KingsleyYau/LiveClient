@@ -748,7 +748,9 @@ bool VideoHardDecoder::CheckVideoSize() {
 
     mWidth = width;
     mHeight = height;
-
+    int displayWidth = width;
+    int displayHeight = height;
+    
     if (!frame_mbs_only_flag) {
         int mb_adaptive_frame_field_flag = U(1, (unsigned char *)sliceData, startBit);
     }
@@ -785,8 +787,8 @@ bool VideoHardDecoder::CheckVideoSize() {
             crop_unit_y = 2 - frame_mbs_only_flag;
         }
 
-        int displayWidth = mWidth - crop_unit_x * (frame_crop_left_offset + frame_crop_right_offset);
-        int displayHeight = mHeight - crop_unit_y * (frame_crop_top_offset + frame_crop_bottom_offset);
+        displayWidth = mWidth - crop_unit_x * (frame_crop_left_offset + frame_crop_right_offset);
+        displayHeight = mHeight - crop_unit_y * (frame_crop_top_offset + frame_crop_bottom_offset);
         
         if (bFlag) {
             FileLevelLog("rtmpdump",
@@ -827,10 +829,14 @@ bool VideoHardDecoder::CheckVideoSize() {
                          ")",
                          mWidth,
                          mHeight,
-                         mWidth,
-                         mHeight
+                         displayWidth,
+                         displayHeight
                          );
         }
+    }
+    
+    if (bFlag && mpCallback) {
+        mpCallback->OnDecodeVideoChangeSize(this, displayWidth, displayHeight);
     }
     
     return bFlag;

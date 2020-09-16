@@ -43,16 +43,14 @@ void VideoFormatConverter::SetDstFormat(VIDEO_FORMATE_TYPE type) {
 }
 
 bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame) {
-    bool bFlag = true;
-
     long long curTime = getCurrentTime();
 
     AVFrame *srcAvFrame = srcFrame->mpAVFrame;
     AVPixelFormat dstFormat = (AVPixelFormat)VideoFrame::GetPixelFormat(mDstFormat);
 
     // 改变句柄
-    bFlag = ChangeContext(srcFrame);
-
+    bool bChangeSize = false;
+    bool bFlag = ChangeContext(srcFrame, bChangeSize);
     if (bFlag) {
         // 填充原始帧
         AVFrame *pictureFrame = srcFrame->mpAVFrame;
@@ -139,16 +137,23 @@ bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFra
                  dstFrame->mTimestamp,
                  handleTime);
 
-    return bFlag;
+    return bChangeSize;
 }
 
-bool VideoFormatConverter::ChangeContext(VideoFrame *srcFrame) {
+int VideoFormatConverter::GetWidth() {
+    return mWidth;
+}
+
+int VideoFormatConverter::GetHeight() {
+    return mHeight;
+}
+
+bool VideoFormatConverter::ChangeContext(VideoFrame *srcFrame, bool &bChangeSize) {
     bool bFlag = false;
 
     //	AVFrame *frame = srcFrame->mpAVFrame;
     AVPixelFormat srcFormat = (AVPixelFormat)srcFrame->GetPixelFormat();
     AVPixelFormat dstFormat = (AVPixelFormat)VideoFrame::GetPixelFormat(mDstFormat);
-    ;
 
     // 创建转换器
     if (mWidth != srcFrame->mWidth || mHeight != srcFrame->mHeight) {
@@ -185,6 +190,8 @@ bool VideoFormatConverter::ChangeContext(VideoFrame *srcFrame) {
             mHeight,
             srcFormat,
             dstFormat);
+        
+        bChangeSize = true;
     }
 
     if( mImgConvertCtx ) {

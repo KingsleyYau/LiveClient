@@ -24,6 +24,7 @@ class VideoDecoder;
 class VideoDecoderCallback {
   public:
     virtual ~VideoDecoderCallback(){};
+    virtual void OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned int displayWidth, unsigned int displayHeight) = 0;
     virtual void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp) = 0;
     virtual void OnDecodeVideoError(VideoDecoder *decoder) = 0;
 };

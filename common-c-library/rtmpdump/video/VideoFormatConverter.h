@@ -27,9 +27,11 @@ class VideoFormatConverter {
   public:
     void SetDstFormat(VIDEO_FORMATE_TYPE type);
     bool ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame);
-
+    int GetWidth();
+    int GetHeight();
+    
   private:
-    bool ChangeContext(VideoFrame *srcFrame);
+    bool ChangeContext(VideoFrame *srcFrame, bool &bChangeSize);
 
   private:
     SwsContext *mImgConvertCtx;

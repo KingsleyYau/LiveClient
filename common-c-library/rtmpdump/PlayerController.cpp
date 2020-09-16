@@ -375,6 +375,19 @@ void PlayerController::OnRecvAudioFrame(
 /*********************************************** 传输器回调处理 End *****************************************************/
 
 /*********************************************** 解码器回调处理 *****************************************************/
+void PlayerController::OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned int displayWidth, unsigned int displayHeight) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnDecodeVideoChangeSize( "
+                 "[New Video Display Size], "
+                 "displayWidth : %d, "
+                 "displayHeight : %d "
+                 ")",
+                 displayWidth,
+                 displayHeight
+                 );
+}
+
 void PlayerController::OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp) {
     // 播放视频帧
     mRtmpPlayer.PushVideoFrame(frame, timestamp);

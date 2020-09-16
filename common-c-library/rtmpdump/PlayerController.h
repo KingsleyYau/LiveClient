@@ -147,6 +147,7 @@ class PlayerController : public RtmpDumpCallback,
                           u_int32_t timestamp);
 
     // 解码器回调
+    void OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned int displayWidth, unsigned int displayHeight);
     void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp);
     void OnDecodeVideoError(VideoDecoder *decoder);
     void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp);

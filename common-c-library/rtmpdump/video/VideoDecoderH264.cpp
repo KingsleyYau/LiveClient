@@ -953,7 +953,7 @@ void VideoDecoderH264::ConvertVideoHandle() {
 
             long long curTime = getCurrentTime();
             // 格式转换
-            mVideoFormatConverter.ConvertFrame(srcFrame, dstFrame);
+            bool bChangeSize = mVideoFormatConverter.ConvertFrame(srcFrame, dstFrame);
             // 计算处理时间
             long long now = getCurrentTime();
             long long handleTime = now - curTime;
@@ -974,6 +974,10 @@ void VideoDecoderH264::ConvertVideoHandle() {
                          mDecodeBufferList.size(),
                          mConvertBufferList.size());
 
+            if ( mpCallback && bChangeSize ) {
+                mpCallback->OnDecodeVideoChangeSize(this, mVideoFormatConverter.GetWidth(), mVideoFormatConverter.GetHeight());
+            }
+            
             // 回调播放
             if (mpCallback && dstFrame) {
                 // 放进播放器
