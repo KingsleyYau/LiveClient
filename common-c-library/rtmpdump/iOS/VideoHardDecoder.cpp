@@ -814,6 +814,23 @@ bool VideoHardDecoder::CheckVideoSize() {
                          frame_crop_bottom_offset
                          );
         }
+    } else {
+        if (bFlag) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "VideoHardDecoder::CheckVideoSize( "
+                         "[New Video Display Size], "
+                         "mWidth : %d, "
+                         "mHeight : %d, "
+                         "displayWidth : %d, "
+                         "displayHeight : %d "
+                         ")",
+                         mWidth,
+                         mHeight,
+                         mWidth,
+                         mHeight
+                         );
+        }
     }
     
     return bFlag;
