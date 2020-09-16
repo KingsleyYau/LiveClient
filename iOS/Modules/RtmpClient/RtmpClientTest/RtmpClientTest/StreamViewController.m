@@ -24,7 +24,6 @@
 @property (assign) NSUInteger playerCount;
 
 @property (strong) LiveStreamPublisher *publisher;
-@property (strong) NSString *publishUrl;
 
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
@@ -63,22 +62,22 @@
     self.playerArray = playerArray;
 
     // 初始化推送
-//    self.publishUrl = @"rtmp://172.25.32.133:4000/cdn_standard/max";
-    self.publishUrl = @"rtmp://52.196.96.7:4000/cdn_standard/max";
-//    self.publishUrl = @"rtmp://198.211.27.71:4000/cdn_standard/max";
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
     LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = vibrateFilter;
 
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max134", nil];
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:4000/cdn_standard/max0", nil];
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.133:4000/cdn_standard/max0", nil];
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://198.211.27.71:4000/cdn_standard/max", nil];
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://52.196.96.7:1935/mediaserver/camsahre", nil];
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.133:1935/mediaserver/camsahre", nil];
-    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
+    // Live
+    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+//    // Camshare
+//    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
+//    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
+    
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
+    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil],
 
     [self play:nil];
     //    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
@@ -181,7 +180,7 @@
 //        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 //    }
     NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
-    NSString *recordH264FilePath = [NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
     NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];

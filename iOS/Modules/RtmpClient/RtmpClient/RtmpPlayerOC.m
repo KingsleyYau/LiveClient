@@ -214,7 +214,7 @@ private:
         _useHardDecoder = NO;
 #else
         // 真机, 默认使用硬解码
-        _useHardDecoder = NO;
+        _useHardDecoder = YES;
 #endif
         
         // 创建解码器和渲染器

@@ -22,7 +22,7 @@
     [urlConnection start];
     
     KLog::SetLogFileEnable(NO);
-    KLog::SetLogLevel(KLog::LOG_MSG);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
     
     return YES;
 }

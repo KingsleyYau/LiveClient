@@ -723,27 +723,27 @@ bool VideoHardDecoder::CheckVideoSize() {
     int height = (pic_height_in_map_units_minus1 + 1) * 16;
     height *= (2 - frame_mbs_only_flag);
 
-    if (mWidth != 0 && mHeight != 0) {
-        if (mWidth != width || mHeight != height) {
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_WARNING,
-                         "VideoHardDecoder::CheckVideoSize( "
-                         "[New Video Size], "
-                         "mSpSize : %d, "
-                         "profile_idc : %d, "
-                         "mWidth : %d, "
-                         "mHeight : %d, "
-                         "width : %d, "
-                         "height : %d "
-                         ")",
-                         mSpSize,
-                         profile_idc,
-                         mWidth,
-                         mHeight,
-                         width,
-                         height);
-            bFlag = true;
-        }
+    if ( (mWidth == 0 && mHeight == 0) ||
+        ((mWidth != 0 && mHeight != 0) && (mWidth != width || mHeight != height))
+        ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "VideoHardDecoder::CheckVideoSize( "
+                     "[New Video Coded Size], "
+                     "mSpSize : %d, "
+                     "profile_idc : %d, "
+                     "mWidth : %d, "
+                     "mHeight : %d, "
+                     "width : %d, "
+                     "height : %d "
+                     ")",
+                     mSpSize,
+                     profile_idc,
+                     mWidth,
+                     mHeight,
+                     width,
+                     height);
+        bFlag = true;
     }
 
     mWidth = width;
@@ -792,7 +792,7 @@ bool VideoHardDecoder::CheckVideoSize() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "VideoHardDecoder::CheckVideoSize( "
-                         "[Crop], "
+                         "[New Video Display Size], "
                          "mWidth : %d, "
                          "mHeight : %d, "
                          "displayWidth : %d, "
