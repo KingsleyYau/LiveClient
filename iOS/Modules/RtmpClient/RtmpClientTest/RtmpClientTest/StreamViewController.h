@@ -14,6 +14,7 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewTop;
 
+@property (nonatomic, weak) IBOutlet UILabel* labelVideoSize0;
 @property (nonatomic, weak) IBOutlet GPUImageView* previewView0;
 @property (nonatomic, weak) IBOutlet GPUImageView* previewView1;
 @property (nonatomic, weak) IBOutlet GPUImageView* previewView2;

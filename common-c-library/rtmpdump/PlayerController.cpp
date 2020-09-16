@@ -386,6 +386,9 @@ void PlayerController::OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned i
                  displayWidth,
                  displayHeight
                  );
+    if ( mpPlayerStatusCallback ) {
+        mpPlayerStatusCallback->OnPlayerInfoChange(this, displayWidth, displayHeight);
+    }
 }
 
 void PlayerController::OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp) {

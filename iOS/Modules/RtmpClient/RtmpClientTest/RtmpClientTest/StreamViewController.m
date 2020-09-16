@@ -53,6 +53,7 @@
     ];
     for (int i = 0; i < self.playerPreviewArray.count; i++) {
         LiveStreamPlayer *player = [LiveStreamPlayer instance];
+        player.delegate = self;
         player.playView = self.playerPreviewArray[i];
         player.customFilter = self.playerFilterArray[i];
 
@@ -69,8 +70,8 @@
     self.publisher.customFilter = vibrateFilter;
 
     // Live
-    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
+    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
 //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
 //    // Camshare
 //    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
@@ -443,6 +444,12 @@
     NSInteger second = [comoponents second];
 
     return [NSString stringWithFormat:@"%ld_%ld_%ld_%ld_%.2ld_%.2ld", (long)year, (long)month, (long)day, (long)hour, (long)minute, (long)second];
+}
+
+- (void)playerOnInfoChange:(LiveStreamPlayer * _Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.labelVideoSize0.text = [NSString stringWithFormat:@"%dx%d", videoDisplayWidth, vieoDisplayHeight, nil];
+    });
 }
 
 @end

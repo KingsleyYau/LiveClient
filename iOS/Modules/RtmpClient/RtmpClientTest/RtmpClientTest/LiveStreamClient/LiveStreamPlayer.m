@@ -314,6 +314,14 @@
     });
 }
 
+- (void)rtmpPlayerOnInfoChange:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnInfoChange( self : %p, videoDisplayWidth : %d, vieoDisplayHeight : %d )", self, videoDisplayWidth, vieoDisplayHeight);
+    
+    if ([self.delegate respondsToSelector:@selector(playerOnInfoChange:videoDisplayWidth:vieoDisplayHeight:)]) {
+        [self.delegate playerOnInfoChange:self videoDisplayWidth:videoDisplayWidth vieoDisplayHeight:vieoDisplayHeight];
+    }
+}
+
 #pragma mark - 视频采集后台
 - (void)willEnterBackground:(NSNotification *)notification {
     BOOL bHandle = NO;

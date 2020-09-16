@@ -184,6 +184,12 @@ public:
         }
     }
     
+    void OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnInfoChange:videoDisplayWidth:vieoDisplayHeight:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnInfoChange:mpRtmpPlayerOC videoDisplayWidth:videoDisplayWidth vieoDisplayHeight:vieoDisplayHeight];
+        }
+    }
+    
 private:
     __weak typeof(RtmpPlayerOC) *mpRtmpPlayerOC;
 };

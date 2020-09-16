@@ -19,6 +19,7 @@
 - (NSString * _Nullable)playerShouldChangeUrl:(LiveStreamPlayer * _Nonnull)player;
 - (void)playerOnConnect:(LiveStreamPlayer * _Nonnull)player;
 - (void)playerOnDisconnect:(LiveStreamPlayer * _Nonnull)player;
+- (void)playerOnInfoChange:(LiveStreamPlayer * _Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight;
 @end
 
 @interface LiveStreamPlayer : NSObject

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,6 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StreamViewController">
             <connections>
+                <outlet property="labelVideoSize0" destination="h6A-Xk-jAV" id="2Wb-3l-6VO"/>
                 <outlet property="playBottom" destination="bgR-hw-VKu" id="Koh-oS-Pvm"/>
                 <outlet property="previewPublishView" destination="i4D-ha-MOA" id="swf-p4-FLT"/>
                 <outlet property="previewView0" destination="lAj-db-Qml" id="6i0-TX-BoF"/>
@@ -58,6 +59,12 @@
                                 <action selector="stop0:" destination="-1" eventType="touchUpInside" id="b9c-uQ-FEp"/>
                             </connections>
                         </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h6A-Xk-jAV" userLabel="Video Size Label">
+                            <rect key="frame" x="10" y="404" width="0.0" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
@@ -70,8 +77,10 @@
                         <constraint firstItem="lAj-db-Qml" firstAttribute="trailing" secondItem="PCz-ew-zQ9" secondAttribute="trailing" id="XTg-vQ-c4R"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" id="Ylb-hn-lIC"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" id="aga-2D-NzT"/>
+                        <constraint firstItem="h6A-Xk-jAV" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="10" id="e8K-Is-pds"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="top" secondItem="o1Z-fk-mBG" secondAttribute="top" id="hlr-ns-igA"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="leading" secondItem="o1Z-fk-mBG" secondAttribute="trailing" id="iXk-GU-1ct"/>
+                        <constraint firstAttribute="bottom" secondItem="h6A-Xk-jAV" secondAttribute="bottom" constant="10" id="lCl-am-CnW"/>
                         <constraint firstAttribute="width" secondItem="PCz-ew-zQ9" secondAttribute="height" multiplier="1:1" id="rQ6-7N-G41"/>
                         <constraint firstItem="o1Z-fk-mBG" firstAttribute="top" secondItem="xgW-Zf-XcI" secondAttribute="top" id="vlm-LC-c9o"/>
                     </constraints>

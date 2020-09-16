@@ -34,6 +34,7 @@ class PlayerStatusCallback {
     virtual void OnPlayerConnect(PlayerController *pc) = 0;
     virtual void OnPlayerDisconnect(PlayerController *pc) = 0;
     virtual void OnPlayerOnDelayMaxTime(PlayerController *pc) = 0;
+    virtual void OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight) = 0;
 };
 
 class PlayerController : public RtmpDumpCallback,
