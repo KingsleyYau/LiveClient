@@ -190,6 +190,12 @@ public:
         }
     }
     
+    void OnPlayerStats(PlayerController *pc, unsigned int fps, unsigned int bitrate) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnStats:fps:bitrate:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnStats:mpRtmpPlayerOC fps:fps bitrate:bitrate];
+        }
+    }
+    
 private:
     __weak typeof(RtmpPlayerOC) *mpRtmpPlayerOC;
 };

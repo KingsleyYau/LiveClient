@@ -9,6 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StreamViewController">
             <connections>
+                <outlet property="labelFps0" destination="qIz-z5-ZpK" id="1cl-23-bUw"/>
                 <outlet property="labelVideoSize0" destination="h6A-Xk-jAV" id="2Wb-3l-6VO"/>
                 <outlet property="playBottom" destination="bgR-hw-VKu" id="Koh-oS-Pvm"/>
                 <outlet property="previewPublishView" destination="i4D-ha-MOA" id="swf-p4-FLT"/>
@@ -65,10 +66,17 @@
                             <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIz-z5-ZpK" userLabel="Fps Label">
+                            <rect key="frame" x="20" y="404" width="0.0" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" constant="5" id="90V-e9-gxT"/>
+                        <constraint firstItem="qIz-z5-ZpK" firstAttribute="top" secondItem="h6A-Xk-jAV" secondAttribute="top" id="DxH-gj-pDH"/>
                         <constraint firstItem="o1Z-fk-mBG" firstAttribute="width" secondItem="xgW-Zf-XcI" secondAttribute="width" id="EnN-8Y-tOh"/>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="5" id="FPR-vk-5Bk"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="width" secondItem="o1Z-fk-mBG" secondAttribute="width" id="FQl-f0-cuZ"/>
@@ -77,6 +85,7 @@
                         <constraint firstItem="lAj-db-Qml" firstAttribute="trailing" secondItem="PCz-ew-zQ9" secondAttribute="trailing" id="XTg-vQ-c4R"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" id="Ylb-hn-lIC"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" id="aga-2D-NzT"/>
+                        <constraint firstItem="qIz-z5-ZpK" firstAttribute="leading" secondItem="h6A-Xk-jAV" secondAttribute="trailing" constant="10" id="c3I-CN-dvg"/>
                         <constraint firstItem="h6A-Xk-jAV" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="10" id="e8K-Is-pds"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="top" secondItem="o1Z-fk-mBG" secondAttribute="top" id="hlr-ns-igA"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="leading" secondItem="o1Z-fk-mBG" secondAttribute="trailing" id="iXk-GU-1ct"/>

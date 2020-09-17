@@ -35,6 +35,15 @@ void Statistics::Start() {
     mVideoPlayFrameCount = 0;
     mAudioRecvFrameCount = 0;
     mAudioPlayFrameCount = 0;
+    
+    mVideoPlayFrameCountPre = 0;
+    mFpsTime = 0;
+    mFps = 0;
+    
+    mVideoRecvBytesPre = 0;
+    mVideoRecvBytes = 0;
+    mVideoBytesTime = 0;
+    mBitrate = 0;
     mStatusMutex.unlock();
 }
 
@@ -53,20 +62,53 @@ void Statistics::Stop() {
     mStatusMutex.unlock();
 }
 
-void Statistics::AddVideoRecvFrame() {
+bool Statistics::AddVideoRecvFrame(int size) {
+    bool bFlag = false;
+    
     mStatusMutex.lock();
     mVideoRecvFrameCount++;
+    
+    mVideoRecvBytes += size;
+    long long now = (long long)getCurrentTime();
+    if ( mVideoBytesTime == 0 ) {
+        mVideoBytesTime = now;
+    }
+    if ( now - mVideoBytesTime > 1000 ) {
+        mBitrate = 8.0 * (mVideoRecvBytes - mVideoRecvBytesPre) / 1000;
+        mVideoRecvBytesPre = mVideoRecvBytes;
+        mVideoBytesTime = now;
+        bFlag = true;
+    }
+    
     mStatusMutex.unlock();
 
     if (!CanRecvAudio() && !CanRecvVideo()) {
         Sleep(100);
     }
+    
+    return bFlag;
 }
 
-void Statistics::AddVideoPlayFrame() {
+bool Statistics::AddVideoPlayFrame() {
+    bool bFlag = false;
+    
     mStatusMutex.lock();
     mVideoPlayFrameCount++;
+    
+    long long now = (long long)getCurrentTime();
+    if ( mFpsTime == 0 ) {
+        mFpsTime = now;
+    }
+    if ( now - mFpsTime > 1000 ) {
+        mFps = mVideoPlayFrameCount - mVideoPlayFrameCountPre;
+        mVideoPlayFrameCountPre = mVideoPlayFrameCount;
+        mFpsTime = now;
+        bFlag = true;
+    }
+    
     mStatusMutex.unlock();
+    
+    return bFlag;
 }
 
 void Statistics::AddAudioRecvFrame() {
@@ -140,5 +182,13 @@ bool Statistics::CanRecvAudio() {
     mStatusMutex.unlock();
 
     return bFlag;
+}
+
+unsigned int Statistics::Fps() {
+    return mFps;
+}
+
+unsigned int Statistics::Bitrate() {
+    return mBitrate;
 }
 }

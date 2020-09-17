@@ -322,6 +322,12 @@
     }
 }
 
+- (void)rtmpPlayerOnStats:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC fps:(unsigned int)fps bitrate:(unsigned int)bitrate {
+    if ([self.delegate respondsToSelector:@selector(playerOnStats:fps:bitrate:)]) {
+        [self.delegate playerOnStats:self fps:fps bitrate:bitrate];
+    }
+}
+
 #pragma mark - 视频采集后台
 - (void)willEnterBackground:(NSNotification *)notification {
     BOOL bHandle = NO;

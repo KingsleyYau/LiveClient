@@ -20,6 +20,7 @@
 - (void)playerOnConnect:(LiveStreamPlayer * _Nonnull)player;
 - (void)playerOnDisconnect:(LiveStreamPlayer * _Nonnull)player;
 - (void)playerOnInfoChange:(LiveStreamPlayer * _Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight;
+- (void)playerOnStats:(LiveStreamPlayer * _Nonnull)player fps:(unsigned int)fps bitrate:(unsigned int)bitrate;
 @end
 
 @interface LiveStreamPlayer : NSObject

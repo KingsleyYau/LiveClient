@@ -19,6 +19,7 @@
 - (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 - (void)rtmpPlayerOnPlayerOnDelayMaxTime:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 - (void)rtmpPlayerOnInfoChange:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight;
+- (void)rtmpPlayerOnStats:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC fps:(unsigned int)fps bitrate:(unsigned int)bitrate;
 @end
 
 @interface RtmpPlayerOC : NSObject

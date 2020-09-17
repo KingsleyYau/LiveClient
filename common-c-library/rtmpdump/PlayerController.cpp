@@ -92,7 +92,6 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
                  ")",
                  this,
                  url.c_str());
-
     // 重置分析器
     mStatistics.Start();
     // 重置解码器
@@ -303,7 +302,10 @@ void PlayerController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, in
                  size,
                  video_type);
     // 增加分析处理
-    mStatistics.AddVideoRecvFrame();
+    bool bChange = mStatistics.AddVideoRecvFrame(size);
+    if ( mpPlayerStatusCallback && bChange ) {
+        mpPlayerStatusCallback->OnPlayerStats(this, mStatistics.Fps(), mStatistics.Bitrate());
+    }
 
     // 录制视频帧
     mVideoRecorderH264.RecordVideoFrame(data, size);
@@ -443,7 +445,10 @@ void PlayerController::OnPlayVideoFrame(RtmpPlayer *player, void *frame) {
     }
 
     // 增加分析处理
-    mStatistics.AddVideoPlayFrame();
+    bool bChange = mStatistics.AddVideoPlayFrame();
+    if ( mpPlayerStatusCallback && bChange ) {
+        mpPlayerStatusCallback->OnPlayerStats(this, mStatistics.Fps(), mStatistics.Bitrate());
+    }
 }
 
 void PlayerController::OnDropVideoFrame(RtmpPlayer *player, void *frame) {

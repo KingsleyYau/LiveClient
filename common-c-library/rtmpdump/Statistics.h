@@ -26,8 +26,8 @@ class Statistics {
     /**
      增加视频帧
      */
-    void AddVideoRecvFrame();
-    void AddVideoPlayFrame();
+    bool AddVideoRecvFrame(int size);
+    bool AddVideoPlayFrame();
 
     /**
      增加音频帧
@@ -49,6 +49,9 @@ class Statistics {
      */
     int IsDisconnect();
 
+    unsigned int Fps();
+    unsigned int Bitrate();
+    
   private:
     /**
      是否接收视频帧
@@ -72,6 +75,17 @@ class Statistics {
     int mVideoPlayFrameCount;
     int mAudioRecvFrameCount;
     int mAudioPlayFrameCount;
+    
+    // 统计帧率
+    unsigned int mVideoPlayFrameCountPre;
+    long long mFpsTime;
+    unsigned int mFps;
+    
+    // 统计码率
+    long long mVideoRecvBytesPre;
+    long long mVideoRecvBytes;
+    long long mVideoBytesTime;
+    unsigned int mBitrate;
 };
     
 }

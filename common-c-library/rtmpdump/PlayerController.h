@@ -35,6 +35,7 @@ class PlayerStatusCallback {
     virtual void OnPlayerDisconnect(PlayerController *pc) = 0;
     virtual void OnPlayerOnDelayMaxTime(PlayerController *pc) = 0;
     virtual void OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight) = 0;
+    virtual void OnPlayerStats(PlayerController *pc, unsigned int fps, unsigned int bitrate) = 0;
 };
 
 class PlayerController : public RtmpDumpCallback,
@@ -207,14 +208,15 @@ class PlayerController : public RtmpDumpCallback,
     // 录制模块
     VideoRecorderH264 mVideoRecorderH264;
     AudioRecorderAAC mAudioRecorderAAC;
-    // 分析模块
-    Statistics mStatistics;
     // 是否需要重置音频播放
     bool mbNeedResetAudioRenderer;
     // 文件播放器
     MediaFileReader mFileReader;
     // 是否播放文件
     bool mbIsPlayFile;
+
+    // 分析模块
+    Statistics mStatistics;
 };
 }
 
