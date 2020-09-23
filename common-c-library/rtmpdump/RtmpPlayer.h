@@ -100,6 +100,7 @@ class RtmpPlayer {
     void SetRtmpDump(RtmpDump *rtmpDump);
     void SetCallback(RtmpPlayerCallback *callback);
     void SetCacheMS(int cacheMS);
+    int CahceMS() const;
     void SetCacheNoLimit(bool bNoCacheLimit);
 
   public:

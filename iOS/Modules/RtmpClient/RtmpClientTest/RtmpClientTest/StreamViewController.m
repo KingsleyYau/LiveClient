@@ -15,15 +15,12 @@
 
 #import "LSImageVibrateFilter.h"
 
-@interface StreamViewController ()
+@interface StreamViewController () <LiveStreamPlayerDelegate>
 
-@property (strong) NSArray<LiveStreamPlayer *> *playerArray;
-@property (strong) NSArray<GPUImageView *> *playerPreviewArray;
-@property (strong) NSArray<NSString *> *playerUrlArray;
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
-@property (assign) NSUInteger playerCount;
 
 @property (strong) LiveStreamPublisher *publisher;
+@property (strong) LiveStreamPlayer *player;
 
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
@@ -40,44 +37,38 @@
     // Do any additional setup after loading the view, typically from a nib.
 
     // 初始化播放
-    self.playerPreviewArray = @[
-        self.previewView0,
-        self.previewView1,
-        self.previewView2
-    ];
-    NSMutableArray *playerArray = [NSMutableArray array];
     self.playerFilterArray = @[
         [[LSImageVibrateFilter alloc] init],
         [[LSImageVibrateFilter alloc] init],
-        [[LSImageVibrateFilter alloc] init]
     ];
-    for (int i = 0; i < self.playerPreviewArray.count; i++) {
-        LiveStreamPlayer *player = [LiveStreamPlayer instance];
-        player.delegate = self;
-        player.playView = self.playerPreviewArray[i];
-        player.customFilter = self.playerFilterArray[i];
+    self.player = [LiveStreamPlayer instance];
+    self.player.delegate = self;
+    self.player.playView = self.previewView;
+    self.player.customFilter = self.playerFilterArray[0];
+    self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
 
-        player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
-        [playerArray addObject:player];
-    }
-    self.playerArray = playerArray;
+    // 界面处理
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    self.labelVideoSize.text = @"";
+    self.labelFps.text = @"";
+    [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
 
     // 初始化推送
-    self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
+    self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x320];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
     LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = vibrateFilter;
 
     // Live
-//    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
-    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
-//    // Camshare
-//    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
-//    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
-    
+        NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
+    //    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
+    //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+    //    // Camshare
+    //    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
+    //    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
+
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil],
 
@@ -154,7 +145,72 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - 播放相关
+- (IBAction)mutePlay:(id)sender {
+    self.player.mute = !self.player.mute;
+}
+
+- (IBAction)filterPlay:(id)sender {
+    if (self.player) {
+        if (!self.player.customFilter) {
+            self.player.customFilter = self.playerFilterArray[0];
+        } else {
+            self.player.customFilter = nil;
+        }
+    }
+}
+
+- (void)sliderValueChanged:(id)sender {
+    UISlider *slider = (UISlider *)sender;
+    self.player.cacheMS = (int)roundf(slider.value);
+    self.labelCacheMS.text = [NSString stringWithFormat:@"%ldms", self.player.cacheMS, nil];
+}
+
+- (IBAction)play:(id)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+
+    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
+    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+
+    NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
+    [self.player playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+}
+
+- (IBAction)playFile:(id)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+
+    NSString *filePath = [NSString stringWithFormat:@"%@/input.mp4", cacheDir];
+    [self.player playFilePath:filePath];
+}
+
+- (IBAction)stopPlay:(id)sender {
+    [self.player stop];
+}
+
+#pragma mark - 播放器状态回调
+- (void)playerOnInfoChange:(LiveStreamPlayer *_Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.labelVideoSize.text = [NSString stringWithFormat:@"%dx%d", videoDisplayWidth, vieoDisplayHeight, nil];
+    });
+}
+
+- (void)playerOnStats:(LiveStreamPlayer *_Nonnull)player fps:(unsigned int)fps bitrate:(unsigned int)bitrate {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.labelFps.text = [NSString stringWithFormat:@"fps:%u  %ukbps", fps, bitrate, nil];
+    });
+}
+
+#pragma mark - 推流相关
 - (IBAction)publish:(id)sender {
+    self.previewPublishView.hidden = NO;
+    
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
 
@@ -167,46 +223,9 @@
     [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
-- (IBAction)play:(id)sender {
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-
-//    for (int i = 0; i < self.playerArray.count; i++) {
-//        NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-//        NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-//        NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-//
-//        NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
-//        [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-//    }
-    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-
-    NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
-    [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-}
-
-- (IBAction)playFile:(id)sender {
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-
-    NSString *filePath = [NSString stringWithFormat:@"%@/input.mp4", cacheDir];
-    [self.playerArray[0] playFilePath:filePath];
-}
-
-- (IBAction)stopPlay:(id)sender {
-    for (int i = 0; i < self.playerArray.count; i++) {
-        [self.playerArray[i] stop];
-    }
-}
-
 - (IBAction)stopPush:(id)sender {
     [self.publisher stop];
+    self.previewPublishView.hidden = YES;
 }
 
 - (IBAction)beauty:(id)sender {
@@ -227,129 +246,6 @@
 
 - (IBAction)stopCam:(id)sender {
     [self.publisher stopPreview];
-}
-
-- (IBAction)CamPlay:(id)sender {
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-    NSString *h264Path = @"";//[NSString stringWithFormat:@"%@/play.h264", recordDir];
-    
-    NSString *url = @"rtmp://172.25.32.133:1935/camshare/iOS";
-    [self.playerArray[0] playUrl:url recordFilePath:@"" recordH264FilePath:h264Path recordAACFilePath:@""];
-//    PlayViewController *vc = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
-//    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (IBAction)CamPush:(id)sender {
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-    NSString *h264Path = @"";//[NSString stringWithFormat:@"%@/publish.h264", recordDir];
-    
-    NSString *url = @"rtmp://172.25.32.133:1935/camshare/iOS";
-    [self.publisher pushlishUrl:url recordH264FilePath:h264Path recordAACFilePath:@""];
-}
-
-#pragma mark - 静音
-- (IBAction)mute0:(id)sender {
-    self.playerArray[0].mute = !self.playerArray[0].mute;
-}
-
-- (IBAction)mute1:(id)sender {
-    self.playerArray[1].mute = !self.playerArray[1].mute;
-}
-
-- (IBAction)mute2:(id)sender {
-    self.playerArray[2].mute = !self.playerArray[2].mute;
-}
-
-#pragma mark - 播放
-- (IBAction)play0:(id)sender {
-    int i = 0;
-
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-
-    NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-
-    NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
-    [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-}
-
-- (IBAction)play1:(id)sender {
-    int i = 1;
-
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-
-    NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-
-    NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
-    [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-}
-
-- (IBAction)play2:(id)sender {
-    int i = 2;
-
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-
-    NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-
-    NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
-    [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-}
-
-- (IBAction)stop0:(id)sender {
-    int i = 0;
-    
-    if( self.playerArray[i] ) {
-        if( !self.playerArray[i].customFilter ) {
-            self.playerArray[i].customFilter = self.playerFilterArray[i];
-        } else {
-            self.playerArray[i].customFilter = nil;
-        }
-    }
-}
-
-- (IBAction)stop1:(id)sender {
-    int i = 1;
-    if( self.playerArray[i] ) {
-        if( !self.playerArray[i].customFilter ) {
-            self.playerArray[i].customFilter = self.playerFilterArray[i];
-        } else {
-            self.playerArray[i].customFilter = nil;
-        }
-    }
-}
-
-- (IBAction)stop2:(id)sender {
-    int i = 2;
-    if( self.playerArray[i] ) {
-        if( !self.playerArray[i].customFilter ) {
-            self.playerArray[i].customFilter = self.playerFilterArray[i];
-        } else {
-            self.playerArray[i].customFilter = nil;
-        }
-    }
 }
 
 #pragma mark - 单击屏幕
@@ -434,29 +330,40 @@
     [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
 }
 
-- (NSString *)toStringYMDHMSWithUnderLine:(NSDate *)date {
-    NSUInteger componentFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
-    NSDateComponents *comoponents = [[NSCalendar currentCalendar] components:componentFlags fromDate:date];
-    NSInteger year = [comoponents year];
-    NSInteger month = [comoponents month];
-    NSInteger day = [comoponents day];
-    NSInteger hour = [comoponents hour];
-    NSInteger minute = [comoponents minute];
-    NSInteger second = [comoponents second];
-
-    return [NSString stringWithFormat:@"%ld_%ld_%ld_%ld_%.2ld_%.2ld", (long)year, (long)month, (long)day, (long)hour, (long)minute, (long)second];
+- (void)deviceOrientationChange:(id)sender {
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    switch (deviceOrientation) {
+        case UIDeviceOrientationPortrait:
+            // Device oriented vertically, home button on the bottom
+            NSLog(@"StreamViewController::deviceOrientationChange( [Portrait] )");
+        case UIDeviceOrientationPortraitUpsideDown: {
+            // Device oriented vertically, home button on the top
+            NSLog(@"StreamViewController::deviceOrientationChange( [PortraitUpsideDown] )");
+            [self hideControll:NO];
+        } break;
+        case UIDeviceOrientationLandscapeLeft:
+        // Device oriented horizontally, home button on the right
+            NSLog(@"StreamViewController::deviceOrientationChange( [LandscapeLeft] )");
+        case UIDeviceOrientationLandscapeRight:{
+            // Device oriented horizontally, home button on the left
+            NSLog(@"StreamViewController::deviceOrientationChange( [LandscapeRight] )");
+            [self hideControll:YES];
+        }break;
+        default:break;
+    }
 }
 
-- (void)playerOnInfoChange:(LiveStreamPlayer * _Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.labelVideoSize0.text = [NSString stringWithFormat:@"%dx%d", videoDisplayWidth, vieoDisplayHeight, nil];
-    });
-}
-
-- (void)playerOnStats:(LiveStreamPlayer * _Nonnull)player fps:(unsigned int)fps bitrate:(unsigned int)bitrate {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.labelFps0.text = [NSString stringWithFormat:@"fps:%u  %ukbps", fps, bitrate, nil];
-    });
+- (void)hideControll:(BOOL)hidden {
+    [self.navigationController setNavigationBarHidden:hidden];
+    self.controlView.hidden = hidden;
+    
+    if (hidden) {
+        [NSLayoutConstraint deactivateConstraints:@[self.previewViewRadio]];
+        [NSLayoutConstraint activateConstraints:@[self.previewViewBottom]];
+    } else {
+        [NSLayoutConstraint deactivateConstraints:@[self.previewViewBottom]];
+        [NSLayoutConstraint activateConstraints:@[self.previewViewRadio]];
+    }
 }
 
 @end

@@ -317,6 +317,13 @@
             self.videoKpi = 6;
             self.videoBitFate = 64 * 1000;
         }break;
+        case LiveStreamType_480x320: {
+            self.videoWidth = 480;
+            self.videoHeight = 320;
+            self.videoFps = 10;
+            self.videoKpi = 10;
+            self.videoBitFate = 400 * 1000;
+        }break;
         default:
             break;
     }

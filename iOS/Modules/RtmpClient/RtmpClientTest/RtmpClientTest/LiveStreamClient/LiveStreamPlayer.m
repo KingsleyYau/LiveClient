@@ -166,6 +166,14 @@
     }
 }
 
+- (NSInteger)cacheMS {
+    return self.player.cacheMS;
+}
+
+- (void)setCacheMS:(NSInteger)cacheMS {
+    self.player.cacheMS = cacheMS;
+}
+
 - (BOOL)mute {
     return self.player.mute;
 }

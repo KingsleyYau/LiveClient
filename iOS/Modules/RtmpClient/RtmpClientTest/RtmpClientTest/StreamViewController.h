@@ -14,30 +14,26 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewTop;
 
-@property (nonatomic, weak) IBOutlet UILabel* labelVideoSize0;
-@property (nonatomic, weak) IBOutlet UILabel* labelFps0;
-@property (nonatomic, weak) IBOutlet GPUImageView* previewView0;
-@property (nonatomic, weak) IBOutlet GPUImageView* previewView1;
-@property (nonatomic, weak) IBOutlet GPUImageView* previewView2;
+@property (nonatomic, weak) IBOutlet UILabel* labelVideoSize;
+@property (nonatomic, weak) IBOutlet UILabel* labelFps;
+@property (nonatomic, weak) IBOutlet GPUImageView* previewView;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* previewViewRadio;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* previewViewBottom;
+
 @property (nonatomic, weak) IBOutlet GPUImageView* previewPublishView;
+@property (nonatomic, weak) IBOutlet UIView* controlView;
 @property (nonatomic, weak) IBOutlet UITextField* textFieldAddress;
 @property (nonatomic, weak) IBOutlet UITextField* textFieldPublishAddress;
 
+@property (nonatomic, weak) IBOutlet UILabel* labelCacheMS;
+@property (nonatomic, weak) IBOutlet UISlider* sliderCacheMS;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint* playBottom;
 
-- (IBAction)mute0:(id)sender;
-- (IBAction)mute1:(id)sender;
-- (IBAction)mute2:(id)sender;
-- (IBAction)play0:(id)sender;
-- (IBAction)play1:(id)sender;
-- (IBAction)play2:(id)sender;
-- (IBAction)stop0:(id)sender;
-- (IBAction)stop1:(id)sender;
-- (IBAction)stop2:(id)sender;
-
+- (IBAction)mutePlay:(id)sender;
+- (IBAction)filterPlay:(id)sender;
 - (IBAction)play:(id)sender;
-- (IBAction)publish:(id)sender;
 - (IBAction)stopPlay:(id)sender;
+- (IBAction)publish:(id)sender;
 - (IBAction)stopPush:(id)sender;
 - (IBAction)beauty:(id)sender;
 - (IBAction)mute:(id)sender;

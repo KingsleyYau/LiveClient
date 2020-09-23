@@ -35,6 +35,11 @@
 @property (weak) id<LiveStreamPlayerDelegate> _Nullable delegate;
 
 /**
+缓存时间
+*/
+@property (nonatomic, assign) NSInteger cacheMS;
+
+/**
  是否静音
  */
 @property (nonatomic, assign) BOOL mute;

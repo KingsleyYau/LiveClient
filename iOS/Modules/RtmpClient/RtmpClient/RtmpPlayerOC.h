@@ -44,6 +44,11 @@
  */
 @property (nonatomic, assign) BOOL mute;
 
+/**
+ 缓存时间
+ */
+@property (nonatomic, assign) NSInteger cacheMS;
+
 #pragma mark - 获取实例
 /**
  *  获取实例

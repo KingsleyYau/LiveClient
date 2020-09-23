@@ -36,11 +36,13 @@ class PublishRunnable : public KRunnable {
     RtmpPublisher *mContainer;
 };
 
-RtmpPublisher::RtmpPublisher()
+RtmpPublisher::RtmpPublisher(RtmpPublisherCallback *callback)
     : mClientMutex(KMutex::MutexType_Recursive) {
     FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::RtmpPublisher( this : %p )", this);
 
     Init();
+        
+    mpRtmpPublisherCallback = callback;
 }
 
 RtmpPublisher::~RtmpPublisher() {
@@ -94,7 +96,8 @@ bool RtmpPublisher::PublishUrl() {
 
 void RtmpPublisher::Init() {
     mbRunning = false;
-
+    mpRtmpPublisherCallback = NULL;
+    
     mCacheVideoBufferQueue.SetCacheQueueSize(VIDEO_BUFFER_COUNT);
     mCacheAudioBufferQueue.SetCacheQueueSize(AUDIO_BUFFER_COUNT);
 
@@ -186,6 +189,9 @@ void RtmpPublisher::SendVideoFrame(char *data, int size, u_int32_t timestamp) {
                          this,
                          mVideoBufferList.size()
                          );
+            if ( mpRtmpPublisherCallback ) {
+                mpRtmpPublisherCallback->OnVideoBufferFull(this);
+            }
         }
 
         if (videoFrame) {

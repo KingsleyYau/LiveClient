@@ -54,6 +54,7 @@ class PlayerController : public RtmpDumpCallback,
      @param cacheMS 缓存时间
      */
     void SetCacheMS(int cacheMS);
+    int CacheMS() const;
     /**
      设置视频渲染器
 

@@ -19,10 +19,17 @@
 #include <stdio.h>
 
 namespace coollive {
+class RtmpPublisher;
+class RtmpPublisherCallback {
+  public:
+    virtual ~RtmpPublisherCallback(){};
+    virtual void OnVideoBufferFull(RtmpPublisher *publisher) = 0;
+};
+
 class PublishRunnable;
 class RtmpPublisher {
   public:
-    RtmpPublisher();
+    RtmpPublisher(RtmpPublisherCallback *callback = NULL);
     ~RtmpPublisher();
 
     /**
@@ -78,6 +85,9 @@ class RtmpPublisher {
     // Rtmp传输模块
     RtmpDump *mpRtmpDump;
 
+    // 回调
+    RtmpPublisherCallback *mpRtmpPublisherCallback;
+    
     // 状态锁
     KMutex mClientMutex;
     bool mbRunning;

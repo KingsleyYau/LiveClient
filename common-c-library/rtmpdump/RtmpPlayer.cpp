@@ -271,6 +271,10 @@ void RtmpPlayer::SetCacheMS(int cacheMS) {
     mCacheMS = cacheMS;
 }
 
+int RtmpPlayer::CahceMS() const {
+    return mCacheMS;
+}
+
 void RtmpPlayer::SetCacheNoLimit(bool bNoCacheLimit) {
     mbNoCacheLimit = bNoCacheLimit;
 }

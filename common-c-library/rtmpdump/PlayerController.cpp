@@ -43,7 +43,19 @@ PlayerController::~PlayerController() {
 }
 
 void PlayerController::SetCacheMS(int cacheMS) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::SetCacheMS( "
+                 "this : %p, "
+                 "cacheMS : %d "
+                 ")",
+                 this,
+                 cacheMS);
     mRtmpPlayer.SetCacheMS(cacheMS);
+}
+
+int PlayerController::CacheMS() const {
+    return mRtmpPlayer.CahceMS();
 }
 
 void PlayerController::SetVideoRenderer(VideoRenderer *videoRenderer) {

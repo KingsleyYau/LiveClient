@@ -219,7 +219,7 @@ private:
         self.player = new PlayerController();
         self.statusCallback = new PlayerStatusCallbackImp(self);
         self.player->SetStatusCallback(self.statusCallback);
-        self.player->SetCacheMS(1000);
+        self.player->SetCacheMS(2000);
         
 #if TARGET_OS_SIMULATOR
         // 模拟器, 默认使用软解码
@@ -295,6 +295,14 @@ private:
 }
 
 #pragma mark - 私有方法
+- (NSInteger)cacheMS {
+    return self.player->CacheMS();
+}
+
+- (void)setCacheMS:(NSInteger)cacheMS {
+    self.player->SetCacheMS((int)cacheMS);
+}
+
 - (BOOL)mute {
     BOOL bMute = NO;
     if( self.audioRenderer ) {
