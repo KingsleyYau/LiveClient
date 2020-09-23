@@ -48,6 +48,7 @@
     self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
 
     // 界面处理
+    self.title = @"Stream Player";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     self.labelVideoSize.text = @"";
     self.labelFps.text = @"";
