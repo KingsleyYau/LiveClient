@@ -47,7 +47,7 @@ https://github.com/KingsleyYau/LiveClient/tree/master/iOS/Modules/RtmpClient/Rtm
 
 ### Demo iOS Snapshot
 -------------
-![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS_1.PNG?raw=true)
+![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_iOS.PNG?raw=true)
 
 
 ### Demo Android Project
