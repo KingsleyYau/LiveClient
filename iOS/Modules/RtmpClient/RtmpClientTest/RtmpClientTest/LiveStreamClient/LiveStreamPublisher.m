@@ -618,8 +618,8 @@
         [self.videoCaptureSession pauseCameraCapture];
         
         // 暂停OpenGL处理队列
-        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-        dispatch_suspend(videoProcessingQueue);
+//        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+//        dispatch_suspend(videoProcessingQueue);
         
         // 直接断开连接
         [self.publisher stop];
@@ -638,8 +638,8 @@
     
     if( bHandle ) {
         // 恢复OpenGL处理队列
-        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-        dispatch_resume(videoProcessingQueue);
+//        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+//        dispatch_resume(videoProcessingQueue);
         
         // 恢复摄像头采集队列
         if (self.isPreview) {

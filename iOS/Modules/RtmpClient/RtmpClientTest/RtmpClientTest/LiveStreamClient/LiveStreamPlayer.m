@@ -274,9 +274,11 @@
 
 #pragma mark - 视频接收处理
 - (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC *_Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
-    if (buffer) {
-        // 这里显示视频
-        [self.pixelBufferInput processCVPixelBuffer:buffer];
+    if (_isBackground == NO) {
+        if (buffer) {
+            // 这里显示视频
+            [self.pixelBufferInput processCVPixelBuffer:buffer];
+        }
     }
 }
 
@@ -349,11 +351,11 @@
 
     if (bHandle) {
         // 暂停OpenGL处理队列
-        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-        dispatch_suspend(videoProcessingQueue);
+//        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+//        dispatch_suspend(videoProcessingQueue);
 
-        // 直接断开连接
-        [self.player stop];
+//        // 直接断开连接
+//        [self.player stop];
     }
 }
 
@@ -369,11 +371,11 @@
 
     if( bHandle ) {
         // 恢复OpenGL处理队列
-        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-        dispatch_resume(videoProcessingQueue);
+//        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+//        dispatch_resume(videoProcessingQueue);
         
-        // 重连
-        [self reconnect];
+//        // 重连
+//        [self reconnect];
     }
 }
 

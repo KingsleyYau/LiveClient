@@ -28,6 +28,14 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="643"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RU6-5d-zM6" userLabel="PreView Publish View Horizontal Sep">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="adO-XW-bnV" userLabel="PreView Publish View Vertical Sep">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="207"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PCz-ew-zQ9" userLabel="Preview Group View">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                     <subviews>
@@ -67,13 +75,26 @@
                             <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nDs-bv-htc" userLabel="Scale Button">
+                            <rect key="frame" x="10" y="379" width="25" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="25" id="A3a-hK-g9C"/>
+                                <constraint firstAttribute="width" secondItem="nDs-bv-htc" secondAttribute="height" multiplier="1:1" id="HtH-0h-gGn"/>
+                            </constraints>
+                            <state key="normal" image="ScaleButton"/>
+                            <connections>
+                                <action selector="scale:" destination="-1" eventType="touchUpInside" id="xw0-mL-gCm"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstItem="nDs-bv-htc" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="10" id="0IS-OO-3Km"/>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" constant="5" id="90V-e9-gxT"/>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="5" id="FPR-vk-5Bk"/>
                         <constraint firstItem="h6A-Xk-jAV" firstAttribute="centerY" secondItem="hvH-pO-Kb3" secondAttribute="centerY" id="JhU-JG-iqh"/>
                         <constraint firstItem="qIz-z5-ZpK" firstAttribute="centerY" secondItem="h6A-Xk-jAV" secondAttribute="centerY" id="NGE-V5-svB"/>
+                        <constraint firstItem="nDs-bv-htc" firstAttribute="bottom" secondItem="PCz-ew-zQ9" secondAttribute="bottom" constant="-10" id="Ogi-qU-blx"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="bottom" secondItem="PCz-ew-zQ9" secondAttribute="bottom" id="Wff-AU-8Cf"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="trailing" secondItem="PCz-ew-zQ9" secondAttribute="trailing" id="XTg-vQ-c4R"/>
                         <constraint firstItem="lAj-db-Qml" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" id="Ylb-hn-lIC"/>
@@ -84,15 +105,7 @@
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="leading" secondItem="xgW-Zf-XcI" secondAttribute="trailing" id="tCn-ag-9Yb"/>
                     </constraints>
                 </view>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RU6-5d-zM6" userLabel="PreView Publish View Horizontal Sep">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                </view>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="adO-XW-bnV" userLabel="PreView Publish View Vertical Sep">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="207"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
                     <rect key="frame" x="207" y="207" width="207" height="207"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -333,4 +346,7 @@
             <point key="canvasLocation" x="139" y="129"/>
         </view>
     </objects>
+    <resources>
+        <image name="ScaleButton" width="100" height="100"/>
+    </resources>
 </document>

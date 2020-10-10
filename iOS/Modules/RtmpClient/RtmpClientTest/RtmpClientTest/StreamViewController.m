@@ -22,7 +22,10 @@
 @property (strong) LiveStreamPublisher *publisher;
 @property (strong) LiveStreamPlayer *player;
 
-@property (nonatomic, strong) UITapGestureRecognizer *singleTap;
+@property (strong) UITapGestureRecognizer *singleTap;
+
+@property (assign) BOOL isScale;
+@property (assign) UIDeviceOrientation deviceOrientation;
 
 @end
 
@@ -35,6 +38,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
+    self.deviceOrientation = [UIDevice currentDevice].orientation;
 
     // 初始化播放
     self.playerFilterArray = @[
@@ -62,10 +67,11 @@
     self.publisher.customFilter = vibrateFilter;
 
     // Live
-        NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-    //    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
 //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
-    //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+    
     //    // Camshare
     //    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
     //    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
@@ -147,6 +153,11 @@
 }
 
 #pragma mark - 播放相关
+- (IBAction)scale:(id)sender {
+    self.isScale = !self.isScale;
+    [self changeOrientation];
+}
+
 - (IBAction)mutePlay:(id)sender {
     self.player.mute = !self.player.mute;
 }
@@ -333,6 +344,14 @@
 
 - (void)deviceOrientationChange:(id)sender {
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if ( UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ) {
+        self.deviceOrientation = deviceOrientation;
+        [self changeOrientation];
+    }
+}
+
+- (void)changeOrientation {
+    UIDeviceOrientation deviceOrientation = self.deviceOrientation;
     switch (deviceOrientation) {
         case UIDeviceOrientationPortrait:
             // Device oriented vertically, home button on the bottom
@@ -340,7 +359,8 @@
         case UIDeviceOrientationPortraitUpsideDown: {
             // Device oriented vertically, home button on the top
             NSLog(@"StreamViewController::deviceOrientationChange( [PortraitUpsideDown] )");
-            [self hideControll:NO];
+            self.player.playView.fillMode = self.isScale?kGPUImageFillModePreserveAspectRatioAndFill:kGPUImageFillModePreserveAspectRatio;
+            [self hideControll:self.isScale];
         } break;
         case UIDeviceOrientationLandscapeLeft:
         // Device oriented horizontally, home button on the right
@@ -348,6 +368,7 @@
         case UIDeviceOrientationLandscapeRight:{
             // Device oriented horizontally, home button on the left
             NSLog(@"StreamViewController::deviceOrientationChange( [LandscapeRight] )");
+            self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
             [self hideControll:YES];
         }break;
         default:break;
