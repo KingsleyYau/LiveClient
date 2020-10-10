@@ -9,6 +9,7 @@
 #import "LiveStreamSession.h"
 
 #import <AVFoundation/AVFoundation.h>
+#import <UIKit/UIKit.h>
 
 static LiveStreamSession *gSession = nil;
 
@@ -37,6 +38,9 @@ static LiveStreamSession *gSession = nil;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
+
+        [UIDevice currentDevice].proximityMonitoringEnabled = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleProximityStateDidChangeNotification:) name:UIDeviceProximityStateDidChangeNotification object:nil];
     }
     return self;
 }
@@ -90,14 +94,9 @@ static LiveStreamSession *gSession = nil;
             [[LiveStreamSession session] activeSession];
         }
         self.playingCount++;
-        
+
         if (self.capturingCount == 0) {
-            // 没有在录制
-            AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-            if (![self useHeadphones]) {
-                // 没有耳机, 设置使用扬声器
-                [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
-            }
+            [self handleRouteChange:nil];
         }
     }
 }
@@ -126,8 +125,7 @@ static LiveStreamSession *gSession = nil;
 
         self.capturingCount++;
 
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+        [self handleRouteChange:nil];
     }
 }
 
@@ -138,10 +136,7 @@ static LiveStreamSession *gSession = nil;
         self.capturingCount--;
 
         if (self.capturingCount == 0 && self.playingCount > 0) {
-            AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-            if (![self useHeadphones]) {
-                [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
-            }
+            [self handleRouteChange:nil];
         }
 
         if (self.capturingCount == 0 && self.playingCount == 0) {
@@ -244,43 +239,49 @@ static LiveStreamSession *gSession = nil;
     return bFlag;
 }
 
-- (BOOL)useHeadphones {
+- (BOOL)hasHeadphones {
     bool bFlag = NO;
     AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
     NSArray *outputs = [route outputs];
     for (AVAudioSessionPortDescription *desc in outputs) {
         NSString *portType = [desc portType];
-        NSLog(@"LiveStreamSession::useHeadphones( portType : %@ )", portType);
+//        NSLog(@"LiveStreamSession::hasHeadphones( portType : %@ )", portType);
         if (
             // 耳机
-            [portType isEqualToString:AVAudioSessionPortHeadphones] ||
+            [portType isEqualToString:AVAudioSessionPortHeadphones]
             // 蓝牙设备
-            [portType isEqualToString:AVAudioSessionPortBluetoothA2DP] ||
-            // 贴近耳朵
-            [portType isEqualToString:AVAudioSessionPortBuiltInReceiver]) {
+            || [portType isEqualToString:AVAudioSessionPortBluetoothA2DP]
+            //            // 贴近耳朵
+            //            || [portType isEqualToString:AVAudioSessionPortBuiltInReceiver]
+            ) {
             bFlag = YES;
             break;
         }
     }
 
-    bFlag = true;
     if (bFlag) {
-        NSLog(@"LiveStreamSession::useHeadphones( [Using Headphones or Bluetooth Output] )");
+        NSLog(@"LiveStreamSession::hasHeadphones( [Headphones or Bluetooth Output] )");
     } else {
-        NSLog(@"LiveStreamSession::useHeadphones( [Using Speaker] )");
+        NSLog(@"LiveStreamSession::hasHeadphones( [Speaker] )");
     }
 
     return bFlag;
 }
 
 - (void)handleRouteChange:(NSNotification *)notification {
-    //    NSDictionary *dictionary = notification.userInfo;
-    //    NSLog(@"LiveStreamSession::handleRouteChange( dictionary : %@ )", dictionary);
+    NSDictionary *dictionary = notification.userInfo;
+    NSLog(@"LiveStreamSession::handleRouteChange( AVAudioSessionRouteChangeReasonKey : %@ )", dictionary[AVAudioSessionRouteChangeReasonKey]);
 
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     if (self.capturingCount == 0 && self.playingCount > 0) {
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        if (![self useHeadphones]) {
-            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+        if (![self hasHeadphones]) {
+            if ([UIDevice currentDevice].proximityState) {
+                NSLog(@"LiveStreamSession::handleRouteChange(), [Near ear, using earphone]");
+                [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+            } else {
+                NSLog(@"LiveStreamSession::handleRouteChange(), [Away from ear, using speaker]");
+                [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+            }
         } else {
             [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
         }
@@ -290,6 +291,10 @@ static LiveStreamSession *gSession = nil;
 - (void)handleInterruption:(NSNotification *)notification {
     NSDictionary *dictionary = notification.userInfo;
     NSLog(@"LiveStreamSession::handleInterruption( dictionary : %@ )", dictionary);
+}
+
+- (void)handleProximityStateDidChangeNotification:(NSNotification *)notification {
+    [self handleRouteChange:nil];
 }
 
 @end
