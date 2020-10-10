@@ -350,10 +350,6 @@
     }
 
     if (bHandle) {
-        // 暂停OpenGL处理队列
-//        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-//        dispatch_suspend(videoProcessingQueue);
-
 //        // 直接断开连接
 //        [self.player stop];
     }
@@ -370,10 +366,6 @@
     }
 
     if( bHandle ) {
-        // 恢复OpenGL处理队列
-//        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-//        dispatch_resume(videoProcessingQueue);
-        
 //        // 重连
 //        [self reconnect];
     }
