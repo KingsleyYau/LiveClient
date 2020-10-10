@@ -56,7 +56,7 @@ https://github.com/KingsleyYau/LiveClient/tree/master/android/coollive_studio
 
 ### Demo Android Snapshot
 -------------
-![](https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true)
+<img width="360" height="640" src="https://github.com/KingsleyYau/LiveClient/blob/master/res/IMG_Android_1.png?raw=true"/>
 
 ## 第三方开源
 [FFmpeg](https://ffmpeg.org/)</br>
