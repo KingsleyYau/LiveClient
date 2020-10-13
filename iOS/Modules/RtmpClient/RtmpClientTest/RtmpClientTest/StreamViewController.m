@@ -7,7 +7,7 @@
 //
 
 #import "StreamViewController.h"
-#import "PlayViewController.h"
+#import "StreamFileCollectionViewController.h"
 
 #import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
@@ -15,7 +15,7 @@
 
 #import "LSImageVibrateFilter.h"
 
-@interface StreamViewController () <LiveStreamPlayerDelegate>
+@interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate>
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
 
@@ -67,11 +67,11 @@
     self.publisher.customFilter = vibrateFilter;
 
     // Live
-    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
+        NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
 //    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
-    
+    //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
+    //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+
     //    // Camshare
     //    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
     //    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
@@ -193,13 +193,9 @@
 }
 
 - (IBAction)playFile:(id)sender {
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-
-    NSString *filePath = [NSString stringWithFormat:@"%@/input.mp4", cacheDir];
-    [self.player playFilePath:filePath];
+    StreamFileCollectionViewController *vc = [[StreamFileCollectionViewController alloc] init];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)stopPlay:(id)sender {
@@ -222,7 +218,7 @@
 #pragma mark - 推流相关
 - (IBAction)publish:(id)sender {
     self.previewPublishView.hidden = NO;
-    
+
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
 
@@ -342,9 +338,10 @@
     [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
 }
 
+#pragma mark - 旋转和全屏播放
 - (void)deviceOrientationChange:(id)sender {
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    if ( UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ) {
+    if (UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation)) {
         self.deviceOrientation = deviceOrientation;
         [self changeOrientation];
     }
@@ -359,33 +356,39 @@
         case UIDeviceOrientationPortraitUpsideDown: {
             // Device oriented vertically, home button on the top
             NSLog(@"StreamViewController::deviceOrientationChange( [PortraitUpsideDown] )");
-            self.player.playView.fillMode = self.isScale?kGPUImageFillModePreserveAspectRatioAndFill:kGPUImageFillModePreserveAspectRatio;
+            self.player.playView.fillMode = self.isScale ? kGPUImageFillModePreserveAspectRatioAndFill : kGPUImageFillModePreserveAspectRatio;
             [self hideControll:self.isScale];
         } break;
         case UIDeviceOrientationLandscapeLeft:
-        // Device oriented horizontally, home button on the right
+            // Device oriented horizontally, home button on the right
             NSLog(@"StreamViewController::deviceOrientationChange( [LandscapeLeft] )");
-        case UIDeviceOrientationLandscapeRight:{
+        case UIDeviceOrientationLandscapeRight: {
             // Device oriented horizontally, home button on the left
             NSLog(@"StreamViewController::deviceOrientationChange( [LandscapeRight] )");
             self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
             [self hideControll:YES];
-        }break;
-        default:break;
+        } break;
+        default:
+            break;
     }
 }
 
 - (void)hideControll:(BOOL)hidden {
     [self.navigationController setNavigationBarHidden:hidden];
     self.controlView.hidden = hidden;
-    
+
     if (hidden) {
-        [NSLayoutConstraint deactivateConstraints:@[self.previewViewRadio]];
-        [NSLayoutConstraint activateConstraints:@[self.previewViewBottom]];
+        [NSLayoutConstraint deactivateConstraints:@[ self.previewViewRadio ]];
+        [NSLayoutConstraint activateConstraints:@[ self.previewViewBottom ]];
     } else {
         [NSLayoutConstraint deactivateConstraints:@[self.previewViewBottom]];
         [NSLayoutConstraint activateConstraints:@[self.previewViewRadio]];
     }
+}
+
+#pragma mark - 播放本地文件
+- (void)didSelectFile:(FileItem *)fileItem {
+    [self.player playFilePath:fileItem.filePath];
 }
 
 @end

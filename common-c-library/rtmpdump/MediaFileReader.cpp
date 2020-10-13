@@ -21,7 +21,7 @@ extern "C" {
 // 无效的Timestamp
 #define INVALID_TIMESTAMP 0xFFFFFFFF
 // 预加载时间
-#define PRE_READ_TIME_MS 3000
+#define PRE_READ_TIME_MS 1500
 
 namespace coollive {
 // 文件读取线程
@@ -339,7 +339,7 @@ void MediaFileReader::MediaReaderHandle() {
                     if (mAudioStartTimestamp == INVALID_TIMESTAMP) {
                         mAudioStartTimestamp = timestamp;
                     }
-                    mVideoLastTimestamp = timestamp;
+                    mAudioStartTimestamp = timestamp;
                 }
 
                 if (ret < 0) {
