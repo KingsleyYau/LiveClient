@@ -201,6 +201,7 @@ void MediaFileReader::MediaReaderHandle() {
             
             AVCodecContext* videoCtx = mContext->streams[mVideoStreamIndex]->codec;
             unsigned char *extradata = (unsigned char *)videoCtx->extradata;
+            unsigned char *extradata_end = (unsigned char *)videoCtx->extradata + videoCtx->extradata_size;
             if ( videoCtx->extradata_size > 0 ) {
                 extradata += 4;
 
@@ -209,13 +210,37 @@ void MediaFileReader::MediaReaderHandle() {
                 int sps_data_size = (extradata[0] << 8) | extradata[1];
                 extradata += 2;
 
+                if ( extradata_end - extradata < sps_data_size ) {
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_WARNING,
+                                 "MediaFileReader::MediaReaderHandle( "
+                                 "this : %p, "
+                                 "[Unknow SPS] "
+                                 ")",
+                                 this
+                                 );
+                    break;
+                }
+                
                 char sps[1024] = {0};
                 memcpy(sps, extradata, sps_data_size);
                 extradata += sps_data_size;
-
+                
                 int pps_count = *extradata++;
                 int pps_data_size = (extradata[0] << 8) | extradata[1];
                 extradata += 2;
+                
+                if ( extradata_end - extradata < pps_data_size ) {
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_WARNING,
+                                 "MediaFileReader::MediaReaderHandle( "
+                                 "this : %p, "
+                                 "[Unknow PPS] "
+                                 ")",
+                                 this
+                                 );
+                    break;
+                }
                 char pps[1024] = {0};
                 memcpy(pps, extradata, pps_data_size);
                 

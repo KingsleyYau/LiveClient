@@ -139,9 +139,9 @@
     // 去除手势
     [self removeSingleTap];
 
-    // 停止流
-    [self stopPlay:nil];
-    [self stopPush:nil];
+//    // 停止流
+//    [self stopPlay:nil];
+//    [self stopPush:nil];
 
     // 允许锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
