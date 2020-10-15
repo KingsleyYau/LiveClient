@@ -63,6 +63,8 @@ class MediaFileReader {
      */
     void SetMediaFileReaderCallback(MediaFileReaderCallback *callback);
 
+    void SetPlaybackRate(float playBackRate);
+    
   private:
     // 文件读取线程实现体
     friend class MediaReaderRunnable;
@@ -99,6 +101,9 @@ class MediaFileReader {
     // 状态锁
     KMutex mRuningMutex;
     bool mbRunning;
+    
+    // 播放速度
+    float mPlaybackRate;
 };
 }
 

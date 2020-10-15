@@ -45,6 +45,11 @@
 @property (nonatomic, assign) BOOL mute;
 
 /**
+ 播放速度
+ */
+@property (nonatomic, assign) float playbackRate;
+
+/**
  自定义滤镜
  */
 @property (strong) GPUImageFilter *customFilter;

@@ -32,6 +32,8 @@ public:
     bool GetMute();
     void SetMute(bool isMute);
     
+    void SetPlaybackRate(float playBackRate);
+    
 private:
     bool Create(void *audioFrame = NULL);
     static void AudioQueueOutputCallback(
@@ -46,6 +48,8 @@ protected:
     AudioStreamBasicDescription mAsbd;
     
     bool mIsMute;
+    float mPlaybackRate;
+    bool mPlaybackRateChange;
 };
 
 #endif /* AudioRendererImp_h */

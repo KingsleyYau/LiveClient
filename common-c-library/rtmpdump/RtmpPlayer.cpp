@@ -279,6 +279,11 @@ void RtmpPlayer::SetCacheNoLimit(bool bNoCacheLimit) {
     mbNoCacheLimit = bNoCacheLimit;
 }
 
+void RtmpPlayer::SetPlaybackRate(float playBackRate) {
+    mPlaybackRate = playBackRate;
+    mPlaybackRateChange = true;
+}
+
 void RtmpPlayer::PlayVideoRunnableHandle() {
     PlayFrame(false);
 }
@@ -473,14 +478,15 @@ void RtmpPlayer::Init() {
     mbSyncFrame = true;
 
     mStartPlayTime = 0;
-
     mIsWaitCache = true;
-
+    
     mpRtmpDump = NULL;
     mpRtmpPlayerCallback = NULL;
 
     mCacheBufferQueue.SetCacheQueueSize(200);
-
+    mPlaybackRate = 1.0f;
+    mPlaybackRateChange = false;
+    
     mpPlayVideoRunnable = new PlayVideoRunnable(this);
     mpPlayAudioRunnable = new PlayAudioRunnable(this);
 
@@ -1030,22 +1036,22 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                     //                    mIsWaitCache = true;
                     //                    mPlayThreadMutex.unlock();
 
-                    FileLevelLog("rtmpdump",
-                                 KLog::LOG_WARNING,
-                                 "RtmpPlayer::PlayFrame( "
-                                 "this : %p, "
-                                 "[Reset %s Start Timestamp], "
-                                 "startTime : %lld, "
-                                 "frame->mTimestamp : %u, "
-                                 "preTimestamp : %u, "
-                                 "bufferListSize : %u "
-                                 ")",
-                                 this,
-                                 isAudio ? "Audio" : "Video",
-                                 startTime,
-                                 frame->mTimestamp,
-                                 preTimestamp,
-                                 bufferList->size());
+//                    FileLevelLog("rtmpdump",
+//                                 KLog::LOG_WARNING,
+//                                 "RtmpPlayer::PlayFrame( "
+//                                 "this : %p, "
+//                                 "[Reset %s Start Timestamp], "
+//                                 "startTime : %lld, "
+//                                 "frame->mTimestamp : %u, "
+//                                 "preTimestamp : %u, "
+//                                 "bufferListSize : %u "
+//                                 ")",
+//                                 this,
+//                                 isAudio ? "Audio" : "Video",
+//                                 startTime,
+//                                 frame->mTimestamp,
+//                                 preTimestamp,
+//                                 bufferList->size());
 
                     // 重置上帧时间戳
                     preTimestamp = INVALID_TIMESTAMP;
@@ -1064,7 +1070,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         // 当前时间
                         long long curTime = (long long)getCurrentTime();
 
-                        if (preTimestamp == INVALID_TIMESTAMP) {
+                        if (preTimestamp == INVALID_TIMESTAMP || mPlaybackRateChange) {
                             // 重置开始播放时间
                             startTime = curTime;
                             preTime = startTime;
@@ -1074,6 +1080,8 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             // 重置上次帧时间
                             preTimestamp = startTimestamp;
 
+                            mPlaybackRateChange = false;
+                            
                             FileLevelLog("rtmpdump",
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::PlayFrame( "
@@ -1081,23 +1089,25 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                          "[Start Play %s], "
                                          "startTime : %lld, "
                                          "startTimestamp : %u, "
+                                         "rate : %.1f, "
                                          "bufferListSize : %u "
                                          ")",
                                          this,
                                          isAudio ? "Audio" : "Video",
                                          startTime,
                                          startTimestamp,
+                                         mPlaybackRate,
                                          bufferList->size());
                         }
 
                         // 本地两帧播放时间差
                         int deltaTime = (int)(curTime - preTime);
                         // 两帧时间差
-                        int deltams = (frame->mTimestamp - preTimestamp);
+                        int deltams = (frame->mTimestamp - preTimestamp) / mPlaybackRate;
                         // 总播放时间差
                         int deltaTotalTime = (int)(curTime - startTime);
                         // 总帧时间差
-                        int deltaTotalms = (frame->mTimestamp - startTimestamp);
+                        int deltaTotalms = (frame->mTimestamp - startTimestamp) / mPlaybackRate;
                         // 是否丢帧
                         bool bDropFrame = false;
                         // 是否断开
@@ -1126,23 +1136,23 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         }
                         //                        }
                         //
-                        //                        FileLevelLog("rtmpdump",
-                        //                                     KLog::LOG_MSG,
-                        //                                     "RtmpPlayer::PlayFrame( "
-                        //                                     "[Get %s Frame], "
-                        //                                     "deltaTime : %d, "
-                        //                                     "deltams : %d, "
-                        //                                     "delay : %d, "
-                        //                                     "timestamp : %u, "
-                        //                                     "bufferListSize : %d "
-                        //                                     ")",
-                        //                                     isAudio?"Audio":"Video",
-                        //                                     deltaTime,
-                        //                                     deltams,
-                        //                                     delay,
-                        //                                     frame->mTimestamp,
-                        //                                     bufferList->size()
-                        //                                     );
+//                        FileLevelLog("rtmpdump",
+//                                     KLog::LOG_MSG,
+//                                     "RtmpPlayer::PlayFrame( "
+//                                     "[Get %s Frame], "
+//                                     "deltaTime : %d, "
+//                                     "deltams : %d, "
+//                                     "delay : %d, "
+//                                     "timestamp : %u, "
+//                                     "bufferListSize : %d "
+//                                     ")",
+//                                     isAudio?"Audio":"Video",
+//                                     deltaTime,
+//                                     deltams,
+//                                     delay,
+//                                     frame->mTimestamp,
+//                                     bufferList->size()
+//                                     );
 
                         bool bHandleFrame = false;
                         if (!bDropFrame) {
@@ -1168,7 +1178,8 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                              * 1.第一帧(deltams == 0)
                              * 2.(总播放时间 - 总帧时间戳 > 帧时间戳差)
                              */
-                            if ((deltams == 0) || (deltaTime >= (deltams - delay)) /*delay > (deltams - 2 * PLAY_SLEEP_TIME)*/) {
+                            int delta = 1.0 * (deltams - delay);
+                            if ((deltams == 0) || (deltaTime >= delta) /*delay > (deltams - 2 * PLAY_SLEEP_TIME)*/) {
                                 // 播放帧
                                 if (isAudio) {
                                     PlayAudioFrame(frame);
@@ -1210,6 +1221,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "timestamp : %u, "
                                              "deltaTotalTime : %d, "
                                              "deltaTotalms : %d, "
+                                             "rate : %.1f, "
                                              "bufferListSize : %d "
                                              ")",
                                              this,
@@ -1221,6 +1233,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              frame->mTimestamp,
                                              deltaTotalTime,
                                              deltaTotalms,
+                                             mPlaybackRate,
                                              bufferList->size());
                             } else {
                                 // 丢帧不需要休眠，直接处理下一帧数据

@@ -12,6 +12,7 @@
 @property (strong) NSString *fileName;
 @property (strong) NSString *filePath;
 @property (strong) UIImage *image;
+@property (assign) bool firstShowImage;
 @end
 
 @protocol StreamFileCollectionViewControllerDelegate <NSObject>

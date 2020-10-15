@@ -32,6 +32,9 @@
 }
 
 - (void)reset {
+//    const NSArray *ColorArray = @[[UIColor redColor], [UIColor blueColor], [UIColor greenColor], [UIColor orangeColor], [UIColor yellowColor], [UIColor magentaColor]];
+//    int index = arc4random() % ColorArray.count;
+//    self.backgroundColor = ColorArray[index];
     self.fileImageView.image = nil;
     self.fileNameLabel.text = @"";
 }

@@ -55,6 +55,14 @@ class PlayerController : public RtmpDumpCallback,
      */
     void SetCacheMS(int cacheMS);
     int CacheMS() const;
+       
+    /**
+     设置播放速度
+
+     @param playbackRate 播放速度(原始视频倍数)
+     */
+    void SetPlaybackRate(float playbackRate);
+                             
     /**
      设置视频渲染器
 

@@ -24,7 +24,8 @@ AudioRendererImp::AudioRendererImp() {
                  );
     mAudioQueue = NULL;
     mIsMute = false;
-    
+    mPlaybackRate = 1.0f;
+    mPlaybackRateChange = true;
 //    Create();
 }
 
@@ -192,6 +193,11 @@ void AudioRendererImp::SetMute(bool isMute) {
     mIsMute = isMute;
 }
 
+void AudioRendererImp::SetPlaybackRate(float playbackRate) {
+    mPlaybackRate = playbackRate;
+    mPlaybackRateChange = true;
+}
+
 bool AudioRendererImp::Create(void *frame) {
     AudioFrame* audioFrame = (AudioFrame *)frame;
     
@@ -212,7 +218,7 @@ bool AudioRendererImp::Create(void *frame) {
                        false
                        );
     
-    if ( mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame ) {
+    if ( (mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame) || mPlaybackRateChange ) {
         if( mAudioQueue ) {
             AudioQueueReset(mAudioQueue);
             mAudioBufferList.lock();
@@ -251,10 +257,16 @@ bool AudioRendererImp::Create(void *frame) {
         OSStatus status = noErr;
         status = AudioQueueNewOutput(&asbd, AudioQueueOutputCallback, this, NULL, NULL, 0, &mAudioQueue);
         if( status == noErr ) {
+            // 开启音频加速
+            UInt32 enabled = 1;
+            AudioQueueSetProperty(mAudioQueue, kAudioQueueProperty_EnableTimePitch, &enabled, sizeof(enabled));
+            UInt32 algorithm = kAudioQueueTimePitchAlgorithm_Spectral;
+            AudioQueueSetProperty(mAudioQueue, kAudioQueueProperty_TimePitchAlgorithm, &algorithm, sizeof(algorithm));
+            
             // 设置音量
             Float32 gain = 1.0;
             AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, gain);
-            
+            AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_PlayRate, mPlaybackRate);
 //            // 申请音频包内存
 //            AudioQueueBufferRef audioBuffer;
 //            for(int i = 0; i < AUDIO_BUFFER_COUNT; i++) {

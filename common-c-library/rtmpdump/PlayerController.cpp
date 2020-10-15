@@ -58,6 +58,12 @@ int PlayerController::CacheMS() const {
     return mRtmpPlayer.CahceMS();
 }
 
+void PlayerController::SetPlaybackRate(float playbackRate) {
+    mRtmpPlayer.SetPlaybackRate(playbackRate);
+    mFileReader.SetPlaybackRate(playbackRate);
+    mpAudioRenderer->SetPlaybackRate(playbackRate);
+}
+
 void PlayerController::SetVideoRenderer(VideoRenderer *videoRenderer) {
     mpVideoRenderer = videoRenderer;
     if (mpVideoRenderer != videoRenderer) {
@@ -104,6 +110,8 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
                  ")",
                  this,
                  url.c_str());
+    // 重置加速
+    SetPlaybackRate(1.0f);
     // 重置分析器
     mStatistics.Start();
     // 重置解码器

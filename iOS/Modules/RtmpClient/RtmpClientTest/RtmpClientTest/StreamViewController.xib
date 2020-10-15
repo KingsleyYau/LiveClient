@@ -86,10 +86,26 @@
                                 <action selector="scale:" destination="-1" eventType="touchUpInside" id="xw0-mL-gCm"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rut-mh-Ohg" userLabel="1x Button">
+                            <rect key="frame" x="329" y="374" width="30" height="30"/>
+                            <state key="normal" title="1x"/>
+                            <connections>
+                                <action selector="playbackRate1x:" destination="-1" eventType="touchUpInside" id="BBl-LQ-Jol"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8DH-89-OTg" userLabel="2x Button">
+                            <rect key="frame" x="364" y="374" width="30" height="30"/>
+                            <state key="normal" title="2x"/>
+                            <connections>
+                                <action selector="playbackRate2x:" destination="-1" eventType="touchUpInside" id="G5k-iO-Owz"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="nDs-bv-htc" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="10" id="0IS-OO-3Km"/>
+                        <constraint firstItem="8DH-89-OTg" firstAttribute="bottom" secondItem="PCz-ew-zQ9" secondAttribute="bottom" constant="-10" id="2eF-gS-EZY"/>
+                        <constraint firstItem="rut-mh-Ohg" firstAttribute="trailing" secondItem="8DH-89-OTg" secondAttribute="leading" constant="-5" id="7yT-zj-eBD"/>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" constant="5" id="90V-e9-gxT"/>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="5" id="FPR-vk-5Bk"/>
                         <constraint firstItem="h6A-Xk-jAV" firstAttribute="centerY" secondItem="hvH-pO-Kb3" secondAttribute="centerY" id="JhU-JG-iqh"/>
@@ -101,11 +117,13 @@
                         <constraint firstItem="lAj-db-Qml" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" id="aga-2D-NzT"/>
                         <constraint firstItem="qIz-z5-ZpK" firstAttribute="trailing" secondItem="PCz-ew-zQ9" secondAttribute="trailing" constant="-20" id="bam-W7-p1T"/>
                         <constraint firstItem="qIz-z5-ZpK" firstAttribute="leading" secondItem="h6A-Xk-jAV" secondAttribute="trailing" constant="10" id="c3I-CN-dvg"/>
+                        <constraint firstItem="rut-mh-Ohg" firstAttribute="bottom" secondItem="PCz-ew-zQ9" secondAttribute="bottom" constant="-10" id="fi8-58-7Xb"/>
+                        <constraint firstItem="8DH-89-OTg" firstAttribute="trailing" secondItem="PCz-ew-zQ9" secondAttribute="trailing" constant="-20" id="g9t-gk-UTo"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="top" secondItem="xgW-Zf-XcI" secondAttribute="top" id="nqX-EB-HAZ"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="leading" secondItem="xgW-Zf-XcI" secondAttribute="trailing" id="tCn-ag-9Yb"/>
                     </constraints>
                 </view>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
+                <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
                     <rect key="frame" x="207" y="207" width="207" height="207"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>

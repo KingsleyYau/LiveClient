@@ -317,6 +317,10 @@ private:
     }
 }
 
+- (void)setPlaybackRate:(float)playbackRate {
+    self.player->SetPlaybackRate(playbackRate);
+}
+
 - (BOOL)useHardDecoder {
     return _useHardDecoder;
 }

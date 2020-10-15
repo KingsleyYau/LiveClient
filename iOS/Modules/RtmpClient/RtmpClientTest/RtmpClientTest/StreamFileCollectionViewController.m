@@ -37,6 +37,7 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:inputDir withIntermediateDirectories:YES attributes:nil error:nil];
 
+    NSInteger index = 0;
     NSArray *fileArray = [fileManager contentsOfDirectoryAtPath:inputDir error:nil];
     for (NSString *fileName in fileArray) {
         BOOL flag = YES;
@@ -48,8 +49,20 @@
                     FileItem *item = [[FileItem alloc] init];
                     item.fileName = fileName;
                     item.filePath = filePath;
-                    item.image = [self getThumbImage:filePath];
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                        UIImage *image = [self getThumbImage:item.filePath];
+                        item.image = image;
+                        item.firstShowImage = YES;
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                            
+//                            NSLog(@"%@::viewDidLoad(), [%ld, Reload]", NSStringFromClass([self class]), index);
+                            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                        });
+                    });
                     [self.items addObject:item];
+                    index++;
                 }
             }
         }
@@ -96,12 +109,41 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     StreamFileCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[StreamFileCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     [cell reset];
-
+    
+    NSMutableArray *visableItems = [NSMutableArray array];
+    for(NSIndexPath *indexPath in collectionView.indexPathsForVisibleItems) {
+        [visableItems addObject:@(indexPath.row)];
+    }
+    
+//    NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show], %p", NSStringFromClass([self class]), indexPath.row, cell);
     if (indexPath.row < self.items.count) {
         FileItem *item = [self.items objectAtIndex:indexPath.row];
-//        cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
+        //        cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
+        if ( item.firstShowImage ) {
+//            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show First], %p", NSStringFromClass([self class]), indexPath.row, cell);
+            item.firstShowImage = NO;
+            cell.fileImageView.alpha = 0.0f;
+            [UIView animateWithDuration:1.0f
+                             animations:^{
+                                 cell.fileImageView.alpha = 1.0;
+                             }];
+        }
         cell.fileImageView.image = item.image;
     }
+
+    //    __weak typeof(self) weakSelf = self;
+    //    NSInteger preLoadIndex = (indexPath.row + 6);
+    //    preLoadIndex = (preLoadIndex < self.items.count) ? preLoadIndex : self.items.count;
+    //    for (NSInteger i = indexPath.row; i < self.items.count; i++) {
+    //        FileItem *item = [self.items objectAtIndex:i];
+    //        if (item.image == nil) {
+    //            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    //                @synchronized(weakSelf) {
+    //                    item.image = [self getThumbImage:item.filePath];
+    //                }
+    //            });
+    //        }
+    //    }
 
     return cell;
 }
@@ -121,7 +163,7 @@
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
         AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         gen.appliesPreferredTrackTransform = YES;
-        gen.maximumSize = CGSizeMake(1920, 1080);
+        gen.maximumSize = CGSizeMake(640, 640);
         CMTime time = CMTimeMakeWithSeconds(0.0, 600); //取第5秒，一秒钟600帧
         NSError *error = nil;
         CMTime actualTime;

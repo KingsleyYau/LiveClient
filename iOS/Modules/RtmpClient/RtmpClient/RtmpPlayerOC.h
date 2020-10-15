@@ -49,6 +49,11 @@
  */
 @property (nonatomic, assign) NSInteger cacheMS;
 
+/**
+ 播放速度
+ */
+@property (nonatomic, assign) float playbackRate;
+
 #pragma mark - 获取实例
 /**
  *  获取实例

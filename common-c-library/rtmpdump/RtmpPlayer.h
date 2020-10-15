@@ -102,7 +102,8 @@ class RtmpPlayer {
     void SetCacheMS(int cacheMS);
     int CahceMS() const;
     void SetCacheNoLimit(bool bNoCacheLimit);
-
+    void SetPlaybackRate(float playBackRate);
+    
   public:
     void PlayVideoRunnableHandle();
     void PlayAudioRunnableHandle();
@@ -182,6 +183,10 @@ class RtmpPlayer {
     
     // 是否不限制内存
     bool mbNoCacheLimit;
+    
+    // 播放速度
+    float mPlaybackRate;
+    bool mPlaybackRateChange;
 };
 }
 #endif /* RtmpPlayer_h */

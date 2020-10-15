@@ -182,6 +182,10 @@
     self.player.mute = mute;
 }
 
+- (void)setPlaybackRate:(float)playbackRate {
+    self.player.playbackRate = playbackRate;
+}
+
 - (void)setPlayView:(GPUImageView *)playView {
     if (_playView != playView) {
         _playView = playView;

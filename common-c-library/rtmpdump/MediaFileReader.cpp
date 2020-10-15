@@ -21,7 +21,7 @@ extern "C" {
 // 无效的Timestamp
 #define INVALID_TIMESTAMP 0xFFFFFFFF
 // 预加载时间
-#define PRE_READ_TIME_MS 1500
+#define PRE_READ_TIME_MS 2000
 
 namespace coollive {
 // 文件读取线程
@@ -52,6 +52,8 @@ MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
 
     mVideoStartTimestamp = INVALID_TIMESTAMP;
     mVideoLastTimestamp = INVALID_TIMESTAMP;
+    
+    mPlaybackRate = 1.0f;
 }
 
 MediaFileReader::~MediaFileReader() {
@@ -130,6 +132,10 @@ void MediaFileReader::Stop() {
 
 void MediaFileReader::SetMediaFileReaderCallback(MediaFileReaderCallback *callback) {
     mpCallback = callback;
+}
+
+void MediaFileReader::SetPlaybackRate(float playBackRate) {
+    mPlaybackRate = playBackRate;
 }
 
 void MediaFileReader::MediaReaderHandle() {
@@ -301,10 +307,10 @@ void MediaFileReader::MediaReaderHandle() {
                 }
             }
 
-            if (deltaTS > deltaTime + PRE_READ_TIME_MS) {
-                bRead = false;
-            } else {
+            if (deltaTime + PRE_READ_TIME_MS > deltaTS / mPlaybackRate ) {
                 bRead = true;
+            } else {
+                bRead = false;
             }
 
             if (bRead) {
