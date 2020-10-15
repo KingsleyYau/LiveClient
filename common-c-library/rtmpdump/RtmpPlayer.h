@@ -186,7 +186,8 @@ class RtmpPlayer {
     
     // 播放速度
     float mPlaybackRate;
-    bool mPlaybackRateChange;
+    bool mAudioPlaybackRateChange;
+    bool mVideoPlaybackRateChange;
 };
 }
 #endif /* RtmpPlayer_h */

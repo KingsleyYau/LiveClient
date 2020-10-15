@@ -158,6 +158,10 @@
     [self changeOrientation];
 }
 
+- (IBAction)playbackRate0_5x:(id)sender {
+    self.player.playbackRate = 0.5f;
+}
+
 - (IBAction)playbackRate1x:(id)sender {
     self.player.playbackRate = 1.0f;
 }

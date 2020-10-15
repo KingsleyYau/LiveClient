@@ -281,7 +281,8 @@ void RtmpPlayer::SetCacheNoLimit(bool bNoCacheLimit) {
 
 void RtmpPlayer::SetPlaybackRate(float playBackRate) {
     mPlaybackRate = playBackRate;
-    mPlaybackRateChange = true;
+    mAudioPlaybackRateChange = true;
+    mVideoPlaybackRateChange = true;
 }
 
 void RtmpPlayer::PlayVideoRunnableHandle() {
@@ -485,7 +486,8 @@ void RtmpPlayer::Init() {
 
     mCacheBufferQueue.SetCacheQueueSize(200);
     mPlaybackRate = 1.0f;
-    mPlaybackRateChange = false;
+    mAudioPlaybackRateChange = false;
+    mVideoPlaybackRateChange = false;
     
     mpPlayVideoRunnable = new PlayVideoRunnable(this);
     mpPlayAudioRunnable = new PlayAudioRunnable(this);
@@ -1069,8 +1071,8 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                     if (IsPlay(isAudio)) {
                         // 当前时间
                         long long curTime = (long long)getCurrentTime();
-
-                        if (preTimestamp == INVALID_TIMESTAMP || mPlaybackRateChange) {
+                        bool *playbackChange = isAudio?&mAudioPlaybackRateChange:&mVideoPlaybackRateChange;
+                        if (preTimestamp == INVALID_TIMESTAMP || *playbackChange) {
                             // 重置开始播放时间
                             startTime = curTime;
                             preTime = startTime;
@@ -1080,7 +1082,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             // 重置上次帧时间
                             preTimestamp = startTimestamp;
 
-                            mPlaybackRateChange = false;
+                            *playbackChange = false;
                             
                             FileLevelLog("rtmpdump",
                                          KLog::LOG_WARNING,
@@ -1271,11 +1273,11 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
 
                             if (isAudio) {
                                 // 如果音频帧时间戳差大于30, 需要重置音频播放器, 否者iOS播放器有问题
-                                if (deltams > 30) {
-                                    if (mpRtmpPlayerCallback) {
-                                        mpRtmpPlayerCallback->OnResetAudioStream(this);
-                                    }
-                                }
+//                                if (deltams > 30) {
+//                                    if (mpRtmpPlayerCallback) {
+//                                        mpRtmpPlayerCallback->OnResetAudioStream(this);
+//                                    }
+//                                }
                             }
 
                             // 队列去除

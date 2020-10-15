@@ -219,6 +219,7 @@ bool AudioRendererImp::Create(void *frame) {
                        );
     
     if ( (mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame) || mPlaybackRateChange ) {
+        mPlaybackRateChange = false;
         if( mAudioQueue ) {
             AudioQueueReset(mAudioQueue);
             mAudioBufferList.lock();

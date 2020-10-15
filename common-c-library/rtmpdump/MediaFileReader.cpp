@@ -21,7 +21,7 @@ extern "C" {
 // 无效的Timestamp
 #define INVALID_TIMESTAMP 0xFFFFFFFF
 // 预加载时间
-#define PRE_READ_TIME_MS 2000
+#define PRE_READ_TIME_MS 1000
 
 namespace coollive {
 // 文件读取线程
