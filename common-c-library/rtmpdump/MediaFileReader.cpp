@@ -54,6 +54,7 @@ MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
     mVideoLastTimestamp = INVALID_TIMESTAMP;
     
     mPlaybackRate = 1.0f;
+    mCacheMS = PRE_READ_TIME_MS;
 }
 
 MediaFileReader::~MediaFileReader() {
@@ -136,6 +137,10 @@ void MediaFileReader::SetMediaFileReaderCallback(MediaFileReaderCallback *callba
 
 void MediaFileReader::SetPlaybackRate(float playBackRate) {
     mPlaybackRate = playBackRate;
+}
+
+void MediaFileReader::SetCacheMS(int cacheMS) {
+    mCacheMS = cacheMS;
 }
 
 void MediaFileReader::MediaReaderHandle() {
@@ -307,7 +312,7 @@ void MediaFileReader::MediaReaderHandle() {
                 }
             }
 
-            if (deltaTime + PRE_READ_TIME_MS > deltaTS / mPlaybackRate ) {
+            if (deltaTime + mCacheMS > deltaTS / mPlaybackRate ) {
                 bRead = true;
             } else {
                 bRead = false;
@@ -332,7 +337,7 @@ void MediaFileReader::MediaReaderHandle() {
                              "deltaTS : %u, "
                              "pts : %d, "
                              "dts : %d, "
-                             "time : %.3f s, "
+                             "time : %.3f second, "
                              "size : %d, "
                              "data : (Hex)%02x,%02x,%02x,%02x,%02x "
                              ")",

@@ -42,6 +42,10 @@ PlayerController::PlayerController() {
 PlayerController::~PlayerController() {
 }
 
+int PlayerController::CacheMS() const {
+    return mRtmpPlayer.CahceMS();
+}
+
 void PlayerController::SetCacheMS(int cacheMS) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -52,10 +56,7 @@ void PlayerController::SetCacheMS(int cacheMS) {
                  this,
                  cacheMS);
     mRtmpPlayer.SetCacheMS(cacheMS);
-}
-
-int PlayerController::CacheMS() const {
-    return mRtmpPlayer.CahceMS();
+    mFileReader.SetCacheMS(cacheMS);
 }
 
 void PlayerController::SetPlaybackRate(float playbackRate) {
@@ -112,6 +113,7 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
                  url.c_str());
     // 重置加速
     SetPlaybackRate(1.0f);
+    
     // 重置分析器
     mStatistics.Start();
     // 重置解码器
@@ -554,9 +556,11 @@ void PlayerController::OnDelayMaxTime(RtmpPlayer *player) {
                  ")",
                  this);
 
-    // 可以断开连接
-    if (mpPlayerStatusCallback) {
-        mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
+    if ( !mbIsPlayFile ) {
+        // 可以断开连接
+        if (mpPlayerStatusCallback) {
+            mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
+        }
     }
 }
 

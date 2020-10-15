@@ -63,7 +63,19 @@ class MediaFileReader {
      */
     void SetMediaFileReaderCallback(MediaFileReaderCallback *callback);
 
+    /**
+     设置播放速度
+
+     @param playbackRate 播放速度(原始视频倍数)
+     */
     void SetPlaybackRate(float playBackRate);
+    
+    /**
+     设置缓存时间
+
+     @param cacheMS 缓存时间
+     */
+    void SetCacheMS(int cacheMS);
     
   private:
     // 文件读取线程实现体
@@ -104,6 +116,9 @@ class MediaFileReader {
     
     // 播放速度
     float mPlaybackRate;
+    
+    // 预加载缓存时间(毫秒)
+    unsigned int mCacheMS;
 };
 }
 
