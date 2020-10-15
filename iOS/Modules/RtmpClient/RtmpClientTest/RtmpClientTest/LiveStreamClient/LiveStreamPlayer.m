@@ -96,6 +96,7 @@
     [self cancel];
 
     self.url = url;
+    self.filePath = @"";
     self.recordFilePath = recordFilePath;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
@@ -116,7 +117,8 @@
     [self cancel];
 
     self.filePath = filePath;
-
+    self.url = @"";
+    
     if (self.filePath.length > 0) {
         [self run];
         bFlag = YES;

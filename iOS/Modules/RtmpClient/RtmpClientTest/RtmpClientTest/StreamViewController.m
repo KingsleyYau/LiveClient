@@ -200,6 +200,7 @@
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
+    self.player.cacheMS = (int)roundf(self.sliderCacheMS.value);
     NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
     [self.player playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
@@ -400,6 +401,7 @@
 
 #pragma mark - 播放本地文件
 - (void)didSelectFile:(FileItem *)fileItem {
+    self.player.cacheMS = 100;
     [self.player playFilePath:fileItem.filePath];
 }
 
