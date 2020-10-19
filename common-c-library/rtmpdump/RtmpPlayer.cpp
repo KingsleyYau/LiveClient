@@ -463,10 +463,6 @@ RtmpPlayerCallback *RtmpPlayer::GetCallback() {
     return mpRtmpPlayerCallback;
 }
 
-void RtmpPlayer::SetCanDropFrame(bool canDropFrame) {
-    mbCanDropFrame = canDropFrame;
-}
-
 size_t RtmpPlayer::GetVideBufferSize() {
     size_t size = 0;
     mVideoBufferList.lock();
@@ -492,7 +488,6 @@ void RtmpPlayer::Init() {
     mPlaybackRate = 1.0f;
     mAudioPlaybackRateChange = false;
     mVideoPlaybackRateChange = false;
-    mbCanDropFrame = false;
     
     mpPlayVideoRunnable = new PlayVideoRunnable(this);
     mpPlayAudioRunnable = new PlayAudioRunnable(this);

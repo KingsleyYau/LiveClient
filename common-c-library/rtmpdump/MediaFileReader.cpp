@@ -310,6 +310,9 @@ void MediaFileReader::MediaReaderHandle() {
                              );
                 
                 mPlaybackRateChange = false;
+                
+                startTime = getCurrentTime();
+                
                 mAudioStartTimestamp = INVALID_TIMESTAMP;
                 mAudioLastTimestamp = INVALID_TIMESTAMP;
                 

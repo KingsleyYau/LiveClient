@@ -132,7 +132,6 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
     // 开始播放
     if (bFlag) {
         mRtmpPlayer.SetCacheNoLimit(false);
-        mRtmpPlayer.SetCanDropFrame(true);
         bFlag = mRtmpPlayer.PlayUrl(recordFilePath);
     }
     // 开始录制
@@ -191,7 +190,6 @@ bool PlayerController::PlayFile(const string &filePath) {
     // 开始播放
     if (bFlag) {
         mRtmpPlayer.SetCacheNoLimit(true);
-        mRtmpPlayer.SetCanDropFrame(false);
         bFlag = mRtmpPlayer.PlayUrl("");
     }
 

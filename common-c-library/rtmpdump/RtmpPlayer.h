@@ -188,8 +188,6 @@ class RtmpPlayer {
     float mPlaybackRate;
     bool mAudioPlaybackRateChange;
     bool mVideoPlaybackRateChange;
-    // 是否延迟丢帧
-    bool mbCanDropFrame;
     
 };
 }
