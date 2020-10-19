@@ -216,65 +216,114 @@ void MediaFileReader::MediaReaderHandle() {
             unsigned char *extradata = (unsigned char *)videoCtx->extradata;
             unsigned char *extradata_end = (unsigned char *)videoCtx->extradata + videoCtx->extradata_size;
             if ( videoCtx->extradata_size > 0 ) {
-                extradata += 4;
+                if ( videoCtx->codec_id == AV_CODEC_ID_H264 ) {
+                    extradata += 4;
 
-                int sps_byte_size = (*extradata++ & 0x3) + 1;
-                int sps_count = *extradata++ & 0x1f;
-                int sps_data_size = (extradata[0] << 8) | extradata[1];
-                extradata += 2;
+                    int sps_byte_size = (*extradata++ & 0x3) + 1;
+                    int sps_count = *extradata++ & 0x1f;
+                    int sps_data_size = (extradata[0] << 8) | extradata[1];
+                    extradata += 2;
 
-                if ( extradata_end - extradata < sps_data_size ) {
+                    if ( extradata_end - extradata < sps_data_size ) {
+                        FileLevelLog("rtmpdump",
+                                     KLog::LOG_WARNING,
+                                     "MediaFileReader::MediaReaderHandle( "
+                                     "this : %p, "
+                                     "[Error SPSP] "
+                                     ")",
+                                     this
+                                     );
+                        break;
+                    }
+                    
+                    char sps[1024] = {0};
+                    memcpy(sps, extradata, sps_data_size);
+                    extradata += sps_data_size;
+                    
+                    int pps_count = *extradata++;
+                    int pps_data_size = (extradata[0] << 8) | extradata[1];
+                    extradata += 2;
+                    
+                    if ( extradata_end - extradata < pps_data_size ) {
+                        FileLevelLog("rtmpdump",
+                                     KLog::LOG_WARNING,
+                                     "MediaFileReader::MediaReaderHandle( "
+                                     "this : %p, "
+                                     "[Error PPS] "
+                                     ")",
+                                     this
+                                     );
+                        break;
+                    }
+                    char pps[1024] = {0};
+                    memcpy(pps, extradata, pps_data_size);
+                    
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
                                  "MediaFileReader::MediaReaderHandle( "
                                  "this : %p, "
-                                 "[Unknow SPS] "
+                                 "[Read Video SPS/PPS], "
+                                 "sps_count : %d, "
+                                 "sps_data_size : %d, "
+                                 "pps_count : %d, "
+                                 "pps_data_size : %d "
                                  ")",
-                                 this
-                                 );
-                    break;
-                }
-                
-                char sps[1024] = {0};
-                memcpy(sps, extradata, sps_data_size);
-                extradata += sps_data_size;
-                
-                int pps_count = *extradata++;
-                int pps_data_size = (extradata[0] << 8) | extradata[1];
-                extradata += 2;
-                
-                if ( extradata_end - extradata < pps_data_size ) {
+                                 this,
+                                 sps_count,
+                                 sps_data_size,
+                                 pps_count,
+                                 pps_data_size);
+                    
+                    if (mpCallback) {
+                        mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_data_size, (const char *)pps, pps_data_size);
+                    }
+                } else if ( videoCtx->codec_id == AV_CODEC_ID_HEVC ) {
+                    extradata += 22;
+                    int arrayCount = *extradata;
+                    extradata++;
+                    for (int i = 0; i < arrayCount; i++) {
+                        unsigned char naluType = extradata[0];
+                        extradata++;
+                        unsigned short naluCount = extradata[0] << 16 | extradata[1];
+                        extradata +=2;
+                        for (int j = 0; j < naluCount; j++) {
+                            unsigned short naluSize = extradata[0] << 16 | extradata[1];
+                            extradata +=2;
+                            extradata += naluSize;
+                            
+                            if ( (naluType & 0x1F) == 0 ) {
+                                // VPS
+                            } else if ( (naluType & 0x1F) == 1 ) {
+                                // SPS
+                            } else if ( (naluType & 0x1F) == 2 ) {
+                                // PP2
+                            }
+                        }
+                    }
+                    
+                    FileLevelLog("rtmpdump",
+                                  KLog::LOG_WARNING,
+                                  "MediaFileReader::MediaReaderHandle( "
+                                  "this : %p, "
+                                  "[UnSupport HEVC], "
+                                  "%d "
+                                  ")",
+                                  this,
+                                  videoCtx->codec_id
+                                  );
+                     break;
+                } else {
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
                                  "MediaFileReader::MediaReaderHandle( "
                                  "this : %p, "
-                                 "[Unknow PPS] "
+                                 "[UnSupport Codec Format], "
+                                 "%d "
                                  ")",
-                                 this
+                                 this,
+                                 videoCtx->codec_id
                                  );
                     break;
-                }
-                char pps[1024] = {0};
-                memcpy(pps, extradata, pps_data_size);
-                
-                FileLevelLog("rtmpdump",
-                             KLog::LOG_WARNING,
-                             "MediaFileReader::MediaReaderHandle( "
-                             "this : %p, "
-                             "[Read Video SPS/PPS], "
-                             "sps_count : %d, "
-                             "sps_data_size : %d, "
-                             "pps_count : %d, "
-                             "pps_data_size : %d "
-                             ")",
-                             this,
-                             sps_count,
-                             sps_data_size,
-                             pps_count,
-                             pps_data_size);
-                
-                if (mpCallback) {
-                    mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_data_size, (const char *)pps, pps_data_size);
                 }
             }
         }
