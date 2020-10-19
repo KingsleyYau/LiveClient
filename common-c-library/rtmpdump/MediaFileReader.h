@@ -116,6 +116,7 @@ class MediaFileReader {
     
     // 播放速度
     float mPlaybackRate;
+    bool mPlaybackRateChange;
     
     // 预加载缓存时间(毫秒)
     unsigned int mCacheMS;

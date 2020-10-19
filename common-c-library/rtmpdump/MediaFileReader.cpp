@@ -54,6 +54,7 @@ MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
     mVideoLastTimestamp = INVALID_TIMESTAMP;
     
     mPlaybackRate = 1.0f;
+    mPlaybackRateChange = false;
     mCacheMS = PRE_READ_TIME_MS;
 }
 
@@ -137,6 +138,7 @@ void MediaFileReader::SetMediaFileReaderCallback(MediaFileReaderCallback *callba
 
 void MediaFileReader::SetPlaybackRate(float playBackRate) {
     mPlaybackRate = playBackRate;
+    mPlaybackRateChange = true;
 }
 
 void MediaFileReader::SetCacheMS(int cacheMS) {
@@ -297,6 +299,24 @@ void MediaFileReader::MediaReaderHandle() {
             unsigned int deltaTime = (unsigned int)(now - startTime);
             unsigned int deltaTS = 0;
 
+            if ( mPlaybackRateChange ) {
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_MSG,
+                             "MediaFileReader::MediaReaderHandle( "
+                             "this : %p, "
+                             "[Change Playback Rate] "
+                             ")",
+                             this
+                             );
+                
+                mPlaybackRateChange = false;
+                mAudioStartTimestamp = INVALID_TIMESTAMP;
+                mAudioLastTimestamp = INVALID_TIMESTAMP;
+                
+                mVideoStartTimestamp = INVALID_TIMESTAMP;
+                mVideoLastTimestamp = INVALID_TIMESTAMP;
+            }
+            
             if (mVideoStartTimestamp == INVALID_TIMESTAMP && mAudioStartTimestamp == INVALID_TIMESTAMP) {
                 bRead = true;
             } else {
@@ -338,6 +358,7 @@ void MediaFileReader::MediaReaderHandle() {
                              "pts : %d, "
                              "dts : %d, "
                              "time : %.3f second, "
+                             "av_q2d : %f, "
                              "size : %d, "
                              "data : (Hex)%02x,%02x,%02x,%02x,%02x "
                              ")",
@@ -349,6 +370,7 @@ void MediaFileReader::MediaReaderHandle() {
                              pkt.pts,
                              pkt.dts,
                              time,
+                             av_q2d(mContext->streams[pkt.stream_index]->time_base),
                              pkt.size,
                              pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
 

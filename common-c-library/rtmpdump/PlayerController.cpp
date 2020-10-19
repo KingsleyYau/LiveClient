@@ -132,6 +132,7 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
     // 开始播放
     if (bFlag) {
         mRtmpPlayer.SetCacheNoLimit(false);
+        mRtmpPlayer.SetCanDropFrame(true);
         bFlag = mRtmpPlayer.PlayUrl(recordFilePath);
     }
     // 开始录制
@@ -141,10 +142,11 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
     }
     if (bFlag) {
         // 开始连接
-        mbIsPlayFile = false;
         bFlag = mRtmpDump.PlayUrl(url, recordFilePath);
     }
 
+    mbIsPlayFile = false;
+    
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::PlayUrl( "
@@ -189,6 +191,7 @@ bool PlayerController::PlayFile(const string &filePath) {
     // 开始播放
     if (bFlag) {
         mRtmpPlayer.SetCacheNoLimit(true);
+        mRtmpPlayer.SetCanDropFrame(false);
         bFlag = mRtmpPlayer.PlayUrl("");
     }
 
