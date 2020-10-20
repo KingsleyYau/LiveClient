@@ -189,8 +189,8 @@ class PlayerController : public RtmpDumpCallback,
                            const string &userName);
 
     // 文件播放器回调
-    void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size);
-    void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type);
+    void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps = NULL, int vps_size = 0);
+    void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type);
     void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
                                      AudioFrameFormat format,
                                      AudioFrameSoundRate sound_rate,

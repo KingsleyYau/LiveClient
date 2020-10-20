@@ -52,4 +52,9 @@ bool CacheBufferQueue::PushBuffer(void* buffer) {
     
     return bFlag;
 }
+
+int CacheBufferQueue::Size() {
+    return mBufferList.size();
+}
+
 }

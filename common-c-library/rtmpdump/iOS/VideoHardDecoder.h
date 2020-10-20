@@ -31,8 +31,11 @@ public:
     bool Reset();
     void Pause();
     void ResetStream();
-    void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp);
-    void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
+    void DecodeVideoKeyFrame(const char* sps, int sps_size,
+                             const char* pps, int pps_size,
+                             int naluHeaderSize, u_int32_t timestamp,
+                             const char *vps = NULL, int vps_size = 0);
+    void DecodeVideoFrame(const char* data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
     void ClearVideoFrame();
@@ -70,6 +73,8 @@ private:
     int mSpSize;
     char* mpPps;
     int mPpsSize;
+    char* mpVps;
+    int mVpsSize;
     int mNaluHeaderSize;
     int mWidth;
     int mHeight;

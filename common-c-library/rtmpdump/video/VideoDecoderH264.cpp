@@ -83,6 +83,8 @@ VideoDecoderH264::VideoDecoderH264()
     mbWaitForInterFrame = true;
     mbCanDropFrame = false;
 
+    mbHEVC = false;
+          
     mpDecodeVideoRunnable = new DecodeVideoRunnable(this);
     mpConvertVideoRunnable = new ConvertVideoRunnable(this);
 }
@@ -291,7 +293,7 @@ bool VideoDecoderH264::CreateContext() {
     avcodec_register_all();
     //    av_log_set_level(AV_LOG_ERROR);
 
-    mCodec = avcodec_find_decoder(AV_CODEC_ID_H264);
+    mCodec = avcodec_find_decoder(mbHEVC?AV_CODEC_ID_HEVC:AV_CODEC_ID_H264);
     if (mCodec) {
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
@@ -387,7 +389,7 @@ void VideoDecoderH264::DestroyContext() {
     }
 }
 
-void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
+void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp, const char *vps, int vps_size) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoDecoderH264::DecodeVideoKeyFrame( "
@@ -396,6 +398,8 @@ void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  "sps_size : %d, "
                  "pps : %p, "
                  "pps_size : %d, "
+                 "vps : %p, "
+                 "vps_size : %d, "
                  "naluHeaderSize : %d, "
                  "timestamp : %u "
                  ")",
@@ -404,19 +408,42 @@ void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  sps_size,
                  pps,
                  pps_size,
+                 vps,
+                 vps_size,
                  naluHeaderSize,
                  timestamp);
 
     mNaluHeaderSize = naluHeaderSize;
 
-    mSPS_PPS_IDR.SetBuffer(sync_bytes, sizeof(sync_bytes));
+    mSPS_PPS_IDR.ResetFrame();
+    if ( vps_size > 0 && vps ) {
+        if ( !mbHEVC ) {
+            mbHEVC = true;
+            mRuningMutex.lock();
+            DestroyContext();
+            CreateContext();
+            mRuningMutex.unlock();
+        }
+        mSPS_PPS_IDR.AddBuffer(sync_bytes, sizeof(sync_bytes));
+        mSPS_PPS_IDR.AddBuffer((const unsigned char *)vps, vps_size);
+    } else {
+        if ( mbHEVC ) {
+            mbHEVC = false;
+            mRuningMutex.lock();
+            DestroyContext();
+            CreateContext();
+            mRuningMutex.unlock();
+        }
+    }
+    
+    mSPS_PPS_IDR.AddBuffer(sync_bytes, sizeof(sync_bytes));
     mSPS_PPS_IDR.AddBuffer((const unsigned char *)sps, sps_size);
 
     mSPS_PPS_IDR.AddBuffer(sync_bytes, sizeof(sync_bytes));
     mSPS_PPS_IDR.AddBuffer((const unsigned char *)pps, pps_size);
 }
 
-void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {
+void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) {
     mFreeBufferList.lock();
     VideoFrame *videoFrame = NULL;
     if (!mFreeBufferList.empty()) {
@@ -437,9 +464,9 @@ void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t ti
     }
     mFreeBufferList.unlock();
 
-    // 更新数据格式
+    // 更新数据格式, 因为ffmpeg里面会对帧重排序, 所以将DTS记录为时间戳
     videoFrame->ResetFrame();
-    videoFrame->mTimestamp = timestamp;
+    videoFrame->mTimestamp = dts;
     videoFrame->mVideoType = video_type;
     //    videoFrame->SetBuffer((const unsigned char*)data, size);
 
@@ -453,12 +480,12 @@ void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                      "VideoDecoderH264::DecodeVideoFrame( "
                      "this : %p, "
                      "[Got Nalu Array], "
-                     "timestamp : %u, "
+                     "ts : %u, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
                      this,
-                     timestamp,
+                     dts,
                      size,
                      naluArraySize);
 
@@ -593,7 +620,7 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame *videoFrame, VideoFrame *newV
             newVideoFrame->mFormat = VIDEO_FORMATE_YUV420P;
             newVideoFrame->mWidth = pictureFrame->width;
             newVideoFrame->mHeight = pictureFrame->height;
-
+            
             bFlag = true;
         } else if ( useLen < 0 ) {
             FileLevelLog(

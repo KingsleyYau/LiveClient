@@ -129,7 +129,7 @@ bool RtmpPlayer::PlayUrl(const string &recordFilePath) {
     if (bFlag) {
         // 开始播放
         mbRunning = true;
-
+        
         mPlayVideoThread.Start(mpPlayVideoRunnable);
         mPlayAudioThread.Start(mpPlayAudioRunnable);
 
@@ -300,7 +300,7 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
         "RtmpPlayer::PushVideoFrame( "
         "this : %p, "
         "frame : %p, "
-        "timestamp : %u, "
+        "ts : %u, "
         "bufferListSize : %u "
         ")",
         this,
@@ -324,13 +324,14 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
                 "this : %p, "
                 "[New Video Frame], "
                 "frame : %p, "
-                "timestamp : %u, "
+                "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
                 frameBuffer,
                 timestamp,
-                mVideoBufferList.size());
+                mVideoBufferList.size()
+                );
         }
 
         if (frameBuffer) {
@@ -348,7 +349,7 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
                     "RtmpPlayer::PushVideoFrame( "
                     "this : %p, "
                     "[Video Buffer Size Warning], "
-                    "timestamp : %u, "
+                    "ts : %u, "
                     "bufferListSize : %u "
                     ")",
                     this,
@@ -357,23 +358,23 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
             }
         }
 
-        mVideoBufferList.push_back(frameBuffer);
-//        if ( mVideoBufferList.empty() ) {
-//            mVideoBufferList.push_back(frameBuffer);
-//        } else {
-//            /**
-//             rbegin = last element
-//             end = last element + 1
-//             rbegin.base = end
-//             */
-//            for(FrameBufferList::reverse_iterator itr = mVideoBufferList.rbegin(); itr != mVideoBufferList.rend(); itr++) {
-//                if ( frameBuffer->mTimestamp > (*itr)->mTimestamp ) {
-//                    FrameBufferList::iterator base = (itr).base();
-//                    mVideoBufferList.insert(base, frameBuffer);
-//                    break;
-//                }
-//            }
-//        }
+//        mVideoBufferList.push_back(frameBuffer);
+        if ( mVideoBufferList.empty() ) {
+            mVideoBufferList.push_back(frameBuffer);
+        } else {
+            /**
+             rbegin = last element
+             end = last element + 1
+             rbegin.base = end
+             */
+            for(FrameBufferList::reverse_iterator itr = mVideoBufferList.rbegin(); itr != mVideoBufferList.rend(); itr++) {
+                if ( frameBuffer->mTimestamp > (*itr)->mTimestamp ) {
+                    FrameBufferList::iterator base = (itr).base();
+                    mVideoBufferList.insert(base, frameBuffer);
+                    break;
+                }
+            }
+        }
         mVideoFrontTimestamp = mVideoBufferList.front()->mTimestamp;
         mVideoBackTimestamp = mVideoBufferList.back()->mTimestamp;
         mVideoBufferList.unlock();
@@ -392,7 +393,7 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
         "RtmpPlayer::PushAudioFrame( "
         "this : %p, "
         "frame : %p, "
-        "timestamp : %u, "
+        "ts : %u, "
         "bufferListSize : %u "
         ")",
         this,
@@ -416,7 +417,7 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
                 "this : %p, "
                 "[New Audio Frame], "
                 "frame : %p, "
-                "timestamp : %u, "
+                "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
@@ -439,7 +440,7 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
                 "RtmpPlayer::PushAudioFrame( "
                 "this : %p, "
                 "[Audio Buffer Size Warning], "
-                "timestamp : %u, "
+                "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
@@ -485,6 +486,7 @@ void RtmpPlayer::Init() {
     mpRtmpPlayerCallback = NULL;
 
     mCacheBufferQueue.SetCacheQueueSize(200);
+    
     mPlaybackRate = 1.0f;
     mAudioPlaybackRateChange = false;
     mVideoPlaybackRateChange = false;
@@ -1181,16 +1183,27 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                              * 2.(总播放时间 - 总帧时间戳 > 帧时间戳差)
                              */
                             int delta = 1.0 * (deltaTS - delay);
-                            if ((deltaTS == 0) || (deltaTime >= delta) /*delay > (deltaTS - 2 * PLAY_SLEEP_TIME)*/) {
-                                // 播放帧
-                                if (isAudio) {
+                            if (isAudio) {
+                                if ((deltaTS == 0) || (deltaTime + 2 >= delta) /*delay > (deltaTS - 2 * PLAY_SLEEP_TIME)*/) {
                                     PlayAudioFrame(frame);
-                                } else {
-                                    PlayVideoFrame(frame);
+                                    bHandleFrame = true;
                                 }
-
-                                bHandleFrame = true;
+                            } else {
+                                if ((deltaTS == 0) || (deltaTime >= delta) /*delay > (deltaTS - 2 * PLAY_SLEEP_TIME)*/) {
+                                    PlayVideoFrame(frame);
+                                    bHandleFrame = true;
+                                }
                             }
+//                            if ((deltaTS == 0) || (deltaTime >= delta) /*delay > (deltaTS - 2 * PLAY_SLEEP_TIME)*/) {
+//                                // 播放帧
+//                                if (isAudio) {
+//                                    PlayAudioFrame(frame);
+//                                } else {
+//                                    PlayVideoFrame(frame);
+//                                }
+//
+//                                bHandleFrame = true;
+//                            }
 
                         } else {
                             // 本地丢帧
@@ -1220,7 +1233,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "deltaTime : %d, "
                                              "deltaTS : %d, "
                                              "delay : %d, "
-                                             "timestamp : %u, "
+                                             "ts : %u, "
                                              "deltaTotalTime : %d, "
                                              "deltaTotalTS : %d, "
                                              "rate : %.1f, "
@@ -1248,7 +1261,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "deltaTime : %d, "
                                              "deltaTS : %d, "
                                              "delay : %d, "
-                                             "timestamp : %u, "
+                                             "ts : %u, "
                                              "deltaTotalTime : %d, "
                                              "deltaTotalTS : %d, "
                                              "bufferListSize : %d "
@@ -1273,11 +1286,11 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
 
                             if (isAudio) {
                                 // 如果音频帧时间戳差大于30, 需要重置音频播放器, 否者iOS播放器有问题
-//                                if (deltaTS > 30) {
-//                                    if (mpRtmpPlayerCallback) {
-//                                        mpRtmpPlayerCallback->OnResetAudioStream(this);
-//                                    }
-//                                }
+                                if (deltaTS > 30) {
+                                    if (mpRtmpPlayerCallback) {
+                                        mpRtmpPlayerCallback->OnResetAudioStream(this);
+                                    }
+                                }
                             }
 
                             // 队列去除

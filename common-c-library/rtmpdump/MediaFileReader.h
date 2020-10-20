@@ -30,8 +30,8 @@ class MediaReaderRunnable;
 class MediaFileReaderCallback {
   public:
     virtual ~MediaFileReaderCallback(){};
-    virtual void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size) = 0;
-    virtual void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
+    virtual void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps = NULL, int vps_size = 0) = 0;
+    virtual void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) = 0;
     virtual void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
                                              AudioFrameFormat format,
                                              AudioFrameSoundRate sound_rate,

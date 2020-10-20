@@ -106,6 +106,8 @@ VideoHardDecoder::VideoHardDecoder()
     mSpSize = 0;
     mpPps = NULL;
     mPpsSize = 0;
+    mpVps = NULL;
+    mVpsSize = 0;
     mNaluHeaderSize = 0;
 }
 
@@ -178,7 +180,7 @@ void VideoHardDecoder::ResetStream() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::ResetStream( this : %p )", this);
 }
 
-void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp, const char *vps, int vps_size) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
@@ -187,6 +189,8 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  "sps_size : %d, "
                  "pps : %p, "
                  "pps_size : %d, "
+                 "vps : %p, "
+                 "vps_size : %d, "
                  "naluHeaderSize : %d, "
                  "timestamp : %u "
                  ")",
@@ -195,6 +199,8 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  sps_size,
                  pps,
                  pps_size,
+                 vps,
+                 vps_size,
                  naluHeaderSize,
                  timestamp);
 
@@ -207,7 +213,6 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
         delete[] mpSps;
         mpSps = NULL;
     }
-
     mSpSize = sps_size;
     mpSps = new char[mSpSize];
     memcpy(mpSps, sps, mSpSize);
@@ -216,13 +221,22 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
         delete[] mpPps;
         mpPps = NULL;
     }
-
     mPpsSize = pps_size;
     mpPps = new char[mPpsSize];
     memcpy(mpPps, pps, mPpsSize);
 
     mNaluHeaderSize = naluHeaderSize;
 
+    if (mpVps) {
+        delete[] mpVps;
+        mpVps = NULL;
+    }
+    mVpsSize = vps_size;
+    if ( mVpsSize > 0 && vps ) {
+        mpVps = new char[mVpsSize];
+        memcpy(mpVps, vps, mVpsSize);
+    }
+    
     if (
         mpSps != NULL &&
         mSpSize != 0 &&
@@ -236,12 +250,12 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
     mRuningMutex.unlock();
 }
 
-void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {
+void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) {
     // 重置解码Buffer
     mVideoDecodeFrame.ResetFrame();
 
+    // 不会对帧重排序, 所以将PTS记录为时间戳
     bool bChange = false;
-    // 如果需要支持B帧, 需要自己根据dts做缓存和排序, 暂时不支持
     Nalu naluArray[16];
     int naluArraySize = _countof(naluArray);
     bool bFlag = mVideoMuxer.GetNalus(data, size, mNaluHeaderSize, naluArray, naluArraySize);
@@ -251,12 +265,12 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                      "VideoHardDecoder::DecodeVideoFrame( "
                      "this : %p, "
                      "[Got Nalu Array], "
-                     "timestamp : %u, "
+                     "ts : %u, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
                      this,
-                     timestamp,
+                     pts,
                      size,
                      naluArraySize);
 
@@ -405,7 +419,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
             VTDecodeInfoFlags flagOut = 0;
 
             DecodeItem item;
-            item.timestamp = timestamp;
+            item.timestamp = pts;
             item.decoder = this;
 
             status = VTDecompressionSessionDecodeFrame(
@@ -422,12 +436,12 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t ti
                          "[Decode Video Result], "
                          "status : %d, "
                          "item : %p, "
-                         "timestamp : %u "
+                         "ts : %u "
                          ")",
                          this,
                          status,
                          &item,
-                         timestamp);
+                         pts);
 
             if (status != noErr || mbError) {
                 DestroyContext();
@@ -576,16 +590,36 @@ bool VideoHardDecoder::CreateContext() {
 
     if (NULL == mSession) {
         // 初始化Video格式
-        const int parameterSetCount = 2;
-        const uint8_t *const parameterSetPointers[parameterSetCount] = {(const uint8_t *)mpSps, (const uint8_t *)mpPps};
-        const size_t parameterSetSizes[parameterSetCount] = {mSpSize, mPpsSize};
-        status = CMVideoFormatDescriptionCreateFromH264ParameterSets(
-            kCFAllocatorDefault,
-            parameterSetCount,
-            parameterSetPointers,
-            parameterSetSizes,
-            mNaluHeaderSize,
-            &mFormatDesc);
+        
+        if ( mVpsSize > 0 && mpVps ) {
+            const int parameterSetCount = 3;
+            const uint8_t *const parameterSetPointers[parameterSetCount] = {(const uint8_t *)mpVps, (const uint8_t *)mpSps, (const uint8_t *)mpPps};
+            const size_t parameterSetSizes[parameterSetCount] = {mVpsSize, mSpSize, mPpsSize};
+            if (@available(iOS 11.0, *)) {
+                status = CMVideoFormatDescriptionCreateFromHEVCParameterSets(
+                                                                             kCFAllocatorDefault,
+                                                                             parameterSetCount,
+                                                                             parameterSetPointers,
+                                                                             parameterSetSizes,
+                                                                             mNaluHeaderSize,
+                                                                             NULL,
+                                                                             &mFormatDesc);
+            } else {
+                // Fallback on earlier versions
+                status = kUnknownType;
+            }
+        } else {
+            const int parameterSetCount = 2;
+            const uint8_t *const parameterSetPointers[parameterSetCount] = {(const uint8_t *)mpSps, (const uint8_t *)mpPps};
+            const size_t parameterSetSizes[parameterSetCount] = {mSpSize, mPpsSize};
+            status = CMVideoFormatDescriptionCreateFromH264ParameterSets(
+                kCFAllocatorDefault,
+                parameterSetCount,
+                parameterSetPointers,
+                parameterSetSizes,
+                mNaluHeaderSize,
+                &mFormatDesc);
+        }
 
         if (status == noErr) {
             // 初始化回调参数

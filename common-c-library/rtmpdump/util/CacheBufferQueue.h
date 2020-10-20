@@ -38,6 +38,8 @@ public:
      */
     bool PushBuffer(void *);
     
+    int Size();
+    
 private:
     // 最大缓存Buffer
     int mMaxBufferCount;

@@ -335,7 +335,7 @@ void PlayerController::OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, in
 
     // 解码视频帧
     if (mpVideoDecoder) {
-        mpVideoDecoder->DecodeVideoFrame(data, size, pts, video_type);
+        mpVideoDecoder->DecodeVideoFrame(data, size, dts, pts, video_type);
     }
 }
 
@@ -612,17 +612,17 @@ void PlayerController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                  userName.c_str());
 }
 /*********************************************** 播放器回调处理 End *****************************************************/
-void PlayerController::OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size) {
-    // 解码视频帧
+void PlayerController::OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps, int vps_size) {
+    // 解码视关键帧频帧
     if (mpVideoDecoder) {
-        mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, 4, 0);
+        mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, 4, 0, vps, vps_size);
     }
 }
 
-void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type) {
+void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) {
     // 解码视频帧
     if (mpVideoDecoder) {
-        mpVideoDecoder->DecodeVideoFrame(data, size, timestamp, video_type);
+        mpVideoDecoder->DecodeVideoFrame(data, size, dts, pts, video_type);
     }
 }
 

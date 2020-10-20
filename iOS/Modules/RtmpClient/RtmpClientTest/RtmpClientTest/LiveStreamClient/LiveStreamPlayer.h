@@ -55,6 +55,11 @@
 @property (strong) GPUImageFilter *customFilter;
 
 /**
+ 是否硬解码
+ */
+@property (nonatomic, assign) BOOL useHardDecoder;
+
+/**
  当前播放URL
  */
 @property (strong, readonly) NSString * _Nonnull url;

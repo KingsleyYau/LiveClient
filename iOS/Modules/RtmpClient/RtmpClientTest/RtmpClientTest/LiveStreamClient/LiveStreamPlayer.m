@@ -136,6 +136,14 @@
 }
 
 #pragma mark - 私有方法
+- (BOOL)useHardDecoder {
+    return self.player.useHardDecoder;
+}
+
+- (void)setUseHardDecoder:(BOOL)useHardDecoder {
+    self.player.useHardDecoder = useHardDecoder;
+}
+
 - (GPUImageFilter *)customFilter {
     return _customFilter;
 }

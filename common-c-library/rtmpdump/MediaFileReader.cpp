@@ -52,7 +52,7 @@ MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
 
     mVideoStartTimestamp = INVALID_TIMESTAMP;
     mVideoLastTimestamp = INVALID_TIMESTAMP;
-    
+
     mPlaybackRate = 1.0f;
     mPlaybackRateChange = false;
     mCacheMS = PRE_READ_TIME_MS;
@@ -193,11 +193,11 @@ void MediaFileReader::MediaReaderHandle() {
 
         mAudioStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
         AVCodecContext *audioCtx = NULL;
-        if ( mAudioStreamIndex >= 0 ) {
+        if (mAudioStreamIndex >= 0) {
             audioCtx = mContext->streams[mAudioStreamIndex]->codec;
         }
         mVideoStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
-        if ( mVideoStreamIndex >= 0 ) {
+        if (mVideoStreamIndex >= 0) {
             AVStream *stream = mContext->streams[mVideoStreamIndex];
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
@@ -209,75 +209,79 @@ void MediaFileReader::MediaReaderHandle() {
                          ")",
                          this,
                          1.0 * stream->duration * stream->time_base.num / stream->time_base.den,
-                         stream->nb_frames
-                         );
-            
-            AVCodecContext* videoCtx = mContext->streams[mVideoStreamIndex]->codec;
+                         stream->nb_frames);
+
+            AVCodecContext *videoCtx = mContext->streams[mVideoStreamIndex]->codec;
             unsigned char *extradata = (unsigned char *)videoCtx->extradata;
             unsigned char *extradata_end = (unsigned char *)videoCtx->extradata + videoCtx->extradata_size;
-            if ( videoCtx->extradata_size > 0 ) {
-                if ( videoCtx->codec_id == AV_CODEC_ID_H264 ) {
+            if (videoCtx->extradata_size > 0) {
+                if (videoCtx->codec_id == AV_CODEC_ID_H264) {
                     extradata += 4;
 
                     int sps_byte_size = (*extradata++ & 0x3) + 1;
                     int sps_count = *extradata++ & 0x1f;
-                    int sps_data_size = (extradata[0] << 8) | extradata[1];
+                    int sps_size = (extradata[0] << 8) | extradata[1];
                     extradata += 2;
 
-                    if ( extradata_end - extradata < sps_data_size ) {
+                    if (extradata_end - extradata < sps_size) {
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_WARNING,
                                      "MediaFileReader::MediaReaderHandle( "
                                      "this : %p, "
                                      "[Error SPSP] "
                                      ")",
-                                     this
-                                     );
+                                     this);
                         break;
                     }
-                    
+
                     char sps[1024] = {0};
-                    memcpy(sps, extradata, sps_data_size);
-                    extradata += sps_data_size;
-                    
+                    memcpy(sps, extradata, sps_size);
+                    extradata += sps_size;
+
                     int pps_count = *extradata++;
-                    int pps_data_size = (extradata[0] << 8) | extradata[1];
+                    int pps_size = (extradata[0] << 8) | extradata[1];
                     extradata += 2;
-                    
-                    if ( extradata_end - extradata < pps_data_size ) {
+
+                    if (extradata_end - extradata < pps_size) {
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_WARNING,
                                      "MediaFileReader::MediaReaderHandle( "
                                      "this : %p, "
                                      "[Error PPS] "
                                      ")",
-                                     this
-                                     );
+                                     this);
                         break;
                     }
                     char pps[1024] = {0};
-                    memcpy(pps, extradata, pps_data_size);
-                    
+                    memcpy(pps, extradata, pps_size);
+
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
                                  "MediaFileReader::MediaReaderHandle( "
                                  "this : %p, "
-                                 "[Read Video SPS/PPS], "
+                                 "[Read H264 Video SPS/PPS], "
                                  "sps_count : %d, "
-                                 "sps_data_size : %d, "
+                                 "sps_size : %d, "
                                  "pps_count : %d, "
-                                 "pps_data_size : %d "
+                                 "pps_size : %d "
                                  ")",
                                  this,
                                  sps_count,
-                                 sps_data_size,
+                                 sps_size,
                                  pps_count,
-                                 pps_data_size);
-                    
+                                 pps_size);
+
                     if (mpCallback) {
-                        mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_data_size, (const char *)pps, pps_data_size);
+                        mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_size, (const char *)pps, pps_size);
                     }
-                } else if ( videoCtx->codec_id == AV_CODEC_ID_HEVC ) {
+                } else if (videoCtx->codec_id == AV_CODEC_ID_HEVC) {
+                    unsigned char *vps = NULL;
+                    int vps_size = 0;
+                    unsigned char *sps = NULL;
+                    int sps_size = 0;
+                    unsigned char *pps = NULL;
+                    int pps_size = 0;
+
                     extradata += 22;
                     int arrayCount = *extradata;
                     extradata++;
@@ -285,33 +289,46 @@ void MediaFileReader::MediaReaderHandle() {
                         unsigned char naluType = extradata[0];
                         extradata++;
                         unsigned short naluCount = extradata[0] << 16 | extradata[1];
-                        extradata +=2;
+                        extradata += 2;
                         for (int j = 0; j < naluCount; j++) {
                             unsigned short naluSize = extradata[0] << 16 | extradata[1];
-                            extradata +=2;
-                            extradata += naluSize;
-                            
-                            if ( (naluType & 0x1F) == 0 ) {
+                            extradata += 2;
+
+                            if ((naluType & 0x3F) == 0x20) {
                                 // VPS
-                            } else if ( (naluType & 0x1F) == 1 ) {
+                                vps = extradata;
+                                vps_size = naluSize;
+                            } else if ((naluType & 0x3F) == 0x21) {
                                 // SPS
-                            } else if ( (naluType & 0x1F) == 2 ) {
-                                // PP2
+                                sps = extradata;
+                                sps_size = naluSize;
+                            } else if ((naluType & 0x3F) == 0x22) {
+                                // PPS
+                                pps = extradata;
+                                pps_size = naluSize;
                             }
+                            
+                            extradata += naluSize;
                         }
                     }
-                    
+
                     FileLevelLog("rtmpdump",
-                                  KLog::LOG_WARNING,
-                                  "MediaFileReader::MediaReaderHandle( "
-                                  "this : %p, "
-                                  "[UnSupport HEVC], "
-                                  "%d "
-                                  ")",
-                                  this,
-                                  videoCtx->codec_id
-                                  );
-                     break;
+                                 KLog::LOG_WARNING,
+                                 "MediaFileReader::MediaReaderHandle( "
+                                 "this : %p, "
+                                 "[Read HEVC Video VPS/SPS/PPS], "
+                                 "vps_size : %d, "
+                                 "sps_size : %d, "
+                                 "pps_size : %d "
+                                 ")",
+                                 this,
+                                 vps_size,
+                                 sps_size,
+                                 pps_size);
+
+                    if (mpCallback) {
+                        mpCallback->OnMediaFileReaderChangeSpsPps(this, (const char *)sps, sps_size, (const char *)pps, pps_size, (const char *)vps, vps_size);
+                    }
                 } else {
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
@@ -321,13 +338,12 @@ void MediaFileReader::MediaReaderHandle() {
                                  "%d "
                                  ")",
                                  this,
-                                 videoCtx->codec_id
-                                 );
+                                 videoCtx->codec_id);
                     break;
                 }
             }
         }
-        
+
         AVPacket pkt;
         av_init_packet(&pkt);
         pkt.data = NULL;
@@ -336,7 +352,6 @@ void MediaFileReader::MediaReaderHandle() {
         AVFrame *frame = NULL;
         int ret = 0, got_frame = 0;
 
-        bool bFinish = false;
         bool bRead = true;
 
         // 开始播放时间
@@ -348,43 +363,42 @@ void MediaFileReader::MediaReaderHandle() {
             unsigned int deltaTime = (unsigned int)(now - startTime);
             unsigned int deltaTS = 0;
 
-            if ( mPlaybackRateChange ) {
+            if (mPlaybackRateChange) {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_MSG,
                              "MediaFileReader::MediaReaderHandle( "
                              "this : %p, "
                              "[Change Playback Rate] "
                              ")",
-                             this
-                             );
-                
+                             this);
+
                 mPlaybackRateChange = false;
-                
+
                 startTime = getCurrentTime();
-                
+
                 mAudioStartTimestamp = INVALID_TIMESTAMP;
                 mAudioLastTimestamp = INVALID_TIMESTAMP;
-                
+
                 mVideoStartTimestamp = INVALID_TIMESTAMP;
                 mVideoLastTimestamp = INVALID_TIMESTAMP;
             }
-            
+
             if (mVideoStartTimestamp == INVALID_TIMESTAMP && mAudioStartTimestamp == INVALID_TIMESTAMP) {
                 bRead = true;
             } else {
                 unsigned int deltaAudioTS = mAudioLastTimestamp - mAudioStartTimestamp;
                 unsigned int deltaVideoTS = mVideoLastTimestamp - mVideoStartTimestamp;
-                
-                if ( mVideoStreamIndex >= 0 && mAudioStreamIndex >= 0 ) {
+
+                if (mVideoStreamIndex >= 0 && mAudioStreamIndex >= 0) {
                     deltaTS = MIN(deltaAudioTS, deltaVideoTS);
-                } else if ( mVideoStreamIndex >= 0 ) {
+                } else if (mVideoStreamIndex >= 0) {
                     deltaTS = deltaVideoTS;
-                } else if ( mAudioStreamIndex >= 0 ) {
+                } else if (mAudioStreamIndex >= 0) {
                     deltaTS = deltaAudioTS;
                 }
             }
 
-            if (deltaTime + mCacheMS > deltaTS / mPlaybackRate ) {
+            if (deltaTime + mCacheMS > deltaTS / mPlaybackRate) {
                 bRead = true;
             } else {
                 bRead = false;
@@ -393,11 +407,14 @@ void MediaFileReader::MediaReaderHandle() {
             if (bRead) {
                 int ret = av_read_frame(mContext, &pkt);
 
+                int pts = pkt.pts * 1000 * av_q2d(mContext->streams[pkt.stream_index]->time_base);
+                int dts = pkt.dts * 1000 * av_q2d(mContext->streams[pkt.stream_index]->time_base);
+                
                 double time = 0;
-                if ( pkt.stream_index == mVideoStreamIndex ) {
-                    time = (pkt.pts - mVideoStartTimestamp) / 90000.0;
+                if (pkt.stream_index == mVideoStreamIndex) {
+                    time = (pts - mVideoStartTimestamp) / 1000.0;
                 } else {
-                    time = (pkt.pts - mAudioStartTimestamp);
+                    time = (pts - mAudioStartTimestamp) / 1000.0;
                 }
                 
                 FileLevelLog("rtmpdump",
@@ -407,51 +424,51 @@ void MediaFileReader::MediaReaderHandle() {
                              "[Read Packet %s %s], "
                              "deltaTime : %u, "
                              "deltaTS : %u, "
-                             "pts : %d, "
                              "dts : %d, "
+                             "pts : %d, "
                              "time : %.3f second, "
                              "av_q2d : %f, "
-                             "size : %d, "
-                             "data : (Hex)%02x,%02x,%02x,%02x,%02x "
+                             "size : %d "
                              ")",
                              this,
                              pkt.stream_index == mVideoStreamIndex ? "Video" : "Audio",
                              (pkt.flags & AV_PKT_FLAG_KEY) ? "IDR Frame" : "Non-IDR Frame",
                              deltaTime,
                              deltaTS,
-                             pkt.pts,
-                             pkt.dts,
+                             dts,
+                             pts,
                              time,
                              av_q2d(mContext->streams[pkt.stream_index]->time_base),
-                             pkt.size,
-                             pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
-
-                int timestamp = pkt.pts * 1000 * av_q2d(mContext->streams[pkt.stream_index]->time_base);
+                             pkt.size
+                             );
+                
                 if (pkt.stream_index == mVideoStreamIndex) {
                     VideoFrameType video_type;
                     video_type = (pkt.flags & AV_PKT_FLAG_KEY) ? VFT_IDR : VFT_NOTIDR;
 
                     if (mpCallback) {
-                        mpCallback->OnMediaFileReaderVideoFrame(this, (const char *)pkt.data, pkt.size, timestamp, video_type);
+                        mpCallback->OnMediaFileReaderVideoFrame(this, (const char *)pkt.data, pkt.size, dts, pts, video_type);
                     }
 
                     if (mVideoStartTimestamp == INVALID_TIMESTAMP) {
-                        mVideoStartTimestamp = timestamp;
+                        mVideoStartTimestamp = pts;
                     }
-                    mVideoLastTimestamp = timestamp;
+                    mVideoLastTimestamp = pts;
 
                 } else if (pkt.stream_index == mAudioStreamIndex) {
                     if (mpCallback) {
-                        mpCallback->OnMediaFileReaderAudioFrame(this, (const char *)pkt.data, pkt.size, timestamp,
+                        mpCallback->OnMediaFileReaderAudioFrame(this, (const char *)pkt.data, pkt.size, pts,
                                                                 AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, (audioCtx->channels == 2) ? AFST_STEREO : AFST_MONO);
                     }
 
                     if (mAudioStartTimestamp == INVALID_TIMESTAMP) {
-                        mAudioStartTimestamp = timestamp;
+                        mAudioStartTimestamp = pts;
                     }
-                    mAudioStartTimestamp = timestamp;
+                    mAudioLastTimestamp = pts;
                 }
 
+                av_packet_unref(&pkt);
+                
                 if (ret < 0) {
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_ERR_USER,
@@ -462,8 +479,6 @@ void MediaFileReader::MediaReaderHandle() {
                                  ")",
                                  this,
                                  ret);
-
-                    bFinish = true;
                     break;
                 }
                 Sleep(1);
@@ -472,11 +487,11 @@ void MediaFileReader::MediaReaderHandle() {
             }
         }
 
-        if (bFinish) {
-            break;
-        }
+        break;
     }
 
+    avformat_close_input(&mContext);
+    
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "MediaFileReader::MediaReaderHandle( "
