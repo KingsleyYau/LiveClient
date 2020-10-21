@@ -323,12 +323,10 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t ts) {
                 "RtmpPlayer::PushVideoFrame( "
                 "this : %p, "
                 "[New Video Frame Buffer], "
-                "frameBuffer : %p, "
                 "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
-                frameBuffer,
                 ts,
                 mVideoBufferList.size()
                 );
@@ -416,12 +414,10 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t ts) {
                 "RtmpPlayer::PushAudioFrame( "
                 "this : %p, "
                 "[New Audio Frame Buffer], "
-                "frameBuffer : %p, "
                 "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
-                frameBuffer,
                 ts,
                 mAudioBufferList.size());
         }
