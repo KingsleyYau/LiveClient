@@ -20,7 +20,7 @@
 #define PLAY_DELAY_DROP_TIME 300
 // 帧延迟断开值(MS)
 #define PLAY_DELAY_DISCONNECT_TIME 5000
-// 无效的Timestamp
+// 无效的时间戳
 #define INVALID_TIMESTAMP 0xFFFFFFFF
 // 音视频同步间隔(MS)
 #define AUDIO_DIFF_VIDEO_TIMESTAMP 300
@@ -242,10 +242,10 @@ void RtmpPlayer::Stop() {
         mbVideoStartPlay = false;
         mbAudioStartPlay = false;
 
-        mVideoFrontTimestamp = INVALID_TIMESTAMP;
-        mVideoBackTimestamp = INVALID_TIMESTAMP;
-        mAudioFrontTimestamp = INVALID_TIMESTAMP;
-        mAudioBackTimestamp = INVALID_TIMESTAMP;
+        mVideoFrontTS = INVALID_TIMESTAMP;
+        mVideoBackTS = INVALID_TIMESTAMP;
+        mAudioFrontTS = INVALID_TIMESTAMP;
+        mAudioBackTS = INVALID_TIMESTAMP;
     }
 
     mClientMutex.unlock();
@@ -293,7 +293,7 @@ void RtmpPlayer::PlayAudioRunnableHandle() {
     PlayFrame(true);
 }
 
-void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
+void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t ts) {
     FileLevelLog(
         "rtmpdump",
         KLog::LOG_MSG,
@@ -305,7 +305,7 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
         ")",
         this,
         frame,
-        timestamp,
+        ts,
         mVideoBufferList.size());
 
     mPlayThreadMutex.lock();
@@ -322,21 +322,21 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
                 KLog::LOG_WARNING,
                 "RtmpPlayer::PushVideoFrame( "
                 "this : %p, "
-                "[New Video Frame], "
-                "frame : %p, "
+                "[New Video Frame Buffer], "
+                "frameBuffer : %p, "
                 "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
                 frameBuffer,
-                timestamp,
+                ts,
                 mVideoBufferList.size()
                 );
         }
 
         if (frameBuffer) {
             frameBuffer->mpFrame = (void *)frame;
-            frameBuffer->mTimestamp = timestamp;
+            frameBuffer->mTS = ts;
         }
 
         mVideoBufferList.lock();
@@ -353,7 +353,7 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
                     "bufferListSize : %u "
                     ")",
                     this,
-                    timestamp,
+                    ts,
                     mVideoBufferList.size());
             }
         }
@@ -368,25 +368,25 @@ void RtmpPlayer::PushVideoFrame(void *frame, u_int32_t timestamp) {
              rbegin.base = end
              */
             for(FrameBufferList::reverse_iterator itr = mVideoBufferList.rbegin(); itr != mVideoBufferList.rend(); itr++) {
-                if ( frameBuffer->mTimestamp > (*itr)->mTimestamp ) {
+                if ( frameBuffer->mTS > (*itr)->mTS ) {
                     FrameBufferList::iterator base = (itr).base();
                     mVideoBufferList.insert(base, frameBuffer);
                     break;
                 }
             }
         }
-        mVideoFrontTimestamp = mVideoBufferList.front()->mTimestamp;
-        mVideoBackTimestamp = mVideoBufferList.back()->mTimestamp;
+        mVideoFrontTS = mVideoBufferList.front()->mTS;
+        mVideoBackTS = mVideoBufferList.back()->mTS;
         mVideoBufferList.unlock();
 
     } else {
         // 直接播放
-        FrameBuffer frameBuffer((void *)frame, timestamp);
+        FrameBuffer frameBuffer((void *)frame, ts);
         PlayVideoFrame(&frameBuffer);
     }
 }
 
-void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
+void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t ts) {
     FileLevelLog(
         "rtmpdump",
         KLog::LOG_MSG,
@@ -398,7 +398,7 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
         ")",
         this,
         frame,
-        timestamp,
+        ts,
         mAudioBufferList.size());
 
     mPlayThreadMutex.lock();
@@ -415,20 +415,20 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
                 KLog::LOG_WARNING,
                 "RtmpPlayer::PushAudioFrame( "
                 "this : %p, "
-                "[New Audio Frame], "
-                "frame : %p, "
+                "[New Audio Frame Buffer], "
+                "frameBuffer : %p, "
                 "ts : %u, "
                 "bufferListSize : %u "
                 ")",
                 this,
                 frameBuffer,
-                timestamp,
+                ts,
                 mAudioBufferList.size());
         }
 
         if (frameBuffer) {
             frameBuffer->mpFrame = (void *)frame;
-            frameBuffer->mTimestamp = timestamp;
+            frameBuffer->mTS = ts;
         }
 
         mAudioBufferList.lock();
@@ -444,18 +444,18 @@ void RtmpPlayer::PushAudioFrame(void *frame, u_int32_t timestamp) {
                 "bufferListSize : %u "
                 ")",
                 this,
-                timestamp,
+                ts,
                 mAudioBufferList.size());
         }
 
         mAudioBufferList.push_back(frameBuffer);
-        mAudioFrontTimestamp = mAudioBufferList.front()->mTimestamp;
-        mAudioBackTimestamp = mAudioBufferList.back()->mTimestamp;
+        mAudioFrontTS = mAudioBufferList.front()->mTS;
+        mAudioBackTS = mAudioBufferList.back()->mTS;
         mAudioBufferList.unlock();
 
     } else {
         // 直接播放
-        FrameBuffer frameBuffer((void *)frame, timestamp);
+        FrameBuffer frameBuffer((void *)frame, ts);
         PlayAudioFrame(&frameBuffer);
     }
 }
@@ -498,23 +498,23 @@ void RtmpPlayer::Init() {
     mbVideoStartPlay = false;
     mbAudioStartPlay = false;
 
-    mVideoFrontTimestamp = INVALID_TIMESTAMP;
-    mVideoBackTimestamp = INVALID_TIMESTAMP;
-    mAudioFrontTimestamp = INVALID_TIMESTAMP;
-    mAudioBackTimestamp = INVALID_TIMESTAMP;
+    mVideoFrontTS = INVALID_TIMESTAMP;
+    mVideoBackTS = INVALID_TIMESTAMP;
+    mAudioFrontTS = INVALID_TIMESTAMP;
+    mAudioBackTS = INVALID_TIMESTAMP;
 }
 
 bool RtmpPlayer::IsCacheEnough() {
     bool bFlag = false;
 
-    int startVideoTimestamp = 0;
-    int endVideoTimestamp = 0;
+    int startVideoTS = 0;
+    int endVideoTS = 0;
 
-    int startAudioTimestamp = 0;
-    int endAudioTimestamp = 0;
+    int startAudioTS = 0;
+    int endAudioTS = 0;
 
-    int startTimestamp = 0;
-    int endTimestamp = 0;
+    int startTS = 0;
+    int endTS = 0;
 
     FrameBuffer *videoFrame = NULL;
     FrameBuffer *audioFrame = NULL;
@@ -526,19 +526,19 @@ bool RtmpPlayer::IsCacheEnough() {
         // 清空旧的Buffer
         while (bPop) {
             videoFrame = mVideoBufferList.front();
-            if (videoFrame->mTimestamp > mVideoBufferList.back()->mTimestamp) {
+            if (videoFrame->mTS > mVideoBufferList.back()->mTS) {
                 FileLevelLog(
                     "rtmpdump",
                     KLog::LOG_WARNING,
                     "RtmpPlayer::IsCacheEnough( "
                     "this : %p, "
                     "[Pop Extra Video Frame], "
-                    "videoFrameFront->mTimestamp : %u, "
-                    "videoFrameBack->mTimestamp : %u "
+                    "videoFrameFront->mTS : %u, "
+                    "videoFrameBack->mTS : %u "
                     ")",
                     this,
-                    videoFrame->mTimestamp,
-                    mVideoBufferList.back()->mTimestamp);
+                    videoFrame->mTS,
+                    mVideoBufferList.back()->mTS);
 
                 // 回收资源
                 if (!mCacheBufferQueue.PushBuffer(videoFrame)) {
@@ -550,17 +550,17 @@ bool RtmpPlayer::IsCacheEnough() {
             }
         }
 
-        // 计算新的Timestamp
+        // 计算新的TS
         videoFrame = mVideoBufferList.front();
-        startVideoTimestamp = videoFrame->mTimestamp;
-        if ((startTimestamp == 0) || startTimestamp > startVideoTimestamp) {
-            startTimestamp = videoFrame->mTimestamp;
+        startVideoTS = videoFrame->mTS;
+        if ((startTS == 0) || startTS > startVideoTS) {
+            startTS = videoFrame->mTS;
         }
 
         videoFrame = mVideoBufferList.back();
-        endVideoTimestamp = videoFrame->mTimestamp;
-        if (endTimestamp < endVideoTimestamp) {
-            endTimestamp = videoFrame->mTimestamp;
+        endVideoTS = videoFrame->mTS;
+        if (endTS < endVideoTS) {
+            endTS = videoFrame->mTS;
         }
     }
     mVideoBufferList.unlock();
@@ -570,19 +570,19 @@ bool RtmpPlayer::IsCacheEnough() {
         // 清空旧的Buffer
         while (bPop) {
             audioFrame = mAudioBufferList.front();
-            if (audioFrame->mTimestamp > mAudioBufferList.back()->mTimestamp) {
+            if (audioFrame->mTS > mAudioBufferList.back()->mTS) {
                 FileLevelLog(
                     "rtmpdump",
                     KLog::LOG_MSG,
                     "RtmpPlayer::IsCacheEnough( "
                     "this : %p, "
                     "[Pop Extra Audio Frame], "
-                    "audioFrameFront->mTimestamp : %u, "
-                    "audioFrameBack->mTimestamp : %u "
+                    "audioFrameFront->mTS : %u, "
+                    "audioFrameBack->mTS : %u "
                     ")",
                     this,
-                    audioFrame->mTimestamp,
-                    mAudioBufferList.back()->mTimestamp);
+                    audioFrame->mTS,
+                    mAudioBufferList.back()->mTS);
 
                 // 回收资源
                 if (!mCacheBufferQueue.PushBuffer(audioFrame)) {
@@ -595,21 +595,21 @@ bool RtmpPlayer::IsCacheEnough() {
         }
 
         audioFrame = mAudioBufferList.front();
-        startAudioTimestamp = audioFrame->mTimestamp;
-        if ((startTimestamp == 0) || startTimestamp > startAudioTimestamp) {
-            startTimestamp = audioFrame->mTimestamp;
+        startAudioTS = audioFrame->mTS;
+        if ((startTS == 0) || startTS > startAudioTS) {
+            startTS = audioFrame->mTS;
         }
 
         audioFrame = mAudioBufferList.back();
-        endAudioTimestamp = audioFrame->mTimestamp;
-        if (endTimestamp < endAudioTimestamp) {
-            endTimestamp = audioFrame->mTimestamp;
+        endAudioTS = audioFrame->mTS;
+        if (endTS < endAudioTS) {
+            endTS = audioFrame->mTS;
         }
     }
     mAudioBufferList.unlock();
 
     //	mPlayThreadMutex.lock();
-    if ((endTimestamp - startTimestamp >= mCacheMS || mAudioBufferList.size() > 150 || mVideoBufferList.size() > 90)) {
+    if ((endTS - startTS >= mCacheMS || mAudioBufferList.size() > 150 || mVideoBufferList.size() > 90)) {
         // 缓存足够, 判断音频先开始还是视频先开始
         if (bPop) {
             FileLevelLog(
@@ -617,22 +617,22 @@ bool RtmpPlayer::IsCacheEnough() {
                 KLog::LOG_MSG,
                 "RtmpPlayer::IsCacheEnough( "
                 "this : %p, "
-                "startVideoTimestamp : %d, "
-                "endVideoTimestamp : %d, "
-                "startAudioTimestamp : %d, "
-                "endAudioTimestamp : %d, "
-                "startTimestamp : %d, "
-                "endTimestamp : %d, "
+                "startVideoTS : %d, "
+                "endVideoTS : %d, "
+                "startAudioTS : %d, "
+                "endAudioTS : %d, "
+                "startTS : %d, "
+                "endTS : %d, "
                 "mVideoBufferList.size() : %d, "
                 "mAudioBufferList.size() : %d "
                 ")",
                 this,
-                startVideoTimestamp,
-                endVideoTimestamp,
-                startAudioTimestamp,
-                endAudioTimestamp,
-                startTimestamp,
-                endTimestamp,
+                startVideoTS,
+                endVideoTS,
+                startAudioTS,
+                endAudioTS,
+                startTS,
+                endTS,
                 mVideoBufferList.size(),
                 mAudioBufferList.size());
         }
@@ -644,37 +644,16 @@ bool RtmpPlayer::IsCacheEnough() {
     return bFlag;
 }
 
-bool RtmpPlayer::IsRestStream(FrameBuffer *frame, unsigned int preTimestamp) {
+bool RtmpPlayer::IsRestStream(FrameBuffer *frame, unsigned int preTS) {
     bool bFlag = false;
 
     if (frame) {
         /**
          * 需要同步播放时间
-         * 1.本地timestamp比服务器要大
+         * 1.本地ts比服务器要大
          */
-        if (preTimestamp != INVALID_TIMESTAMP && preTimestamp > frame->mTimestamp) {
+        if (preTS != INVALID_TIMESTAMP && preTS > frame->mTS) {
             bFlag = true;
-            //        // 重置开始播放时间
-            //        startTime = curTime;
-            //        preTime = startTime;
-            //
-            //        // 重置开始帧时间
-            //        startTimestamp = frame->mTimestamp;
-            //        // 重置上次帧时间
-            //        preTimestamp = startTimestamp;
-            //
-            //        FileLog("rtmpdump",
-            //                "RtmpPlayer::PlayFrame( "
-            //                "[Reset %s Start Time], "
-            //                "startTime : %lld, "
-            //                "startTimestamp : %u, "
-            //                "bufferList->size() : %u "
-            //                ")",
-            //                isAudio?"Audio":"Video",
-            //                startTime,
-            //                startTimestamp,
-            //                bufferList->size()
-            //                );
         }
     }
 
@@ -692,47 +671,47 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
             if (!mbAudioStartPlay) {
                 // 计算音视频开播差值
                 FrameBuffer *audioFrame = NULL;
-                int audioTimestamp = INVALID_TIMESTAMP;
+                int audioTS = INVALID_TIMESTAMP;
                 FrameBuffer *videoFrame = NULL;
-                int videoTimestamp = INVALID_TIMESTAMP;
+                int videoTS = INVALID_TIMESTAMP;
 
-                videoTimestamp = mVideoFrontTimestamp;
+                videoTS = mVideoFrontTS;
 
                 // 下一帧播放的视频时间戳
-                if (videoTimestamp != INVALID_TIMESTAMP) {
+                if (videoTS != INVALID_TIMESTAMP) {
                     // 已经缓存视频, 比较音视频时间戳
                     mAudioBufferList.lock();
                     if (!mAudioBufferList.empty()) {
                         audioFrame = mAudioBufferList.front();
-                        audioTimestamp = audioFrame->mTimestamp;
+                        audioTS = audioFrame->mTS;
 
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_STAT,
                                      "RtmpPlayer::IsPlay( "
                                      "this : %p, "
                                      "[Sync Audio], "
-                                     "audioTimestamp : %d, "
-                                     "videoTimestamp : %d "
+                                     "audioTS : %d, "
+                                     "videoTS : %d "
                                      ")",
                                      this,
-                                     audioTimestamp,
-                                     videoTimestamp);
+                                     audioTS,
+                                     videoTS);
 
                         // 视频时间戳不在重置中
-                        if (mVideoBackTimestamp >= mVideoFrontTimestamp) {
-                            if (audioTimestamp <= videoTimestamp - AUDIO_DIFF_VIDEO_TIMESTAMP) {
+                        if (mVideoBackTS >= mVideoFrontTS) {
+                            if (audioTS <= videoTS - AUDIO_DIFF_VIDEO_TIMESTAMP) {
                                 // 音频延迟太大, 丢弃
                                 FileLevelLog("rtmpdump",
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
                                              "[Sync Audio to drop], "
-                                             "audioTimestamp : %d, "
-                                             "videoTimestamp : %d "
+                                             "audioTS : %d, "
+                                             "videoTS : %d "
                                              ")",
                                              this,
-                                             audioTimestamp,
-                                             videoTimestamp);
+                                             audioTS,
+                                             videoTS);
 
                                 DropAudioFrame(audioFrame);
                                 mAudioBufferList.pop_front();
@@ -751,19 +730,19 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                     delete audioFrame;
                                 }
 
-                            } else if (audioTimestamp <= videoTimestamp) {
+                            } else if (audioTS <= videoTS) {
                                 // 音频的时间戳已经追上视频, 开始播放
                                 FileLevelLog("rtmpdump",
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
                                              "[Sync Audio to play], "
-                                             "audioTimestamp : %d, "
-                                             "videoTimestamp : %d "
+                                             "audioTS : %d, "
+                                             "videoTS : %d "
                                              ")",
                                              this,
-                                             audioTimestamp,
-                                             videoTimestamp);
+                                             audioTS,
+                                             videoTS);
                                 bFlag = true;
                                 mbAudioStartPlay = true;
                             }
@@ -773,13 +752,13 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::IsPlay( "
                                          "this : %p, "
-                                         "[Sync Audio for Video timestamp reset], "
-                                         "mVideoFrontTimestamp : %d, "
-                                         "mVideoBackTimestamp : %d "
+                                         "[Sync Audio for Video ts reset], "
+                                         "mVideoFrontTS : %d, "
+                                         "mVideoBackTS : %d "
                                          ")",
                                          this,
-                                         mVideoFrontTimestamp,
-                                         mVideoBackTimestamp);
+                                         mVideoFrontTS,
+                                         mVideoBackTS);
                         }
                     }
                     mAudioBufferList.unlock();
@@ -805,47 +784,47 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
             if (!mbVideoStartPlay) {
                 // 计算视频开播差值
                 FrameBuffer *audioFrame = NULL;
-                int audioTimestamp = INVALID_TIMESTAMP;
+                int audioTS = INVALID_TIMESTAMP;
                 FrameBuffer *videoFrame = NULL;
-                int videoTimestamp = INVALID_TIMESTAMP;
+                int videoTS = INVALID_TIMESTAMP;
 
-                audioTimestamp = mAudioFrontTimestamp;
+                audioTS = mAudioFrontTS;
 
                 // 下一帧播放的音频时间戳
-                if (audioTimestamp != INVALID_TIMESTAMP) {
+                if (audioTS != INVALID_TIMESTAMP) {
                     // 已经缓存音频, 比较音视频时间戳
                     mVideoBufferList.lock();
                     if (!mVideoBufferList.empty()) {
                         videoFrame = mVideoBufferList.front();
-                        videoTimestamp = videoFrame->mTimestamp;
+                        videoTS = videoFrame->mTS;
 
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_STAT,
                                      "RtmpPlayer::IsPlay( "
                                      "this : %p, "
                                      "[Sync Video], "
-                                     "audioTimestamp : %d, "
-                                     "videoTimestamp : %d "
+                                     "audioTS : %d, "
+                                     "videoTS : %d "
                                      ")",
                                      this,
-                                     audioTimestamp,
-                                     videoTimestamp);
+                                     audioTS,
+                                     videoTS);
 
                         // 音频时间戳不在重置中
-                        if (mAudioBackTimestamp >= mAudioFrontTimestamp) {
-                            if (videoTimestamp <= audioTimestamp - AUDIO_DIFF_VIDEO_TIMESTAMP) {
+                        if (mAudioBackTS >= mAudioFrontTS) {
+                            if (videoTS <= audioTS - AUDIO_DIFF_VIDEO_TIMESTAMP) {
                                 // 视频延迟太大, 丢弃
                                 FileLevelLog("rtmpdump",
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
                                              "[Sync Video to drop], "
-                                             "audioTimestamp : %d, "
-                                             "videoTimestamp : %d "
+                                             "audioTS : %d, "
+                                             "videoTS : %d "
                                              ")",
                                              this,
-                                             audioTimestamp,
-                                             videoTimestamp);
+                                             audioTS,
+                                             videoTS);
 
                                 DropVideoFrame(videoFrame);
                                 mVideoBufferList.pop_front();
@@ -864,19 +843,19 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                     delete videoFrame;
                                 }
 
-                            } else if (videoTimestamp <= audioTimestamp) {
+                            } else if (videoTS <= audioTS) {
                                 // 视频的时间戳已经追上音频
                                 FileLevelLog("rtmpdump",
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
                                              "[Sync Video to play], "
-                                             "audioTimestamp : %d, "
-                                             "videoTimestamp : %d "
+                                             "audioTS : %d, "
+                                             "videoTS : %d "
                                              ")",
                                              this,
-                                             audioTimestamp,
-                                             videoTimestamp);
+                                             audioTS,
+                                             videoTS);
                                 bFlag = true;
                                 mbVideoStartPlay = true;
                             }
@@ -886,13 +865,13 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::IsPlay( "
                                          "this : %p, "
-                                         "[Sync Video for Audio timestamp reset], "
-                                         "mAudioFrontTimestamp : %d, "
-                                         "mAudioBackTimestamp : %d "
+                                         "[Sync Video for Audio ts reset], "
+                                         "mAudioFrontTS : %d, "
+                                         "mAudioBackTS : %d "
                                          ")",
                                          this,
-                                         mAudioFrontTimestamp,
-                                         mAudioBackTimestamp);
+                                         mAudioFrontTS,
+                                         mAudioBackTS);
                         }
                     }
                     mVideoBufferList.unlock();
@@ -973,9 +952,9 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
     // 上一帧视频播放时间
     long long preTime = 0;
     // 开始播放帧时间戳
-    unsigned int startTimestamp = INVALID_TIMESTAMP;
+    unsigned int startTS = INVALID_TIMESTAMP;
     // 上一帧视频播放时间戳
-    unsigned int preTimestamp = INVALID_TIMESTAMP;
+    unsigned int preTS = INVALID_TIMESTAMP;
 
     // 由于播放操作导致的时间差
     int handleDelay = 0;
@@ -1034,7 +1013,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                 frame = bufferList->front();
 
                 // 是否需要重置时间戳
-                if (IsRestStream(frame, preTimestamp)) {
+                if (IsRestStream(frame, preTS)) {
                     // 重新开始缓存
                     //                    mPlayThreadMutex.lock();
                     //                    mIsWaitCache = true;
@@ -1044,21 +1023,21 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
 //                                 KLog::LOG_WARNING,
 //                                 "RtmpPlayer::PlayFrame( "
 //                                 "this : %p, "
-//                                 "[Reset %s Start Timestamp], "
+//                                 "[Reset %s Start TS], "
 //                                 "startTime : %lld, "
-//                                 "frame->mTimestamp : %u, "
-//                                 "preTimestamp : %u, "
+//                                 "frame->mTS : %u, "
+//                                 "preTS : %u, "
 //                                 "bufferListSize : %u "
 //                                 ")",
 //                                 this,
 //                                 isAudio ? "Audio" : "Video",
 //                                 startTime,
-//                                 frame->mTimestamp,
-//                                 preTimestamp,
+//                                 frame->mTS,
+//                                 preTS,
 //                                 bufferList->size());
 
                     // 重置上帧时间戳
-                    preTimestamp = INVALID_TIMESTAMP;
+                    preTS = INVALID_TIMESTAMP;
 
                     if (mpRtmpPlayerCallback) {
                         if (isAudio) {
@@ -1074,15 +1053,15 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         // 当前时间
                         long long curTime = (long long)getCurrentTime();
                         bool *playbackChange = isAudio?&mAudioPlaybackRateChange:&mVideoPlaybackRateChange;
-                        if (preTimestamp == INVALID_TIMESTAMP || *playbackChange) {
+                        if (preTS == INVALID_TIMESTAMP || *playbackChange) {
                             // 重置开始播放时间
                             startTime = curTime;
                             preTime = startTime;
 
                             // 重置开始帧时间
-                            startTimestamp = frame->mTimestamp;
+                            startTS = frame->mTS;
                             // 重置上次帧时间
-                            preTimestamp = startTimestamp;
+                            preTS = startTS;
 
                             *playbackChange = false;
                             
@@ -1092,14 +1071,14 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                          "this : %p, "
                                          "[Start Play %s], "
                                          "startTime : %lld, "
-                                         "startTimestamp : %u, "
+                                         "startTS : %u, "
                                          "rate : %.1f, "
                                          "bufferListSize : %u "
                                          ")",
                                          this,
                                          isAudio ? "Audio" : "Video",
                                          startTime,
-                                         startTimestamp,
+                                         startTS,
                                          mPlaybackRate,
                                          bufferList->size());
                         }
@@ -1107,11 +1086,11 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         // 本地两帧播放时间差
                         int deltaTime = (int)(curTime - preTime);
                         // 两帧时间差
-                        int deltaTS = (frame->mTimestamp - preTimestamp) / mPlaybackRate;
+                        int deltaTS = (frame->mTS - preTS) / mPlaybackRate;
                         // 总播放时间差
                         int deltaTotalTime = (int)(curTime - startTime);
                         // 总帧时间差
-                        int deltaTotalTS = (frame->mTimestamp - startTimestamp) / mPlaybackRate;
+                        int deltaTotalTS = (frame->mTS - startTS) / mPlaybackRate;
                         // 是否丢帧
                         bool bDropFrame = false;
                         // 是否断开
@@ -1120,7 +1099,6 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         // 帧延迟(总播放时间 - 总帧时间差)
                         int delay = deltaTotalTime - deltaTotalTS;
                         
-                        //                        if( !isAudio ) {
                         if (deltaTS > 0) {
                             if (delay > 0) {
                                 // 播放延迟, 如果是解码能力或者网络不足, 可以通知服务器降低视频质量(码率/帧率/分辨率)
@@ -1129,54 +1107,32 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                     bDropFrame = true;
                                 }
 
-                                // 只有音频才处理
-                                //                                    if( isAudio ) {
                                 // 播放延迟太大, 断开连接
                                 if (delay > PLAY_DELAY_DISCONNECT_TIME) {
                                     bDisconnect = true;
                                 }
-                                //                                    }
                             }
                         }
-                        //                        }
-                        //
 //                        FileLevelLog("rtmpdump",
 //                                     KLog::LOG_MSG,
 //                                     "RtmpPlayer::PlayFrame( "
 //                                     "[Get %s Frame], "
+//                                     "ts : %u, "
 //                                     "deltaTime : %d, "
 //                                     "deltaTS : %d, "
 //                                     "delay : %d, "
-//                                     "timestamp : %u, "
 //                                     "bufferListSize : %d "
 //                                     ")",
 //                                     isAudio?"Audio":"Video",
+//                                     frame->mTS,
 //                                     deltaTime,
 //                                     deltaTS,
 //                                     delay,
-//                                     frame->mTimestamp,
 //                                     bufferList->size()
 //                                     );
 
                         bool bHandleFrame = false;
                         if (!bDropFrame) {
-                            // 播放帧
-                            //                            if( isAudio ) {
-                            //                                PlayAudioFrame(frame);
-                            //                                bHandleFrame = true;
-                            //
-                            //                            } else {
-                            //                                /**
-                            //                                 * 判断是否到时间播放
-                            //                                 * 1.第一帧(deltaTS == 0)
-                            //                                 * 2.(总播放时间 - 总帧时间戳 > 帧时间戳差)
-                            //                                 */
-                            //                                if( (deltaTS == 0) || delay > deltaTS) {
-                            //                                    PlayVideoFrame(frame);
-                            //                                    bHandleFrame = true;
-                            //                                }
-                            //                            }
-
                             /**
                              * 判断是否到时间播放
                              * 1.第一帧(deltaTS == 0)
@@ -1229,11 +1185,12 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "RtmpPlayer::PlayFrame( "
                                              "this : %p, "
                                              "[Play %s Frame], "
+                                             "frame : %p, "
+                                             "ts : %u, "
                                              "handleTime : %d, "
                                              "deltaTime : %d, "
                                              "deltaTS : %d, "
                                              "delay : %d, "
-                                             "ts : %u, "
                                              "deltaTotalTime : %d, "
                                              "deltaTotalTS : %d, "
                                              "rate : %.1f, "
@@ -1241,11 +1198,12 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              ")",
                                              this,
                                              isAudio ? "Audio" : "Video",
+                                             frame->mpFrame,
+                                             frame->mTS,
                                              handleTime,
                                              deltaTime,
                                              deltaTS,
                                              delay,
-                                             frame->mTimestamp,
                                              deltaTotalTime,
                                              deltaTotalTS,
                                              mPlaybackRate,
@@ -1257,22 +1215,24 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                              "RtmpPlayer::PlayFrame( "
                                              "this : %p, "
                                              "[Drop %s Frame], "
+                                             "frame : %p, "
+                                             "ts : %u, "
                                              "handleTime : %d, "
                                              "deltaTime : %d, "
                                              "deltaTS : %d, "
                                              "delay : %d, "
-                                             "ts : %u, "
                                              "deltaTotalTime : %d, "
                                              "deltaTotalTS : %d, "
                                              "bufferListSize : %d "
                                              ")",
                                              this,
                                              isAudio ? "Audio" : "Video",
+                                             frame->mpFrame,
+                                             frame->mTS,
                                              handleTime,
                                              deltaTime,
                                              deltaTS,
                                              delay,
-                                             frame->mTimestamp,
                                              deltaTotalTime,
                                              deltaTotalTS,
                                              bufferList->size());
@@ -1298,7 +1258,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
 
                             // 更新最后一帧播放开始时间
                             preTime = curTime; // - frameDelay;
-                            preTimestamp = frame->mTimestamp;
+                            preTS = frame->mTS;
 
                             // 回收资源
                             if (!mCacheBufferQueue.PushBuffer(frame)) {
@@ -1344,9 +1304,9 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
 void RtmpPlayer::PlayVideoFrame(FrameBuffer* frame) {
 //    FileLog("rtmpdump",
 //            "RtmpPlayer::PlayVideoFrame( "
-//            "timestamp : %d "
+//            "ts : %d "
 //            ")",
-//            frame->mTimestamp
+//            frame->mTS
 //            );
     if( frame != NULL ) {
         if( mpRtmpPlayerCallback ) {
@@ -1358,9 +1318,9 @@ void RtmpPlayer::PlayVideoFrame(FrameBuffer* frame) {
 void RtmpPlayer::DropVideoFrame(FrameBuffer* frame) {
 //    FileLog("rtmpdump",
 //            "RtmpPlayer::DropVideoFrame( "
-//            "timestamp : %d "
+//            "ts : %d "
 //            ")",
-//            frame->mTimestamp
+//            frame->mTS
 //            );
     if( frame != NULL ) {
         if( mpRtmpPlayerCallback ) {
@@ -1372,9 +1332,9 @@ void RtmpPlayer::DropVideoFrame(FrameBuffer* frame) {
 void RtmpPlayer::PlayAudioFrame(FrameBuffer* frame) {
 //    FileLog("rtmpdump",
 //            "RtmpPlayer::PlayAudioFrame( "
-//            "timestamp : %d, "
+//            "ts : %d, "
 //            ")",
-//            frame->mTimestamp
+//            frame->mTS
 //            );
     if( frame != NULL ) {
         if( mpRtmpPlayerCallback ) {
@@ -1386,9 +1346,9 @@ void RtmpPlayer::PlayAudioFrame(FrameBuffer* frame) {
 void RtmpPlayer::DropAudioFrame(FrameBuffer* frame) {
 //    FileLog("rtmpdump",
 //            "RtmpPlayer::DropAudioFrame( "
-//            "timestamp : %d "
+//            "ts : %d "
 //            ")",
-//            frame->mTimestamp
+//            frame->mTS
 //            );
     if( frame != NULL ) {
         if( mpRtmpPlayerCallback ) {

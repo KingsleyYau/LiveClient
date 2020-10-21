@@ -550,14 +550,14 @@ void PlayerController::OnResetAudioStream(RtmpPlayer *player) {
 }
 
 void PlayerController::OnDelayMaxTime(RtmpPlayer *player) {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
-                 "PlayerController::OnDelayMaxTime( "
-                 "this : %p "
-                 ")",
-                 this);
-
     if ( !mbIsPlayFile ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "PlayerController::OnDelayMaxTime( "
+                     "this : %p "
+                     ")",
+                     this);
+        
         // 可以断开连接
         if (mpPlayerStatusCallback) {
             mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);

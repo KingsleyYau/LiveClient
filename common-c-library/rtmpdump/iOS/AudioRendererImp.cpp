@@ -25,7 +25,7 @@ AudioRendererImp::AudioRendererImp() {
     mAudioQueue = NULL;
     mIsMute = false;
     mPlaybackRate = 1.0f;
-    mPlaybackRateChange = true;
+    mAudioQueueNeedChange = true;
 //    Create();
 }
 
@@ -69,8 +69,7 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
         mAudioBufferList.lock();
         if( mAudioBufferList.empty() ) {
             status = AudioQueueAllocateBuffer(mAudioQueue, AUDIO_BUFFER_SIZE, &audioBuffer);
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [New More AudioBuffer], audioBuffer : %p, timestamp : %u )", audioBuffer, audioFrame->mTimestamp);
-            
+//            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [New More AudioBuffer], audioBuffer : %p, ts : %u )", audioBuffer, audioFrame->mTimestamp);
         } else {
             audioBuffer = mAudioBufferList.front();
             mAudioBufferList.pop_front();
@@ -146,9 +145,25 @@ void AudioRendererImp::Stop() {
                  );
     
     if( mAudioQueue ) {
-        AudioQueueStop(mAudioQueue, YES);
-        AudioQueueReset(mAudioQueue);
         AudioQueueFlush(mAudioQueue);
+        AudioQueueReset(mAudioQueue);
+        AudioQueueStop(mAudioQueue, YES);
+        
+        mAudioBufferList.lock();
+        while( !mAudioBufferList.empty() ) {
+            AudioQueueBufferRef audioBuffer = mAudioBufferList.front();
+            if( audioBuffer != NULL ) {
+                mAudioBufferList.pop_front();
+                // 释放内存
+                AudioQueueFreeBuffer(mAudioQueue, audioBuffer);
+            } else {
+                break;
+            }
+        }
+        mAudioBufferList.unlock();
+        
+        AudioQueueDispose(mAudioQueue, YES);
+        mAudioQueue = NULL;
     }
     
     FileLevelLog("rtmpdump",
@@ -170,10 +185,7 @@ void AudioRendererImp::Reset() {
                  this
                  );
     
-    if( mAudioQueue ) {
-        AudioQueueReset(mAudioQueue);
-        AudioQueueFlush(mAudioQueue);
-    }
+    mAudioQueueNeedChange = true;
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
@@ -195,7 +207,7 @@ void AudioRendererImp::SetMute(bool isMute) {
 
 void AudioRendererImp::SetPlaybackRate(float playbackRate) {
     mPlaybackRate = playbackRate;
-    mPlaybackRateChange = true;
+    mAudioQueueNeedChange = true;
 }
 
 bool AudioRendererImp::Create(void *frame) {
@@ -218,20 +230,19 @@ bool AudioRendererImp::Create(void *frame) {
                        false
                        );
     
-    if ( (mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame) || mPlaybackRateChange ) {
-        mPlaybackRateChange = false;
+    if ( (mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame) || mAudioQueueNeedChange ) {
+        mAudioQueueNeedChange = false;
         if( mAudioQueue ) {
             AudioQueueReset(mAudioQueue);
             mAudioBufferList.lock();
             while( !mAudioBufferList.empty() ) {
-                AudioQueueReset(mAudioQueue);
                 AudioQueueFlush(mAudioQueue);
+                AudioQueueReset(mAudioQueue);
                 AudioQueueBufferRef audioBuffer = mAudioBufferList.front();
                 if( audioBuffer != NULL ) {
                     mAudioBufferList.pop_front();
                     // 释放内存
                     AudioQueueFreeBuffer(mAudioQueue, audioBuffer);
-                    
                 } else {
                     break;
                 }

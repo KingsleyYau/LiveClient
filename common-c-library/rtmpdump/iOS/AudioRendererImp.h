@@ -49,7 +49,7 @@ protected:
     
     bool mIsMute;
     float mPlaybackRate;
-    bool mPlaybackRateChange;
+    bool mAudioQueueNeedChange;
 };
 
 #endif /* AudioRendererImp_h */

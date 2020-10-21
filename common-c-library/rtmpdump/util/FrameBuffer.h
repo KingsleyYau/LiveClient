@@ -23,7 +23,7 @@ public:
     
 public:
     void* mpFrame;
-    unsigned int mTimestamp;    // 帧时间戳
+    unsigned int mTS;    // 帧时间戳
 };
 
 // list define

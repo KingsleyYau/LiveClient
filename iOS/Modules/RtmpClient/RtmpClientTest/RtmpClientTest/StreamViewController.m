@@ -47,9 +47,10 @@
         [[LSImageVibrateFilter alloc] init],
     ];
     self.player = [LiveStreamPlayer instance];
+    self.player.useHardDecoder = YES;
     self.player.delegate = self;
     self.player.playView = self.previewView;
-    self.player.customFilter = self.playerFilterArray[0];
+//    self.player.customFilter = self.playerFilterArray[0];
     self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
 
     // 界面处理
@@ -74,12 +75,12 @@
 
     //    // Camshare
 //        NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
-    //    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
+//        NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
-    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil],
+    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
-    [self play:nil];
+//    [self play:nil];
     //    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
     //        dispatch_async(dispatch_get_main_queue(), ^{
     //            if (!granted) {

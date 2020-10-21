@@ -63,17 +63,17 @@ class RtmpPlayer {
      播放一个视频帧
 
      @param frame 视频帧
-     @param timestamp 时间戳
+     @param ts 时间戳
      */
-    void PushVideoFrame(void *frame, u_int32_t timestamp);
+    void PushVideoFrame(void *frame, u_int32_t ts);
 
     /**
      播放一个音频帧
 
      @param frame 音频帧
-     @param timestamp 时间戳
+     @param ts 时间戳
      */
-    void PushAudioFrame(void *frame, u_int32_t timestamp);
+    void PushAudioFrame(void *frame, u_int32_t ts);
 
     /**
      获取回调
@@ -113,7 +113,7 @@ class RtmpPlayer {
     // 缓存时间是否足够
     bool IsCacheEnough();
     // 是否重置播放流
-    bool IsRestStream(FrameBuffer *frame, unsigned int preTimestamp);
+    bool IsRestStream(FrameBuffer *frame, unsigned int preTS);
     // 是否开始播放
     bool IsPlay(bool isAudio);
     // 没有需要播放的Buffer
@@ -172,11 +172,11 @@ class RtmpPlayer {
     // 音频开播时间戳
     bool mbAudioStartPlay;
     // 当前缓存的视频时间戳
-    int mVideoFrontTimestamp;
-    int mVideoBackTimestamp;
+    int mVideoFrontTS;
+    int mVideoBackTS;
     // 当前缓存的音频时间戳
-    int mAudioFrontTimestamp;
-    int mAudioBackTimestamp;
+    int mAudioFrontTS;
+    int mAudioBackTS;
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;

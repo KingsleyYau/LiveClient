@@ -72,7 +72,7 @@ AudioDecoderAAC::~AudioDecoderAAC() {
 }
 
 bool AudioDecoderAAC::Create(AudioDecoderCallback *callback) {
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Create( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Create( this : %p )", this);
 
     mpCallback = callback;
 
