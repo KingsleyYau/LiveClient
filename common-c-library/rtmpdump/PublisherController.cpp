@@ -233,7 +233,7 @@ void PublisherController::PushVideoFrame(void *data, int size, void *frame) {
                         KLog::LOG_STAT,
                         "PublisherController::PushVideoFrame( "
                         "this : %p, "
-                        "[Video timestamp sync], "
+                        "[Video ts sync], "
                         "mVideoTimestampSyncMod : %u, "
                         "videoFrameIndex : %d "
                         ")",
@@ -302,25 +302,25 @@ void PublisherController::ResumePushVideo() {
 }
 
 /*********************************************** 编码器回调处理 *****************************************************/
-void PublisherController::OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t timestamp) {
+void PublisherController::OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t ts) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeVideoFrame( "
                  "this : %p, "
                  "frameType : 0x%02x, "
-                 "timestamp : %u, "
+                 "ts : %u, "
                  "size : %d "
                  ")",
                  this,
                  data[0],
-                 timestamp,
+                 ts,
                  size);
 
     // 录制视频帧
     mVideoRecorderH264.RecordVideoNaluFrame(data, size);
 
     // 发送视频帧
-    mRtmpPublisher.SendVideoFrame(data, size, timestamp);
+    mRtmpPublisher.SendVideoFrame(data, size, ts);
 }
 
 void PublisherController::OnEncodeAudioFrame(
@@ -331,16 +331,16 @@ void PublisherController::OnEncodeAudioFrame(
     AudioFrameSoundType sound_type,
     char *frame,
     int size,
-    u_int32_t timestamp) {
+    u_int32_t ts) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeAudioFrame( "
                  "this : %p, "
-                 "timestamp : %u, "
+                 "ts : %u, "
                  "size : %d "
                  ")",
                  this,
-                 timestamp,
+                 ts,
                  size);
 
     // 录制音频帧
@@ -348,7 +348,7 @@ void PublisherController::OnEncodeAudioFrame(
     mAudioRecorderAAC.RecordAudioFrame(frame, size);
 
     // 发送音频帧
-    mRtmpPublisher.SendAudioFrame(format, sound_rate, sound_size, sound_type, frame, size, timestamp);
+    mRtmpPublisher.SendAudioFrame(format, sound_rate, sound_size, sound_type, frame, size, ts);
 }
 
 /*********************************************** 编码器回调处理 End *****************************************************/
@@ -374,7 +374,7 @@ void PublisherController::OnDisconnect(RtmpDump *rtmpDump) {
     }
 }
 
-void PublisherController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
+void PublisherController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t ts) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::OnChangeVideoSpsPps( "
@@ -382,13 +382,13 @@ void PublisherController::OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sp
                  "sps_size : %d, "
                  "pps_size : %d, "
                  "naluHeaderSize : %d, "
-				 "timestamp : %u"
+				 "ts : %u"
                  ")",
                  this,
                  sps_size,
                  pps_size,
                  naluHeaderSize,
-				 timestamp
+				 ts
 				 );
 }
 
@@ -435,15 +435,15 @@ void PublisherController::OnRecvAudioFrame(
     AudioFrameSoundType sound_type,
     char *data,
     int size,
-    u_int32_t timestamp) {
+    u_int32_t ts) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "PublisherController::OnRecvAudioFrame( "
                  "this : %p, "
-                 "timestamp : %u "
+                 "ts : %u "
                  ")",
                  this,
-                 timestamp);
+                 ts);
 }
 
 void PublisherController::OnRecvCmdLogin(RtmpDump *rtmpDump,

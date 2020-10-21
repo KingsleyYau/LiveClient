@@ -88,19 +88,19 @@ void VideoHardEncoder::EncodeVideoFrame(void *data, int size, void *frame) {
 
         VTEncodeInfoFlags flags;
 
-        // 设置每帧的Timestamp
-        CMTime presentationTimeStamp = CMTimeMake(mEncodeFrameCount++, mFPS);
-        double second = (double)(1.0 * presentationTimeStamp.value / presentationTimeStamp.timescale);
+        // 设置每帧的时间戳
+        CMTime presentationTS = CMTimeMake(mEncodeFrameCount++, mFPS);
+        double second = (double)(1.0 * presentationTS.value / presentationTS.timescale);
         FileLevelLog("rtmpdump", KLog::LOG_STAT,
                      "VideoHardEncoder::EncodeVideoFrame( this : %p, frame : %p, value : %lld, timescale : %lld )",
                      this,
                      frame,
-                     presentationTimeStamp.value,
-                     presentationTimeStamp.timescale);
+                     presentationTS.value,
+                     presentationTS.timescale);
         OSStatus status = VTCompressionSessionEncodeFrame(
             mVideoCompressionSession,
             pixelBuffer,
-            presentationTimeStamp,
+            presentationTS,
             kCMTimeInvalid,
             NULL,
             NULL,
@@ -142,13 +142,13 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
     // 第一帧, 或者时间被重置
     if (encoder->mLastPresentationTime == 0 || encoder->mLastPresentationTime > value) {
         encoder->mLastPresentationTime = value;
-        encoder->mEncodeStartTimestamp = 0;
+        encoder->mEncodeStartTS = 0;
     }
 
     double diff = value - encoder->mLastPresentationTime;
-    long int presentTimestamp = (UInt32)lround(1000 * diff);
-    encoder->mEncodeStartTimestamp += presentTimestamp;
-    UInt32 timestamp = encoder->mEncodeStartTimestamp;
+    long int presentTS = (UInt32)lround(1000 * diff);
+    encoder->mEncodeStartTS += presentTS;
+    UInt32 ts = encoder->mEncodeStartTS;
     encoder->mLastPresentationTime = value;
 
     // 判断当前帧是否为关键帧
@@ -168,14 +168,14 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
                          KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded SPS], "
-                         "timestamp : %u, "
+                         "ts : %u, "
                          "frameType : 0x%x, "
                          "size : %d "
                          ")",
-                         timestamp,
+                         ts,
                          sparameterSet[0],
                          sparameterSetSize);
-            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)sparameterSet, (int)sparameterSetSize, timestamp);
+            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)sparameterSet, (int)sparameterSetSize, ts);
         }
 
         // 获取PPS(Picture Parameter Set)
@@ -187,14 +187,14 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
                          KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded PSP], "
-                         "timestamp : %u, "
+                         "ts : %u, "
                          "frameType : 0x%x, "
                          "size : %d "
                          ")",
-                         timestamp,
+                         ts,
                          pparameterSet[0],
                          pparameterSetCount);
-            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)pparameterSet, (int)pparameterSetSize, timestamp);
+            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)pparameterSet, (int)pparameterSetSize, ts);
         }
     }
 
@@ -236,10 +236,10 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
                          KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded Data Slice], "
-                         "timestamp : %u, "
+                         "ts : %u, "
                          "size : %d "
                          ")",
-                         timestamp,
+                         ts,
                          nalUnitLength);
 
             // Move to the next NALU in the block buffer
@@ -251,14 +251,14 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
                          KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded Data], "
-                         "timestamp : %u, "
+                         "ts : %u, "
                          "frameType : 0x%x, "
                          "size : %d "
                          ")",
-                         timestamp,
+                         ts,
                          encoder->mVideoEncodeFrame.GetBuffer()[0],
                          encoder->mVideoEncodeFrame.mBufferLen);
-            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)encoder->mVideoEncodeFrame.GetBuffer(), encoder->mVideoEncodeFrame.mBufferLen, timestamp);
+            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)encoder->mVideoEncodeFrame.GetBuffer(), encoder->mVideoEncodeFrame.mBufferLen, ts);
         }
     }
 }
@@ -308,7 +308,7 @@ bool VideoHardEncoder::CreateContext() {
 
             // 初始化时间戳
             mLastPresentationTime = 0;
-            mEncodeStartTimestamp = 0;
+            mEncodeStartTS = 0;
             mEncodeFrameCount = 0;
 
         } else {

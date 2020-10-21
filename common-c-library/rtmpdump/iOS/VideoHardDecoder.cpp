@@ -16,11 +16,11 @@ namespace coollive {
 
 typedef struct _tagDecodeItem {
     VideoHardDecoder *decoder;
-    u_int32_t timestamp;
+    u_int32_t ts;
 
     _tagDecodeItem() {
         decoder = NULL;
-        timestamp = 0;
+        ts = 0;
     }
 } DecodeItem;
 
@@ -180,7 +180,7 @@ void VideoHardDecoder::ResetStream() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::ResetStream( this : %p )", this);
 }
 
-void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp, const char *vps, int vps_size) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t ts, const char *vps, int vps_size) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
@@ -192,7 +192,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  "vps : %p, "
                  "vps_size : %d, "
                  "naluHeaderSize : %d, "
-                 "timestamp : %u "
+                 "ts : %u "
                  ")",
                  this,
                  sps,
@@ -202,7 +202,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  vps,
                  vps_size,
                  naluHeaderSize,
-                 timestamp);
+                 ts);
 
     DestroyContext();
 
@@ -402,7 +402,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t dt
     if (status == kCMBlockBufferNoErr) {
         CMSampleBufferRef sampleBuffer = NULL;
         const size_t sampleSizeArray[] = {mVideoDecodeFrame.mBufferLen};
-        //        CMSampleTimingInfo timingInfo = {CMTimeMake(0, 0), CMTimeMake(timestamp, 15), CMTimeMake(timestamp, 15)};
+        //        CMSampleTimingInfo timingInfo = {CMTimeMake(0, 0), CMTimeMake(ts, 15), CMTimeMake(ts, 15)};
         status = CMSampleBufferCreateReady(
             kCFAllocatorDefault,
             blockBuffer,
@@ -419,7 +419,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t dt
             VTDecodeInfoFlags flagOut = 0;
 
             DecodeItem item;
-            item.timestamp = pts;
+            item.ts = pts;
             item.decoder = this;
 
             status = VTDecompressionSessionDecodeFrame(
@@ -491,17 +491,17 @@ void VideoHardDecoder::DecodeOutputCallback(
     OSStatus status,
     VTDecodeInfoFlags infoFlags,
     CVImageBufferRef imageBuffer,
-    CMTime presentationTimeStamp,
+    CMTime presentationTS,
     CMTime presentationDuration) {
 
-    Float64 ptTimestamp = CMTimeGetSeconds(presentationTimeStamp);
+    Float64 ptTimestamp = CMTimeGetSeconds(presentationTS);
     Float64 ptDuration = CMTimeGetSeconds(presentationDuration);
 
     DecodeItem *item = NULL;
-    u_int32_t timestamp = 0xFFFFFFFF;
+    u_int32_t ts = 0xFFFFFFFF;
     if (sourceFrameRefCon != NULL) {
         item = (DecodeItem *)sourceFrameRefCon;
-        timestamp = item->timestamp;
+        ts = item->ts;
     }
 
     if (status == noErr) {
@@ -510,15 +510,15 @@ void VideoHardDecoder::DecodeOutputCallback(
                      "VideoHardDecoder::DecodeOutputCallback( "
                      "[Decode Video Success], "
                      "item : %p, "
-                     "timestamp : %u "
+                     "ts : %u "
                      ")",
                      item,
-                     timestamp);
+                     ts);
 
         if (imageBuffer != NULL) {
             if (NULL != item && item->decoder) {
                 CFRetain(imageBuffer);
-                item->decoder->DecodeCallbackProc(imageBuffer, item->timestamp);
+                item->decoder->DecodeCallbackProc(imageBuffer, item->ts);
             }
         }
     } else {
@@ -528,26 +528,26 @@ void VideoHardDecoder::DecodeOutputCallback(
                      "[Decode Video Error], "
                      "status : %d, "
                      "item : %p, "
-                     "timestamp : %u "
+                     "ts : %u "
                      ")",
                      status,
                      item,
-                     timestamp);
+                     ts);
         if (NULL != item && item->decoder) {
             if (NULL != item && item->decoder) {
-                item->decoder->DecodeCallbackProc(NULL, item->timestamp, false);
+                item->decoder->DecodeCallbackProc(NULL, item->ts, false);
             }
         }
     }
 }
 
 // 硬解码回调
-void VideoHardDecoder::DecodeCallbackProc(void *frame, u_int32_t timestamp, bool bFlag) {
+void VideoHardDecoder::DecodeCallbackProc(void *frame, u_int32_t ts, bool bFlag) {
     // 不用锁, 因为DecodeOutputCallback是VTDecompressionSessionDecodeFrame的同步回调(不同线程)
     mbError = !bFlag;
     if (NULL != mpCallback) {
         if (bFlag) {
-            mpCallback->OnDecodeVideoFrame(this, frame, timestamp);
+            mpCallback->OnDecodeVideoFrame(this, frame, ts);
         } else {
             //            mpCallback->OnDecodeVideoError(this);
         }
@@ -559,7 +559,7 @@ void VideoHardDecoder::DecodeCallbackProc(void *frame, u_int32_t timestamp, bool
     //        CGImageRef cgiimage = [context createCGImage:ciImage fromRect:ciImage.extent];
     //        UIImage* uiImage = [UIImage imageWithCGImage:cgiimage];
     //
-    //        NSString* imageName = [NSString stringWithFormat:@"%.7d.png", item->timestamp];
+    //        NSString* imageName = [NSString stringWithFormat:@"%.7d.png", item->ts];
     //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     //        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:imageName];
     //        NSData* dataImage = UIImagePNGRepresentation(uiImage);

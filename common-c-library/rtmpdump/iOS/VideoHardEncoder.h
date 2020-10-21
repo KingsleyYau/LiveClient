@@ -61,7 +61,7 @@ private:
     
     int mEncodeFrameCount;
     double mLastPresentationTime;
-    UInt32 mEncodeStartTimestamp;
+    UInt32 mEncodeStartTS;
     
     // 状态锁
     KMutex mRuningMutex;

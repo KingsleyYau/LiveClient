@@ -107,9 +107,9 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
     /**
      增加采集视频卡顿造成的时间
      
-     @param timestamp 采集视频卡顿造成的时间
+     @param ts 采集视频卡顿造成的时间
      */
-    void AddVideoTimestamp(u_int32_t timestamp);
+    void AddVideoTimestamp(u_int32_t ts);
 
     /**
      发送Login命令
@@ -126,7 +126,7 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
 
   private:
     // 编码器回调
-    void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t timestamp);
+    void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t ts);
     void OnEncodeAudioFrame(AudioEncoder *encoder,
                             AudioFrameFormat format,
                             AudioFrameSoundRate sound_rate,
@@ -134,13 +134,13 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
                             AudioFrameSoundType sound_type,
                             char *frame,
                             int size,
-                            u_int32_t timestamp);
+                            u_int32_t ts);
 
   private:
     // 传输器回调
     void OnConnect(RtmpDump *rtmpDump);
     void OnDisconnect(RtmpDump *rtmpDump);
-    void OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp);
+    void OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t ts);
     void OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t pts, u_int32_t dts, VideoFrameType video_type);
     void OnChangeAudioFormat(RtmpDump *rtmpDump,
                              AudioFrameFormat format,
@@ -154,7 +154,7 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
                           AudioFrameSoundType sound_type,
                           char *data,
                           int size,
-                          u_int32_t timestamp);
+                          u_int32_t ts);
     void OnRecvCmdLogin(RtmpDump *rtmpDump,
                         bool bFlag,
                         const string &userName,
