@@ -39,8 +39,20 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
+    // 界面处理
+    self.title = @"Stream Player";
+    // 旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    // 信息
+    self.labelVideoSize.text = @"";
+    self.labelFps.text = @"";
+    [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    // 手势
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
+    tap.numberOfTapsRequired = 2;
+    [self.previewView addGestureRecognizer:tap];
+    
     // 初始化播放
     self.playerFilterArray = @[
         [[LSImageVibrateFilter alloc] init],
@@ -52,14 +64,7 @@
     self.player.playView = self.previewView;
 //    self.player.customFilter = self.playerFilterArray[0];
     self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
-
-    // 界面处理
-    self.title = @"Stream Player";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-    self.labelVideoSize.text = @"";
-    self.labelFps.text = @"";
-    [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-
+    
     // 初始化推送
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x320];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -81,35 +86,6 @@
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
 //    [self play:nil];
-    //    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
-    //        dispatch_async(dispatch_get_main_queue(), ^{
-    //            if (!granted) {
-    //                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启麦克风权限" preferredStyle:UIAlertControllerStyleAlert];
-    //                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-    //                                                                   style:UIAlertActionStyleDefault
-    //                                                                 handler:^(UIAlertAction *_Nonnull action){
-    //
-    //                                                                 }];
-    //                [alertVC addAction:actionOK];
-    //                [self presentViewController:alertVC animated:NO completion:nil];
-    //            }
-    //        });
-    //    }];
-    //
-    //    [[LiveStreamSession session] checkVideo:^(BOOL granted) {
-    //        dispatch_async(dispatch_get_main_queue(), ^{
-    //            if (!granted) {
-    //                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头权限" preferredStyle:UIAlertControllerStyleAlert];
-    //                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-    //                                                                   style:UIAlertActionStyleDefault
-    //                                                                 handler:^(UIAlertAction *_Nonnull action){
-    //
-    //                                                                 }];
-    //                [alertVC addAction:actionOK];
-    //                [self presentViewController:alertVC animated:NO completion:nil];
-    //            }
-    //        });
-    //    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -140,10 +116,6 @@
     // 去除手势
     [self removeSingleTap];
 
-//    // 停止流
-//    [self stopPlay:nil];
-//    [self stopPush:nil];
-
     // 允许锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
@@ -155,8 +127,8 @@
 
 #pragma mark - 播放相关
 - (IBAction)scale:(id)sender {
-    self.isScale = !self.isScale;
-    [self changeOrientation];
+    self.player.playView.fillMode++;
+    self.player.playView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
 }
 
 - (IBAction)playbackRate0_5x:(id)sender {
@@ -398,6 +370,12 @@
         [NSLayoutConstraint deactivateConstraints:@[self.previewViewBottom]];
         [NSLayoutConstraint activateConstraints:@[self.previewViewRadio]];
     }
+}
+
+#pragma mark - 手势
+- (void)tapGesture:(id)sender {
+    self.isScale = !self.isScale;
+    [self changeOrientation];
 }
 
 #pragma mark - 播放本地文件
