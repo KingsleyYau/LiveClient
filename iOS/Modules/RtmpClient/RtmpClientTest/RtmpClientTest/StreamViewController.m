@@ -209,12 +209,13 @@
 }
 
 - (void)playerOnFinish:(LiveStreamPlayer * _Nonnull)player {
-    NSLog(@"StreamViewController::playerOnFinish()");
+    NSLog(@"StreamViewController::playerOnFinish(), self.fileItemIndex: %ld", self.fileItemIndex);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if ( self.fileItemArray.count > 0 ) {
             self.fileItemIndex++;
             self.fileItemIndex %= self.fileItemArray.count;
+            NSLog(@"StreamViewController::playerOnFinish( [Play] ), self.fileItemIndex: %ld", self.fileItemIndex);
             FileItem *fileItem = self.fileItemArray[self.fileItemIndex];
             [self.player playFilePath:fileItem.filePath];
         }
@@ -410,6 +411,8 @@
     self.fileItemArray = fileItemArray;
     if ( self.fileItemArray.count > 0 ) {
         self.fileItemIndex = arc4random() % self.fileItemArray.count;
+        NSLog(@"StreamViewController::didSelectAllFile( [Play] ), self.fileItemIndex: %ld", self.fileItemIndex);
+        
         FileItem *fileItem = self.fileItemArray[self.fileItemIndex];
         [self.player playFilePath:fileItem.filePath];
     }
