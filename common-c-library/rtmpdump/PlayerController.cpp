@@ -61,7 +61,7 @@ void PlayerController::SetCacheMS(int cacheMS) {
                  this,
                  cacheMS);
     mRtmpPlayer.SetCacheMS(cacheMS);
-    mFileReader.SetCacheMS(cacheMS + 300);
+    mFileReader.SetCacheMS(cacheMS + 200);
 }
 
 void PlayerController::SetPlaybackRate(double playbackRate) {

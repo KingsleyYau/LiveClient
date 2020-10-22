@@ -402,7 +402,7 @@
 - (void)didSelectFile:(FileItem *)fileItem {
     self.fileItemArray = nil;
     
-    self.player.cacheMS = 200;
+    self.player.cacheMS = 100;
     [self.player playFilePath:fileItem.filePath];
 }
 
