@@ -130,6 +130,8 @@ bool AudioDecoderAAC::Start() {
 
     bFlag = CreateContext();
     if (bFlag) {
+        mbRunning = true;
+        
         AudioFrame *frame = NULL;
         mFreeBufferList.lock();
         mBufferListSize = 0;
@@ -143,9 +145,6 @@ bool AudioDecoderAAC::Start() {
         // 开启解码线程
         mDecodeAudioThread.Start(mpDecodeAudioRunnable);
     }
-
-    mbRunning = true;
-
     mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
@@ -198,7 +197,6 @@ bool AudioDecoderAAC::CreateContext() {
     //    mCodec = avcodec_find_decoder(AV_CODEC_ID_AAC);
     mCodec = avcodec_find_decoder_by_name("libfdk_aac");
     if (mCodec) {
-        bFlag = true;
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
                      "AudioDecoderAAC::CreateContext( "
@@ -208,6 +206,7 @@ bool AudioDecoderAAC::CreateContext() {
                      ")",
                      this,
                      mCodec->name);
+        bFlag = true;
     } else {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
@@ -246,9 +245,7 @@ bool AudioDecoderAAC::CreateContext() {
                          mContext->bit_rate,
                          mContext->frame_size,
                          mContext->profile);
-
             bFlag = true;
-
         } else {
             FileLevelLog("rtmpdump",
                          KLog::LOG_ERR_SYS,
@@ -382,58 +379,60 @@ void AudioDecoderAAC::DecodeAudioFrame(
     int64_t ts) {
     bool bFlag = false;
 
-    mFreeBufferList.lock();
-    AudioFrame *audioFrame = NULL;
-    if (!mFreeBufferList.empty()) {
-        audioFrame = (AudioFrame *)mFreeBufferList.front();
-        mFreeBufferList.pop_front();
+    if (mbRunning) {
+        mFreeBufferList.lock();
+        AudioFrame *audioFrame = NULL;
+        if (!mFreeBufferList.empty()) {
+            audioFrame = (AudioFrame *)mFreeBufferList.front();
+            mFreeBufferList.pop_front();
 
-    } else {
-        audioFrame = new AudioFrame();
-        FileLevelLog("rtmpdump",
-                     KLog::LOG_WARNING,
-                     "AudioDecoderAAC::DecodeAudioFrame( "
-                     "this : %p, "
-                     "[New Audio Frame], "
-                     "frame : %p, "
-                     "ts : %lld, "
-                     "bufferListSize : %u, "
-                     "mDecodeBufferList.size() : %d "
-                     ")",
-                     this,
-                     audioFrame,
-                     ts,
-                     mBufferListSize,
-                     mDecodeBufferList.size());
-    }
-    mBufferListSize++;
-    mFreeBufferList.unlock();
-
-    // 更新数据格式
-    audioFrame->ResetFrame();
-    audioFrame->mTS = ts;
-    audioFrame->InitFrame(format, sound_rate, sound_size, sound_type);
-
-    // 增加ADTS头部
-    char *frame = (char *)audioFrame->GetBuffer();
-    int headerCapacity = audioFrame->GetBufferCapacity();
-    int frameHeaderSize = 0;
-
-    bFlag = mAudioMuxer.GetADTS(size, format, sound_rate, sound_size, sound_type, frame, headerCapacity, frameHeaderSize);
-    if (bFlag) {
-        // 计算已用的ADTS
-        audioFrame->mBufferLen = frameHeaderSize;
-        // 计算帧大小是否足够
-        if (frameHeaderSize + size > headerCapacity) {
-            audioFrame->RenewBufferSize(frameHeaderSize + size);
+        } else {
+            audioFrame = new AudioFrame();
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "AudioDecoderAAC::DecodeAudioFrame( "
+                         "this : %p, "
+                         "[New Audio Frame], "
+                         "frame : %p, "
+                         "ts : %lld, "
+                         "bufferListSize : %u, "
+                         "mDecodeBufferList.size() : %d "
+                         ")",
+                         this,
+                         audioFrame,
+                         ts,
+                         mBufferListSize,
+                         mDecodeBufferList.size());
         }
-        // 增加帧内容
-        audioFrame->AddBuffer((unsigned char *)data, size);
+        mBufferListSize++;
+        mFreeBufferList.unlock();
 
-        // 放进解码队列
-        mDecodeBufferList.lock();
-        mDecodeBufferList.push_back(audioFrame);
-        mDecodeBufferList.unlock();
+        // 更新数据格式
+        audioFrame->ResetFrame();
+        audioFrame->mTS = ts;
+        audioFrame->InitFrame(format, sound_rate, sound_size, sound_type);
+
+        // 增加ADTS头部
+        char *frame = (char *)audioFrame->GetBuffer();
+        int headerCapacity = audioFrame->GetBufferCapacity();
+        int frameHeaderSize = 0;
+
+        bFlag = mAudioMuxer.GetADTS(size, format, sound_rate, sound_size, sound_type, frame, headerCapacity, frameHeaderSize);
+        if (bFlag) {
+            // 计算已用的ADTS
+            audioFrame->mBufferLen = frameHeaderSize;
+            // 计算帧大小是否足够
+            if (frameHeaderSize + size > headerCapacity) {
+                audioFrame->RenewBufferSize(frameHeaderSize + size);
+            }
+            // 增加帧内容
+            audioFrame->AddBuffer((unsigned char *)data, size);
+
+            // 放进解码队列
+            mDecodeBufferList.lock();
+            mDecodeBufferList.push_back(audioFrame);
+            mDecodeBufferList.unlock();
+        }
     }
 }
 

@@ -165,11 +165,11 @@ public:
         if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnConnect:)] ) {
             [mpRtmpPlayerOC.delegate rtmpPlayerOnConnect:mpRtmpPlayerOC];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            mpRtmpPlayerOC.player->SendCmdLogin("MM201", "123456", "4");
-            mpRtmpPlayerOC.player->SendCmdMakeCall("CM24242934", "PC4", "4");
-            mpRtmpPlayerOC.player->SendCmdReceive();
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            mpRtmpPlayerOC.player->SendCmdLogin("MM201", "123456", "4");
+//            mpRtmpPlayerOC.player->SendCmdMakeCall("CM24242934", "PC4", "4");
+//            mpRtmpPlayerOC.player->SendCmdReceive();
+//        });
     }
     
     void OnPlayerDisconnect(PlayerController* pc) {

@@ -611,14 +611,15 @@
     }
 
     if (bHandle) {
-        // 暂停视频推送
-        [self.publisher pausePushVideo];
-
-        // 暂停摄像头采集队列
-        [self.videoCaptureSession pauseCameraCapture];
+        if (self.isPreview) {
+            // 暂停视频推送
+            [self.publisher pausePushVideo];
+            // 暂停摄像头采集队列
+            [self.videoCaptureSession pauseCameraCapture];
+        }
         
-        // 直接断开连接
-        [self.publisher stop];
+//        // 直接断开连接
+//        [self.publisher stop];
     }
 }
 
@@ -633,16 +634,15 @@
     }
     
     if( bHandle ) {
-        // 恢复摄像头采集队列
         if (self.isPreview) {
+            // 恢复摄像头采集队列
             [self.videoCaptureSession resumeCameraCapture];
+            // 恢复视频推送
+            [self.publisher resumePushVideo];
         }
         
-        // 恢复视频推送
-        [self.publisher resumePushVideo];
-        
-        // 重连
-        [self reconnect];
+//        // 重连
+//        [self reconnect];
     }
 }
 

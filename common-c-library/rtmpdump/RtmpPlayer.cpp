@@ -110,12 +110,12 @@ RtmpPlayer::~RtmpPlayer() {
     }
 }
 
-bool RtmpPlayer::PlayUrl(const string &recordFilePath) {
+bool RtmpPlayer::Play(const string &recordFilePath) {
     bool bFlag = false;
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "RtmpPlayer::PlayUrl( "
+                 "RtmpPlayer::Play( "
                  "this : %p "
                  ")",
                  this);
@@ -141,7 +141,7 @@ bool RtmpPlayer::PlayUrl(const string &recordFilePath) {
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "RtmpPlayer::PlayUrl( "
+                 "RtmpPlayer::Play( "
                  "this : %p, "
                  "[%s] "
                  ")",

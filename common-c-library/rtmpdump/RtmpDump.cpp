@@ -987,71 +987,77 @@ bool RtmpDump::SendCmdLogin(const string &userName, const string &password, cons
     int index = 0;
     int size = 0;
 
-    srs_amf0_t amfCmd = srs_amf0_create_string("login");
-    size = srs_amf0_size(amfCmd);
-    srs_amf0_serialize(amfCmd, data + index, size);
-    index += size;
-    srs_amf0_free(amfCmd);
+    mClientMutex.lock();
+    mConnectedMutex.lock();
+    if (mbRunning && mpRtmp && mIsConnected) {
+        srs_amf0_t amfCmd = srs_amf0_create_string("login");
+        size = srs_amf0_size(amfCmd);
+        srs_amf0_serialize(amfCmd, data + index, size);
+        index += size;
+        srs_amf0_free(amfCmd);
 
-    srs_amf0_t amfNumber = srs_amf0_create_number(0);
-    size = srs_amf0_size(amfNumber);
-    srs_amf0_serialize(amfNumber, data + index, size);
-    index += size;
-    srs_amf0_free(amfNumber);
+        srs_amf0_t amfNumber = srs_amf0_create_number(0);
+        size = srs_amf0_size(amfNumber);
+        srs_amf0_serialize(amfNumber, data + index, size);
+        index += size;
+        srs_amf0_free(amfNumber);
 
-    srs_amf0_t amfArgs = srs_amf0_create_null();
-    size = srs_amf0_size(amfArgs);
-    srs_amf0_serialize(amfArgs, data + index, size);
-    index += size;
-    srs_amf0_free(amfArgs);
+        srs_amf0_t amfArgs = srs_amf0_create_null();
+        size = srs_amf0_size(amfArgs);
+        srs_amf0_serialize(amfArgs, data + index, size);
+        index += size;
+        srs_amf0_free(amfArgs);
 
-    char user[2048] = {0};
-    snprintf(user, sizeof(user) - 1, "%s@%s", userName.c_str(), "172.25.32.133");
-    srs_amf0_t amfUserName = srs_amf0_create_string(user);
-    size = srs_amf0_size(amfUserName);
-    srs_amf0_serialize(amfUserName, data + index, size);
-    index += size;
-    srs_amf0_free(amfUserName);
+        char user[2048] = {0};
+        snprintf(user, sizeof(user) - 1, "%s@%s", userName.c_str(), "172.25.32.133");
+        srs_amf0_t amfUserName = srs_amf0_create_string(user);
+        size = srs_amf0_size(amfUserName);
+        srs_amf0_serialize(amfUserName, data + index, size);
+        index += size;
+        srs_amf0_free(amfUserName);
 
-    char auth[2048] = {0};
-    snprintf(auth, sizeof(auth) - 1, "%s:%s", user, "123456");
-    char authMd5[2048] = {0};
-    GetMD5String(auth, authMd5);
-    srs_amf0_t amfAuth = srs_amf0_create_string(authMd5);
-    size = srs_amf0_size(amfAuth);
-    srs_amf0_serialize(amfAuth, data + index, size);
-    index += size;
-    srs_amf0_free(amfAuth);
+        char auth[2048] = {0};
+        snprintf(auth, sizeof(auth) - 1, "%s:%s", user, "123456");
+        char authMd5[2048] = {0};
+        GetMD5String(auth, authMd5);
+        srs_amf0_t amfAuth = srs_amf0_create_string(authMd5);
+        size = srs_amf0_size(amfAuth);
+        srs_amf0_serialize(amfAuth, data + index, size);
+        index += size;
+        srs_amf0_free(amfAuth);
 
-    srs_amf0_t amfSiteId = srs_amf0_create_string(siteId.c_str());
-    size = srs_amf0_size(amfSiteId);
-    srs_amf0_serialize(amfSiteId, data + index, size);
-    index += size;
-    srs_amf0_free(amfSiteId);
+        srs_amf0_t amfSiteId = srs_amf0_create_string(siteId.c_str());
+        size = srs_amf0_size(amfSiteId);
+        srs_amf0_serialize(amfSiteId, data + index, size);
+        index += size;
+        srs_amf0_free(amfSiteId);
 
-    char sid[2048] = {0};
-    snprintf(sid, sizeof(sid) - 1, "sid=%s&userType=1", siteId.c_str());
-    srs_amf0_t amfCustom = srs_amf0_create_string(sid);
-    size = srs_amf0_size(amfCustom);
-    srs_amf0_serialize(amfCustom, data + index, size);
-    index += size;
-    srs_amf0_free(amfCustom);
+        char sid[2048] = {0};
+        snprintf(sid, sizeof(sid) - 1, "sid=%s&userType=1", siteId.c_str());
+        srs_amf0_t amfCustom = srs_amf0_create_string(sid);
+        size = srs_amf0_size(amfCustom);
+        srs_amf0_serialize(amfCustom, data + index, size);
+        index += size;
+        srs_amf0_free(amfCustom);
 
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
-                 "RtmpDump::SendCmdLogin( "
-                 "this : %p, "
-                 "user : %s, "
-                 "auth : %s, "
-                 "sid : %s "
-                 ")",
-                 this,
-                 user,
-                 auth,
-                 sid);
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "RtmpDump::SendCmdLogin( "
+                     "this : %p, "
+                     "user : %s, "
+                     "auth : %s, "
+                     "sid : %s "
+                     ")",
+                     this,
+                     user,
+                     auth,
+                     sid);
 
-    int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
-
+        int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
+    }
+    mConnectedMutex.unlock();
+    mClientMutex.unlock();
+    
     return bFlag;
 }
 
@@ -1135,50 +1141,56 @@ bool RtmpDump::SendCmdMakeCall(const string &userName, const string &serverId, c
     int index = 0;
     int size = 0;
 
-    srs_amf0_t amfCmd = srs_amf0_create_string("makeCall");
-    size = srs_amf0_size(amfCmd);
-    srs_amf0_serialize(amfCmd, data + index, size);
-    index += size;
-    srs_amf0_free(amfCmd);
+    mClientMutex.lock();
+    mConnectedMutex.lock();
+    if (mbRunning && mpRtmp && mIsConnected) {
+        srs_amf0_t amfCmd = srs_amf0_create_string("makeCall");
+        size = srs_amf0_size(amfCmd);
+        srs_amf0_serialize(amfCmd, data + index, size);
+        index += size;
+        srs_amf0_free(amfCmd);
 
-    srs_amf0_t amfNumber = srs_amf0_create_number(0);
-    size = srs_amf0_size(amfNumber);
-    srs_amf0_serialize(amfNumber, data + index, size);
-    index += size;
-    srs_amf0_free(amfNumber);
+        srs_amf0_t amfNumber = srs_amf0_create_number(0);
+        size = srs_amf0_size(amfNumber);
+        srs_amf0_serialize(amfNumber, data + index, size);
+        index += size;
+        srs_amf0_free(amfNumber);
 
-    srs_amf0_t amfArgs = srs_amf0_create_null();
-    size = srs_amf0_size(amfArgs);
-    srs_amf0_serialize(amfArgs, data + index, size);
-    index += size;
-    srs_amf0_free(amfArgs);
+        srs_amf0_t amfArgs = srs_amf0_create_null();
+        size = srs_amf0_size(amfArgs);
+        srs_amf0_serialize(amfArgs, data + index, size);
+        index += size;
+        srs_amf0_free(amfArgs);
 
-    char userNameString[1024] = {0};
-    snprintf(userNameString, sizeof(userNameString) - 1, "%s|||%s|||%s", userName.c_str(), serverId.c_str(), siteId.c_str());
-    srs_amf0_t amfUserName = srs_amf0_create_string(userNameString);
-    size = srs_amf0_size(amfUserName);
-    srs_amf0_serialize(amfUserName, data + index, size);
-    index += size;
-    srs_amf0_free(amfUserName);
+        char userNameString[1024] = {0};
+        snprintf(userNameString, sizeof(userNameString) - 1, "%s|||%s|||%s", userName.c_str(), serverId.c_str(), siteId.c_str());
+        srs_amf0_t amfUserName = srs_amf0_create_string(userNameString);
+        size = srs_amf0_size(amfUserName);
+        srs_amf0_serialize(amfUserName, data + index, size);
+        index += size;
+        srs_amf0_free(amfUserName);
 
-    srs_amf0_t argsNullString = srs_amf0_create_string("");
-    size = srs_amf0_size(argsNullString);
-    srs_amf0_serialize(argsNullString, data + index, size);
-    index += size;
-    srs_amf0_free(argsNullString);
+        srs_amf0_t argsNullString = srs_amf0_create_string("");
+        size = srs_amf0_size(argsNullString);
+        srs_amf0_serialize(argsNullString, data + index, size);
+        index += size;
+        srs_amf0_free(argsNullString);
 
-    srs_amf0_t makeCallObj = srs_amf0_create_object();
-    srs_amf0_t bandWith = srs_amf0_create_string("1mb");
-    srs_amf0_object_property_set(makeCallObj, "incomingBandwidth", bandWith);
-    srs_amf0_t wantVideo = srs_amf0_create_string("true");
-    srs_amf0_object_property_set(makeCallObj, "wantVideo", wantVideo);
-    size = srs_amf0_size(makeCallObj);
-    srs_amf0_serialize(makeCallObj, data + index, size);
-    index += size;
-    srs_amf0_free(makeCallObj);
+        srs_amf0_t makeCallObj = srs_amf0_create_object();
+        srs_amf0_t bandWith = srs_amf0_create_string("1mb");
+        srs_amf0_object_property_set(makeCallObj, "incomingBandwidth", bandWith);
+        srs_amf0_t wantVideo = srs_amf0_create_string("true");
+        srs_amf0_object_property_set(makeCallObj, "wantVideo", wantVideo);
+        size = srs_amf0_size(makeCallObj);
+        srs_amf0_serialize(makeCallObj, data + index, size);
+        index += size;
+        srs_amf0_free(makeCallObj);
 
-    int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
-
+        int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
+    }
+    mConnectedMutex.unlock();
+    mClientMutex.unlock();
+    
     return bFlag;
 }
 
@@ -1243,31 +1255,37 @@ bool RtmpDump::SendCmdReceive() {
     int index = 0;
     int size = 0;
 
-    srs_amf0_t amfCmd = srs_amf0_create_string("receiveVideo");
-    size = srs_amf0_size(amfCmd);
-    srs_amf0_serialize(amfCmd, data + index, size);
-    index += size;
-    srs_amf0_free(amfCmd);
+    mClientMutex.lock();
+    mConnectedMutex.lock();
+    if (mbRunning && mpRtmp && mIsConnected) {
+        srs_amf0_t amfCmd = srs_amf0_create_string("receiveVideo");
+        size = srs_amf0_size(amfCmd);
+        srs_amf0_serialize(amfCmd, data + index, size);
+        index += size;
+        srs_amf0_free(amfCmd);
 
-    srs_amf0_t amfNumber = srs_amf0_create_number(0);
-    size = srs_amf0_size(amfNumber);
-    srs_amf0_serialize(amfNumber, data + index, size);
-    index += size;
-    srs_amf0_free(amfNumber);
+        srs_amf0_t amfNumber = srs_amf0_create_number(0);
+        size = srs_amf0_size(amfNumber);
+        srs_amf0_serialize(amfNumber, data + index, size);
+        index += size;
+        srs_amf0_free(amfNumber);
 
-    srs_amf0_t amfArgs = srs_amf0_create_null();
-    size = srs_amf0_size(amfArgs);
-    srs_amf0_serialize(amfArgs, data + index, size);
-    index += size;
-    srs_amf0_free(amfArgs);
+        srs_amf0_t amfArgs = srs_amf0_create_null();
+        size = srs_amf0_size(amfArgs);
+        srs_amf0_serialize(amfArgs, data + index, size);
+        index += size;
+        srs_amf0_free(amfArgs);
 
-    srs_amf0_t amfRecvVideo = srs_amf0_create_boolean(true);
-    size = srs_amf0_size(amfRecvVideo);
-    srs_amf0_serialize(amfRecvVideo, data + index, size);
-    index += size;
-    srs_amf0_free(amfRecvVideo);
-    
-    int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
+        srs_amf0_t amfRecvVideo = srs_amf0_create_boolean(true);
+        size = srs_amf0_size(amfRecvVideo);
+        srs_amf0_serialize(amfRecvVideo, data + index, size);
+        index += size;
+        srs_amf0_free(amfRecvVideo);
+        
+        int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
+    }
+    mConnectedMutex.unlock();
+    mClientMutex.unlock();
     
     return bFlag;
 }

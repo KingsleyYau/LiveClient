@@ -15,6 +15,8 @@
 
 #import "LSImageVibrateFilter.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+
 @interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate>
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
@@ -27,7 +29,8 @@
 @property (assign) BOOL isScale;
 @property (assign) UIDeviceOrientation deviceOrientation;
 
-@property (strong) NSArray<FileItem *>* fileItemArray;
+@property (strong) NSArray<FileItem *> *fileItemArray;
+@property (strong) FileItem *fileItem;
 @property (assign) NSInteger fileItemIndex;
 
 @end
@@ -52,9 +55,19 @@
     self.labelFps.text = @"";
     [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     // 手势
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     tap.numberOfTapsRequired = 2;
     [self.previewView addGestureRecognizer:tap];
+    // 耳机事件
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    commandCenter.pauseCommand.enabled = YES;
+    [commandCenter.pauseCommand addTarget:self action:@selector(pauseCommand)];
+    commandCenter.playCommand.enabled = YES;
+    [commandCenter.playCommand addTarget:self action:@selector(playCommand)];
+    commandCenter.nextTrackCommand.enabled = YES;
+    [commandCenter.nextTrackCommand addTarget:self action:@selector(nextTrackCommand)];
+    commandCenter.previousTrackCommand.enabled = YES;
+    [commandCenter.previousTrackCommand addTarget:self action:@selector(previousTrackCommand)];
     
     // 初始化播放
     self.playerFilterArray = @[
@@ -65,9 +78,9 @@
     self.player.useHardDecoder = YES;
     self.player.delegate = self;
     self.player.playView = self.previewView;
-//    self.player.customFilter = self.playerFilterArray[0];
+    //    self.player.customFilter = self.playerFilterArray[0];
     self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
-    
+
     // 初始化推送
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x320];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -77,18 +90,18 @@
 
     // Live
     NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+//        NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
     //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
     //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
 
     //    // Camshare
-//        NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
-//        NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
+    //        NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
+    //        NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
-//    [self play:nil];
+    //    [self play:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -188,6 +201,7 @@
 }
 
 - (IBAction)stopPlay:(id)sender {
+    self.fileItemArray = nil;
     [self.player stop];
 }
 
@@ -198,7 +212,7 @@
     });
 }
 
-- (void)playerOnFastPlaybackError:(LiveStreamPlayer * _Nonnull)player {
+- (void)playerOnFastPlaybackError:(LiveStreamPlayer *_Nonnull)player {
     NSLog(@"StreamViewController::playerOnFastPlaybackError()");
 }
 
@@ -208,17 +222,11 @@
     });
 }
 
-- (void)playerOnFinish:(LiveStreamPlayer * _Nonnull)player {
+- (void)playerOnFinish:(LiveStreamPlayer *_Nonnull)player {
     NSLog(@"StreamViewController::playerOnFinish(), self.fileItemIndex: %ld", self.fileItemIndex);
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ( self.fileItemArray.count > 0 ) {
-            self.fileItemIndex++;
-            self.fileItemIndex %= self.fileItemArray.count;
-            NSLog(@"StreamViewController::playerOnFinish( [Play] ), self.fileItemIndex: %ld", self.fileItemIndex);
-            FileItem *fileItem = self.fileItemArray[self.fileItemIndex];
-            [self.player playFilePath:fileItem.filePath];
-        }
+        [self playNextFileItem];
     });
 }
 
@@ -241,6 +249,8 @@
 - (IBAction)stopPush:(id)sender {
     [self.publisher stop];
     self.previewPublishView.hidden = YES;
+    
+    [self changeNowPlayingInfo:self.fileItem];
 }
 
 - (IBAction)beauty:(id)sender {
@@ -256,10 +266,12 @@
 }
 
 - (IBAction)startCam:(id)sender {
+    self.previewPublishView.hidden = NO;
     [self.publisher startPreview];
 }
 
 - (IBAction)stopCam:(id)sender {
+    self.previewPublishView.hidden = YES;
     [self.publisher stopPreview];
 }
 
@@ -388,8 +400,8 @@
         [NSLayoutConstraint deactivateConstraints:@[ self.previewViewRadio ]];
         [NSLayoutConstraint activateConstraints:@[ self.previewViewBottom ]];
     } else {
-        [NSLayoutConstraint deactivateConstraints:@[self.previewViewBottom]];
-        [NSLayoutConstraint activateConstraints:@[self.previewViewRadio]];
+        [NSLayoutConstraint deactivateConstraints:@[ self.previewViewBottom ]];
+        [NSLayoutConstraint activateConstraints:@[ self.previewViewRadio ]];
     }
 }
 
@@ -399,22 +411,94 @@
     [self changeOrientation];
 }
 
+#pragma mark - 耳机事件
+- (MPRemoteCommandHandlerStatus)pauseCommand {
+    NSLog(@"StreamViewController::pauseCommand()");
+    BOOL result = true; //[self pause];
+    if (result) {
+        return MPRemoteCommandHandlerStatusSuccess;
+    } else {
+        return MPRemoteCommandHandlerStatusCommandFailed;
+    }
+}
+
+- (MPRemoteCommandHandlerStatus)playCommand {
+    NSLog(@"StreamViewController::playCommand()");
+    BOOL result = true;
+    if (result) {
+        return MPRemoteCommandHandlerStatusSuccess;
+    } else {
+        return MPRemoteCommandHandlerStatusCommandFailed;
+    }
+}
+
+- (MPRemoteCommandHandlerStatus)nextTrackCommand {
+    NSLog(@"StreamViewController::nextTrackCommand()");
+    [self.player stop];
+    BOOL result = true;
+    if (result) {
+        return MPRemoteCommandHandlerStatusSuccess;
+    } else {
+        return MPRemoteCommandHandlerStatusCommandFailed;
+    }
+}
+
+- (MPRemoteCommandHandlerStatus)previousTrackCommand {
+    NSLog(@"StreamViewController::previousTrackCommand()");
+    [self.player stop];
+    BOOL result = true;
+    if (result) {
+        return MPRemoteCommandHandlerStatusSuccess;
+    } else {
+        return MPRemoteCommandHandlerStatusCommandFailed;
+    }
+}
+
+- (void)playNextFileItem {
+    if (self.fileItemArray.count > 0) {
+        self.fileItemIndex++;
+        self.fileItemIndex %= self.fileItemArray.count;
+        NSLog(@"StreamViewController::playNextFileItem(), self.fileItemIndex: %ld", self.fileItemIndex);
+        
+        self.fileItem = self.fileItemArray[self.fileItemIndex];
+        [self changeNowPlayingInfo:self.fileItem];
+        [self.player playFilePath:self.fileItem.filePath];
+    }
+}
+
+- (void)changeNowPlayingInfo:(FileItem *)fileItem {
+    NSMutableDictionary *songInfo = nil;
+    if (fileItem) {
+        songInfo = [NSMutableDictionary dictionary];
+        UIImage *image = fileItem.image;
+        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size requestHandler:^UIImage * _Nonnull(CGSize size) {
+            return image;
+        }];
+        [songInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
+        [songInfo setObject:@"Title" forKey:MPMediaItemPropertyTitle];
+        [songInfo setObject:fileItem.fileName forKey:MPMediaItemPropertyArtist];
+    }
+    MPNowPlayingInfoCenter* center = [MPNowPlayingInfoCenter defaultCenter];
+    [center setNowPlayingInfo:songInfo];
+}
+
 #pragma mark - 播放本地文件
 - (void)didSelectFile:(FileItem *)fileItem {
     self.fileItemArray = nil;
+    self.fileItem = fileItem;
+    
+    [self changeNowPlayingInfo:self.fileItem];
     
     self.player.cacheMS = 100;
-    [self.player playFilePath:fileItem.filePath];
+    [self.player playFilePath:self.fileItem.filePath];
 }
 
 - (void)didSelectAllFile:(NSArray<FileItem *> *)fileItemArray {
     self.fileItemArray = fileItemArray;
-    if ( self.fileItemArray.count > 0 ) {
+    
+    if (self.fileItemArray.count > 0) {
         self.fileItemIndex = arc4random() % self.fileItemArray.count;
-        NSLog(@"StreamViewController::didSelectAllFile( [Play] ), self.fileItemIndex: %ld", self.fileItemIndex);
-        
-        FileItem *fileItem = self.fileItemArray[self.fileItemIndex];
-        [self.player playFilePath:fileItem.filePath];
+        [self playNextFileItem];
     }
 }
 

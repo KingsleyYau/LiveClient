@@ -21,7 +21,7 @@
 /**
  开启后台播放
  */
-- (void)activeSession;
+- (void)activeSession:(BOOL)isPlayAndRecord;
 
 /**
  停止后台播放

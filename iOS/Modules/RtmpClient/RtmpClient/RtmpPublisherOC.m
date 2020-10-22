@@ -94,10 +94,10 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         if ([mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnConnect:)]) {
             [mpPublisher.delegate rtmpPublisherOCOnConnect:mpPublisher];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            mpPublisher.publisher->SendCmdLogin("MM1", "123456", "4");
-            mpPublisher.publisher->SendCmdMakeCall("MM1", "PC0", "4");
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            mpPublisher.publisher->SendCmdLogin("MM1", "123456", "4");
+//            mpPublisher.publisher->SendCmdMakeCall("MM1", "PC0", "4");
+//        });
     }
 
     void OnPublisherDisconnect(PublisherController *pc) {

@@ -61,7 +61,7 @@ void PlayerController::SetCacheMS(int cacheMS) {
                  this,
                  cacheMS);
     mRtmpPlayer.SetCacheMS(cacheMS);
-    mFileReader.SetCacheMS(cacheMS + 200);
+    mFileReader.SetCacheMS(cacheMS + 100);
 }
 
 void PlayerController::SetPlaybackRate(double playbackRate) {
@@ -162,7 +162,7 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
     // 开始播放
     if (bFlag) {
         mRtmpPlayer.SetCacheNoLimit(false);
-        bFlag = mRtmpPlayer.PlayUrl(recordFilePath);
+        bFlag = mRtmpPlayer.Play(recordFilePath);
     }
     // 开始录制
     if (bFlag) {
@@ -221,7 +221,7 @@ bool PlayerController::PlayFile(const string &filePath) {
     // 开始播放
     if (bFlag) {
         mRtmpPlayer.SetCacheNoLimit(true);
-        bFlag = mRtmpPlayer.PlayUrl("");
+        bFlag = mRtmpPlayer.Play("");
     }
     bFlag = mFileReader.PlayFile(filePath);
 

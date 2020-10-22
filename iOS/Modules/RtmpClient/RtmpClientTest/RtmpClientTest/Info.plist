@@ -33,6 +33,7 @@
 	<string>$(PRODUCT_NAME) Microphone use</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>fetch</string>
 		<string>newsstand-content</string>
 		<string>voip</string>

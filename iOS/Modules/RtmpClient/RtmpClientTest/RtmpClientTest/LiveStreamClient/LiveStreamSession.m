@@ -53,17 +53,22 @@ static LiveStreamSession *gSession = nil;
 }
 
 #pragma mark - Session控制
-- (void)activeSession {
-    NSLog(@"LiveStreamSession::activeSession()");
+- (void)activeSession:(BOOL)isPlayAndRecord {
+    NSLog(@"LiveStreamSession::activeSession(), isPlayAndRecord: %d", isPlayAndRecord);
 
     dispatch_async(self.sessionQueue, ^{
         /**
          * 1.必须使用AVAudioSessionCategoryPlayAndRecord, 然后audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO
          */
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
-                      withOptions:AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionAllowBluetoothA2DP
-                            error:nil];
+        if ( isPlayAndRecord ) {
+            [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
+                          withOptions:AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionAllowBluetoothA2DP
+                                error:nil];
+        } else {
+            [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+        }
+
         NSError *error = nil;
         [audioSession setActive:YES error:&error];
         if (error) {
@@ -91,7 +96,7 @@ static LiveStreamSession *gSession = nil;
     @synchronized(self) {
         if (self.playingCount == 0 && self.capturingCount == 0) {
             // 开启后台播放
-            [[LiveStreamSession session] activeSession];
+            [[LiveStreamSession session] activeSession:NO];
         }
         self.playingCount++;
 
@@ -118,9 +123,10 @@ static LiveStreamSession *gSession = nil;
     NSLog(@"LiveStreamSession::startCapture()");
 
     @synchronized(self) {
-        if (self.playingCount == 0 && self.capturingCount == 0) {
+//        if (self.playingCount == 0 && self.capturingCount == 0) {
+        if (self.capturingCount == 0) {
             // 开启后台播放
-            [[LiveStreamSession session] activeSession];
+            [[LiveStreamSession session] activeSession:YES];
         }
 
         self.capturingCount++;
@@ -142,6 +148,9 @@ static LiveStreamSession *gSession = nil;
         if (self.capturingCount == 0 && self.playingCount == 0) {
             // 禁止后台播放
             [[LiveStreamSession session] inactiveSession];
+        }
+        else if ( self.capturingCount == 0 && self.playingCount > 0 ) {
+            [[LiveStreamSession session] activeSession:NO];
         }
     }
 }

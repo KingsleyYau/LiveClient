@@ -175,6 +175,9 @@ void PublisherController::PushVideoFrame(void *data, int size, void *frame) {
             // 视频未恢复
             mVideoResume = true;
             // 更新上次暂停导致的时间差
+            if ( mVideoFrameLastPushTime == 0 ) {
+                mVideoFrameLastPushTime = now;
+            }
             long long videoFrameDiffTime = now - mVideoFrameLastPushTime;
             videoFrameDiffTime -= mVideoFrameInterval;
             FileLevelLog(

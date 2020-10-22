@@ -52,7 +52,7 @@ class RtmpPlayer {
      @param recordFilePath flv录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string &recordFilePath);
+    bool Play(const string &recordFilePath);
 
     /**
      停止
