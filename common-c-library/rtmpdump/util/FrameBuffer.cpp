@@ -15,7 +15,7 @@ FrameBuffer::FrameBuffer() {
     mTS = 0;
 }
 
-FrameBuffer::FrameBuffer(void* frame, unsigned int ts) {
+FrameBuffer::FrameBuffer(void* frame, int64_t ts) {
     mpFrame = frame;
     mTS = ts;
 }

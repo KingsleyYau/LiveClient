@@ -41,8 +41,8 @@ class VideoDecoderH264 : public VideoDecoder {
     bool Reset();
     void Pause();
     void ResetStream();
-    void DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp, const char *vps = NULL, int vps_size = 0);
-    void DecodeVideoFrame(const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type);
+    void DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, int64_t ts, const char *vps = NULL, int vps_size = 0);
+    void DecodeVideoFrame(const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type);
     void ReleaseVideoFrame(void *frame);
     void StartDropFrame();
     void ClearVideoFrame();

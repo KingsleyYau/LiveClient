@@ -343,7 +343,7 @@ bool AudioEncoderAAC::EncodeAudioFrame(AudioFrame *srcFrame, AudioFrame *dstFram
         "bGotFrame : %d, "
         "srcFrame : %p, "
         "dstFrame : %p, "
-        "timestamp : %u, "
+        "timestamp : %lld, "
         "handleTime : %lld "
         ")",
         this,
@@ -351,7 +351,7 @@ bool AudioEncoderAAC::EncodeAudioFrame(AudioFrame *srcFrame, AudioFrame *dstFram
         bGotFrame,
         srcFrame,
         dstFrame,
-        dstFrame->mTimestamp,
+        dstFrame->mTS,
         handleTime);
 
     if (ret >= 0 && bGotFrame) {
@@ -360,7 +360,7 @@ bool AudioEncoderAAC::EncodeAudioFrame(AudioFrame *srcFrame, AudioFrame *dstFram
 
         // 重新计算timestamp
         pcmFrame->pts = mPts;
-        dstFrame->mTimestamp = (unsigned int)(1000.0 * pcmFrame->pts / mContext->time_base.den);
+        dstFrame->mTS = (unsigned int)(1000.0 * pcmFrame->pts / mContext->time_base.den);
         mPts += pcmFrame->nb_samples * pcmFrame->channels;
 
         FileLevelLog(
@@ -371,13 +371,13 @@ bool AudioEncoderAAC::EncodeAudioFrame(AudioFrame *srcFrame, AudioFrame *dstFram
             "[Got Audio Frame], "
             "srcFrame : %p, "
             "dstFrame : %p, "
-            "timestamp : %u, "
+            "ts : %lld, "
             "size : %d "
             ")",
             this,
             srcFrame,
             dstFrame,
-            dstFrame->mTimestamp,
+            dstFrame->mTS,
             pkt.size);
 
         av_free_packet(&pkt);
@@ -613,7 +613,7 @@ void AudioEncoderAAC::EncodeAudioHandle() {
                         dstFrame->mSoundType,
                         (char *)dstFrame->GetBuffer(),
                         dstFrame->mBufferLen,
-                        dstFrame->mTimestamp);
+                        dstFrame->mTS);
                 }
             }
 

@@ -19,7 +19,7 @@ class VideoEncoder;
 class VideoEncoderCallback {
   public:
     virtual ~VideoEncoderCallback(){};
-    virtual void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t ts) = 0;
+    virtual void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, int64_t ts) = 0;
 };
 
 class VideoEncoder {
@@ -43,7 +43,7 @@ class AudioEncoderCallback {
                                     AudioFrameSoundType sound_type,
                                     char *frame,
                                     int size,
-                                    u_int32_t ts) = 0;
+                                    int64_t ts) = 0;
 };
 
 class AudioEncoder {

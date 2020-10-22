@@ -9,6 +9,7 @@
 //
 
 #include "MediaFileReader.h"
+#include "ICodec.h"
 
 #include <common/CommonFunc.h>
 
@@ -18,8 +19,6 @@ extern "C" {
 #include <libavformat/avformat.h>
 }
 
-// 无效的Timestamp
-#define INVALID_TIMESTAMP 0xFFFFFFFF
 // 预加载时间
 #define PRE_READ_TIME_MS 1000
 
@@ -47,15 +46,17 @@ MediaFileReader::MediaFileReader() : mRuningMutex(KMutex::MutexType_Recursive) {
     mContext = NULL;
     mpMediaReaderRunnable = new MediaReaderRunnable(this);
 
-    mAudioStartTimestamp = INVALID_TIMESTAMP;
-    mAudioLastTimestamp = INVALID_TIMESTAMP;
-
-    mVideoStartTimestamp = INVALID_TIMESTAMP;
-    mVideoLastTimestamp = INVALID_TIMESTAMP;
-
+    mAudioStartTS = INVALID_TIMESTAMP;
+    mAudioLastTS = INVALID_TIMESTAMP;
+    
+    mVideoStartTS = INVALID_TIMESTAMP;
+    mVideoLastTS = INVALID_TIMESTAMP;
+    
     mPlaybackRate = 1.0f;
     mPlaybackRateChange = false;
     mCacheMS = PRE_READ_TIME_MS;
+    
+    mbFinish = true;
 }
 
 MediaFileReader::~MediaFileReader() {
@@ -75,14 +76,15 @@ bool MediaFileReader::PlayFile(const string &filePath) {
         Stop();
     }
 
+    mbFinish = false;
     mbRunning = true;
     mFilePath = filePath;
 
-    mAudioStartTimestamp = INVALID_TIMESTAMP;
-    mAudioLastTimestamp = INVALID_TIMESTAMP;
+    mAudioStartTS = INVALID_TIMESTAMP;
+    mAudioLastTS = INVALID_TIMESTAMP;
 
-    mVideoStartTimestamp = INVALID_TIMESTAMP;
-    mVideoLastTimestamp = INVALID_TIMESTAMP;
+    mVideoStartTS = INVALID_TIMESTAMP;
+    mVideoLastTS = INVALID_TIMESTAMP;
 
     // 开启文件读取线程
     mMediaReaderThread.Start(mpMediaReaderRunnable);
@@ -115,11 +117,6 @@ void MediaFileReader::Stop() {
 
         // 停止文件读取线程
         mMediaReaderThread.Stop();
-
-        if (mContext != NULL) {
-            avformat_close_input(&mContext);
-            mContext = NULL;
-        }
     }
     mRuningMutex.unlock();
 
@@ -143,6 +140,10 @@ void MediaFileReader::SetPlaybackRate(float playBackRate) {
 
 void MediaFileReader::SetCacheMS(int cacheMS) {
     mCacheMS = cacheMS;
+}
+
+bool MediaFileReader::IsFinish() {
+    return mbFinish;
 }
 
 void MediaFileReader::MediaReaderHandle() {
@@ -199,18 +200,27 @@ void MediaFileReader::MediaReaderHandle() {
         mVideoStreamIndex = av_find_best_stream(mContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
         if (mVideoStreamIndex >= 0) {
             AVStream *stream = mContext->streams[mVideoStreamIndex];
+            double duration = 1.0 * stream->duration * stream->time_base.num / stream->time_base.den;
+            int fps = (stream->avg_frame_rate.den != 0)?(stream->avg_frame_rate.num / stream->avg_frame_rate.den):0;
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "MediaFileReader::MediaReaderHandle( "
                          "this : %p, "
                          "[Video Stream Info], "
                          "duration : %.3f s, "
-                         "nb_frames : %lld "
+                         "nb_frames : %lld, "
+                         "fps : %lld "
                          ")",
                          this,
-                         1.0 * stream->duration * stream->time_base.num / stream->time_base.den,
-                         stream->nb_frames);
+                         duration,
+                         stream->nb_frames,
+                         fps
+                         );
 
+            if (mpCallback) {
+                mpCallback->OnMediaFileReaderInfo(this, duration, fps);
+            }
+            
             AVCodecContext *videoCtx = mContext->streams[mVideoStreamIndex]->codec;
             unsigned char *extradata = (unsigned char *)videoCtx->extradata;
             unsigned char *extradata_end = (unsigned char *)videoCtx->extradata + videoCtx->extradata_size;
@@ -360,9 +370,10 @@ void MediaFileReader::MediaReaderHandle() {
 
         while (mbRunning) {
             now = getCurrentTime();
-            unsigned int deltaTime = (unsigned int)(now - startTime);
-            unsigned int deltaTS = 0;
-
+            int64_t deltaTime = (unsigned int)(now - startTime);
+            int64_t deltaTS = 0;
+            bRead = true;
+            
             if (mPlaybackRateChange) {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_MSG,
@@ -376,18 +387,18 @@ void MediaFileReader::MediaReaderHandle() {
 
                 startTime = getCurrentTime();
 
-                mAudioStartTimestamp = INVALID_TIMESTAMP;
-                mAudioLastTimestamp = INVALID_TIMESTAMP;
-
-                mVideoStartTimestamp = INVALID_TIMESTAMP;
-                mVideoLastTimestamp = INVALID_TIMESTAMP;
+                mAudioStartTS = INVALID_TIMESTAMP;
+                mAudioLastTS = INVALID_TIMESTAMP;
+                
+                mVideoStartTS = INVALID_TIMESTAMP;
+                mVideoLastTS = INVALID_TIMESTAMP;
             }
 
-            if (mVideoStartTimestamp == INVALID_TIMESTAMP && mAudioStartTimestamp == INVALID_TIMESTAMP) {
+            if (mVideoStartTS == INVALID_TIMESTAMP && mAudioStartTS == INVALID_TIMESTAMP) {
                 bRead = true;
             } else {
-                unsigned int deltaAudioTS = mAudioLastTimestamp - mAudioStartTimestamp;
-                unsigned int deltaVideoTS = mVideoLastTimestamp - mVideoStartTimestamp;
+                int64_t deltaAudioTS = (mAudioStartTS == INVALID_TIMESTAMP)?0:(mAudioLastTS - mAudioStartTS);
+                int64_t deltaVideoTS = (mVideoStartTS == INVALID_TIMESTAMP)?0:(mVideoLastTS - mVideoStartTS);
 
                 if (mVideoStreamIndex >= 0 && mAudioStreamIndex >= 0) {
                     deltaTS = MIN(deltaAudioTS, deltaVideoTS);
@@ -398,9 +409,9 @@ void MediaFileReader::MediaReaderHandle() {
                 }
             }
 
-            if (deltaTime + mCacheMS > deltaTS / mPlaybackRate) {
-                bRead = true;
-            } else {
+            int64_t delta = deltaTime + mCacheMS;
+            deltaTS = deltaTS / mPlaybackRate;
+            if ( bRead && (delta < deltaTS) ) {
                 bRead = false;
             }
 
@@ -412,9 +423,9 @@ void MediaFileReader::MediaReaderHandle() {
                 
                 double time = 0;
                 if (pkt.stream_index == mVideoStreamIndex) {
-                    time = (pts - mVideoStartTimestamp) / 1000.0;
+                    time = (pts - mVideoStartTS) / 1000.0;
                 } else {
-                    time = (pts - mAudioStartTimestamp) / 1000.0;
+                    time = (pts - mAudioStartTS) / 1000.0;
                 }
                 
                 FileLevelLog("rtmpdump",
@@ -450,10 +461,11 @@ void MediaFileReader::MediaReaderHandle() {
                         mpCallback->OnMediaFileReaderVideoFrame(this, (const char *)pkt.data, pkt.size, dts, pts, video_type);
                     }
 
-                    if (mVideoStartTimestamp == INVALID_TIMESTAMP) {
-                        mVideoStartTimestamp = pts;
+                    if (mVideoStartTS == INVALID_TIMESTAMP) {
+                        mVideoStartTS = pts;
                     }
-                    mVideoLastTimestamp = pts;
+                    
+                    mVideoLastTS = pts;
 
                 } else if (pkt.stream_index == mAudioStreamIndex) {
                     if (mpCallback) {
@@ -461,10 +473,11 @@ void MediaFileReader::MediaReaderHandle() {
                                                                 AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, (audioCtx->channels == 2) ? AFST_STEREO : AFST_MONO);
                     }
 
-                    if (mAudioStartTimestamp == INVALID_TIMESTAMP) {
-                        mAudioStartTimestamp = pts;
+                    if (mAudioStartTS == INVALID_TIMESTAMP) {
+                        mAudioStartTS = pts;
                     }
-                    mAudioLastTimestamp = pts;
+                    
+                    mAudioLastTS = pts;
                 }
 
                 av_packet_unref(&pkt);
@@ -499,5 +512,7 @@ void MediaFileReader::MediaReaderHandle() {
                  "[Exit] "
                  ")",
                  this);
+    
+    mbFinish = true;
 }
 }

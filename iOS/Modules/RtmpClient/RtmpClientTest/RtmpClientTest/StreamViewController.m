@@ -27,6 +27,9 @@
 @property (assign) BOOL isScale;
 @property (assign) UIDeviceOrientation deviceOrientation;
 
+@property (strong) NSArray<FileItem *>* fileItemArray;
+@property (assign) NSInteger fileItemIndex;
+
 @end
 
 @implementation StreamViewController
@@ -195,9 +198,26 @@
     });
 }
 
+- (void)playerOnFastPlaybackError:(LiveStreamPlayer * _Nonnull)player {
+    NSLog(@"StreamViewController::playerOnFastPlaybackError()");
+}
+
 - (void)playerOnStats:(LiveStreamPlayer *_Nonnull)player fps:(unsigned int)fps bitrate:(unsigned int)bitrate {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.labelFps.text = [NSString stringWithFormat:@"fps:%u  %ukbps", fps, bitrate, nil];
+    });
+}
+
+- (void)playerOnFinish:(LiveStreamPlayer * _Nonnull)player {
+    NSLog(@"StreamViewController::playerOnFinish()");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ( self.fileItemArray.count > 0 ) {
+            self.fileItemIndex++;
+            self.fileItemIndex %= self.fileItemArray.count;
+            FileItem *fileItem = self.fileItemArray[self.fileItemIndex];
+            [self.player playFilePath:fileItem.filePath];
+        }
     });
 }
 
@@ -380,8 +400,19 @@
 
 #pragma mark - 播放本地文件
 - (void)didSelectFile:(FileItem *)fileItem {
-    self.player.cacheMS = 100;
+    self.fileItemArray = nil;
+    
+    self.player.cacheMS = 200;
     [self.player playFilePath:fileItem.filePath];
+}
+
+- (void)didSelectAllFile:(NSArray<FileItem *> *)fileItemArray {
+    self.fileItemArray = fileItemArray;
+    if ( self.fileItemArray.count > 0 ) {
+        self.fileItemIndex = arc4random() % self.fileItemArray.count;
+        FileItem *fileItem = self.fileItemArray[self.fileItemIndex];
+        [self.player playFilePath:fileItem.filePath];
+    }
 }
 
 @end

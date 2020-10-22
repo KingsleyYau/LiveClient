@@ -51,6 +51,8 @@ class Statistics {
 
     unsigned int Fps();
     unsigned int Bitrate();
+    void SetOriginalFps(unsigned int fps);
+    unsigned int OriginalFps();
     
   private:
     /**
@@ -80,12 +82,14 @@ class Statistics {
     unsigned int mVideoPlayFrameCountPre;
     long long mFpsTime;
     unsigned int mFps;
+    unsigned int mOriginalFps;
     
     // 统计码率
     long long mVideoRecvBytesPre;
     long long mVideoRecvBytes;
     long long mVideoBytesTime;
     unsigned int mBitrate;
+    
 };
     
 }

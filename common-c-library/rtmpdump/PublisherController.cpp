@@ -302,13 +302,13 @@ void PublisherController::ResumePushVideo() {
 }
 
 /*********************************************** 编码器回调处理 *****************************************************/
-void PublisherController::OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t ts) {
+void PublisherController::OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, int64_t ts) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeVideoFrame( "
                  "this : %p, "
                  "frameType : 0x%02x, "
-                 "ts : %u, "
+                 "ts : %lld, "
                  "size : %d "
                  ")",
                  this,
@@ -331,12 +331,12 @@ void PublisherController::OnEncodeAudioFrame(
     AudioFrameSoundType sound_type,
     char *frame,
     int size,
-    u_int32_t ts) {
+    int64_t ts) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeAudioFrame( "
                  "this : %p, "
-                 "ts : %u, "
+                 "ts : %lld, "
                  "size : %d "
                  ")",
                  this,

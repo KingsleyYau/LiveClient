@@ -41,7 +41,7 @@ public:
     
 public:
     int mBufferLen;             // 数据已用长度
-    unsigned int mTimestamp;    // 帧时间戳
+    int64_t mTS;    // 帧时间戳
     
 private:
     // 释放空间

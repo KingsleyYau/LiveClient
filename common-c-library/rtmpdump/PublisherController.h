@@ -126,7 +126,7 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
 
   private:
     // 编码器回调
-    void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, u_int32_t ts);
+    void OnEncodeVideoFrame(VideoEncoder *encoder, char *data, int size, int64_t ts);
     void OnEncodeAudioFrame(AudioEncoder *encoder,
                             AudioFrameFormat format,
                             AudioFrameSoundRate sound_rate,
@@ -134,7 +134,7 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
                             AudioFrameSoundType sound_type,
                             char *frame,
                             int size,
-                            u_int32_t ts);
+                            int64_t ts);
 
   private:
     // 传输器回调

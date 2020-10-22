@@ -47,7 +47,7 @@ class AudioDecoderAAC : public AudioDecoder {
         AudioFrameSoundType sound_type,
         const char *data,
         int size,
-        u_int32_t timestamp);
+        int64_t ts);
     void ReleaseAudioFrame(void *frame);
     void ClearAudioFrame();
 

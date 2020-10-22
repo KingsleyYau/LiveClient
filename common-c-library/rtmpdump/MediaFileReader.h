@@ -30,9 +30,10 @@ class MediaReaderRunnable;
 class MediaFileReaderCallback {
   public:
     virtual ~MediaFileReaderCallback(){};
+    virtual void OnMediaFileReaderInfo(MediaFileReader *mfr, double duration, int fps) = 0;
     virtual void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps = NULL, int vps_size = 0) = 0;
-    virtual void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) = 0;
-    virtual void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+    virtual void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) = 0;
+    virtual void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, int64_t ts,
                                              AudioFrameFormat format,
                                              AudioFrameSoundRate sound_rate,
                                              AudioFrameSoundSize sound_size,
@@ -77,6 +78,8 @@ class MediaFileReader {
      */
     void SetCacheMS(int cacheMS);
     
+    bool IsFinish();
+    
   private:
     // 文件读取线程实现体
     friend class MediaReaderRunnable;
@@ -92,17 +95,17 @@ class MediaFileReader {
     // 视频流序号
     int mVideoStreamIndex;
     // 视频开始时间戳
-    int mVideoStartTimestamp;
+    int64_t mVideoStartTS;
     // 视频最新时间戳
-    int mVideoLastTimestamp;
-
+    int64_t mVideoLastTS;
+    
     // 音频流序号
     int mAudioStreamIndex;
     // 音频开始时间戳
-    int mAudioStartTimestamp;
+    int64_t mAudioStartTS;
     // 音频最新时间戳
-    int mAudioLastTimestamp;
-
+    int64_t mAudioLastTS;
+    
     // 文件路径
     string mFilePath;
 
@@ -120,6 +123,9 @@ class MediaFileReader {
     
     // 预加载缓存时间(毫秒)
     unsigned int mCacheMS;
+    
+    // 是否读取完成
+    bool mbFinish;
 };
 }
 

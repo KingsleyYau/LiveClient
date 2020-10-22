@@ -124,7 +124,7 @@ bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFra
                  "width : %d, "
                  "height : %d, "
                  "size : %d, "
-                 "timestamp : %u, "
+                 "ts : %lld, "
                  "handleTime : %lld "
                  ")",
                  bFlag ? "Success" : "Fail",
@@ -134,7 +134,7 @@ bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFra
                  dstFrame->mWidth,
                  dstFrame->mHeight,
                  dstFrame->mBufferLen,
-                 dstFrame->mTimestamp,
+                 dstFrame->mTS,
                  handleTime);
 
     return bChangeSize;

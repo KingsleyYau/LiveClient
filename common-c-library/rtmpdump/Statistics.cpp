@@ -39,6 +39,7 @@ void Statistics::Start() {
     mVideoPlayFrameCountPre = 0;
     mFpsTime = 0;
     mFps = 0;
+    mOriginalFps = 0;
     
     mVideoRecvBytesPre = 0;
     mVideoRecvBytes = 0;
@@ -59,6 +60,16 @@ void Statistics::Stop() {
     mVideoPlayFrameCount = 0;
     mAudioRecvFrameCount = 0;
     mAudioPlayFrameCount = 0;
+    
+    mVideoPlayFrameCountPre = 0;
+    mFpsTime = 0;
+    mFps = 0;
+    mOriginalFps = 0;
+    
+    mVideoRecvBytesPre = 0;
+    mVideoRecvBytes = 0;
+    mVideoBytesTime = 0;
+    mBitrate = 0;
     mStatusMutex.unlock();
 }
 
@@ -191,4 +202,13 @@ unsigned int Statistics::Fps() {
 unsigned int Statistics::Bitrate() {
     return mBitrate;
 }
+
+void Statistics::SetOriginalFps(unsigned int fps) {
+    mOriginalFps = fps;
+}
+
+unsigned int Statistics::OriginalFps() {
+    return mOriginalFps;
+}
+
 }

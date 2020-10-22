@@ -18,12 +18,12 @@ class FrameBuffer
 {
 public:
     FrameBuffer();
-    FrameBuffer(void* frame, unsigned int timestamp);
+    FrameBuffer(void* frame, int64_t timestamp);
     ~FrameBuffer();
     
 public:
     void* mpFrame;
-    unsigned int mTS;    // 帧时间戳
+    int64_t mTS;    // 帧时间戳
 };
 
 // list define

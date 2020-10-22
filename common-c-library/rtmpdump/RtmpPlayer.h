@@ -26,10 +26,10 @@ class RtmpPlayerCallback {
   public:
     virtual ~RtmpPlayerCallback(){};
 
-    virtual void OnPlayVideoFrame(RtmpPlayer *player, void *frame) = 0;
-    virtual void OnDropVideoFrame(RtmpPlayer *player, void *frame) = 0;
-    virtual void OnPlayAudioFrame(RtmpPlayer *player, void *frame) = 0;
-    virtual void OnDropAudioFrame(RtmpPlayer *player, void *frame) = 0;
+    virtual void OnPlayVideoFrame(RtmpPlayer *player, void *frame, int64_t ts) = 0;
+    virtual void OnDropVideoFrame(RtmpPlayer *player, void *frame, int64_t ts) = 0;
+    virtual void OnPlayAudioFrame(RtmpPlayer *player, void *frame, int64_t ts) = 0;
+    virtual void OnDropAudioFrame(RtmpPlayer *player, void *frame, int64_t ts) = 0;
     virtual void OnResetVideoStream(RtmpPlayer *player) = 0;
     virtual void OnResetAudioStream(RtmpPlayer *player) = 0;
     virtual void OnDelayMaxTime(RtmpPlayer *player) = 0;
@@ -65,7 +65,7 @@ class RtmpPlayer {
      @param frame 视频帧
      @param ts 时间戳
      */
-    void PushVideoFrame(void *frame, u_int32_t ts);
+    void PushVideoFrame(void *frame, int64_t ts);
 
     /**
      播放一个音频帧
@@ -73,7 +73,7 @@ class RtmpPlayer {
      @param frame 音频帧
      @param ts 时间戳
      */
-    void PushAudioFrame(void *frame, u_int32_t ts);
+    void PushAudioFrame(void *frame, int64_t ts);
 
     /**
      获取回调
@@ -99,7 +99,7 @@ class RtmpPlayer {
   public:
     void SetRtmpDump(RtmpDump *rtmpDump);
     void SetCallback(RtmpPlayerCallback *callback);
-    void SetCacheMS(int cacheMS);
+    void SetCacheMS(unsigned int cacheMS);
     int CahceMS() const;
     void SetCacheNoLimit(bool bNoCacheLimit);
     void SetPlaybackRate(float playBackRate);
@@ -113,7 +113,7 @@ class RtmpPlayer {
     // 缓存时间是否足够
     bool IsCacheEnough();
     // 是否重置播放流
-    bool IsRestStream(FrameBuffer *frame, unsigned int preTS);
+    bool IsRestStream(FrameBuffer *frame, int64_t preTS);
     // 是否开始播放
     bool IsPlay(bool isAudio);
     // 没有需要播放的Buffer
@@ -172,11 +172,11 @@ class RtmpPlayer {
     // 音频开播时间戳
     bool mbAudioStartPlay;
     // 当前缓存的视频时间戳
-    int mVideoFrontTS;
-    int mVideoBackTS;
+    int64_t mVideoFrontTS;
+    int64_t mVideoBackTS;
     // 当前缓存的音频时间戳
-    int mAudioFrontTS;
-    int mAudioBackTS;
+    int64_t mAudioFrontTS;
+    int64_t mAudioBackTS;
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;

@@ -17,7 +17,7 @@ EncodeDecodeBuffer::EncodeDecodeBuffer()
     mBuffer = NULL;
     mBufferLen = 0;
     mBufferSize = 0;
-    mTimestamp = 0;
+    mTS = 0;
 }
 
 EncodeDecodeBuffer::~EncodeDecodeBuffer()
@@ -33,7 +33,7 @@ EncodeDecodeBuffer::EncodeDecodeBuffer(const EncodeDecodeBuffer& item) {
     mBufferLen = 0;
     mBufferSize = 0;
 
-    mTimestamp = item.mTimestamp;
+    mTS = item.mTS;
 }
     
 EncodeDecodeBuffer& EncodeDecodeBuffer::operator=(const EncodeDecodeBuffer& item) {
@@ -41,7 +41,7 @@ EncodeDecodeBuffer& EncodeDecodeBuffer::operator=(const EncodeDecodeBuffer& item
         return *this;
     }
     
-    mTimestamp = item.mTimestamp;
+    mTS = item.mTS;
     
     return *this;
 }
@@ -89,7 +89,7 @@ bool EncodeDecodeBuffer::AddBuffer(const unsigned char* buffer, int bufferLen)
 void EncodeDecodeBuffer::ResetBuffer()
 {
     mBufferLen = 0;
-    mTimestamp = 0;
+    mTS = 0;
 }
 
 void EncodeDecodeBuffer::FillBufferWithChar(char c) {

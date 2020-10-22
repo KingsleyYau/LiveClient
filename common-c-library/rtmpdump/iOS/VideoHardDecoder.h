@@ -33,9 +33,9 @@ public:
     void ResetStream();
     void DecodeVideoKeyFrame(const char* sps, int sps_size,
                              const char* pps, int pps_size,
-                             int naluHeaderSize, u_int32_t ts,
+                             int naluHeaderSize, int64_t ts,
                              const char *vps = NULL, int vps_size = 0);
-    void DecodeVideoFrame(const char* data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type);
+    void DecodeVideoFrame(const char* data, int size, int64_t dts, int64_t pts, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
     void ClearVideoFrame();
@@ -52,7 +52,7 @@ private:
                                      CMTime presentationDuration
                                      );
     // 硬解码回调
-    void DecodeCallbackProc(void* frame, u_int32_t ts, bool bFlag = true);
+    void DecodeCallbackProc(void* frame, int64_t ts, bool bFlag = true);
     
 private:
     void ResetParam();

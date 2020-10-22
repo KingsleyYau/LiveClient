@@ -17,6 +17,8 @@ extern "C" {
 #include <libavformat/avformat.h>
 }
 
+#define MAX_ORIGINAL_FPS 60
+
 namespace coollive {
 PlayerController::PlayerController() {
     mpVideoRenderer = NULL;
@@ -33,6 +35,9 @@ PlayerController::PlayerController() {
     mbNeedResetAudioRenderer = false;
     mbIsPlayFile = false;
 
+    mLastFileTS = INVALID_TIMESTAMP;
+    mPlaybackRate = 1.0;
+    
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
     mRtmpPlayer.SetCallback(this);
@@ -56,10 +61,32 @@ void PlayerController::SetCacheMS(int cacheMS) {
                  this,
                  cacheMS);
     mRtmpPlayer.SetCacheMS(cacheMS);
-    mFileReader.SetCacheMS(cacheMS);
+    mFileReader.SetCacheMS(cacheMS + 300);
 }
 
-void PlayerController::SetPlaybackRate(float playbackRate) {
+void PlayerController::SetPlaybackRate(double playbackRate) {
+    if (playbackRate >= 0.5 && playbackRate <= 2.0) {
+        mPlaybackRate = playbackRate;
+        AutoFixPlaybackRate();
+    }
+}
+
+void PlayerController::AutoFixPlaybackRate() {
+    double maxPlaybackRate = (mStatistics.OriginalFps() > 0)?(1.0 * MAX_ORIGINAL_FPS / mStatistics.OriginalFps()):1.0;
+    double playbackRate = MIN(mPlaybackRate, maxPlaybackRate);
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::AutoFixPlaybackRate( "
+                 "this : %p, "
+                 "mPlaybackRate : %.2f, "
+                 "playbackRate : %.2f, "
+                 "maxPlaybackRate : %.2f "
+                 ")",
+                 this,
+                 mPlaybackRate,
+                 playbackRate,
+                 maxPlaybackRate);
     mRtmpPlayer.SetPlaybackRate(playbackRate);
     mFileReader.SetPlaybackRate(playbackRate);
     mpAudioRenderer->SetPlaybackRate(playbackRate);
@@ -114,6 +141,9 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
     // 重置加速
     SetPlaybackRate(1.0f);
     
+    mbIsPlayFile = false;
+    mLastFileTS = INVALID_TIMESTAMP;
+    
     // 重置分析器
     mStatistics.Start();
     // 重置解码器
@@ -143,8 +173,6 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
         // 开始连接
         bFlag = mRtmpDump.PlayUrl(url, recordFilePath);
     }
-
-    mbIsPlayFile = false;
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -172,6 +200,9 @@ bool PlayerController::PlayFile(const string &filePath) {
                  this,
                  filePath.c_str());
 
+    mbIsPlayFile = true;
+    mLastFileTS = INVALID_TIMESTAMP;
+    
     // 重置分析器
     mStatistics.Start();
     // 重置解码器
@@ -192,8 +223,6 @@ bool PlayerController::PlayFile(const string &filePath) {
         mRtmpPlayer.SetCacheNoLimit(true);
         bFlag = mRtmpPlayer.PlayUrl("");
     }
-
-    mbIsPlayFile = true;
     bFlag = mFileReader.PlayFile(filePath);
 
     FileLevelLog("rtmpdump",
@@ -231,7 +260,6 @@ void PlayerController::Stop() {
     if (mpAudioDecoder) {
         mpAudioDecoder->Pause();
     }
-
     // 停止播放
     mRtmpPlayer.Stop();
 
@@ -416,9 +444,9 @@ void PlayerController::OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned i
     }
 }
 
-void PlayerController::OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp) {
+void PlayerController::OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, int64_t ts) {
     // 播放视频帧
-    mRtmpPlayer.PushVideoFrame(frame, timestamp);
+    mRtmpPlayer.PushVideoFrame(frame, ts);
 }
 
 void PlayerController::OnDecodeVideoError(VideoDecoder *decoder) {
@@ -435,9 +463,9 @@ void PlayerController::OnDecodeVideoError(VideoDecoder *decoder) {
     }
 }
 
-void PlayerController::OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp) {
+void PlayerController::OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, int64_t ts) {
     // 播放音频帧
-    mRtmpPlayer.PushAudioFrame(frame, timestamp);
+    mRtmpPlayer.PushAudioFrame(frame, ts);
 }
 
 void PlayerController::OnDecodeAudioError(AudioDecoder *decoder) {
@@ -457,7 +485,7 @@ void PlayerController::OnDecodeAudioError(AudioDecoder *decoder) {
 /*********************************************** 解码器回调处理 End *****************************************************/
 
 /*********************************************** 播放器回调处理 *****************************************************/
-void PlayerController::OnPlayVideoFrame(RtmpPlayer *player, void *frame) {
+void PlayerController::OnPlayVideoFrame(RtmpPlayer *player, void *frame, int64_t ts) {
     if (mpVideoRenderer) {
         mpVideoRenderer->RenderVideoFrame(frame);
     }
@@ -472,9 +500,22 @@ void PlayerController::OnPlayVideoFrame(RtmpPlayer *player, void *frame) {
     if ( mpPlayerStatusCallback && bChange ) {
         mpPlayerStatusCallback->OnPlayerStats(this, mStatistics.Fps(), mStatistics.Bitrate());
     }
+    
+    if ( mpPlayerStatusCallback && mbIsPlayFile && ts >= mLastFileTS && mFileReader.IsFinish() ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "PlayerController::OnPlayVideoFrame( "
+                     "this : %p, "
+                     "[Play Finish], "
+                     "ts : %lld "
+                     ")",
+                     this,
+                     ts);
+        mpPlayerStatusCallback->OnPlayerFinish(this);
+    }
 }
 
-void PlayerController::OnDropVideoFrame(RtmpPlayer *player, void *frame) {
+void PlayerController::OnDropVideoFrame(RtmpPlayer *player, void *frame, int64_t ts) {
     if (mbSkipDelayFrame) {
         // 需要丢的帧不显示, 效果为[瞬间移动]
 
@@ -492,9 +533,22 @@ void PlayerController::OnDropVideoFrame(RtmpPlayer *player, void *frame) {
 
     // 增加分析处理
     mStatistics.AddVideoPlayFrame();
+    
+    if ( mpPlayerStatusCallback && mbIsPlayFile && ts >= mLastFileTS && mFileReader.IsFinish()) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "PlayerController::OnDropVideoFrame( "
+                     "this : %p, "
+                     "[Play Finish], "
+                     "ts : %lld "
+                     ")",
+                     this,
+                     ts);
+        mpPlayerStatusCallback->OnPlayerFinish(this);
+    }
 }
 
-void PlayerController::OnPlayAudioFrame(RtmpPlayer *player, void *frame) {
+void PlayerController::OnPlayAudioFrame(RtmpPlayer *player, void *frame, int64_t ts) {
     if (mbNeedResetAudioRenderer) {
         if (mpAudioRenderer) {
             mpAudioRenderer->Reset();
@@ -513,9 +567,22 @@ void PlayerController::OnPlayAudioFrame(RtmpPlayer *player, void *frame) {
 
     // 增加分析处理
     mStatistics.AddAudioPlayFrame();
+    
+    if ( mpPlayerStatusCallback && mbIsPlayFile && ts >= mLastFileTS && mFileReader.IsFinish() ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "PlayerController::OnPlayAudioFrame( "
+                     "this : %p, "
+                     "[Play Finish], "
+                     "ts : %lld "
+                     ")",
+                     this,
+                     ts);
+        mpPlayerStatusCallback->OnPlayerFinish(this);
+    }
 }
 
-void PlayerController::OnDropAudioFrame(RtmpPlayer *player, void *frame) {
+void PlayerController::OnDropAudioFrame(RtmpPlayer *player, void *frame, int64_t ts) {
     // 标记需要重置
     mbNeedResetAudioRenderer = true;
 
@@ -526,6 +593,19 @@ void PlayerController::OnDropAudioFrame(RtmpPlayer *player, void *frame) {
 
     // 增加分析处理
     mStatistics.AddAudioPlayFrame();
+    
+    if ( mpPlayerStatusCallback && mbIsPlayFile && ts >= mLastFileTS && mFileReader.IsFinish() ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "PlayerController::OnDropAudioFrame( "
+                     "this : %p, "
+                     "[Play Finish], "
+                     "ts : %lld "
+                     ")",
+                     this,
+                     ts);
+        mpPlayerStatusCallback->OnPlayerFinish(this);
+    }
 }
 
 void PlayerController::OnResetVideoStream(RtmpPlayer *player) {
@@ -612,6 +692,16 @@ void PlayerController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                  userName.c_str());
 }
 /*********************************************** 播放器回调处理 End *****************************************************/
+void PlayerController::OnMediaFileReaderInfo(MediaFileReader *mfr, double duration, int fps) {
+    mStatistics.SetOriginalFps(fps);
+    AutoFixPlaybackRate();
+    if (fps > MAX_ORIGINAL_FPS) {
+        if (mpPlayerStatusCallback) {
+            mpPlayerStatusCallback->OnPlayerFastPlaybackError(this);
+        }
+    }
+}
+
 void PlayerController::OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps, int vps_size) {
     // 解码视关键帧频帧
     if (mpVideoDecoder) {
@@ -619,23 +709,33 @@ void PlayerController::OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const
     }
 }
 
-void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) {
+void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) {
     // 解码视频帧
     if (mpVideoDecoder) {
         mpVideoDecoder->DecodeVideoFrame(data, size, dts, pts, video_type);
     }
+    
+    if ( mLastFileTS == INVALID_TIMESTAMP ) {
+        mLastFileTS = dts;
+    }
+    mLastFileTS = MAX(mLastFileTS, dts);
 }
 
 void PlayerController::OnMediaFileReaderAudioFrame(
-    MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+    MediaFileReader *mfr, const char *data, int size, int64_t ts,
     AudioFrameFormat format,
     AudioFrameSoundRate sound_rate,
     AudioFrameSoundSize sound_size,
     AudioFrameSoundType sound_type) {
     // 解码音频帧
     if (mpAudioDecoder) {
-        mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);
+        mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, ts);
     }
+    
+    if ( mLastFileTS == INVALID_TIMESTAMP ) {
+        mLastFileTS = ts;
+    }
+    mLastFileTS = MAX(mLastFileTS, ts);
 }
 
 bool PlayerController::SendCmdLogin(const string& userName, const string& password, const string& siteId) {

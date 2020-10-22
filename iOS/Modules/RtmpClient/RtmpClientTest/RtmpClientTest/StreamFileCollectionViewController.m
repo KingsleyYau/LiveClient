@@ -29,6 +29,9 @@
 
     self.title = @"File List";
 
+    UIBarButtonItem *selectAllBarItem = [[UIBarButtonItem alloc] initWithTitle:@"All" style:UIBarButtonItemStyleDone target:self action:@selector(selectAll:)];
+    self.navigationItem.rightBarButtonItem = selectAllBarItem;
+    
     [self setupCollectionView];
 
     self.items = [NSMutableArray array];
@@ -99,6 +102,13 @@
 #pragma mark - 数据逻辑
 - (void)reloadData {
     [self.collectionView reloadData];
+}
+
+- (void)selectAll:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(didSelectAllFile:)]) {
+        [self.delegate didSelectAllFile:self.items];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - (UICollectionViewDataSource)

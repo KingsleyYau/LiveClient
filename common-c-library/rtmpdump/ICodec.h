@@ -8,6 +8,10 @@
 #ifndef RTMPDUMP_ICODEC_H_
 #define RTMPDUMP_ICODEC_H_
 
+// 无效的TS
+#define INVALID_TIMESTAMP 0x7FFFFFFFFFFFFFFF
+#define START_TIMESTAMP 0x0
+
 namespace coollive {
 // 原始视频数据格式
 typedef enum VIDEO_FORMATE_TYPE {

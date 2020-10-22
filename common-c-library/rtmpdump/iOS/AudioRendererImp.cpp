@@ -233,20 +233,22 @@ bool AudioRendererImp::Create(void *frame) {
     if ( (mAsbd.mChannelsPerFrame != asbd.mChannelsPerFrame) || mAudioQueueNeedChange ) {
         mAudioQueueNeedChange = false;
         if( mAudioQueue ) {
+            AudioQueueFlush(mAudioQueue);
             AudioQueueReset(mAudioQueue);
+            AudioQueueStop(mAudioQueue, YES);
+            
             mAudioBufferList.lock();
-            while( !mAudioBufferList.empty() ) {
-                AudioQueueFlush(mAudioQueue);
-                AudioQueueReset(mAudioQueue);
-                AudioQueueBufferRef audioBuffer = mAudioBufferList.front();
-                if( audioBuffer != NULL ) {
-                    mAudioBufferList.pop_front();
-                    // 释放内存
-                    AudioQueueFreeBuffer(mAudioQueue, audioBuffer);
-                } else {
-                    break;
-                }
-            }
+            mAudioBufferList.clear();
+//            while( !mAudioBufferList.empty() ) {
+//                AudioQueueBufferRef audioBuffer = mAudioBufferList.front();
+//                if( audioBuffer != NULL ) {
+//                    mAudioBufferList.pop_front();
+//                    // 释放内存
+//                    AudioQueueFreeBuffer(mAudioQueue, audioBuffer);
+//                } else {
+//                    break;
+//                }
+//            }
             mAudioBufferList.unlock();
             AudioQueueDispose(mAudioQueue, YES);
             mAudioQueue = NULL;

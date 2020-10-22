@@ -65,7 +65,6 @@
     NSAssert(result == kCVReturnSuccess, @"CVOpenGLESTextureCacheCreateTextureFromImage error: %@",@(result));
 
     if (result == kCVReturnSuccess && textureRef) {
-        
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(CVOpenGLESTextureGetTarget(textureRef), CVOpenGLESTextureGetName(textureRef));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

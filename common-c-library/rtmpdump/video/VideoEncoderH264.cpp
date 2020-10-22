@@ -378,7 +378,7 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFra
     yuvFrame->height = mContext->height;
 
     yuvFrame->pts = mPts++;
-    dstFrame->mTimestamp = (unsigned int)floor(1000.0 * yuvFrame->pts / mContext->time_base.den);
+    dstFrame->mTS = (int64_t)floor(1000.0 * yuvFrame->pts / mContext->time_base.den);
 
     // 编码帧
     int bGotFrame = 0;
@@ -395,13 +395,13 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFra
         "[Encode Frame], "
         "srcFrame : %p, "
         "dstFrame : %p, "
-        "timestamp : %u, "
+        "ts : %lld, "
         "handleTime : %lld "
         ")",
         this,
         srcFrame,
         dstFrame,
-        dstFrame->mTimestamp,
+        dstFrame->mTS,
         handleTime);
 
     if (ret >= 0 && bGotFrame) {
@@ -416,14 +416,14 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFra
             "[Got Video Frame], "
             "srcFrame : %p, "
             "dstFrame : %p, "
-            "timestamp : %u, "
+            "ts : %lld, "
             "frameSize : %d, "
             "handleTime : %lld "
             ")",
             this,
             srcFrame,
             dstFrame,
-            dstFrame->mTimestamp,
+            dstFrame->mTS,
             pkt.size,
             handleTime);
 
@@ -868,7 +868,7 @@ void VideoEncoderH264::EncodeVideoHandle() {
 
                     // 回调编码成功
                     if (NULL != mpCallback) {
-                        mpCallback->OnEncodeVideoFrame(this, naluStart, naluSize, dstFrame->mTimestamp);
+                        mpCallback->OnEncodeVideoFrame(this, naluStart, naluSize, dstFrame->mTS);
                     }
 
                     // 数据下标偏移

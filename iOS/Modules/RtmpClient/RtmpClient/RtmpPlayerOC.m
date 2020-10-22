@@ -196,6 +196,18 @@ public:
         }
     }
     
+    void OnPlayerFastPlaybackError(PlayerController *pc) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnFastPlaybackError:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnFastPlaybackError:mpRtmpPlayerOC];
+        }
+    }
+    
+    void OnPlayerFinish(PlayerController *pc) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnFinish:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnFinish:mpRtmpPlayerOC];
+        }
+    }
+    
 private:
     __weak typeof(RtmpPlayerOC) *mpRtmpPlayerOC;
 };

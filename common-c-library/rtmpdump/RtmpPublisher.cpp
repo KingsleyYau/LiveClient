@@ -172,7 +172,7 @@ void RtmpPublisher::Stop() {
                  this);
 }
 
-void RtmpPublisher::SendVideoFrame(char *data, int size, u_int32_t timestamp) {
+void RtmpPublisher::SendVideoFrame(char *data, int size, int64_t ts) {
     mClientMutex.lock();
 
     if (mbRunning) {
@@ -196,7 +196,7 @@ void RtmpPublisher::SendVideoFrame(char *data, int size, u_int32_t timestamp) {
 
         if (videoFrame) {
             videoFrame->SetBuffer((const unsigned char *)data, size);
-            videoFrame->mTimestamp = timestamp;
+            videoFrame->mTS = ts;
 
             mVideoBufferList.lock();
             mVideoBufferList.push_back(videoFrame);
@@ -214,7 +214,7 @@ void RtmpPublisher::SendAudioFrame(
     AudioFrameSoundType sound_type,
     char *data,
     int size,
-    u_int32_t timestamp) {
+    int64_t ts) {
     mClientMutex.lock();
 
     if (mbRunning) {
@@ -236,7 +236,7 @@ void RtmpPublisher::SendAudioFrame(
         if (audioFrame) {
             audioFrame->InitFrame(sound_format, sound_rate, sound_size, sound_type);
             audioFrame->SetBuffer((const unsigned char *)data, size);
-            audioFrame->mTimestamp = timestamp;
+            audioFrame->mTS = ts;
 
             mAudioBufferList.lock();
             mAudioBufferList.push_back(audioFrame);
@@ -276,19 +276,19 @@ void RtmpPublisher::PublishHandle() {
                          "this : %p, "
                          "[Send Video Frame], "
                          "frame : %p, "
-                         "timestamp : %u, "
+                         "ts : %lld, "
                          "frameType : 0x%x, "
                          "mVideoBufferList : %u "
                          ")",
                          this,
                          videoFrame,
-                         videoFrame->mTimestamp,
+                         videoFrame->mTS,
                          videoFrame->GetBuffer()[0],
                          mVideoBufferList.size()
                          );
 
             if (mpRtmpDump) {
-                mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTimestamp);
+                mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTS);
             }
 
             // 回收资源
@@ -323,12 +323,12 @@ void RtmpPublisher::PublishHandle() {
                          "this : %p, "
                          "[Send Audio Frame], "
                          "frame : %p, "
-                         "timestamp : %u, "
+                         "ts : %lld, "
                          "mAudioBufferList : %u "
                          ")",
                          this,
                          audioFrame,
-                         audioFrame->mTimestamp,
+                         audioFrame->mTS,
                          mAudioBufferList.size()
                          );
 
@@ -339,7 +339,7 @@ void RtmpPublisher::PublishHandle() {
                                            audioFrame->mSoundType,
                                            (char *)audioFrame->GetBuffer(),
                                            audioFrame->mBufferLen,
-                                           audioFrame->mTimestamp);
+                                           audioFrame->mTS);
             }
 
             // 回收资源

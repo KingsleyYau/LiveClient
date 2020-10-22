@@ -47,10 +47,10 @@ class RtmpPublisher {
     /**
      发送原始h264视频帧
      
-     @param data <#frame description#>
-     @param size <#frame_size description#>
+     @param data 帧数据
+     @param size 帧大小
      */
-    void SendVideoFrame(char *data, int size, u_int32_t timestamp);
+    void SendVideoFrame(char *data, int size, int64_t ts);
 
     /**
      发送原始音频帧
@@ -68,7 +68,7 @@ class RtmpPublisher {
                         AudioFrameSoundType sound_type,
                         char *data,
                         int size,
-                        u_int32_t timestamp);
+                        int64_t ts);
 
   public:
     void SetRtmpDump(RtmpDump *rtmpDump);

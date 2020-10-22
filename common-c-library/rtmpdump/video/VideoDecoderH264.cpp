@@ -181,11 +181,11 @@ void VideoDecoderH264::ReleaseVideoFrame(void *frame) {
                  "VideoDecoderH264::ReleaseVideoFrame( "
                  "this : %p, "
                  "videoFrame : %p, "
-                 "timestamp : %u "
+                 "ts : %lld "
                  ")",
                  this,
                  videoFrame,
-                 videoFrame->mTimestamp);
+                 videoFrame->mTS);
 
     mFreeBufferList.lock();
     if (mFreeBufferList.size() >= DEFAULT_VIDEO_BUFFER_MAX_COUNT) {
@@ -389,7 +389,7 @@ void VideoDecoderH264::DestroyContext() {
     }
 }
 
-void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t timestamp, const char *vps, int vps_size) {
+void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, int64_t ts, const char *vps, int vps_size) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoDecoderH264::DecodeVideoKeyFrame( "
@@ -401,7 +401,7 @@ void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  "vps : %p, "
                  "vps_size : %d, "
                  "naluHeaderSize : %d, "
-                 "timestamp : %u "
+                 "ts : %lld "
                  ")",
                  this,
                  sps,
@@ -411,7 +411,7 @@ void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  vps,
                  vps_size,
                  naluHeaderSize,
-                 timestamp);
+                 ts);
 
     mNaluHeaderSize = naluHeaderSize;
 
@@ -443,7 +443,7 @@ void VideoDecoderH264::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
     mSPS_PPS_IDR.AddBuffer((const unsigned char *)pps, pps_size);
 }
 
-void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) {
+void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) {
     mFreeBufferList.lock();
     VideoFrame *videoFrame = NULL;
     if (!mFreeBufferList.empty()) {
@@ -466,7 +466,7 @@ void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t dt
 
     // 更新数据格式, 因为ffmpeg里面会对帧重排序, 所以将DTS记录为时间戳
     videoFrame->ResetFrame();
-    videoFrame->mTimestamp = dts;
+    videoFrame->mTS = dts;
     videoFrame->mVideoType = video_type;
     //    videoFrame->SetBuffer((const unsigned char*)data, size);
 
@@ -480,7 +480,7 @@ void VideoDecoderH264::DecodeVideoFrame(const char *data, int size, u_int32_t dt
                      "VideoDecoderH264::DecodeVideoFrame( "
                      "this : %p, "
                      "[Got Nalu Array], "
-                     "ts : %u, "
+                     "ts : %lld, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
@@ -553,11 +553,11 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame *videoFrame, VideoFrame *newV
                     "VideoDecoderH264::DecodeVideoFrame( "
                     "this : %p, "
                     "[Got Key Frame], "
-                    "timestamp : %u, "
+                    "ts : %lld, "
                     "frameSize : %d "
                     ")",
                     this,
-                    newVideoFrame->mTimestamp,
+                    newVideoFrame->mTS,
                     frameSize);
 
         } else {
@@ -631,13 +631,13 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame *videoFrame, VideoFrame *newV
                 "[Decode Frame Error], "
                 "srcFrame : %p, "
                 "dstFrame : %p, "
-                "timestamp : %u, "
+                "ts : %lld, "
                 "error : %ld "
                 ")",
                 this,
                 videoFrame,
                 newVideoFrame,
-                newVideoFrame->mTimestamp,
+                newVideoFrame->mTS,
                 useLen
                 );
         }
@@ -653,13 +653,13 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame *videoFrame, VideoFrame *newV
             "[Decode Frame], "
             "srcFrame : %p, "
             "dstFrame : %p, "
-            "timestamp : %u, "
+            "ts : %lld, "
             "handleTime : %lld "
             ")",
             this,
             videoFrame,
             newVideoFrame,
-            newVideoFrame->mTimestamp,
+            newVideoFrame->mTS,
             handleTime);
 
         if (bGotPPS) {
@@ -761,11 +761,11 @@ void VideoDecoderH264::DecodeVideoHandle() {
     VideoFrame *dstFrame = NULL;
 
     // 开始解码帧时间戳
-    unsigned int startTimestamp = 0;
+    int64_t startTS = 0;
     // 上一帧视频播放时间戳
-    unsigned int preTimestamp = 0;
+    int64_t preTS = 0;
     // 当前帧时间
-    unsigned int timestamp = 0;
+    int64_t ts = 0;
     // 开始解码时间
     long long startDecodeTime = 0;
     // 解码总用时
@@ -784,7 +784,7 @@ void VideoDecoderH264::DecodeVideoHandle() {
         bFlag = false;
         srcFrame = NULL;
         dstFrame = NULL;
-        timestamp = 0;
+        ts = 0;
         decodeTime = 0;
 
         mDecodeBufferList.lock();
@@ -795,27 +795,27 @@ void VideoDecoderH264::DecodeVideoHandle() {
                 mDecodeBufferList.pop_front();
 
                 long long curTime = getCurrentTime();
-                timestamp = srcFrame->mTimestamp;
+                ts = srcFrame->mTS;
 
                 // 更新开始帧时间戳
-                if (preTimestamp == 0 || preTimestamp >= srcFrame->mTimestamp) {
+                if (preTS == 0 || preTS >= srcFrame->mTS) {
                     FileLog("rtmpdump",
                             "VideoDecoderH264::DecodeVideoHandle( "
                             "this : %p, "
                             "[Reset Start Timestamp], "
                             "startDecodeTime : %lld, "
-                            "startTimestamp : %u, "
-                            "preTimestamp : %u, "
-                            "timestamp : %u "
+                            "startTS : %lld, "
+                            "preTS : %lld, "
+                            "ts : %lld "
                             ")",
                             this,
                             curTime,
-                            startTimestamp,
-                            preTimestamp,
-                            srcFrame->mTimestamp);
+                            startTS,
+                            preTS,
+                            srcFrame->mTS);
 
-                    startTimestamp = srcFrame->mTimestamp;
-                    preTimestamp = srcFrame->mTimestamp;
+                    startTS = srcFrame->mTS;
+                    preTS = srcFrame->mTS;
 
                     startDecodeTime = curTime;
                     decodeTotalTime = 0;
@@ -938,7 +938,7 @@ void VideoDecoderH264::ConvertVideoHandle() {
     VideoFrame *srcFrame = NULL;
     VideoFrame *dstFrame = NULL;
     // 当前帧时间
-    unsigned int timestamp = 0;
+    int64_t ts = 0;
 
     while (mbRunning) {
         srcFrame = NULL;
@@ -956,7 +956,7 @@ void VideoDecoderH264::ConvertVideoHandle() {
         mConvertBufferList.unlock();
 
         if (srcFrame) {
-            timestamp = srcFrame->mTimestamp;
+            ts = srcFrame->mTS;
 
             // 获取空闲Buffer
             mFreeBufferList.lock();
@@ -1008,7 +1008,7 @@ void VideoDecoderH264::ConvertVideoHandle() {
             // 回调播放
             if (mpCallback && dstFrame) {
                 // 放进播放器
-                mpCallback->OnDecodeVideoFrame(this, dstFrame, dstFrame->mTimestamp);
+                mpCallback->OnDecodeVideoFrame(this, dstFrame, dstFrame->mTS);
 
             } else {
                 // 归还没使用Buffer

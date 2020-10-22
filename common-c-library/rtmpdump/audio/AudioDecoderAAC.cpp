@@ -308,11 +308,11 @@ void AudioDecoderAAC::ReleaseAudioFrame(void *frame) {
                  "AudioDecoderAAC::ReleaseAudioFrame( "
                  "this : %p, "
                  "audioFrame : %p, "
-                 "timestamp : %u "
+                 "ts : %lld "
                  ")",
                  this,
                  audioFrame,
-                 audioFrame->mTimestamp);
+                 audioFrame->mTS);
 
     mFreeBufferList.lock();
     if (mFreeBufferList.size() >= DEFAULT_AUDIO_BUFFER_MAX_COUNT) {
@@ -379,7 +379,7 @@ void AudioDecoderAAC::DecodeAudioFrame(
     AudioFrameSoundType sound_type,
     const char *data,
     int size,
-    u_int32_t timestamp) {
+    int64_t ts) {
     bool bFlag = false;
 
     mFreeBufferList.lock();
@@ -396,13 +396,13 @@ void AudioDecoderAAC::DecodeAudioFrame(
                      "this : %p, "
                      "[New Audio Frame], "
                      "frame : %p, "
-                     "timestamp : %u, "
+                     "ts : %lld, "
                      "bufferListSize : %u, "
                      "mDecodeBufferList.size() : %d "
                      ")",
                      this,
                      audioFrame,
-                     timestamp,
+                     ts,
                      mBufferListSize,
                      mDecodeBufferList.size());
     }
@@ -411,7 +411,7 @@ void AudioDecoderAAC::DecodeAudioFrame(
 
     // 更新数据格式
     audioFrame->ResetFrame();
-    audioFrame->mTimestamp = timestamp;
+    audioFrame->mTS = ts;
     audioFrame->InitFrame(format, sound_rate, sound_size, sound_type);
 
     // 增加ADTS头部
@@ -473,14 +473,14 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame *audioFrame, AudioFrame *newAu
             "this : %p, "
             "[Decode Frame], "
             "ret : %d, "
-            "timestamp : %u, "
+            "ts : %lld, "
             "handleTime : %lld, "
             "size : %d, "
             "data : (Hex)%02x,%02x,%02x,%02x,%02x "
             ")",
             this,
             ret,
-            audioFrame->mTimestamp,
+            audioFrame->mTS,
             handleTime,
             size,
             pkt.data[0], pkt.data[1], pkt.data[2], pkt.data[3], pkt.data[4]);
@@ -531,12 +531,12 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame *audioFrame, AudioFrame *newAu
                          "AudioDecoderAAC::DecodeAudioFrame( "
                          "this : %p, "
                          "[Fail], "
-                         "timestamp : %u, "
+                         "ts : %lld, "
                          "ret : %d, "
                          "errbuf : %s "
                          ")",
                          this,
-                         audioFrame->mTimestamp,
+                         audioFrame->mTS,
                          ret,
                          errbuf);
         }
@@ -591,18 +591,18 @@ void AudioDecoderAAC::DecodeAudioHandle() {
                              "this : %p, "
                              "[New Audio Frame], "
                              "frame : %p, "
-                             "timestamp : %u "
+                             "ts : %lld "
                              ")",
                              this,
                              dstFrame,
-                             srcFrame->mTimestamp);
+                             srcFrame->mTS);
             }
             mFreeBufferList.unlock();
 
             // 解码码帧
             bool bFlag = DecodeAudioFrame(srcFrame, dstFrame);
             if (bFlag && mpCallback) {
-                mpCallback->OnDecodeAudioFrame(this, dstFrame, dstFrame->mTimestamp);
+                mpCallback->OnDecodeAudioFrame(this, dstFrame, dstFrame->mTS);
             } else {
                 // 释放空闲Buffer
                 ReleaseAudioFrame(dstFrame);

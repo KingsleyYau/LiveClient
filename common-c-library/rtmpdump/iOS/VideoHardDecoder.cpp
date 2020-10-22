@@ -16,7 +16,7 @@ namespace coollive {
 
 typedef struct _tagDecodeItem {
     VideoHardDecoder *decoder;
-    u_int32_t ts;
+    int64_t ts;
 
     _tagDecodeItem() {
         decoder = NULL;
@@ -180,7 +180,7 @@ void VideoHardDecoder::ResetStream() {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::ResetStream( this : %p )", this);
 }
 
-void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, u_int32_t ts, const char *vps, int vps_size) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, int64_t ts, const char *vps, int vps_size) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
@@ -192,7 +192,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
                  "vps : %p, "
                  "vps_size : %d, "
                  "naluHeaderSize : %d, "
-                 "ts : %u "
+                 "ts : %lld "
                  ")",
                  this,
                  sps,
@@ -250,7 +250,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const 
     mRuningMutex.unlock();
 }
 
-void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type) {
+void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) {
     // 重置解码Buffer
     mVideoDecodeFrame.ResetFrame();
 
@@ -265,7 +265,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, u_int32_t dt
                      "VideoHardDecoder::DecodeVideoFrame( "
                      "this : %p, "
                      "[Got Nalu Array], "
-                     "ts : %u, "
+                     "ts : %lld, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
@@ -498,7 +498,7 @@ void VideoHardDecoder::DecodeOutputCallback(
     Float64 ptDuration = CMTimeGetSeconds(presentationDuration);
 
     DecodeItem *item = NULL;
-    u_int32_t ts = 0xFFFFFFFF;
+    int64_t ts = 0x7FFFFFFFFFFFFFFF;
     if (sourceFrameRefCon != NULL) {
         item = (DecodeItem *)sourceFrameRefCon;
         ts = item->ts;
@@ -510,7 +510,7 @@ void VideoHardDecoder::DecodeOutputCallback(
                      "VideoHardDecoder::DecodeOutputCallback( "
                      "[Decode Video Success], "
                      "item : %p, "
-                     "ts : %u "
+                     "ts : %lld "
                      ")",
                      item,
                      ts);
@@ -542,7 +542,7 @@ void VideoHardDecoder::DecodeOutputCallback(
 }
 
 // 硬解码回调
-void VideoHardDecoder::DecodeCallbackProc(void *frame, u_int32_t ts, bool bFlag) {
+void VideoHardDecoder::DecodeCallbackProc(void *frame, int64_t ts, bool bFlag) {
     // 不用锁, 因为DecodeOutputCallback是VTDecompressionSessionDecodeFrame的同步回调(不同线程)
     mbError = !bFlag;
     if (NULL != mpCallback) {

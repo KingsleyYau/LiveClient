@@ -36,6 +36,8 @@ class PlayerStatusCallback {
     virtual void OnPlayerOnDelayMaxTime(PlayerController *pc) = 0;
     virtual void OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight) = 0;
     virtual void OnPlayerStats(PlayerController *pc, unsigned int fps, unsigned int bitrate) = 0;
+    virtual void OnPlayerFastPlaybackError(PlayerController *pc) = 0;
+    virtual void OnPlayerFinish(PlayerController *pc) = 0;
 };
 
 class PlayerController : public RtmpDumpCallback,
@@ -55,14 +57,14 @@ class PlayerController : public RtmpDumpCallback,
      */
     void SetCacheMS(int cacheMS);
     int CacheMS() const;
-       
+
     /**
      设置播放速度
 
      @param playbackRate 播放速度(原始视频倍数)
      */
-    void SetPlaybackRate(float playbackRate);
-                             
+    void SetPlaybackRate(double playbackRate);
+
     /**
      设置视频渲染器
 
@@ -138,6 +140,9 @@ class PlayerController : public RtmpDumpCallback,
     bool SendCmdReceive();
 
   private:
+    void AutoFixPlaybackRate();
+
+  private:
     // 传输器回调
     void OnConnect(RtmpDump *rtmpDump);
     void OnDisconnect(RtmpDump *rtmpDump);
@@ -159,17 +164,17 @@ class PlayerController : public RtmpDumpCallback,
 
     // 解码器回调
     void OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned int displayWidth, unsigned int displayHeight);
-    void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp);
+    void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, int64_t timestamp);
     void OnDecodeVideoError(VideoDecoder *decoder);
-    void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp);
+    void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, int64_t timestamp);
     void OnDecodeAudioError(AudioDecoder *decoder);
 
   private:
     // 播放器回调
-    void OnPlayVideoFrame(RtmpPlayer *player, void *frame);
-    void OnDropVideoFrame(RtmpPlayer *player, void *frame);
-    void OnPlayAudioFrame(RtmpPlayer *player, void *frame);
-    void OnDropAudioFrame(RtmpPlayer *player, void *frame);
+    void OnPlayVideoFrame(RtmpPlayer *player, void *frame, int64_t ts);
+    void OnDropVideoFrame(RtmpPlayer *player, void *frame, int64_t ts);
+    void OnPlayAudioFrame(RtmpPlayer *player, void *frame, int64_t ts);
+    void OnDropAudioFrame(RtmpPlayer *player, void *frame, int64_t ts);
     void OnStartVideoStream(RtmpPlayer *player);
     void OnEndVideoStream(RtmpPlayer *player);
     void OnStartAudioStream(RtmpPlayer *player);
@@ -189,9 +194,10 @@ class PlayerController : public RtmpDumpCallback,
                            const string &userName);
 
     // 文件播放器回调
+    void OnMediaFileReaderInfo(MediaFileReader *mfr, double duration, int fps);
     void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps = NULL, int vps_size = 0);
-    void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t dts, u_int32_t pts, VideoFrameType video_type);
-    void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, u_int32_t timestamp,
+    void OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type);
+    void OnMediaFileReaderAudioFrame(MediaFileReader *mfr, const char *data, int size, int64_t ts,
                                      AudioFrameFormat format,
                                      AudioFrameSoundRate sound_rate,
                                      AudioFrameSoundSize sound_size,
@@ -226,6 +232,12 @@ class PlayerController : public RtmpDumpCallback,
 
     // 分析模块
     Statistics mStatistics;
+    
+    // 音视频最新时间戳
+    int64_t mLastFileTS;
+                             
+    // 播放速度
+    double mPlaybackRate;
 };
 }
 

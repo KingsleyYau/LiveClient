@@ -215,16 +215,16 @@
             [[LiveStreamSession session] startPlay];
 
             // 仅在前台才运行
-            if (!_isBackground) {
+//            if (!_isBackground) {
                 // 开始拉流
                 if (self.filePath.length > 0) {
                     self.isConnected = [self.player playFilePath:self.filePath];
                 } else {
                     self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
                 }
-            } else {
-                NSLog(@"LiveStreamPlayer::run( [Player is in background], self : %p )", self);
-            }
+//            } else {
+//                NSLog(@"LiveStreamPlayer::run( [Player is in background], self : %p )", self);
+//            }
         }
     }
 
@@ -258,8 +258,10 @@
     BOOL bHandle = NO;
 
     @synchronized(self) {
-        if (self.isStart && !self.isConnected && !_isBackground) {
-            // 1.已经手动开始, 2.连接还没连接上, 3.不在后台
+        // 1.已经手动开始, 2.连接还没连接上, 3.不在后台
+//        if (self.isStart && !self.isConnected && !_isBackground) {
+        // 1.已经手动开始, 2.连接还没连接上
+        if (self.isStart && !self.isConnected) {
             bHandle = YES;
         }
     }
@@ -349,6 +351,18 @@
 - (void)rtmpPlayerOnStats:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC fps:(unsigned int)fps bitrate:(unsigned int)bitrate {
     if ([self.delegate respondsToSelector:@selector(playerOnStats:fps:bitrate:)]) {
         [self.delegate playerOnStats:self fps:fps bitrate:bitrate];
+    }
+}
+
+- (void)rtmpPlayerOnFastPlaybackError:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC {
+    if ([self.delegate respondsToSelector:@selector(playerOnFastPlaybackError:)]) {
+        [self.delegate playerOnFastPlaybackError:self];
+    }
+}
+
+- (void)rtmpPlayerOnFinish:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC {
+    if ([self.delegate respondsToSelector:@selector(playerOnFinish:)]) {
+        [self.delegate playerOnFinish:self];
     }
 }
 
