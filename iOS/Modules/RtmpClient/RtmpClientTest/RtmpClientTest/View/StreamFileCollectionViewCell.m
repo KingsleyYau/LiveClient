@@ -1,8 +1,8 @@
 //
 //  StreamFileCollectionViewCell.m
-//  UIWidget
+//  RtmpClientTest
 //
-//  Created by test on 2017/6/12.
+//  Created by Max on 2020/10/12.
 //  Copyright © 2017年 lance. All rights reserved.
 //
 

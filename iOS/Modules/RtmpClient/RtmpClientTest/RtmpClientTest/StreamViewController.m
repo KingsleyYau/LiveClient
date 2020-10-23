@@ -10,6 +10,7 @@
 
 #import "StreamViewController.h"
 #import "StreamFileCollectionViewController.h"
+#import "PronViewController.h"
 
 #import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
@@ -124,9 +125,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-    // 添加手势
-    [self addSingleTap];
-
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
 }
@@ -137,9 +135,6 @@
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-
-    // 去除手势
-    [self removeSingleTap];
 
     // 允许锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
@@ -299,38 +294,10 @@
     [self.publisher stopPreview];
 }
 
-#pragma mark - 单击屏幕
-- (void)addSingleTap {
-    //    if (self.singleTap == nil) {
-    //        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction)];
-    //        [self.view addGestureRecognizer:self.singleTap];
-    //    }
-}
-
-- (void)removeSingleTap {
-    //    if (self.singleTap) {
-    //        [self.view removeGestureRecognizer:self.singleTap];
-    //        self.singleTap = nil;
-    //        self.singleTap.delegate = nil;
-    //    }
-}
-
-- (void)singleTapAction {
-    //    [self.textFieldAddress resignFirstResponder];
-    //    [self.textFieldPublishAddress resignFirstResponder];
-    //
-    //    self.navigationController.navigationBar.alpha = 0.7;
-    //    self.navigationController.navigationBar.hidden = NO;
-    //
-    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    //        [UIView animateWithDuration:1
-    //            animations:^{
-    //                self.navigationController.navigationBar.alpha = 0;
-    //            }
-    //            completion:^(BOOL finished) {
-    //                self.navigationController.navigationBar.hidden = YES;
-    //            }];
-    //    });
+#pragma mark - 浏览器
+- (IBAction)pronAction:(UIButton *)sender {
+    PronViewController *vc = [[PronViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - 处理键盘回调

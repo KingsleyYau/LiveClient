@@ -20,8 +20,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-    //    NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil];
-    //    [urlConnection start];
+//    NSURLSession *session = [NSURLSession sharedSession];
+//    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http:www.baidu.com"]];
+//    NSURLSessionDataTask *task = [session dataTaskWithRequest:req completionHandler:^(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error) {
+//        if ( !error ) {
+//            NSLog(@"response:%@", response);
+//        } else {
+//            NSLog(@"error:%@", error);
+//        }
+//    }];
+//    [task resume];
 
     KLog::SetLogFileEnable(NO);
     KLog::SetLogLevel(KLog::LOG_WARNING);

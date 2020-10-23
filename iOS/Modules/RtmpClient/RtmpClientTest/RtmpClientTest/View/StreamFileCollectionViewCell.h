@@ -1,8 +1,8 @@
 //
 //  StreamFileCollectionViewCell.h
-//  livestream
+//  RtmpClientTest
 //
-//  Created by Created by Max on 16/2/15.
+//  Created by Max on 2020/10/12.
 //  Copyright (c) 2013年 net.qdating. All rights reserved.
 //
 

@@ -1,9 +1,9 @@
 //
 //  StreamFileItemLayout.h
-//  UIWidget
+//  RtmpClientTest
 //
-//  Created by max on 2017/6/13.
-//  Copyright © 2017年 lance. All rights reserved.
+//  Created by Max on 2020/10/12.
+//  Copyright © 2020年 lance. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

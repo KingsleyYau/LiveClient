@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 500520131E94A26200C45E22 /* libCommon-C-Library.a */; };
 		500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995221E8F930A001E1355 /* libRtmpClient.a */; };
+		509187432542AAA00073BECA /* PronViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187412542AAA00073BECA /* PronViewController.m */; };
+		509187442542AAA00073BECA /* PronViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509187422542AAA00073BECA /* PronViewController.xib */; };
+		509187472542B4C10073BECA /* StreamWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187462542B4C10073BECA /* StreamWebView.m */; };
 		50C9948E1E8F911E001E1355 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C9948D1E8F911E001E1355 /* main.m */; };
 		50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50C994901E8F911E001E1355 /* AppDelegate.mm */; };
 		50C994971E8F911E001E1355 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C994951E8F911E001E1355 /* Main.storyboard */; };
@@ -69,6 +72,11 @@
 
 /* Begin PBXFileReference section */
 		5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
+		509187402542AAA00073BECA /* PronViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PronViewController.h; sourceTree = "<group>"; };
+		509187412542AAA00073BECA /* PronViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PronViewController.m; sourceTree = "<group>"; };
+		509187422542AAA00073BECA /* PronViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PronViewController.xib; sourceTree = "<group>"; };
+		509187452542B4C10073BECA /* StreamWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamWebView.h; sourceTree = "<group>"; };
+		509187462542B4C10073BECA /* StreamWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamWebView.m; sourceTree = "<group>"; };
 		50C994891E8F911E001E1355 /* RtmpClientTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RtmpClientTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C9948D1E8F911E001E1355 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		50C9948F1E8F911E001E1355 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -183,6 +191,9 @@
 				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
 				50DAEF8B213641E900FB374D /* LiveStreamClient */,
 				50C994951E8F911E001E1355 /* Main.storyboard */,
+				509187402542AAA00073BECA /* PronViewController.h */,
+				509187412542AAA00073BECA /* PronViewController.m */,
+				509187422542AAA00073BECA /* PronViewController.xib */,
 				50E8AF6C253584C300DECC7D /* RtmpClientTest.entitlements */,
 				50E8AF7C25358E5600DECC7D /* StreamFileCollectionViewController.h */,
 				50E8AF7B25358E5600DECC7D /* StreamFileCollectionViewController.m */,
@@ -265,6 +276,8 @@
 		50E8AF8025358FEC00DECC7D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				509187452542B4C10073BECA /* StreamWebView.h */,
+				509187462542B4C10073BECA /* StreamWebView.m */,
 				50E8AF8125358FEC00DECC7D /* StreamFileCollectionViewCell.h */,
 				50E8AF8525358FEC00DECC7D /* StreamFileCollectionViewCell.m */,
 				50E8AF8225358FEC00DECC7D /* StreamFileCollectionViewCell.xib */,
@@ -376,6 +389,7 @@
 				50E8AF8625358FED00DECC7D /* StreamFileCollectionViewCell.xib in Resources */,
 				50C994991E8F911E001E1355 /* Assets.xcassets in Resources */,
 				50E8AF7F25358E5700DECC7D /* StreamFileCollectionViewController.xib in Resources */,
+				509187442542AAA00073BECA /* PronViewController.xib in Resources */,
 				50C994971E8F911E001E1355 /* Main.storyboard in Resources */,
 				50DAEFAD2136468600FB374D /* common.xcconfig in Resources */,
 			);
@@ -443,7 +457,9 @@
 				50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */,
 				50E8AF7E25358E5700DECC7D /* StreamFileCollectionViewController.m in Sources */,
 				50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */,
+				509187432542AAA00073BECA /* PronViewController.m in Sources */,
 				50E8AF8825358FED00DECC7D /* StreamFileCollectionViewCell.m in Sources */,
+				509187472542B4C10073BECA /* StreamWebView.m in Sources */,
 				50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */,
 				50E5E69D2216978D00D66072 /* LSImageVibrateFilter.m in Sources */,
 				50DAEF9A213641E900FB374D /* LiveStreamPublisher.m in Sources */,
