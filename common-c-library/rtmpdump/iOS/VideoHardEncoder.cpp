@@ -57,6 +57,8 @@ void VideoHardEncoder::SetCallback(VideoEncoderCallback *callback) {
 bool VideoHardEncoder::Reset() {
     bool bFlag = true;
 
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Reset( this : %p )", this);
+    
     bFlag = CreateContext();
 
     FileLevelLog("rtmpdump",
@@ -75,6 +77,8 @@ void VideoHardEncoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Pause( this : %p )", this);
 
     DestroyContext();
+    
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Pause( this : %p, [Success] )", this);
 }
 
 void VideoHardEncoder::EncodeVideoFrame(void *data, int size, void *frame) {

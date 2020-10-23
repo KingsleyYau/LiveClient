@@ -29,6 +29,10 @@
 @property (nonatomic, weak) IBOutlet UISlider* sliderCacheMS;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint* playBottom;
 
+@property (nonatomic, weak) IBOutlet UIButton* button0_5x;
+@property (nonatomic, weak) IBOutlet UIButton* button1x;
+@property (nonatomic, weak) IBOutlet UIButton* button2x;
+
 - (IBAction)scale:(id)sender;
 - (IBAction)mutePlay:(id)sender;
 - (IBAction)filterPlay:(id)sender;

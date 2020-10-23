@@ -9,6 +9,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StreamViewController">
             <connections>
+                <outlet property="button0_5x" destination="a9C-OX-LJ3" id="FyS-MB-bKy"/>
+                <outlet property="button1x" destination="rut-mh-Ohg" id="HlH-B3-dIo"/>
+                <outlet property="button2x" destination="8DH-89-OTg" id="rzZ-dM-NRU"/>
                 <outlet property="controlView" destination="Cb4-yG-ORS" id="u47-qy-32B"/>
                 <outlet property="labelCacheMS" destination="BuY-wB-Amn" id="OGw-kV-SfQ"/>
                 <outlet property="labelFps" destination="qIz-z5-ZpK" id="98D-w7-rur"/>
@@ -93,7 +96,7 @@
                                 <action selector="playbackRate0_5x:" destination="-1" eventType="touchUpInside" id="XrB-AE-sdT"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rut-mh-Ohg" userLabel="1x Button">
+                        <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rut-mh-Ohg" userLabel="1x Button">
                             <rect key="frame" x="329" y="374" width="30" height="30"/>
                             <state key="normal" title="1x"/>
                             <connections>

@@ -6,6 +6,8 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
+#import "AppDelegate.h"
+
 #import "StreamViewController.h"
 #import "StreamFileCollectionViewController.h"
 
@@ -33,6 +35,8 @@
 @property (strong) FileItem *fileItem;
 @property (assign) NSInteger fileItemIndex;
 
+@property (assign) float playbackRate;
+
 @end
 
 @implementation StreamViewController
@@ -58,18 +62,23 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     tap.numberOfTapsRequired = 2;
     [self.previewView addGestureRecognizer:tap];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
+    longPress.minimumPressDuration = 0.5;
+    [self.previewView addGestureRecognizer:longPress];
+
     // 耳机事件
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    commandCenter.pauseCommand.enabled = YES;
+    commandCenter.pauseCommand.enabled = NO;
     [commandCenter.pauseCommand addTarget:self action:@selector(pauseCommand)];
-    commandCenter.playCommand.enabled = YES;
+    commandCenter.playCommand.enabled = NO;
     [commandCenter.playCommand addTarget:self action:@selector(playCommand)];
     commandCenter.nextTrackCommand.enabled = YES;
     [commandCenter.nextTrackCommand addTarget:self action:@selector(nextTrackCommand)];
     commandCenter.previousTrackCommand.enabled = YES;
     [commandCenter.previousTrackCommand addTarget:self action:@selector(previousTrackCommand)];
-    
+
     // 初始化播放
+    self.playbackRate = 1.0;
     self.playerFilterArray = @[
         [[LSImageVibrateFilter alloc] init],
         [[LSImageVibrateFilter alloc] init],
@@ -90,7 +99,7 @@
 
     // Live
     NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-//        NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+    //        NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
     //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
     //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
 
@@ -147,15 +156,30 @@
     self.player.playView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
 }
 
-- (IBAction)playbackRate0_5x:(id)sender {
+- (IBAction)playbackRate0_5x:(UIButton *)sender {
+    [sender setSelected:YES];
+    [self.button1x setSelected:NO];
+    [self.button2x setSelected:NO];
+    
+    self.playbackRate = 0.5f;
     self.player.playbackRate = 0.5f;
 }
 
 - (IBAction)playbackRate1x:(id)sender {
+    [sender setSelected:YES];
+    [self.button0_5x setSelected:NO];
+    [self.button2x setSelected:NO];
+    
+    self.playbackRate = 1.0f;
     self.player.playbackRate = 1.0f;
 }
 
 - (IBAction)playbackRate2x:(id)sender {
+    [sender setSelected:YES];
+    [self.button0_5x setSelected:NO];
+    [self.button1x setSelected:NO];
+    
+    self.playbackRate = 2.0f;
     self.player.playbackRate = 2.0f;
 }
 
@@ -249,7 +273,7 @@
 - (IBAction)stopPush:(id)sender {
     [self.publisher stop];
     self.previewPublishView.hidden = YES;
-    
+
     [self changeNowPlayingInfo:self.fileItem];
 }
 
@@ -406,9 +430,17 @@
 }
 
 #pragma mark - 手势
-- (void)tapGesture:(id)sender {
+- (void)tapGesture:(UITapGestureRecognizer *)sender {
     self.isScale = !self.isScale;
     [self changeOrientation];
+}
+
+- (void)longPressGesture:(UILongPressGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        self.player.playbackRate = 2.0;
+    } else if (sender.state == UIGestureRecognizerStateEnded) {
+        self.player.playbackRate = self.playbackRate;
+    }
 }
 
 #pragma mark - 耳机事件
@@ -459,7 +491,7 @@
         self.fileItemIndex++;
         self.fileItemIndex %= self.fileItemArray.count;
         NSLog(@"StreamViewController::playNextFileItem(), self.fileItemIndex: %ld", self.fileItemIndex);
-        
+
         self.fileItem = self.fileItemArray[self.fileItemIndex];
         [self changeNowPlayingInfo:self.fileItem];
         [self.player playFilePath:self.fileItem.filePath];
@@ -471,14 +503,19 @@
     if (fileItem) {
         songInfo = [NSMutableDictionary dictionary];
         UIImage *image = fileItem.image;
-        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size requestHandler:^UIImage * _Nonnull(CGSize size) {
-            return image;
-        }];
+        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size
+                                                                      requestHandler:^UIImage *_Nonnull(CGSize size) {
+                                                                          CGImageRef sourceImageRef = [image CGImage];
+                                                                          CGRect rect = CGRectMake(image.size.width / 3, 0, image.size.width / 2.5, image.size.width / 2.5);
+                                                                          CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
+                                                                          UIImage *newImage = [UIImage imageWithCGImage:newImageRef scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+                                                                          return newImage;
+                                                                      }];
         [songInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
         [songInfo setObject:@"Title" forKey:MPMediaItemPropertyTitle];
         [songInfo setObject:fileItem.fileName forKey:MPMediaItemPropertyArtist];
     }
-    MPNowPlayingInfoCenter* center = [MPNowPlayingInfoCenter defaultCenter];
+    MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
     [center setNowPlayingInfo:songInfo];
 }
 
@@ -486,15 +523,16 @@
 - (void)didSelectFile:(FileItem *)fileItem {
     self.fileItemArray = nil;
     self.fileItem = fileItem;
-    
+
     [self changeNowPlayingInfo:self.fileItem];
-    
-    self.player.cacheMS = 100;
+
+    self.player.cacheMS = 50;
     [self.player playFilePath:self.fileItem.filePath];
 }
 
 - (void)didSelectAllFile:(NSArray<FileItem *> *)fileItemArray {
     self.fileItemArray = fileItemArray;
+    self.player.cacheMS = 50;
     
     if (self.fileItemArray.count > 0) {
         self.fileItemIndex = arc4random() % self.fileItemArray.count;

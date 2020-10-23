@@ -20,7 +20,7 @@ extern "C" {
 }
 
 // 预加载时间
-#define PRE_READ_TIME_MS 1000
+#define PRE_READ_TIME_MS 500
 
 namespace coollive {
 // 文件读取线程

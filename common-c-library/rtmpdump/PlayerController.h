@@ -119,7 +119,7 @@ class PlayerController : public RtmpDumpCallback,
      停止
      */
     void Stop();
-
+                             
     /**
       发送Login命令
 

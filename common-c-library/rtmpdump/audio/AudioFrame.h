@@ -14,8 +14,8 @@
 
 #include <rtmpdump/util/EncodeDecodeBuffer.h>
 
-#define DEFAULT_AUDIO_BUFFER_COUNT 90
-#define DEFAULT_AUDIO_BUFFER_MAX_COUNT 300
+#define DEFAULT_AUDIO_BUFFER_COUNT 200
+#define DEFAULT_AUDIO_BUFFER_MAX_COUNT 350
 #define DEFAULT_AUDIO_BUFFER_SIZE 1024 * 8
 
 struct AVFrame;

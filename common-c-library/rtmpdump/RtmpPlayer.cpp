@@ -11,9 +11,6 @@
 // 默认视频数据播放缓存(毫秒)
 #define PLAY_CACHE_DEFAULT_MS 1000
 
-// 最大视频数据缓存数量(帧个数)
-#define PLAYVIDEO_CACHE_MAX_NUM 60
-
 // 播放休眠
 #define PLAY_SLEEP_TIME 1
 // 帧延迟丢弃值(MS), 如果由于CPU卡顿, 可能导致音视频不同步的差距值(音频延迟)
@@ -33,6 +30,10 @@
 #define AUDIO_WARN_FRAME_COUNT 200
 // 音频最大缓冲(帧数)
 #define AUDIO_MAX_FRAME_COUNT 350
+
+// 最大数据缓存数量(帧个数)
+#define CACHE_BUFFER_QUEUE_MAX_COUNT (AUDIO_MAX_FRAME_COUNT + VIDEO_MAX_FRAME_COUNT)
+
 namespace coollive {
 class PlayVideoRunnable : public KRunnable {
   public:
@@ -110,6 +111,38 @@ RtmpPlayer::~RtmpPlayer() {
     }
 }
 
+void RtmpPlayer::Init() {
+    mbRunning = false;
+
+    mCacheMS = PLAY_CACHE_DEFAULT_MS;
+    mbCacheFrame = true;
+    mbSyncFrame = true;
+
+    mStartPlayTime = 0;
+    mIsWaitCache = true;
+    
+    mpRtmpDump = NULL;
+    mpRtmpPlayerCallback = NULL;
+
+    mCacheBufferQueue.SetCacheQueueSize(CACHE_BUFFER_QUEUE_MAX_COUNT);
+    
+    mPlaybackRate = 1.0f;
+    mAudioPlaybackRateChange = false;
+    mVideoPlaybackRateChange = false;
+    
+    mpPlayVideoRunnable = new PlayVideoRunnable(this);
+    mpPlayAudioRunnable = new PlayAudioRunnable(this);
+
+    mbShowNoCacheLog = false;
+    mbVideoStartPlay = false;
+    mbAudioStartPlay = false;
+
+    mVideoFrontTS = INVALID_TIMESTAMP;
+    mVideoBackTS = INVALID_TIMESTAMP;
+    mAudioFrontTS = INVALID_TIMESTAMP;
+    mAudioBackTS = INVALID_TIMESTAMP;
+}
+
 bool RtmpPlayer::Play(const string &recordFilePath) {
     bool bFlag = false;
 
@@ -129,6 +162,11 @@ bool RtmpPlayer::Play(const string &recordFilePath) {
     if (bFlag) {
         // 开始播放
         mbRunning = true;
+        
+        for(int i = 0; i < CACHE_BUFFER_QUEUE_MAX_COUNT; i++) {
+            FrameBuffer *frameBuffer = new FrameBuffer();
+            mCacheBufferQueue.PushBuffer(frameBuffer);
+        }
         
         mPlayVideoThread.Start(mpPlayVideoRunnable);
         mPlayAudioThread.Start(mpPlayAudioRunnable);
@@ -480,38 +518,6 @@ size_t RtmpPlayer::GetVideBufferSize() {
     return size;
 }
 
-void RtmpPlayer::Init() {
-    mbRunning = false;
-
-    mCacheMS = PLAY_CACHE_DEFAULT_MS;
-    mbCacheFrame = true;
-    mbSyncFrame = true;
-
-    mStartPlayTime = 0;
-    mIsWaitCache = true;
-    
-    mpRtmpDump = NULL;
-    mpRtmpPlayerCallback = NULL;
-
-    mCacheBufferQueue.SetCacheQueueSize(200);
-    
-    mPlaybackRate = 1.0f;
-    mAudioPlaybackRateChange = false;
-    mVideoPlaybackRateChange = false;
-    
-    mpPlayVideoRunnable = new PlayVideoRunnable(this);
-    mpPlayAudioRunnable = new PlayAudioRunnable(this);
-
-    mbShowNoCacheLog = false;
-    mbVideoStartPlay = false;
-    mbAudioStartPlay = false;
-
-    mVideoFrontTS = INVALID_TIMESTAMP;
-    mVideoBackTS = INVALID_TIMESTAMP;
-    mAudioFrontTS = INVALID_TIMESTAMP;
-    mAudioBackTS = INVALID_TIMESTAMP;
-}
-
 bool RtmpPlayer::IsCacheEnough() {
     bool bFlag = false;
 
@@ -744,7 +750,7 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
-                                             "[Sync Audio to play], "
+                                             "[Sync Audio To Play], "
                                              "audioTS : %d, "
                                              "videoTS : %d "
                                              ")",
@@ -777,7 +783,7 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                  KLog::LOG_WARNING,
                                  "RtmpPlayer::IsPlay( "
                                  "this : %p, "
-                                 "[Sync Audio to play for NO Video frame] "
+                                 "[Sync Audio to Play For NO Video Frame] "
                                  ")",
                                  this);
                     bFlag = true;
@@ -997,7 +1003,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                              KLog::LOG_WARNING,
                              "RtmpPlayer::PlayFrame( "
                              "this : %p, "
-                             "[Cache %s enough], "
+                             "[Cache %s Enough], "
                              "mCacheMS : %u, "
                              "mStartPlayTime : %lld, "
                              "bufferListSize : %u "
