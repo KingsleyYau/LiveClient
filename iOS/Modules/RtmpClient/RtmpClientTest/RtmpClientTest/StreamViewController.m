@@ -51,22 +51,22 @@
 
     // 界面处理
     self.title = @"Stream Player";
-    // 旋转
-    self.deviceOrientation = [UIDevice currentDevice].orientation;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     // 信息
     self.labelVideoSize.text = @"";
     self.labelFps.text = @"";
     [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-    // 手势
+    // TODO:旋转
+    self.deviceOrientation = [UIDevice currentDevice].orientation;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    // TODO:手势 - 双击全屏
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     tap.numberOfTapsRequired = 2;
     [self.previewView addGestureRecognizer:tap];
+    // TODO:手势 - 长按2倍速度播放
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
     longPress.minimumPressDuration = 0.5;
     [self.previewView addGestureRecognizer:longPress];
-
-    // 耳机事件
+    // TODO:线控/Airpod控制事件
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     commandCenter.pauseCommand.enabled = NO;
     [commandCenter.pauseCommand addTarget:self action:@selector(pauseCommand)];
@@ -77,7 +77,7 @@
     commandCenter.previousTrackCommand.enabled = YES;
     [commandCenter.previousTrackCommand addTarget:self action:@selector(previousTrackCommand)];
 
-    // 初始化播放
+    // TODO:初始化播放
     self.playbackRate = 1.0;
     self.playerFilterArray = @[
         [[LSImageVibrateFilter alloc] init],
@@ -90,14 +90,14 @@
     //    self.player.customFilter = self.playerFilterArray[0];
     self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
 
-    // 初始化推送
+    // TODO:初始化推送
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x320];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
     LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = vibrateFilter;
 
-    // Live
+    // TODO:链接地址
     NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
     //        NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
     //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
@@ -151,11 +151,6 @@
 }
 
 #pragma mark - 播放相关
-- (IBAction)scale:(id)sender {
-    self.player.playView.fillMode++;
-    self.player.playView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
-}
-
 - (IBAction)playbackRate0_5x:(UIButton *)sender {
     [sender setSelected:YES];
     [self.button1x setSelected:NO];
@@ -165,7 +160,7 @@
     self.player.playbackRate = 0.5f;
 }
 
-- (IBAction)playbackRate1x:(id)sender {
+- (IBAction)playbackRate1x:(UIButton *)sender {
     [sender setSelected:YES];
     [self.button0_5x setSelected:NO];
     [self.button2x setSelected:NO];
@@ -174,7 +169,7 @@
     self.player.playbackRate = 1.0f;
 }
 
-- (IBAction)playbackRate2x:(id)sender {
+- (IBAction)playbackRate2x:(UIButton *)sender {
     [sender setSelected:YES];
     [self.button0_5x setSelected:NO];
     [self.button1x setSelected:NO];
@@ -183,11 +178,16 @@
     self.player.playbackRate = 2.0f;
 }
 
-- (IBAction)mutePlay:(id)sender {
+- (IBAction)scale:(UIButton *)sender {
+    self.player.playView.fillMode++;
+    self.player.playView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
+}
+
+- (IBAction)mutePlay:(UIButton *)sender {
     self.player.mute = !self.player.mute;
 }
 
-- (IBAction)filterPlay:(id)sender {
+- (IBAction)filterPlay:(UIButton *)sender {
     if (self.player) {
         if (!self.player.customFilter) {
             self.player.customFilter = self.playerFilterArray[0];
@@ -197,13 +197,13 @@
     }
 }
 
-- (void)sliderValueChanged:(id)sender {
+- (void)sliderValueChanged:(UISlider *)sender {
     UISlider *slider = (UISlider *)sender;
     self.player.cacheMS = (int)roundf(slider.value);
     self.labelCacheMS.text = [NSString stringWithFormat:@"%ldms", self.player.cacheMS, nil];
 }
 
-- (IBAction)play:(id)sender {
+- (IBAction)play:(UIButton *)sender {
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -218,13 +218,13 @@
     [self.player playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
-- (IBAction)playFile:(id)sender {
+- (IBAction)playFile:(UIButton *)sender {
     StreamFileCollectionViewController *vc = [[StreamFileCollectionViewController alloc] init];
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (IBAction)stopPlay:(id)sender {
+- (IBAction)stopPlay:(UIButton *)sender {
     self.fileItemArray = nil;
     [self.player stop];
 }

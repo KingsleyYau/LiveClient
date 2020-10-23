@@ -710,6 +710,12 @@ void PlayerController::OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const
 }
 
 void PlayerController::OnMediaFileReaderVideoFrame(MediaFileReader *mfr, const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) {
+    // 增加分析处理
+    bool bChange = mStatistics.AddVideoRecvFrame(size);
+    if ( mpPlayerStatusCallback && bChange ) {
+        mpPlayerStatusCallback->OnPlayerStats(this, mStatistics.Fps(), mStatistics.Bitrate());
+    }
+    
     // 解码视频帧
     if (mpVideoDecoder) {
         mpVideoDecoder->DecodeVideoFrame(data, size, dts, pts, video_type);
@@ -727,6 +733,9 @@ void PlayerController::OnMediaFileReaderAudioFrame(
     AudioFrameSoundRate sound_rate,
     AudioFrameSoundSize sound_size,
     AudioFrameSoundType sound_type) {
+    // 增加分析处理
+    mStatistics.AddAudioRecvFrame();
+    
     // 解码音频帧
     if (mpAudioDecoder) {
         mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, ts);
