@@ -7,7 +7,7 @@
 //
 
 #import "PronViewController.h"
-
+#import "AppDelegate.h"
 @interface PronViewController ()
 @property (weak) IBOutlet StreamWebView *webView;
 @property (weak) IBOutlet UIButton *downloadBtn;
@@ -19,7 +19,7 @@
 @property (strong) NSURLSession *session;
 @end
 
-@implementation PronViewController 
+@implementation PronViewController
 - (void)dealloc {
 }
 
@@ -69,36 +69,33 @@
 }
 
 - (IBAction)checkDownloadURL {
-    if (!self.downloadBtn.enabled) {
-
-        [self.webView evaluateJavaScript:@"quality_480p"
-                       completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                           self.urlCheckDict[@"480P"] = @(1);
-                           if (!error) {
-                               NSLog(@"PronViewController::downloadAction( [480P] ), %@", response);
-                               self.urlDict[@"480P"] = response;
-                           }
-                           [self check];
-                       }];
-        [self.webView evaluateJavaScript:@"quality_720p"
-                       completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                           self.urlCheckDict[@"720P"] = @(1);
-                           if (!error) {
-                               NSLog(@"PronViewController::downloadAction( [720P] ), %@", response);
-                               self.urlDict[@"720P"] = response;
-                           }
-                           [self check];
-                       }];
-        [self.webView evaluateJavaScript:@"quality_1080p"
-                       completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                           self.urlCheckDict[@"1080P"] = @(1);
-                           if (!error) {
-                               NSLog(@"PronViewController::downloadAction( [1080P] ), %@", response);
-                               self.urlDict[@"1080P"] = response;
-                           }
-                           [self check];
-                       }];
-    }
+    [self.webView evaluateJavaScript:@"quality_480p"
+                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                       self.urlCheckDict[@"480P"] = @(1);
+                       if (!error) {
+                           NSLog(@"PronViewController::downloadAction( [480P] ), %@", response);
+                           self.urlDict[@"480P"] = response;
+                       }
+                       [self check];
+                   }];
+    [self.webView evaluateJavaScript:@"quality_720p"
+                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                       self.urlCheckDict[@"720P"] = @(1);
+                       if (!error) {
+                           NSLog(@"PronViewController::downloadAction( [720P] ), %@", response);
+                           self.urlDict[@"720P"] = response;
+                       }
+                       [self check];
+                   }];
+    [self.webView evaluateJavaScript:@"quality_1080p"
+                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                       self.urlCheckDict[@"1080P"] = @(1);
+                       if (!error) {
+                           NSLog(@"PronViewController::downloadAction( [1080P] ), %@", response);
+                           self.urlDict[@"1080P"] = response;
+                       }
+                       [self check];
+                   }];
 }
 
 - (void)check {
@@ -125,9 +122,30 @@
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    NSString *unit = @"B";
+    NSInteger size = totalBytesExpectedToWrite;
+    if (size / 1024 > 1) {
+        size /= 1024;
+        unit = @"K";
+
+        if (size / 1024 > 1) {
+            size /= 1024;
+            unit = @"M";
+        }
+
+        if (size / 1024 > 1) {
+            size /= 1024;
+            unit = @"G";
+        }
+    }
+
     float percent = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
-    NSLog(@"PronViewController::didWriteData(), %f", percent);
-    self.title = [NSString stringWithFormat:@"%.0f%%", percent * 100];
+    NSLog(@"PronViewController::didWriteData(), (%ld%@)%.0f%%", size, unit, percent * 100);
+    self.title = [NSString stringWithFormat:@"(%ld%@)%.0f%%", size, unit, percent * 100];
+    
+    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
+        [self.delegate downloadTaskPercent:self.title];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
@@ -145,16 +163,28 @@
     [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
     NSLog(@"PronViewController::didFinishDownloadingToURL(), %@", downloadTask.response.suggestedFilename);
     self.title = self.webView.title;
+    
+    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
+        [self.delegate downloadTaskPercent:@""];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     NSLog(@"PronViewController::didCompleteWithError(), %@", error);
     self.title = self.webView.title;
+    
+    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
+        [self.delegate downloadTaskPercent:@""];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
     NSLog(@"PronViewController::didBecomeInvalidWithError(), %@", error);
     self.title = self.webView.title;
+    
+    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
+        [self.delegate downloadTaskPercent:@""];
+    }
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {

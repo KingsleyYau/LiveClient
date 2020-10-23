@@ -20,7 +20,7 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate>
+@interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate, PronViewControllerDelegate>
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
 
@@ -297,6 +297,7 @@
 #pragma mark - 浏览器
 - (IBAction)pronAction:(UIButton *)sender {
     PronViewController *vc = [[PronViewController alloc] init];
+    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -507,4 +508,11 @@
     }
 }
 
+- (void)downloadTaskPercent:(NSString *)percentString {
+    if ( percentString.length > 0 ) {
+        self.title = [NSString stringWithFormat:@"Stream Player %@", percentString];
+    } else {
+        self.title = @"Stream Player %@";
+    }
+}
 @end
