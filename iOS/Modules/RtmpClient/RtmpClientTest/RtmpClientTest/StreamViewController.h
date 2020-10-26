@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "StreamBaseViewController.h"
 #import "GPUImage.h"
 
-@interface StreamViewController : UIViewController
+@interface StreamViewController : StreamBaseViewController
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewTop;
 

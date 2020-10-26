@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "StreamBaseViewController.h"
 #import "StreamWebView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)downloadTaskPercent:(NSString *)percentString;
 @end
 
-@interface PronViewController : UIViewController <WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate>
+@interface PronViewController : StreamBaseViewController <WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate>
 @property (weak) id<PronViewControllerDelegate> delegate;
 @end
 

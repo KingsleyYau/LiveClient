@@ -11,12 +11,16 @@
 @interface PronViewController ()
 @property (weak) IBOutlet StreamWebView *webView;
 @property (weak) IBOutlet UIButton *downloadBtn;
+@property (weak) IBOutlet UITextView *downloadTextView;
 
 @property (strong) NSMutableDictionary *urlDict;
 @property (strong) NSMutableDictionary *urlCheckDict;
 
 @property (weak) IBOutlet UITextField *textFieldAddress;
 @property (strong) NSURLSession *session;
+
+@property (strong) NSMutableDictionary* taskRULDict;
+
 @end
 
 @implementation PronViewController
@@ -26,7 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-
+    
     // 界面处理
     self.title = @"Browser";
     self.urlDict = [NSMutableDictionary dictionary];
@@ -39,9 +43,11 @@
     self.downloadBtn.enabled = NO;
 
     self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-
+    self.taskRULDict = [NSMutableDictionary dictionary];
+    
     NSString *urlString = @"";
     self.textFieldAddress.text = urlString;
+    
     //    [self goAction:nil];
 }
 
@@ -115,10 +121,24 @@
 
     NSLog(@"PronViewController::download(), %@", urlString);
     if (urlString.length >= 0) {
+        NSString *tips = [NSString stringWithFormat:@"[Download]%@", urlString];
+        @synchronized(self) {
+            self.taskRULDict[urlString] = tips;
+        }
+        [self changeDownloadStatus];
+        
         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
         NSURLSessionDownloadTask *task = [self.session downloadTaskWithRequest:req];
         [task resume];
     }
+}
+
+- (void)changeDownloadStatus {
+    NSMutableString* mutString = [NSMutableString string];
+    for(NSString* key in self.taskRULDict) {
+        [mutString appendFormat:@"%@\n", self.taskRULDict[key]];
+    }
+    self.downloadTextView.text = mutString;
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
@@ -146,6 +166,15 @@
     if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
         [self.delegate downloadTaskPercent:self.title];
     }
+    
+    NSString* urlString = downloadTask.originalRequest.URL.absoluteString;
+    NSString *tips = [NSString stringWithFormat:@"[Download] %@ - %@", downloadTask.response.suggestedFilename, self.title];
+    @synchronized(self) {
+        self.taskRULDict[urlString] = tips;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeDownloadStatus];
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
@@ -167,6 +196,15 @@
     if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
         [self.delegate downloadTaskPercent:@""];
     }
+    
+    NSString* urlString = downloadTask.originalRequest.URL.absoluteString;
+    NSString *tips = [NSString stringWithFormat:@"[Finish] %@", downloadTask.response.suggestedFilename];
+    @synchronized(self) {
+        self.taskRULDict[urlString] = tips;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeDownloadStatus];
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
@@ -175,6 +213,17 @@
     
     if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
         [self.delegate downloadTaskPercent:@""];
+    }
+    
+    if (error) {
+        NSString* urlString = task.originalRequest.URL.absoluteString;
+        NSString *tips = [NSString stringWithFormat:@"[Error] %@", task.response.suggestedFilename];
+        @synchronized(self) {
+            self.taskRULDict[urlString] = tips;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self changeDownloadStatus];
+        });
     }
 }
 

@@ -26,7 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     // 导航
     self.title = @"File List";
     UIBarButtonItem *selectAllBarItem = [[UIBarButtonItem alloc] initWithTitle:@"All" style:UIBarButtonItemStyleDone target:self action:@selector(selectAll:)];
@@ -73,7 +73,7 @@
                 item.filePath = filePath;
                 item.isDirectory = flag;
                 item.image = [UIImage imageNamed:@"Directory"];
-                item.firstShowImage = YES;
+                item.firstShowImage = NO;
                 [self.items addObject:item];
                 index++;
             }

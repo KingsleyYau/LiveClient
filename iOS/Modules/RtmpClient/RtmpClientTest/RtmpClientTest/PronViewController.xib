@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PronViewController">
             <connections>
                 <outlet property="downloadBtn" destination="Dm8-PR-1Nf" id="0US-cM-VHq"/>
+                <outlet property="downloadTextView" destination="qPS-2S-mvw" id="xsp-iH-pap"/>
                 <outlet property="textFieldAddress" destination="Ydi-8d-4up" id="At0-rN-cHx"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="webView" destination="L2S-Fp-rW7" id="3ha-Ns-BKF"/>
@@ -42,7 +44,7 @@
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2S-Fp-rW7" customClass="StreamWebView">
                     <rect key="frame" x="0.0" y="97" width="414" height="765"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dm8-PR-1Nf" userLabel="Download">
                     <rect key="frame" x="374" y="58" width="30" height="30"/>
@@ -55,27 +57,47 @@
                         <action selector="downloadAction:" destination="-1" eventType="touchUpInside" id="ov8-VZ-2cg"/>
                     </connections>
                 </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qPS-2S-mvw" userLabel="Download Text View">
+                    <rect key="frame" x="0.0" y="107" width="414" height="755"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="textColor" systemColor="labelColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="3bx-H9-3Q8"/>
+                    </connections>
+                </textView>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="BGl-TD-TqG" firstAttribute="leading" secondItem="Ydi-8d-4up" secondAttribute="trailing" constant="5" id="0yV-81-4jA"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-10" id="4tH-2z-SWH"/>
                 <constraint firstItem="Ydi-8d-4up" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="5" id="5Ch-wP-ttk"/>
                 <constraint firstItem="L2S-Fp-rW7" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" id="8eS-v9-XUX"/>
                 <constraint firstItem="L2S-Fp-rW7" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="M0F-eM-SbT"/>
+                <constraint firstItem="qPS-2S-mvw" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="OY0-lV-YMZ"/>
                 <constraint firstItem="BGl-TD-TqG" firstAttribute="centerY" secondItem="Ydi-8d-4up" secondAttribute="centerY" id="Pd7-iK-uAD"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="centerY" secondItem="BGl-TD-TqG" secondAttribute="centerY" id="TG1-2U-RGU"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="L2S-Fp-rW7" secondAttribute="bottom" id="Utw-GC-geR"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="L2S-Fp-rW7" secondAttribute="trailing" id="ZbS-E1-EDS"/>
+                <constraint firstItem="qPS-2S-mvw" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="cmq-D7-Jzb"/>
                 <constraint firstItem="Ydi-8d-4up" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="5" id="cvi-Ml-NAp"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="leading" secondItem="BGl-TD-TqG" secondAttribute="trailing" constant="5" id="rpW-NK-mOm"/>
+                <constraint firstItem="qPS-2S-mvw" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="yEp-Wn-JBJ"/>
+                <constraint firstItem="qPS-2S-mvw" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" constant="10" id="yOD-nm-oYO"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
             <point key="canvasLocation" x="141" y="104"/>
         </view>
     </objects>
     <resources>
         <image name="DownloadButton" width="100" height="100"/>
         <image name="GoButton" width="100" height="100"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "StreamBaseViewController.h"
+
 @interface FileItem : NSObject
 @property (strong) NSString *fileName;
 @property (strong) NSString *filePath;
@@ -21,7 +23,7 @@
 - (void)didSelectAllFile:(NSArray<FileItem *>*)fileItemArray;
 @end
 
-@interface StreamFileCollectionViewController : UIViewController
+@interface StreamFileCollectionViewController : StreamBaseViewController
 @property (weak) id<StreamFileCollectionViewControllerDelegate> delegate;
 @property (strong) NSString *inputDir;
 @end
