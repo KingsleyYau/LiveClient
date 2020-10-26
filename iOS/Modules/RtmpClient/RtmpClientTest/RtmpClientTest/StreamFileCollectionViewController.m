@@ -27,25 +27,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // 导航
     self.title = @"File List";
-
     UIBarButtonItem *selectAllBarItem = [[UIBarButtonItem alloc] initWithTitle:@"All" style:UIBarButtonItemStyleDone target:self action:@selector(selectAll:)];
     self.navigationItem.rightBarButtonItem = selectAllBarItem;
     
+    // 列表
     [self setupCollectionView];
-
+    
+    // 数据
     self.items = [NSMutableArray array];
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *inputDir = [NSString stringWithFormat:@"%@/input", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:inputDir withIntermediateDirectories:YES attributes:nil error:nil];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    [fm createDirectoryAtPath:self.inputDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     NSInteger index = 0;
-    NSArray *fileArray = [fileManager contentsOfDirectoryAtPath:inputDir error:nil];
+    NSArray *fileArray = [fm contentsOfDirectoryAtPath:self.inputDir error:nil];
     for (NSString *fileName in fileArray) {
         BOOL flag = YES;
-        NSString *filePath = [inputDir stringByAppendingPathComponent:fileName];
-        if ([fileManager fileExistsAtPath:filePath isDirectory:&flag]) {
+        NSString *filePath = [self.inputDir stringByAppendingPathComponent:fileName];
+        if ([fm fileExistsAtPath:filePath isDirectory:&flag]) {
             if (!flag) {
                 // ignore .DS_Store
                 if (![[fileName substringToIndex:1] isEqualToString:@"."]) {
@@ -67,6 +67,15 @@
                     [self.items addObject:item];
                     index++;
                 }
+            } else {
+                FileItem *item = [[FileItem alloc] init];
+                item.fileName = fileName;
+                item.filePath = filePath;
+                item.isDirectory = flag;
+                item.image = [UIImage imageNamed:@"Directory"];
+                item.firstShowImage = YES;
+                [self.items addObject:item];
+                index++;
             }
         }
     }
@@ -106,9 +115,15 @@
 
 - (void)selectAll:(id)sender {
     if ([self.delegate respondsToSelector:@selector(didSelectAllFile:)]) {
-        [self.delegate didSelectAllFile:self.items];
+        NSMutableArray *items = [NSMutableArray array];
+        for (FileItem* item in self.items) {
+            if (!item.isDirectory && [item.fileName hasSuffix:@".mp4"]) {
+                [items addObject:item];
+            }
+        }
+        [self.delegate didSelectAllFile:items];
     }
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 #pragma mark - (UICollectionViewDataSource)
@@ -128,7 +143,6 @@
 //    NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show], %p", NSStringFromClass([self class]), indexPath.row, cell);
     if (indexPath.row < self.items.count) {
         FileItem *item = [self.items objectAtIndex:indexPath.row];
-        //        cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
         if ( item.firstShowImage ) {
 //            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show First], %p", NSStringFromClass([self class]), indexPath.row, cell);
             item.firstShowImage = NO;
@@ -139,21 +153,16 @@
                              }];
         }
         cell.fileImageView.image = item.image;
+        
+        if (item.isDirectory) {
+            cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
+        }
+        
+        // TODO:手势 - 长按弹出菜单
+        cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
+        cell.longPress.minimumPressDuration = 0.5;
+        [cell addGestureRecognizer:cell.longPress];
     }
-
-    //    __weak typeof(self) weakSelf = self;
-    //    NSInteger preLoadIndex = (indexPath.row + 6);
-    //    preLoadIndex = (preLoadIndex < self.items.count) ? preLoadIndex : self.items.count;
-    //    for (NSInteger i = indexPath.row; i < self.items.count; i++) {
-    //        FileItem *item = [self.items objectAtIndex:i];
-    //        if (item.image == nil) {
-    //            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-    //                @synchronized(weakSelf) {
-    //                    item.image = [self getThumbImage:item.filePath];
-    //                }
-    //            });
-    //        }
-    //    }
 
     return cell;
 }
@@ -161,10 +170,18 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.items.count) {
         FileItem *item = [self.items objectAtIndex:indexPath.row];
-        if ([self.delegate respondsToSelector:@selector(didSelectFile:)]) {
-            [self.delegate didSelectFile:item];
+        if (item.isDirectory) {
+            NSString *inputDir = [NSString stringWithFormat:@"%@/%@", self.inputDir, item.fileName];
+            StreamFileCollectionViewController *vc = [[StreamFileCollectionViewController alloc] init];
+            vc.delegate = self.delegate;
+            vc.inputDir = inputDir;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            if ([self.delegate respondsToSelector:@selector(didSelectFile:)]) {
+                [self.delegate didSelectFile:item];
+            }
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }
-        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -179,7 +196,7 @@
         CMTime actualTime;
         CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
         if (error) {
-            NSLog(@"%@::getThumbImage(), error:%@", NSStringFromClass([StreamFileCollectionViewCell class]), error);
+            NSLog(@"%@::getThumbImage(), error:%@", NSStringFromClass([self class]), error);
             return nil;
         }
         UIImage *thumb = [[UIImage alloc] initWithCGImage:image];
@@ -187,6 +204,36 @@
         return thumb;
     } else {
         return nil;
+    }
+}
+
+#pragma mark - 手势
+- (void)longPressGesture:(UILongPressGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        StreamFileCollectionViewCell* cell = (StreamFileCollectionViewCell *)sender.view;
+        NSIndexPath* indexPath = [self.collectionView indexPathForCell:cell];
+        FileItem *item = [self.items objectAtIndex:indexPath.row];
+        UIAlertController* alertVC = [UIAlertController alertControllerWithTitle:@"Edit" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *delAction = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            NSFileManager *fm = [NSFileManager defaultManager];
+            NSError* error;
+            [fm removeItemAtPath:item.filePath error:&error];
+            if (error) {
+                NSLog(@"%@::longPressGesture( [Delete] ), error:%@", NSStringFromClass([self class]), error);
+            } else {
+                [self.items removeObjectAtIndex:indexPath.row];
+                [self reloadData];
+            }
+        }];
+        [alertVC addAction:delAction];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alertVC addAction:cancelAction];
+        
+        [self presentViewController:alertVC animated:YES completion:nil];
     }
 }
 

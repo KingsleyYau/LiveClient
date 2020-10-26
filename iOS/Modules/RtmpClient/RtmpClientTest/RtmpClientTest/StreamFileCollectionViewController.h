@@ -13,6 +13,7 @@
 @property (strong) NSString *filePath;
 @property (strong) UIImage *image;
 @property (assign) bool firstShowImage;
+@property (assign) bool isDirectory;
 @end
 
 @protocol StreamFileCollectionViewControllerDelegate <NSObject>
@@ -22,4 +23,5 @@
 
 @interface StreamFileCollectionViewController : UIViewController
 @property (weak) id<StreamFileCollectionViewControllerDelegate> delegate;
+@property (strong) NSString *inputDir;
 @end

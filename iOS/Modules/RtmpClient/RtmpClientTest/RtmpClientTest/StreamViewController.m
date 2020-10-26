@@ -59,6 +59,10 @@
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    // TODO:手势 - 单击收起键盘
+    UITapGestureRecognizer *tapCloseKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapCloseKeyboardGesture:)];
+    tapCloseKeyboard.numberOfTapsRequired = 1;
+    [self.previewView addGestureRecognizer:tapCloseKeyboard];
     // TODO:手势 - 双击全屏
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     tap.numberOfTapsRequired = 2;
@@ -214,8 +218,11 @@
 }
 
 - (IBAction)playFile:(UIButton *)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *inputDir = [NSString stringWithFormat:@"%@", cacheDir];
     StreamFileCollectionViewController *vc = [[StreamFileCollectionViewController alloc] init];
     vc.delegate = self;
+    vc.inputDir = inputDir;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -301,6 +308,13 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+#pragma mark - 输入回调
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    BOOL result = YES;
+    [textField resignFirstResponder];
+    return result;
+}
+
 #pragma mark - 处理键盘回调
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
     //    BOOL bFlag = NO;
@@ -310,11 +324,11 @@
 
     if (height != 0) {
         // 弹出键盘
-        self.playBottom.constant = -(height + 20);
-
+        self.controlBottom.constant = -(height + 20);
+        
     } else {
         // 收起键盘
-        self.playBottom.constant = -20;
+        self.controlBottom.constant = -20;
     }
 
     [UIView animateWithDuration:duration
@@ -398,6 +412,11 @@
 }
 
 #pragma mark - 手势
+- (void)tapCloseKeyboardGesture:(UITapGestureRecognizer *)sender {
+    [self.textFieldAddress resignFirstResponder];
+    [self.textFieldPublishAddress resignFirstResponder];
+}
+
 - (void)tapGesture:(UITapGestureRecognizer *)sender {
     self.isScale = !self.isScale;
     [self changeOrientation];
@@ -512,7 +531,7 @@
     if ( percentString.length > 0 ) {
         self.title = [NSString stringWithFormat:@"Stream Player %@", percentString];
     } else {
-        self.title = @"Stream Player %@";
+        self.title = @"Stream Player";
     }
 }
 @end

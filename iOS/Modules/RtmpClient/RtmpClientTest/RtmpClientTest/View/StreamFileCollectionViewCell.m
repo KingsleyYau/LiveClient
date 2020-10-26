@@ -37,6 +37,9 @@
 //    self.backgroundColor = ColorArray[index];
     self.fileImageView.image = nil;
     self.fileNameLabel.text = @"";
+    if (self.longPress) {
+        [self removeGestureRecognizer:self.longPress];
+    }
 }
 
 @end

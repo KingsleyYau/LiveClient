@@ -48,7 +48,7 @@
     [super prepareLayout];
 
     // 初始化参数
-    self.itemSize = self.collectionView.frame.size.width / 2;
+    self.itemSize = self.collectionView.frame.size.width / 3;
 
     self.lineItemCount = 0;
     self.lineCount = 0;

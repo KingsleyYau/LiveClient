@@ -35,7 +35,7 @@
 
     self.webView.UIDelegate = self;
     self.webView.navigationDelegate = self;
-    //    self.webView.hidden = YES;
+    self.webView.hidden = YES;
     self.downloadBtn.enabled = NO;
 
     self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];

@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface StreamFileCollectionViewCell : UICollectionViewCell
-
 @property (weak) IBOutlet UILabel *fileNameLabel;
 @property (weak) IBOutlet UIImageView *fileImageView;
+@property (strong) UILongPressGestureRecognizer *longPress;
 
 + (NSString *)cellIdentifier;
 - (void)reset;

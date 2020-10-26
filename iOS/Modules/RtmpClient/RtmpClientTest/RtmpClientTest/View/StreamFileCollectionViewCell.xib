@@ -21,9 +21,9 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jqt-4g-S5Y" userLabel="File Title Label">
-                        <rect key="frame" x="10" y="73" width="80" height="17"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <rect key="frame" x="10" y="52" width="80" height="18"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                        <color key="textColor" red="0.076917149126529694" green="0.74882268905639648" blue="0.95623713731765747" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -35,7 +35,7 @@
                 <constraint firstItem="McW-Up-txE" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Tgd-7g-MxC"/>
                 <constraint firstItem="McW-Up-txE" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" id="aZ9-8a-KsO"/>
                 <constraint firstItem="Jqt-4g-S5Y" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="wEm-4c-fey"/>
-                <constraint firstItem="Jqt-4g-S5Y" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" constant="-10" id="z8G-8A-h6f"/>
+                <constraint firstItem="Jqt-4g-S5Y" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" constant="-30" id="z8G-8A-h6f"/>
             </constraints>
             <size key="customSize" width="167" height="169"/>
             <connections>

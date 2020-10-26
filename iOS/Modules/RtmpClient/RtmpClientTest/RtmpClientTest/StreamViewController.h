@@ -27,7 +27,8 @@
 
 @property (nonatomic, weak) IBOutlet UILabel* labelCacheMS;
 @property (nonatomic, weak) IBOutlet UISlider* sliderCacheMS;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* playBottom;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint* controlBottom;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint* controlTop;
 
 @property (nonatomic, weak) IBOutlet UIButton* button0_5x;
 @property (nonatomic, weak) IBOutlet UIButton* button1x;
