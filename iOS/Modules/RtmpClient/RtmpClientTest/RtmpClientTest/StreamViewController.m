@@ -56,6 +56,7 @@
     self.labelVideoSize.text = @"";
     self.labelFps.text = @"";
     [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.sliderCacheMS.value = 2000;
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
