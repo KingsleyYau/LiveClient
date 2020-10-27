@@ -55,13 +55,14 @@
                     item.fileName = fileName;
                     item.filePath = filePath;
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                        UIImage *image = [self getThumbImage:item.filePath];
+                        BOOL isUnknowFormat;
+                        UIImage *image = [self getThumbImage:item.filePath isUnknowFormat:&isUnknowFormat];
                         item.image = image;
                         item.firstShowImage = YES;
+                        item.isUnknowFormat = isUnknowFormat;
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
                             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                            
 //                            NSLog(@"%@::viewDidLoad(), [%ld, Reload]", NSStringFromClass([self class]), index);
                             [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
                         });
@@ -156,7 +157,7 @@
         }
         cell.fileImageView.image = item.image;
         
-        if (item.isDirectory) {
+        if (item.isDirectory || item.isUnknowFormat) {
             cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
         }
         
@@ -187,25 +188,47 @@
     }
 }
 
-- (UIImage *)getThumbImage:(NSString *)videoPath {
+- (UIImage *)getThumbImage:(NSString *)videoPath isUnknowFormat:(BOOL *)isUnknowFormat {
+    UIImage* image = [UIImage imageNamed:@"File"];
+    *isUnknowFormat = YES;
     if (videoPath) {
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
+        // 获取视频图像实际开始时间 部分视频并非一开始就是有图像的 因此要获取视频的实际开始片段
+        AVAssetTrack *videoTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+        NSArray<AVAssetTrackSegment *> *segs = videoTrack.segments;
+        if (!segs.count) {
+            return image;
+        }
+        CMTime currentStartTime = kCMTimeZero;
+        for (NSInteger i = 0; i < segs.count; i ++) {
+            if (!segs[i].isEmpty) {
+                currentStartTime = segs[i].timeMapping.target.start;
+                break;
+            }
+        }
+        
+        CMTime coverAtTimeSec = CMTimeMakeWithSeconds(1, asset.duration.timescale);
+        // 如果想要获取的视频时间大于视频总时长 或者小于视频实际开始时间 则设置获取视频实际开始时间
+        if (CMTimeCompare(coverAtTimeSec, asset.duration) == 1 || CMTimeCompare(coverAtTimeSec, currentStartTime) == -1) {
+            coverAtTimeSec = currentStartTime;
+        }
+        
         AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         gen.appliesPreferredTrackTransform = YES;
         gen.maximumSize = CGSizeMake(640, 640);
-        CMTime time = CMTimeMakeWithSeconds(0.0, 600); //取第5秒，一秒钟600帧
         NSError *error = nil;
         CMTime actualTime;
-        CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+        CGImageRef image = [gen copyCGImageAtTime:coverAtTimeSec actualTime:&actualTime error:&error];
         if (error) {
             NSLog(@"%@::getThumbImage(), error:%@", NSStringFromClass([self class]), error);
-            return nil;
+            return [UIImage imageNamed:@"File"];
         }
+        *isUnknowFormat = NO;
         UIImage *thumb = [[UIImage alloc] initWithCGImage:image];
         CGImageRelease(image);
         return thumb;
     } else {
-        return nil;
+        return [UIImage imageNamed:@"File"];
     }
 }
 

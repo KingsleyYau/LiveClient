@@ -35,6 +35,8 @@
 @property (nonatomic, weak) IBOutlet UIButton* button1x;
 @property (nonatomic, weak) IBOutlet UIButton* button2x;
 
+@property (nonatomic, weak) IBOutlet UIButton* buttonRecord;
+
 - (IBAction)scale:(id)sender;
 - (IBAction)mutePlay:(id)sender;
 - (IBAction)filterPlay:(id)sender;

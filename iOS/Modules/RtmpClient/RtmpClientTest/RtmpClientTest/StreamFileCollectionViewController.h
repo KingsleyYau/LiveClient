@@ -16,6 +16,7 @@
 @property (strong) UIImage *image;
 @property (assign) bool firstShowImage;
 @property (assign) bool isDirectory;
+@property (assign) bool isUnknowFormat;
 @end
 
 @protocol StreamFileCollectionViewControllerDelegate <NSObject>

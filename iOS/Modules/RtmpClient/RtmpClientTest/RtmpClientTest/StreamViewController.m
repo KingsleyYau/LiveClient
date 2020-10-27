@@ -57,6 +57,7 @@
     self.labelFps.text = @"";
     [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     self.sliderCacheMS.value = 2000;
+    [self.buttonRecord setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -203,6 +204,10 @@
     self.labelCacheMS.text = [NSString stringWithFormat:@"%ldms", self.player.cacheMS, nil];
 }
 
+- (IBAction)record:(UIButton *)sender {
+    sender.selected = !sender.selected;
+}
+
 - (IBAction)play:(UIButton *)sender {
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
@@ -213,6 +218,14 @@
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
+    if (self.buttonRecord.selected) {
+        NSDate* now = [NSDate date];
+        NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+        [fmt setDateFormat:@"yyyyMM_ddhhmmss"];
+        NSString *dateString = [fmt stringFromDate:now];
+        recordFilePath = [NSString stringWithFormat:@"%@/%@_%@.flv", recordDir, @"record", dateString];
+    }
+    
     self.player.cacheMS = (int)roundf(self.sliderCacheMS.value);
     NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
     [self.player playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
