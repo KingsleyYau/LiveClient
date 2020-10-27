@@ -47,7 +47,7 @@
     
     self.taskURLDict = [NSMutableDictionary dictionary];
     
-    NSString *urlString = @"";
+    NSString *urlString = @"http://www.baidu.com";
     self.textFieldAddress.text = urlString;
     
     [[FileDownloadManager manager] addDelegate:self];
@@ -80,6 +80,7 @@
 
 - (IBAction)viewAction:(UIButton *)sender {
     self.webView.hidden = !self.webView.hidden;
+    self.downloadTextView.hidden = !self.downloadTextView.hidden;
 }
 
 - (IBAction)checkDownloadURL {
@@ -229,8 +230,6 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     NSLog(@"PronViewController::didCompleteWithError(), %@", error);
-    self.title = self.webView.title;
-    
     if (error) {
         NSString* urlString = task.currentRequest.URL.absoluteString;
         NSString *tips = [NSString stringWithFormat:@"[Error] %@", task.response.suggestedFilename];
@@ -247,7 +246,6 @@
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
     NSLog(@"PronViewController::didBecomeInvalidWithError(), %@", error);
-    self.title = self.webView.title;
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
@@ -286,4 +284,57 @@
     NSLog(@"PronViewController:webViewWebContentProcessDidTerminate()");
 }
 
+#pragma mark - 输入回调
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    BOOL result = YES;
+    [textField resignFirstResponder];
+    [self goAction:nil];
+    return result;
+}
+
+#pragma mark - 处理键盘回调
+- (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
+    //    BOOL bFlag = NO;
+
+    // Ensures that all pending layout operations have been completed
+    [self.view layoutIfNeeded];
+
+    if (height != 0) {
+        // 弹出键盘
+        
+    } else {
+        // 收起键盘
+    }
+
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         // Make all constraint changes here, Called on parent view
+                         [self.view layoutIfNeeded];
+
+                     }
+                     completion:^(BOOL finished){
+
+                     }];
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+
+    [self moveInputBarWithKeyboardHeight:keyboardRect.size.height withDuration:animationDuration];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+
+    // 动画收起键盘
+    [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
+}
 @end

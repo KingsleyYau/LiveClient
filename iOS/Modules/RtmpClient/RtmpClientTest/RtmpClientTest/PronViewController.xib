@@ -40,7 +40,10 @@
                         <constraint firstAttribute="height" constant="48" id="hqb-ZR-xYR"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <textInputTraits key="textInputTraits"/>
+                    <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="OG6-Cy-CDN"/>
+                    </connections>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BGl-TD-TqG" userLabel="Go">
                     <rect key="frame" x="329" y="53" width="40" height="40"/>
@@ -69,7 +72,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qPS-2S-mvw" userLabel="Download Text View">
-                    <rect key="frame" x="0.0" y="107" width="414" height="755"/>
+                    <rect key="frame" x="0.0" y="97" width="414" height="765"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <color key="textColor" systemColor="labelColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -111,7 +114,7 @@
                 <constraint firstItem="HQ0-QU-xZi" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" constant="-20" id="d1X-gj-fG7"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="leading" secondItem="BGl-TD-TqG" secondAttribute="trailing" constant="5" id="rpW-NK-mOm"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="yEp-Wn-JBJ"/>
-                <constraint firstItem="qPS-2S-mvw" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" constant="10" id="yOD-nm-oYO"/>
+                <constraint firstItem="qPS-2S-mvw" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" id="yOD-nm-oYO"/>
             </constraints>
             <point key="canvasLocation" x="141" y="104"/>
         </view>
