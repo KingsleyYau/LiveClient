@@ -13,6 +13,7 @@
 		509187442542AAA00073BECA /* PronViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509187422542AAA00073BECA /* PronViewController.xib */; };
 		509187472542B4C10073BECA /* StreamWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187462542B4C10073BECA /* StreamWebView.m */; };
 		509CC0E72546AECA0037BA32 /* StreamBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509CC0E62546AECA0037BA32 /* StreamBaseViewController.m */; };
+		509CC0EC2546C0F40037BA32 /* FileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 509CC0EB2546C0F40037BA32 /* FileDownloadManager.m */; };
 		50C9948E1E8F911E001E1355 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C9948D1E8F911E001E1355 /* main.m */; };
 		50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50C994901E8F911E001E1355 /* AppDelegate.mm */; };
 		50C994971E8F911E001E1355 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C994951E8F911E001E1355 /* Main.storyboard */; };
@@ -80,6 +81,8 @@
 		509187462542B4C10073BECA /* StreamWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamWebView.m; sourceTree = "<group>"; };
 		509CC0E52546AECA0037BA32 /* StreamBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamBaseViewController.h; sourceTree = "<group>"; };
 		509CC0E62546AECA0037BA32 /* StreamBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StreamBaseViewController.m; sourceTree = "<group>"; };
+		509CC0EA2546C0F40037BA32 /* FileDownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileDownloadManager.h; sourceTree = "<group>"; };
+		509CC0EB2546C0F40037BA32 /* FileDownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManager.m; sourceTree = "<group>"; };
 		50C994891E8F911E001E1355 /* RtmpClientTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RtmpClientTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C9948D1E8F911E001E1355 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		50C9948F1E8F911E001E1355 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -189,6 +192,8 @@
 				50C9948F1E8F911E001E1355 /* AppDelegate.h */,
 				50C994901E8F911E001E1355 /* AppDelegate.mm */,
 				50C994981E8F911E001E1355 /* Assets.xcassets */,
+				509CC0EA2546C0F40037BA32 /* FileDownloadManager.h */,
+				509CC0EB2546C0F40037BA32 /* FileDownloadManager.m */,
 				50DAEF9E2136429E00FB374D /* Header */,
 				50C9949D1E8F911E001E1355 /* Info.plist */,
 				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
@@ -461,6 +466,7 @@
 				50DAEF98213641E900FB374D /* GPUImageBeautifyFilter.m in Sources */,
 				50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */,
 				50E8AF7E25358E5700DECC7D /* StreamFileCollectionViewController.m in Sources */,
+				509CC0EC2546C0F40037BA32 /* FileDownloadManager.m in Sources */,
 				50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */,
 				509187432542AAA00073BECA /* PronViewController.m in Sources */,
 				50E8AF8825358FED00DECC7D /* StreamFileCollectionViewCell.m in Sources */,

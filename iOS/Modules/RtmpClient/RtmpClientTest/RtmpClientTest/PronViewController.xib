@@ -23,8 +23,19 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QgU-HD-bRe" userLabel="Eye">
+                    <rect key="frame" x="5" y="58" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="M00-8W-Tlb"/>
+                        <constraint firstAttribute="width" secondItem="QgU-HD-bRe" secondAttribute="height" multiplier="1:1" id="iLz-h9-SM1"/>
+                    </constraints>
+                    <state key="normal" title="Button" image="Eye"/>
+                    <connections>
+                        <action selector="viewAction:" destination="-1" eventType="touchUpInside" id="xXg-Po-wZY"/>
+                    </connections>
+                </button>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ydi-8d-4up" userLabel="URL Text Field">
-                    <rect key="frame" x="5" y="49" width="319" height="48"/>
+                    <rect key="frame" x="40" y="49" width="284" height="48"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="hqb-ZR-xYR"/>
                     </constraints>
@@ -42,10 +53,6 @@
                         <action selector="goAction:" destination="-1" eventType="touchUpInside" id="Z83-CC-OMf"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2S-Fp-rW7" customClass="StreamWebView">
-                    <rect key="frame" x="0.0" y="97" width="414" height="765"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dm8-PR-1Nf" userLabel="Download">
                     <rect key="frame" x="374" y="58" width="30" height="30"/>
                     <constraints>
@@ -57,6 +64,10 @@
                         <action selector="downloadAction:" destination="-1" eventType="touchUpInside" id="ov8-VZ-2cg"/>
                     </connections>
                 </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2S-Fp-rW7" customClass="StreamWebView">
+                    <rect key="frame" x="0.0" y="97" width="414" height="765"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qPS-2S-mvw" userLabel="Download Text View">
                     <rect key="frame" x="0.0" y="107" width="414" height="755"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -67,22 +78,37 @@
                         <outlet property="delegate" destination="-1" id="3bx-H9-3Q8"/>
                     </connections>
                 </textView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HQ0-QU-xZi" userLabel="Clean">
+                    <rect key="frame" x="364" y="812" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="HQ0-QU-xZi" secondAttribute="height" multiplier="1:1" id="RY5-PC-4hE"/>
+                        <constraint firstAttribute="width" constant="30" id="wa5-SU-sfl"/>
+                    </constraints>
+                    <state key="normal" image="Clean"/>
+                    <connections>
+                        <action selector="cleanAction:" destination="-1" eventType="touchUpInside" id="IRp-n1-lrz"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="BGl-TD-TqG" firstAttribute="leading" secondItem="Ydi-8d-4up" secondAttribute="trailing" constant="5" id="0yV-81-4jA"/>
+                <constraint firstItem="HQ0-QU-xZi" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-20" id="3Ay-bZ-Wfg"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-10" id="4tH-2z-SWH"/>
                 <constraint firstItem="Ydi-8d-4up" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="5" id="5Ch-wP-ttk"/>
                 <constraint firstItem="L2S-Fp-rW7" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" id="8eS-v9-XUX"/>
+                <constraint firstItem="QgU-HD-bRe" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="5" id="Glv-hu-saN"/>
                 <constraint firstItem="L2S-Fp-rW7" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="M0F-eM-SbT"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="OY0-lV-YMZ"/>
+                <constraint firstItem="QgU-HD-bRe" firstAttribute="centerY" secondItem="Ydi-8d-4up" secondAttribute="centerY" id="OuI-Ye-sn7"/>
                 <constraint firstItem="BGl-TD-TqG" firstAttribute="centerY" secondItem="Ydi-8d-4up" secondAttribute="centerY" id="Pd7-iK-uAD"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="centerY" secondItem="BGl-TD-TqG" secondAttribute="centerY" id="TG1-2U-RGU"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="L2S-Fp-rW7" secondAttribute="bottom" id="Utw-GC-geR"/>
+                <constraint firstItem="Ydi-8d-4up" firstAttribute="leading" secondItem="QgU-HD-bRe" secondAttribute="trailing" constant="5" id="XhR-sJ-DiJ"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="L2S-Fp-rW7" secondAttribute="trailing" id="ZbS-E1-EDS"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="cmq-D7-Jzb"/>
-                <constraint firstItem="Ydi-8d-4up" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="5" id="cvi-Ml-NAp"/>
+                <constraint firstItem="HQ0-QU-xZi" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" constant="-20" id="d1X-gj-fG7"/>
                 <constraint firstItem="Dm8-PR-1Nf" firstAttribute="leading" secondItem="BGl-TD-TqG" secondAttribute="trailing" constant="5" id="rpW-NK-mOm"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="yEp-Wn-JBJ"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" constant="10" id="yOD-nm-oYO"/>
@@ -91,7 +117,9 @@
         </view>
     </objects>
     <resources>
+        <image name="Clean" width="100" height="100"/>
         <image name="DownloadButton" width="100" height="100"/>
+        <image name="Eye" width="100" height="100"/>
         <image name="GoButton" width="100" height="100"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

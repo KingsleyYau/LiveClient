@@ -8,6 +8,8 @@
 
 #import "PronViewController.h"
 #import "AppDelegate.h"
+#import "FileDownloadManager.h"
+
 @interface PronViewController ()
 @property (weak) IBOutlet StreamWebView *webView;
 @property (weak) IBOutlet UIButton *downloadBtn;
@@ -19,12 +21,13 @@
 @property (weak) IBOutlet UITextField *textFieldAddress;
 @property (strong) NSURLSession *session;
 
-@property (strong) NSMutableDictionary* taskRULDict;
+@property (strong) NSMutableDictionary* taskURLDict;
 
 @end
 
 @implementation PronViewController
 - (void)dealloc {
+    [[FileDownloadManager manager] removeDelegate:self];
 }
 
 - (void)viewDidLoad {
@@ -41,12 +44,13 @@
     self.webView.navigationDelegate = self;
     self.webView.hidden = YES;
     self.downloadBtn.enabled = NO;
-
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-    self.taskRULDict = [NSMutableDictionary dictionary];
+    
+    self.taskURLDict = [NSMutableDictionary dictionary];
     
     NSString *urlString = @"";
     self.textFieldAddress.text = urlString;
+    
+    [[FileDownloadManager manager] addDelegate:self];
     
     //    [self goAction:nil];
 }
@@ -74,12 +78,16 @@
     [self.webView loadRequest:request];
 }
 
+- (IBAction)viewAction:(UIButton *)sender {
+    self.webView.hidden = !self.webView.hidden;
+}
+
 - (IBAction)checkDownloadURL {
     [self.webView evaluateJavaScript:@"quality_480p"
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"480P"] = @(1);
                        if (!error) {
-                           NSLog(@"PronViewController::downloadAction( [480P] ), %@", response);
+                           NSLog(@"PronViewController::checkDownloadURL( [480P] ), %@", response);
                            self.urlDict[@"480P"] = response;
                        }
                        [self check];
@@ -88,7 +96,7 @@
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"720P"] = @(1);
                        if (!error) {
-                           NSLog(@"PronViewController::downloadAction( [720P] ), %@", response);
+                           NSLog(@"PronViewController::checkDownloadURL( [720P] ), %@", response);
                            self.urlDict[@"720P"] = response;
                        }
                        [self check];
@@ -97,7 +105,7 @@
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"1080P"] = @(1);
                        if (!error) {
-                           NSLog(@"PronViewController::downloadAction( [1080P] ), %@", response);
+                           NSLog(@"PronViewController::checkDownloadURL( [1080P] ), %@", response);
                            self.urlDict[@"1080P"] = response;
                        }
                        [self check];
@@ -110,6 +118,10 @@
     }
 }
 
+- (IBAction)cleanAction:(UIButton *)sender {
+    [[FileDownloadManager manager] cancel];
+}
+
 - (IBAction)downloadAction:(UIButton *)sender {
     NSString *urlString = self.urlDict[@"1080P"];
     if (urlString.length == 0) {
@@ -119,31 +131,27 @@
         urlString = self.urlDict[@"480P"];
     }
 
-    NSLog(@"PronViewController::download(), %@", urlString);
-    if (urlString.length >= 0) {
+    NSLog(@"PronViewController::downloadAction(), %@", urlString);
+    if ( urlString.length > 0) {
         NSString *tips = [NSString stringWithFormat:@"[Download]%@", urlString];
         @synchronized(self) {
-            self.taskRULDict[urlString] = tips;
+            self.taskURLDict[urlString] = tips;
         }
         [self changeDownloadStatus];
-        
-        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-        NSURLSessionDownloadTask *task = [self.session downloadTaskWithRequest:req];
-        [task resume];
+        [[FileDownloadManager manager] downloadURL:urlString];
     }
 }
 
 - (void)changeDownloadStatus {
     NSMutableString* mutString = [NSMutableString string];
-    for(NSString* key in self.taskRULDict) {
-        [mutString appendFormat:@"%@\n", self.taskRULDict[key]];
+    for(NSString* key in self.taskURLDict) {
+        [mutString appendFormat:@"%@\n", self.taskURLDict[key]];
     }
     self.downloadTextView.text = mutString;
 }
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+- (NSString *)readableSize:(NSInteger)size {
     NSString *unit = @"B";
-    NSInteger size = totalBytesExpectedToWrite;
     if (size / 1024 > 1) {
         size /= 1024;
         unit = @"K";
@@ -158,19 +166,20 @@
             unit = @"G";
         }
     }
+    NSString *result = [NSString stringWithFormat:@"%ld%@", size, unit];
+    return result;
+}
 
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+
+    NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
     float percent = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
-    NSLog(@"PronViewController::didWriteData(), (%ld%@)%.0f%%", size, unit, percent * 100);
-    self.title = [NSString stringWithFormat:@"(%ld%@)%.0f%%", size, unit, percent * 100];
-    
-    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
-        [self.delegate downloadTaskPercent:self.title];
-    }
-    
-    NSString* urlString = downloadTask.originalRequest.URL.absoluteString;
-    NSString *tips = [NSString stringWithFormat:@"[Download] %@ - %@", downloadTask.response.suggestedFilename, self.title];
+    NSString* percentString = [NSString stringWithFormat:@"(%@/%@)%.0f%%", [self readableSize:totalBytesWritten], [self readableSize:totalBytesExpectedToWrite], percent * 100];
+    NSString *tips = [NSString stringWithFormat:@"[Download] %@ - %@", downloadTask.response.suggestedFilename, percentString];
     @synchronized(self) {
-        self.taskRULDict[urlString] = tips;
+        if (urlString.length > 0) {
+            self.taskURLDict[urlString] = tips;
+        }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self changeDownloadStatus];
@@ -178,7 +187,20 @@
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
-    NSLog(@"PronViewController::didResumeAtOffset(), fileOffset: %lld, expectedTotalBytes: %lld", fileOffset, expectedTotalBytes);
+    NSLog(@"PronViewController::didResumeAtOffset(), (%@/%@)", [self readableSize:fileOffset], [self readableSize:expectedTotalBytes]);
+    
+    NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
+    float percent = 1.0 * fileOffset / expectedTotalBytes;
+    NSString* percentString = [NSString stringWithFormat:@"(%@/%@)%.0f%%", [self readableSize:fileOffset], [self readableSize:expectedTotalBytes], percent * 100];
+    NSString *tips = [NSString stringWithFormat:@"[Download] %@ - %@", downloadTask.response.suggestedFilename, percentString];
+    @synchronized(self) {
+        if (urlString.length > 0) {
+            self.taskURLDict[urlString] = tips;
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeDownloadStatus];
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
@@ -193,14 +215,12 @@
     NSLog(@"PronViewController::didFinishDownloadingToURL(), %@", downloadTask.response.suggestedFilename);
     self.title = self.webView.title;
     
-    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
-        [self.delegate downloadTaskPercent:@""];
-    }
-    
-    NSString* urlString = downloadTask.originalRequest.URL.absoluteString;
+    NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
     NSString *tips = [NSString stringWithFormat:@"[Finish] %@", downloadTask.response.suggestedFilename];
     @synchronized(self) {
-        self.taskRULDict[urlString] = tips;
+        if (urlString.length > 0) {
+            self.taskURLDict[urlString] = tips;
+        }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         [self changeDownloadStatus];
@@ -211,15 +231,13 @@
     NSLog(@"PronViewController::didCompleteWithError(), %@", error);
     self.title = self.webView.title;
     
-    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
-        [self.delegate downloadTaskPercent:@""];
-    }
-    
     if (error) {
-        NSString* urlString = task.originalRequest.URL.absoluteString;
+        NSString* urlString = task.currentRequest.URL.absoluteString;
         NSString *tips = [NSString stringWithFormat:@"[Error] %@", task.response.suggestedFilename];
         @synchronized(self) {
-            self.taskRULDict[urlString] = tips;
+            if (urlString.length > 0) {
+                self.taskURLDict[urlString] = tips;
+            }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self changeDownloadStatus];
@@ -230,10 +248,6 @@
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
     NSLog(@"PronViewController::didBecomeInvalidWithError(), %@", error);
     self.title = self.webView.title;
-    
-    if ([self.delegate respondsToSelector:@selector(downloadTaskPercent:)]) {
-        [self.delegate downloadTaskPercent:@""];
-    }
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {

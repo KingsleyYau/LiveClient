@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)downloadTaskPercent:(NSString *)percentString;
 @end
 
-@interface PronViewController : StreamBaseViewController <WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate>
+@interface PronViewController : StreamBaseViewController <WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
 @property (weak) id<PronViewControllerDelegate> delegate;
 @end
 
