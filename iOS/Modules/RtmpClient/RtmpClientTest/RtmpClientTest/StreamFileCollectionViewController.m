@@ -253,6 +253,13 @@
         }];
         [alertVC addAction:delAction];
         
+        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"Share" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSURL* fileURL = [NSURL fileURLWithPath:item.filePath];
+            UIActivityViewController *shareVC = [[UIActivityViewController alloc] initWithActivityItems:@[fileURL] applicationActivities:nil];
+            [self presentViewController:shareVC animated:YES completion:nil];
+        }];
+        [alertVC addAction:shareAction];
+        
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];

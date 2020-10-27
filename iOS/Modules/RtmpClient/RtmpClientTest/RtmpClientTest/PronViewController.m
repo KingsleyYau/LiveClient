@@ -134,9 +134,13 @@
 
     NSLog(@"PronViewController::downloadAction(), %@", urlString);
     if ( urlString.length > 0) {
-        NSString *tips = [NSString stringWithFormat:@"[Download]%@", urlString];
+        NSString *tips = [NSString stringWithFormat:@"[Download] %@", urlString];
+        NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:tips];
+        [line addAttributes:@{
+            NSForegroundColorAttributeName:[UIColor blueColor]
+        } range:NSMakeRange(0, 10)];
         @synchronized(self) {
-            self.taskURLDict[urlString] = tips;
+            self.taskURLDict[urlString] = line;
         }
         [self changeDownloadStatus];
         [[FileDownloadManager manager] downloadURL:urlString];
@@ -144,11 +148,17 @@
 }
 
 - (void)changeDownloadStatus {
-    NSMutableString* mutString = [NSMutableString string];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
+//    NSMutableString* mutString = [NSMutableString string];
     for(NSString* key in self.taskURLDict) {
-        [mutString appendFormat:@"%@\n", self.taskURLDict[key]];
+//        [mutString appendFormat:@"%@\n", self.taskURLDict[key]];
+        NSAttributedString *line = [[NSAttributedString alloc] initWithAttributedString:self.taskURLDict[key]];
+        [attrString appendAttributedString:line];
+        [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
     }
-    self.downloadTextView.text = mutString;
+//    self.downloadTextView.text = mutString;
+    self.downloadTextView.attributedText = attrString;
+    
 }
 
 - (NSString *)readableSize:(NSInteger)size {
@@ -177,9 +187,13 @@
     float percent = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
     NSString* percentString = [NSString stringWithFormat:@"(%@/%@)%.0f%%", [self readableSize:totalBytesWritten], [self readableSize:totalBytesExpectedToWrite], percent * 100];
     NSString *tips = [NSString stringWithFormat:@"[Download] %@ - %@", downloadTask.response.suggestedFilename, percentString];
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:tips];
+    [line addAttributes:@{
+        NSForegroundColorAttributeName:[UIColor blueColor]
+    } range:NSMakeRange(0, 10)];
     @synchronized(self) {
         if (urlString.length > 0) {
-            self.taskURLDict[urlString] = tips;
+            self.taskURLDict[urlString] = line;
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -194,9 +208,13 @@
     float percent = 1.0 * fileOffset / expectedTotalBytes;
     NSString* percentString = [NSString stringWithFormat:@"(%@/%@)%.0f%%", [self readableSize:fileOffset], [self readableSize:expectedTotalBytes], percent * 100];
     NSString *tips = [NSString stringWithFormat:@"[Download] %@ - %@", downloadTask.response.suggestedFilename, percentString];
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:tips];
+    [line addAttributes:@{
+        NSForegroundColorAttributeName:[UIColor blueColor]
+    } range:NSMakeRange(0, 10)];
     @synchronized(self) {
         if (urlString.length > 0) {
-            self.taskURLDict[urlString] = tips;
+            self.taskURLDict[urlString] = line;
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -218,9 +236,13 @@
     
     NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
     NSString *tips = [NSString stringWithFormat:@"[Finish] %@", downloadTask.response.suggestedFilename];
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:tips];
+    [line addAttributes:@{
+        NSForegroundColorAttributeName:[UIColor greenColor]
+    } range:NSMakeRange(0, 8)];
     @synchronized(self) {
         if (urlString.length > 0) {
-            self.taskURLDict[urlString] = tips;
+            self.taskURLDict[urlString] = line;
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -233,9 +255,13 @@
     if (error) {
         NSString* urlString = task.currentRequest.URL.absoluteString;
         NSString *tips = [NSString stringWithFormat:@"[Error] %@", task.response.suggestedFilename];
+        NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:tips];
+        [line addAttributes:@{
+            NSForegroundColorAttributeName:[UIColor redColor]
+        } range:NSMakeRange(0, 7)];
         @synchronized(self) {
             if (urlString.length > 0) {
-                self.taskURLDict[urlString] = tips;
+                self.taskURLDict[urlString] = line;
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -251,6 +277,7 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSLog(@"PronViewController::decidePolicyForNavigationAction()");
     decisionHandler(WKNavigationActionPolicyAllow);
+    self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
@@ -288,7 +315,6 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     BOOL result = YES;
     [textField resignFirstResponder];
-    [self goAction:nil];
     return result;
 }
 
