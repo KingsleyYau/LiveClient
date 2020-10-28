@@ -28,6 +28,7 @@ class Statistics {
      */
     bool AddVideoRecvFrame(int size);
     bool AddVideoPlayFrame();
+    unsigned int GetVideoPlayFrameCount();
 
     /**
      增加音频帧

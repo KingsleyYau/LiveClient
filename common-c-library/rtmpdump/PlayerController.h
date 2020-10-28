@@ -238,6 +238,8 @@ class PlayerController : public RtmpDumpCallback,
                              
     // 播放速度
     double mPlaybackRate;
+    // 播放丢帧间隔
+    int mPlaybackDropInterval;
 };
 }
 

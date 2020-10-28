@@ -18,6 +18,15 @@ Statistics::Statistics()
     mVideoPlayFrameCount = 0;
     mAudioRecvFrameCount = 0;
     mAudioPlayFrameCount = 0;
+        
+    mFpsTime = 0;
+    mFps = 0;
+    mOriginalFps = 0;
+    
+    mVideoRecvBytesPre = 0;
+    mVideoRecvBytes = 0;
+    mVideoBytesTime = 0;
+    mBitrate = 0;
 }
 
 Statistics::~Statistics() {
@@ -120,6 +129,10 @@ bool Statistics::AddVideoPlayFrame() {
     mStatusMutex.unlock();
     
     return bFlag;
+}
+
+unsigned int Statistics::GetVideoPlayFrameCount() {
+    return mVideoPlayFrameCount;
 }
 
 void Statistics::AddAudioRecvFrame() {

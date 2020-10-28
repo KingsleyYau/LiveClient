@@ -62,7 +62,7 @@
                                                                    0,
                                                                    &textureRef);
     
-    NSAssert(result == kCVReturnSuccess, @"CVOpenGLESTextureCacheCreateTextureFromImage error: %@",@(result));
+    NSAssert(result == kCVReturnSuccess, @"CVOpenGLESTextureCacheCreateTextureFromImage() error: %@", @(result));
 
     if (result == kCVReturnSuccess && textureRef) {
         glActiveTexture(GL_TEXTURE4);
@@ -90,7 +90,7 @@
         
         CFRelease(textureRef);
     }
-
+    
     CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
     CFRelease(pixelBuffer);
     });

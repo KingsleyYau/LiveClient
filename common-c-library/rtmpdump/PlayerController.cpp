@@ -34,9 +34,9 @@ PlayerController::PlayerController() {
 
     mbNeedResetAudioRenderer = false;
     mbIsPlayFile = false;
-
     mLastFileTS = INVALID_TIMESTAMP;
     mPlaybackRate = 1.0;
+    mPlaybackDropInterval = 0;
     
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
@@ -72,8 +72,18 @@ void PlayerController::SetPlaybackRate(double playbackRate) {
 }
 
 void PlayerController::AutoFixPlaybackRate() {
-    double maxPlaybackRate = (mStatistics.OriginalFps() > 0)?(1.0 * MAX_ORIGINAL_FPS / mStatistics.OriginalFps()):1.0;
+    double maxPlaybackRate = (mStatistics.OriginalFps() > 0)?(1.0 * MAX_ORIGINAL_FPS / mStatistics.OriginalFps()):0;
     double playbackRate = MIN(mPlaybackRate, maxPlaybackRate);
+    if ( maxPlaybackRate > 0 && (mPlaybackRate > maxPlaybackRate) ) {
+        /**
+         1.原始帧率大于最大帧率
+         2.播放倍速大于最大播放帧率
+         播放丢帧间隔 = 播放倍速 / 最大播放帧率
+         */
+        mPlaybackDropInterval = ceil(mPlaybackRate / maxPlaybackRate);
+    } else {
+        mPlaybackDropInterval = 0;
+    }
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -81,15 +91,18 @@ void PlayerController::AutoFixPlaybackRate() {
                  "this : %p, "
                  "mPlaybackRate : %.2f, "
                  "playbackRate : %.2f, "
-                 "maxPlaybackRate : %.2f "
+                 "maxPlaybackRate : %.2f, "
+                 "mPlaybackDropInterval : %ld "
                  ")",
                  this,
                  mPlaybackRate,
                  playbackRate,
-                 maxPlaybackRate);
-    mRtmpPlayer.SetPlaybackRate(playbackRate);
-    mFileReader.SetPlaybackRate(playbackRate);
-    mpAudioRenderer->SetPlaybackRate(playbackRate);
+                 maxPlaybackRate,
+                 mPlaybackDropInterval);
+
+    mRtmpPlayer.SetPlaybackRate(mPlaybackRate);
+    mFileReader.SetPlaybackRate(mPlaybackRate);
+    mpAudioRenderer->SetPlaybackRate(mPlaybackRate);
 }
 
 void PlayerController::SetVideoRenderer(VideoRenderer *videoRenderer) {
@@ -143,6 +156,7 @@ bool PlayerController::PlayUrl(const string &url, const string &recordFilePath, 
     
     mbIsPlayFile = false;
     mLastFileTS = INVALID_TIMESTAMP;
+    mPlaybackDropInterval = 0;
     
     // 重置分析器
     mStatistics.Start();
@@ -202,6 +216,7 @@ bool PlayerController::PlayFile(const string &filePath) {
 
     mbIsPlayFile = true;
     mLastFileTS = INVALID_TIMESTAMP;
+    mPlaybackDropInterval = 0;
     
     // 重置分析器
     mStatistics.Start();
@@ -486,8 +501,17 @@ void PlayerController::OnDecodeAudioError(AudioDecoder *decoder) {
 
 /*********************************************** 播放器回调处理 *****************************************************/
 void PlayerController::OnPlayVideoFrame(RtmpPlayer *player, void *frame, int64_t ts) {
-    if (mpVideoRenderer) {
-        mpVideoRenderer->RenderVideoFrame(frame);
+    bool bRender = true;
+    if ( (mPlaybackDropInterval > 0)
+        && ((mStatistics.GetVideoPlayFrameCount() + 1) % mPlaybackDropInterval == 0)
+        ) {
+        bRender = false;
+    }
+    
+    if ( bRender ) {
+        if (mpVideoRenderer) {
+            mpVideoRenderer->RenderVideoFrame(frame);
+        }
     }
 
     // 释放内存
