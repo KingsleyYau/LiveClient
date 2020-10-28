@@ -92,6 +92,9 @@ void AudioHardDecoder::DecodeAudioFrame(
     }
 }
 
+void AudioHardDecoder::ReleaseAudioFrame(void* frame) {
+}
+
 void AudioHardDecoder::inPropertyListenerProc(
                                               void *						inClientData,
                                               AudioFileStreamID				inAudioFileStream,

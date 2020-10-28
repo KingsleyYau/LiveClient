@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface StreamBaseViewController : UIViewController
-
+- (BOOL)isDarkStyle;
 @end
 
 NS_ASSUME_NONNULL_END

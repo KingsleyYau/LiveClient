@@ -31,20 +31,26 @@
 }
 */
 
+- (BOOL)isDarkStyle {
+    BOOL bFlag = NO;
+    if (@available(iOS 12.0, *)) {
+        BOOL isDark = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
+        bFlag = isDark;
+    } else {
+        // Fallback on earlier versions
+    }
+    return bFlag;
+}
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [self updateTrait];
 }
 
 - (void)updateTrait {
-    if (@available(iOS 12.0, *)) {
-        BOOL isDark = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
-        if (isDark) {
-            self.view.backgroundColor = [UIColor blackColor];
-        } else {
-            self.view.backgroundColor = [UIColor whiteColor];
-        }
+    BOOL isDark = [self isDarkStyle];
+    if (isDark) {
+        self.view.backgroundColor = [UIColor blackColor];
     } else {
-        // Fallback on earlier versions
         self.view.backgroundColor = [UIColor whiteColor];
     }
 }
