@@ -28,7 +28,7 @@ typedef enum FileDownloadItemStatus {
 + (instancetype)manager;
 - (void)addDelegate:(id<NSURLSessionDelegate>)delegate;
 - (void)removeDelegate:(id<NSURLSessionDelegate>)delegate;
-- (void)downloadURL:(NSString *)url;
+- (NSURLSessionDownloadTask *)downloadURL:(NSString *)url;
 - (void)cancel;
 @end
 

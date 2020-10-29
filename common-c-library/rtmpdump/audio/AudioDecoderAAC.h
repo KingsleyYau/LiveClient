@@ -83,8 +83,10 @@ class AudioDecoderAAC : public AudioDecoder {
 
     // 解码线程
     KThread mDecodeAudioThread;
-    
+    // 缓存队列大小
     unsigned int mBufferListSize;
+    
+    EncodeDecodeBuffer mResampeBuffer;
 };
 }
 #endif /* RTMPDUMP_AUDIODECODERAAC_H_ */

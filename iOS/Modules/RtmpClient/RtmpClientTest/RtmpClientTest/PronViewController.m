@@ -10,6 +10,14 @@
 #import "AppDelegate.h"
 #import "FileDownloadManager.h"
 
+@interface DownloadAttachment : NSTextAttachment
+@property (strong) NSURLSessionTask *task;
+@property (strong) NSAttributedString *statusString;
+@end
+
+@implementation DownloadAttachment
+@end
+
 @interface PronViewController ()
 @property (weak) IBOutlet StreamWebView *webView;
 @property (weak) IBOutlet UIButton *downloadBtn;
@@ -21,7 +29,7 @@
 @property (weak) IBOutlet UITextField *textFieldAddress;
 @property (strong) NSURLSession *session;
 
-@property (strong) NSMutableDictionary* taskURLDict;
+@property (strong) NSMutableDictionary *taskURLDict;
 
 @end
 
@@ -33,7 +41,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+
     // 界面处理
     self.title = @"Browser";
     self.urlDict = [NSMutableDictionary dictionary];
@@ -44,14 +52,14 @@
     self.webView.navigationDelegate = self;
     self.webView.hidden = YES;
     self.downloadBtn.enabled = NO;
-    
+
     self.taskURLDict = [NSMutableDictionary dictionary];
-    
+
     NSString *urlString = @"http://www.baidu.com";
     self.textFieldAddress.text = urlString;
-    
+
     [[FileDownloadManager manager] addDelegate:self];
-    
+
     //    [self goAction:nil];
 }
 
@@ -133,32 +141,43 @@
     }
 
     NSLog(@"PronViewController::downloadAction(), %@", urlString);
-    if ( urlString.length > 0) {
-        NSString *tips = [NSString stringWithFormat:@"[Download] %@", urlString];
-        NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:tips];
-        [line addAttributes:@{
-            NSForegroundColorAttributeName:[UIColor blueColor]
-        } range:NSMakeRange(0, 10)];
-        @synchronized(self) {
-            self.taskURLDict[urlString] = line;
+    if (urlString.length > 0) {
+        NSURLSessionDownloadTask *task = [[FileDownloadManager manager] downloadURL:urlString];
+        if (task) {
+            DownloadAttachment *att = [[DownloadAttachment alloc] init];
+            att.task = task;
+            NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Download]"
+                                                                                     attributes:@{
+                                                                                         NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                         NSForegroundColorAttributeName : [UIColor blueColor],
+                                                                                     }];
+            NSString *content = [NSString stringWithFormat:@" %@", urlString];
+            NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
+                                                                                              attributes:@{
+                                                                                                  NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                                  NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                              }];
+            [line appendAttributedString:contentAttStr];
+            att.statusString = line;
+            
+            @synchronized(self) {
+                NSString *hash = [NSString stringWithFormat:@"%lu", [task hash]];
+                self.taskURLDict[hash] = att;
+            }
+            [self changeDownloadStatus];
         }
-        [self changeDownloadStatus];
-        [[FileDownloadManager manager] downloadURL:urlString];
     }
 }
 
 - (void)changeDownloadStatus {
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
-//    NSMutableString* mutString = [NSMutableString string];
-    for(NSString* key in self.taskURLDict) {
-//        [mutString appendFormat:@"%@\n", self.taskURLDict[key]];
-        NSAttributedString *line = [[NSAttributedString alloc] initWithAttributedString:self.taskURLDict[key]];
+    for (NSString *key in self.taskURLDict) {
+        DownloadAttachment *att = (DownloadAttachment *)self.taskURLDict[key];
+        NSAttributedString *line = [[NSAttributedString alloc] initWithAttributedString:att.statusString];
         [attrString appendAttributedString:line];
         [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
     }
-//    self.downloadTextView.text = mutString;
     self.downloadTextView.attributedText = attrString;
-    
 }
 
 - (NSString *)readableSize:(NSInteger)size {
@@ -183,24 +202,33 @@
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 
-    NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
+    NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     float percent = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
-    NSString* percentString = [NSString stringWithFormat:@"(%@/%@)%.0f%%", [self readableSize:totalBytesWritten], [self readableSize:totalBytesExpectedToWrite], percent * 100];
-    
-    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Download]"
+    NSString *percentString = [NSString stringWithFormat:@"(%@/%@) %.0f%%", [self readableSize:totalBytesWritten], [self readableSize:totalBytesExpectedToWrite], percent * 100];
+
+    DownloadAttachment *att = [[DownloadAttachment alloc] init];
+    att.task = downloadTask;
+    NSString *attURL = [NSString stringWithFormat:@"Cancel://%lu", [downloadTask hash]];
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Cancel]"
                                                                              attributes:@{
-                                                                                 NSForegroundColorAttributeName:[UIColor blueColor]
+                                                                                 NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                 NSForegroundColorAttributeName : [UIColor blueColor],
+                                                                                 NSLinkAttributeName : attURL,
+                                                                                 NSAttachmentAttributeName : att
                                                                              }];
     NSString *content = [NSString stringWithFormat:@" %@ - %@", downloadTask.response.suggestedFilename, percentString];
     NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
-                                                                                attributes:@{
-                                                                                    NSForegroundColorAttributeName:[self isDarkStyle]?[UIColor whiteColor]:[UIColor darkGrayColor]
-                                                                                }];
+                                                                                      attributes:@{
+                                                                                          NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                          NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                      }];
     [line appendAttributedString:contentAttStr];
+    att.statusString = line;
     
     @synchronized(self) {
         if (urlString.length > 0) {
-            self.taskURLDict[urlString] = line;
+            NSString *hash = [NSString stringWithFormat:@"%lu", [downloadTask hash]];
+            self.taskURLDict[hash] = att;
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -209,25 +237,34 @@
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
-    NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
+    NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     float percent = 1.0 * fileOffset / expectedTotalBytes;
-    NSString* percentString = [NSString stringWithFormat:@"(%@/%@) %.0f%%", [self readableSize:fileOffset], [self readableSize:expectedTotalBytes], percent * 100];
+    NSString *percentString = [NSString stringWithFormat:@"(%@/%@) %.0f%%", [self readableSize:fileOffset], [self readableSize:expectedTotalBytes], percent * 100];
     NSLog(@"PronViewController::didResumeAtOffset(), %@", percentString);
-    
-    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Download]"
+
+    DownloadAttachment *att = [[DownloadAttachment alloc] init];
+    att.task = downloadTask;
+    NSString *attURL = [NSString stringWithFormat:@"Cancel://%lu", [downloadTask hash]];
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Cancel]"
                                                                              attributes:@{
-                                                                                 NSForegroundColorAttributeName:[UIColor blueColor]
+                                                                                 NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                 NSForegroundColorAttributeName : [UIColor blueColor],
+                                                                                 NSLinkAttributeName : attURL,
+                                                                                 NSAttachmentAttributeName : att
                                                                              }];
     NSString *content = [NSString stringWithFormat:@" %@ - %@", downloadTask.response.suggestedFilename, percentString];
     NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
-                                                                                attributes:@{
-                                                                                    NSForegroundColorAttributeName:[self isDarkStyle]?[UIColor whiteColor]:[UIColor darkGrayColor]
-                                                                                }];
+                                                                                      attributes:@{
+                                                                                          NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                          NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                      }];
     [line appendAttributedString:contentAttStr];
+    att.statusString = line;
     
     @synchronized(self) {
         if (urlString.length > 0) {
-            self.taskURLDict[urlString] = line;
+            NSString *hash = [NSString stringWithFormat:@"%lu", [downloadTask hash]];
+            self.taskURLDict[hash] = att;
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -246,23 +283,28 @@
     [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
     NSLog(@"PronViewController::didFinishDownloadingToURL(), %@", downloadTask.response.suggestedFilename);
     self.title = self.webView.title;
-    
-    NSString* urlString = downloadTask.currentRequest.URL.absoluteString;
-    
+
+    NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
+    DownloadAttachment *att = [[DownloadAttachment alloc] init];
+    att.task = downloadTask;
     NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Finish]"
                                                                              attributes:@{
-                                                                                 NSForegroundColorAttributeName:[UIColor greenColor]
+                                                                                 NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                 NSForegroundColorAttributeName : [UIColor greenColor]
                                                                              }];
     NSString *content = [NSString stringWithFormat:@" %@", downloadTask.response.suggestedFilename];
     NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
-                                                                                attributes:@{
-                                                                                    NSForegroundColorAttributeName:[self isDarkStyle]?[UIColor whiteColor]:[UIColor darkGrayColor]
-                                                                                }];
+                                                                                      attributes:@{
+                                                                                          NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                          NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                      }];
     [line appendAttributedString:contentAttStr];
+    att.statusString = line;
     
     @synchronized(self) {
         if (urlString.length > 0) {
-            self.taskURLDict[urlString] = line;
+            NSString *hash = [NSString stringWithFormat:@"%lu", [downloadTask hash]];
+            self.taskURLDict[hash] = att;
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -273,21 +315,24 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     NSLog(@"PronViewController::didCompleteWithError(), %@", error);
     if (error) {
-        NSString* urlString = task.currentRequest.URL.absoluteString;
+        NSString *urlString = task.currentRequest.URL.absoluteString;
+        DownloadAttachment *att = [[DownloadAttachment alloc] init];
+        att.task = task;
         NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Error]"
                                                                                  attributes:@{
-                                                                                     NSForegroundColorAttributeName:[UIColor redColor]
+                                                                                     NSForegroundColorAttributeName : [UIColor redColor]
                                                                                  }];
         NSString *content = [NSString stringWithFormat:@" %@", task.response.suggestedFilename];
         NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
-                                                                                    attributes:@{
-                                                                                        NSForegroundColorAttributeName:[self isDarkStyle]?[UIColor whiteColor]:[UIColor darkGrayColor]
-                                                                                    }];
+                                                                                          attributes:@{
+                                                                                              NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                          }];
         [line appendAttributedString:contentAttStr];
-        
+        att.statusString = line;
         @synchronized(self) {
             if (urlString.length > 0) {
-                self.taskURLDict[urlString] = line;
+                NSString *hash = [NSString stringWithFormat:@"%lu", [task hash]];
+                self.taskURLDict[hash] = att;
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -344,6 +389,16 @@
     return result;
 }
 
+#pragma mark - 富文本回调
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+    if ([[URL scheme] isEqualToString:@"Cancel"]) {
+        NSString *hash = [URL host];
+        DownloadAttachment *att = (DownloadAttachment *)self.taskURLDict[hash];
+        [att.task cancel];
+    }
+    return YES;
+}
+
 #pragma mark - 处理键盘回调
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
     //    BOOL bFlag = NO;
@@ -353,7 +408,7 @@
 
     if (height != 0) {
         // 弹出键盘
-        
+
     } else {
         // 收起键盘
     }

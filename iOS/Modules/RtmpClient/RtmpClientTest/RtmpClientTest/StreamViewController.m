@@ -112,7 +112,7 @@
 
     //    // Camshare
     //        NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
-    //        NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
+//            NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
