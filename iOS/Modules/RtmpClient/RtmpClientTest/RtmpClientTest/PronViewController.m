@@ -47,6 +47,12 @@
     self.urlDict = [NSMutableDictionary dictionary];
     self.urlCheckDict = [NSMutableDictionary dictionary];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"<Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 24, 24);
+    [button setImage:[UIImage imageNamed:@"DownloadButton"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(downloadAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 
     self.webView.UIDelegate = self;
     self.webView.navigationDelegate = self;

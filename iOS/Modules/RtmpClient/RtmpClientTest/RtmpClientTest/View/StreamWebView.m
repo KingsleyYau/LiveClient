@@ -16,7 +16,7 @@
     config.preferences.javaScriptEnabled = YES;
     config.allowsInlineMediaPlayback = YES;
     if (@available(iOS 10.0, *)) {
-        config.mediaTypesRequiringUserActionForPlayback = NO;
+        config.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
     }
     config.allowsAirPlayForMediaPlayback = YES;
     // 追加

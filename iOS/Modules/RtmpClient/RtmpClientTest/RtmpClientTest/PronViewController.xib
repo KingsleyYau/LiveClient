@@ -11,7 +11,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PronViewController">
             <connections>
-                <outlet property="downloadBtn" destination="Dm8-PR-1Nf" id="0US-cM-VHq"/>
                 <outlet property="downloadTextView" destination="qPS-2S-mvw" id="xsp-iH-pap"/>
                 <outlet property="textFieldAddress" destination="Ydi-8d-4up" id="At0-rN-cHx"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -35,7 +34,7 @@
                     </connections>
                 </button>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ydi-8d-4up" userLabel="URL Text Field">
-                    <rect key="frame" x="40" y="49" width="284" height="48"/>
+                    <rect key="frame" x="40" y="49" width="324" height="48"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="hqb-ZR-xYR"/>
                     </constraints>
@@ -46,7 +45,7 @@
                     </connections>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BGl-TD-TqG" userLabel="Go">
-                    <rect key="frame" x="329" y="53" width="40" height="40"/>
+                    <rect key="frame" x="369" y="53" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="d9w-s8-LmO"/>
                         <constraint firstAttribute="width" constant="40" id="pX7-Aa-3Ae"/>
@@ -54,17 +53,6 @@
                     <state key="normal" image="GoButton"/>
                     <connections>
                         <action selector="goAction:" destination="-1" eventType="touchUpInside" id="Z83-CC-OMf"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dm8-PR-1Nf" userLabel="Download">
-                    <rect key="frame" x="374" y="58" width="30" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="Dm8-PR-1Nf" secondAttribute="height" multiplier="1:1" id="O32-6b-1ab"/>
-                        <constraint firstAttribute="height" constant="30" id="jjt-2O-afw"/>
-                    </constraints>
-                    <state key="normal" image="DownloadButton"/>
-                    <connections>
-                        <action selector="downloadAction:" destination="-1" eventType="touchUpInside" id="ov8-VZ-2cg"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2S-Fp-rW7" customClass="StreamWebView">
@@ -97,7 +85,6 @@
             <constraints>
                 <constraint firstItem="BGl-TD-TqG" firstAttribute="leading" secondItem="Ydi-8d-4up" secondAttribute="trailing" constant="5" id="0yV-81-4jA"/>
                 <constraint firstItem="HQ0-QU-xZi" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-20" id="3Ay-bZ-Wfg"/>
-                <constraint firstItem="Dm8-PR-1Nf" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-10" id="4tH-2z-SWH"/>
                 <constraint firstItem="Ydi-8d-4up" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="5" id="5Ch-wP-ttk"/>
                 <constraint firstItem="L2S-Fp-rW7" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" id="8eS-v9-XUX"/>
                 <constraint firstItem="QgU-HD-bRe" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="5" id="Glv-hu-saN"/>
@@ -105,13 +92,12 @@
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="OY0-lV-YMZ"/>
                 <constraint firstItem="QgU-HD-bRe" firstAttribute="centerY" secondItem="Ydi-8d-4up" secondAttribute="centerY" id="OuI-Ye-sn7"/>
                 <constraint firstItem="BGl-TD-TqG" firstAttribute="centerY" secondItem="Ydi-8d-4up" secondAttribute="centerY" id="Pd7-iK-uAD"/>
-                <constraint firstItem="Dm8-PR-1Nf" firstAttribute="centerY" secondItem="BGl-TD-TqG" secondAttribute="centerY" id="TG1-2U-RGU"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="L2S-Fp-rW7" secondAttribute="bottom" id="Utw-GC-geR"/>
                 <constraint firstItem="Ydi-8d-4up" firstAttribute="leading" secondItem="QgU-HD-bRe" secondAttribute="trailing" constant="5" id="XhR-sJ-DiJ"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="L2S-Fp-rW7" secondAttribute="trailing" id="ZbS-E1-EDS"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="cmq-D7-Jzb"/>
                 <constraint firstItem="HQ0-QU-xZi" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" constant="-20" id="d1X-gj-fG7"/>
-                <constraint firstItem="Dm8-PR-1Nf" firstAttribute="leading" secondItem="BGl-TD-TqG" secondAttribute="trailing" constant="5" id="rpW-NK-mOm"/>
+                <constraint firstItem="BGl-TD-TqG" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-5" id="vHK-SB-sbH"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="yEp-Wn-JBJ"/>
                 <constraint firstItem="qPS-2S-mvw" firstAttribute="top" secondItem="Ydi-8d-4up" secondAttribute="bottom" id="yOD-nm-oYO"/>
             </constraints>
@@ -119,8 +105,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Clean" width="100" height="100"/>
-        <image name="DownloadButton" width="100" height="100"/>
+        <image name="Clean" width="66.666664123535156" height="66.666664123535156"/>
         <image name="Eye" width="100" height="100"/>
         <image name="GoButton" width="100" height="100"/>
         <systemColor name="systemBackgroundColor">

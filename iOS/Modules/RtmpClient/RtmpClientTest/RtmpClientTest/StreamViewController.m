@@ -229,6 +229,7 @@
     self.player.cacheMS = (int)roundf(self.sliderCacheMS.value);
     NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
     [self.player playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    self.loadingView.hidden = NO;
 }
 
 - (IBAction)playFile:(UIButton *)sender {
@@ -243,9 +244,22 @@
 - (IBAction)stopPlay:(UIButton *)sender {
     self.fileItemArray = nil;
     [self.player stop];
+    self.loadingView.hidden = YES;
 }
 
 #pragma mark - 播放器状态回调
+- (void)playerOnConnect:(LiveStreamPlayer * _Nonnull)player {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.loadingView.hidden = YES;
+    });
+}
+
+- (void)playerOnDisconnect:(LiveStreamPlayer * _Nonnull)player {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.loadingView.hidden = NO;
+    });
+}
+
 - (void)playerOnInfoChange:(LiveStreamPlayer *_Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.labelVideoSize.text = [NSString stringWithFormat:@"%dx%d", videoDisplayWidth, vieoDisplayHeight, nil];

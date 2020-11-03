@@ -13,29 +13,29 @@
 
 @interface StreamViewController : StreamBaseViewController
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewTop;
+@property (weak) IBOutlet NSLayoutConstraint *previewTop;
 
-@property (nonatomic, weak) IBOutlet UILabel* labelVideoSize;
-@property (nonatomic, weak) IBOutlet UILabel* labelFps;
-@property (nonatomic, weak) IBOutlet GPUImageView* previewView;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint* previewViewRadio;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint* previewViewBottom;
+@property (weak) IBOutlet UIActivityIndicatorView* loadingView;
+@property (weak) IBOutlet UILabel* labelVideoSize;
+@property (weak) IBOutlet UILabel* labelFps;
+@property (weak) IBOutlet GPUImageView* previewView;
+@property (weak) IBOutlet NSLayoutConstraint* previewViewRadio;
+@property (weak) IBOutlet NSLayoutConstraint* previewViewBottom;
 
-@property (nonatomic, weak) IBOutlet GPUImageView* previewPublishView;
-@property (nonatomic, weak) IBOutlet UIView* controlView;
-@property (nonatomic, weak) IBOutlet UITextField* textFieldAddress;
-@property (nonatomic, weak) IBOutlet UITextField* textFieldPublishAddress;
+@property (weak) IBOutlet GPUImageView* previewPublishView;
+@property (weak) IBOutlet UIView* controlView;
+@property (weak) IBOutlet UITextField* textFieldAddress;
+@property (weak) IBOutlet UITextField* textFieldPublishAddress;
 
-@property (nonatomic, weak) IBOutlet UILabel* labelCacheMS;
-@property (nonatomic, weak) IBOutlet UISlider* sliderCacheMS;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* controlBottom;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* controlTop;
+@property (weak) IBOutlet UILabel* labelCacheMS;
+@property (weak) IBOutlet UISlider* sliderCacheMS;
+@property (weak) IBOutlet NSLayoutConstraint* controlBottom;
+@property (weak) IBOutlet NSLayoutConstraint* controlTop;
 
-@property (nonatomic, weak) IBOutlet UIButton* button0_5x;
-@property (nonatomic, weak) IBOutlet UIButton* button1x;
-@property (nonatomic, weak) IBOutlet UIButton* button2x;
-
-@property (nonatomic, weak) IBOutlet UIButton* buttonRecord;
+@property (weak) IBOutlet UIButton* button0_5x;
+@property (weak) IBOutlet UIButton* button1x;
+@property (weak) IBOutlet UIButton* button2x;
+@property (weak) IBOutlet UIButton* buttonRecord;
 
 - (IBAction)scale:(id)sender;
 - (IBAction)mutePlay:(id)sender;
