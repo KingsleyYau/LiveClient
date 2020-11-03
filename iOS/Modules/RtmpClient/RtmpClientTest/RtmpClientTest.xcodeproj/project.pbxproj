@@ -38,6 +38,7 @@
 		50E8AF8825358FED00DECC7D /* StreamFileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E8AF8525358FEC00DECC7D /* StreamFileCollectionViewCell.m */; };
 		50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BF81E94F46100116A4B /* VideoToolbox.framework */; };
 		50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BFA1E94F46A00116A4B /* AVFoundation.framework */; };
+		50F4D8B1255153D6004B5853 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50F4D8AF255153D6004B5853 /* InfoPlist.strings */; };
 		8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */; };
 /* End PBXBuildFile section */
 
@@ -125,6 +126,8 @@
 		50E8AF8525358FEC00DECC7D /* StreamFileCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamFileCollectionViewCell.m; sourceTree = "<group>"; };
 		50F18BF81E94F46100116A4B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		50F18BFA1E94F46A00116A4B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		50F4D8B0255153D6004B5853 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		50F4D8DB255155E7004B5853 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RtmpClientTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE17A865FD417A671B581711 /* Pods-RtmpClientTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RtmpClientTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-RtmpClientTest/Pods-RtmpClientTest.release.xcconfig"; sourceTree = "<group>"; };
 		CA070A2EB98CA5A0244570A4 /* Pods-RtmpClientTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RtmpClientTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RtmpClientTest/Pods-RtmpClientTest.debug.xcconfig"; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 		50C9948B1E8F911E001E1355 /* RtmpClientTest */ = {
 			isa = PBXGroup;
 			children = (
+				50F4D8AF255153D6004B5853 /* InfoPlist.strings */,
 				50C9948F1E8F911E001E1355 /* AppDelegate.h */,
 				50C994901E8F911E001E1355 /* AppDelegate.mm */,
 				50C994981E8F911E001E1355 /* Assets.xcassets */,
@@ -401,6 +405,7 @@
 				50E8AF7F25358E5700DECC7D /* StreamFileCollectionViewController.xib in Resources */,
 				509187442542AAA00073BECA /* PronViewController.xib in Resources */,
 				50C994971E8F911E001E1355 /* Main.storyboard in Resources */,
+				50F4D8B1255153D6004B5853 /* InfoPlist.strings in Resources */,
 				50DAEFAD2136468600FB374D /* common.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,6 +515,15 @@
 				50C9949B1E8F911E001E1355 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		50F4D8AF255153D6004B5853 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50F4D8B0255153D6004B5853 /* Base */,
+				50F4D8DB255155E7004B5853 /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

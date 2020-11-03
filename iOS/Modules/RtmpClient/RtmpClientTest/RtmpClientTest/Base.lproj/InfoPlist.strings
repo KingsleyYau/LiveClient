@@ -1,0 +1,9 @@
+//
+//  InfoPlist.strings
+//  RtmpClientTest
+//
+//  Created by Max on 2020/11/03.
+//  Copyright © 2020 net.qdating. All rights reserved.
+//
+
+"CFBundleDisplayName" = "RtmpClient";
