@@ -108,7 +108,7 @@
     NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
     //        NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
     //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
-    //    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+//        NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
 
     //    // Camshare
     //        NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
@@ -427,7 +427,9 @@
 }
 
 - (void)hideControll:(BOOL)hidden {
-    [self.navigationController setNavigationBarHidden:hidden];
+    if ([self.navigationController.topViewController isEqual:self]) {
+        [self.navigationController setNavigationBarHidden:hidden];
+    }
     self.controlView.hidden = hidden;
 
     if (hidden) {

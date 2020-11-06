@@ -13,14 +13,14 @@
 
 @interface StreamViewController : StreamBaseViewController
 
-@property (weak) IBOutlet NSLayoutConstraint *previewTop;
+@property (strong) IBOutlet NSLayoutConstraint *previewTop;
+@property (strong) IBOutlet NSLayoutConstraint* previewViewRadio;
+@property (strong) IBOutlet NSLayoutConstraint* previewViewBottom;
 
 @property (weak) IBOutlet UIActivityIndicatorView* loadingView;
 @property (weak) IBOutlet UILabel* labelVideoSize;
 @property (weak) IBOutlet UILabel* labelFps;
 @property (weak) IBOutlet GPUImageView* previewView;
-@property (weak) IBOutlet NSLayoutConstraint* previewViewRadio;
-@property (weak) IBOutlet NSLayoutConstraint* previewViewBottom;
 
 @property (weak) IBOutlet GPUImageView* previewPublishView;
 @property (weak) IBOutlet UIView* controlView;
