@@ -80,6 +80,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	// 消息定义
 	private final int MSG_CONNECT = 0;
 	private final int MSG_DISCONNECT = 1;
+	private final int MSG_STATUS = 2;
 
 	/**
 	 * 正在断开
@@ -172,6 +173,35 @@ public class LSPlayer implements ILSPlayerCallback {
 				    	player.Stop();
 						isDisconnecting = false;
 
+					}break;
+					case MSG_STATUS:{
+						String freeMemory = Runtime.getRuntime().freeMemory() / 1024 + " K";
+						String totalMemory = Runtime.getRuntime().totalMemory() / 1024 + " K";
+						String maxMemory = Runtime.getRuntime().maxMemory() / 1024 + " K";
+
+						Log.w(LSConfig.TAG,
+								String.format("LSPlayer::handleMessage( "
+												+ "this : 0x%x, "
+												+ "[Check status], "
+												+ "freeMemory : %s, "
+												+ "totalMemory : %s, "
+												+ "maxMemory : %s "
+										+ ")",
+										(msg.obj!=null)?msg.obj.hashCode():0,
+										freeMemory,
+										totalMemory,
+										maxMemory
+								)
+						);
+
+						final Message newMsg = Message.obtain(msg);
+						handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								handler.sendMessage(newMsg);
+							}
+						}, 3000);
 					}break;
 					default:
 						break;
@@ -277,16 +307,27 @@ public class LSPlayer implements ILSPlayerCallback {
 	    	    bFlag = true;
 	    	    
 	    	    // 开始消息队列
+				final LSPlayer player = this;
 	    		handler.post(new Runnable() {
 	    			@Override
 	    			public void run() {
 	    				// TODO Auto-generated method stub
 						Message msg = Message.obtain();
 						msg.what = MSG_CONNECT;
-						msg.obj = this;
+						msg.obj = player;
 						handler.sendMessage(msg);
 	    			}
 	    		});
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Message msg = Message.obtain();
+						msg.what = MSG_STATUS;
+						msg.obj = player;
+						handler.sendMessage(msg);
+					}
+				}, 3000);
 	    	}
 	    }
 	    
@@ -320,6 +361,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		// 取消事件
 		handler.removeMessages(MSG_CONNECT);
+		handler.removeMessages(MSG_STATUS);
     	// 停止流播放器
     	player.Stop();
 		// 停止音频播放
