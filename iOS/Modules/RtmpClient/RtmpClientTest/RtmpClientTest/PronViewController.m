@@ -288,7 +288,6 @@
     [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
     [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
     NSLog(@"PronViewController::didFinishDownloadingToURL(), %@", downloadTask.response.suggestedFilename);
-    self.title = self.webView.title;
 
     NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     DownloadAttachment *att = [[DownloadAttachment alloc] init];

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 500520131E94A26200C45E22 /* libCommon-C-Library.a */; };
 		500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995221E8F930A001E1355 /* libRtmpClient.a */; };
+		5080C84A2558EB5E00F5E4F3 /* StreamNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5080C8492558EB5E00F5E4F3 /* StreamNavigationController.m */; };
 		509187432542AAA00073BECA /* PronViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187412542AAA00073BECA /* PronViewController.m */; };
 		509187442542AAA00073BECA /* PronViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509187422542AAA00073BECA /* PronViewController.xib */; };
 		509187472542B4C10073BECA /* StreamWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187462542B4C10073BECA /* StreamWebView.m */; };
@@ -75,6 +76,8 @@
 
 /* Begin PBXFileReference section */
 		5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
+		5080C8482558EB5E00F5E4F3 /* StreamNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamNavigationController.h; sourceTree = "<group>"; };
+		5080C8492558EB5E00F5E4F3 /* StreamNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StreamNavigationController.m; sourceTree = "<group>"; };
 		509187402542AAA00073BECA /* PronViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PronViewController.h; sourceTree = "<group>"; };
 		509187412542AAA00073BECA /* PronViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PronViewController.m; sourceTree = "<group>"; };
 		509187422542AAA00073BECA /* PronViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PronViewController.xib; sourceTree = "<group>"; };
@@ -192,7 +195,6 @@
 		50C9948B1E8F911E001E1355 /* RtmpClientTest */ = {
 			isa = PBXGroup;
 			children = (
-				50F4D8AF255153D6004B5853 /* InfoPlist.strings */,
 				50C9948F1E8F911E001E1355 /* AppDelegate.h */,
 				50C994901E8F911E001E1355 /* AppDelegate.mm */,
 				50C994981E8F911E001E1355 /* Assets.xcassets */,
@@ -200,6 +202,7 @@
 				509CC0EB2546C0F40037BA32 /* FileDownloadManager.m */,
 				50DAEF9E2136429E00FB374D /* Header */,
 				50C9949D1E8F911E001E1355 /* Info.plist */,
+				50F4D8AF255153D6004B5853 /* InfoPlist.strings */,
 				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
 				50DAEF8B213641E900FB374D /* LiveStreamClient */,
 				50C994951E8F911E001E1355 /* Main.storyboard */,
@@ -212,6 +215,8 @@
 				50E8AF7C25358E5600DECC7D /* StreamFileCollectionViewController.h */,
 				50E8AF7B25358E5600DECC7D /* StreamFileCollectionViewController.m */,
 				50E8AF7D25358E5600DECC7D /* StreamFileCollectionViewController.xib */,
+				5080C8482558EB5E00F5E4F3 /* StreamNavigationController.h */,
+				5080C8492558EB5E00F5E4F3 /* StreamNavigationController.m */,
 				50DAEF832136403D00FB374D /* StreamViewController.h */,
 				50DAEF812136403D00FB374D /* StreamViewController.m */,
 				50DAEF822136403D00FB374D /* StreamViewController.xib */,
@@ -475,6 +480,7 @@
 				50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */,
 				509187432542AAA00073BECA /* PronViewController.m in Sources */,
 				50E8AF8825358FED00DECC7D /* StreamFileCollectionViewCell.m in Sources */,
+				5080C84A2558EB5E00F5E4F3 /* StreamNavigationController.m in Sources */,
 				509187472542B4C10073BECA /* StreamWebView.m in Sources */,
 				50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */,
 				509CC0E72546AECA0037BA32 /* StreamBaseViewController.m in Sources */,

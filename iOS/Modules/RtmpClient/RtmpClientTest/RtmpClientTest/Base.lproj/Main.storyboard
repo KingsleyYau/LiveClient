@@ -7,10 +7,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
+        <!--Stream Navigation Controller-->
         <scene sceneID="fzJ-Hr-9w6">
             <objects>
-                <navigationController id="ctK-1s-U0Q" sceneMemberID="viewController">
+                <navigationController id="ctK-1s-U0Q" customClass="StreamNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="igi-eU-EAz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
