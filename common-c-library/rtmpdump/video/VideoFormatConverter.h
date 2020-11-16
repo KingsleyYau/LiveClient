@@ -26,7 +26,7 @@ class VideoFormatConverter {
 
   public:
     void SetDstFormat(VIDEO_FORMATE_TYPE type);
-    bool ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame);
+    bool ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame, bool &bChangeSize);
     int GetWidth();
     int GetHeight();
     

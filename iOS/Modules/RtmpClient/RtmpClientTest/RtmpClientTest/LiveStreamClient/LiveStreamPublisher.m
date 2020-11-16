@@ -317,9 +317,9 @@
             self.videoKpi = 6;
             self.videoBitFate = 64 * 1000;
         }break;
-        case LiveStreamType_480x320: {
+        case LiveStreamType_480x640: {
             self.videoWidth = 480;
-            self.videoHeight = 320;
+            self.videoHeight = 640;
             self.videoFps = 10;
             self.videoKpi = 10;
             self.videoBitFate = 400 * 1000;
@@ -588,7 +588,7 @@
             NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Disconnect], self : %p )", self);
 
         } else {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 // 断线重新拉流
                 NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Delay Check], self : %p )", self);
 
@@ -596,6 +596,14 @@
                 [self reconnect];
             });
         }
+    }
+}
+
+- (void)rtmpPublisherOCOnError:(RtmpPublisherOC * _Nonnull)rtmpClient code:(NSString * _Nullable)code description:(NSString * _Nullable)description {
+    NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnError( self : %p, code : %@, description : %@ )", self, code, description);
+
+    if ([self.delegate respondsToSelector:@selector(publisherOnError:code:description:)]) {
+        [self.delegate publisherOnError:self code:code description:description];
     }
 }
 

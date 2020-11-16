@@ -20,7 +20,7 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate, PronViewControllerDelegate>
+@interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate>
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
 
@@ -44,6 +44,8 @@
 #pragma mark - 界面初始化
 - (void)dealloc {
     NSLog(@"StreamViewController::dealloc()");
+    
+    [self.player removePlayView:self.previewView];
 }
 
 - (void)viewDidLoad {
@@ -93,30 +95,42 @@
     self.player = [LiveStreamPlayer instance];
     self.player.useHardDecoder = YES;
     self.player.delegate = self;
-    self.player.playView = self.previewView;
     //    self.player.customFilter = self.playerFilterArray[0];
-    self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
+    self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
+    [self.player addPlayView:self.previewView];
 
     // TODO:初始化推送
-    self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x320];
+    self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x640];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
     LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = vibrateFilter;
 
     // TODO:链接地址
-    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-    //        NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
-    //    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
-//        NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
+    NSDictionary<NSString *, NSString *> *urls = @{
+        @"tn":@"rtmp://81.71.134.206:4000/cdn_standard/max0",           // Live
+        @"ra":@"rtmp://198.211.27.71:4000/cdn_standard/max0",
+        @"demo1":@"rtmp://52.196.96.7:4000/cdn_standard/max0",
+        @"demo2":@"rtmp://18.194.23.38:4000/cdn_standard/max0",
+        @"local":@"rtmp://172.25.32.133:4000/cdn_standard/max0",
+        @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre",         // Camshare
+        @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre",
+    };
+    NSString *url = urls[@"local"];
+//    NSString *url = @"rtmp://81.71.134.206:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
+//    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
 
-    //    // Camshare
-    //        NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
-//            NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
+      // Camshare
+//    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
+//    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
+    [self playbackRate2x:nil];
     //    [self play:nil];
 }
 
@@ -186,8 +200,8 @@
 }
 
 - (IBAction)scale:(UIButton *)sender {
-    self.player.playView.fillMode++;
-    self.player.playView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
+    self.previewView.fillMode++;
+    self.previewView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
 }
 
 - (IBAction)mutePlay:(UIButton *)sender {
@@ -272,8 +286,8 @@
     });
 }
 
-- (void)playerOnFastPlaybackError:(LiveStreamPlayer *_Nonnull)player {
-    NSLog(@"StreamViewController::playerOnFastPlaybackError()");
+- (void)playerOnError:(LiveStreamPlayer *_Nonnull)player code:(NSString *)code description:(NSString *)description {
+    NSLog(@"StreamViewController::playerOnError(), code: %@, description: %@", code, description);
 }
 
 - (void)playerOnStats:(LiveStreamPlayer *_Nonnull)player fps:(unsigned int)fps bitrate:(unsigned int)bitrate {
@@ -335,10 +349,22 @@
     [self.publisher stopPreview];
 }
 
+#pragma mark - 推流器状态回调
+- (void)publisherOnConnect:(LiveStreamPublisher *)publisher {
+    NSLog(@"StreamViewController::publisherOnConnect()");
+}
+
+- (void)publisherOnDisconnect:(LiveStreamPublisher *)publisher {
+    NSLog(@"StreamViewController::publisherOnDisconnect()");
+}
+
+- (void)publisherOnError:(LiveStreamPublisher *)publisher code:(NSString * _Nullable)code description:(NSString * _Nullable)description {
+    NSLog(@"StreamViewController::publisherOnError(), code: %@, description: %@", code, description);
+}
+
 #pragma mark - 浏览器
 - (IBAction)pronAction:(UIButton *)sender {
     PronViewController *vc = [[PronViewController alloc] init];
-    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -415,7 +441,7 @@
         case UIDeviceOrientationPortraitUpsideDown: {
             // Device oriented vertically, home button on the top
             NSLog(@"StreamViewController::deviceOrientationChange( [PortraitUpsideDown] )");
-            self.player.playView.fillMode = self.isScale ? kGPUImageFillModePreserveAspectRatioAndFill : kGPUImageFillModePreserveAspectRatio;
+            self.previewView.fillMode = self.isScale ? kGPUImageFillModePreserveAspectRatioAndFill : kGPUImageFillModePreserveAspectRatio;
             [self hideControll:self.isScale];
         } break;
         case UIDeviceOrientationLandscapeLeft:
@@ -424,7 +450,7 @@
         case UIDeviceOrientationLandscapeRight: {
             // Device oriented horizontally, home button on the left
             NSLog(@"StreamViewController::deviceOrientationChange( [LandscapeRight] )");
-            self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
+            self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
             [self hideControll:YES];
         } break;
         default:
@@ -560,14 +586,6 @@
     if (self.fileItemArray.count > 0) {
         self.fileItemIndex = arc4random() % self.fileItemArray.count;
         [self playNextFileItem];
-    }
-}
-
-- (void)downloadTaskPercent:(NSString *)percentString {
-    if ( percentString.length > 0 ) {
-        self.title = [NSString stringWithFormat:@"Stream Player %@", percentString];
-    } else {
-        self.title = @"Stream Player";
     }
 }
 @end

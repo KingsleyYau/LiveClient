@@ -197,4 +197,11 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 		}
 	}
 
+	@Override
+	public void onError(String code, String description) {
+		if( publisherCallback != null ) {
+			publisherCallback.onError(this, code, description);
+		}
+	}
+
 }

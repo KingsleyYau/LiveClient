@@ -21,15 +21,15 @@
 - (void)playerOnDisconnect:(LiveStreamPlayer * _Nonnull)player;
 - (void)playerOnInfoChange:(LiveStreamPlayer * _Nonnull)player videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight;
 - (void)playerOnStats:(LiveStreamPlayer * _Nonnull)player fps:(unsigned int)fps bitrate:(unsigned int)bitrate;
-- (void)playerOnFastPlaybackError:(LiveStreamPlayer * _Nonnull)player;
+- (void)playerOnError:(LiveStreamPlayer * _Nonnull)player code:(NSString * _Nullable)code description:(NSString * _Nullable)description;
 - (void)playerOnFinish:(LiveStreamPlayer * _Nonnull)player;
 @end
 
 @interface LiveStreamPlayer : NSObject
-/**
- 显示界面
- */
-@property (strong, nonatomic) GPUImageView* _Nullable playView;
+///**
+// 显示界面
+// */
+//@property (strong, nonatomic) GPUImageView* _Nullable playView;
 
 /**
  委托
@@ -79,6 +79,20 @@
 + (instancetype _Nonnull)instance;
 
 /**
+ 增加播放界面
+ 
+ @param playView 播放界面
+ */
+- (void)addPlayView:(GPUImageView * _Nonnull)playView;
+
+/**
+ 移除播放界面
+ 
+ @param playView 播放界面
+ */
+- (void)removePlayView:(GPUImageView * _Nonnull)playView;
+    
+/**
  播放流连接
  
  @param url 连接
@@ -89,6 +103,11 @@
  */
 - (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString * _Nullable)recordFilePath recordH264FilePath:(NSString * _Nullable)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
 
+/**
+ 播放文件
+ 
+ @param filePath 文件绝对路径
+ */
 - (BOOL)playFilePath:(NSString * _Nonnull)filePath;
 
 /**

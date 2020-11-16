@@ -20,7 +20,7 @@
 - (void)rtmpPlayerOnPlayerOnDelayMaxTime:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 - (void)rtmpPlayerOnInfoChange:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight;
 - (void)rtmpPlayerOnStats:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC fps:(unsigned int)fps bitrate:(unsigned int)bitrate;
-- (void)rtmpPlayerOnFastPlaybackError:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
+- (void)rtmpPlayerOnError:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC code:(NSString * _Nullable)code description:(NSString * _Nullable)description;
 - (void)rtmpPlayerOnFinish:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 @end
 

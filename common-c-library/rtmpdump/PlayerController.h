@@ -36,7 +36,7 @@ class PlayerStatusCallback {
     virtual void OnPlayerOnDelayMaxTime(PlayerController *pc) = 0;
     virtual void OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight) = 0;
     virtual void OnPlayerStats(PlayerController *pc, unsigned int fps, unsigned int bitrate) = 0;
-    virtual void OnPlayerFastPlaybackError(PlayerController *pc) = 0;
+    virtual void OnPlayerError(PlayerController *pc, const string& code, const string& description) = 0;
     virtual void OnPlayerFinish(PlayerController *pc) = 0;
 };
 
@@ -192,7 +192,10 @@ class PlayerController : public RtmpDumpCallback,
     void OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                            const string &uuId,
                            const string &userName);
-
+    void OnRecvStatusError(RtmpDump *rtmpDump,
+                           const string &code,
+                           const string &description);
+                             
     // 文件播放器回调
     void OnMediaFileReaderInfo(MediaFileReader *mfr, double duration, int fps);
     void OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps = NULL, int vps_size = 0);

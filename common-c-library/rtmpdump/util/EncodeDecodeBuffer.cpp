@@ -120,6 +120,7 @@ bool EncodeDecodeBuffer::RenewBufferSize(int bufferLen)
         }
         else {
             // 重建失败
+            mBuffer = NULL;
             mBufferSize = 0;
             mBufferLen = 0;
             result = false;

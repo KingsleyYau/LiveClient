@@ -21,6 +21,10 @@ using namespace std;
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+#ifndef MAX
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+
 // 判断文件是否存在
 bool IsFileExist(const string& path);
 // 判断目录是否存在

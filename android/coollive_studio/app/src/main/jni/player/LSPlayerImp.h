@@ -34,6 +34,10 @@ private:
 	void OnPlayerConnect(PlayerController* pc);
 	void OnPlayerDisconnect(PlayerController* pc);
 	void OnPlayerOnDelayMaxTime(PlayerController* pc);
+	void OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight);
+    void OnPlayerStats(PlayerController *pc, unsigned int fps, unsigned int bitrate);
+    void OnPlayerError(PlayerController *pc, const string& code, const string& description);
+    void OnPlayerFinish(PlayerController *pc);
 
 private:
 	void CreateDecoders();

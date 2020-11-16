@@ -321,3 +321,30 @@ void LSPlayerImp::OnPlayerOnDelayMaxTime(PlayerController* pc) {
 		ReleaseEnv(isAttachThread);
 	}
 }
+
+void LSPlayerImp::OnPlayerInfoChange(PlayerController *pc, int videoDisplayWidth, int vieoDisplayHeight) {
+
+}
+
+void LSPlayerImp::OnPlayerStats(PlayerController *pc, unsigned int fps, unsigned int bitrate) {
+
+}
+
+void LSPlayerImp::OnPlayerError(PlayerController *pc, const string& code, const string& description) {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_WARNING,
+			"LSPublisherImp::OnPlayerError( "
+			"this : %p, "
+			"code : %s, "
+			"description : %s "
+			")",
+			this,
+			code.c_str(),
+			description.c_str()
+			);
+}
+
+void LSPlayerImp::OnPlayerFinish(PlayerController *pc) {
+
+}

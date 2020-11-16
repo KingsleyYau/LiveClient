@@ -42,14 +42,13 @@ void VideoFormatConverter::SetDstFormat(VIDEO_FORMATE_TYPE type) {
     mDstFormat = type;
 }
 
-bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame) {
+bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFrame, bool &bChangeSize) {
     long long curTime = getCurrentTime();
 
     AVFrame *srcAvFrame = srcFrame->mpAVFrame;
     AVPixelFormat dstFormat = (AVPixelFormat)VideoFrame::GetPixelFormat(mDstFormat);
 
     // 改变句柄
-    bool bChangeSize = false;
     bool bFlag = ChangeContext(srcFrame, bChangeSize);
     if (bFlag) {
         // 填充原始帧
@@ -101,8 +100,8 @@ bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFra
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "VideoFormatConverter::ConvertFrame( "
-                         "[Scacl Frame Fail], "
                          "this : %p, "
+						 "[Scacl Frame Fail], "
                          "ret : %d "
                          ")",
                          bFlag ? "Success" : "Fail",
@@ -117,8 +116,8 @@ bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFra
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "VideoFormatConverter::ConvertFrame( "
-                 "[Convert Frame %s], "
                  "this : %p, "
+				 "[Convert Frame %s], "
                  "srcFrame->mFormat : %d, "
                  "dstFrame->mFormat: %d, "
                  "width : %d, "
@@ -137,7 +136,7 @@ bool VideoFormatConverter::ConvertFrame(VideoFrame *srcFrame, VideoFrame *dstFra
                  dstFrame->mTS,
                  handleTime);
 
-    return bChangeSize;
+    return bFlag;
 }
 
 int VideoFormatConverter::GetWidth() {
@@ -178,14 +177,16 @@ bool VideoFormatConverter::ChangeContext(VideoFrame *srcFrame, bool &bChangeSize
             "rtmpdump",
             KLog::LOG_WARNING,
             "VideoFormatConverter::ChangeContext( "
-            "[Image Convert Context Change], "
             "this : %p, "
+			"[Image Convert Context Change], "
+			"mImgConvertCtx : %p, "
             "width : %d, "
             "height : %d, "
             "srcPixelFormat : %d, "
             "dstPixelFormat : %d "
             ")",
             this,
+			mImgConvertCtx,
             mWidth,
             mHeight,
             srcFormat,

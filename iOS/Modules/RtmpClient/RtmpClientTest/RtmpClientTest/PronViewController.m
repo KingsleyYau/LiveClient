@@ -46,7 +46,7 @@
     self.title = @"Browser";
     self.urlDict = [NSMutableDictionary dictionary];
     self.urlCheckDict = [NSMutableDictionary dictionary];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"<Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"< Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 24, 24);
@@ -351,9 +351,11 @@
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    NSLog(@"PronViewController::decidePolicyForNavigationAction()");
+    NSLog(@"PronViewController::decidePolicyForNavigationAction(), %u, %@", navigationAction.navigationType, navigationAction.request.URL.absoluteString);
     decisionHandler(WKNavigationActionPolicyAllow);
-    self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
+    if ( navigationAction.navigationType == WKNavigationTypeLinkActivated ) {
+        self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
+    }
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {

@@ -29,8 +29,8 @@
  显示界面
  */
 @property (nonatomic, strong) AVSampleBufferDisplayLayer *videoLayer;
-
 @property (nonatomic, strong) ImageCVPixelBufferInput *pixelBufferInput;
+@property (nonatomic, strong) NSMutableArray<GPUImageView *> *viewArray;
 
 @property (strong) NSString *_Nonnull url;
 @property (strong) NSString *_Nonnull recordFilePath;
@@ -66,6 +66,8 @@
 
         self.pixelBufferInput = [[ImageCVPixelBufferInput alloc] init];
 
+        self.viewArray = [NSMutableArray array];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
@@ -167,12 +169,38 @@
         [self.pixelBufferInput addTarget:_customFilter];
         filter = _customFilter;
     }
-    if (_playView) {
-        if( filter ) {
-            [filter addTarget:_playView];
-        } else {
-            [self.pixelBufferInput addTarget:_playView];
+    for(GPUImageView *playView in self.viewArray) {
+        if (playView) {
+            if( filter ) {
+                [filter addTarget:playView];
+            } else {
+                [self.pixelBufferInput addTarget:playView];
+            }
         }
+    }
+}
+
+//- (void)setPlayView:(GPUImageView *)playView {
+//    if (_playView != playView) {
+//        _playView = playView;
+//
+//        [self installFilter];
+//    }
+//}
+
+- (void)addPlayView:(GPUImageView *)playView {
+    NSLog(@"LiveStreamPlayer::addPlayView(), playView: %@", playView);
+    if (![self.viewArray containsObject:playView]) {
+        [self.viewArray addObject:playView];
+        [self installFilter];
+    }
+}
+
+- (void)removePlayView:(GPUImageView *)playView {
+    NSLog(@"LiveStreamPlayer::removePlayView(), playView: %@", playView);
+    if ([self.viewArray containsObject:playView]) {
+        [self.viewArray removeObject:playView];
+        [self installFilter];
     }
 }
 
@@ -194,14 +222,6 @@
 
 - (void)setPlaybackRate:(float)playbackRate {
     self.player.playbackRate = playbackRate;
-}
-
-- (void)setPlayView:(GPUImageView *)playView {
-    if (_playView != playView) {
-        _playView = playView;
-
-        [self installFilter];
-    }
 }
 
 - (void)run {
@@ -354,9 +374,9 @@
     }
 }
 
-- (void)rtmpPlayerOnFastPlaybackError:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC {
-    if ([self.delegate respondsToSelector:@selector(playerOnFastPlaybackError:)]) {
-        [self.delegate playerOnFastPlaybackError:self];
+- (void)rtmpPlayerOnError:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC code:(NSString *)code description:(NSString *)description {
+    if ([self.delegate respondsToSelector:@selector(playerOnError:code:description:)]) {
+        [self.delegate playerOnError:self code:code description:description];
     }
 }
 

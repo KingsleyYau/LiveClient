@@ -13,6 +13,12 @@
 #define START_TIMESTAMP 0x0
 
 namespace coollive {
+typedef enum VideoFrameRateType {
+    VIDEO_FRAME_RATE_HOLD = 0,
+    VIDEO_FRAME_RATE_INC,
+    VIDEO_FRAME_RATE_DEC,
+} VideoFrameRateType;
+
 // 原始视频数据格式
 typedef enum VIDEO_FORMATE_TYPE {
     VIDEO_FORMATE_NONE = 0,

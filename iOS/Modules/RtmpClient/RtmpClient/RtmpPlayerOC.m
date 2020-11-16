@@ -53,103 +53,6 @@ class PlayerStatusCallbackImp;
 
 @end
 
-//#pragma mark - RrmpPlayer回调
-//class RtmpPlayerCallbackImp : public RtmpPlayerCallback {
-//public:
-//    RtmpPlayerCallbackImp(RtmpPlayerOC* player) {
-//        mpPlayer = player;
-//    };
-//
-//    ~RtmpPlayerCallbackImp(){};
-//    
-//    void OnDisconnect(RtmpPlayer* player) {
-//        NSLog(@"RtmpPlayerOC::OnDisconnect( player : %p )", player);
-//    }
-//    
-//    void OnPlayVideoFrame(RtmpPlayer* player, void* frame) {
-//        if( mpPlayer.useHardDecoder ) {
-//            // 硬解码
-//            CVPixelBufferRef buffer = (CVPixelBufferRef)frame;
-//            [mpPlayer.delegate rtmpPlayerOCOnRecvVideoBuffer:mpPlayer buffer:buffer];
-//            CFRelease(buffer);
-//            
-//        } else {
-//            // 软解码
-////            VideoBuffer* videoFrame = (VideoBuffer *)frame;
-//            CVPixelBufferRef buffer = [mpPlayer createPixelBufferByRGBData:(const unsigned char*)videoFrame->GetBuffer()
-//                                                                      size:videoFrame->mBufferLen
-//                                                                     width:videoFrame->mWidth
-//                                                                    height:videoFrame->mHeight];
-////
-//            [mpPlayer.delegate rtmpPlayerOCOnRecvVideoBuffer:mpPlayer buffer:buffer];
-//            CFRelease(buffer);
-////
-////            // 释放Buffer
-////            VideoDecoderH264* decoder = (VideoDecoderH264 *)mpPlayer.player->GetVideoDecoder();
-////            decoder->ReleaseBuffer(videoFrame);
-//        }
-//    }
-//    
-//    void OnDropVideoFrame(RtmpPlayer* player, void* frame) {
-//        if( mpPlayer.useHardDecoder ) {
-//            // 硬解码
-//            CVPixelBufferRef buffer = (CVPixelBufferRef)frame;
-//            CFRelease(buffer);
-//            
-//        } else {
-//            // 软解码
-////            VideoBuffer* videoFrame = (VideoBuffer *)frame;
-////            
-////            // 释放Buffer
-////            VideoDecoderH264* decoder = (VideoDecoderH264 *)mpPlayer.player->GetVideoDecoder();
-////            decoder->ReleaseBuffer(videoFrame);
-//        }
-//    }
-//    
-//    void OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
-//        if( mpPlayer.useHardDecoder ) {
-//            // 硬解码
-//            CFDataRef dataRef = (CFDataRef)frame;
-//            //        OSStatus status = noErr;
-//            //        if( mpPlayer.audioFileStream ) {
-//            //            status = AudioFileStreamParseBytes(mpPlayer.audioFileStream, (UInt32)CFDataGetLength(dataRef), CFDataGetBytePtr(dataRef), 0);
-//            //            if( status != noErr ) {
-//            //                NSLog(@"RtmpPlayerOC::OnPlayAudioFrame( [Fail], status : %ld )", (long)status);
-//            //            }
-//            //        }
-//            CFRelease(dataRef);
-//        } else {
-//            // 软解码
-////            coollive::AudioBuffer* audioFrame = (coollive::AudioBuffer *)frame;
-////            
-//////            AudioStreamBasicDescription asbd;
-//////            
-//////            AudioStreamPacketDescription desc;
-//////            [mpPlayer.audioPlayer playAudioFrame:(const unsigned char*)audioFrame->GetBuffer() size:audioFrame->mBufferLen desc:desc];
-//////            
-//////            // 释放Buffer
-//////            AudioDecoderAAC* decoder = (AudioDecoderAAC *)mpPlayer.player->GetAudioDecoder();
-////            decoder->ReleaseBuffer(audioFrame);
-//        }
-//    }
-//    
-//    void OnDropAudioFrame(RtmpPlayer* player, void* frame) {
-//        if( mpPlayer.useHardDecoder ) {
-//            // 硬解码
-//            CFDataRef dataRef = (CFDataRef)frame;
-//            CFRelease(dataRef);
-//            
-//        } else {
-//            // 软解码
-//            
-//        }
-//    }
-//    
-//private:
-//    RtmpPlayerOC* mpPlayer;
-//
-//};
-
 #pragma mark - PlayerStatusCallback回调
 class PlayerStatusCallbackImp : public PlayerStatusCallback {
 public:
@@ -196,9 +99,9 @@ public:
         }
     }
     
-    void OnPlayerFastPlaybackError(PlayerController *pc) {
-        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnFastPlaybackError:)] ) {
-            [mpRtmpPlayerOC.delegate rtmpPlayerOnFastPlaybackError:mpRtmpPlayerOC];
+    void OnPlayerError(PlayerController *pc, const string& code, const string& description) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnError:code:description:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnError:mpRtmpPlayerOC code:[NSString stringWithUTF8String:code.c_str()] description:[NSString stringWithUTF8String:description.c_str()]];
         }
     }
     

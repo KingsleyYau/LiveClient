@@ -2,6 +2,7 @@ package net.qdating.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.qpidnetwork.tool.CrashHandlerJni;
 
@@ -84,8 +87,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private LSImageFilter[] imageFilters = null;
 	private LSPlayerRendererBinder[] playerRenderderBinders = null;
 //	private String playerUrl = "rtmp://172.25.32.17:19351/live/max";
-	private String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max";
-//	private String playerUrl = "rtmp://52.196.96.7:4000/cdn_standard/max";
+//	private String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max";
+	private String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
 	private EditText editText = null;
 	private int playerRunningCount = 0;
 	private Object playerRunningCountLock = new Object();
@@ -93,6 +96,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	// 推送相关
 //	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
 	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+//  private String publishUrl = "rtmp://52.196.96.7:4000/cdn_standard/max0";
 //	private String publishUrl = "rtmp://172.25.32.133:8899/publish_standard/max0?token=ABC#123";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
@@ -116,7 +120,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	private boolean supportPublish = false;
 
 	// 人面识别
-	private LSFaceDetector faceDetector = new LSFaceDetector();
+	private LSFaceDetector faceDetector = null;//new LSFaceDetector();
 	private LSVideoPlayer previewPlayer = new LSVideoPlayer();
 	private LSImageGroupFilter previewGroupFilter = new LSImageGroupFilter();
 	private LSImageWaterMarkFilter previewWaterMarkFilter = null;
@@ -130,10 +134,11 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
-		LSConfig.DEBUG = true;
-		LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
+		LSConfig.DEBUG = false;
+		LSConfig.LOG_LEVEL = android.util.Log.WARN;
 		LSConfig.LOGDIR = LSConfig.TAG;
 		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeAuto;
+//		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeSoft;
 
 		File path = Environment.getExternalStorageDirectory();
 		filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR;
@@ -160,7 +165,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		editTextPublish.setText(publishUrl);
 
 		// 播放相关
-		surfaceViews = new GLSurfaceView[3];
+		surfaceViews = new GLSurfaceView[2];
 		imageFilters = new LSImageFilter[surfaceViews.length];
 		playerRenderderBinders = new LSPlayerRendererBinder[surfaceViews.length];
 
@@ -171,9 +176,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		imageFilters[1] = new LSImageMosaicFilter(0.2f);
 		imageFilters[1] = new LSImageSampleBeautyEmeraldFilter(this);
 
-		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
-//		imageFilters[2] = new LSImageColorFilter();
-		imageFilters[2] = new LSImageSampleBeautyHealthyFilter(this);
 		surfaceViewsScale = new boolean[surfaceViews.length];
 
 		players = new LSPlayer[surfaceViews.length];
@@ -195,6 +197,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
 //			players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
 		}
+		play();
 
 //		RelativeLayout layoutVideo1 = (RelativeLayout)this.findViewById(R.id.layoutVideo1);
 //		newSurfaceView = new GLSurfaceView(this);
@@ -238,7 +241,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					LSConfig.VideoConfigType.VideoConfigType480x640,
 					12,
 					12,
-					400 * 1000
+					600 * 1000
 			);
 
 			publishFilterCount = 8;
@@ -253,7 +256,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				publishFilters[4] = new LSImageSampleBeautySakuraFilter(this);
 				publishFilters[5] = new LSImageSampleBeautySunsetFilter(this);
 				publishFilters[6] = new LSImageSampleBeautyWatermarkFilter(this);
-				publishFilters[7] = new LSImageSampleBeautyBaseFilter(this);
+				LSImageGroupFilter filters = new LSImageGroupFilter();
+				filters.addFilter(new LSImageSampleBeautyBaseFilter(this));
+				filters.addFilter(new LSImageVibrateFilter());
+				publishFilters[7] = filters;
 				publishFilterIndex = 7;
 
 				publisher.setCustomFilter(publishFilters[publishFilterIndex]);
@@ -294,18 +300,58 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			surfaceViewPublish.setVisibility(View.INVISIBLE);
 		}
 
+
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+					case 0:{
+						String freeMemory = Runtime.getRuntime().freeMemory() / 1024 + " K";
+						String totalMemory = Runtime.getRuntime().totalMemory() / 1024 + " K";
+						String maxMemory = Runtime.getRuntime().maxMemory() / 1024 + " K";
+
+						Log.w(LSConfig.TAG, String.format("PlayActivity::check( "
+										+ "freeMemory : %s, "
+										+ "totalMemory : %s, "
+										+ "maxMemory : %s "
+										+ ")",
+								freeMemory,
+								totalMemory,
+								maxMemory
+								)
+						);
+
+						handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								Message msg = Message.obtain();
+								msg.what = 0;
+								handler.sendMessage(msg);
+							}
+						}, 1000);
+					}break;
+					default:
+						break;
+				}
+			}
+		};
+//		handler.post(new Runnable() {
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				Message msg = Message.obtain();
+//				msg.what = 0;
+//				handler.sendMessage(msg);
+//			}
+//		});
+
 		Button playButton = (Button) this.findViewById(R.id.button1);
 		playButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			for(int i = 0; i < players.length; i++) {
-				if( players[i] != null ) {
-//					String url = String.format("%s%d", editText.getText().toString(), i);
-					String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
-					players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
-				}
-			}
+				play();
 			}
 		});
 
@@ -316,7 +362,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			// TODO Auto-generated method stub
 			if( publisher != null && supportPublish ) {
 				String publishUrl = editTextPublish.getText().toString();
-				faceDetector.start();
+				if ( faceDetector != null ) {
+					faceDetector.start();
+				}
 				publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 			}
 			}
@@ -450,6 +498,18 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	}
 
+	private void play() {
+//		for(int i = 0; i < players.length; i++) {
+//			if( players[i] != null ) {
+//				String url = String.format("%s%d", editText.getText().toString(), i);
+////				String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+//				players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
+//			}
+//		}
+		String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+		players[0].playUrl(url, "", playH264File[0], playAACFile[0]);
+	}
+
 	// TODO: 2019/10/29
 	private void handlerProgressChange(int progress,boolean isBeautyChange){
 		float scale = progress * 1.0f / 100;
@@ -536,42 +596,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				} else {
 					playerRenderderBinders[1].setCustomFilter(null);
 				}
-			}
-			}
-		});
-
-		Button playButton30 = (Button) this.findViewById(R.id.button30);
-		playButton30.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int i = 2;
-				if( players[i] != null ) {
-					String url = String.format("%s%d", editText.getText().toString(), i);
-					players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
-				}
-			}
-		});
-		Button muteButton300 = (Button) this.findViewById(R.id.button300);
-		muteButton300.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( players[2] != null ) {
-				players[2].setMute(!players[2].getMute());
-			}
-			}
-		});
-
-		Button fliterButton301 = (Button) this.findViewById(R.id.button301);
-		fliterButton301.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( playerRenderderBinders[2].getCustomFilter() == null ) {
-				playerRenderderBinders[2].setCustomFilter(imageFilters[2]);
-			} else {
-				playerRenderderBinders[2].setCustomFilter(null);
 			}
 			}
 		});
@@ -753,7 +777,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		        intent.setClass(PlayActivity.this, TestActivity.class);
 //		        startActivity(intent);
 //			}
-//		}, 5000);
+//		}, 3000);
     }
 
 	@Override
@@ -812,6 +836,19 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 	@Override
 	public void onVideoCaptureError(LSPublisher publisher, int error) {
 		Log.e(LSConfig.TAG, String.format("PlayActivity::onVideoCaptureError( publisher : 0x%x, error : %d )", publisher.hashCode(), error));
+	}
+
+	@Override
+	public void onError(LSPublisher publisher, String code, final String description) {
+		Log.e(LSConfig.TAG, String.format("PlayActivity::onError( publisher : 0x%x, code : %s, description : %s )", publisher.hashCode(), code, description));
+
+		final Context context = this;
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(context, description, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 //	@Override

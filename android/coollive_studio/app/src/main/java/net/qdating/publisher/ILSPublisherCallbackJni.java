@@ -8,4 +8,5 @@ package net.qdating.publisher;
 public interface ILSPublisherCallbackJni {
 	public void onConnect();
 	public void onDisconnect();
+	public void onError(String code, String description);
 }

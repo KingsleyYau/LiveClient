@@ -119,25 +119,6 @@
 		android:layout_below="@id/layoutVideo0"
         >
 
-		<Button
-			android:id="@+id/button30"
-			android:layout_width="180dp"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/layoutButtons300"
-			android:layout_alignBottom="@+id/surfaceView2"
-			android:layout_alignParentLeft="true"
-			android:background="#00000000"
-			android:text=""
-			android:textAllCaps="false"
-			/>
-       	<android.opengl.GLSurfaceView
-	        android:id="@+id/surfaceView2"
-	        android:layout_width="180dp"
-	        android:layout_height="180dp"
-	        android:layout_alignParentLeft="true"
-			android:visibility="gone"
-        />
-
 		<LinearLayout
 			android:id="@+id/layoutButtons300"
 			android:layout_width="match_parent"

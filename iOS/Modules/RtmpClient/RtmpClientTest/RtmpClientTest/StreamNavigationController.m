@@ -13,37 +13,6 @@
     [super viewDidLoad];
 }
 
-//- (void)backAction:(id)sender {
-//    // ViewController自己处理是否返回
-//    if ([self.topViewController respondsToSelector:@selector(backAction:)]) {
-//        [self.topViewController performSelector:@selector(backAction:) withObject:sender];
-//    } else {
-//        [self popViewControllerAnimated:YES];
-//    }
-//}
-
-//- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPushItem:(UINavigationItem *)item {
-//    // 重定义默认后退按钮事件触发
-//    UINavigationItem *backItem = navigationBar.backItem;
-//
-//    if ([self respondsToSelector:@selector(backAction:)]) {
-//        backItem.backBarButtonItem.target = self;
-//        backItem.backBarButtonItem.action = @selector(backAction:);
-//    }
-//
-//    return YES;
-//}
-
-//- (void)navigationBar:(UINavigationBar *)navigationBar didPushItem:(UINavigationItem *)item {
-//    // 重定义默认后退按钮事件触发
-//    UINavigationItem *backItem = navigationBar.backItem;
-//
-//    if ([self respondsToSelector:@selector(backAction:)]) {
-//        backItem.backBarButtonItem.target = self;
-//        backItem.backBarButtonItem.action = @selector(backAction:);
-//    }
-//}
-
 - (BOOL)shouldAutorotate {
     return [self.topViewController shouldAutorotate];
 }

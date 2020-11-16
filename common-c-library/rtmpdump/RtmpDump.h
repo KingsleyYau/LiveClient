@@ -51,6 +51,9 @@ class RtmpDumpCallback {
     virtual void OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                                    const string &uuId,
                                    const string &userName) = 0;
+    virtual void OnRecvStatusError(RtmpDump *rtmpDump,
+                                   const string &code,
+                                   const string &description) = 0;
 };
 
 class RecvRunnable;
@@ -168,7 +171,8 @@ class RtmpDump {
     void RecvCmd(char *frame, int frame_size, u_int32_t timestamp);
     void RecvCmdLogin(char *frame, int frame_size, u_int32_t timestamp);
     void RecvCmdMakeCall(char *frame, int frame_size, u_int32_t timestamp);
-
+    void RecvCmdStatus(char *frame, int frame_size, u_int32_t timestamp);
+    
     RtmpDumpCallback *mpRtmpDumpCallback;
 
     // srs_rtmp_t 句柄
@@ -203,10 +207,10 @@ class RtmpDump {
     int mNaluHeaderSize;
 
     // 发包参数
-    u_int32_t mEncodeVideoTimestamp;
-    u_int32_t mEncodeAudioTimestamp;
-    u_int32_t mSendVideoFrameTimestamp;
-    u_int32_t mSendAudioFrameTimestamp;
+    u_int32_t mEncodeVideoTs;
+    u_int32_t mEncodeAudioTs;
+    u_int32_t mSendVideoFrameTs;
+    u_int32_t mSendAudioFrameTs;
     
     // 是否播放流
     bool mIsPlay;

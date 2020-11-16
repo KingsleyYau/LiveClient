@@ -31,7 +31,7 @@ public:
     void SetCallback(VideoEncoderCallback* callback);
     bool Reset();
     void Pause();
-    void EncodeVideoFrame(void* data, int size, void* frame);
+    VideoFrameRateType EncodeVideoFrame(void* data, int size, void* frame, int64_t ts);
     
 private:
     /**

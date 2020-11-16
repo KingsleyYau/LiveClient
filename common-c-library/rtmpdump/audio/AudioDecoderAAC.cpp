@@ -511,17 +511,7 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame *audioFrame, AudioFrame *newAu
                     decodeFrame->sample_rate,
                     decodeFrame->channels,
                     decodeFrame->nb_samples);
-                
-//                mResampeBuffer.RenewBufferSize(bufferSize);
-//                uint8_t *resample = (uint8_t *)mResampeBuffer.GetBuffer();
-//                int step = 2;
-//                int i = 0;
-//                for(i = 0; i < bufferSize / 4;) {
-//                    resample[i] = *(decodeFrame->data[0] + (2 * i));
-//                    resample[i + 1] = *(decodeFrame->data[0] + (2 * i) + 1);
-//                    i += step;
-//                }
-//                newAudioFrame->SetBuffer(resample, i);
+
                 // Copy解码Buffer
                 newAudioFrame->SetBuffer(decodeFrame->data[0], bufferSize);
 

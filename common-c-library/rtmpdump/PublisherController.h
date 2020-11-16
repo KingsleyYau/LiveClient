@@ -28,6 +28,7 @@ class PublisherStatusCallback {
     virtual ~PublisherStatusCallback(){};
     virtual void OnPublisherConnect(PublisherController *pc) = 0;
     virtual void OnPublisherDisconnect(PublisherController *pc) = 0;
+    virtual void OnPublisherError(PublisherController *pc, const string& code, const string& description) = 0;
 };
 
 class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, AudioEncoderCallback {
@@ -162,7 +163,10 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
     void OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                            const string &uuId,
                            const string &userName);
-
+    void OnRecvStatusError(RtmpDump *rtmpDump,
+                           const string &code,
+                           const string &description);
+    
   private:
     // 传输器
     RtmpDump mRtmpDump;
@@ -186,20 +190,18 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
     // 第一次处理帧时间
     long long mVideoFrameStartPushTime;
     long long mVideoFrameLastPushTime;
-    // 由帧率得出的帧间隔(ms)
+    // 由期望帧率得出的帧间隔(ms)
     int mVideoFps;
     int mVideoFrameInterval;
+    // 由实际帧率得出的帧间隔(ms)
+    int mVideoFpsExact;
+    int mVideoFrameIntervalExact;
     
     int mVideoFrameIndex;
     // 视频是否暂停采集
     bool mVideoPause;
     // 视频是否已经恢复采集
     bool mVideoResume;
-    // 视频总暂停时长
-    long long mVideoFramePauseTime;
-    // 视频时间戳余数同步
-    unsigned int mVideoTimestampSyncMod;
-    unsigned int mVideoTimestampSyncTotal;
 };
 }
 #endif /* PublisherController_h */

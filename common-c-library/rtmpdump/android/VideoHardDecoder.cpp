@@ -85,7 +85,7 @@ VideoHardDecoder::VideoHardDecoder(jobject jniDecoder)
 				);
 		mJniDecoderGetDecodeVideoMethodID = jMethodID;
 
-		signure = "([BI[BIII)Z";
+		signure = "([BI[BIIJ)Z";
 		jMethodID = env->GetMethodID(
 				jniDecoderCls,
 				"decodeVideoKeyFrame",
@@ -93,7 +93,7 @@ VideoHardDecoder::VideoHardDecoder(jobject jniDecoder)
 				);
 		mJniDecoderDecodeKeyMethodID = jMethodID;
 
-		signure = "([BII)Z";
+		signure = "([BIJ)Z";
 		jMethodID = env->GetMethodID(
 				jniDecoderCls,
 				"decodeVideoFrame",
@@ -370,20 +370,20 @@ void VideoHardDecoder::Init() {
     mpDecodeVideoRunnable = new DecodeVideoHardRunnable(this);
 }
 
-void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize, u_int32_t timestamp) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, int64_t ts, const char *vps, int vps_size) {
 	FileLog("rtmpdump",
 			"VideoHardDecoder::DecodeVideoKeyFrame( "
 			"this : %p, "
 			"sps_size : %d, "
 			"pps_size : %d, "
 			"naluHeaderSize : %d, "
-			"timestamp : %u "
+			"ts : %lld "
 			")",
 			this,
 			sps_size,
 			pps_size,
 			naluHeaderSize,
-			timestamp
+			ts
 			);
 
 	bool bChange = true;
@@ -403,13 +403,13 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 					 "sps_size : %d, "
 					 "pps_size : %d, "
 					 "naluHeaderSize : %d, "
-					 "timestamp : %u "
+					 "ts : %lld "
                      ")",
 					 this,
 					 sps_size,
 					 pps_size,
 					 naluHeaderSize,
-					 timestamp
+					 ts
                      );
 
 		// 重新设置解码器变量
@@ -475,7 +475,7 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 		}
 
 		if( mJniDecoder && mJniDecoderDecodeKeyMethodID ) {
-			env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNaluHeaderSize, timestamp);
+			env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNaluHeaderSize, ts);
 		}
 
 		if( bFlag ) {
@@ -484,18 +484,20 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 	}
 }
 
-void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
+void VideoHardDecoder::DecodeVideoFrame(const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) {
 	FileLevelLog(
 			"rtmpdump",
 			KLog::LOG_STAT,
 			"VideoHardDecoder::DecodeVideoFrame( "
 			"size : %d, "
-			"timestamp : %u "
+			"dts : %lld, "
+			"pts : %lld "
 			")",
 			size,
-			timestamp
+			dts,
+			pts
 			);
-
+	// 不会对帧重排序, 所以将PTS记录为时间戳
 	bool bDecode = false;
     // Mux
     Nalu naluArray[16];
@@ -507,12 +509,12 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
                      "VideoHardDecoder::DecodeVideoFrame( "
 					 "this : %p, "
                      "[Got Nalu Array], "
-                     "timestamp : %u, "
+                     "ts : %lld, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
 					 this,
-                     timestamp,
+					 pts,
                      size,
                      naluArraySize
                      );
@@ -573,7 +575,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 
     	// 反射类
     	if( mJniDecoder && mJniDecoderDecodeVideoMethodID ) {
-    		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeVideoMethodID, dataByteArray, newSize, timestamp);
+    		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeVideoMethodID, dataByteArray, newSize, pts);
     	}
 
     	if( bFlag ) {
@@ -584,9 +586,9 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 	FileLog("rtmpdump",
 			"VideoHardDecoder::DecodeVideoFrame( "
 			"[Success], "
-			"timestamp : %d "
+			"pts : %lld "
 			")",
-			timestamp
+			pts
 			);
 }
 

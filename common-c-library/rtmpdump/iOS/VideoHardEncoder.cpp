@@ -81,9 +81,11 @@ void VideoHardEncoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Pause( this : %p, [Success] )", this);
 }
 
-void VideoHardEncoder::EncodeVideoFrame(void *data, int size, void *frame) {
+VideoFrameRateType VideoHardEncoder::EncodeVideoFrame(void *data, int size, void *frame, int64_t ts) {
     //    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::EncodeVideoFrame( frame : %p )", frame);
 
+    VideoFrameRateType type = VIDEO_FRAME_RATE_HOLD;
+    
     CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame;
     CVPixelBufferRetain(pixelBuffer);
 
@@ -93,14 +95,15 @@ void VideoHardEncoder::EncodeVideoFrame(void *data, int size, void *frame) {
         VTEncodeInfoFlags flags;
 
         // 设置每帧的时间戳
-        CMTime presentationTS = CMTimeMake(mEncodeFrameCount++, mFPS);
+//        CMTime presentationTS = CMTimeMake(mEncodeFrameCount++, mFPS);
+        CMTime presentationTS = CMTimeMake(ts, 1000);
         double second = (double)(1.0 * presentationTS.value / presentationTS.timescale);
-        FileLevelLog("rtmpdump", KLog::LOG_STAT,
-                     "VideoHardEncoder::EncodeVideoFrame( this : %p, frame : %p, value : %lld, timescale : %lld )",
+        FileLevelLog("rtmpdump", KLog::LOG_MSG,
+                     "VideoHardEncoder::EncodeVideoFrame( this : %p, frame : %p, second : %f, ts : %lld  )",
                      this,
                      frame,
-                     presentationTS.value,
-                     presentationTS.timescale);
+                     second,
+                     1000 * second);
         OSStatus status = VTCompressionSessionEncodeFrame(
             mVideoCompressionSession,
             pixelBuffer,
@@ -117,6 +120,8 @@ void VideoHardEncoder::EncodeVideoFrame(void *data, int size, void *frame) {
 
         mRuningMutex.unlock();
     });
+    
+    return type;
 }
 
 void VideoHardEncoder::VideoCompressionOutputCallback(
@@ -137,23 +142,27 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
     }
 
     // 计算时间戳
-    CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-    double value = presentationTime.value;
-    value /= presentationTime.timescale;
+    CMTime presentationTS = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+    double second = (double)(1.0 * presentationTS.value / presentationTS.timescale);
+    int64_t ts = 1000 * second;
+    FileLevelLog("rtmpdump", KLog::LOG_MSG,
+                 "VideoHardEncoder::VideoCompressionOutputCallback( second : %f, ts : %lld )",
+                 second,
+                 ts);
+    
+//    CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
 
-    CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
-
-    // 第一帧, 或者时间被重置
-    if (encoder->mLastPresentationTime == 0 || encoder->mLastPresentationTime > value) {
-        encoder->mLastPresentationTime = value;
-        encoder->mEncodeStartTS = 0;
-    }
-
-    double diff = value - encoder->mLastPresentationTime;
-    long int presentTS = (UInt32)lround(1000 * diff);
-    encoder->mEncodeStartTS += presentTS;
-    UInt32 ts = encoder->mEncodeStartTS;
-    encoder->mLastPresentationTime = value;
+//    // 第一帧, 或者时间被重置
+//    if (encoder->mLastPresentationTime == 0 || encoder->mLastPresentationTime > value) {
+//        encoder->mLastPresentationTime = value;
+//        encoder->mEncodeStartTS = 0;
+//    }
+//
+//    double diff = value - encoder->mLastPresentationTime;
+//    long int presentTS = (UInt32)lround(1000 * diff);
+//    encoder->mEncodeStartTS += presentTS;
+//    UInt32 ts = encoder->mEncodeStartTS;
+//    encoder->mLastPresentationTime = value;
 
     // 判断当前帧是否为关键帧
     CFArrayRef arrayRef = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, true);
@@ -310,10 +319,10 @@ bool VideoHardEncoder::CreateContext() {
             // 创建编码器
             VTCompressionSessionPrepareToEncodeFrames(mVideoCompressionSession);
 
-            // 初始化时间戳
-            mLastPresentationTime = 0;
-            mEncodeStartTS = 0;
-            mEncodeFrameCount = 0;
+//            // 初始化时间戳
+//            mLastPresentationTime = 0;
+//            mEncodeStartTS = 0;
+//            mEncodeFrameCount = 0;
 
         } else {
             FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::CreateContext( this : %p, status : %d )", this, (int)status);

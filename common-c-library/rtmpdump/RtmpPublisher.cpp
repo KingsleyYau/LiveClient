@@ -183,10 +183,12 @@ void RtmpPublisher::SendVideoFrame(char *data, int size, int64_t ts) {
                          KLog::LOG_WARNING,
                          "RtmpPublisher::SendVideoFrame( "
                          "this : %p, "
-                         "[Cache Video buffer is full, droped], "
+                         "[Cache Video Buffer Is Full, Dropped], "
+                         "ts : %lld, "
                          "mVideoBufferList : %u "
                          ")",
                          this,
+                         ts,
                          mVideoBufferList.size()
                          );
             if ( mpRtmpPublisherCallback ) {
@@ -198,6 +200,22 @@ void RtmpPublisher::SendVideoFrame(char *data, int size, int64_t ts) {
             videoFrame->SetBuffer((const unsigned char *)data, size);
             videoFrame->mTS = ts;
 
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "RtmpPublisher::SendVideoFrame( "
+                         "this : %p, "
+                         "frame : %p, "
+                         "ts : %lld, "
+                         "frameType : 0x%x, "
+                         "mVideoBufferList : %u "
+                         ")",
+                         this,
+                         videoFrame,
+                         videoFrame->mTS,
+                         videoFrame->GetBuffer()[0],
+                         mVideoBufferList.size()
+                         );
+            
             mVideoBufferList.lock();
             mVideoBufferList.push_back(videoFrame);
             mVideoBufferList.unlock();
@@ -225,10 +243,12 @@ void RtmpPublisher::SendAudioFrame(
                          KLog::LOG_WARNING,
                          "RtmpPublisher::SendAudioFrame( "
                          "this : %p, "
-                         "[Cache Audio buffer is full, droped], "
+                         "[Cache Audio Buffer Is Full, Dropped], "
+                         "ts : %lld, "
                          "mAudioBufferList : %u "
                          ")",
                          this,
+                         ts,
                          mAudioBufferList.size()
                          );
         }
@@ -238,6 +258,20 @@ void RtmpPublisher::SendAudioFrame(
             audioFrame->SetBuffer((const unsigned char *)data, size);
             audioFrame->mTS = ts;
 
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_MSG,
+                         "RtmpPublisher::SendAudioFrame( "
+                         "this : %p, "
+                         "frame : %p, "
+                         "ts : %lld, "
+                         "mAudioBufferList : %u "
+                         ")",
+                         this,
+                         audioFrame,
+                         audioFrame->mTS,
+                         mAudioBufferList.size()
+                         );
+            
             mAudioBufferList.lock();
             mAudioBufferList.push_back(audioFrame);
             mAudioBufferList.unlock();
@@ -257,107 +291,108 @@ void RtmpPublisher::PublishHandle() {
     AudioFrame *audioFrame = NULL;
 
     while (mbRunning) {
-        videoFrame = NULL;
-        audioFrame = NULL;
-
-        // 获取视频帧
-        mVideoBufferList.lock();
-        if (!mVideoBufferList.empty()) {
-            videoFrame = (VideoFrame *)mVideoBufferList.front();
-            mVideoBufferList.pop_front();
-        }
-        mVideoBufferList.unlock();
-
-        // 发送视频帧
-        if (videoFrame) {
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
-                         "RtmpPublisher::PublishHandle( "
-                         "this : %p, "
-                         "[Send Video Frame], "
-                         "frame : %p, "
-                         "ts : %lld, "
-                         "frameType : 0x%x, "
-                         "mVideoBufferList : %u "
-                         ")",
-                         this,
-                         videoFrame,
-                         videoFrame->mTS,
-                         videoFrame->GetBuffer()[0],
-                         mVideoBufferList.size()
-                         );
-
-            if (mpRtmpDump) {
-                mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTS);
+        while (!mVideoBufferList.empty() || !mAudioBufferList.empty()) {
+            videoFrame = NULL;
+            audioFrame = NULL;
+            
+            // 获取视频帧
+            mVideoBufferList.lock();
+            if (!mVideoBufferList.empty()) {
+                videoFrame = (VideoFrame *)mVideoBufferList.front();
+                mVideoBufferList.pop_front();
             }
+            mVideoBufferList.unlock();
 
-            // 回收资源
-            if (!mCacheVideoBufferQueue.PushBuffer(videoFrame)) {
-                // 归还失败，释放Buffer
+            // 发送视频帧
+            if (videoFrame) {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_MSG,
                              "RtmpPublisher::PublishHandle( "
                              "this : %p, "
-                             "[Delete Video frame], "
-                             "videoFrame : %p "
+                             "[Send Video Frame], "
+                             "frame : %p, "
+                             "ts : %lld, "
+                             "frameType : 0x%x, "
+                             "mVideoBufferList : %u "
                              ")",
                              this,
-                             videoFrame);
-                delete videoFrame;
-            }
-        }
+                             videoFrame,
+                             videoFrame->mTS,
+                             videoFrame->GetBuffer()[0],
+                             mVideoBufferList.size()
+                             );
 
-        // 获取音频帧
-        mAudioBufferList.lock();
-        if (!mAudioBufferList.empty()) {
-            audioFrame = (AudioFrame *)mAudioBufferList.front();
-            mAudioBufferList.pop_front();
-        }
-        mAudioBufferList.unlock();
+                if (mpRtmpDump) {
+                    mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTS);
+                }
 
-        // 发送音频帧
-        if (audioFrame) {
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
-                         "RtmpPublisher::PublishHandle( "
-                         "this : %p, "
-                         "[Send Audio Frame], "
-                         "frame : %p, "
-                         "ts : %lld, "
-                         "mAudioBufferList : %u "
-                         ")",
-                         this,
-                         audioFrame,
-                         audioFrame->mTS,
-                         mAudioBufferList.size()
-                         );
-
-            if (mpRtmpDump) {
-                mpRtmpDump->SendAudioFrame(audioFrame->mSoundFormat,
-                                           audioFrame->mSoundRate,
-                                           audioFrame->mSoundSize,
-                                           audioFrame->mSoundType,
-                                           (char *)audioFrame->GetBuffer(),
-                                           audioFrame->mBufferLen,
-                                           audioFrame->mTS);
+                // 回收资源
+                if (!mCacheVideoBufferQueue.PushBuffer(videoFrame)) {
+                    // 归还失败，释放Buffer
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_MSG,
+                                 "RtmpPublisher::PublishHandle( "
+                                 "this : %p, "
+                                 "[Delete Video frame], "
+                                 "videoFrame : %p "
+                                 ")",
+                                 this,
+                                 videoFrame);
+                    delete videoFrame;
+                }
             }
 
-            // 回收资源
-            if (!mCacheAudioBufferQueue.PushBuffer(audioFrame)) {
-                // 归还失败，释放Buffer
+            // 获取音频帧
+            mAudioBufferList.lock();
+            if (!mAudioBufferList.empty()) {
+                audioFrame = (AudioFrame *)mAudioBufferList.front();
+                mAudioBufferList.pop_front();
+            }
+            mAudioBufferList.unlock();
+
+            // 发送音频帧
+            if (audioFrame) {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_MSG,
                              "RtmpPublisher::PublishHandle( "
                              "this : %p, "
-                             "[Delete Audio frame], "
-                             "audioFrame : %p "
+                             "[Send Audio Frame], "
+                             "frame : %p, "
+                             "ts : %lld, "
+                             "mAudioBufferList : %u "
                              ")",
                              this,
-                             audioFrame);
-                delete audioFrame;
+                             audioFrame,
+                             audioFrame->mTS,
+                             mAudioBufferList.size()
+                             );
+
+                if (mpRtmpDump) {
+                    mpRtmpDump->SendAudioFrame(audioFrame->mSoundFormat,
+                                               audioFrame->mSoundRate,
+                                               audioFrame->mSoundSize,
+                                               audioFrame->mSoundType,
+                                               (char *)audioFrame->GetBuffer(),
+                                               audioFrame->mBufferLen,
+                                               audioFrame->mTS);
+                }
+
+                // 回收资源
+                if (!mCacheAudioBufferQueue.PushBuffer(audioFrame)) {
+                    // 归还失败，释放Buffer
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_MSG,
+                                 "RtmpPublisher::PublishHandle( "
+                                 "this : %p, "
+                                 "[Delete Audio frame], "
+                                 "audioFrame : %p "
+                                 ")",
+                                 this,
+                                 audioFrame);
+                    delete audioFrame;
+                }
             }
         }
-        
         Sleep(PUBLISH_SLEEP_TIME);
     }
 }

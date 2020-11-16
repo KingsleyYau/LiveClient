@@ -362,7 +362,7 @@ void VideoHardEncoder::Stop() {
                  );
 }
 
-void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
+VideoFrameRateType VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame, int64_t ts) {
 	FileLog("rtmpdump",
 			"VideoHardEncoder::EncodeVideoFrame( "
 			"this : %p, "
@@ -372,8 +372,9 @@ void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
 			size
 			);
 
-	bool bFlag = false;
+	VideoFrameRateType type = VIDEO_FRAME_RATE_HOLD;;
 
+	bool bFlag = false;
     mRuningMutex.lock();
     if( mbRunning ) {
         // 编码视频
@@ -422,6 +423,8 @@ void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
 			bFlag?"Success":"Fail",
 			size
 			);
+
+	return type;
 }
 
 void VideoHardEncoder::EncodeVideoHandle() {

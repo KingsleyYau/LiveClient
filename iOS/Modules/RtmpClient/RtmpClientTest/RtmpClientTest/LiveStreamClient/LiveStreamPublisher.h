@@ -16,6 +16,7 @@
 - (NSString *)publisherShouldChangeUrl:(LiveStreamPublisher *)publisher;
 - (void)publisherOnConnect:(LiveStreamPublisher *)publisher;
 - (void)publisherOnDisconnect:(LiveStreamPublisher *)publisher;
+- (void)publisherOnError:(LiveStreamPublisher *)publisher code:(NSString * _Nullable)code description:(NSString * _Nullable)description;
 @end
 
 typedef enum LiveStreamType {
@@ -25,7 +26,7 @@ typedef enum LiveStreamType {
     LiveStreamType_ShowHost_Private,     // 主播私密    240x320, 12fps, 12kfi, 700kbps
     LiveStreamType_ShowHost_Mutiple,     // 主播多人互动 240x240, 12fps, 12kfi, 500kbps
     LiveStreamType_Camshare,             // Camshare 176x144, 6fps, 6kfi, 300kbps
-    LiveStreamType_480x320,              // 480x320, 10fps, 10kfi, 400kbps
+    LiveStreamType_480x640,              // 480x320, 10fps, 10kfi, 400kbps
 } LiveStreamType;
 
 @interface LiveStreamPublisher : NSObject

@@ -27,7 +27,7 @@
 // 视频最大缓冲(帧数)
 #define VIDEO_MAX_FRAME_COUNT 120
 // 音频警告缓冲(帧数)
-#define AUDIO_WARN_FRAME_COUNT 200
+#define AUDIO_WARN_FRAME_COUNT 250
 // 音频最大缓冲(帧数)
 #define AUDIO_MAX_FRAME_COUNT 350
 
@@ -719,7 +719,7 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
-                                             "[Sync Audio to drop], "
+                                             "[Sync Audio To Drop], "
                                              "audioTS : %d, "
                                              "videoTS : %d "
                                              ")",
@@ -832,7 +832,7 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                              KLog::LOG_WARNING,
                                              "RtmpPlayer::IsPlay( "
                                              "this : %p, "
-                                             "[Sync Video to drop], "
+                                             "[Sync Video To Drop], "
                                              "audioTS : %lld, "
                                              "videoTS : %lld "
                                              ")",

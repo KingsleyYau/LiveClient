@@ -87,10 +87,10 @@ RtmpDump::RtmpDump()
     mWidth = 0;
     mHeight = 0;
 
-    mEncodeVideoTimestamp = 0;
-    mEncodeAudioTimestamp = 0;
-    mSendVideoFrameTimestamp = 0;
-    mSendAudioFrameTimestamp = 0;
+    mEncodeVideoTs = 0;
+    mEncodeAudioTs = 0;
+    mSendVideoFrameTs = 0;
+    mSendAudioFrameTs = 0;
 
     mIsPlay = true;
     mIsConnected = false;
@@ -326,10 +326,10 @@ void RtmpDump::RecvRunnableHandle() {
     if (bFlag) {
         mConnectedMutex.lock();
         mIsConnected = true;
-//        mEncodeVideoTimestamp = 0;
-//        mEncodeAudioTimestamp = 0;
-//        mSendVideoFrameTimestamp = 0;
-//        mSendAudioFrameTimestamp = 0;
+//        mEncodeVideoTs = 0;
+//        mEncodeAudioTs = 0;
+//        mSendVideoFrameTs = 0;
+//        mSendAudioFrameTs = 0;
         mConnectedMutex.unlock();
 
         FileLevelLog("rtmpdump",
@@ -428,18 +428,18 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
     int sendTimestamp = 0;
 
     // 第一帧
-    if (mEncodeVideoTimestamp == 0) {
-        mEncodeVideoTimestamp = timestamp;
+    if (mEncodeVideoTs == 0) {
+        mEncodeVideoTs = timestamp;
     }
 
     // 当前帧比上一帧时间戳大, 计算时间差
-    if (timestamp > mEncodeVideoTimestamp) {
-        sendTimestamp = timestamp - mEncodeVideoTimestamp;
+    if (timestamp > mEncodeVideoTs) {
+        sendTimestamp = timestamp - mEncodeVideoTs;
     }
 
     // 生成RTMP相对时间戳
-    mSendVideoFrameTimestamp += sendTimestamp;
-    mEncodeVideoTimestamp = timestamp;
+    mSendVideoFrameTs += sendTimestamp;
+    mEncodeVideoTs = timestamp;
     
     mClientMutex.lock();
     mConnectedMutex.lock();
@@ -456,9 +456,9 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
         //        }
 
         // 因为没有B帧, 所以dts和pts一样就可以
-        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, timestamp : %u, mEncodeVideoTimestamp : %u, size : %d, frameType : 0x%x )", this, mSendVideoFrameTimestamp, mEncodeVideoTimestamp, sendSize, sendFrame[0]);
-        ret = srs_h264_write_raw_frame_without_startcode(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
-        //        ret = srs_h264_write_raw_frames(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, ts : %u, mEncodeVideoTs : %u, size : %d, frameType : 0x%x )", this, mSendVideoFrameTs, mEncodeVideoTs, sendSize, sendFrame[0]);
+        ret = srs_h264_write_raw_frame_without_startcode(mpRtmp, sendFrame, sendSize, mSendVideoFrameTs, mSendVideoFrameTs);
+        //        ret = srs_h264_write_raw_frames(mpRtmp, sendFrame, sendSize, mSendVideoFrameTs, mSendVideoFrameTs);
         if (ret != 0) {
             bFlag = true;
 
@@ -466,10 +466,10 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
                 //                FileLog("rtmpdump", "RtmpDump::SendVideoFrame( ignore drop video error, code=%d )", ret);
 
             } else if (srs_h264_is_duplicated_sps_error(ret)) {
-                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, Ignore duplicated sps, ret : %d )", this, ret);
+                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, [Ignore Duplicated SPS], ret : %d )", this, ret);
 
             } else if (srs_h264_is_duplicated_pps_error(ret)) {
-                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, Ignore duplicated pps, ret : %d )", this, ret);
+                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, [Ignore Duplicated PPS], ret : %d )", this, ret);
 
             } else {
                 bFlag = false;
@@ -488,7 +488,7 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
             FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendVideoFrame( this : %p, Send h264 raw data failed, ret : %d )", this, ret);
             srs_rtmp_shutdown(mpRtmp);
         } else {
-           FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, Drop video before connected, timestamp : %u )", this, mSendVideoFrameTimestamp);
+            FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpDump::SendVideoFrame( this : %p, Drop Video Before Connected, ts : %u )", this, mSendVideoFrameTs);
        }
         mConnectedMutex.unlock();
     } else {
@@ -497,7 +497,7 @@ bool RtmpDump::SendVideoFrame(char *frame, int frame_size, u_int32_t timestamp) 
         //  7: SPS, 8: PPS, 5: I Frame, 1: P Frame, 9: AUD, 6: SEI
         //        u_int8_t nut = (char)frame[nb_start_code] & 0x1f;
         //        FileLog("RtmpDump", "sent packet: type=%s, time=%d, size=%d, b[%d]=%#x(%s)",
-        //                        srs_human_flv_tag_type2string(SRS_RTMP_TYPE_VIDEO), mSendVideoFrameTimestamp, frame_size, nb_start_code, (char)frame[nb_start_code],
+        //                        srs_human_flv_tag_type2string(SRS_RTMP_TYPE_VIDEO), mSendVideoFrameTs, frame_size, nb_start_code, (char)frame[nb_start_code],
         //                        (nut == 7? "SPS":(nut == 8? "PPS":(nut == 5? "I":(nut == 1? "P":(nut == 9? "AUD":(nut == 6? "SEI":"Unknown")))))));
     }
 
@@ -516,7 +516,7 @@ void RtmpDump::AddVideoTimestamp(u_int32_t timestamp) {
 
     mConnectedMutex.lock();
     if (mIsConnected) {
-        mSendVideoFrameTimestamp += timestamp;
+        mSendVideoFrameTs += timestamp;
     }
     mConnectedMutex.unlock();
 }
@@ -536,24 +536,24 @@ bool RtmpDump::SendAudioFrame(
     int sendTimestamp = 0;
 
     // 第一帧
-    if (mEncodeAudioTimestamp == 0) {
-        mEncodeAudioTimestamp = timestamp;
+    if (mEncodeAudioTs == 0) {
+        mEncodeAudioTs = timestamp;
     }
 
     // 当前帧比上一帧时间戳大, 计算时间差
-    if (timestamp > mEncodeAudioTimestamp) {
-        sendTimestamp = timestamp - mEncodeAudioTimestamp;
+    if (timestamp > mEncodeAudioTs) {
+        sendTimestamp = timestamp - mEncodeAudioTs;
     }
 
     // 生成RTMP相对时间戳
-    mSendAudioFrameTimestamp += sendTimestamp;
-    mEncodeAudioTimestamp = timestamp;
+    mSendAudioFrameTs += sendTimestamp;
+    mEncodeAudioTs = timestamp;
     
     mClientMutex.lock();
     mConnectedMutex.lock();
     if (mbRunning && mpRtmp && mIsConnected) {
-        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( this : %p, timestamp : %u, size : %d )", this, mSendAudioFrameTimestamp, frame_size);
-        if ((ret = srs_audio_write_raw_frame(mpRtmp, sound_format, sound_rate, sound_size, sound_type, frame, frame_size, mSendAudioFrameTimestamp)) == 0) {
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( this : %p, ts : %u, mEncodeAudioTs : %u, size : %d )", this, mSendAudioFrameTs, mEncodeAudioTs, frame_size);
+        if ((ret = srs_audio_write_raw_frame(mpRtmp, sound_format, sound_rate, sound_size, sound_type, frame, frame_size, mSendAudioFrameTs)) == 0) {
             bFlag = true;
         }
     }
@@ -563,10 +563,10 @@ bool RtmpDump::SendAudioFrame(
     if (!bFlag) {
         mConnectedMutex.lock();
         if (mIsConnected) {
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send audio raw data failed. ret=%d, timestamp : %u )", this, ret, mSendAudioFrameTimestamp);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send Audio raw data failed. ret=%d, ts : %u )", this, ret, mSendAudioFrameTs);
             srs_rtmp_shutdown(mpRtmp);
         } else {
-            FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( this : %p, Drop audio before connected, timestamp : %u )", this, mSendAudioFrameTimestamp);
+            FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpDump::SendAudioFrame( this : %p, Drop Audio Before Connected, ts : %u )", this, mSendAudioFrameTs);
         }
         mConnectedMutex.unlock();
     }
@@ -577,7 +577,7 @@ bool RtmpDump::SendAudioFrame(
 void RtmpDump::AddAudioTimestamp(u_int32_t timestamp) {
     mConnectedMutex.lock();
     if (mIsConnected) {
-        mSendAudioFrameTimestamp += timestamp;
+        mSendAudioFrameTs += timestamp;
     }
     mConnectedMutex.unlock();
 }
@@ -641,10 +641,10 @@ void RtmpDump::Destroy() {
     }
 
     // 还原参数
-    mEncodeVideoTimestamp = 0;
-    mEncodeAudioTimestamp = 0;
-    mSendVideoFrameTimestamp = 0;
-    mSendAudioFrameTimestamp = 0;
+    mEncodeVideoTs = 0;
+    mEncodeAudioTs = 0;
+    mSendVideoFrameTs = 0;
+    mSendAudioFrameTs = 0;
     //    FileLog("rtmpdump", "RtmpDump::Destroy( "
     //            "[Success], "
     //            "this : %p "
@@ -958,9 +958,10 @@ void RtmpDump::RecvCmd(char *frame, int frame_size, u_int32_t timestamp) {
 
         if (0 == strcmp(cmdString, "onLogin")) {
             RecvCmdLogin(frame + index, last, timestamp);
-
         } else if (0 == strcmp(cmdString, "onMakeCall")) {
             RecvCmdMakeCall(frame + index, last, timestamp);
+        } else if (0 == strcmp(cmdString, "onStatus")) {
+            RecvCmdStatus(frame + index, last, timestamp);
         }
     }
     srs_amf0_free(cmd);
@@ -1226,7 +1227,7 @@ void RtmpDump::RecvCmdMakeCall(char *frame, int frame_size, u_int32_t timestamp)
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
-                 "RtmpDump::LOG_WARNING( "
+                 "RtmpDump::RecvCmdMakeCall( "
                  "this : %p, "
                  "uuId : %s, "
                  "userName : %s "
@@ -1237,6 +1238,69 @@ void RtmpDump::RecvCmdMakeCall(char *frame, int frame_size, u_int32_t timestamp)
 
     if (mpRtmpDumpCallback) {
         mpRtmpDumpCallback->OnRecvCmdMakeCall(this, uuIdString, userNameString);
+    }
+}
+
+void RtmpDump::RecvCmdStatus(char *frame, int frame_size, u_int32_t timestamp) {
+    int index = 0;
+    int last = frame_size;
+    int size = 0;
+    bool bFlag = false;
+    
+    srs_amf0_t number = srs_amf0_parse(frame + index, last, &size);
+    index += size;
+    last -= size;
+
+    srs_amf0_t args = srs_amf0_parse(frame + index, last, &size);
+    index += size;
+    last -= size;
+    
+    srs_amf0_t status = srs_amf0_parse(frame + index, last, &size);
+    index += size;
+    last -= size;
+    
+    const char *levelString = "";
+    const char *codeString = "";
+    const char *descriptionString = "";
+    
+    if (srs_amf0_is_object(status)) {
+        srs_amf0_t level = srs_amf0_object_property(status, "level");
+        if (srs_amf0_is_string(level)) {
+            levelString = srs_amf0_to_string(level);
+        }
+        
+        srs_amf0_t code = srs_amf0_object_property(status, "code");
+        if (srs_amf0_is_string(code)) {
+            codeString = srs_amf0_to_string(code);
+        }
+        
+        srs_amf0_t description = srs_amf0_object_property(status, "description");
+        if (srs_amf0_is_string(description)) {
+            descriptionString = srs_amf0_to_string(description);
+        }
+    }
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::RecvCmdStatus( "
+                 "this : %p, "
+                 "level : %s, "
+                 "code : %s, "
+                 "description : %s "
+                 ")",
+                 this,
+                 levelString,
+                 codeString,
+                 descriptionString);
+    
+    if ( 0 == strcmp(levelString, "error") ) {
+        if (mpRtmpDumpCallback) {
+            mpRtmpDumpCallback->OnRecvStatusError(this, codeString, descriptionString);
+        }
+        
+        if (mpRtmp) {
+            srs_rtmp_shutdown(mpRtmp);
+        }
     }
 }
 

@@ -37,7 +37,7 @@ class VideoDecoder {
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void ResetStream() = 0;
-    virtual void DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, int64_t ts,const char *vps = NULL, int vps_size = 0) = 0;
+    virtual void DecodeVideoKeyFrame(const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize, int64_t ts, const char *vps = NULL, int vps_size = 0) = 0;
     virtual void DecodeVideoFrame(const char *data, int size, int64_t dts, int64_t pts, VideoFrameType video_type) = 0;
     virtual void ReleaseVideoFrame(void *frame) = 0;
     virtual void StartDropFrame() = 0;

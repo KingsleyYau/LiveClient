@@ -227,6 +227,17 @@ public class LSPublisher {
 						}
 					}
 				}
+
+				@Override
+				public void onError(LSPublisherJni publisher, String code, String description) {
+					Log.w(LSConfig.TAG, String.format("LSPublisher::onError( this : 0x%x, code : %s, description : %s )", lsPublisher.hashCode(), code, description));
+
+					// 通知外部监听
+					if( statusCallback != null ) {
+						statusCallback.onError(lsPublisher, code, description);
+					}
+				}
+
 			}, useHardEncoder, videoHardEncoder, publishConfig);
 		}
 		

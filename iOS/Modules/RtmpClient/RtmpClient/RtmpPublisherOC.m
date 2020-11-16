@@ -106,6 +106,12 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         }
     }
 
+    void OnPublisherError(PublisherController *pc, const string& code, const string& description) {
+        if ([mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnError:code:description:)]) {
+            [mpPublisher.delegate rtmpPublisherOCOnError:mpPublisher code:[NSString stringWithUTF8String:code.c_str()] description:[NSString stringWithUTF8String:description.c_str()]];
+        }
+    }
+    
   private:
     __weak typeof(RtmpPublisherOC) *mpPublisher;
 };
@@ -275,8 +281,6 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
 
         // 销毁硬编码器
         self.videoEncoder->Pause();
-
-        //        self.enterBackgroundTime = [NSDate date];
     }
 }
 
@@ -286,15 +290,6 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
 
         // 重置视频编码器
         self.videoEncoder->Reset();
-
-        //        if( (self.startTime == [self.enterBackgroundTime earlierDate:self.startTime]) ) {
-        //            // 开始时间比进入后台时间要早, 增加在后台的时间到视频的时间戳
-        //            NSDate* now = [NSDate date];
-        //            NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.enterBackgroundTime];
-        //            NSUInteger timestamp = timeInterval * 1000;
-        //
-        //            self.publisher->AddVideoTimestamp((unsigned int)timestamp);
-        //        }
     }
 }
 

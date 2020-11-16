@@ -8,6 +8,8 @@
 
 #include "PlayerController.h"
 
+#include <common/CommonFunc.h>
+
 #include "video/VideoDecoderH264.h"
 #include "audio/AudioDecoderAAC.h"
 
@@ -715,15 +717,31 @@ void PlayerController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
                  uuId.c_str(),
                  userName.c_str());
 }
+
+void PlayerController::OnRecvStatusError(RtmpDump *rtmpDump,
+                                         const string &code,
+                                         const string &description) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnRecvStatusError( "
+                 "this : %p, "
+                 "code : %s, "
+                 "description : %s "
+                 ")",
+                 this,
+                 code.c_str(),
+                 description.c_str());
+    
+    // 可以断开连接
+    if (mpPlayerStatusCallback) {
+        mpPlayerStatusCallback->OnPlayerError(this, code, description);
+    }
+}
+
 /*********************************************** 播放器回调处理 End *****************************************************/
 void PlayerController::OnMediaFileReaderInfo(MediaFileReader *mfr, double duration, int fps) {
     mStatistics.SetOriginalFps(fps);
     AutoFixPlaybackRate();
-    if (fps > MAX_ORIGINAL_FPS) {
-        if (mpPlayerStatusCallback) {
-            mpPlayerStatusCallback->OnPlayerFastPlaybackError(this);
-        }
-    }
 }
 
 void PlayerController::OnMediaFileReaderChangeSpsPps(MediaFileReader *mfr, const char *sps, int sps_size, const char *pps, int pps_size, const char *vps, int vps_size) {

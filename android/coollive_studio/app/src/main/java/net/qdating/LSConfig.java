@@ -11,7 +11,7 @@ public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	public final static String VERSION = "2.0.2";
+	public final static String VERSION = "2.0.3";
 	/**
 	 * 日志TAG
 	 */

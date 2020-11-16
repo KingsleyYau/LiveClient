@@ -17,6 +17,7 @@
 @optional
 - (void)rtmpPublisherOCOnConnect:(RtmpPublisherOC * _Nonnull)rtmpClient;
 - (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC * _Nonnull)rtmpClient;
+- (void)rtmpPublisherOCOnError:(RtmpPublisherOC * _Nonnull)rtmpClient code:(NSString * _Nullable)code description:(NSString * _Nullable)description;
 @end
 
 @interface RtmpPublisherOC : NSObject

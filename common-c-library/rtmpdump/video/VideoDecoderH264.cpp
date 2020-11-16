@@ -980,7 +980,8 @@ void VideoDecoderH264::ConvertVideoHandle() {
 
             long long curTime = getCurrentTime();
             // 格式转换
-            bool bChangeSize = mVideoFormatConverter.ConvertFrame(srcFrame, dstFrame);
+            bool bChangeSize = false;
+            bool bFlag = mVideoFormatConverter.ConvertFrame(srcFrame, dstFrame, bChangeSize);
             // 计算处理时间
             long long now = getCurrentTime();
             long long handleTime = now - curTime;

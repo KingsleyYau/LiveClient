@@ -29,7 +29,7 @@ class VideoEncoder {
     virtual void SetCallback(VideoEncoderCallback *callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
-    virtual void EncodeVideoFrame(void *data, int size, void *frame) = 0;
+    virtual VideoFrameRateType EncodeVideoFrame(void *data, int size, void *frame, int64_t ts) = 0;
 };
 
 class AudioEncoder;
