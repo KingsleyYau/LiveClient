@@ -32,7 +32,7 @@
 //    [task resume];
 
     KLog::SetLogFileEnable(NO);
-    KLog::SetLogLevel(KLog::LOG_MSG);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
 
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 

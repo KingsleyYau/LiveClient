@@ -116,7 +116,7 @@
         @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre",         // Camshare
         @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre",
     };
-    NSString *url = urls[@"local"];
+    NSString *url = urls[@"tn"];
 //    NSString *url = @"rtmp://81.71.134.206:4000/cdn_standard/max0";
 //    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
 //    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
@@ -130,7 +130,7 @@
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
-    [self playbackRate2x:nil];
+//    [self playbackRate2x:nil];
     //    [self play:nil];
 }
 
@@ -259,6 +259,7 @@
     vc.delegate = self;
     vc.inputDir = inputDir;
     [self.navigationController pushViewController:vc animated:YES];
+    self.loadingView.hidden = YES;
 }
 
 - (IBAction)stopPlay:(UIButton *)sender {
