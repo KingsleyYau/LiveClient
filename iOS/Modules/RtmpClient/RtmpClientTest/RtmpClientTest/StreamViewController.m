@@ -20,7 +20,7 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface StreamViewController () <LiveStreamPlayerDelegate, StreamFileCollectionViewControllerDelegate>
+@interface StreamViewController () <LiveStreamPlayerDelegate, LiveStreamPublisherDelegate, StreamFileCollectionViewControllerDelegate>
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
 
@@ -35,9 +35,14 @@
 @property (strong) NSArray<FileItem *> *fileItemArray;
 @property (strong) FileItem *fileItem;
 @property (assign) NSInteger fileItemIndex;
-
+/**
+ 播放速率
+ */
 @property (assign) float playbackRate;
-
+/**
+ 播放器数组
+ */
+@property (strong) NSMutableArray<LiveStreamPlayer *> *playerArray;
 @end
 
 @implementation StreamViewController
@@ -57,8 +62,12 @@
     // 信息
     self.labelVideoSize.text = @"";
     self.labelFps.text = @"";
+    [self.sliderBitrate addTarget:self action:@selector(sliderBitrateValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.sliderBitrate.continuous = NO;
     [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-    self.sliderCacheMS.value = 2000;
+    self.sliderCacheMS.value = 1000;
+    self.labelCacheMS.text = [NSString stringWithFormat:@"%dms", (int)(self.sliderCacheMS.value), nil];
+    // 是否录制
     [self.buttonRecord setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
@@ -93,7 +102,7 @@
         [[LSImageVibrateFilter alloc] init],
     ];
     self.player = [LiveStreamPlayer instance];
-    self.player.useHardDecoder = YES;
+    self.player.useHardDecoder = NO;
     self.player.delegate = self;
     //    self.player.customFilter = self.playerFilterArray[0];
     self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -101,11 +110,14 @@
 
     // TODO:初始化推送
     self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x640];
+    self.publisher.delegate = self;
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
     LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = vibrateFilter;
-
+    self.sliderBitrate.maximumValue = self.publisher.bitrate;
+    self.sliderBitrate.value = self.sliderBitrate.maximumValue;
+    
     // TODO:链接地址
     NSDictionary<NSString *, NSString *> *urls = @{
         @"tn":@"rtmp://81.71.134.206:4000/cdn_standard/max0",           // Live
@@ -113,25 +125,25 @@
         @"demo1":@"rtmp://52.196.96.7:4000/cdn_standard/max0",
         @"demo2":@"rtmp://18.194.23.38:4000/cdn_standard/max0",
         @"local":@"rtmp://172.25.32.133:4000/cdn_standard/max0",
-        @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre",         // Camshare
-        @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre",
+        @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",         // Camshare
+        @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
     };
     NSString *url = urls[@"tn"];
-//    NSString *url = @"rtmp://81.71.134.206:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://198.211.27.71:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://52.196.96.7:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://18.194.23.38:4000/cdn_standard/max0";
-//    NSString *url = @"rtmp://172.25.32.133:4000/cdn_standard/max0";
-
-      // Camshare
-//    NSString *url = @"rtmp://52.196.96.7:1935/mediaserver/camsahre";
-//    NSString *url = @"rtmp://172.25.32.133:1935/mediaserver/camsahre";
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
 //    [self playbackRate2x:nil];
     //    [self play:nil];
+    
+//    self.playerArray = [NSMutableArray array];
+//    for(int i = 0; i < 4; i ++) {
+//        LiveStreamPlayer *player = [LiveStreamPlayer instance];
+//        player.useHardDecoder = YES;
+//        NSString *url = [NSString stringWithFormat:@"rtmp://172.25.32.133:1935/mediaserver/camsahre"];
+//        [player playUrl:url recordFilePath:@"" recordH264FilePath:@"" recordAACFilePath:@""];
+//        [self.playerArray addObject:player];
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -218,10 +230,17 @@
     }
 }
 
+- (void)sliderBitrateValueChanged:(UISlider *)sender {
+    UISlider *slider = (UISlider *)sender;
+    int bitrate = (int)roundf(slider.value);
+    self.labelBitrate.text = [NSString stringWithFormat:@"%dkbps", (int)(bitrate / 1000), nil];
+    [self.publisher updateVideoParam:bitrate];
+}
+
 - (void)sliderValueChanged:(UISlider *)sender {
     UISlider *slider = (UISlider *)sender;
     self.player.cacheMS = (int)roundf(slider.value);
-    self.labelCacheMS.text = [NSString stringWithFormat:@"%ldms", self.player.cacheMS, nil];
+    self.labelCacheMS.text = [NSString stringWithFormat:@"%dms", (int)(self.player.cacheMS), nil];
 }
 
 - (IBAction)record:(UIButton *)sender {
@@ -361,6 +380,9 @@
 
 - (void)publisherOnError:(LiveStreamPublisher *)publisher code:(NSString * _Nullable)code description:(NSString * _Nullable)description {
     NSLog(@"StreamViewController::publisherOnError(), code: %@, description: %@", code, description);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self toast:description];
+    });
 }
 
 #pragma mark - 浏览器

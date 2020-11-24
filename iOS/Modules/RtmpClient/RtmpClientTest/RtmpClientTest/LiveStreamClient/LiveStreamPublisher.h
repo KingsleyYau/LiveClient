@@ -26,7 +26,8 @@ typedef enum LiveStreamType {
     LiveStreamType_ShowHost_Private,     // 主播私密    240x320, 12fps, 12kfi, 700kbps
     LiveStreamType_ShowHost_Mutiple,     // 主播多人互动 240x240, 12fps, 12kfi, 500kbps
     LiveStreamType_Camshare,             // Camshare 176x144, 6fps, 6kfi, 300kbps
-    LiveStreamType_480x640,              // 480x320, 10fps, 10kfi, 400kbps
+    LiveStreamType_480x640,              // 480x640, 12fps, 12kfi, 600kbps
+    LiveStreamType_720x1080,              // 720x1080, 12fps, 12kfi, 1000kbps
 } LiveStreamType;
 
 @interface LiveStreamPublisher : NSObject
@@ -61,6 +62,11 @@ typedef enum LiveStreamType {
 @property (strong, readonly) NSString *url;
 
 /**
+ 对应配置的码率
+ */
+@property (assign, readonly) NSInteger bitrate;
+
+/**
  *  获取实例
  *
  *  @return 实例
@@ -81,6 +87,12 @@ typedef enum LiveStreamType {
  停止
  */
 - (void)stop;
+
+/**
+ 更新视频编码器参数
+ 
+ */
+- (BOOL)updateVideoParam:(NSInteger)bitrate;
 
 /**
  镜头翻转

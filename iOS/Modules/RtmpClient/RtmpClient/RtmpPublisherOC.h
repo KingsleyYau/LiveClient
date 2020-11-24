@@ -12,6 +12,29 @@
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+@interface RtmpVideoParam : NSObject <NSCopying>
+/**
+ 宽
+ */
+@property (assign) int width;
+/**
+ 高
+ */
+@property (assign) int height;
+/**
+ 帧率
+ */
+@property (assign) int fps;
+/**
+ 关键帧间隔
+ */
+@property (assign) int keyFrameInterval;
+/**
+ 码率
+ */
+@property (assign) int bitrate;
+@end
+
 @class RtmpPublisherOC;
 @protocol RtmpPublisherOCDelegate <NSObject>
 @optional
@@ -43,7 +66,7 @@
  @param height 视频高
  @return 实例
  */
-+ (instancetype _Nonnull)instance:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate;
++ (instancetype _Nonnull)instance:(RtmpVideoParam * _Nonnull)videoParam;
 
 /**
  发布流连接
@@ -56,6 +79,12 @@
 - (BOOL)publishUrl:(NSString * _Nonnull)url
 recordH264FilePath:(NSString * _Nullable)recordH264FilePath
  recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
+
+/**
+ 更新视频编码器参数
+ 
+ */
+- (BOOL)updateVideoParam:(RtmpVideoParam * _Nonnull)videoParam;
 
 /**
  停止

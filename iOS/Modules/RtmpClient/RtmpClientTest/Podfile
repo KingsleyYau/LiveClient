@@ -5,4 +5,5 @@ platform :ios, '8.0'
 
 target 'RtmpClientTest' do
 	pod 'GPUImage', '~> 0.1.7'
+	pod 'Masonry', '0.6.4'
 end

@@ -85,7 +85,7 @@ VideoEncoderH264::VideoEncoderH264()
     mpCallback = NULL;
     mWidth = 480;
     mHeight = 640;
-    mBitRate = 1000000;
+    mBitrate = 1000000;
     mKeyFrameInterval = 20;
     mFPS = 20;
 
@@ -122,37 +122,40 @@ VideoEncoderH264::~VideoEncoderH264() {
     DestroyContext();
 }
 
-bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) {
+bool VideoEncoderH264::Create(int width, int height, int fps, int keyFrameInterval, int bitrate, VIDEO_FORMATE_TYPE type) {
     bool bFlag = true;
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_WARNING,
                  "VideoEncoderH264::Create( "
                  "this : %p, "
                  "width : %d, "
                  "height : %d, "
-                 "bitRate : %d, "
-                 "keyFrameInterval : %d, "
                  "fps : %d, "
+                 "keyFrameInterval : %d, "
+                 "bitrate : %d, "
                  "type : %d "
                  ")",
                  this,
                  width,
                  height,
-                 bitRate,
-                 keyFrameInterval,
                  fps,
+                 keyFrameInterval,
+                 bitrate,
                  type);
 
+    mRuningMutex.lock();
     mWidth = width;
     mHeight = height;
-    mBitRate = bitRate;
+    mBitrate = bitrate;
     mKeyFrameInterval = keyFrameInterval;
     mFPS = fps;
     mSrcFormat = type;
-
+    
     // 创建编码器
+    DestroyContext();
     bFlag = CreateContext();
+    mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -161,18 +164,18 @@ bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameIn
                  "[%s], "
                  "width : %d, "
                  "height : %d, "
-                 "bitRate : %d, "
-                 "keyFrameInterval : %d, "
                  "fps : %d, "
+                 "keyFrameInterval : %d, "
+                 "bitrate : %d, "
                  "type : %d "
                  ")",
                  this,
                  bFlag ? "Success" : "Fail",
                  width,
                  height,
-                 bitRate,
-                 keyFrameInterval,
                  fps,
+                 keyFrameInterval,
+                 bitrate,
                  type);
 
     return bFlag;
@@ -184,7 +187,7 @@ void VideoEncoderH264::SetCallback(VideoEncoderCallback *callback) {
 
 bool VideoEncoderH264::Reset() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_WARNING,
                  "VideoEncoderH264::Reset( "
                  "this : %p "
                  ")",
@@ -410,9 +413,9 @@ bool VideoEncoderH264::ConvertVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFr
 
 bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFrame) {
     bool bFlag = false;
-
     long long curTime = getCurrentTime();
 
+    mRuningMutex.lock();
     // 编码帧
     AVPacket pkt = {0};
     av_init_packet(&pkt);
@@ -481,12 +484,13 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFra
         bFlag = true;
     }
 
+    mRuningMutex.unlock();
     return bFlag;
 }
 
 bool VideoEncoderH264::CreateContext() {
     FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoEncoderH264::CreateContext( this : %p )", this);
-
+    mRuningMutex.lock();
     bool bFlag = true;
     avcodec_register_all();
     //    av_log_set_level(AV_LOG_ERROR);
@@ -495,7 +499,7 @@ bool VideoEncoderH264::CreateContext() {
     mCodec = avcodec_find_encoder_by_name("libx264");
     if (mCodec) {
         FileLevelLog("rtmpdump",
-                     KLog::LOG_WARNING,
+                     KLog::LOG_MSG,
                      "VideoEncoderH264::CreateContext( "
                      "this : %p, "
                      "[Codec Found], "
@@ -553,7 +557,7 @@ bool VideoEncoderH264::CreateContext() {
 //        av_opt_set(mContext->priv_data, "profile", "baseline", 0);
 //        av_opt_set(mContext->priv_data, "level", "3.0", 0);
 
-        mContext->bit_rate = mBitRate;
+        mContext->bit_rate = mBitrate;
         mContext->width = mWidth;
         mContext->height = mHeight;
         mContext->time_base = (AVRational){1, mFPS};
@@ -599,6 +603,7 @@ bool VideoEncoderH264::CreateContext() {
                      this);
     }
 
+    mRuningMutex.unlock();
     return bFlag;
 }
 
@@ -610,6 +615,7 @@ void VideoEncoderH264::DestroyContext() {
                  ")",
                  this);
 
+    mRuningMutex.lock();
     if (mContext) {
         avcodec_close(mContext);
         avcodec_free_context(&mContext);
@@ -617,6 +623,7 @@ void VideoEncoderH264::DestroyContext() {
     }
 
     mCodec = NULL;
+    mRuningMutex.unlock();
 }
 
 void VideoEncoderH264::ReleaseBuffer(VideoFrame *videoFrame) {

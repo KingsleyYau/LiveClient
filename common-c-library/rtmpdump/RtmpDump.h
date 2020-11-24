@@ -153,7 +153,9 @@ class RtmpDump {
      @return 发送结果
      */
     bool SendCmdReceive();
-
+    
+    bool SendCmdHeartBeat();
+    
   public:
     // 接收线程处理
     void RecvRunnableHandle();

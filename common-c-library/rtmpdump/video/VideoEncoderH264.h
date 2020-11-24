@@ -40,7 +40,7 @@ class VideoEncoderH264 : public VideoEncoder {
     static void GobalInit();
 
   public:
-    bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type);
+    bool Create(int width, int height, int fps, int keyInterval, int bitrate, VIDEO_FORMATE_TYPE type);
     void SetCallback(VideoEncoderCallback *callback);
     bool Reset();
     void Pause();
@@ -113,7 +113,7 @@ class VideoEncoderH264 : public VideoEncoder {
     // 编码参数
     int mWidth;
     int mHeight;
-    int mBitRate;
+    int mBitrate;
     int mKeyFrameInterval;
     int mFPS;
 

@@ -68,11 +68,13 @@ public:
         if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnConnect:)] ) {
             [mpRtmpPlayerOC.delegate rtmpPlayerOnConnect:mpRtmpPlayerOC];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            mpRtmpPlayerOC.player->SendCmdLogin("MM301", "123456", "4");
-            mpRtmpPlayerOC.player->SendCmdMakeCall("WW0", "PC4", "4");
-            mpRtmpPlayerOC.player->SendCmdReceive();
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            int num = 300 + arc4random() % 100;
+//            NSString *user = [NSString stringWithFormat:@"MM%d", num];
+//            mpRtmpPlayerOC.player->SendCmdLogin([user UTF8String], "123456", "4");
+//            mpRtmpPlayerOC.player->SendCmdMakeCall("WW0", "PC4", "4");
+//            mpRtmpPlayerOC.player->SendCmdReceive();
+//        });
     }
     
     void OnPlayerDisconnect(PlayerController* pc) {

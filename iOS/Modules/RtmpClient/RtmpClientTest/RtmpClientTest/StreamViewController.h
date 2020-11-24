@@ -29,12 +29,15 @@
 
 @property (weak) IBOutlet UILabel* labelCacheMS;
 @property (weak) IBOutlet UISlider* sliderCacheMS;
+@property (weak) IBOutlet UILabel* labelBitrate;
+@property (weak) IBOutlet UISlider* sliderBitrate;
 @property (weak) IBOutlet NSLayoutConstraint* controlBottom;
 @property (weak) IBOutlet NSLayoutConstraint* controlTop;
 
 @property (weak) IBOutlet UIButton* button0_5x;
 @property (weak) IBOutlet UIButton* button1x;
 @property (weak) IBOutlet UIButton* button2x;
+
 @property (weak) IBOutlet UIButton* buttonRecord;
 
 - (IBAction)scale:(id)sender;

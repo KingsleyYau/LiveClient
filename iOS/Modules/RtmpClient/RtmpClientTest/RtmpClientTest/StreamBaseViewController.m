@@ -7,9 +7,12 @@
 //
 
 #import "StreamBaseViewController.h"
+#import "StreamToastView.h"
+
+#import <Masonry/Masonry.h>
 
 @interface StreamBaseViewController ()
-
+@property (weak) StreamToastView *taostView;
 @end
 
 @implementation StreamBaseViewController
@@ -53,6 +56,26 @@
     } else {
         self.view.backgroundColor = [UIColor whiteColor];
     }
+}
+
+- (void)toast:(NSString *)msg {
+    [self.taostView removeFromSuperview];
+    
+    self.taostView = [StreamToastView view];
+    [self.view addSubview:self.taostView];
+    
+    self.taostView.msgLabel.text = msg;
+    CGSize size = [self.taostView.msgLabel sizeThatFits:CGSizeZero];
+    [self.taostView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+    }];
+    [self.taostView.msgLabel sizeToFit];
+//    [self.view layoutIfNeeded];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.taostView removeFromSuperview];
+        self.taostView = nil;
+    });
 }
 
 - (BOOL)shouldAutorotate {

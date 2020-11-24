@@ -24,19 +24,21 @@ VideoHardEncoder::~VideoHardEncoder() {
     DestroyContext();
 }
 
-bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) {
+bool VideoHardEncoder::Create(int width, int height, int fps, int keyInterval, int bitrate, VIDEO_FORMATE_TYPE type) {
     bool bFlag = true;
 
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Create( this : %p )", this);
 
+    mRuningMutex.lock();
     mWidth = width;
     mHeight = height;
-    mKeyFrameInterval = keyFrameInterval;
-    mBitRate = bitRate;
+    mKeyFrameInterval = keyInterval;
+    mBitrate = bitrate;
     mFPS = fps;
-
+    
     DestroyContext();
     bFlag = CreateContext();
+    mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -57,7 +59,7 @@ void VideoHardEncoder::SetCallback(VideoEncoderCallback *callback) {
 bool VideoHardEncoder::Reset() {
     bool bFlag = true;
 
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Reset( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::Reset( this : %p )", this);
     
     bFlag = CreateContext();
 
@@ -305,8 +307,8 @@ bool VideoHardEncoder::CreateContext() {
             VTSessionSetProperty(mVideoCompressionSession, kVTCompressionPropertyKey_ProfileLevel, kVTProfileLevel_H264_Baseline_AutoLevel);
 
             // 码率
-            SInt32 bitRate = mBitRate;
-            CFNumberRef ref = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &bitRate);
+            SInt32 bitrate = mBitrate;
+            CFNumberRef ref = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &bitrate);
             VTSessionSetProperty(mVideoCompressionSession, kVTCompressionPropertyKey_AverageBitRate, ref);
             CFRelease(ref);
 

@@ -27,7 +27,7 @@ public:
     virtual ~VideoHardEncoder();
     
 public:
-    bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type);
+    bool Create(int width, int height, int fps, int keyInterval, int bitrate, VIDEO_FORMATE_TYPE type);
     void SetCallback(VideoEncoderCallback* callback);
     bool Reset();
     void Pause();
@@ -51,7 +51,7 @@ private:
     
     int mWidth;
     int mHeight;
-    int mBitRate;
+    int mBitrate;
     int mKeyFrameInterval;
     int mFPS;
     

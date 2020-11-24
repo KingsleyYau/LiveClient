@@ -55,15 +55,22 @@ void PublisherController::SetStatusCallback(PublisherStatusCallback *pc) {
     mpPublisherStatusCallback = pc;
 }
 
-void PublisherController::SetVideoParam(int width, int height, int fps, int keyInterval) {
-    mRtmpDump.SetVideoParam(width, height);
-
+bool PublisherController::SetVideoParam(int width, int height, int fps, int keyFrameInterval, int bitrate, VIDEO_FORMATE_TYPE type) {
+    bool bFlag = false;
+    
     mPublisherMutex.lock();
     mVideoFps = fps;
     if (fps > 0) {
         mVideoFrameInterval = 1000.0 / fps;
     }
+    mRtmpDump.SetVideoParam(width, height);
+    
+    if (mpVideoEncoder) {
+        bFlag = mpVideoEncoder->Create(width, height, fps, keyFrameInterval, bitrate, type);
+    }
     mPublisherMutex.unlock();
+    
+    return bFlag;
 }
 
 bool PublisherController::PublishUrl(const string &url, const string &recordH264FilePath, const string &recordAACFilePath) {
@@ -72,7 +79,7 @@ bool PublisherController::PublishUrl(const string &url, const string &recordH264
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::PublishUrl( "
-                 "this : %p "
+                 "this : %p, "
                  "url : %s "
                  ")",
                  this,

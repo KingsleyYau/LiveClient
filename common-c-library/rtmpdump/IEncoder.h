@@ -25,7 +25,7 @@ class VideoEncoderCallback {
 class VideoEncoder {
   public:
     virtual ~VideoEncoder(){};
-    virtual bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) = 0;
+    virtual bool Create(int width, int height, int fps, int keyInterval, int bitrate, VIDEO_FORMATE_TYPE type) = 0;
     virtual void SetCallback(VideoEncoderCallback *callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;

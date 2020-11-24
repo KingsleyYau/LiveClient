@@ -326,10 +326,6 @@ void RtmpDump::RecvRunnableHandle() {
     if (bFlag) {
         mConnectedMutex.lock();
         mIsConnected = true;
-//        mEncodeVideoTs = 0;
-//        mEncodeAudioTs = 0;
-//        mSendVideoFrameTs = 0;
-//        mSendAudioFrameTs = 0;
         mConnectedMutex.unlock();
 
         FileLevelLog("rtmpdump",
@@ -1104,7 +1100,7 @@ void RtmpDump::RecvCmdLogin(char *frame, int frame_size, u_int32_t timestamp) {
     }
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "RtmpDump::RecvCmdLogin( "
                  "this : %p, "
                  "bFlag : %s, "
@@ -1345,6 +1341,50 @@ bool RtmpDump::SendCmdReceive() {
         srs_amf0_serialize(amfRecvVideo, data + index, size);
         index += size;
         srs_amf0_free(amfRecvVideo);
+        
+        int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
+    }
+    mConnectedMutex.unlock();
+    mClientMutex.unlock();
+    
+    return bFlag;
+}
+
+bool RtmpDump::SendCmdHeartBeat() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::SendCmdHeartBeat( "
+                 "this : %p "
+                 ")",
+                 this);
+
+    bool bFlag = false;
+
+    char *data = new char[4096];
+    memset(data, 0, 4096);
+    int index = 0;
+    int size = 0;
+
+    mClientMutex.lock();
+    mConnectedMutex.lock();
+    if (mbRunning && mpRtmp && mIsConnected) {
+        srs_amf0_t amfCmd = srs_amf0_create_string("setActive");
+        size = srs_amf0_size(amfCmd);
+        srs_amf0_serialize(amfCmd, data + index, size);
+        index += size;
+        srs_amf0_free(amfCmd);
+
+        srs_amf0_t amfNumber = srs_amf0_create_number(0);
+        size = srs_amf0_size(amfNumber);
+        srs_amf0_serialize(amfNumber, data + index, size);
+        index += size;
+        srs_amf0_free(amfNumber);
+
+        srs_amf0_t amfArgs = srs_amf0_create_null();
+        size = srs_amf0_size(amfArgs);
+        srs_amf0_serialize(amfArgs, data + index, size);
+        index += size;
+        srs_amf0_free(amfArgs);
         
         int ret = srs_rtmp_write_packet(mpRtmp, SRS_RTMP_TYPE_COMMAND, 0, data, index);
     }

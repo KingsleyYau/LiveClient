@@ -62,10 +62,12 @@ bool AudioHardEncoder::Create(int sampleRate, int channelsPerFrame, int bitPerSa
     mLastPresentationTime = 0;
     mTotalPresentationTime = 0;
 
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Create( "
-                                                "this : %p, "
-                                                "[%s] "
-                                                ")",
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioHardEncoder::Create( "
+                 "this : %p, "
+                 "[%s] "
+                 ")",
                  this,
                  bFlag ? "Success" : "Fail"
                  );
@@ -80,14 +82,17 @@ void AudioHardEncoder::SetCallback(AudioEncoderCallback *callback) {
 bool AudioHardEncoder::Reset() {
     bool bFlag = true;
 
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Reset( this : %p )", this);
+    
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioHardEncoder::Reset( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag ? "Success" : "Fail",
-                 this);
+                 this,
+                 bFlag ? "Success" : "Fail"
+                 );
 
     return bFlag;
 }
@@ -96,6 +101,16 @@ void AudioHardEncoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Pause( this : %p )", this);
 
     DestroyContext();
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioHardEncoder::Pause( "
+                 "this : %p, "
+                 "[%s] "
+                 ")",
+                 this,
+                 "Success"
+                 );
 }
 
 void AudioHardEncoder::EncodeAudioFrame(void *data, int size, void *frame) {

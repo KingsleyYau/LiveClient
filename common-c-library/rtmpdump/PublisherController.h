@@ -62,9 +62,9 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
      @param width 视频宽
      @param height 视频高
      @param fps 帧率
-     @param keyInterval 关键帧间隔
+     @param keyFrameInterval 关键帧间隔
      */
-    void SetVideoParam(int width, int height, int fps, int keyInterval);
+    bool SetVideoParam(int width, int height, int fps, int keyFrameInterval, int bitrate, VIDEO_FORMATE_TYPE type = VIDEO_FORMATE_RGBA);
 
     /**
      发布流连接
@@ -104,13 +104,6 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
      恢复推送视频
      */
     void ResumePushVideo();
-
-    /**
-     增加采集视频卡顿造成的时间
-     
-     @param ts 采集视频卡顿造成的时间
-     */
-    void AddVideoTimestamp(u_int32_t ts);
 
     /**
      发送Login命令

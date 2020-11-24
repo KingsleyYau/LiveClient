@@ -32,18 +32,15 @@
 @property (assign) BOOL isConnected;
 @property (assign) BOOL isPreview;
 
-@property (assign) NSInteger videoWidth;
-@property (assign) NSInteger videoHeight;
-@property (assign) NSInteger videoFps;
-@property (assign) NSInteger videoKpi;
-@property (assign) NSInteger videoBitFate;
-
 #pragma mark - 传输处理
 /**
  RTMP推拉流模块
  */
 @property (strong) RtmpPublisherOC *publisher;
-
+/**
+ 视频参数
+ */
+@property (strong) RtmpVideoParam *videoParam;
 #pragma mark - 视频处理
 /**
  视频采集
@@ -67,7 +64,9 @@
  视频输出处理
  */
 @property (nonatomic, strong) GPUImageRawDataOutput *output;
-
+/**
+ 闪光灯
+ */
 @property (nonatomic, strong) AVCaptureSession *flashSession;
 
 #pragma mark - 音频处理
@@ -109,10 +108,10 @@
         NSLog(@"LiveStreamPublisher::initWithType( self : %p, liveStreamType : %d )", self, liveStreamType);
         
         // 初始化推流参数
-        [self initStreamParam:liveStreamType];
+        _videoParam = [self videoParamFromStreamParam:liveStreamType];
         
         // 创建推流器
-        self.publisher = [RtmpPublisherOC instance:self.videoWidth height:self.videoHeight fps:self.videoFps keyInterval:self.videoKpi bitRate:self.videoBitFate];
+        self.publisher = [RtmpPublisherOC instance:self.videoParam];
         self.publisher.delegate = self;
 
         self.isPreview = NO;
@@ -127,7 +126,7 @@
         
         // 创建裁剪滤镜
         // 目标比例
-        double radioPreview = 1.0 * self.videoWidth / self.videoHeight;
+        double radioPreview = 1.0 * self.videoParam.width / self.videoParam.height;
         // 源比例
         double radioImage = 1.0 * VIDEO_CAPTURE_WIDTH / VIDEO_CAPTURE_HEIGHT;
         if (radioPreview < radioImage) {
@@ -140,7 +139,7 @@
             self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
         }
         // 创建输出处理
-        self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(self.videoWidth, self.videoHeight) resultsInBGRAFormat:YES];
+        self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(self.videoParam.width, self.videoParam.height) resultsInBGRAFormat:YES];
         
         WeakObject(self, weakSelf);
         WeakObject(self.output, weakOutput);
@@ -154,7 +153,7 @@
                 CVPixelBufferRef pixelBuffer = NULL;
                 CVReturn ret = kCVReturnSuccess;
                 
-                ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, weakSelf.videoWidth, weakSelf.videoHeight, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
+                ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, weakSelf.videoParam.width, weakSelf.videoParam.height, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
                 if (ret == kCVReturnSuccess) {
                     // 将视频帧放进推流器
                     [weakSelf.publisher pushVideoFrame:pixelBuffer];
@@ -182,13 +181,6 @@
 }
 
 #pragma mark - 对外接口
-- (void)initCapture {
-    NSLog(@"LiveStreamPublisher::initCapture( self : %p )", self);
-
-    [self initVideoCapture];
-    [self initAudioCapture];
-}
-
 - (BOOL)pushlishUrl:(NSString *_Nonnull)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath {
     NSLog(@"LiveStreamPublisher::pushlishUrl( self : %p, url : %@ )", self, url);
 
@@ -208,6 +200,20 @@
     NSLog(@"LiveStreamPublisher::stop( self : %p )", self);
 
     [self cancel];
+}
+
+- (BOOL)updateVideoParam:(NSInteger)bitrate {
+    NSLog(@"LiveStreamPublisher::updateVideoParam( self : %p, bitrate : %d )", self, (int)bitrate);
+    RtmpVideoParam *videoParam = [self.videoParam copy];
+    videoParam.bitrate = (int)bitrate;
+    return [self.publisher updateVideoParam:videoParam];
+}
+
+- (void)initCapture {
+    NSLog(@"LiveStreamPublisher::initCapture( self : %p )", self);
+
+    [self initVideoCapture];
+    [self initAudioCapture];
 }
 
 - (void)rotateCamera {
@@ -279,54 +285,64 @@
 }
 
 #pragma mark - 私有方法
-- (void)initStreamParam:(LiveStreamType)liveStreamType {
+- (RtmpVideoParam *)videoParamFromStreamParam:(LiveStreamType)liveStreamType {
+    RtmpVideoParam *param = [[RtmpVideoParam alloc] init];
     switch (liveStreamType) {
         case LiveStreamType_Audience_Private: {
-            self.videoWidth = 240;
-            self.videoHeight = 320;
-            self.videoFps = 10;
-            self.videoKpi = 10;
-            self.videoBitFate = 400 * 1000;
+            param.width = 240;
+            param.height = 320;
+            param.fps = 10;
+            param.keyFrameInterval = 10;
+            param.bitrate = 400 * 1000;
         }break;
         case LiveStreamType_Audience_Mutiple: {
-            self.videoWidth = 240;
-            self.videoHeight = 240;
-            self.videoFps = 10;
-            self.videoKpi = 10;
-            self.videoBitFate = 400 * 1000;
+            param.width = 240;
+            param.height = 240;
+            param.fps = 10;
+            param.keyFrameInterval = 10;
+            param.bitrate= 400 * 1000;
         }break;
         case LiveStreamType_ShowHost_Public:
         case LiveStreamType_ShowHost_Private: {
-            self.videoWidth = 320;
-            self.videoHeight = 320;
-            self.videoFps = 12;
-            self.videoKpi = 12;
-            self.videoBitFate = 700 * 1000;
+            param.width = 320;
+            param.height = 320;
+            param.fps = 12;
+            param.keyFrameInterval = 12;
+            param.bitrate= 700 * 1000;
         }break;
         case LiveStreamType_ShowHost_Mutiple: {
-            self.videoWidth = 240;
-            self.videoHeight = 240;
-            self.videoFps = 12;
-            self.videoKpi = 12;
-            self.videoBitFate = 500 * 1000;
+            param.width = 240;
+            param.height = 240;
+            param.fps = 12;
+            param.keyFrameInterval = 12;
+            param.bitrate= 500 * 1000;
         }break;
         case LiveStreamType_Camshare: {
-            self.videoWidth = 176;
-            self.videoHeight = 144;
-            self.videoFps = 6;
-            self.videoKpi = 6;
-            self.videoBitFate = 64 * 1000;
+            param.width = 176;
+            param.height = 144;
+            param.fps = 6;
+            param.keyFrameInterval = 6;
+            param.bitrate= 64 * 1000;
         }break;
         case LiveStreamType_480x640: {
-            self.videoWidth = 480;
-            self.videoHeight = 640;
-            self.videoFps = 10;
-            self.videoKpi = 10;
-            self.videoBitFate = 400 * 1000;
+            param.width = 480;
+            param.height = 640;
+            param.fps = 12;
+            param.keyFrameInterval = 12;
+            param.bitrate= 600 * 1000;
         }break;
-        default:
-            break;
+        case LiveStreamType_720x1080: {
+            param.width = 720;
+            param.height = 1080;
+            param.fps = 12;
+            param.keyFrameInterval = 12;
+            param.bitrate= 1000 * 1000;
+        }break;
+        default: {
+            return nil;
+        }break;
     }
+    return param;
 }
 
 - (void)setPublishView:(GPUImageView *)publishView {
@@ -391,6 +407,10 @@
     if (self.publisher.mute != mute) {
         self.publisher.mute = mute;
     }
+}
+
+- (NSInteger)bitrate {
+    return self.videoParam.bitrate;
 }
 
 - (void)run {

@@ -27,8 +27,19 @@
 
 using namespace coollive;
 
-class PublisherStatusCallbackImp;
+@implementation RtmpVideoParam
+- (id)copyWithZone:(NSZone *)zone {
+    RtmpVideoParam *copy = [[[self class] allocWithZone:zone] init];
+    copy.width = self.width;
+    copy.height = self.height;
+    copy.fps = self.fps;
+    copy.keyFrameInterval = self.keyFrameInterval;
+    copy.bitrate = self.bitrate;
+    return copy;
+}
+@end
 
+class PublisherStatusCallbackImp;
 @interface RtmpPublisherOC () {
     BOOL _useHardEncoder;
 }
@@ -50,16 +61,7 @@ class PublisherStatusCallbackImp;
 @property (nonatomic, strong) NSDate *startTime;
 
 #pragma mark - 视频参数
-// 宽
-@property (assign) int width;
-// 高
-@property (assign) int height;
-// 帧率
-@property (assign) int fps;
-// 关键帧间隔
-@property (assign) int keyInterval;
-// 视频码率
-@property (assign) int bitRate;
+@property (strong) RtmpVideoParam *videoParam;
 // 第一次处理帧时间
 @property (assign) long long videoFrameStartPushTime;
 @property (assign) long long videoFrameLastPushTime;
@@ -94,10 +96,6 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         if ([mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnConnect:)]) {
             [mpPublisher.delegate rtmpPublisherOCOnConnect:mpPublisher];
         }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            mpPublisher.publisher->SendCmdLogin("MM1", "123456", "4");
-//            mpPublisher.publisher->SendCmdMakeCall("MM1", "PC0", "4");
-//        });
     }
 
     void OnPublisherDisconnect(PublisherController *pc) {
@@ -118,39 +116,31 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
 
 @implementation RtmpPublisherOC
 #pragma mark - 获取实例
-+ (instancetype)instance:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate {
-    RtmpPublisherOC *obj = [[[self class] alloc] initWithWidthAndHeight:width height:height fps:fps keyInterval:keyInterval bitRate:bitRate];
++ (instancetype)instance:(RtmpVideoParam *)videoParam {
+    RtmpPublisherOC *obj = [[[self class] alloc] initWithVideoParam:videoParam];
     return obj;
 }
 
-- (instancetype)initWithWidthAndHeight:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate {
-    NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %ld, height : %ld, fps : %ld, keyInterval : %ld, bitRate : %ld )", (long)width, (long)height, (long)fps, (long)keyInterval, (long)bitRate);
+- (instancetype)initWithVideoParam:(RtmpVideoParam *)videoParam {
+    NSLog(@"RtmpPublisherOC::initWithParam( width : %ld, height : %ld, fps : %ld, keyFrameInterval : %ld, bitrate : %ld )",
+          (long)videoParam.width, (long)videoParam.height, (long)videoParam.fps, (long)videoParam.keyFrameInterval, (long)videoParam.bitrate);
 
     if (self = [super init]) {
         // 初始化参数
-        _width = (int)width;
-        _height = (int)height;
-        _fps = (int)fps;
-        _keyInterval = (int)keyInterval;
-        _bitRate = (int)bitRate;
+        self.videoParam = videoParam;
+        
         _mute = NO;
 
         self.videoFrameLastPushTime = 0;
         self.videoFrameStartPushTime = 0;
         self.videoFrameIndex = 0;
-        self.videoFrameInterval = 1000.0 / fps;
+        self.videoFrameInterval = 1000.0 / videoParam.fps;
 
         self.videoPause = NO;
         self.videoResume = YES;
         self.videoFramePauseTime = 0;
 
         self.startTime = [NSDate date];
-
-        // 创建流推送器
-        self.publisher = new PublisherController();
-        self.publisher->SetVideoParam(self.width, self.height, self.fps, self.keyInterval);
-        self.statusCallback = new PublisherStatusCallbackImp(self);
-        self.publisher->SetStatusCallback(self.statusCallback);
 
         // 创建静音Buffer
         self.mpMuteBuffer = new EncodeDecodeBuffer();
@@ -160,12 +150,28 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         _useHardEncoder = NO;
 #else
         // 真机, 默认使用硬编码
-        _useHardEncoder = YES;
+        _useHardEncoder = NO;
 #endif
-
         // 创建解码器和渲染器
         [self createEncoders];
 
+        // 创建流推送器
+        self.publisher = new PublisherController();
+        // 设置状态回调
+        self.statusCallback = new PublisherStatusCallbackImp(self);
+        self.publisher->SetStatusCallback(self.statusCallback);
+        // 设置编码器
+        self.publisher->SetVideoEncoder(self.videoEncoder);
+        self.audioEncoder->Create(44100, 1, 16);
+        self.publisher->SetAudioEncoder(self.audioEncoder);
+        // 设置视频参数
+        self.publisher->SetVideoParam(self.videoParam.width,
+                                      self.videoParam.height,
+                                      self.videoParam.fps,
+                                      self.videoParam.keyFrameInterval,
+                                      self.videoParam.bitrate,
+                                      VIDEO_FORMATE_BGRA);
+        
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -224,6 +230,13 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
     NSLog(@"RtmpPublisherOC::stop()");
     // 停止推流
     self.publisher->Stop();
+}
+
+- (BOOL)updateVideoParam:(RtmpVideoParam *)videoParam {
+    NSLog(@"RtmpPublisherOC::updateVideoParam()");
+    // 设置视频参数
+    self.videoParam = videoParam;
+    return self.publisher->SetVideoParam(self.videoParam.width, self.videoParam.height, self.videoParam.fps, self.videoParam.keyFrameInterval, self.videoParam.bitrate, VIDEO_FORMATE_BGRA);
 }
 
 - (void)pushVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer {
@@ -307,13 +320,6 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         self.videoEncoder = new VideoEncoderH264();
         self.audioEncoder = new AudioEncoderAAC();
     }
-
-    // 替换编码器
-    self.videoEncoder->Create(self.width, self.height, self.bitRate, self.keyInterval, self.fps, VIDEO_FORMATE_BGRA);
-    self.publisher->SetVideoEncoder(self.videoEncoder);
-
-    self.audioEncoder->Create(44100, 1, 16);
-    self.publisher->SetAudioEncoder(self.audioEncoder);
 }
 
 - (void)destroyEncoders {
