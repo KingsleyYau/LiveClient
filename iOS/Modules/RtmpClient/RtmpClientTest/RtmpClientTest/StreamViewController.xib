@@ -273,10 +273,13 @@
                                 <action selector="stopCam:" destination="-1" eventType="touchUpInside" id="iWU-80-lOV"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QXn-gN-QVm" userLabel="Test">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QXn-gN-QVm" userLabel="Filter">
                             <rect key="frame" x="321.66666666666669" y="130" width="63.333333333333314" height="28"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <state key="normal" title="Test"/>
+                            <state key="normal" title="Filter"/>
+                            <connections>
+                                <action selector="filterPublish:" destination="-1" eventType="touchUpInside" id="ycu-RY-Dtf"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T6M-2C-qo0">
                             <rect key="frame" x="5.0000000000000036" y="160" width="63.333333333333343" height="30"/>

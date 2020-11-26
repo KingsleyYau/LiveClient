@@ -23,9 +23,10 @@
 @interface StreamViewController () <LiveStreamPlayerDelegate, LiveStreamPublisherDelegate, StreamFileCollectionViewControllerDelegate>
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
-
-@property (strong) LiveStreamPublisher *publisher;
 @property (strong) LiveStreamPlayer *player;
+
+@property (strong) GPUImageFilter *publisherFilter;
+@property (strong) LiveStreamPublisher *publisher;
 
 @property (strong) UITapGestureRecognizer *singleTap;
 
@@ -65,6 +66,7 @@
     [self.sliderBitrate addTarget:self action:@selector(sliderBitrateValueChanged:) forControlEvents:UIControlEventValueChanged];
     self.sliderBitrate.continuous = NO;
     [self.sliderCacheMS addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.sliderCacheMS.continuous = NO;
     self.sliderCacheMS.value = 1000;
     self.labelCacheMS.text = [NSString stringWithFormat:@"%dms", (int)(self.sliderCacheMS.value), nil];
     // 是否录制
@@ -102,7 +104,7 @@
         [[LSImageVibrateFilter alloc] init],
     ];
     self.player = [LiveStreamPlayer instance];
-    self.player.useHardDecoder = NO;
+    self.player.useHardDecoder = YES;
     self.player.delegate = self;
     //    self.player.customFilter = self.playerFilterArray[0];
     self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -113,10 +115,12 @@
     self.publisher.delegate = self;
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
-    LSImageVibrateFilter *vibrateFilter = [[LSImageVibrateFilter alloc] init];
-    self.publisher.customFilter = vibrateFilter;
+    self.publisherFilter = [[LSImageVibrateFilter alloc] init];
+    self.publisher.customFilter = self.publisherFilter;
+    
     self.sliderBitrate.maximumValue = self.publisher.bitrate;
     self.sliderBitrate.value = self.sliderBitrate.maximumValue;
+    self.labelBitrate.text = [NSString stringWithFormat:@"%dkbps", (int)(self.sliderBitrate.value / 1000), nil];
     
     // TODO:链接地址
     NSDictionary<NSString *, NSString *> *urls = @{
@@ -128,7 +132,7 @@
         @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",         // Camshare
         @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
     };
-    NSString *url = urls[@"tn"];
+    NSString *url = urls[@"local"];
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
@@ -367,6 +371,16 @@
 - (IBAction)stopCam:(id)sender {
     self.previewPublishView.hidden = YES;
     [self.publisher stopPreview];
+}
+
+- (IBAction)filterPublish:(id)sender {
+    if (self.publisher) {
+        if (!self.publisher.customFilter) {
+            self.publisher.customFilter = self.publisherFilter;
+        } else {
+            self.publisher.customFilter = nil;
+        }
+    }
 }
 
 #pragma mark - 推流器状态回调

@@ -52,5 +52,6 @@
 - (IBAction)roate:(id)sender;
 - (IBAction)startCam:(id)sender;
 - (IBAction)stopCam:(id)sender;
+- (IBAction)filterPublish:(id)sender;
 @end
 

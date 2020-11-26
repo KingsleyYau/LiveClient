@@ -16,24 +16,29 @@
 @end
 
 @implementation AppDelegate
+- (void)firstTimeActive {
+    if (NO) {
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http:www.baidu.com"]];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:req completionHandler:^(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error) {
+            if ( !error ) {
+                NSLog(@"response:%@", response);
+            } else {
+                NSLog(@"error:%@", error);
+            }
+        }];
+        [task resume];
+    }
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-//    NSURLSession *session = [NSURLSession sharedSession];
-//    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http:www.baidu.com"]];
-//    NSURLSessionDataTask *task = [session dataTaskWithRequest:req completionHandler:^(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error) {
-//        if ( !error ) {
-//            NSLog(@"response:%@", response);
-//        } else {
-//            NSLog(@"error:%@", error);
-//        }
-//    }];
-//    [task resume];
-
     KLog::SetLogFileEnable(NO);
-    KLog::SetLogLevel(KLog::LOG_WARNING);
-
+    KLog::SetLogLevel(KLog::LOG_MSG);
+    
+    [self firstTimeActive];
+    
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
     return YES;
@@ -60,27 +65,5 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
-//- (BOOL)canBecomeFirstResponder {
-//    return YES;
-//}
-//
-//- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-//    NSLog(@"remoteControlReceivedWithEvent(), %@", event);
-//
-//    switch (event.subtype) {
-//        case UIEventSubtypeRemoteControlPlay:
-//            //play
-//            break;
-//        case UIEventSubtypeRemoteControlPause:
-//            //pause
-//            break;
-//        case UIEventSubtypeRemoteControlStop:
-//            //stop
-//            break;
-//        default:
-//            break;
-//    }
-//}
 
 @end

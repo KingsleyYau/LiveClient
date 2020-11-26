@@ -186,23 +186,30 @@
     self.downloadTextView.attributedText = attrString;
 }
 
+#define KB 1024
+#define MB 1024 * KB
+#define GB 1024 * MB
 - (NSString *)readableSize:(NSInteger)size {
+    NSString *result = @"";
     NSString *unit = @"B";
-    if (size / 1024 > 1) {
-        size /= 1024;
+    float floatSize = (1.0 * size);
+    if (floatSize > KB) {
+        floatSize = 1.0 * size / KB;
         unit = @"K";
-
-        if (size / 1024 > 1) {
-            size /= 1024;
+        result = [NSString stringWithFormat:@"%.0f%@", floor(floatSize), unit];
+        
+        if (floatSize > MB) {
+            floatSize = 1.0 * size / MB;
             unit = @"M";
+            result = [NSString stringWithFormat:@"%.1f%@", floor(floatSize), unit];
         }
 
-        if (size / 1024 > 1) {
-            size /= 1024;
+        if (floatSize > GB) {
+            floatSize = 1.0 * size / GB;
             unit = @"G";
+            result = [NSString stringWithFormat:@"%.2f%@", floor(floatSize), unit];
         }
     }
-    NSString *result = [NSString stringWithFormat:@"%ld%@", size, unit];
     return result;
 }
 
