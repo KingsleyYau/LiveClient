@@ -132,7 +132,7 @@
         @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",         // Camshare
         @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
     };
-    NSString *url = urls[@"local"];
+    NSString *url = urls[@"tn"];
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];

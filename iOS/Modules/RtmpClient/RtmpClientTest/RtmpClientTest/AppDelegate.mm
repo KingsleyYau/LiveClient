@@ -35,7 +35,7 @@
     // Override point for customization after application launch.
 
     KLog::SetLogFileEnable(NO);
-    KLog::SetLogLevel(KLog::LOG_MSG);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
     
     [self firstTimeActive];
     

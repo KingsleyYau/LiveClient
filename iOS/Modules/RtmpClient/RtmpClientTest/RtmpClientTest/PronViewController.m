@@ -186,29 +186,25 @@
     self.downloadTextView.attributedText = attrString;
 }
 
-#define KB 1024
-#define MB 1024 * KB
-#define GB 1024 * MB
+#define KB (1024)
+#define MB (1024 * KB)
+#define GB (1024 * MB)
 - (NSString *)readableSize:(NSInteger)size {
     NSString *result = @"";
     NSString *unit = @"B";
     float floatSize = (1.0 * size);
-    if (floatSize > KB) {
-        floatSize = 1.0 * size / KB;
+    if (floatSize > GB) {
+        floatSize = floatSize / GB;
+        unit = @"G";
+        result = [NSString stringWithFormat:@"%.2f%@", floatSize, unit];
+    } else if (floatSize > MB) {
+        floatSize = floatSize / MB;
+        unit = @"M";
+        result = [NSString stringWithFormat:@"%.1f%@", floatSize, unit];
+    } else if (floatSize > KB) {
+        floatSize = floatSize / KB;
         unit = @"K";
-        result = [NSString stringWithFormat:@"%.0f%@", floor(floatSize), unit];
-        
-        if (floatSize > MB) {
-            floatSize = 1.0 * size / MB;
-            unit = @"M";
-            result = [NSString stringWithFormat:@"%.1f%@", floor(floatSize), unit];
-        }
-
-        if (floatSize > GB) {
-            floatSize = 1.0 * size / GB;
-            unit = @"G";
-            result = [NSString stringWithFormat:@"%.2f%@", floor(floatSize), unit];
-        }
+        result = [NSString stringWithFormat:@"%.0f%@", floatSize, unit];
     }
     return result;
 }
@@ -358,9 +354,11 @@
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    NSLog(@"PronViewController::decidePolicyForNavigationAction(), %u, %@", navigationAction.navigationType, navigationAction.request.URL.absoluteString);
+    NSLog(@"PronViewController::decidePolicyForNavigationAction(), %ld, %@", navigationAction.navigationType, navigationAction.request.URL.absoluteString);
     decisionHandler(WKNavigationActionPolicyAllow);
-    if ( navigationAction.navigationType == WKNavigationTypeLinkActivated ) {
+    if ( [self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString]
+        || (navigationAction.navigationType != WKNavigationTypeOther)
+        ) {
         self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
     }
 }
@@ -384,7 +382,8 @@
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-    NSLog(@"PronViewController::didFinishNavigation()");
+    NSLog(@"PronViewController::didFinishNavigation(), %@", webView.title);
+    self.title = webView.title;
     [self checkDownloadURL];
 }
 

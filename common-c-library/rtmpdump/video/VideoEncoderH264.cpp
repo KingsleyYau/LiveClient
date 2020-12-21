@@ -478,11 +478,9 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame *srcFrame, VideoFrame *dstFra
             dstFrame->mTS,
             pkt.size,
             handleTime);
-
-        av_free_packet(&pkt);
-
         bFlag = true;
     }
+    av_free_packet(&pkt);
 
     mRuningMutex.unlock();
     return bFlag;
