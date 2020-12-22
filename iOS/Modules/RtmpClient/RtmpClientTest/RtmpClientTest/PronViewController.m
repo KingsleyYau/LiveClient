@@ -22,6 +22,8 @@
 @property (weak) IBOutlet StreamWebView *webView;
 @property (weak) IBOutlet UIButton *downloadBtn;
 @property (weak) IBOutlet UITextView *downloadTextView;
+@property (weak) IBOutlet UIButton *buttonAudoDownload;
+@property (assign) BOOL forward;
 
 @property (strong) NSMutableDictionary *urlDict;
 @property (strong) NSMutableDictionary *urlCheckDict;
@@ -34,6 +36,12 @@
 @end
 
 @implementation PronViewController
++ (NSString *)jqueryScript {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"File/jquery.min" ofType:@"js"];
+    NSString *javascript = [NSString stringWithContentsOfFile:path encoding:kCFStringEncodingASCII error:nil];
+    return javascript;
+}
+
 - (void)dealloc {
     [[FileDownloadManager manager] removeDelegate:self];
 }
@@ -44,29 +52,35 @@
 
     // 界面处理
     self.title = @"Browser";
-    self.urlDict = [NSMutableDictionary dictionary];
-    self.urlCheckDict = [NSMutableDictionary dictionary];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"< Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    
+
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 24, 24);
     [button setImage:[UIImage imageNamed:@"DownloadButton"] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(downloadAction:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 
+    // 是否自动下载
+    [self.buttonAudoDownload setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
+    self.buttonAudoDownload.selected = YES;
+    self.downloadBtn.enabled = NO;
+
+    // 浏览界面
     self.webView.UIDelegate = self;
     self.webView.navigationDelegate = self;
     self.webView.hidden = YES;
-    self.downloadBtn.enabled = NO;
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"http://www.baidu.com";
+    NSString *urlString = @"https://www.baidu.com/";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
 
-    //    [self goAction:nil];
+    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[[self class] jqueryScript] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+    [self.webView.configuration.userContentController addUserScript:usrScript];
+
+    [self goAction:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -82,8 +96,6 @@
 }
 
 - (IBAction)goAction:(UIButton *)sender {
-    self.urlDict = [NSMutableDictionary dictionary];
-    self.urlCheckDict = [NSMutableDictionary dictionary];
     self.downloadBtn.enabled = NO;
 
     NSString *urlString = self.textFieldAddress.text;
@@ -97,48 +109,92 @@
     self.downloadTextView.hidden = !self.downloadTextView.hidden;
 }
 
-- (IBAction)checkDownloadURL {
+- (IBAction)autoDownload:(UIButton *)sender {
+    sender.selected = !sender.selected;
+}
+
+- (IBAction)checkDownloadURL:(BOOL)autoDownload {
+    self.urlDict = [NSMutableDictionary dictionary];
+    self.urlCheckDict = [NSMutableDictionary dictionary];
+    self.downloadBtn.enabled = NO;
+
     [self.webView evaluateJavaScript:@"quality_480p"
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"480P"] = @(1);
                        if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL( [480P] ), %@", response);
+                           NSLog(@"PronViewController::checkDownloadURL(), [480P], %@", response);
                            self.urlDict[@"480P"] = response;
                        }
-                       [self check];
+                       [self check:autoDownload];
                    }];
     [self.webView evaluateJavaScript:@"quality_720p"
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"720P"] = @(1);
                        if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL( [720P] ), %@", response);
+                           NSLog(@"PronViewController::checkDownloadURL(), [720P], %@", response);
                            self.urlDict[@"720P"] = response;
                        }
-                       [self check];
+                       [self check:autoDownload];
                    }];
     [self.webView evaluateJavaScript:@"quality_1080p"
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"1080P"] = @(1);
                        if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL( [1080P] ), %@", response);
+                           NSLog(@"PronViewController::checkDownloadURL(), [1080P], %@", response);
                            self.urlDict[@"1080P"] = response;
                        }
-                       [self check];
+                       [self check:autoDownload];
+                   }];
+
+    //    NSString *js = @"document.body.innerHTML";
+    NSString *js = @"$('video').children().attr('src')";
+    [self.webView evaluateJavaScript:js
+                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                       self.urlCheckDict[@"ORIGINAL"] = @(1);
+                       if (!error) {
+                           NSLog(@"PronViewController::checkDownloadURL(), [ORIGINAL], %@", response);
+                           self.urlDict[@"ORIGINAL"] = response;
+                       } else {
+                           NSLog(@"PronViewController::checkDownloadURL(), [Error], %@", error);
+                       }
+                       [self check:autoDownload];
                    }];
 }
 
-- (void)check {
-    if (self.urlCheckDict.count == 3) {
+- (void)check:(BOOL)autoDownload {
+    NSString *original = self.urlDict[@"ORIGINAL"];
+    if (self.urlCheckDict.count >= 3 || original.length > 0) {
         self.downloadBtn.enabled = YES;
+
+        if (autoDownload && self.buttonAudoDownload.selected) {
+            [self downloadAction:nil];
+        }
     }
 }
 
 - (IBAction)cleanAction:(UIButton *)sender {
     [[FileDownloadManager manager] cancel];
+    [self.taskURLDict removeAllObjects];
+    [self changeDownloadStatus];
+
+//    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+//    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+//                     completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
+//                         for (WKWebsiteDataRecord *record in records) {
+//                             [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
+//                                                                       forDataRecords:@[ record ]
+//                                                                    completionHandler:^{
+//                                                                        NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
+//                                                                    }];
+//                         }
+//                     }];
 }
 
 - (IBAction)downloadAction:(UIButton *)sender {
-    NSString *urlString = self.urlDict[@"1080P"];
+    NSString *urlString = self.urlDict[@"ORIGINAL"];
+    if (urlString.length == 0) {
+        urlString = self.urlDict[@"1080P"];
+    }
     if (urlString.length == 0) {
         urlString = self.urlDict[@"720P"];
     }
@@ -165,7 +221,7 @@
                                                                                               }];
             [line appendAttributedString:contentAttStr];
             att.statusString = line;
-            
+
             @synchronized(self) {
                 NSString *hash = [NSString stringWithFormat:@"%lu", [task hash]];
                 self.taskURLDict[hash] = att;
@@ -233,7 +289,7 @@
                                                                                       }];
     [line appendAttributedString:contentAttStr];
     att.statusString = line;
-    
+
     @synchronized(self) {
         if (urlString.length > 0) {
             NSString *hash = [NSString stringWithFormat:@"%lu", [downloadTask hash]];
@@ -269,7 +325,7 @@
                                                                                       }];
     [line appendAttributedString:contentAttStr];
     att.statusString = line;
-    
+
     @synchronized(self) {
         if (urlString.length > 0) {
             NSString *hash = [NSString stringWithFormat:@"%lu", [downloadTask hash]];
@@ -308,7 +364,7 @@
                                                                                       }];
     [line appendAttributedString:contentAttStr];
     att.statusString = line;
-    
+
     @synchronized(self) {
         if (urlString.length > 0) {
             NSString *hash = [NSString stringWithFormat:@"%lu", [downloadTask hash]];
@@ -356,10 +412,16 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSLog(@"PronViewController::decidePolicyForNavigationAction(), %ld, %@", navigationAction.navigationType, navigationAction.request.URL.absoluteString);
     decisionHandler(WKNavigationActionPolicyAllow);
-    if ( [self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString]
-        || (navigationAction.navigationType != WKNavigationTypeOther)
-        ) {
+    if ([self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString] || (navigationAction.navigationType != WKNavigationTypeOther)) {
         self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
+    } else {
+        self.title = webView.title;
+    }
+
+    if (navigationAction.navigationType == WKNavigationTypeBackForward) {
+        self.forward = NO;
+    } else {
+        self.forward = YES;
     }
 }
 
@@ -370,7 +432,7 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
     NSLog(@"PronViewController::decidePolicyForNavigationResponse()");
     decisionHandler(WKNavigationResponsePolicyAllow);
-    [self checkDownloadURL];
+    //    [self checkDownloadURL];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
@@ -384,7 +446,7 @@
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     NSLog(@"PronViewController::didFinishNavigation(), %@", webView.title);
     self.title = webView.title;
-    [self checkDownloadURL];
+    [self checkDownloadURL:self.forward];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {

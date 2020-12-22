@@ -76,12 +76,12 @@ static FileDownloadManager *gManager = nil;
 - (NSURLSessionDownloadTask *)downloadURL:(NSString *)url {
     NSURLSessionDownloadTask *task = nil;
     if (self.isSessionOK) {
-        NSLog(@"FileDownloadManager::download( [Start] ), %@", url);
+        NSLog(@"FileDownloadManager::download(), [Start], %@", url);
         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
         task = [self.session downloadTaskWithRequest:req];
         [task resume];
     } else {
-        NSLog(@"FileDownloadManager::download( [Start], Fail ), %@", url);
+        NSLog(@"FileDownloadManager::download(), [Start Fail], %@", url);
     }
     return task;
 }
