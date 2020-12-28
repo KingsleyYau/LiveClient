@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <AVFoundation/AVAssetDownloadTask.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef enum FileDownloadItemStatus {
@@ -29,6 +31,7 @@ typedef enum FileDownloadItemStatus {
 - (void)addDelegate:(id<NSURLSessionDelegate>)delegate;
 - (void)removeDelegate:(id<NSURLSessionDelegate>)delegate;
 - (NSURLSessionDownloadTask *)downloadURL:(NSString *)url;
+- (AVAssetDownloadTask *)downloadHLSURL:(NSString *)url;
 - (void)cancel;
 @end
 

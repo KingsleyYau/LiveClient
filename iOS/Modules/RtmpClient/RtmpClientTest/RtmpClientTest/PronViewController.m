@@ -72,7 +72,7 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://www.baidu.com/";
+    NSString *urlString = @"https://www.baidu.com/index.php";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
@@ -146,8 +146,8 @@
                        [self check:autoDownload];
                    }];
 
-    //    NSString *js = @"document.body.innerHTML";
-    NSString *js = @"$('video').children().attr('src')";
+//        NSString *js = @"document.body.innerHTML";
+    NSString *js = @"$('video').children()[0].src";
     [self.webView evaluateJavaScript:js
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        self.urlCheckDict[@"ORIGINAL"] = @(1);
@@ -205,6 +205,7 @@
     NSLog(@"PronViewController::downloadAction(), %@", urlString);
     if (urlString.length > 0) {
         NSURLSessionDownloadTask *task = [[FileDownloadManager manager] downloadURL:urlString];
+//        [[FileDownloadManager manager] downloadHLSURL:urlString];
         if (task) {
             DownloadAttachment *att = [[DownloadAttachment alloc] init];
             att.task = task;

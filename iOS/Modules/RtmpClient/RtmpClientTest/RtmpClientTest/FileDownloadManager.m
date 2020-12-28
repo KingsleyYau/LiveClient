@@ -7,7 +7,9 @@
 //
 
 #import "FileDownloadManager.h"
+
 #import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonDigest.h>
 
 #define IDENTIFYIER @"net.qdating.rtmpclient.BackgroundSession"
 
@@ -28,6 +30,7 @@ static FileDownloadManager *gManager = nil;
 @property (strong) NSMutableDictionary *downloadItemDict;
 @property (strong) NSMutableArray *delegates;
 @property (assign) BOOL isSessionOK;
+@property (strong) AVAssetDownloadURLSession *assetSession;
 @end
 
 @implementation FileDownloadManager
@@ -49,6 +52,9 @@ static FileDownloadManager *gManager = nil;
     self = [super init];
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:IDENTIFYIER];
     self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+    NSURLSessionConfiguration *assetConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"assetDowloadConfigIdentifier"];
+    self.assetSession = [AVAssetDownloadURLSession sessionWithConfiguration:assetConfig assetDownloadDelegate:self delegateQueue:[NSOperationQueue mainQueue]];
+
     self.isSessionOK = YES;
     self.downloadItemDict = [NSMutableDictionary dictionary];
     self.delegates = [NSMutableArray array];
@@ -73,6 +79,20 @@ static FileDownloadManager *gManager = nil;
     }
 }
 
+- (AVAssetDownloadTask *)downloadHLSURL:(NSString *)url {
+    AVAssetDownloadTask *task = nil;
+    if (self.isSessionOK) {
+        NSLog(@"FileDownloadManager::downloadHLS(), [Start], %@", url);
+        NSURL *assetURL = [NSURL URLWithString:url];
+        AVURLAsset *hlsAsset = [AVURLAsset assetWithURL:assetURL];
+        task = [self.assetSession assetDownloadTaskWithURLAsset:hlsAsset assetTitle:@"hls" assetArtworkData:nil options:nil];
+        [task resume];
+    } else {
+        NSLog(@"FileDownloadManager::downloadHLS(), [Start Fail], %@", url);
+    }
+    return task;
+}
+
 - (NSURLSessionDownloadTask *)downloadURL:(NSString *)url {
     NSURLSessionDownloadTask *task = nil;
     if (self.isSessionOK) {
@@ -93,6 +113,18 @@ static FileDownloadManager *gManager = nil;
     }];
 }
 
++ (NSString *)getMd5FromString:(NSString *)string {
+    const char *str = [string UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH] = {0};
+    CC_MD5(str, (CC_LONG)strlen(str), result);
+    NSMutableString *code = [NSMutableString string];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [code appendFormat:@"%02X", result[i]];
+    }
+    return code;
+}
+
+#pragma mark - MP4
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     for (NSValue *value in self.delegates) {
         id<NSURLSessionDownloadDelegate> delegate = value.nonretainedObjectValue;
@@ -144,15 +176,15 @@ static FileDownloadManager *gManager = nil;
     NSLog(@"FileDownloadManager::didCompleteWithError(), %@", error);
     BOOL bCanResume = NO;
     if (error) {
-        NSData* data = error.userInfo[NSURLSessionDownloadTaskResumeData];
+        NSData *data = error.userInfo[NSURLSessionDownloadTaskResumeData];
         if (data) {
-            NSURLSessionDownloadTask* resumeTask = [session downloadTaskWithResumeData:data];
+            NSURLSessionDownloadTask *resumeTask = [session downloadTaskWithResumeData:data];
             [resumeTask resume];
             bCanResume = YES;
         }
     }
-    
-    if ( !bCanResume ) {
+
+    if (!bCanResume) {
         for (NSValue *value in self.delegates) {
             id<NSURLSessionTaskDelegate> delegate = value.nonretainedObjectValue;
             if ([delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
@@ -173,10 +205,48 @@ static FileDownloadManager *gManager = nil;
                 didBecomeInvalidWithError:error];
         }
     }
-    
+
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:IDENTIFYIER];
     self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     self.isSessionOK = YES;
+}
+
+#pragma mark - HLS
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
+    NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), location: %@", location);
+    
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *ouputDir = [NSString stringWithFormat:@"%@/download", cacheDir];
+    NSString *ouputFile = [NSString stringWithFormat:@"%@/%@", ouputDir, [[self class] getMd5FromString:assetDownloadTask.URLAsset.URL.absoluteString]];
+
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error;
+    [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
+    [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
+}
+
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
+    NSLog(@"FileDownloadManager::didLoadTimeRange(), %.0f/%.0f second",
+          CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
+}
+
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didResolveMediaSelection:(AVMediaSelection *)resolvedMediaSelection {
+    NSLog(@"FileDownloadManager::didResolveMediaSelection(), resolvedMediaSelection: %@", resolvedMediaSelection);
+}
+
+- (void)URLSession:(NSURLSession *)session aggregateAssetDownloadTask:(AVAggregateAssetDownloadTask *)aggregateAssetDownloadTask willDownloadToURL:(NSURL *)location API_AVAILABLE(ios(11.0)) {
+    NSLog(@"FileDownloadManager::willDownloadToURL(), location: %@", location);
+}
+
+- (void)URLSession:(NSURLSession *)session aggregateAssetDownloadTask:(AVAggregateAssetDownloadTask *)aggregateAssetDownloadTask didCompleteForMediaSelection:(AVMediaSelection *)mediaSelection API_AVAILABLE(ios(11.0)) {
+    NSLog(@"FileDownloadManager::didCompleteForMediaSelection(), mediaSelection: %@", mediaSelection);
+}
+
+- (void)URLSession:(NSURLSession *)session aggregateAssetDownloadTask:(AVAggregateAssetDownloadTask *)aggregateAssetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad forMediaSelection:(AVMediaSelection *)mediaSelection API_AVAILABLE(ios(11.0)) {
+    NSLog(@"FileDownloadManager::didLoadTimeRange(), [Finish], loaded(%f, %f), expected(%f, %f), mediaSelection: %@",
+          CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRange.duration),
+          CMTimeGetSeconds(timeRangeExpectedToLoad.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration),
+          mediaSelection);
 }
 
 @end
