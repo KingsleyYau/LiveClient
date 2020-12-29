@@ -205,7 +205,6 @@
     NSLog(@"PronViewController::downloadAction(), %@", urlString);
     if (urlString.length > 0) {
         NSURLSessionDownloadTask *task = [[FileDownloadManager manager] downloadURL:urlString];
-//        [[FileDownloadManager manager] downloadHLSURL:urlString];
         if (task) {
             DownloadAttachment *att = [[DownloadAttachment alloc] init];
             att.task = task;
