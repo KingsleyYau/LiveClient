@@ -533,8 +533,8 @@ bool VideoEncoderH264::CreateContext() {
         /**
          * 设置不分片
          */
-        av_opt_set(mContext->priv_data, "x264-params", "no-sliced-threads", 0);
-
+        av_opt_set(mContext->priv_data, "x264-params", "sliced-threads=0", 0);
+        
         /**
          @description https://trac.ffmpeg.org/wiki/Encode/H.264
          
