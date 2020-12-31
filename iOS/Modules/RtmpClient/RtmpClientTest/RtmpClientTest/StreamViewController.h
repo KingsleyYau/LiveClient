@@ -39,19 +39,5 @@
 @property (weak) IBOutlet UIButton* button2x;
 
 @property (weak) IBOutlet UIButton* buttonRecord;
-
-- (IBAction)scale:(id)sender;
-- (IBAction)mutePlay:(id)sender;
-- (IBAction)filterPlay:(id)sender;
-- (IBAction)play:(id)sender;
-- (IBAction)stopPlay:(id)sender;
-- (IBAction)publish:(id)sender;
-- (IBAction)stopPush:(id)sender;
-- (IBAction)beauty:(id)sender;
-- (IBAction)mute:(id)sender;
-- (IBAction)roate:(id)sender;
-- (IBAction)startCam:(id)sender;
-- (IBAction)stopCam:(id)sender;
-- (IBAction)filterPublish:(id)sender;
 @end
 

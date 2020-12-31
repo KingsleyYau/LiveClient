@@ -400,7 +400,7 @@
 }
 
 #pragma mark - 浏览器
-- (IBAction)pronAction:(UIButton *)sender {
+- (IBAction)browserAction:(UIButton *)sender {
     PronViewController *vc = [[PronViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }

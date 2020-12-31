@@ -62,7 +62,7 @@
 
     // 是否自动下载
     [self.buttonAudoDownload setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
-    self.buttonAudoDownload.selected = YES;
+    self.buttonAudoDownload.selected = NO;
     self.downloadBtn.enabled = NO;
 
     // 浏览界面
@@ -72,7 +72,7 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://www.baidu.com/index.php";
+    NSString *urlString = @"https://www.baidu.com/";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
@@ -118,52 +118,36 @@
     self.urlCheckDict = [NSMutableDictionary dictionary];
     self.downloadBtn.enabled = NO;
 
-    [self.webView evaluateJavaScript:@"quality_480p"
-                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                       self.urlCheckDict[@"480P"] = @(1);
-                       if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL(), [480P], %@", response);
-                           self.urlDict[@"480P"] = response;
-                       }
-                       [self check:autoDownload];
-                   }];
-    [self.webView evaluateJavaScript:@"quality_720p"
-                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                       self.urlCheckDict[@"720P"] = @(1);
-                       if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL(), [720P], %@", response);
-                           self.urlDict[@"720P"] = response;
-                       }
-                       [self check:autoDownload];
-                   }];
-    [self.webView evaluateJavaScript:@"quality_1080p"
-                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                       self.urlCheckDict[@"1080P"] = @(1);
-                       if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL(), [1080P], %@", response);
-                           self.urlDict[@"1080P"] = response;
-                       }
-                       [self check:autoDownload];
-                   }];
+    for(int i = 0; i < 6; i++) {
+        NSString *mediaKey = [NSString stringWithFormat:@"media_%d", i];
+        [self.webView evaluateJavaScript:mediaKey
+                       completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                           self.urlCheckDict[mediaKey] = @(1);
+                           if (!error) {
+                               NSLog(@"PronViewController::checkDownloadURL(), [%@], %@", mediaKey, response);
+                               self.urlDict[mediaKey] = response;
+                           }
+                           [self check:autoDownload];
+                       }];
+    }
 
 //        NSString *js = @"document.body.innerHTML";
     NSString *js = @"$('video').children()[0].src";
     [self.webView evaluateJavaScript:js
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                       self.urlCheckDict[@"ORIGINAL"] = @(1);
                        if (!error) {
                            NSLog(@"PronViewController::checkDownloadURL(), [ORIGINAL], %@", response);
                            self.urlDict[@"ORIGINAL"] = response;
+                           [self check:autoDownload];
                        } else {
-                           NSLog(@"PronViewController::checkDownloadURL(), [Error], %@", error);
+                           NSLog(@"PronViewController::checkDownloadURL(), [ORIGINAL], [Error], %@", error);
                        }
-                       [self check:autoDownload];
                    }];
 }
 
 - (void)check:(BOOL)autoDownload {
     NSString *original = self.urlDict[@"ORIGINAL"];
-    if (self.urlCheckDict.count >= 3 || original.length > 0) {
+    if (self.urlCheckDict.count >= 6 || original.length > 0) {
         self.downloadBtn.enabled = YES;
 
         if (autoDownload && self.buttonAudoDownload.selected) {
@@ -191,15 +175,30 @@
 }
 
 - (IBAction)downloadAction:(UIButton *)sender {
+    int maxResolution = 0;
     NSString *urlString = self.urlDict[@"ORIGINAL"];
     if (urlString.length == 0) {
-        urlString = self.urlDict[@"1080P"];
-    }
-    if (urlString.length == 0) {
-        urlString = self.urlDict[@"720P"];
-    }
-    if (urlString.length == 0) {
-        urlString = self.urlDict[@"480P"];
+        for(NSString *key in self.urlDict) {
+            NSString *value = self.urlDict[key];
+            NSURL *url = [NSURL URLWithString:value];
+            NSString *path = url.path;
+            
+            NSString *regex = @"^.*.mp4$";
+            NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch|NSBackwardsSearch];
+            if (range.length > 0) {
+                regex = @"[0-9]*P";
+                NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch|NSBackwardsSearch];
+                if (range.length > 0) {
+                    NSRange range1 = NSMakeRange(range.location, range.length - 1);
+                    NSString *resolution = [path substringWithRange:range1];
+                    NSLog(@"PronViewController::downloadAction(), resolution: %@", resolution);
+                    if (maxResolution < [resolution intValue]) {
+                        maxResolution = [resolution intValue];
+                        urlString = value;
+                    }
+                }
+            }
+        }
     }
 
     NSLog(@"PronViewController::downloadAction(), %@", urlString);
