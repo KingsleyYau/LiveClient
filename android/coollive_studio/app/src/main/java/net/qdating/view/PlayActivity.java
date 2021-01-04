@@ -152,8 +152,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
-		LSConfig.DEBUG = true;
-		LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
+		LSConfig.DEBUG = false;
+		LSConfig.LOG_LEVEL = android.util.Log.WARN;
 		LSConfig.LOGDIR = LSConfig.TAG;
 		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeAuto;
 //		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeSoft;

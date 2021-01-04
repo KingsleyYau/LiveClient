@@ -162,10 +162,12 @@ void PublisherController::PushVideoFrame(void *data, int size, void *frame) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::PushVideoFrame( "
+                 "this : %p, "
                  "frame : %p, "
                  "data : %p, "
                  "size : %d "
                  ")",
+                 this,
                  frame,
                  data,
                  size);
@@ -293,19 +295,37 @@ void PublisherController::PushVideoFrame(void *data, int size, void *frame) {
 }
 
 void PublisherController::PushAudioFrame(void *data, int size, void *frame) {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
-                 "PublisherController::PushAudioFrame( "
-                 "frame : %p, "
-                 "data : %p, "
-                 "size : %d "
-                 ")",
-                 frame,
-                 data,
-                 size);
-
-    if (mpAudioEncoder) {
-        mpAudioEncoder->EncodeAudioFrame(data, size, frame);
+    if (mVideoFrameStartPushTime != 0) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_STAT,
+                     "PublisherController::PushAudioFrame( "
+                     "this : %p, "
+                     "frame : %p, "
+                     "data : %p, "
+                     "size : %d "
+                     ")",
+                     this,
+                     frame,
+                     data,
+                     size);
+        
+        if (mpAudioEncoder) {
+            mpAudioEncoder->EncodeAudioFrame(data, size, frame);
+        }
+    } else {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_STAT,
+                     "PublisherController::PushAudioFrame( "
+                     "this : %p, "
+                     "[Drop Before Video Frame Push], "
+                     "frame : %p, "
+                     "data : %p, "
+                     "size : %d "
+                     ")",
+                     this,
+                     frame,
+                     data,
+                     size);
     }
 }
 
