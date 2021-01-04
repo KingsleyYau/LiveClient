@@ -24,6 +24,17 @@ import net.qdating.LSPublisher;
 import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 
+import org.webrtc.AudioSource;
+import org.webrtc.AudioTrack;
+import org.webrtc.CameraEnumerationAndroid;
+import org.webrtc.MediaConstraints;
+import org.webrtc.PeerConnectionFactory;
+import org.webrtc.SurfaceViewRenderer;
+import org.webrtc.VideoSource;
+import org.webrtc.VideoTrack;
+
+import java.util.Random;
+
 public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 	private String playH264File = "" ;
 
@@ -59,7 +70,7 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 		playerRenderderBinder.setCustomFilter(playerImageFilter);
 		player.setRendererBinder(playerRenderderBinder);
 
-		String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
+		String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/tester0";
 		player.playUrl(playerUrl, "", "", "");
 
 		// 推送相关
@@ -70,6 +81,8 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 		final String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
 //		publisher.publisherUrl(publishUrl, "", "");
 
+		final Random rand = new Random();
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -78,6 +91,7 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 						if( publisher != null ) {
 							publisher.publisherUrl(publishUrl, "", "");
 						}
+						int millisecond = rand.nextInt(5000);
 						handler.postDelayed(new Runnable() {
 							@Override
 							public void run() {
@@ -86,7 +100,7 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 								msg.what = 1;
 								handler.sendMessage(msg);
 							}
-						}, 3000);
+						}, millisecond);
 					}break;
 					case 1:{
 						if( publisher != null ) {
@@ -105,8 +119,6 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 					default:
 						break;
 				}
-
-
 			}
 		};
 
@@ -128,6 +140,18 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 				finish();
 			}
 		}, 30000);
+
+
+		PeerConnectionFactory.Builder builder = PeerConnectionFactory.builder();
+		PeerConnectionFactory pc = builder.createPeerConnectionFactory();
+		VideoSource videoSource = pc.createVideoSource(false);
+		VideoTrack localVideoTrack = pc.createVideoTrack("video", videoSource);
+		SurfaceViewRenderer videoRenderer = new SurfaceViewRenderer(this);
+		localVideoTrack.addSink(videoRenderer);
+
+		MediaConstraints audioConstraints = new MediaConstraints();
+		AudioSource audioSource = pc.createAudioSource(audioConstraints);
+		AudioTrack localAudioTrack = pc.createAudioTrack("audio", audioSource);
 	}
 	
 	@Override

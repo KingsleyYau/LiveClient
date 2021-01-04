@@ -36,4 +36,12 @@ public interface ILSPublisherStatusCallback {
 //	 * @param height 图像高
 //	 */
 //	public void onVideoCapture(LSPublisher publisher, final byte[] data, int size, final int width, final int height);
+
+	/***
+	 * 推流出错回调
+	 * @param publisher 推流器
+	 * @param code 错误码
+	 * @param description 错误提示
+	 */
+	public void onError(LSPublisher publisher, String code, String description);
 }

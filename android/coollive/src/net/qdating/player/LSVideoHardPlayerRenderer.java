@@ -4,8 +4,7 @@ import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageInputYuvFilter;
-import net.qdating.filter.LSImageOutputFilter;
-import net.qdating.player.LSVideoHardDecoderFrame;
+import net.qdating.filter.LSImageView;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -45,7 +44,7 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	 * 显示原始图片滤镜
 	 */
 	private LSImageInputYuvFilter inputYuvFilter = null;
-	private LSImageOutputFilter outputFilter = null;
+	private LSImageView outputFilter = null;
 
 	private LSImageFilter customFilter = null;
 	private boolean bCustomFilterChange = false;
@@ -53,7 +52,7 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	public LSVideoHardPlayerRenderer(FillMode fillMode) {
         inputYuvFilter = new LSImageInputYuvFilter();
 
-		outputFilter = new LSImageOutputFilter();
+		outputFilter = new LSImageView();
 		outputFilter.fillMode = fillMode;
 	}
 
@@ -115,17 +114,17 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	}
 	
 	public void setOriginalSize(int width, int height) {
-		Log.d(LSConfig.TAG,
-				String.format("LSVideoHardPlayerRenderer::setOriginalSize( "
-								+ "this : 0x%x, "
-								+ "originalWidth : %d, "
-								+ "originalHeight : %d "
-								+ ")",
-						hashCode(),
-						width,
-						height
-				)
-		);
+//		Log.d(LSConfig.TAG,
+//				String.format("LSVideoHardPlayerRenderer::setOriginalSize( "
+//								+ "this : 0x%x, "
+//								+ "originalWidth : %d, "
+//								+ "originalHeight : %d "
+//								+ ")",
+//						hashCode(),
+//						width,
+//						height
+//				)
+//		);
 		
 		originalWidth = width;
 		originalHeight = height;
@@ -169,7 +168,7 @@ public class LSVideoHardPlayerRenderer implements Renderer {
         previewWidth = width;
         previewHeight = height;
 
-		outputFilter.changeViewPointSize(previewWidth, previewHeight);
+		outputFilter.setOutputSize(previewWidth, previewHeight);
 	}
 
 	@Override

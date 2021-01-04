@@ -4,7 +4,7 @@ import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageBmpFilter;
-import net.qdating.filter.LSImageOutputFilter;
+import net.qdating.filter.LSImageView;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -44,14 +44,14 @@ public class LSVideoPlayerRenderer implements Renderer {
 	 * 显示原始图片滤镜
 	 */
 	private LSImageBmpFilter bmpFilter = null;
-	private LSImageOutputFilter outputFilter = null;
+	private LSImageView outputFilter = null;
 
 	private LSImageFilter customFilter = null;
 	private boolean bCustomFilterChange = false;
 
 	public LSVideoPlayerRenderer(FillMode fillMode) {
 		bmpFilter = new LSImageBmpFilter();
-		outputFilter = new LSImageOutputFilter();
+		outputFilter = new LSImageView();
 		outputFilter.fillMode = fillMode;
 	}
 
@@ -149,7 +149,7 @@ public class LSVideoPlayerRenderer implements Renderer {
         previewWidth = width;
         previewHeight = height;
         
-        outputFilter.changeViewPointSize(previewWidth, previewHeight);
+        outputFilter.setOutputSize(previewWidth, previewHeight);
 	}
 
 	@Override

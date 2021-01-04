@@ -84,7 +84,14 @@ public abstract class LSImageFilter {
 	 * 预览高
 	 */
 	protected int viewPointHeight = 0;
-
+	/**
+	 * 输出宽
+	 */
+	protected int outputWidth = 0;
+	/**
+	 * 输出高
+	 */
+	protected int outputHeight = 0;
 	/**
 	 * 预览X坐标
 	 */
@@ -93,7 +100,9 @@ public abstract class LSImageFilter {
 	 * 预览Y坐标
 	 */
 	protected int viewPointY = 0;
-
+	/**
+	 * @bChange 是否需要更新输出大小
+	 */
 	protected class ImageSize {
 		public boolean bChange;
 		public int width;
@@ -240,44 +249,14 @@ public abstract class LSImageFilter {
 	public void setFilter(LSImageFilter filter) {
 		this.filter = filter;
 	}
-	
-	/**
-	 * 改变滤镜输出大小
-	 * @param viewPointWidth
-	 * @param viewPointHeight
-	 * @return 是否改变
-	 */
-	public boolean changeViewPointSize(int viewPointWidth, int viewPointHeight) {
-		boolean bFlag = false;
-		if( this.viewPointWidth != viewPointWidth || this.viewPointHeight != viewPointHeight ) {
-			this.viewPointWidth = viewPointWidth;
-			this.viewPointHeight = viewPointHeight;
-			bFlag = true;
-			
-			Log.d(LSConfig.TAG,
-					String.format("LSImageFilter::changeViewPointSize( "
-									+ "this : 0x%x, "
-									+ "viewPointWidth : %d, "
-									+ "viewPointHeight : %d, "
-									+ "className : [%s] "
-									+ ")",
-							hashCode(),
-							viewPointWidth,
-							viewPointHeight,
-							getClass().getName()
-					)
-			);
-		}
-		return bFlag;
-	}
-	
+
 	/**
 	 * 绘制纹理
 	 * @param textureId
 	 */
 	public int draw(int textureId, int width, int height) {
 		if( LSConfig.DEBUG ) {
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, width : %d, height : %d, className : [%s] )", hashCode(), textureId, glProgram, width, height, getClass().getName()));
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, [%dx%d], className : [%s] )", hashCode(), textureId, glProgram, width, height, getClass().getName()));
 		}
 
 		if( glProgram != INVALID_PROGRAM ) {
@@ -285,31 +264,38 @@ public abstract class LSImageFilter {
 		}
 
 		// 更新输入大小
-		ImageSize outputImageSize = changeInputSize(width, height);
-		// 更新滤镜后的大小
-		changeViewPoint(outputImageSize.width, outputImageSize.height, viewPointWidth, viewPointHeight);
-		
+		changeInputSize(width, height);
+		if( this.outputWidth == 0 || this.outputHeight == 0 ) {
+			// 更新默认输出大小
+			changeOutputSize(inputWidth, inputHeight);
+		} else {
+			// 更新输出大小
+			changeOutputSize(outputWidth, outputHeight);
+		}
+		// 视觉转换
+		changeViewPoint(inputWidth, inputHeight, viewPointWidth, viewPointHeight);
+
 		// 绑定自定义参数
 		onDrawStart(textureId);
 		// 自定义绘制
 		int newTextureId = onDrawFrame(textureId);
 		// 解绑自定义参数
 		onDrawFinish(textureId);
-		
+
 		// 绘制下一个滤镜
 		if( filter != null ) {
-			return filter.draw(newTextureId, outputImageSize.width, outputImageSize.height);
+			return filter.draw(newTextureId, viewPointWidth, viewPointHeight);
 		} else {
 			return newTextureId;
 		}
 	}
-	
+
 	/**
 	 * 绘制纹理开始(子类重载)
 	 * @param textureId
 	 */
 	protected abstract void onDrawStart(int textureId);
-	
+
 	/**
 	 * 绘制纹理过程(子类重载)
 	 * @param textureId 绘制完新的纹理Id
@@ -317,7 +303,7 @@ public abstract class LSImageFilter {
 	protected int onDrawFrame(int textureId) {
 		return textureId;
 	}
-	
+
 	/**
 	 * 绘制纹理结束(子类重载)
 	 * @param textureId
@@ -332,19 +318,28 @@ public abstract class LSImageFilter {
 	 */
 	protected ImageSize changeInputSize(int inputWidth, int inputHeight) {
 		ImageSize imageSize = new ImageSize();
-		
+
 		boolean bFlag = false;
 		if( this.inputWidth != inputWidth || this.inputHeight != inputHeight ) {
+			Log.d(LSConfig.TAG,
+					String.format(
+							"LSImageFilter::changeInputSize( " +
+									"this : 0x%x, " +
+									"[%dx%d] => [%dx%d], " +
+									"className : [%s] " +
+									")",
+							hashCode(),
+							this.inputWidth,
+							this.inputHeight,
+							inputWidth,
+							inputHeight,
+							getClass().getName()
+					)
+			);
+
 			this.inputWidth = inputWidth;
 			this.inputHeight = inputHeight;
 
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::changeInputSize( this : 0x%x, inputWidth : %d, inputHeight : %d, className : [%s] )", hashCode(), inputWidth, inputHeight, getClass().getName()));
-
-			// 设置默认的视觉
-			if( viewPointWidth == 0 || viewPointHeight == 0 ) {
-				changeViewPointSize(inputWidth, inputHeight);
-			}
-			
 			bFlag = true;
 		}
 		
@@ -354,9 +349,54 @@ public abstract class LSImageFilter {
 		
 		return imageSize;
 	}
-	
+
+	/**
+	 * 设置输出大小
+	 * @param outputWidth
+	 * @param outputHeight
+	 */
+	public void setOutputSize(int outputWidth, int outputHeight) {
+		this.outputWidth = outputWidth;
+		this.outputHeight = outputHeight;
+	}
+
+	/**
+	 * 更新输出大小
+	 * @param viewPointWidth
+	 * @param viewPointHeight
+	 * @return 是否改变
+	 */
+	protected boolean changeOutputSize(int viewPointWidth, int viewPointHeight) {
+		boolean bFlag = false;
+		if( this.viewPointWidth != viewPointWidth || this.viewPointHeight != viewPointHeight ) {
+			Log.d(LSConfig.TAG,
+					String.format("LSImageFilter::changeOutputSize( " +
+									"this : 0x%x, " +
+									"[%dx%d] => [%dx%d], " +
+									"className : [%s] " +
+									")",
+							hashCode(),
+							this.viewPointWidth,
+							this.viewPointHeight,
+							viewPointWidth,
+							viewPointHeight,
+							getClass().getName()
+					)
+			);
+
+			this.viewPointWidth = viewPointWidth;
+			this.viewPointHeight = viewPointHeight;
+			bFlag = true;
+		}
+		return bFlag;
+	}
+
 	/**
 	 * 设定视觉
+	 * @param imageWidth
+	 * @param imageHeight
+	 * @param viewWidth
+	 * @param viewHeight
 	 */
 	protected void changeViewPoint(int imageWidth, int imageHeight, int viewWidth, int viewHeight) {
         // 设定视觉为窗口大小, GLES纹理坐标
@@ -386,7 +426,6 @@ public abstract class LSImageFilter {
 //    	                		+ "[剪裁左右], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f, className : [%s] ) ",
 //    	                		coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview, getClass().getName()));
 //    		        }
-                    
             	} else {
             		// 剪裁上下
             		coordinateWidth = outputWidth;
@@ -418,7 +457,6 @@ public abstract class LSImageFilter {
 //										+ "[上下留黑], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f, className : [%s] ) ",
 //								coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview, getClass().getName()));
 //					}
-
             	} else {
             		// 左右留黑
             		coordinateHeight = outputHeight;
@@ -432,17 +470,16 @@ public abstract class LSImageFilter {
 //					}
             	}
         	}
-        	
         } else {
         	// 输入图像拉伸填满输出
         	coordinateWidth = outputWidth;
         	coordinateHeight = outputHeight;
 
-			if( LSConfig.DEBUG ) {
+//			if( LSConfig.DEBUG ) {
 //				Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPoint( "
 //								+ "[拉伸填满], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, className : [%s] ) ",
 //						coordinateX, coordinateY, coordinateWidth, coordinateHeight, getClass().getName()));
-			}
+//			}
         }
 
         // 记录预览起始坐标

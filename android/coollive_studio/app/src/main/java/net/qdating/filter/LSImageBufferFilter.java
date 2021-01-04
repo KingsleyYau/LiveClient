@@ -32,8 +32,8 @@ public abstract class LSImageBufferFilter extends LSImageFilter {
 	}
 
 	@Override
-	public boolean changeViewPointSize(int viewPointWidth, int viewPointHeight) {
-		boolean bChange = super.changeViewPointSize(viewPointWidth, viewPointHeight);
+	public boolean changeOutputSize(int viewPointWidth, int viewPointHeight) {
+		boolean bChange = super.changeOutputSize(viewPointWidth, viewPointHeight);
 		if( bChange ) {
 			destroyGLFBO();
 			createGLFBO();
@@ -105,8 +105,7 @@ public abstract class LSImageBufferFilter extends LSImageFilter {
 									"this : 0x%x, " +
 									"glFBOTextureId : %d, " +
 									"glFBOId : %d, " +
-									"width : %d, " +
-									"height : %d, " +
+									"[%dx%d], " +
 									"className : [%s] " +
 									") ",
 							hashCode(),

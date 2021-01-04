@@ -50,58 +50,67 @@ import net.qdating.publisher.ILSPublisherStatusCallback;
 import net.qdating.utils.CrashHandler;
 import net.qdating.utils.Log;
 
+import org.webrtc.AudioSource;
+import org.webrtc.AudioTrack;
+import org.webrtc.Camera1Enumerator;
+import org.webrtc.Camera2Capturer;
+import org.webrtc.Camera2Enumerator;
+import org.webrtc.CameraEnumerator;
+import org.webrtc.CameraVideoCapturer;
+import org.webrtc.DataChannel;
+import org.webrtc.DefaultVideoDecoderFactory;
+import org.webrtc.DefaultVideoEncoderFactory;
+import org.webrtc.EglBase;
+import org.webrtc.IceCandidate;
+import org.webrtc.Logging;
+import org.webrtc.MediaConstraints;
+import org.webrtc.MediaStream;
+import org.webrtc.PeerConnection;
+import org.webrtc.PeerConnection.Observer;
+import org.webrtc.PeerConnectionFactory;
+import org.webrtc.RendererCommon;
+import org.webrtc.RtpReceiver;
+import org.webrtc.SdpObserver;
+import org.webrtc.SessionDescription;
+import org.webrtc.SurfaceTextureHelper;
+import org.webrtc.SurfaceViewRenderer;
+import org.webrtc.VideoDecoderFactory;
+import org.webrtc.VideoEncoderFactory;
+import org.webrtc.VideoSource;
+import org.webrtc.VideoTrack;
+import org.webrtc.audio.JavaAudioDeviceModule;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.microedition.khronos.egl.EGL;
 
 public class PlayActivity extends Activity implements ILSPlayerStatusCallback, ILSPublisherStatusCallback, ILSFaceDetectorStatusCallback, ActivityCompat.OnRequestPermissionsResultCallback {
-	String filePath = "/sdcard";
-	private String[] playH264File = {
-			"",//"/sdcard/coollive/play0.h264",
-			"",//"/sdcard/coollive/play1.h264",
-			"",//"/sdcard/coollive/play2.h264",
-	};
-	private String[] playAACFile = {
-			"",//"/sdcard/coollive/play0.aac",
-			"",//"/sdcard/coollive/play1.aac",
-			"",//"/sdcard/coollive/play2.aac",
-	};
-
-	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
-	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
+	private String filePath = "/sdcard";
 
 	// 播放相关
-	private String[] playerUrls = {
-			"rtmp://172.25.32.17:19351/live/max0",
-			"rtmp://172.25.32.17:19351/live/max1",
-			"rtmp://172.25.32.17:19351/live/max2",
-	};
-//	private String[] playerUrls = {
-//		"rtmp://52.196.96.7:8899/play_standard/fansi_CM46054718_17710?token=A582892#uid#8WOK1IC5_1530000959125&deviceid=358074081011879",
-//		"rtmp://172.25.32.133:7474/test_flash/samson",
-//		"rtmp://172.25.32.133:7474/test_flash/samson",
-//	};
+	private String playerUrl = "";
 	private LSPlayer[] players = null;
 	private GLSurfaceView[] surfaceViews = null;
-	private boolean[] surfaceViewsScale = null;
 	private LSImageFilter[] imageFilters = null;
 	private LSPlayerRendererBinder[] playerRenderderBinders = null;
-//	private String playerUrl = "rtmp://172.25.32.17:19351/live/max";
-//	private String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max";
-	private String playerUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
 	private EditText editText = null;
 	private int playerRunningCount = 0;
 	private Object playerRunningCountLock = new Object();
 
 	// 推送相关
-//	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
-	private String publishUrl = "rtmp://172.25.32.133:4000/cdn_standard/max0";
-//  private String publishUrl = "rtmp://52.196.96.7:4000/cdn_standard/max0";
-//	private String publishUrl = "rtmp://172.25.32.133:8899/publish_standard/max0?token=ABC#123";
+	private String publishUrl = "";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
 	private EditText editTextPublish = null;
+	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
+	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
 
+	// 人面识别界面
 	private GLSurfaceView newSurfaceView = null;
 	private LSPlayerRendererBinder newRenderderBinder = null;
 	// 推流预设滤镜
@@ -127,15 +136,24 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 	private int previewWaterMarkDisappearFrame = 15;
 
-	private SeekBar mSeekBarBeauty, mSeekBarWhite;
+	private SeekBar seekBarBeauty;
+	
+	private SeekBar seekBarBitrate;
+	private EditText seekBarBitrateEditText;
+
+	private static int VIDEO_MIN_BITRATE = 50000;
+	private static int VIDEO_MAX_BITRATE = 1000000;
+	private int videoBitrate;
+
+	private PeerConnection pc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
-		LSConfig.DEBUG = false;
-		LSConfig.LOG_LEVEL = android.util.Log.WARN;
+		LSConfig.DEBUG = true;
+		LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
 		LSConfig.LOGDIR = LSConfig.TAG;
 		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeAuto;
 //		LSConfig.decodeMode = LSConfig.DecodeMode.DecodeModeSoft;
@@ -151,11 +169,21 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //		LSUtilTesterJni utilTestJni = new LSUtilTesterJni();
 //		utilTestJni.Test();
 
+		final Context context = this;
 		handler = new Handler();
+
+		HashMap<String, String> urls = new HashMap<String, String>();
+		urls.put("demo1", "rtmp://52.196.96.7:4000/cdn_standard/max0");
+		urls.put("demo2", "rtmp://18.194.23.38:4000/cdn_standard/max0");
+		urls.put("local", "rtmp://172.25.32.133:4000/cdn_standard/max0");
+		urls.put("cam", "rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4");
+		urls.put("camlocal", "rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4");
+
+		playerUrl = urls.get("local");
+		publishUrl = urls.get("local");
 
 		// 初始化按钮
 		initItemButtons();
-
 		checkPermission();
 
 		editText = (EditText) this.findViewById(R.id.editText);
@@ -171,33 +199,20 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
 		imageFilters[0] = new LSImageVibrateFilter();
-
-		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
-//		imageFilters[1] = new LSImageMosaicFilter(0.2f);
-		imageFilters[1] = new LSImageSampleBeautyEmeraldFilter(this);
-
-		surfaceViewsScale = new boolean[surfaceViews.length];
+//		imageFilters[0] = new LSImageMosaicFilter(0.2f);
+//		imageFilters[0] = new LSImageSampleBeautyEmeraldFilter(this);
 
 		players = new LSPlayer[surfaceViews.length];
-		for(int i = 0; i < surfaceViews.length; i++) {
+		for(int i = 0; i < surfaceViews.length - 1; i++) {
 //		for(int i = 0; i < surfaceViews.length - 1; i++) { // 人面识别测试
-			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
-
 			players[i] = new LSPlayer();
-
+			players[i].init(this);
 			playerRenderderBinders[i] = new LSPlayerRendererBinder(surfaceViews[i], FillMode.FillModeAspectRatioFit);
 			playerRenderderBinders[i].setCustomFilter(imageFilters[i]);
-			players[i].init(this);
-
 			players[i].setRendererBinder(playerRenderderBinders[i]);
-//			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
-
-//			String url = String.format("%s%d", editText.getText().toString(), i);
-			String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
-//			players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
 		}
-		play();
+//		play();
 
 //		RelativeLayout layoutVideo1 = (RelativeLayout)this.findViewById(R.id.layoutVideo1);
 //		newSurfaceView = new GLSurfaceView(this);
@@ -241,7 +256,7 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					LSConfig.VideoConfigType.VideoConfigType480x640,
 					12,
 					12,
-					600 * 1000
+					VIDEO_MAX_BITRATE
 			);
 
 			publishFilterCount = 8;
@@ -258,7 +273,9 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				publishFilters[6] = new LSImageSampleBeautyWatermarkFilter(this);
 				LSImageGroupFilter filters = new LSImageGroupFilter();
 				filters.addFilter(new LSImageSampleBeautyBaseFilter(this));
-				filters.addFilter(new LSImageVibrateFilter());
+				LSImageVibrateFilter vbFilter = new LSImageVibrateFilter();
+				vbFilter.setlevel(1.0f);
+//				filters.addFilter(vbFilter);
 				publishFilters[7] = filters;
 				publishFilterIndex = 7;
 
@@ -346,6 +363,163 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 //			}
 //		});
 
+//		System.loadLibrary("jingle_peerconnection_so");
+//		Logging.enableLogToDebugOutput(Logging.Severity.LS_INFO);
+//		EglBase eglBase = EglBase.create();
+//
+//		VideoEncoderFactory vencf;
+//		VideoDecoderFactory vdecf;
+//
+//		vencf = new DefaultVideoEncoderFactory(eglBase.getEglBaseContext(), false, true);
+//		vdecf = new DefaultVideoDecoderFactory(eglBase.getEglBaseContext());
+//
+//		PeerConnectionFactory.InitializationOptions options = PeerConnectionFactory.InitializationOptions.builder(this).createInitializationOptions();
+//		PeerConnectionFactory.initialize(options);
+//		PeerConnectionFactory.Builder pcfBuilder = PeerConnectionFactory.builder();
+//		pcfBuilder.setAudioDeviceModule(JavaAudioDeviceModule.builder(this).createAudioDeviceModule());
+//		pcfBuilder.setVideoEncoderFactory(vencf);
+//		pcfBuilder.setVideoDecoderFactory(vdecf);
+//		PeerConnectionFactory pcf = pcfBuilder.createPeerConnectionFactory();
+
+//		VideoTrack localVideoTrack = pcf.createVideoTrack("video", videoSource);
+//		SurfaceViewRenderer videoRenderer = (SurfaceViewRenderer) this.findViewById(R.id.surfaceView1);
+//		videoRenderer.init(eglBase.getEglBaseContext(), null);
+//		videoRenderer.setMirror(true);
+//		videoRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
+//		videoRenderer.setKeepScreenOn(true);
+//		videoRenderer.setZOrderMediaOverlay(true);
+//		videoRenderer.setEnableHardwareScaler(false);
+//		localVideoTrack.addSink(videoRenderer);
+
+//		MediaConstraints audioConstraints = new MediaConstraints();
+//		// 回声消除
+//		audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googEchoCancellation", "true"));
+//		// 自动增益
+//		audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googAutoGainControl", "true"));
+//		// 高音过滤
+//		audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googHighpassFilter", "true"));
+//		// 噪音处理
+//		audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googNoiseSuppression", "true"));
+//
+//		AudioSource audioSource = pcf.createAudioSource(audioConstraints);
+//		AudioTrack localAudioTrack = pcf.createAudioTrack("audio", audioSource);
+
+//		MediaStream mediaStream = pcf.createLocalMediaStream("local-mediastream");
+//		mediaStream.addTrack(localVideoTrack);
+//		mediaStream.addTrack(localAudioTrack);
+
+//		List<PeerConnection.IceServer> iceServers = new ArrayList<>();
+//		PeerConnection.IceServer.Builder iceBuilder = PeerConnection.IceServer.builder("turn:172.25.32.133:3478");
+//		iceBuilder.setUsername("1605754464557:B");
+//		iceBuilder.setPassword("QhjcEW7iZh7k5g7Ys39N9SGSrvw=");
+//		iceServers.add(iceBuilder.createIceServer());
+//		iceServers.add(PeerConnection.IceServer.builder("stun:172.25.32.133:3478").createIceServer());
+//
+//		pc = pcf.createPeerConnection(iceServers, new Observer() {
+//			@Override
+//			public void onSignalingChange(PeerConnection.SignalingState signalingState) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onSignalingChange()"));
+//			}
+//
+//			@Override
+//			public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onIceConnectionChange()"));
+//			}
+//
+//			@Override
+//			public void onIceConnectionReceivingChange(boolean b) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onIceConnectionReceivingChange()"));
+//			}
+//
+//			@Override
+//			public void onIceGatheringChange(PeerConnection.IceGatheringState iceGatheringState) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onIceGatheringChange()"));
+//			}
+//
+//			@Override
+//			public void onIceCandidate(IceCandidate iceCandidate) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onIceCandidate()"));
+//			}
+//
+//			@Override
+//			public void onIceCandidatesRemoved(IceCandidate[] iceCandidates) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onIceCandidatesRemoved()"));
+//			}
+//
+//			@Override
+//			public void onAddStream(MediaStream mediaStream) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onAddStream()"));
+//			}
+//
+//			@Override
+//			public void onRemoveStream(MediaStream mediaStream) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onRemoveStream()"));
+//			}
+//
+//			@Override
+//			public void onDataChannel(DataChannel dataChannel) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onDataChannel()"));
+//			}
+//
+//			@Override
+//			public void onRenegotiationNeeded() {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onRenegotiationNeeded()"));
+//			}
+//
+//			@Override
+//			public void onAddTrack(RtpReceiver rtpReceiver, MediaStream[] mediaStreams) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::onAddTrack()"));
+//			}
+//		});
+//
+//		MediaConstraints mediaConstraints = new MediaConstraints();
+//		mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+//		mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
+//		mediaConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
+//		pc.createOffer(new SdpObserver() {
+//			@Override
+//			public void onCreateSuccess(SessionDescription sessionDescription) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::createOffer.onCreateSuccess(), %s", sessionDescription.description));
+//				pc.setLocalDescription(new SdpObserver() {
+//					@Override
+//					public void onCreateSuccess(SessionDescription sessionDescription) {
+//						Log.i(LSConfig.TAG, String.format("PlayActivity::setLocalDescription.onCreateSuccess(), %s", sessionDescription.description));
+//					}
+//
+//					@Override
+//					public void onSetSuccess() {
+//						Log.i(LSConfig.TAG, String.format("PlayActivity::setLocalDescription.onSetSuccess()"));
+//					}
+//
+//					@Override
+//					public void onCreateFailure(String s) {
+//						Log.i(LSConfig.TAG, String.format("PlayActivity::setLocalDescription.onCreateFailure(), %s", s));
+//					}
+//
+//					@Override
+//					public void onSetFailure(String s) {
+//						Log.i(LSConfig.TAG, String.format("PlayActivity::setLocalDescription.onSetFailure(), %s", s));
+//					}
+//				}, sessionDescription);
+//			}
+//
+//			@Override
+//			public void onSetSuccess() {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::createOffer.onSetSuccess()"));
+//			}
+//
+//			@Override
+//			public void onCreateFailure(String s) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::createOffer.onCreateFailure(), %s", s));
+//			}
+//
+//			@Override
+//			public void onSetFailure(String s) {
+//				Log.i(LSConfig.TAG, String.format("PlayActivity::createOffer.onSetFailure(), %s", s));
+//			}
+//		}, mediaConstraints);
+
+
 		Button playButton = (Button) this.findViewById(R.id.button1);
 		playButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -359,14 +533,14 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		pubilsherButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher != null && supportPublish ) {
-				String publishUrl = editTextPublish.getText().toString();
-				if ( faceDetector != null ) {
-					faceDetector.start();
+				// TODO Auto-generated method stub
+				if( publisher != null && supportPublish ) {
+					String publishUrl = editTextPublish.getText().toString();
+					if ( faceDetector != null ) {
+						faceDetector.start();
+					}
+					publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 				}
-				publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
-			}
 			}
 		});
 
@@ -413,13 +587,13 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		stopPublishButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher != null && supportPublish ) {
-				if( faceDetector != null ) {
-					faceDetector.stop();
+				// TODO Auto-generated method stub
+				if( publisher != null && supportPublish ) {
+					if( faceDetector != null ) {
+						faceDetector.stop();
+					}
+					publisher.stop();
 				}
-				publisher.stop();
-			}
 			}
 		});
 
@@ -427,10 +601,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		startCamButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher != null && supportPublish ) {
-				publisher.startPreview();
-			}
+				// TODO Auto-generated method stub
+				if( publisher != null && supportPublish ) {
+					publisher.startPreview();
+				}
 			}
 		});
 
@@ -438,10 +612,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		stopCamButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher != null && supportPublish ) {
-				publisher.stopPreview();
-			}
+				// TODO Auto-generated method stub
+				if( publisher != null && supportPublish ) {
+					publisher.stopPreview();
+				}
 			}
 		});
 
@@ -450,19 +624,19 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent intent = new Intent();
-			intent.setClass(PlayActivity.this, TestActivity.class);
-			startActivity(intent);
+//			Intent intent = new Intent();
+//			intent.setClass(PlayActivity.this, TestActivity.class);
+//			startActivity(intent);
 
 //			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //			startActivityForResult(intent, 1);
+//				publisher.updateVideoParam(isLowestBitrate?150000:publisher.getBitrate());
 			}
 		});
 
 		// TODO: 2019/10/29 Hardy
-		mSeekBarBeauty = (SeekBar)findViewById(R.id.seekBar_beauty);
-		mSeekBarWhite = (SeekBar)findViewById(R.id.seekBar_white);
-		mSeekBarBeauty.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		seekBarBeauty = (SeekBar)findViewById(R.id.seekBar_beauty);
+		seekBarBeauty.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				handlerProgressChange(progress, true);
@@ -479,10 +653,17 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 		});
 
-		mSeekBarWhite.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		seekBarBitrate = (SeekBar)findViewById(R.id.seekBar_bitrate);
+		seekBarBitrateEditText = (EditText) findViewById(R.id.bitrateLabel);
+		videoBitrate = publisher.getBitrate() ;
+		String bitrateStr = String.format("%dkbps", (int)(videoBitrate / 1000));
+		seekBarBitrateEditText.setText(bitrateStr);
+		seekBarBitrate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				handlerProgressChange(progress,false);
+				videoBitrate = VIDEO_MIN_BITRATE + (int)((1.0f * progress / 100) * (publisher.getBitrate() - VIDEO_MIN_BITRATE));
+				String bitrateStr = String.format("%dkbps", videoBitrate / 1000);
+				seekBarBitrateEditText.setText(bitrateStr);
 			}
 
 			@Override
@@ -492,35 +673,31 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-
+				publisher.updateVideoParam(videoBitrate);
+				String bitrateStr = String.format("Video bitrate is changed to %dkbps", videoBitrate / 1000);
+				Toast.makeText(context, bitrateStr, Toast.LENGTH_SHORT).show();
 			}
 		});
 
 	}
 
 	private void play() {
-//		for(int i = 0; i < players.length; i++) {
-//			if( players[i] != null ) {
-//				String url = String.format("%s%d", editText.getText().toString(), i);
-////				String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
-//				players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
-//			}
-//		}
-		String url = "rtmp://172.25.32.133:4000/cdn_standard/max0";
-		players[0].playUrl(url, "", playH264File[0], playAACFile[0]);
+		players[0].playUrl(playerUrl, "", "", "");
 	}
 
 	// TODO: 2019/10/29
 	private void handlerProgressChange(int progress,boolean isBeautyChange){
-		float scale = progress * 1.0f / 100;
-		Log.i("info", "--------scale: "+scale);
-
-		LSImageSampleBeautyBaseFilterEvent filter = (LSImageSampleBeautyBaseFilterEvent) publishFilters[publishFilterIndex];
-		if (isBeautyChange) {
-			filter.setBeautyLevel(scale);
-		}else {
-			filter.setStrength(scale);
-		}
+//		float scale = progress * 1.0f / 100;
+//		Log.i("info", "--------scale: "+scale);
+//		LSImageFilter filter = publishFilters[publishFilterIndex];
+//		if ( filter instanceof LSImageSampleBeautyBaseFilterEvent ) {
+//			LSImageSampleBeautyBaseFilterEvent event = (LSImageSampleBeautyBaseFilterEvent)filter;
+//			if (isBeautyChange) {
+//				event.setBeautyLevel(scale);
+//			}else {
+//				event.setStrength(scale);
+//			}
+//		}
 	}
 
 	private void initItemButtons() {
@@ -529,11 +706,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			@Override
 			public void onClick(View v) {
 			// TODO Auto-generated method stub
-			int i = 0;
-			if( players[i] != null ) {
-				String url = String.format("%s%d", editText.getText().toString(), i);
-				players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
-			}
 			}
 		});
 
@@ -541,24 +713,24 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		muteButton100.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( players[0] != null ) {
-				players[0].setMute(!players[0].getMute());
-			}
+				// TODO Auto-generated method stub
+				if( players[0] != null ) {
+					players[0].setMute(!players[0].getMute());
+				}
 			}
 		});
 		Button filterButton101 = (Button) this.findViewById(R.id.button101);
         filterButton101.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( playerRenderderBinders[0] != null ) {
-				if( playerRenderderBinders[0].getCustomFilter() == null ) {
-					playerRenderderBinders[0].setCustomFilter(imageFilters[0]);
-				} else {
-					playerRenderderBinders[0].setCustomFilter(null);
+				// TODO Auto-generated method stub
+				if( playerRenderderBinders[0] != null ) {
+					if( playerRenderderBinders[0].getCustomFilter() == null ) {
+						playerRenderderBinders[0].setCustomFilter(imageFilters[0]);
+					} else {
+						playerRenderderBinders[0].setCustomFilter(null);
+					}
 				}
-			}
 			}
 		});
 
@@ -566,22 +738,14 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		playButton20.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			int i = 1;
-			if( players[i] != null ) {
-				String url = String.format("%s%d", editText.getText().toString(), i);
-				players[i].playUrl(url, "", playH264File[i], playAACFile[i]);
-			}
+				// TODO Auto-generated method stub
 			}
 		});
 		Button muteButton200 = (Button) this.findViewById(R.id.button200);
 		muteButton200.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-				if( players[1] != null ) {
-					players[1].setMute(!players[1].getMute());
-				}
+				// TODO Auto-generated method stub
 			}
 		});
 
@@ -589,14 +753,14 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		filterButton201.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( playerRenderderBinders[1] != null ) {
-				if( playerRenderderBinders[1].getCustomFilter() == null ) {
-					playerRenderderBinders[1].setCustomFilter(imageFilters[1]);
-				} else {
-					playerRenderderBinders[1].setCustomFilter(null);
+				// TODO Auto-generated method stub
+				if( playerRenderderBinders[1] != null ) {
+					if( playerRenderderBinders[1].getCustomFilter() == null ) {
+						playerRenderderBinders[1].setCustomFilter(imageFilters[1]);
+					} else {
+						playerRenderderBinders[1].setCustomFilter(null);
+					}
 				}
-			}
 			}
 		});
 
@@ -604,10 +768,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		muteButton400.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher != null && supportPublish ) {
-				publisher.setMute(!publisher.getMute());
-			}
+				// TODO Auto-generated method stub
+				if( publisher != null && supportPublish ) {
+					publisher.setMute(!publisher.getMute());
+				}
 			}
 		});
 
@@ -615,10 +779,10 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		rotateButton401.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher != null && supportPublish ) {
-				publisher.rotateCamera();
-			}
+				// TODO Auto-generated method stub
+				if( publisher != null && supportPublish ) {
+					publisher.rotateCamera();
+				}
 			}
 		});
 
@@ -626,12 +790,12 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 		fliterButton402.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if( publisher.getCustomFilter() == null ) {
-				publisher.setCustomFilter(publishFilters[publishFilterIndex]);
-			} else {
-				publisher.setCustomFilter(null);
-			}
+				// TODO Auto-generated method stub
+				if( publisher.getCustomFilter() == null ) {
+					publisher.setCustomFilter(publishFilters[publishFilterIndex]);
+				} else {
+					publisher.setCustomFilter(null);
+				}
 			}
 		});
 
@@ -668,47 +832,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 			}
 		});
 		photoButton = photoButton404;
-
-//		SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
-//		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//			@Override
-//			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//				float level = 1.0f * progress / 100;
-////				Log.w(LSConfig.TAG, String.format("PlayActivity::onProgressChanged( beauty : %f )", level));
-//				LSImageSampleBeautyBaseFilter filter = (LSImageSampleBeautyBaseFilter)publishFilters[7];
-//				filter.setBeautyLevel(level);
-//			}
-//
-//			@Override
-//			public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//			}
-//
-//			@Override
-//			public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//			}
-//		});
-//		SeekBar seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
-//		seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//			@Override
-//			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//				float level = 1.0f * progress / 100;
-////				Log.w(LSConfig.TAG, String.format("PlayActivity::onProgressChanged( strength : %f )", level));
-//				LSImageSampleBeautyBaseFilter filter = (LSImageSampleBeautyBaseFilter)publishFilters[7];
-//				filter.setStrength(level);
-//			}
-//
-//			@Override
-//			public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//			}
-//
-//			@Override
-//			public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//			}
-//		});
 	}
 
 	private void deleteAllFiles(File root) {

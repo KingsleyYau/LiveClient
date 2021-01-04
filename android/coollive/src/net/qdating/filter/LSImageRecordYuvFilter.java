@@ -205,8 +205,8 @@ public class LSImageRecordYuvFilter extends LSImageBufferFilter {
 	}
 
 	@Override
-	public boolean changeViewPointSize(int viewPointWidth, int viewPointHeight) {
-		boolean bFlag = super.changeViewPointSize(viewPointWidth, viewPointHeight);
+	public boolean changeOutputSize(int viewPointWidth, int viewPointHeight) {
+		boolean bFlag = super.changeOutputSize(viewPointWidth, viewPointHeight);
 		if( bFlag ) {
 			destroyGLPBO();
 			createGLPBO();

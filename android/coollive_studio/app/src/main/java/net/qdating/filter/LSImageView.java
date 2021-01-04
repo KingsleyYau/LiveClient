@@ -7,13 +7,21 @@ import android.opengl.GLES20;
  * @author max
  *
  */
-public class LSImageOutputFilter extends LSImageFilter {
+public class LSImageView extends LSImageFilter {
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
 
-	public LSImageOutputFilter() {
+	public LSImageView() {
 		super(LSImageShader.defaultPixelVertexShaderString, LSImageShader.dafaultPixelFragmentShaderString, LSImageVertex.filterVertex_0);
+	}
+
+	@Override
+	protected ImageSize changeInputSize(int inputWidth, int inputHeight) {
+		ImageSize imageSize = super.changeInputSize(inputWidth, inputHeight);
+		// 不需要更新输出大小
+		imageSize.bChange = false;
+		return imageSize;
 	}
 
 	@Override

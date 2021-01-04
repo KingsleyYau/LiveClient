@@ -29,10 +29,10 @@ public class LSImageCropFilter extends LSImageInputFilter {
 	public void setCropRect(float x, float y, float width, float height) {
 		Log.d(LSConfig.TAG,
 				String.format("LSImageCropFilter::setCropRect( "
-								+ "x : %f, "
-								+ "y : %f, "
-								+ "width : %f, "
-								+ "height : %f "
+								+ "x : %.2f, "
+								+ "y : %.2f, "
+								+ "width : %.2f, "
+								+ "height : %.2f "
 								+ ")",
 						x,
 						y,

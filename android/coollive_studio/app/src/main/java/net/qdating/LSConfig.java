@@ -5,13 +5,13 @@ import net.qdating.utils.Log;
 /**
  * RTMP推拉流模块初始化配置
  * @author max
- * @version 2.0.2
+ * @version 2.0.5
  */
 public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	public final static String VERSION = "2.0.3";
+	public final static String VERSION = "2.0.5";
 	/**
 	 * 日志TAG
 	 */
@@ -37,7 +37,7 @@ public class LSConfig {
 	/**
 	 * 重连时间
 	 */
-	public static Integer RECONNECT_SECOND = 3000;
+	public static Integer RECONNECT_SECOND = 5000;
 	/**
 	 * 初始化解码缓存(播放器参数) <br/>
 	 * 总量 = 缓存时间 * FPS <br/>

@@ -62,7 +62,13 @@ public class LSImageInputCameraFilter extends LSImageBufferFilter {
 	public void init() {
 		super.init();
 	}
-	
+
+	@Override
+	protected ImageSize changeInputSize(int inputWidth, int inputHeight) {
+		ImageSize imageSize = super.changeInputSize(inputWidth, inputHeight);
+		return imageSize;
+	}
+
 	@Override
 	protected void onDrawStart(int textureId) {
 		super.onDrawStart(textureId);

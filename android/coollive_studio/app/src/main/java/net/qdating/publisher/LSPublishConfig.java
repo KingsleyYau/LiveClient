@@ -55,7 +55,7 @@ public class LSPublishConfig {
      * @param videoConfigType
      * @return 成功失败
      */
-    public boolean updateVideoConfig(LSConfig.VideoConfigType videoConfigType, int fps, int keyFrameInterval, int videoBitrate) {
+    public boolean updateVideoConfig(LSConfig.VideoConfigType videoConfigType, int fps, int keyFrameInterval, int bitrate) {
         boolean bFlag = true;
         switch (videoConfigType) {
             case VideoConfigType240x240:{
@@ -88,7 +88,7 @@ public class LSPublishConfig {
         }
         videoFps = fps;
         videoKeyFrameInterval = keyFrameInterval;
-        videoBitrate = videoBitrate;
+        videoBitrate = bitrate;
         return bFlag;
     }
 }

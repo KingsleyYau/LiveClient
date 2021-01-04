@@ -267,20 +267,20 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	}
 	
 	@Override
-	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize, int timestamp) {
+	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize, long ts) {
 		Log.d(LSConfig.TAG,
 				String.format("LSVideoHardDecoder::decodeVideoKeyFrame( "
 				+ "this : 0x%x, "
 				+ "sps_size : %d, "
 				+ "pps_size : %d, "
-				+ "naluHeaderSize : %d "
-				+ "timestamp : %d "
+				+ "naluHeaderSize : %d, "
+				+ "ts : %d "
 				+ ")",
 				hashCode(),
 				sps_size,
 				pps_size,
 				naluHeaderSize,
-				timestamp
+				ts
 				)
         );
 		
@@ -288,21 +288,21 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		
 		this.naluHeaderSize = naluHeaderSize;
 		
-        bFlag = decodeVideoFrame(sps, 0, sps_size, timestamp);
-        bFlag = bFlag && decodeVideoFrame(pps, 0, pps_size, timestamp);
+        bFlag = decodeVideoFrame(sps, 0, sps_size, ts);
+        bFlag = bFlag && decodeVideoFrame(pps, 0, pps_size, ts);
 		
         return bFlag;
 	}
 	
 	@Override
-	public boolean decodeVideoFrame(byte[] data, int size, int timestamp) {
+	public boolean decodeVideoFrame(byte[] data, int size, long ts) {
 		// TODO Auto-generated method stub
 		
 		// 放到解码队列
-		return decodeVideoFrame(data, this.naluHeaderSize, size, timestamp);
+		return decodeVideoFrame(data, this.naluHeaderSize, size, ts);
 	}
 
-	private boolean decodeVideoFrame(byte[] data, int offset, int size, int timestamp) {
+	private boolean decodeVideoFrame(byte[] data, int offset, int size, long ts) {
 		boolean bFlag = false;
 		
 		if( videoCodec != null ) {
@@ -316,12 +316,12 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 										+ "this : 0x%x, "
 										+ "inputIndex : %d, "
 										+ "size : %d, "
-										+ "timestamp : %d "
+										+ "ts : %d "
 										+ ")",
 								hashCode(),
 								inputIndex,
 								size,
-								timestamp
+								ts
 						)
 	            );
 	        }
@@ -334,7 +334,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	            buffer.put(data, offset, size - offset);
 
 	            // 放进硬解码器
-	            videoCodec.queueInputBuffer(inputIndex, 0, buffer.position(), timestamp, 0/*MediaCodec.BUFFER_FLAG_CODEC_CONFIG*/);
+	            videoCodec.queueInputBuffer(inputIndex, 0, buffer.position(), ts, 0/*MediaCodec.BUFFER_FLAG_CODEC_CONFIG*/);
 
 	            bFlag = true;
 	        }
@@ -385,10 +385,9 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 					sliceHeight = videoMediaFormat.getInteger(MediaFormat.KEY_SLICE_HEIGHT);
 
 //					int strideMod = width % 16;
-//					stride = (strideMod == 0)?0:(((width / 16) + 1) * 16 - width);
-//					stride = keyStride - width;
+//					stride = (strideMod == 0)?width:(((width / 16) + 1) * 16);
 
-					Log.i(LSConfig.TAG,
+					Log.w(LSConfig.TAG,
 							String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 											+ "this : 0x%x, "
 											+ "[INFO_OUTPUT_FORMAT_CHANGED], "
@@ -414,32 +413,18 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 								videoFrame = new LSVideoHardDecoderFrame();
 							decodeFrameCount++;
 
-								Log.w(LSConfig.TAG,
-										String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
-														+ "this : 0x%x, "
-														+ "[New Video Frame], "
-														+ "videoFrame : 0x%x, "
-														+ "decodeFrameCount : %d "
-														+ ")",
-												hashCode(),
-												videoFrame.hashCode(),
-												decodeFrameCount
-										)
-								);
-//							} else {
-//								Log.w(LSConfig.TAG,
-//										String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
-//														+ "this : 0x%x, "
-//														+ "[Too many videoFrame is created], "
-//														+ "decodeFrameCount : %d "
-//														+ ")",
-//												hashCode(),
-//												decodeFrameCount
-//										)
-//								);
-//
-//								videoFrame = videoErrorFrame;
-//							}
+							Log.w(LSConfig.TAG,
+									String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+													+ "this : 0x%x, "
+													+ "[New Video Frame], "
+													+ "videoFrame : 0x%x, "
+													+ "decodeFrameCount : %d "
+													+ ")",
+											hashCode(),
+											videoFrame.hashCode(),
+											decodeFrameCount
+									)
+							);
 			            } else {
 			            	videoFrame = videoFrameStack.pop();
 			            }
@@ -451,7 +436,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 												+ "this : 0x%x, "
 												+ "outputIndex : %d, "
 												+ "size : %d, "
-												+ "timestamp : %d "
+												+ "ts : %d "
 												+ ")",
 										hashCode(),
 										outputIndex,
@@ -503,7 +488,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 //					}
 
 		        } else {
-		    		Log.d(LSConfig.TAG,
+		    		Log.w(LSConfig.TAG,
 		    				String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 											+ "this : 0x%x, "
 											+ "[Fail, unknow], "
@@ -516,7 +501,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		        }
 
 			} catch(Exception e) {
-				Log.d(LSConfig.TAG,
+				Log.w(LSConfig.TAG,
 	                    String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 	                                    + "this : 0x%x, "
 	                                    + "[Fail, exception], "
@@ -533,7 +518,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 					try {
 						videoCodec.releaseOutputBuffer(outputIndex, false);
 					} catch(Exception e) {
-						Log.d(LSConfig.TAG,
+						Log.w(LSConfig.TAG,
 								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 												+ "this : 0x%x, "
 												+ "[releaseOutputBuffer Fail, exception], "

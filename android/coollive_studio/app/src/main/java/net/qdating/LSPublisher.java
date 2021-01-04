@@ -57,6 +57,10 @@ public class LSPublisher {
 	 */
 	private Handler handler = new Handler();
 	/**
+	 * 视频参数配置
+	 */
+	private LSPublishConfig publishConfig = new LSPublishConfig();
+	/**
 	 * 是否已经启动
 	 */
 	private boolean isRuning = false;
@@ -122,7 +126,7 @@ public class LSPublisher {
 	 * @param videoConfigType 视频配置
 	 * @param fps 帧率(12)
 	 * @param keyFrameInterval 关键帧间隔(12)
-	 * @param videoBitrate 视频码率(500 * 1000)
+	 * @param bitrate 视频码率(500 * 1000)
 	 * @return true:成功/false:失败
 	 */
 	public boolean init(Context context,
@@ -133,7 +137,7 @@ public class LSPublisher {
 						LSConfig.VideoConfigType videoConfigType,
 						int fps,
 						int keyFrameInterval,
-						int videoBitrate
+						int bitrate
 	) {
 		boolean bFlag = true;
 
@@ -158,7 +162,7 @@ public class LSPublisher {
 								+ "videoConfigType : %d, "
 								+ "fps : %d, "
 								+ "keyFrameInterval : %d, "
-								+ "videoBitrate : %d "
+								+ "bitrate : %d, "
 								+ "freeMemory : %s, "
 								+ "totalMemory : %s, "
 								+ "maxMemory : %s "
@@ -169,7 +173,7 @@ public class LSPublisher {
 						videoConfigType.ordinal(),
 						fps,
 						keyFrameInterval,
-						videoBitrate,
+						bitrate,
 						freeMemory,
 						totalMemory,
 						maxMemory
@@ -180,17 +184,16 @@ public class LSPublisher {
 		this.statusCallback = statusCallback;
 
 		// 创建推流视频配置
-		LSPublishConfig publishConfig = new LSPublishConfig();
-		bFlag = publishConfig.updateVideoConfig(videoConfigType, fps, keyFrameInterval, videoBitrate);
+		bFlag = publishConfig.updateVideoConfig(videoConfigType, fps, keyFrameInterval, bitrate);
 
 		// 编码模式选择
 //        if( LSConfig.encodeMode == LSConfig.EncodeMode.EncodeModeAuto ) {
 //            if( LSVideoHardEncoder.supportHardEncoder(publishConfig) ) {
-//                // 判断可以使用硬解码
+//                // 判断可以使用硬编码
 //                useHardEncoder = true;
 //            }
 //        } else if( LSConfig.encodeMode == LSConfig.EncodeMode.EncodeModeHard ) {
-//            // 强制使用硬解码
+//            // 强制使用硬编码
 //            useHardEncoder = true;
 //        }
 
@@ -499,6 +502,29 @@ public class LSPublisher {
 		}
 
 		Log.w(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x, [Success] )", hashCode()));
+	}
+
+	/**
+	 * 更新视频编码器参数
+	 * @param bitrate	码率
+	 * @return 成功/失败
+	 */
+	public boolean updateVideoParam(int bitrate) {
+		return publisher.UpdateVideoParam(
+				publishConfig.videoWidth,
+				publishConfig.videoHeight,
+				publishConfig.videoFps,
+				publishConfig.videoKeyFrameInterval,
+				bitrate
+		);
+	}
+
+	/**
+	 * 获取初始化码率
+	 * @return 初始化码率
+	 */
+	public int getBitrate() {
+		return publishConfig.videoBitrate;
 	}
 
 	/***

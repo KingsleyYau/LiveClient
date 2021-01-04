@@ -10,10 +10,15 @@ android {
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "net.qdating.coollive"
-        minSdkVersion 9
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 
     buildTypes {
@@ -27,6 +32,7 @@ android {
         main {
             jni.srcDirs = []
             jniLibs.srcDirs = ['src/main/libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
         }
     }
 }
@@ -34,6 +40,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:25.3.1'
+    // https://mvnrepository.com/artifact/org.webrtc/google-webrtc
+    implementation group: 'org.webrtc', name: 'google-webrtc', version: '1.0.32006'
 
     // Adds a remote binary dependency only for local tests.
     testImplementation 'junit:junit:4.12'
@@ -49,7 +57,7 @@ tasks.withType(JavaCompile) {
 
 task ndkBuild(type: Exec) {
     workingDir file('src/main')
-    commandLine getNdkBuildCmd(), 'NDK_DEBUG=1'
+    commandLine getNdkBuildCmd(), 'NDK_DEBUG=0'
 }
 
 task cleanNative(type: Exec) {
@@ -72,5 +80,6 @@ def getNdkDir() {
 
 def getNdkBuildCmd() {
     def ndkbuild = getNdkDir() + "/ndk-build"
+//    ndkbuild += ".cmd"
     return ndkbuild
 }

@@ -24,6 +24,15 @@ import net.qdating.LSPublisher;
 import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 
+import org.webrtc.AudioSource;
+import org.webrtc.AudioTrack;
+import org.webrtc.CameraEnumerationAndroid;
+import org.webrtc.MediaConstraints;
+import org.webrtc.PeerConnectionFactory;
+import org.webrtc.SurfaceViewRenderer;
+import org.webrtc.VideoSource;
+import org.webrtc.VideoTrack;
+
 import java.util.Random;
 
 public class TestActivity extends Activity implements ILSPlayerStatusCallback {
@@ -131,6 +140,18 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 				finish();
 			}
 		}, 30000);
+
+
+		PeerConnectionFactory.Builder builder = PeerConnectionFactory.builder();
+		PeerConnectionFactory pc = builder.createPeerConnectionFactory();
+		VideoSource videoSource = pc.createVideoSource(false);
+		VideoTrack localVideoTrack = pc.createVideoTrack("video", videoSource);
+		SurfaceViewRenderer videoRenderer = new SurfaceViewRenderer(this);
+		localVideoTrack.addSink(videoRenderer);
+
+		MediaConstraints audioConstraints = new MediaConstraints();
+		AudioSource audioSource = pc.createAudioSource(audioConstraints);
+		AudioTrack localAudioTrack = pc.createAudioTrack("audio", audioSource);
 	}
 	
 	@Override

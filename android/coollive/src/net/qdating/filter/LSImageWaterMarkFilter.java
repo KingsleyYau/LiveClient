@@ -89,8 +89,8 @@ public class LSImageWaterMarkFilter extends LSImageInputFilter {
 	}
 
 	@Override
-	public boolean changeViewPointSize(int viewPointWidth, int viewPointHeight) {
-		boolean bChange = super.changeViewPointSize(viewPointWidth, viewPointHeight);
+	public boolean changeOutputSize(int viewPointWidth, int viewPointHeight) {
+		boolean bChange = super.changeOutputSize(viewPointWidth, viewPointHeight);
 		if( bChange ) {
 			// 创建FBO纹理
 			glWaterMarkTextureId = LSImageFilter.genPixelTexture();

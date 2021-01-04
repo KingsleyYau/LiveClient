@@ -27,7 +27,7 @@ public interface ILSVideoHardDecoderJni {
 	 * @param timestamp
 	 * @return
 	 */
-	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize, int timestamp);
+	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize, long timestamp);
 	
 	/**
 	 * 解码视频帧
@@ -36,7 +36,7 @@ public interface ILSVideoHardDecoderJni {
 	 * @param timestamp
 	 * @return
 	 */
-	public boolean decodeVideoFrame(byte[] data, int size, int timestamp);
+	public boolean decodeVideoFrame(byte[] data, int size, long timestamp);
 	
 	/**
 	 * 获取一个已经解码的视频帧

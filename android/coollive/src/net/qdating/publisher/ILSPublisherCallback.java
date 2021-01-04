@@ -17,4 +17,12 @@ public interface ILSPublisherCallback {
 	 * @param publisher 推流器
 	 */
 	public void onDisconnect(LSPublisherJni publisher);
+
+	/***
+	 * 断线回调
+	 * @param publisher 推流器
+	 * @param code 错误码
+	 * @param description 错误提示
+	 */
+	public void onError(LSPublisherJni publisher, String code, String description);
 }

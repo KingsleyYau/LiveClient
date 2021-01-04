@@ -44,8 +44,8 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
 						String.format("LSVideoHardPlayer::renderVideoFrame( "
 										+ "this : 0x%x, "
 										+ "[Change image size], "
-										+ "oldWidth : %d, oldHeight : %d, "
-										+ "newWidth : %d, newHeight : %d "
+										+ "[%dx%d] => "
+										+ "[%dx%d] "
 										+ ")",
 								hashCode(),
 								width, height,
