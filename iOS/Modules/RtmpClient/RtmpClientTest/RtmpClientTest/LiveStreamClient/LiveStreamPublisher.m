@@ -402,7 +402,6 @@
     
     [self.videoCaptureSession addTarget:filter];
     filter = self.cropFilter;
-//    GPUImageFilter *filter = self.cropFilter;
     if (_beauty) {
         [self.cropFilter addTarget:self.beautyFilter];
         filter = self.beautyFilter;
