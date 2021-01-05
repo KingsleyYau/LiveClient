@@ -394,8 +394,9 @@
     
     GPUImageFilter *filter = nil;
     if (_inputFilter) {
+        [_inputFilter removeAllTargets];
+        [_inputFilter addTarget:self.cropFilter];
         filter = _inputFilter;
-        [filter addTarget:self.cropFilter];
     } else {
         filter = self.cropFilter;
     }
