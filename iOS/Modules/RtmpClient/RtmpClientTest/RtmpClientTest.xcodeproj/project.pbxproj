@@ -205,10 +205,10 @@
 		50C9948B1E8F911E001E1355 /* RtmpClientTest */ = {
 			isa = PBXGroup;
 			children = (
-				5038ED772591953A004D9AE6 /* File */,
 				50C9948F1E8F911E001E1355 /* AppDelegate.h */,
 				50C994901E8F911E001E1355 /* AppDelegate.mm */,
 				50C994981E8F911E001E1355 /* Assets.xcassets */,
+				5038ED772591953A004D9AE6 /* File */,
 				509CC0EA2546C0F40037BA32 /* FileDownloadManager.h */,
 				509CC0EB2546C0F40037BA32 /* FileDownloadManager.m */,
 				50DAEF9E2136429E00FB374D /* Header */,
