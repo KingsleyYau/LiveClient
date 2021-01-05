@@ -17,6 +17,7 @@
 #import "LiveStreamPublisher.h"
 
 #import "LSImageVibrateFilter.h"
+#import "LSImagePictureFilter.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -69,10 +70,14 @@
     self.sliderCacheMS.continuous = NO;
     self.sliderCacheMS.value = 1000;
     self.labelCacheMS.text = [NSString stringWithFormat:@"%dms", (int)(self.sliderCacheMS.value), nil];
-    // 是否录制
+    // TODO:是否录制
     [self.buttonRecord setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
+
+    UITapGestureRecognizer *tapImageView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(inputChangeAction:)];
+    [self.imageViewInput addGestureRecognizer:tapImageView];
+    self.imageViewInput.userInteractionEnabled = YES;
 
     // TODO:手势 - 单击收起键盘
     UITapGestureRecognizer *tapCloseKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapCloseKeyboardGesture:)];
@@ -380,6 +385,19 @@
         } else {
             self.publisher.customFilter = nil;
         }
+    }
+}
+- (IBAction)inputChangeAction:(id)sender {
+    if (self.publisher) {
+        UIImage *image = nil;
+        if (!self.publisher.inputFilter) {
+            image = [UIImage imageNamed:@"P0"];
+            self.publisher.inputFilter = [[LSImagePictureFilter alloc] initWithImage:image];
+        } else {
+            image = [UIImage imageNamed:@"C"];
+            self.publisher.inputFilter = nil;
+        }
+        self.imageViewInput.image = image;
     }
 }
 

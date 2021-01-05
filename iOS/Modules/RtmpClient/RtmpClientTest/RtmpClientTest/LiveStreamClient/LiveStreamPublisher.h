@@ -51,6 +51,11 @@ typedef enum LiveStreamType {
 @property (nonatomic, assign) BOOL mute;
 
 /**
+ 自定义输入
+ */
+@property (strong) GPUImageFilter *inputFilter;
+
+/**
  自定义滤镜
  */
 @property (strong) GPUImageFilter *customFilter;

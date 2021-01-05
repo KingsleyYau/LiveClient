@@ -17,6 +17,7 @@
                 <outlet property="controlBottom" destination="IF5-Dj-FHK" id="KYV-3d-UxP"/>
                 <outlet property="controlTop" destination="mdg-Xo-6Bu" id="f8K-Fj-Wba"/>
                 <outlet property="controlView" destination="Cb4-yG-ORS" id="u47-qy-32B"/>
+                <outlet property="imageViewInput" destination="hU9-eE-xlQ" id="jrX-Yu-x0u"/>
                 <outlet property="labelBitrate" destination="C1r-tC-e1T" id="wev-39-1VJ"/>
                 <outlet property="labelCacheMS" destination="BuY-wB-Amn" id="OGw-kV-SfQ"/>
                 <outlet property="labelFps" destination="qIz-z5-ZpK" id="98D-w7-rur"/>
@@ -199,6 +200,13 @@
                                 <action selector="record:" destination="-1" eventType="touchUpInside" id="nZ1-bs-1pq"/>
                             </connections>
                         </button>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="C" translatesAutoresizingMaskIntoConstraints="NO" id="hU9-eE-xlQ" userLabel="Input Image View">
+                            <rect key="frame" x="350" y="0.0" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="KCw-xu-XdE"/>
+                                <constraint firstAttribute="width" secondItem="hU9-eE-xlQ" secondAttribute="height" multiplier="1:1" id="bER-WU-lCf"/>
+                            </constraints>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JTs-RJ-tmO" userLabel=" Pubilsh Label">
                             <rect key="frame" x="10" y="69" width="50" height="17"/>
                             <constraints>
@@ -369,6 +377,7 @@
                         <constraint firstItem="QHt-yH-acT" firstAttribute="height" secondItem="OZ2-eN-Tlv" secondAttribute="height" id="V3I-q2-8SC"/>
                         <constraint firstItem="OZ2-eN-Tlv" firstAttribute="height" secondItem="D4r-RD-2IJ" secondAttribute="height" id="VyU-9I-PGC"/>
                         <constraint firstItem="nPX-Bf-Cn5" firstAttribute="bottom" secondItem="R83-1A-ytF" secondAttribute="top" constant="-5" id="Xa6-Tf-RcS"/>
+                        <constraint firstItem="hU9-eE-xlQ" firstAttribute="trailing" secondItem="Cb4-yG-ORS" secondAttribute="trailing" constant="-10" id="YC3-2Z-hdL"/>
                         <constraint firstItem="fvn-Gc-E65" firstAttribute="width" secondItem="OZ2-eN-Tlv" secondAttribute="width" id="YwW-Dd-QX6"/>
                         <constraint firstItem="D4r-RD-2IJ" firstAttribute="bottom" secondItem="Cb4-yG-ORS" secondAttribute="bottom" constant="-10" id="ZpI-sJ-DmK"/>
                         <constraint firstItem="a6a-Yx-S8x" firstAttribute="width" secondItem="OZ2-eN-Tlv" secondAttribute="width" id="aDd-VM-PCH"/>
@@ -377,6 +386,7 @@
                         <constraint firstItem="gLq-qq-TiF" firstAttribute="width" secondItem="D4r-RD-2IJ" secondAttribute="width" id="cGV-Qi-0hz"/>
                         <constraint firstItem="Uml-im-px6" firstAttribute="leading" secondItem="JTs-RJ-tmO" secondAttribute="leading" id="dM8-kH-3H1"/>
                         <constraint firstItem="QHt-yH-acT" firstAttribute="width" secondItem="OZ2-eN-Tlv" secondAttribute="width" id="dST-3M-pFU"/>
+                        <constraint firstItem="hU9-eE-xlQ" firstAttribute="top" secondItem="Cb4-yG-ORS" secondAttribute="top" id="eAY-L1-I7r"/>
                         <constraint firstItem="a6a-Yx-S8x" firstAttribute="leading" secondItem="QHt-yH-acT" secondAttribute="trailing" id="ePN-N1-VwJ"/>
                         <constraint firstAttribute="height" constant="200" id="fP3-9f-ZOv"/>
                         <constraint firstItem="T6M-2C-qo0" firstAttribute="top" secondItem="D4r-RD-2IJ" secondAttribute="top" id="fRJ-m3-0vM"/>
@@ -443,6 +453,7 @@
         </view>
     </objects>
     <resources>
+        <image name="C" width="190" height="190"/>
         <image name="CheckButton" width="100" height="100"/>
         <image name="ScaleButton" width="100" height="100"/>
         <systemColor name="systemBlueColor">

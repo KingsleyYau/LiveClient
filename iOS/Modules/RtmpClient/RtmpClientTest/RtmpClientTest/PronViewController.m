@@ -72,7 +72,7 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://www.baidu.com/";
+    NSString *urlString = @"https://www.pornhub.com/";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];

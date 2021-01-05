@@ -39,5 +39,6 @@
 @property (weak) IBOutlet UIButton* button2x;
 
 @property (weak) IBOutlet UIButton* buttonRecord;
+@property (weak) IBOutlet UIImageView* imageViewInput;
 @end
 

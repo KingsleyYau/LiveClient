@@ -22,6 +22,7 @@
 
 @interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate> {
     GPUImageFilter *_customFilter;
+    GPUImageFilter *_inputFilter;
 }
 
 @property (strong) NSString *_Nonnull url;
@@ -349,8 +350,8 @@
     }
 }
 
+// TODO:切换美颜
 - (void)setBeauty:(BOOL)beauty {
-    // TODO:切换美颜
     if (_beauty != beauty) {
         _beauty = beauty;
 
@@ -358,12 +359,25 @@
     }
 }
 
+// TODO:切换输入源
+- (GPUImageFilter *)inputFilter {
+    return _inputFilter;
+}
+
+- (void)setInputFilter:(GPUImageFilter *)inputFilter {
+    if (_inputFilter != inputFilter) {
+        _inputFilter = inputFilter;
+        
+        [self installFilter];
+    }
+}
+// TODO:切换自定义滤镜
 - (GPUImageFilter *)customFilter {
     return _customFilter;
 }
 
 - (void)setCustomFilter:(GPUImageFilter *)customFilter {
-    // TODO:切换美颜
+    
     if (_customFilter != customFilter) {
         _customFilter = customFilter;
         
@@ -371,13 +385,24 @@
     }
 }
 
+// TODO:组装滤镜
 - (void)installFilter {
-    // TODO:组装滤镜
+    [self.videoCaptureSession removeAllTargets];
     [self.cropFilter removeAllTargets];
     [self.beautyFilter removeAllTargets];
     [self.customFilter removeAllTargets];
     
-    GPUImageFilter *filter = self.cropFilter;
+    GPUImageFilter *filter = nil;
+    if (_inputFilter) {
+        filter = _inputFilter;
+        [filter addTarget:self.cropFilter];
+    } else {
+        filter = self.cropFilter;
+    }
+    
+    [self.videoCaptureSession addTarget:filter];
+    filter = self.cropFilter;
+//    GPUImageFilter *filter = self.cropFilter;
     if (_beauty) {
         [self.cropFilter addTarget:self.beautyFilter];
         filter = self.beautyFilter;
@@ -396,8 +421,9 @@
     return self.publisher.mute;
 }
 
+// TODO:切换静音
 - (void)setMute:(BOOL)mute {
-    // TODO:切换静音
+    
     NSLog(@"LiveStreamPublisher::setMute( mute : %@ )", BOOL2YES(mute));
 
     if (self.publisher.mute != mute) {
