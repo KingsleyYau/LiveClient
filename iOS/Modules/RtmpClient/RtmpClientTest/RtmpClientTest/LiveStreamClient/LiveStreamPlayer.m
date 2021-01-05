@@ -80,13 +80,6 @@
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
-
-    if (_isBackground == YES) {
-        _isBackground = NO;
-
-        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-        dispatch_resume(videoProcessingQueue);
-    }
 }
 
 #pragma mark - 对外接口
@@ -248,7 +241,7 @@
         }
     }
 
-    NSLog(@"LiveStreamPlayer::run( [Finish], self : %p )", self);
+    NSLog(@"LiveStreamPlayer::run( self : %p, [Finish] )", self);
 }
 
 - (void)cancel {
@@ -271,7 +264,7 @@
         [[LiveStreamSession session] stopPlay];
     }
 
-    NSLog(@"LiveStreamPlayer::cancel( [Finish], self : %p )", self);
+    NSLog(@"LiveStreamPlayer::cancel( self : %p, [Finish] )", self);
 }
 
 - (void)reconnect {
@@ -287,7 +280,7 @@
     }
 
     if (bHandle) {
-        NSLog(@"LiveStreamPlayer::reconnect( [Start], self : %p )", self);
+        NSLog(@"LiveStreamPlayer::reconnect( self : %p, [Start] )", self);
 
         [self.player stop];
 
@@ -304,7 +297,7 @@
             }
         }
 
-        NSLog(@"LiveStreamPlayer::reconnect( [Finish], self : %p )", self);
+        NSLog(@"LiveStreamPlayer::reconnect( self : %p, [Finish] )", self);
     }
 }
 
@@ -337,12 +330,12 @@
         self.isConnected = NO;
         if (!self.isStart) {
             // 停止拉流
-            NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Disconnect], self : %p )", self);
+            NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( self : %p, [Disconnect] )", self);
 
         } else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 // 断线重新拉流
-                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Delay Check], self : %p )", self);
+                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( self : %p, [Delay Check] )", self);
 
                 // 重连
                 [self reconnect];
@@ -361,7 +354,7 @@
 }
 
 - (void)rtmpPlayerOnInfoChange:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC videoDisplayWidth:(int)videoDisplayWidth vieoDisplayHeight:(int)vieoDisplayHeight {
-    NSLog(@"LiveStreamPlayer::rtmpPlayerOnInfoChange( self : %p, videoDisplayWidth : %d, vieoDisplayHeight : %d )", self, videoDisplayWidth, vieoDisplayHeight);
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnInfoChange( self : %p, [%dx%d] )", self, videoDisplayWidth, vieoDisplayHeight);
     
     if ([self.delegate respondsToSelector:@selector(playerOnInfoChange:videoDisplayWidth:vieoDisplayHeight:)]) {
         [self.delegate playerOnInfoChange:self videoDisplayWidth:videoDisplayWidth vieoDisplayHeight:vieoDisplayHeight];

@@ -89,7 +89,7 @@ bool AudioDecoderAAC::Create(AudioDecoderCallback *callback) {
 }
 
 bool AudioDecoderAAC::Reset() {
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Reset( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Reset( this : %p )", this);
 
     bool bFlag = Start();
 
@@ -106,7 +106,7 @@ bool AudioDecoderAAC::Reset() {
 }
 
 void AudioDecoderAAC::Pause() {
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Pause( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Pause( this : %p )", this);
 
     Stop();
 

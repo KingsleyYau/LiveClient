@@ -763,14 +763,13 @@ bool VideoHardDecoder::CheckVideoSize() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
                      "VideoHardDecoder::CheckVideoSize( "
+                     "this : %p, "
                      "[New Video Coded Size], "
                      "mSpSize : %d, "
                      "profile_idc : %d, "
-                     "mWidth : %d, "
-                     "mHeight : %d, "
-                     "width : %d, "
-                     "height : %d "
+                     "[%dx%d] => [%dx%d] "
                      ")",
+                     this,
                      mSpSize,
                      profile_idc,
                      mWidth,
@@ -828,17 +827,16 @@ bool VideoHardDecoder::CheckVideoSize() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "VideoHardDecoder::CheckVideoSize( "
+                         "this : %p, "
                          "[New Video Display Size], "
-                         "mWidth : %d, "
-                         "mHeight : %d, "
-                         "displayWidth : %d, "
-                         "displayHeight : %d, "
+                         "[%dx%d] => [%dx%d], "
                          "chroma_format_idc : %d, "
                          "frame_crop_left_offset : %d, "
                          "frame_crop_right_offset : %d, "
                          "frame_crop_top_offset : %d, "
                          "frame_crop_bottom_offset : %d "
                          ")",
+                         this,
                          mWidth,
                          mHeight,
                          displayWidth,
@@ -855,12 +853,11 @@ bool VideoHardDecoder::CheckVideoSize() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "VideoHardDecoder::CheckVideoSize( "
+                         "this : %p, "
                          "[New Video Display Size], "
-                         "mWidth : %d, "
-                         "mHeight : %d, "
-                         "displayWidth : %d, "
-                         "displayHeight : %d "
+                         "[%dx%d] => [%dx%d] "
                          ")",
+                         this,
                          mWidth,
                          mHeight,
                          displayWidth,

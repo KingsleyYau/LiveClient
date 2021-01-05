@@ -83,7 +83,7 @@ bool AudioEncoderAAC::Create(int sampleRate, int channelsPerFrame, int bitPerSam
     bool bFlag = true;
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_WARNING,
                  "AudioEncoderAAC::Create( "
                  "this : %p, "
                  "sampleRate : %d, "

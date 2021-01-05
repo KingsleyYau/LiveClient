@@ -450,8 +450,7 @@ void PlayerController::OnDecodeVideoChangeSize(VideoDecoder *decoder, unsigned i
                  KLog::LOG_WARNING,
                  "PlayerController::OnDecodeVideoChangeSize( "
                  "[New Video Display Size], "
-                 "displayWidth : %d, "
-                 "displayHeight : %d "
+                 "[%dx%d] "
                  ")",
                  displayWidth,
                  displayHeight

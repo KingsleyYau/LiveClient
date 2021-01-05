@@ -162,7 +162,7 @@
                     [weakSelf.publisher pushVideoFrame:pixelBuffer];
                     CVPixelBufferRelease(pixelBuffer);
                 } else {
-                    NSLog(@"LiveStreamPublisher::initVideoCapture( [Send Video Frame Fail], self : %p, error : %d )", weakSelf, ret);
+                    NSLog(@"LiveStreamPublisher::initVideoCapture( self : %p, [Send Video Frame Fail], error : %d )", weakSelf, ret);
                 }
                 
                 [weakOutput unlockFramebufferAfterReading];
@@ -426,12 +426,12 @@
                 // 开始推流
                 self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
             } else {
-                NSLog(@"LiveStreamPublisher::run( [Publisher is in background], self : %p )", self);
+                NSLog(@"LiveStreamPublisher::run( self : %p, [Publisher is in background] )", self);
             }
         }
     }
 
-    NSLog(@"LiveStreamPublisher::run( [Finish], self : %p )", self);
+    NSLog(@"LiveStreamPublisher::run( self : %p, [Finish] )", self);
 }
 
 - (void)cancel {
@@ -456,7 +456,7 @@
         [[LiveStreamSession session] stopCapture];
     }
 
-    NSLog(@"LiveStreamPublisher::cancel( [Finish], self : %p )", self);
+    NSLog(@"LiveStreamPublisher::cancel( self : %p, [Finish] )", self);
 }
 
 - (void)reconnect {
@@ -470,7 +470,7 @@
     }
 
     if (bHandle) {
-        NSLog(@"LiveStreamPublisher::reconnect( [Start], self : %p )", self);
+        NSLog(@"LiveStreamPublisher::reconnect( self : %p, [Start] )", self);
 
         [self.publisher stop];
 
@@ -483,7 +483,7 @@
             self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
         }
 
-        NSLog(@"LiveStreamPublisher::reconnect( [Finish], self : %p )", self);
+        NSLog(@"LiveStreamPublisher::reconnect( self : %p, [Finish] )", self);
     }
 }
 
@@ -601,12 +601,12 @@
         self.isConnected = NO;
         if (!self.isStart) {
             // 停止拉流
-            NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Disconnect], self : %p )", self);
+            NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( self : %p, [Disconnect] )", self);
 
         } else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 // 断线重新拉流
-                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Delay Check], self : %p )", self);
+                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( self : %p, [Delay Check] )", self);
 
                 // 重连
                 [self reconnect];
