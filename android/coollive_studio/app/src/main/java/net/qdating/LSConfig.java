@@ -63,6 +63,7 @@ public class LSConfig {
 		VideoConfigType240x320,
 		VideoConfigType320x320,
 		VideoConfigType480x640,
+		VideoConfigType720x1080,
 	}
 	/**
 	 * 渲染模式类型 <br/>

@@ -129,13 +129,16 @@
         double radioPreview = 1.0 * self.videoParam.width / self.videoParam.height;
         // 源比例
         double radioImage = 1.0 * VIDEO_CAPTURE_WIDTH / VIDEO_CAPTURE_HEIGHT;
-        if (radioPreview < radioImage) {
-            // 剪裁左右
-            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake((1 - radioImage) / 2, 0, radioImage, 1)];
-        } else if ( radioPreview > radioImage ) {
+        if ( radioPreview > radioImage ) {
             // 剪裁上下
-            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, (1 - radioImage) / 2, 1, radioImage)];
+            float radio = 1.0f * VIDEO_CAPTURE_WIDTH / self.videoParam.width * self.videoParam.height / VIDEO_CAPTURE_HEIGHT;
+            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, (1 - radio) / 2, 1, radio)];
+        } else if (radioPreview < radioImage) {
+            // 剪裁左右
+            float radio = 1.0f * VIDEO_CAPTURE_HEIGHT / self.videoParam.height * self.videoParam.width / VIDEO_CAPTURE_WIDTH;
+            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake((1 - radio) / 2, 0, radio, 1)];
         } else {
+            // 不剪裁
             self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
         }
         // 创建输出处理
@@ -330,13 +333,6 @@
             param.fps = 12;
             param.keyFrameInterval = 12;
             param.bitrate= 600 * 1000;
-        }break;
-        case LiveStreamType_720x1080: {
-            param.width = 720;
-            param.height = 1080;
-            param.fps = 12;
-            param.keyFrameInterval = 12;
-            param.bitrate= 1000 * 1000;
         }break;
         default: {
             return nil;

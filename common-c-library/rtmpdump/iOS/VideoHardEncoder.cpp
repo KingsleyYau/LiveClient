@@ -11,7 +11,7 @@
 #include <common/KLog.h>
 
 namespace coollive {
-VideoHardEncoder::VideoHardEncoder() {
+VideoHardEncoder::VideoHardEncoder():mRuningMutex(KMutex::MutexType_Recursive) {
     FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::VideoHardEncoder( this : %p )", this);
 
     mVideoEncodeQueue = dispatch_queue_create("_mVideoEncodeQueue", NULL);

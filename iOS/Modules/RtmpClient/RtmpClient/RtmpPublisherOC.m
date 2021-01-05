@@ -104,12 +104,12 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         }
     }
 
-    void OnPublisherError(PublisherController *pc, const string& code, const string& description) {
+    void OnPublisherError(PublisherController *pc, const string &code, const string &description) {
         if ([mpPublisher.delegate respondsToSelector:@selector(rtmpPublisherOCOnError:code:description:)]) {
             [mpPublisher.delegate rtmpPublisherOCOnError:mpPublisher code:[NSString stringWithUTF8String:code.c_str()] description:[NSString stringWithUTF8String:description.c_str()]];
         }
     }
-    
+
   private:
     __weak typeof(RtmpPublisherOC) *mpPublisher;
 };
@@ -128,7 +128,7 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
     if (self = [super init]) {
         // 初始化参数
         self.videoParam = videoParam;
-        
+
         _mute = NO;
 
         self.videoFrameLastPushTime = 0;
@@ -150,7 +150,7 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         _useHardEncoder = NO;
 #else
         // 真机, 默认使用硬编码
-        _useHardEncoder = NO;
+        _useHardEncoder = YES;
 #endif
         // 创建解码器和渲染器
         [self createEncoders];
@@ -171,7 +171,7 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
                                       self.videoParam.keyFrameInterval,
                                       self.videoParam.bitrate,
                                       VIDEO_FORMATE_BGRA);
-        
+
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -337,18 +337,27 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
 }
 
 - (void)writeDataToFile:(const void *)bytes length:(NSUInteger)length filePath:(NSString *)filePath {
-    NSData* data = [NSData dataWithBytes:bytes length:length];
+    NSData *data = [NSData dataWithBytes:bytes length:length];
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
-    if( !fileHandle ) {
+    if (!fileHandle) {
         [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
         fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
     }
-    
-    if( fileHandle ) {
+
+    if (fileHandle) {
         [fileHandle seekToEndOfFile];
         [fileHandle writeData:data];
         [fileHandle closeFile];
     }
+}
+
+- (UIImage *)pixelBuffer2Image:(CVPixelBufferRef _Nonnull)pixelBuffer {
+    CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+    CIContext *cxt = [CIContext contextWithOptions:nil];
+    CGImageRef imageRef = [cxt createCGImage:ciImage fromRect:CGRectMake(0,0, CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer))];
+    UIImage *image = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    return image;
 }
 
 @end

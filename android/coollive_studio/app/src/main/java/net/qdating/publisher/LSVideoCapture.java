@@ -337,11 +337,10 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		if( previewSizes != null ) {
 			for (Size size : previewSizes) {
 				if( LSConfig.DEBUG ) {
-					Log.i(LSConfig.TAG,
+					Log.w(LSConfig.TAG,
 							String.format("LSVideoCapture::getBestSuppportPreviewSize( " +
 									"this : 0x%x, " +
-									"width : %d, " +
-									"height : %d " +
+									"[%dx%d] " +
 									")",
 									hashCode(),
 									size.width,
@@ -366,7 +365,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		}
 		
 		if( bestSize != null ) {
-			Log.i(LSConfig.TAG, String.format("LSVideoCapture::getBestSuppportPreviewSize( this : 0x%x, bestWidth : %d, bestHeight : %d )", hashCode(), bestSize.width, bestSize.height));
+			Log.w(LSConfig.TAG, String.format("LSVideoCapture::getBestSuppportPreviewSize( this : 0x%x, [%dx%d] )", hashCode(), bestSize.width, bestSize.height));
 			// 是否宽高互换
 			if( isSwitchFrame() ) {
 				previewRenderer.setOriginalSize(bestSize.height, bestSize.width);

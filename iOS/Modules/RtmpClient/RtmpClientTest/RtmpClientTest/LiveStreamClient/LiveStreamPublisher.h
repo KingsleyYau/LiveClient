@@ -27,7 +27,6 @@ typedef enum LiveStreamType {
     LiveStreamType_ShowHost_Mutiple,     // 主播多人互动 240x240, 12fps, 12kfi, 500kbps
     LiveStreamType_Camshare,             // Camshare 176x144, 6fps, 6kfi, 300kbps
     LiveStreamType_480x640,              // 480x640, 12fps, 12kfi, 600kbps
-    LiveStreamType_720x1080,              // 720x1080, 12fps, 12kfi, 1000kbps
 } LiveStreamType;
 
 @interface LiveStreamPublisher : NSObject

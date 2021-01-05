@@ -254,8 +254,8 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 					FillMode.FillModeAspectRatioFit,
 					this,
 					LSConfig.VideoConfigType.VideoConfigType480x640,
-					12,
-					12,
+					15,
+					15,
 					VIDEO_MAX_BITRATE
 			);
 
@@ -274,7 +274,6 @@ public class PlayActivity extends Activity implements ILSPlayerStatusCallback, I
 				LSImageGroupFilter filters = new LSImageGroupFilter();
 				filters.addFilter(new LSImageSampleBeautyBaseFilter(this));
 				LSImageVibrateFilter vbFilter = new LSImageVibrateFilter();
-				vbFilter.setlevel(1.0f);
 //				filters.addFilter(vbFilter);
 				publishFilters[7] = filters;
 				publishFilterIndex = 7;

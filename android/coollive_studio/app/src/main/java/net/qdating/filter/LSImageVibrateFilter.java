@@ -51,9 +51,7 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 	private float uvImagePixel[] = new float[2];
 
 	private Random rnd = new Random();
-
-	static private int VIBRATE_OFFSET_MAX = 10;
-	private int vibrateOffset = 5;
+	private double level = 0.01;
 
 	public LSImageVibrateFilter() {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
@@ -63,23 +61,21 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 	public LSImageVibrateFilter(double level) {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
 		// TODO Auto-generated constructor stub
-		this.vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
 	}
 
 	/**
 	 * 设置抖动等级
 	 * @param level 0.0 ~ 1.0
 	 */
-	public void setlevel(double level) {
+	public void setLevel(double level) {
 		Log.d(LSConfig.TAG,
-				String.format("LSImageVibrateFilter::setlevel( "
+				String.format("LSImageVibrateFilter::setLevel( "
 								+ "level : %f "
 								+ ")",
 						level
 				)
 		);
-
-		this.vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
+		this.level = level;
 	}
 
 	@Override
@@ -129,7 +125,7 @@ public class LSImageVibrateFilter extends LSImageBufferFilter {
 		// 填充着色器
 		GLES20.glUniform2f(uImagePixel, uvImagePixel[0], uvImagePixel[1]);
 
-		int num = rnd.nextInt() % vibrateOffset;
+		int num = rnd.nextInt() % Math.min((int)(level * Math.min(inputWidth, inputHeight)), 5);
 		float uvOffset[] = {num, num};
 		GLES20.glUniform2f(uOffet, uvOffset[0], uvOffset[1]);
 	}

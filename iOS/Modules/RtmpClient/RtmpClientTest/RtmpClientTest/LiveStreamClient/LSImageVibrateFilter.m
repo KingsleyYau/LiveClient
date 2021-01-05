@@ -23,9 +23,8 @@ NSString *const kGPUImageVibrateFragmentShaderString = SHADER_STRING
     }
 );
 
-static int VIBRATE_OFFSET_MAX = 10;
 @interface LSImageVibrateFilter() {
-    int _vibrateOffset;
+    double _level;
 }
 @end
 
@@ -35,13 +34,13 @@ static int VIBRATE_OFFSET_MAX = 10;
         return nil;
     }
     
-    _vibrateOffset = 5;
+    _level = 0.01;
     
     return self;
 }
 
 - (void)setlevel:(double)level {
-    _vibrateOffset = (int)(level * VIBRATE_OFFSET_MAX);
+    _level = level;//(int)(level * VIBRATE_OFFSET_MAX);
 }
 
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex {
@@ -55,7 +54,7 @@ static int VIBRATE_OFFSET_MAX = 10;
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     [super newFrameReadyAtTime:frameTime atIndex:textureIndex];
     
-    int offset = arc4random() % _vibrateOffset;
+    int offset = arc4random() % (int)(MAX(_level * MIN(inputTextureSize.width, inputTextureSize.height), 5));
     CGPoint uOffet = CGPointMake(offset, offset);
     [self setPoint:uOffet forUniformName:@"uOffet"];
 }

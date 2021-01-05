@@ -2,7 +2,7 @@
 //  YUGPUImageCVPixelBufferInput.h
 //  Pods
 //
-//  Created by YuAo on 3/28/16.
+//  Created by Max on 3/28/16.
 //
 //
 
