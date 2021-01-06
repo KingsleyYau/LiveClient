@@ -14,14 +14,16 @@
 @property (strong) NSString *fileName;
 @property (strong) NSString *filePath;
 @property (strong) UIImage *image;
-@property (assign) bool firstShowImage;
-@property (assign) bool isDirectory;
-@property (assign) bool isUnknowFormat;
+@property (assign) BOOL firstShowImage;
+@property (assign) BOOL isDirectory;
+@property (assign) BOOL isUnknowFormat;
+@property (nonatomic, assign, readonly) BOOL isVideo;
 @end
 
 @protocol StreamFileCollectionViewControllerDelegate <NSObject>
 - (void)didSelectFile:(FileItem *)fileItem;
 - (void)didSelectAllFile:(NSArray<FileItem *>*)fileItemArray;
+- (void)didPublishImage:(FileItem *)fileItem;
 @end
 
 @interface StreamFileCollectionViewController : StreamBaseViewController

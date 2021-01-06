@@ -34,6 +34,10 @@
 @property (assign) BOOL isScale;
 @property (assign) UIDeviceOrientation deviceOrientation;
 
+@property (strong) UIImage *publishImage;
+/**
+ 播放文件
+ */
 @property (strong) NSArray<FileItem *> *fileItemArray;
 @property (strong) FileItem *fileItem;
 @property (assign) NSInteger fileItemIndex;
@@ -137,7 +141,7 @@
         @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",         // Camshare
         @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
     };
-    NSString *url = urls[@"tn"];
+    NSString *url = urls[@"local"];
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
@@ -391,7 +395,7 @@
     if (self.publisher) {
         UIImage *image = nil;
         if (!self.publisher.inputFilter) {
-            image = [UIImage imageNamed:@"P0"];
+            image = self.publishImage?self.publishImage:[UIImage imageNamed:@"P0"];
             self.publisher.inputFilter = [[LSImagePictureFilter alloc] initWithImage:image];
         } else {
             image = [UIImage imageNamed:@"C"];
@@ -642,5 +646,12 @@
         self.fileItemIndex = arc4random() % self.fileItemArray.count;
         [self playNextFileItem];
     }
+}
+
+#pragma mark - 推送本地文件
+- (void)didPublishImage:(FileItem *)fileItem {
+    self.publishImage = fileItem.image;
+    self.publisher.inputFilter = [[LSImagePictureFilter alloc] initWithImage:self.publishImage];
+    self.imageViewInput.image = self.publishImage;
 }
 @end
