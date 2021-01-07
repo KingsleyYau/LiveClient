@@ -227,6 +227,8 @@
             }
             [self changeDownloadStatus];
         }
+    } else {
+        [self toast:@"No urls can be download."];
     }
 }
 

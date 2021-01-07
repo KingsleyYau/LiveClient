@@ -12,6 +12,8 @@
 
 #import "GPUImageBeautifyFilter.h"
 #import "LFGPUImageBeautyFilter.h"
+#import "LSImagePictureFilter.h"
+#import "LSImageMovie.h"
 
 #import "LiveStreamSession.h"
 
@@ -20,18 +22,20 @@
 #define VIDEO_CAPTURE_HEIGHT 640
 #define VIDEO_CAPTURE_FPS 30
 
-@interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate> {
+@interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate, LSImageMovieDelegate> {
     GPUImageFilter *_customFilter;
-    GPUImageFilter *_inputFilter;
+    UIImage *_image;
 }
 
 @property (strong) NSString *_Nonnull url;
+@property (strong) NSString *_Nullable filePath;
 @property (strong) NSString *_Nullable recordH264FilePath;
 @property (strong) NSString *_Nullable recordAACFilePath;
 
 @property (assign) BOOL isStart;
 @property (assign) BOOL isConnected;
 @property (assign) BOOL isPreview;
+@property (assign) CGSize videoSize;
 
 #pragma mark - 传输处理
 /**
@@ -47,16 +51,17 @@
  视频采集
  */
 @property (nonatomic, strong) GPUImageVideoCamera *videoCaptureSession;
-/**
- 滤镜处理后Buffer
- */
-@property (nonatomic, strong) GPUImageFramebuffer *inputFramebuffer;
+@property (nonatomic, strong) LSImageMovie *videoMovieSession;
 /**
  美颜滤镜
  */
 @property (nonatomic, strong) LFGPUImageBeautyFilter *beautyFilter;
 //@property (nonatomic, strong) GPUImageBeautifyFilter* beautyFilter;
 
+/**
+ 图片输入
+ */
+@property (nonatomic, strong) LSImagePictureFilter *pictureFilter;
 /**
  裁剪滤镜
  */
@@ -125,27 +130,11 @@
         self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
         self.beautyFilter.beautyLevel = 0.5;
         
-        // 创建裁剪滤镜
-        // 目标比例
-        double radioPreview = 1.0 * self.videoParam.width / self.videoParam.height;
-        // 源比例
-        double radioImage = 1.0 * VIDEO_CAPTURE_WIDTH / VIDEO_CAPTURE_HEIGHT;
-        if ( radioPreview > radioImage ) {
-            // 剪裁上下
-            float radio = 1.0f * VIDEO_CAPTURE_WIDTH / self.videoParam.width * self.videoParam.height / VIDEO_CAPTURE_HEIGHT;
-            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, (1 - radio) / 2, 1, radio)];
-        } else if (radioPreview < radioImage) {
-            // 剪裁左右
-            float radio = 1.0f * VIDEO_CAPTURE_HEIGHT / self.videoParam.height * self.videoParam.width / VIDEO_CAPTURE_WIDTH;
-            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake((1 - radio) / 2, 0, radio, 1)];
-        } else {
-            // 不剪裁
-            self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
-        }
         // 创建输出处理
         self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(self.videoParam.width, self.videoParam.height) resultsInBGRAFormat:YES];
         
         WeakObject(self, weakSelf);
+        WeakObject(weakSelf.publisher, weakPublisher);
         WeakObject(self.output, weakOutput);
         [self.output setNewFrameAvailableBlock:^{
             if (weakSelf.isStart) {
@@ -156,14 +145,14 @@
                 
                 CVPixelBufferRef pixelBuffer = NULL;
                 CVReturn ret = kCVReturnSuccess;
-                
+
                 ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, weakSelf.videoParam.width, weakSelf.videoParam.height, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
                 if (ret == kCVReturnSuccess) {
                     // 将视频帧放进推流器
-                    [weakSelf.publisher pushVideoFrame:pixelBuffer];
+                    [weakPublisher pushVideoFrame:pixelBuffer];
                     CVPixelBufferRelease(pixelBuffer);
                 } else {
-                    NSLog(@"LiveStreamPublisher::initVideoCapture( self : %p, [Send Video Frame Fail], error : %d )", weakSelf, ret);
+                    NSLog(@"LiveStreamPublisher::initWithType( self : %p, [Send Video Frame Fail], error : %d )", weakSelf, ret);
                 }
                 
                 [weakOutput unlockFramebufferAfterReading];
@@ -185,15 +174,31 @@
 }
 
 #pragma mark - 对外接口
-- (BOOL)pushlishUrl:(NSString *_Nonnull)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath {
-    NSLog(@"LiveStreamPublisher::pushlishUrl( self : %p, url : %@ )", self, url);
+- (BOOL)publishUrl:(NSString *_Nonnull)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath {
+    NSLog(@"LiveStreamPublisher::publishUrl( self : %p, url : %@ )", self, url);
 
     BOOL bFlag = YES;
 
     self.url = url;
+    self.filePath = @"";
+    self.videoSize = CGSizeZero;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
 
+    [self cancel];
+    [self run];
+
+    return bFlag;
+}
+
+- (BOOL)publishUrl:(NSString *)url withVideo:(NSString *)filePath {
+    NSLog(@"LiveStreamPublisher::publishUrl( self : %p, url : %@, filePath : %@ )", self, url, filePath);
+
+    BOOL bFlag = YES;
+
+    self.url = url;
+    self.filePath = filePath;
+    
     [self cancel];
     [self run];
 
@@ -359,25 +364,12 @@
     }
 }
 
-// TODO:切换输入源
-- (GPUImageFilter *)inputFilter {
-    return _inputFilter;
-}
-
-- (void)setInputFilter:(GPUImageFilter *)inputFilter {
-    if (_inputFilter != inputFilter) {
-        _inputFilter = inputFilter;
-        
-        [self installFilter];
-    }
-}
 // TODO:切换自定义滤镜
 - (GPUImageFilter *)customFilter {
     return _customFilter;
 }
 
 - (void)setCustomFilter:(GPUImageFilter *)customFilter {
-    
     if (_customFilter != customFilter) {
         _customFilter = customFilter;
         
@@ -385,23 +377,69 @@
     }
 }
 
+// TODO:创建剪裁滤镜
+- (GPUImageFilter *)resetCropFilter:(CGSize)src dst:(CGSize)dst {
+    CGRect cropRegion = CGRectMake(0, 0, 1, 1);
+    // 源比例
+    double radioImage = 1.0 * src.width / src.height;
+    // 目标比例
+    double radioPreview = 1.0 * dst.width / dst.height;
+    if ( radioPreview > radioImage ) {
+        // 剪裁上下
+        float radio = 1.0f * src.width / dst.width * dst.height / src.height;
+        cropRegion = CGRectMake(0, (1 - radio) / 2, 1, radio);
+    } else if (radioPreview < radioImage) {
+        // 剪裁左右
+        float radio = 1.0f * src.height / dst.height * dst.width / src.width;
+        cropRegion = CGRectMake((1 - radio) / 2, 0, radio, 1);
+    } else {
+        // 不剪裁
+    }
+    
+    if(self.cropFilter) {
+        self.cropFilter.cropRegion = cropRegion;
+    } else {
+        self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:cropRegion];
+    }
+    
+    return self.cropFilter;
+}
+
+// TODO:创建图片输入滤镜
+- (GPUImageFilter *)resetPictureFilter {
+    if (self.image) {
+        self.pictureFilter = [[LSImagePictureFilter alloc] initWithImage:self.image];
+    } else {
+        self.pictureFilter = nil;
+    }
+    return self.pictureFilter;
+}
+
 // TODO:组装滤镜
 - (void)installFilter {
+    [self.videoMovieSession removeAllTargets];
     [self.videoCaptureSession removeAllTargets];
+    [self.pictureFilter removeAllTargets];
     [self.cropFilter removeAllTargets];
     [self.beautyFilter removeAllTargets];
     [self.customFilter removeAllTargets];
     
     GPUImageFilter *filter = nil;
-    if (_inputFilter) {
-        [_inputFilter removeAllTargets];
-        [_inputFilter addTarget:self.cropFilter];
-        filter = _inputFilter;
+    // 是否图片
+    if (self.pictureFilter) {
+        [self.pictureFilter addTarget:self.cropFilter];
+        filter = self.pictureFilter;
     } else {
         filter = self.cropFilter;
     }
     
-    [self.videoCaptureSession addTarget:filter];
+    // 输入源
+    if (self.filePath.length > 0) {
+        [self.videoMovieSession addTarget:filter];
+    } else {
+        [self.videoCaptureSession addTarget:filter];
+    }
+    
     filter = self.cropFilter;
     if (_beauty) {
         [self.cropFilter addTarget:self.beautyFilter];
@@ -417,13 +455,34 @@
     [filter addTarget:self.output];
 }
 
+// TODO:切换图片
+- (UIImage *)image {
+    return _image;
+}
+
+- (void)setImage:(UIImage *)image {
+    NSLog(@"LiveStreamPublisher::setImage( image : %@ )", image);
+
+    _image = image;
+    if (self.image) {
+        [self resetCropFilter:self.image.size dst:CGSizeMake(self.videoParam.width, self.videoParam.height)];
+    } else {
+        if (self.filePath.length > 0) {
+            [self resetCropFilter:self.videoSize dst:CGSizeMake(self.videoParam.width, self.videoParam.height)];
+        } else {
+            [self resetCropFilter:CGSizeMake(VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT) dst:CGSizeMake(self.videoParam.width, self.videoParam.height)];
+        }
+    }
+    [self resetPictureFilter];
+    [self installFilter];
+}
+
+// TODO:切换静音
 - (BOOL)mute {
     return self.publisher.mute;
 }
 
-// TODO:切换静音
 - (void)setMute:(BOOL)mute {
-    
     NSLog(@"LiveStreamPublisher::setMute( mute : %@ )", BOOL2YES(mute));
 
     if (self.publisher.mute != mute) {
@@ -441,11 +500,16 @@
     @synchronized(self) {
         if (!self.isStart) {
             self.isStart = YES;
-            // 开启音频服务
-            [[LiveStreamSession session] startCapture];
+            
+            if ( self.filePath.length > 0 ) {
+                [self startMovie];
+            } else {
+                // 开启音频服务
+                [[LiveStreamSession session] startCapture];
 
-            // 开始采集音视频
-            [self startCapture];
+                // 开始采集音视频
+                [self startCapture];
+            }
 
             // 仅在前台才运行
             if (!self.isBackground) {
@@ -472,6 +536,9 @@
     }
 
     if (bHandle) {
+        // 停止读取文件
+        [self stopMovie];
+        
         // 停止采集音视频
         [self stopCapture];
 
@@ -529,9 +596,6 @@
         self.videoCaptureSession.horizontallyMirrorFrontFacingCamera = YES;
         // TODO:5.设置帧数
         self.videoCaptureSession.frameRate = VIDEO_CAPTURE_FPS;
-        // TODO:6.组装滤镜
-        [self.videoCaptureSession addTarget:self.cropFilter];
-        [self installFilter];
     }
 }
 
@@ -568,6 +632,12 @@
 - (void)startCapture {
     self.isPreview = YES;
 
+    if (self.image) {
+        [self resetCropFilter:self.image.size dst:CGSizeMake(self.videoParam.width, self.videoParam.height)];
+    } else {
+        [self resetCropFilter:CGSizeMake(VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT) dst:CGSizeMake(self.videoParam.width, self.videoParam.height)];
+    }
+    
     // 先初始化摄像头
     [self initCapture];
     
@@ -577,7 +647,9 @@
     if (!self.audioCaptureSession.running) {
         [self.audioCaptureSession startRunning];
     }
-
+    
+    // 重新组装滤镜
+    [self installFilter];
     //    });
 }
 
@@ -593,6 +665,35 @@
 
     self.isPreview = NO;
     //    });
+}
+
+#pragma mark - 视频文件处理
+- (void)startMovie {
+    self.isPreview = YES;
+    
+    self.videoMovieSession = [[LSImageMovie alloc] initWithURL:[NSURL fileURLWithPath:self.filePath]];
+    self.videoMovieSession.delegate = self;
+    self.videoMovieSession.playAtActualSpeed = YES;
+    self.videoMovieSession.shouldRepeat = YES;
+    [self.videoMovieSession startProcessing];
+}
+
+- (void)stopMovie {
+    [self.videoMovieSession cancelProcessing];
+    self.videoMovieSession = nil;
+    self.isPreview = NO;
+}
+
+- (void)didLoadPlayingMovie {
+    AVAssetTrack *videoTrack = [self.videoMovieSession.asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+    CGSize videoSize = CGSizeApplyAffineTransform(videoTrack.naturalSize, videoTrack.preferredTransform);
+    videoSize = CGSizeMake(fabs(videoSize.width), fabs(videoSize.height));
+    self.videoSize = videoSize;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self resetCropFilter:videoSize dst:CGSizeMake(self.videoParam.width, self.videoParam.height)];
+        [self installFilter];
+    });
 }
 
 #pragma mark - 音频采集处理

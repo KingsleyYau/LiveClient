@@ -58,7 +58,6 @@
                     item.fileName = fileName;
                     item.filePath = filePath;
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                        BOOL isUnknowFormat = NO;
                         UIImage *image;
                         if ([fileName containsString:@".mp4"]) {
                             image = [self getThumbImage:item.filePath];
@@ -73,13 +72,10 @@
                         
                         if (!image) {
                             image = [UIImage imageNamed:@"File"];
-                        } else {
-                            isUnknowFormat = YES;
                         }
                         
                         item.image = image;
                         item.firstShowImage = YES;
-                        item.isUnknowFormat = isUnknowFormat;
                         
                     });
                     [self.items addObject:item];
@@ -171,9 +167,11 @@
                              }];
         }
         cell.fileImageView.image = item.image;
-        
-        if (item.isDirectory || item.isUnknowFormat) {
+        if ( !item.isVideo ) {
             cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
+            cell.fileImageView.contentMode = UIViewContentModeScaleAspectFit;
+        } else {
+            cell.fileImageView.contentMode = UIViewContentModeScaleAspectFill;
         }
         
         // TODO:手势 - 长按弹出菜单
@@ -274,9 +272,9 @@
         }];
         [alertVC addAction:shareAction];
         
-        UIAlertAction *publishImageAction = [UIAlertAction actionWithTitle:@"Publish Image" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if ([self.delegate respondsToSelector:@selector(didPublishImage:)]) {
-                [self.delegate didPublishImage:item];
+        UIAlertAction *publishImageAction = [UIAlertAction actionWithTitle:@"Publish" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if ([self.delegate respondsToSelector:@selector(didPublishFile:)]) {
+                [self.delegate didPublishFile:item];
             }
             [self.navigationController popToRootViewControllerAnimated:YES];
         }];

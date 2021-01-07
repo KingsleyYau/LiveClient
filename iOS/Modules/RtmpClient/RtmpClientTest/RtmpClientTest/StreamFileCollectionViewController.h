@@ -23,7 +23,7 @@
 @protocol StreamFileCollectionViewControllerDelegate <NSObject>
 - (void)didSelectFile:(FileItem *)fileItem;
 - (void)didSelectAllFile:(NSArray<FileItem *>*)fileItemArray;
-- (void)didPublishImage:(FileItem *)fileItem;
+- (void)didPublishFile:(FileItem *)fileItem;
 @end
 
 @interface StreamFileCollectionViewController : StreamBaseViewController

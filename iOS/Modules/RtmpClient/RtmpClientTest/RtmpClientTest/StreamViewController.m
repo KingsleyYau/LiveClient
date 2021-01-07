@@ -17,7 +17,6 @@
 #import "LiveStreamPublisher.h"
 
 #import "LSImageVibrateFilter.h"
-#import "LSImagePictureFilter.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -141,7 +140,7 @@
         @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",         // Camshare
         @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
     };
-    NSString *url = urls[@"local"];
+    NSString *url = urls[@"tn"];
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
@@ -263,14 +262,15 @@
 - (IBAction)play:(UIButton *)sender {
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@.flv", recordDir, @"max"];
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, 0];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
     if (self.buttonRecord.selected) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+        
         NSDate* now = [NSDate date];
         NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
         [fmt setDateFormat:@"yyyyMM_ddhhmmss"];
@@ -350,7 +350,7 @@
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
 
-    [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    [self.publisher publishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
 - (IBAction)stopPush:(id)sender {
@@ -394,12 +394,12 @@
 - (IBAction)inputChangeAction:(id)sender {
     if (self.publisher) {
         UIImage *image = nil;
-        if (!self.publisher.inputFilter) {
+        if (!self.publisher.image) {
             image = self.publishImage?self.publishImage:[UIImage imageNamed:@"P0"];
-            self.publisher.inputFilter = [[LSImagePictureFilter alloc] initWithImage:image];
+            self.publisher.image = image;
         } else {
             image = [UIImage imageNamed:@"C"];
-            self.publisher.inputFilter = nil;
+            self.publisher.image = nil;
         }
         self.imageViewInput.image = image;
     }
@@ -649,9 +649,17 @@
 }
 
 #pragma mark - 推送本地文件
-- (void)didPublishImage:(FileItem *)fileItem {
-    self.publishImage = fileItem.image;
-    self.publisher.inputFilter = [[LSImagePictureFilter alloc] initWithImage:self.publishImage];
-    self.imageViewInput.image = self.publishImage;
+- (void)didPublishFile:(FileItem *)fileItem {
+    self.previewPublishView.hidden = NO;
+    if (fileItem.isVideo) {
+        self.publisher.image = nil;
+        self.imageViewInput.image = [UIImage imageNamed:@"C"];
+        [self.publisher publishUrl:self.textFieldPublishAddress.text withVideo:fileItem.filePath];
+    } else {
+        self.publishImage = fileItem.image;
+        self.publisher.image = self.publishImage;
+        self.imageViewInput.image = self.publisher.image;
+        [self publish:nil];
+    }
 }
 @end

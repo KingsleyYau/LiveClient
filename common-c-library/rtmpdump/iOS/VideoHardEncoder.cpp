@@ -100,12 +100,13 @@ VideoFrameRateType VideoHardEncoder::EncodeVideoFrame(void *data, int size, void
 //        CMTime presentationTS = CMTimeMake(mEncodeFrameCount++, mFPS);
         CMTime presentationTS = CMTimeMake(ts, 1000);
         double second = (double)(1.0 * presentationTS.value / presentationTS.timescale);
+        int64_t ts = 1000 * second;
         FileLevelLog("rtmpdump", KLog::LOG_MSG,
-                     "VideoHardEncoder::EncodeVideoFrame( this : %p, frame : %p, second : %f, ts : %lld  )",
+                     "VideoHardEncoder::EncodeVideoFrame( this : %p, frame : %p, second : %f, ts : %lld )",
                      this,
                      frame,
                      second,
-                     1000 * second);
+                     ts);
         OSStatus status = VTCompressionSessionEncodeFrame(
             mVideoCompressionSession,
             pixelBuffer,
@@ -118,9 +119,9 @@ VideoFrameRateType VideoHardEncoder::EncodeVideoFrame(void *data, int size, void
             FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::EncodeVideoFrame( this : %p, [Fail], frame : %p, status : %d )", this, frame, (int)status);
         }
 
-        CVPixelBufferRelease(pixelBuffer);
-
         mRuningMutex.unlock();
+        
+        CVPixelBufferRelease(pixelBuffer);
     });
     
     return type;
@@ -148,7 +149,7 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
     double second = (double)(1.0 * presentationTS.value / presentationTS.timescale);
     int64_t ts = 1000 * second;
     FileLevelLog("rtmpdump", KLog::LOG_MSG,
-                 "VideoHardEncoder::VideoCompressionOutputCallback( second : %f, ts : %lld )",
+                 "VideoHardEncoder::VideoCompressionOutputCallback( second : %.2f, ts : %lld )",
                  second,
                  ts);
     

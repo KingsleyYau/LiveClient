@@ -214,14 +214,14 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
      recordAACFilePath:(NSString *_Nullable)recordAACFilePath {
     BOOL bFlag = YES;
 
-    NSLog(@"RtmpPublisherOC::pushlishUrl( url : %@ )", url);
+    NSLog(@"RtmpPublisherOC::publishUrl( url : %@ )", url);
 
     @synchronized(self) {
         self.videoPause = NO;
     }
     self.startTime = [NSDate date];
     // 开始推流连接
-    bFlag = self.publisher->PublishUrl([url UTF8String], [recordH264FilePath UTF8String], [recordAACFilePath UTF8String]);
+    bFlag = self.publisher->PublishUrl(url?[url UTF8String]:"", recordH264FilePath?[recordH264FilePath UTF8String]:"", recordAACFilePath?[recordAACFilePath UTF8String]:"");
 
     return bFlag;
 }

@@ -51,11 +51,6 @@ typedef enum LiveStreamType {
 @property (nonatomic, assign) BOOL mute;
 
 /**
- 自定义输入
- */
-@property (strong) GPUImageFilter *inputFilter;
-
-/**
  自定义滤镜
  */
 @property (strong) GPUImageFilter *customFilter;
@@ -71,6 +66,10 @@ typedef enum LiveStreamType {
 @property (assign, readonly) NSInteger bitrate;
 
 /**
+ 自定义输入图片
+ */
+@property (nonatomic, strong) UIImage *_Nullable image;
+/**
  *  获取实例
  *
  *  @return 实例
@@ -85,7 +84,16 @@ typedef enum LiveStreamType {
  @param recordAACFilePath AAC录制路径
  @return 成功失败
  */
-- (BOOL)pushlishUrl:(NSString *)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath;
+- (BOOL)publishUrl:(NSString *)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath;
+
+/**
+ 发布流连接(本地视频)
+ 
+ @param url 连接
+ @param filePath 源文件路径
+ @return 成功失败
+ */
+- (BOOL)publishUrl:(NSString *)url withVideo:(NSString *)filePath;
 
 /**
  停止

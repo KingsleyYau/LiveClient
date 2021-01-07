@@ -37,6 +37,10 @@ NSString *const kGPUImagePictureFragmentShaderString = SHADER_STRING
     [_picture addTarget:newTarget];
 }
 
+- (void)removeTarget:(id<GPUImageInput>)targetToRemove {
+    [_picture removeTarget:targetToRemove];
+}
+
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     [super newFrameReadyAtTime:frameTime atIndex:textureIndex];
     [_picture processImage];
