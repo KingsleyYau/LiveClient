@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,13 +17,16 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="McW-Up-txE">
-                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                        <rect key="frame" x="10" y="0.0" width="80" height="80"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="McW-Up-txE" secondAttribute="height" multiplier="1:1" id="VaA-nS-UUh"/>
+                        </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jqt-4g-S5Y" userLabel="File Title Label">
-                        <rect key="frame" x="10" y="52" width="80" height="18"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                        <color key="textColor" red="0.076917149126529694" green="0.74882268905639648" blue="0.95623713731765747" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Some long name file.mp4" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jqt-4g-S5Y" userLabel="File Title Label">
+                        <rect key="frame" x="10" y="81" width="80" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -31,11 +34,10 @@
             <constraints>
                 <constraint firstItem="Jqt-4g-S5Y" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" constant="-10" id="JxU-IT-gUQ"/>
                 <constraint firstItem="McW-Up-txE" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="OMc-mk-8f7"/>
-                <constraint firstItem="McW-Up-txE" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" id="S31-bi-BlY"/>
-                <constraint firstItem="McW-Up-txE" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Tgd-7g-MxC"/>
-                <constraint firstItem="McW-Up-txE" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" id="aZ9-8a-KsO"/>
+                <constraint firstItem="McW-Up-txE" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="Tgd-7g-MxC"/>
+                <constraint firstItem="McW-Up-txE" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" constant="-10" id="aZ9-8a-KsO"/>
                 <constraint firstItem="Jqt-4g-S5Y" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="wEm-4c-fey"/>
-                <constraint firstItem="Jqt-4g-S5Y" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" constant="-30" id="z8G-8A-h6f"/>
+                <constraint firstItem="Jqt-4g-S5Y" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" constant="-2" id="z8G-8A-h6f"/>
             </constraints>
             <size key="customSize" width="167" height="169"/>
             <connections>

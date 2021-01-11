@@ -29,17 +29,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     // 导航
-    NSArray* array = [self.inputDir componentsSeparatedByString:@"/"];
-    NSString* dir = [array lastObject];
+    NSArray *array = [self.inputDir componentsSeparatedByString:@"/"];
+    NSString *dir = [array lastObject];
     self.title = dir;
     UIBarButtonItem *selectAllBarItem = [[UIBarButtonItem alloc] initWithTitle:@"All" style:UIBarButtonItemStyleDone target:self action:@selector(selectAll:)];
     self.navigationItem.rightBarButtonItem = selectAllBarItem;
-    
+
     // 列表
     [self setupCollectionView];
-    
+
     // 数据
     self.items = [NSMutableArray array];
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -63,20 +63,20 @@
                             image = [self getThumbImage:item.filePath];
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    //                            NSLog(@"%@::viewDidLoad(), [%ld, Reload]", NSStringFromClass([self class]), index);
-                                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                                //                            NSLog(@"%@::viewDidLoad(), [%ld, Reload]", NSStringFromClass([self class]), index);
+                                [self.collectionView reloadItemsAtIndexPaths:@[ indexPath ]];
                             });
                         } else {
                             image = [UIImage imageWithData:[NSData dataWithContentsOfFile:item.filePath]];
                         }
-                        
+
                         if (!image) {
                             image = [UIImage imageNamed:@"File"];
                         }
-                        
+
                         item.image = image;
                         item.firstShowImage = YES;
-                        
+
                     });
                     [self.items addObject:item];
                     index++;
@@ -130,7 +130,7 @@
 - (void)selectAll:(id)sender {
     if ([self.delegate respondsToSelector:@selector(didSelectAllFile:)]) {
         NSMutableArray *items = [NSMutableArray array];
-        for (FileItem* item in self.items) {
+        for (FileItem *item in self.items) {
             if (!item.isDirectory && [item.fileName hasSuffix:@".mp4"]) {
                 [items addObject:item];
             }
@@ -148,17 +148,17 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     StreamFileCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[StreamFileCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     [cell reset];
-    
+
     NSMutableArray *visableItems = [NSMutableArray array];
-    for(NSIndexPath *indexPath in collectionView.indexPathsForVisibleItems) {
+    for (NSIndexPath *indexPath in collectionView.indexPathsForVisibleItems) {
         [visableItems addObject:@(indexPath.row)];
     }
-    
-//    NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show], %p", NSStringFromClass([self class]), indexPath.row, cell);
+
+    //    NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show], %p", NSStringFromClass([self class]), indexPath.row, cell);
     if (indexPath.row < self.items.count) {
         FileItem *item = [self.items objectAtIndex:indexPath.row];
-        if ( item.firstShowImage ) {
-//            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show First], %p", NSStringFromClass([self class]), indexPath.row, cell);
+        if (item.firstShowImage) {
+            //            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show First], %p", NSStringFromClass([self class]), indexPath.row, cell);
             item.firstShowImage = NO;
             cell.fileImageView.alpha = 0.0f;
             [UIView animateWithDuration:1.0f
@@ -167,13 +167,13 @@
                              }];
         }
         cell.fileImageView.image = item.image;
-        if ( !item.isVideo ) {
-            cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
+        cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
+        if (!item.isVideo) {
             cell.fileImageView.contentMode = UIViewContentModeScaleAspectFit;
         } else {
             cell.fileImageView.contentMode = UIViewContentModeScaleAspectFill;
         }
-        
+
         // TODO:手势 - 长按弹出菜单
         cell.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
         cell.longPress.minimumPressDuration = 0.5;
@@ -193,7 +193,7 @@
             vc.inputDir = inputDir;
             [self.navigationController pushViewController:vc animated:YES];
         } else {
-            if ( [item isVideo] ) {
+            if ([item isVideo]) {
                 if ([self.delegate respondsToSelector:@selector(didSelectFile:)]) {
                     [self.delegate didSelectFile:item];
                 }
@@ -213,19 +213,19 @@
             return nil;
         }
         CMTime currentStartTime = kCMTimeZero;
-        for (NSInteger i = 0; i < segs.count; i ++) {
+        for (NSInteger i = 0; i < segs.count; i++) {
             if (!segs[i].isEmpty) {
                 currentStartTime = segs[i].timeMapping.target.start;
                 break;
             }
         }
-        
+
         CMTime coverAtTimeSec = CMTimeMakeWithSeconds(1, asset.duration.timescale);
         // 如果想要获取的视频时间大于视频总时长 或者小于视频实际开始时间 则设置获取视频实际开始时间
         if (CMTimeCompare(coverAtTimeSec, asset.duration) == 1 || CMTimeCompare(coverAtTimeSec, currentStartTime) == -1) {
             coverAtTimeSec = currentStartTime;
         }
-        
+
         AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         gen.appliesPreferredTrackTransform = YES;
         gen.maximumSize = CGSizeMake(640, 640);
@@ -247,44 +247,56 @@
 #pragma mark - 手势
 - (void)longPressGesture:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
-        StreamFileCollectionViewCell* cell = (StreamFileCollectionViewCell *)sender.view;
-        NSIndexPath* indexPath = [self.collectionView indexPathForCell:cell];
+        StreamFileCollectionViewCell *cell = (StreamFileCollectionViewCell *)sender.view;
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
         FileItem *item = [self.items objectAtIndex:indexPath.row];
-        UIAlertController* alertVC = [UIAlertController alertControllerWithTitle:@"Edit" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *delAction = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            NSFileManager *fm = [NSFileManager defaultManager];
-            NSError* error;
-            [fm removeItemAtPath:item.filePath error:&error];
-            if (error) {
-                NSLog(@"%@::longPressGesture( [Delete] ), error:%@", NSStringFromClass([self class]), error);
-            } else {
-                [self.items removeObjectAtIndex:indexPath.row];
-                [self reloadData];
-            }
-        }];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:item.fileName message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+        UIAlertAction *delAction = [UIAlertAction actionWithTitle:@"Delete"
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:^(UIAlertAction *_Nonnull action) {
+                                                              NSFileManager *fm = [NSFileManager defaultManager];
+                                                              NSError *error;
+                                                              [fm removeItemAtPath:item.filePath error:&error];
+                                                              if (error) {
+                                                                  NSLog(@"%@::longPressGesture( [Delete] ), error:%@", NSStringFromClass([self class]), error);
+                                                              } else {
+                                                                  [self.items removeObjectAtIndex:indexPath.row];
+                                                                  [self reloadData];
+                                                              }
+                                                          }];
         [alertVC addAction:delAction];
-        
-        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"Share" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSURL* fileURL = [NSURL fileURLWithPath:item.filePath];
-            UIActivityViewController *shareVC = [[UIActivityViewController alloc] initWithActivityItems:@[fileURL] applicationActivities:nil];
-            [self presentViewController:shareVC animated:YES completion:nil];
-        }];
-        [alertVC addAction:shareAction];
-        
-        UIAlertAction *publishImageAction = [UIAlertAction actionWithTitle:@"Publish" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if ([self.delegate respondsToSelector:@selector(didPublishFile:)]) {
-                [self.delegate didPublishFile:item];
-            }
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        }];
-        [alertVC addAction:publishImageAction];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
+
+        if (!item.isDirectory) {
+            UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"Share"
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction *_Nonnull action) {
+                                                                    NSURL *fileURL = [NSURL fileURLWithPath:item.filePath];
+                                                                    UIActivityViewController *shareVC = [[UIActivityViewController alloc] initWithActivityItems:@[ fileURL ] applicationActivities:nil];
+                                                                    [self presentViewController:shareVC animated:YES completion:nil];
+                                                                }];
+            [alertVC addAction:shareAction];
+        }
+
+        if (!item.isDirectory && !item.isVideo && item.image) {
+            UIAlertAction *publishImageAction = [UIAlertAction actionWithTitle:@"Publish"
+                                                                         style:UIAlertActionStyleDefault
+                                                                       handler:^(UIAlertAction *_Nonnull action) {
+                                                                           if ([self.delegate respondsToSelector:@selector(didPublishFile:)]) {
+                                                                               [self.delegate didPublishFile:item];
+                                                                           }
+                                                                           [self.navigationController popToRootViewControllerAnimated:YES];
+                                                                       }];
+            [alertVC addAction:publishImageAction];
+        }
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction *_Nonnull action){
+
+                                                             }];
         [alertVC addAction:cancelAction];
-        
+
         [self presentViewController:alertVC animated:YES completion:nil];
     }
 }

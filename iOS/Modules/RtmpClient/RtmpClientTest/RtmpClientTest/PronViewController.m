@@ -182,7 +182,10 @@
         [self toast:@"No video urls can be download."];
         return;
     }
-
+    
+    self.webView.hidden = YES;
+    self.downloadTextView.hidden = NO;
+    
     NSURLSessionTask *task;
     if (self.isHLS) {
         task = [[FileDownloadManager manager] downloadHLSURL:self.downloadUrlString];
@@ -274,12 +277,13 @@
         }
     }
 
-    if (urlString.length == 0) {
-        [self toast:@"No video urls can be download."];
-    }
-
     NSLog(@"PronViewController::selectDownloadURL(), [Select], %@", urlString);
     self.downloadUrlString = urlString;
+    
+//    if (urlString.length > 0) {
+//        NSString *tips = [NSString stringWithFormat:@"%@ Found!", self.downloadUrlString];
+//        [self toast:tips];
+//    }
 }
 
 - (void)changeDownloadStatus {

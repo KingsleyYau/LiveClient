@@ -14,6 +14,7 @@
 #import "RtmpPlayerOC.h"
 
 #define IDENTIFYIER @"net.qdating.rtmpclient.BackgroundSession"
+#define HLS_IDENTIFYIER @"net.qdating.rtmpclient.hls.BackgroundSession"
 
 @implementation FileDownloadItem
 - (id)init {
@@ -32,6 +33,7 @@ static FileDownloadManager *gManager = nil;
 @property (strong) NSMutableDictionary *downloadItemDict;
 @property (strong) NSMutableArray *delegates;
 @property (assign) BOOL isSessionOK;
+@property (assign) BOOL isAssetSessionOK;
 @property (strong) AVAssetDownloadURLSession *assetSession;
 @end
 
@@ -54,10 +56,12 @@ static FileDownloadManager *gManager = nil;
     self = [super init];
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:IDENTIFYIER];
     self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-    NSURLSessionConfiguration *assetConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"assetDowloadConfigIdentifier"];
-    self.assetSession = [AVAssetDownloadURLSession sessionWithConfiguration:assetConfig assetDownloadDelegate:self delegateQueue:[NSOperationQueue mainQueue]];
-
     self.isSessionOK = YES;
+    
+    NSURLSessionConfiguration *assetConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:HLS_IDENTIFYIER];
+    self.assetSession = [AVAssetDownloadURLSession sessionWithConfiguration:assetConfig assetDownloadDelegate:self delegateQueue:[NSOperationQueue mainQueue]];
+    self.isAssetSessionOK = YES;
+    
     self.downloadItemDict = [NSMutableDictionary dictionary];
     self.delegates = [NSMutableArray array];
     return self;
@@ -83,7 +87,7 @@ static FileDownloadManager *gManager = nil;
 
 - (AVAssetDownloadTask *)downloadHLSURL:(NSString *)url {
     AVAssetDownloadTask *task = nil;
-    if (self.isSessionOK) {
+    if (self.isAssetSessionOK) {
         NSLog(@"FileDownloadManager::downloadHLS(), [Start], %@", url);
         NSURL *assetURL = [NSURL URLWithString:url];
         AVURLAsset *hlsAsset = [AVURLAsset assetWithURL:assetURL];
@@ -113,6 +117,7 @@ static FileDownloadManager *gManager = nil;
     [self.session invalidateAndCancel];
     [self.session resetWithCompletionHandler:^{
     }];
+    self.isAssetSessionOK = NO;
     [self.assetSession invalidateAndCancel];
 }
 
@@ -233,9 +238,15 @@ static FileDownloadManager *gManager = nil;
         }
     }
 
-    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:IDENTIFYIER];
-    self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-    self.isSessionOK = YES;
+    if ([session isKindOfClass:[AVAssetDownloadURLSession class]]) {
+        NSURLSessionConfiguration *assetConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:HLS_IDENTIFYIER];
+        self.assetSession = [AVAssetDownloadURLSession sessionWithConfiguration:assetConfig assetDownloadDelegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        self.isAssetSessionOK = YES;
+    } else {
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:IDENTIFYIER];
+        self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        self.isSessionOK = YES;
+    }
 }
 
 #pragma mark - HLS
