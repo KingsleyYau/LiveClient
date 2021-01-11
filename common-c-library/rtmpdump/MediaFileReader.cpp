@@ -515,4 +515,137 @@ void MediaFileReader::MediaReaderHandle() {
     
     mbFinish = true;
 }
+
+bool MediaFileReader::CombineFile(const vector<string>& srcFilePaths, const string& dstFilePath) {
+    bool bFlag = false;
+    
+    int err, ret;
+    char errbuf[128];
+    const char *errbuf_ptr = errbuf;
+    
+    const string &output = dstFilePath;
+    AVFormatContext *oc;
+    bool opened = false;
+    
+    err = avformat_alloc_output_context2(&oc, NULL, NULL, output.c_str());
+    if (oc) {
+        AVStream *os_v = avformat_new_stream(oc, NULL);
+        AVStream *os_a = avformat_new_stream(oc, NULL);
+        bool os_v_copy = false;
+        bool os_a_copy = false;
+        
+        for(int i = 0; i < (int)srcFilePaths.size(); i++) {
+            const string &input = srcFilePaths[i];
+            AVFormatContext *ic;
+            
+            ic = avformat_alloc_context();
+            ic->flags |= AVFMT_FLAG_KEEP_SIDE_DATA;
+            ic->flags |= AVFMT_FLAG_NONBLOCK;
+            
+            err = avformat_open_input(&ic, input.c_str(), NULL, NULL);
+            if (err < 0) {
+                if (av_strerror(err, errbuf, sizeof(errbuf)) < 0) {
+                    errbuf_ptr = strerror(AVUNERROR(err));
+                }
+            }
+            
+            ret = avformat_find_stream_info(ic, NULL);
+            if (ret < 0) {
+                av_log(NULL, AV_LOG_FATAL, "%s: could not find codec parameters\n", input.c_str());
+                if (ic->nb_streams == 0) {
+                    avformat_close_input(&ic);
+                }
+            }
+            av_dump_format(ic, ic->nb_streams - 1, input.c_str(), 0);
+            
+            AVCodecContext *ctx = avcodec_alloc_context3(NULL);
+            AVCodecParameters *par = avcodec_parameters_alloc();
+            
+            for(int i = 0; i < ic->nb_streams; i++) {
+                AVStream *is = ic->streams[i];
+                AVStream *os;
+                if (is->codecpar->codec_type != AVMEDIA_TYPE_VIDEO && is->codecpar->codec_type != AVMEDIA_TYPE_AUDIO ) {
+                    continue;
+                }
+                
+                if( !os_v_copy && is->codecpar->codec_type == AVMEDIA_TYPE_VIDEO ) {
+                    os = os_v;
+                } else if( !os_a_copy && is->codecpar->codec_type == AVMEDIA_TYPE_AUDIO ) {
+                    os = os_a;
+                } else {
+                    continue;
+                }
+                
+                ret = avcodec_parameters_to_context(ctx, is->codecpar);
+                ret = avcodec_parameters_from_context(par, ctx);
+                
+                uint32_t codec_tag = os->codecpar->codec_tag;
+                if (!codec_tag) {
+                    unsigned int codec_tag_tmp;
+                    if (!oc->oformat->codec_tag ||
+                        av_codec_get_id (oc->oformat->codec_tag, par->codec_tag) == par->codec_id ||
+                        !av_codec_get_tag2(oc->oformat->codec_tag, par->codec_id, &codec_tag_tmp))
+                        codec_tag = par->codec_tag;
+                }
+                
+                if ( !opened ) {
+                    ret = avcodec_parameters_copy(os->codecpar, is->codecpar);
+                    if (ret < 0) {
+                        if (av_strerror(err, errbuf, sizeof(errbuf)) < 0) {
+                            errbuf_ptr = strerror(AVUNERROR(err));
+                        }
+                    }
+                    os->codecpar->codec_tag = codec_tag;
+                    
+                    ret = avformat_transfer_internal_stream_timing_info(oc->oformat, os, is, AVFMT_TBCF_AUTO);
+                    if (av_strerror(err, errbuf, sizeof(errbuf)) < 0) {
+                        errbuf_ptr = strerror(AVUNERROR(err));
+                    }
+                }
+            }
+            
+            if ( !opened ) {
+                av_dump_format(oc, oc->nb_streams - 1, output.c_str(), 1);
+
+                ret = avio_open(&oc->pb, output.c_str(), AVIO_FLAG_WRITE);
+                ret = avformat_write_header(oc, NULL);
+                if (ret < 0) {
+                    if (av_strerror(err, errbuf, sizeof(errbuf)) < 0) {
+                        errbuf_ptr = strerror(AVUNERROR(err));
+                    }
+                }
+            }
+            opened = true;
+            
+            AVPacket *pkt = av_packet_alloc();
+            while (av_read_frame(ic, pkt) >= 0) {
+                AVStream *is = ic->streams[pkt->stream_index];
+                AVStream *os;
+                if (is->codecpar->codec_type == AVMEDIA_TYPE_VIDEO ) {
+                    os = os_v;
+                } else if ( is->codecpar->codec_type == AVMEDIA_TYPE_AUDIO ) {
+                    os = os_a;
+                } else {
+                    continue;
+                }
+                
+                av_packet_rescale_ts(pkt, is->time_base, os->time_base);
+                ret = av_interleaved_write_frame(oc, pkt);
+            }
+            
+            avformat_close_input(&ic);
+            av_free(ic);
+            
+            av_free(ctx);
+            avcodec_parameters_free(&par);
+        }
+        
+        av_write_trailer(oc);
+        avio_close(oc->pb);
+        av_free(oc);
+    }
+    
+    return bFlag;
+}
+
 }

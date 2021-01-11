@@ -11,6 +11,8 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 
+#import "RtmpPlayerOC.h"
+
 #define IDENTIFYIER @"net.qdating.rtmpclient.BackgroundSession"
 
 @implementation FileDownloadItem
@@ -25,7 +27,7 @@
 @end
 
 static FileDownloadManager *gManager = nil;
-@interface FileDownloadManager () <NSURLSessionDownloadDelegate>
+@interface FileDownloadManager () <NSURLSessionDownloadDelegate, AVAssetDownloadDelegate>
 @property (strong) NSURLSession *session;
 @property (strong) NSMutableDictionary *downloadItemDict;
 @property (strong) NSMutableArray *delegates;
@@ -111,6 +113,7 @@ static FileDownloadManager *gManager = nil;
     [self.session invalidateAndCancel];
     [self.session resetWithCompletionHandler:^{
     }];
+    [self.assetSession invalidateAndCancel];
 }
 
 + (NSString *)getMd5FromString:(NSString *)string {
@@ -122,6 +125,30 @@ static FileDownloadManager *gManager = nil;
         [code appendFormat:@"%02X", result[i]];
     }
     return code;
+}
+
++ (void)getAllVideo:(NSString *)inputDir outputFilePaths:(NSMutableArray *)outputFilePaths {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error;
+
+    NSArray *fileArray = [fm contentsOfDirectoryAtPath:inputDir error:&error];
+    if (!error) {
+        for (NSString *fileName in fileArray) {
+            BOOL isDirectory = YES;
+            NSString *filePath = [inputDir stringByAppendingPathComponent:fileName];
+            if ([fm fileExistsAtPath:filePath isDirectory:&isDirectory]) {
+                if (isDirectory) {
+                    [[self class] getAllVideo:filePath outputFilePaths:outputFilePaths];
+                } else {
+                    if ([fileName containsString:@".frag"]) {
+                        [outputFilePaths addObject:filePath];
+                    }
+                }
+            }
+        }
+    } else {
+        NSLog(@"FileDownloadManager::getAllVideo(), error: %@", error);
+    }
 }
 
 #pragma mark - MP4
@@ -213,21 +240,58 @@ static FileDownloadManager *gManager = nil;
 
 #pragma mark - HLS
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
-    NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), location: %@", location);
-    
+    NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), location: %@, url: %@", location, assetDownloadTask.URLAsset.URL.absoluteString);
+
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *ouputDir = [NSString stringWithFormat:@"%@/download", cacheDir];
-    NSString *ouputFile = [NSString stringWithFormat:@"%@/%@", ouputDir, [[self class] getMd5FromString:assetDownloadTask.URLAsset.URL.absoluteString]];
+    NSString *ouputFile = [NSString stringWithFormat:@"%@/%@", ouputDir, [FileDownloadManager getMd5FromString:assetDownloadTask.URLAsset.URL.absoluteString]];
 
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *error;
     [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
     [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
+
+    NSMutableArray *srcFilePaths = [NSMutableArray array];
+    [[self class] getAllVideo:ouputFile outputFilePaths:srcFilePaths];
+
+    NSString *dstFilePath = [NSString stringWithFormat:@"%@/%lu.mp4", ouputDir, [assetDownloadTask hash]];
+    NSArray *sortPaths = [srcFilePaths sortedArrayUsingComparator:^(NSString *firstPath, NSString *secondPath) {
+        NSDictionary *firstFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:firstPath error:nil];
+        NSDictionary *secondFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:secondPath error:nil];
+        id firstData = [firstFileInfo objectForKey:NSFileModificationDate];
+        id secondData = [secondFileInfo objectForKey:NSFileModificationDate];
+        return [firstData compare:secondData];
+    }];
+    [RtmpPlayerOC combine:sortPaths dstFilePath:dstFilePath];
+
+    [fm removeItemAtPath:ouputFile error:&error];
+    if (error) {
+        NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), error: %@", error);
+    }
+
+    for (NSValue *value in self.delegates) {
+        id<AVAssetDownloadDelegate> delegate = value.nonretainedObjectValue;
+        if ([delegate respondsToSelector:@selector(URLSession:assetDownloadTask:didFinishDownloadingToURL:)]) {
+            [delegate URLSession:session
+                        assetDownloadTask:assetDownloadTask
+                didFinishDownloadingToURL:location];
+        }
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
-    NSLog(@"FileDownloadManager::didLoadTimeRange(), %.0f/%.0f second",
-          CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
+    NSLog(@"FileDownloadManager::didLoadTimeRange(), %.0f/%.0f second, %lu.mp4",
+          CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration), [assetDownloadTask hash]);
+    for (NSValue *value in self.delegates) {
+        id<AVAssetDownloadDelegate> delegate = value.nonretainedObjectValue;
+        if ([delegate respondsToSelector:@selector(URLSession:assetDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad:)]) {
+            [delegate URLSession:session
+                      assetDownloadTask:assetDownloadTask
+                       didLoadTimeRange:timeRange
+                  totalTimeRangesLoaded:loadedTimeRanges
+                timeRangeExpectedToLoad:timeRangeExpectedToLoad];
+        }
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didResolveMediaSelection:(AVMediaSelection *)resolvedMediaSelection {

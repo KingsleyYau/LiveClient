@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <vector>
 using namespace std;
 
 struct AVFormatContext;
@@ -41,6 +42,12 @@ class MediaFileReaderCallback {
 };
 
 class MediaFileReader {
+public:
+    /**
+     合并视频文件到新视频文件
+     */
+    static bool CombineFile(const vector<string>& srcFilePaths, const string& dstFilePath);
+    
   public:
     MediaFileReader();
     ~MediaFileReader();

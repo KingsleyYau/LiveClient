@@ -27,6 +27,7 @@
 
 #pragma mark - 播放控制器
 #include <rtmpdump/PlayerController.h>
+
 using namespace coollive;
 
 class PlayerStatusCallbackImp;
@@ -209,6 +210,16 @@ private:
     self.player->Stop();
     
     NSLog(@"RtmpPlayerOC::stop( [Finish], self : %p )", self);
+}
+
++ (void)combine:(NSArray<NSString *> *)srcFilePaths dstFilePath:(NSString *)dstFilePath {
+    vector<string> cSrcFilesPath;
+    if (srcFilePaths.count > 0) {
+        for(int i = 0; i < srcFilePaths.count; i++) {
+            cSrcFilesPath.push_back([srcFilePaths[i] UTF8String]);
+        }
+        MediaFileReader::CombineFile(cSrcFilesPath, [dstFilePath UTF8String]);
+    }
 }
 
 #pragma mark - 私有方法

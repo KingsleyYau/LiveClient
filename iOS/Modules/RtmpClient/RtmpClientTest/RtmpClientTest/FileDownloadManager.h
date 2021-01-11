@@ -33,6 +33,7 @@ typedef enum FileDownloadItemStatus {
 - (NSURLSessionDownloadTask *)downloadURL:(NSString *)url;
 - (AVAssetDownloadTask *)downloadHLSURL:(NSString *)url;
 - (void)cancel;
++ (NSString *)getMd5FromString:(NSString *)string;
 @end
 
 NS_ASSUME_NONNULL_END

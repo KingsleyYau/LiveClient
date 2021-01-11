@@ -82,4 +82,5 @@
  */
 - (void)stop;
 
++ (void)combine:(NSArray<NSString *> *)srcFilePaths dstFilePath:(NSString *)dstFilePath;
 @end

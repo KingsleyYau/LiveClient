@@ -9,6 +9,7 @@
 #import "PronViewController.h"
 #import "AppDelegate.h"
 #import "FileDownloadManager.h"
+#import "RtmpPlayerOC.h"
 
 @interface DownloadAttachment : NSTextAttachment
 @property (strong) NSURLSessionTask *task;
@@ -32,7 +33,8 @@
 @property (strong) NSURLSession *session;
 
 @property (strong) NSMutableDictionary *taskURLDict;
-
+@property (strong) NSString *downloadUrlString;
+@property (assign) BOOL isHLS;
 @end
 
 @implementation PronViewController
@@ -72,7 +74,7 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://www.baidu.com/";
+    NSString *urlString = @"https://cn.baidu.com/";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
@@ -118,7 +120,7 @@
     self.urlCheckDict = [NSMutableDictionary dictionary];
     self.downloadBtn.enabled = NO;
 
-    for(int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         NSString *mediaKey = [NSString stringWithFormat:@"media_%d", i];
         [self.webView evaluateJavaScript:mediaKey
                        completionHandler:^(id _Nullable response, NSError *_Nullable error) {
@@ -131,7 +133,7 @@
                        }];
     }
 
-//        NSString *js = @"document.body.innerHTML";
+    //        NSString *js = @"document.body.innerHTML";
     NSString *js = @"$('video').children()[0].src";
     [self.webView evaluateJavaScript:js
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
@@ -149,6 +151,7 @@
     NSString *original = self.urlDict[@"ORIGINAL"];
     if (self.urlCheckDict.count >= 6 || original.length > 0) {
         self.downloadBtn.enabled = YES;
+        [self selectDownloadURL];
 
         if (autoDownload && self.buttonAudoDownload.selected) {
             [self downloadAction:nil];
@@ -161,37 +164,75 @@
     [self.taskURLDict removeAllObjects];
     [self changeDownloadStatus];
 
-//    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
-//    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
-//                     completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
-//                         for (WKWebsiteDataRecord *record in records) {
-//                             [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
-//                                                                       forDataRecords:@[ record ]
-//                                                                    completionHandler:^{
-//                                                                        NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
-//                                                                    }];
-//                         }
-//                     }];
+    //    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+    //    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+    //                     completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
+    //                         for (WKWebsiteDataRecord *record in records) {
+    //                             [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
+    //                                                                       forDataRecords:@[ record ]
+    //                                                                    completionHandler:^{
+    //                                                                        NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
+    //                                                                    }];
+    //                         }
+    //                     }];
 }
 
 - (IBAction)downloadAction:(UIButton *)sender {
+    if (self.downloadUrlString.length == 0) {
+        [self toast:@"No video urls can be download."];
+        return;
+    }
+
+    NSURLSessionTask *task;
+    if (self.isHLS) {
+        task = [[FileDownloadManager manager] downloadHLSURL:self.downloadUrlString];
+    } else {
+        task = [[FileDownloadManager manager] downloadURL:self.downloadUrlString];
+    }
+    //    NSURLSessionDownloadTask *task = [[FileDownloadManager manager] downloadURL:self.downloadUrlString];
+    if (task) {
+        DownloadAttachment *att = [[DownloadAttachment alloc] init];
+        att.task = task;
+        NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Download]"
+                                                                                 attributes:@{
+                                                                                     NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                     NSForegroundColorAttributeName : [UIColor blueColor],
+                                                                                 }];
+        NSString *content = [NSString stringWithFormat:@" %@", self.downloadUrlString];
+        NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
+                                                                                          attributes:@{
+                                                                                              NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                              NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                          }];
+        [line appendAttributedString:contentAttStr];
+        att.statusString = line;
+
+        @synchronized(self) {
+            NSString *hash = [NSString stringWithFormat:@"%lu", [task hash]];
+            self.taskURLDict[hash] = att;
+        }
+        [self changeDownloadStatus];
+    }
+}
+
+- (void)selectDownloadURL {
     int maxResolution = 0;
     NSString *urlString = self.urlDict[@"ORIGINAL"];
     if (urlString.length == 0) {
-        for(NSString *key in self.urlDict) {
+        for (NSString *key in self.urlDict) {
             NSString *value = self.urlDict[key];
             NSURL *url = [NSURL URLWithString:value];
             NSString *path = url.path;
-            
+
             NSString *regex = @"^.*.mp4$";
-            NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch|NSBackwardsSearch];
+            NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch | NSBackwardsSearch];
             if (range.length > 0) {
                 regex = @"[0-9]*P";
-                NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch|NSBackwardsSearch];
+                NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch | NSBackwardsSearch];
                 if (range.length > 0) {
                     NSRange range1 = NSMakeRange(range.location, range.length - 1);
                     NSString *resolution = [path substringWithRange:range1];
-                    NSLog(@"PronViewController::downloadAction(), resolution: %@", resolution);
+                    NSLog(@"PronViewController::selectDownloadURL(), [MP4], resolution: %@", resolution);
                     if (maxResolution < [resolution intValue]) {
                         maxResolution = [resolution intValue];
                         urlString = value;
@@ -199,37 +240,46 @@
                 }
             }
         }
-    }
 
-    NSLog(@"PronViewController::downloadAction(), %@", urlString);
-    if (urlString.length > 0) {
-        NSURLSessionDownloadTask *task = [[FileDownloadManager manager] downloadURL:urlString];
-        if (task) {
-            DownloadAttachment *att = [[DownloadAttachment alloc] init];
-            att.task = task;
-            NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Download]"
-                                                                                     attributes:@{
-                                                                                         NSFontAttributeName : [UIFont systemFontOfSize:16],
-                                                                                         NSForegroundColorAttributeName : [UIColor blueColor],
-                                                                                     }];
-            NSString *content = [NSString stringWithFormat:@" %@", urlString];
-            NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
-                                                                                              attributes:@{
-                                                                                                  NSFontAttributeName : [UIFont systemFontOfSize:16],
-                                                                                                  NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
-                                                                                              }];
-            [line appendAttributedString:contentAttStr];
-            att.statusString = line;
-
-            @synchronized(self) {
-                NSString *hash = [NSString stringWithFormat:@"%lu", [task hash]];
-                self.taskURLDict[hash] = att;
-            }
-            [self changeDownloadStatus];
+        if (urlString.length > 0) {
+            self.isHLS = NO;
         }
-    } else {
-        [self toast:@"No urls can be download."];
     }
+
+    if (urlString.length == 0) {
+        for (NSString *key in self.urlDict) {
+            NSString *value = self.urlDict[key];
+            NSURL *url = [NSURL URLWithString:value];
+            NSString *path = url.path;
+
+            NSString *regex = @"^.*.m3u8";
+            NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch | NSBackwardsSearch];
+            if (range.length > 0) {
+                regex = @"[0-9]*P";
+                NSRange range = [path rangeOfString:regex options:NSRegularExpressionSearch | NSBackwardsSearch];
+                if (range.length > 0) {
+                    NSRange range1 = NSMakeRange(range.location, range.length - 1);
+                    NSString *resolution = [path substringWithRange:range1];
+                    NSLog(@"PronViewController::selectDownloadURL(), [HLS], resolution: %@", resolution);
+                    if (maxResolution < [resolution intValue]) {
+                        maxResolution = [resolution intValue];
+                        urlString = value;
+                    }
+                }
+            }
+        }
+
+        if (urlString.length > 0) {
+            self.isHLS = YES;
+        }
+    }
+
+    if (urlString.length == 0) {
+        [self toast:@"No video urls can be download."];
+    }
+
+    NSLog(@"PronViewController::selectDownloadURL(), [Select], %@", urlString);
+    self.downloadUrlString = urlString;
 }
 
 - (void)changeDownloadStatus {
@@ -380,14 +430,19 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     NSLog(@"PronViewController::didCompleteWithError(), %@", error);
     if (error) {
-        NSString *urlString = task.currentRequest.URL.absoluteString;
+        AVAssetDownloadTask *assetDownloadTask = nil;
+        if ( [task isKindOfClass:[AVAssetDownloadTask class]] ) {
+            assetDownloadTask = (AVAssetDownloadTask *)task;
+        }
+        NSString *urlString = assetDownloadTask?assetDownloadTask.URLAsset.URL.absoluteString:task.currentRequest.URL.absoluteString;
         DownloadAttachment *att = [[DownloadAttachment alloc] init];
         att.task = task;
         NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Error]"
                                                                                  attributes:@{
                                                                                      NSForegroundColorAttributeName : [UIColor redColor]
                                                                                  }];
-        NSString *content = [NSString stringWithFormat:@" %@", task.response.suggestedFilename];
+        NSString *suggestedFilename = assetDownloadTask?[NSString stringWithFormat:@"%ld", [assetDownloadTask hash]]:[NSString stringWithFormat:@"%@", task.response.suggestedFilename];;
+        NSString *content = [NSString stringWithFormat:@" %@", suggestedFilename];
         NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
                                                                                           attributes:@{
                                                                                               NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
@@ -410,6 +465,80 @@
     NSLog(@"PronViewController::didBecomeInvalidWithError(), %@", error);
 }
 
+#pragma mark - HLS
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
+    NSString *urlString = assetDownloadTask.URLAsset.URL.absoluteString;
+    float percent = 1.0 * CMTimeGetSeconds(timeRange.start) / CMTimeGetSeconds(timeRangeExpectedToLoad.duration);
+    NSString *percentString = [NSString stringWithFormat:@"(%.0f/%.0f) seconds %.0f%%",
+                               CMTimeGetSeconds(timeRange.start),
+                               CMTimeGetSeconds(timeRangeExpectedToLoad.duration),
+                               percent * 100];
+
+    NSLog(@"PronViewController::didLoadTimeRange(), %.0f/%.0f seconds",
+          CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
+    
+    DownloadAttachment *att = [[DownloadAttachment alloc] init];
+    att.task = assetDownloadTask;
+    NSString *attURL = [NSString stringWithFormat:@"Cancel://%lu", [assetDownloadTask hash]];
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Cancel]"
+                                                                             attributes:@{
+                                                                                 NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                 NSForegroundColorAttributeName : [UIColor blueColor],
+                                                                                 NSLinkAttributeName : attURL,
+                                                                                 NSAttachmentAttributeName : att
+                                                                             }];
+    NSString *content = [NSString stringWithFormat:@" %lu - %@", [assetDownloadTask hash], percentString];
+    NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
+                                                                                      attributes:@{
+                                                                                          NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                          NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                      }];
+    [line appendAttributedString:contentAttStr];
+    att.statusString = line;
+
+    @synchronized(self) {
+        if (urlString.length > 0) {
+            NSString *hash = [NSString stringWithFormat:@"%lu", [assetDownloadTask hash]];
+            self.taskURLDict[hash] = att;
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeDownloadStatus];
+    });
+}
+
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
+    NSLog(@"PronViewController::didFinishDownloadingToURL(), location: %@", location);
+    
+    NSString *urlString = assetDownloadTask.URLAsset.URL.absoluteString;
+    DownloadAttachment *att = [[DownloadAttachment alloc] init];
+    att.task = assetDownloadTask;
+    NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Finish]"
+                                                                             attributes:@{
+                                                                                 NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                 NSForegroundColorAttributeName : [UIColor greenColor]
+                                                                             }];
+    NSString *content = [NSString stringWithFormat:@" %lu", [assetDownloadTask hash]];
+    NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
+                                                                                      attributes:@{
+                                                                                          NSFontAttributeName : [UIFont systemFontOfSize:16],
+                                                                                          NSForegroundColorAttributeName : [self isDarkStyle] ? [UIColor whiteColor] : [UIColor darkGrayColor]
+                                                                                      }];
+    [line appendAttributedString:contentAttStr];
+    att.statusString = line;
+
+    @synchronized(self) {
+        if (urlString.length > 0) {
+            NSString *hash = [NSString stringWithFormat:@"%lu", [assetDownloadTask hash]];
+            self.taskURLDict[hash] = att;
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeDownloadStatus];
+    });
+}
+
+#pragma mark - WebView回调
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSLog(@"PronViewController::decidePolicyForNavigationAction(), %ld, %@", navigationAction.navigationType, navigationAction.request.URL.absoluteString);
     decisionHandler(WKNavigationActionPolicyAllow);
