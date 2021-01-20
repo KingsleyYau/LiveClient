@@ -17,6 +17,7 @@
 #import "LiveStreamPublisher.h"
 
 #import "LSImageVibrateFilter.h"
+#import "LivePictureCapture.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -32,6 +33,7 @@
 
 @property (assign) BOOL isScale;
 @property (assign) UIDeviceOrientation deviceOrientation;
+@property (assign) BOOL isKeyboardShow;
 
 @property (strong) UIImage *publishImage;
 /**
@@ -48,20 +50,21 @@
  播放器数组
  */
 @property (strong) NSMutableArray<LiveStreamPlayer *> *playerArray;
+@property (strong) LivePictureCapture *pictureCapture;
 @end
 
 @implementation StreamViewController
 #pragma mark - 界面初始化
 - (void)dealloc {
     NSLog(@"StreamViewController::dealloc()");
-    
+
     [self.player removePlayView:self.previewView];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
+
     // 界面处理
     self.title = @"Stream Player";
     // 信息
@@ -73,25 +76,30 @@
     self.sliderCacheMS.continuous = NO;
     self.sliderCacheMS.value = 1000;
     self.labelCacheMS.text = [NSString stringWithFormat:@"%dms", (int)(self.sliderCacheMS.value), nil];
+    self.isKeyboardShow = NO;
+    // TODO:拍照
+    self.pictureCapture = [[LivePictureCapture alloc] init];
     // TODO:是否录制
     [self.buttonRecord setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
 
+    // TODO:手势 - 切换展现方式
     UITapGestureRecognizer *tapImageView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(inputChangeAction:)];
     [self.imageViewInput addGestureRecognizer:tapImageView];
     self.imageViewInput.userInteractionEnabled = YES;
-
     // TODO:手势 - 单击收起键盘
-    UITapGestureRecognizer *tapCloseKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapCloseKeyboardGesture:)];
-    tapCloseKeyboard.numberOfTapsRequired = 1;
-    [self.previewView addGestureRecognizer:tapCloseKeyboard];
+    UITapGestureRecognizer *tapSingleGuesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSingleGuestureAction:)];
+    tapSingleGuesture.numberOfTapsRequired = 1;
+    [self.previewView addGestureRecognizer:tapSingleGuesture];
     // TODO:手势 - 双击全屏
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
-    tap.numberOfTapsRequired = 2;
-    [self.previewView addGestureRecognizer:tap];
+    UITapGestureRecognizer *tapDoubleGuesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDoubleGestureAction:)];
+    tapDoubleGuesture.numberOfTapsRequired = 2;
+    [self.previewView addGestureRecognizer:tapDoubleGuesture];
+    // 双击取消单击手势
+    [tapSingleGuesture requireGestureRecognizerToFail:tapDoubleGuesture];
     // TODO:手势 - 长按2倍速度播放
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureAction:)];
     longPress.minimumPressDuration = 0.5;
     [self.previewView addGestureRecognizer:longPress];
     // TODO:线控/Airpod控制事件
@@ -125,37 +133,28 @@
     self.publisher.publishView = self.previewPublishView;
     self.publisherFilter = [[LSImageVibrateFilter alloc] init];
     self.publisher.customFilter = self.publisherFilter;
-    
+
     self.sliderBitrate.maximumValue = self.publisher.bitrate;
     self.sliderBitrate.value = self.sliderBitrate.maximumValue;
     self.labelBitrate.text = [NSString stringWithFormat:@"%dkbps", (int)(self.sliderBitrate.value / 1000), nil];
-    
+
     // TODO:链接地址
     NSDictionary<NSString *, NSString *> *urls = @{
-        @"tn":@"rtmp://81.71.134.206:4000/cdn_standard/max0",           // Live
-        @"ra":@"rtmp://198.211.27.71:4000/cdn_standard/max0",
-        @"demo1":@"rtmp://52.196.96.7:4000/cdn_standard/max0",
-        @"demo2":@"rtmp://18.194.23.38:4000/cdn_standard/max0",
-        @"local":@"rtmp://172.25.32.133:4000/cdn_standard/max0",
-        @"cam":@"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",         // Camshare
-        @"camlocal":@"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
+        @"tn" : @"rtmp://81.71.134.206:4000/cdn_standard/max0", // Live
+        @"ra" : @"rtmp://198.211.27.71:4000/cdn_standard/max0",
+        @"demo1" : @"rtmp://52.196.96.7:4000/cdn_standard/max0",
+        @"demo2" : @"rtmp://18.194.23.38:4000/cdn_standard/max0",
+        @"local" : @"rtmp://172.25.32.133:4000/cdn_standard/max0",
+        @"cam" : @"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4", // Camshare
+        @"camlocal" : @"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
     };
     NSString *url = urls[@"tn"];
 
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
 
-//    [self playbackRate2x:nil];
+    //    [self playbackRate2x:nil];
     //    [self play:nil];
-    
-//    self.playerArray = [NSMutableArray array];
-//    for(int i = 0; i < 4; i ++) {
-//        LiveStreamPlayer *player = [LiveStreamPlayer instance];
-//        player.useHardDecoder = YES;
-//        NSString *url = [NSString stringWithFormat:@"rtmp://172.25.32.133:1935/mediaserver/camsahre"];
-//        [player playUrl:url recordFilePath:@"" recordH264FilePath:@"" recordAACFilePath:@""];
-//        [self.playerArray addObject:player];
-//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -167,7 +166,7 @@
 
     // 添加旋转事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-    
+
     // 添加键盘事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -181,7 +180,7 @@
 
     // 去除旋转事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-    
+
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -200,7 +199,7 @@
     [sender setSelected:YES];
     [self.button1x setSelected:NO];
     [self.button2x setSelected:NO];
-    
+
     self.playbackRate = 0.5f;
     self.player.playbackRate = 0.5f;
 }
@@ -209,7 +208,7 @@
     [sender setSelected:YES];
     [self.button0_5x setSelected:NO];
     [self.button2x setSelected:NO];
-    
+
     self.playbackRate = 1.0f;
     self.player.playbackRate = 1.0f;
 }
@@ -218,7 +217,7 @@
     [sender setSelected:YES];
     [self.button0_5x setSelected:NO];
     [self.button1x setSelected:NO];
-    
+
     self.playbackRate = 2.0f;
     self.player.playbackRate = 2.0f;
 }
@@ -270,14 +269,14 @@
     if (self.buttonRecord.selected) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
         [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
-        
-        NSDate* now = [NSDate date];
+
+        NSDate *now = [NSDate date];
         NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
         [fmt setDateFormat:@"yyyyMM_ddhhmmss"];
         NSString *dateString = [fmt stringFromDate:now];
         recordFilePath = [NSString stringWithFormat:@"%@/%@_%@.flv", recordDir, @"record", dateString];
     }
-    
+
     self.player.cacheMS = (int)roundf(self.sliderCacheMS.value);
     NSString *playUrl = [NSString stringWithFormat:@"%@", self.textFieldAddress.text];
     [self.player playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
@@ -301,15 +300,17 @@
 }
 
 #pragma mark - 播放器状态回调
-- (void)playerOnConnect:(LiveStreamPlayer * _Nonnull)player {
+- (void)playerOnConnect:(LiveStreamPlayer *_Nonnull)player {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.loadingView.hidden = YES;
     });
 }
 
-- (void)playerOnDisconnect:(LiveStreamPlayer * _Nonnull)player {
+- (void)playerOnDisconnect:(LiveStreamPlayer *_Nonnull)player {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.loadingView.hidden = NO;
+        if (self.player.filePath.length == 0) {
+            self.loadingView.hidden = NO;
+        }
     });
 }
 
@@ -344,8 +345,8 @@
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
 
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    //    NSFileManager *fileManager = [NSFileManager defaultManager];
+    //    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
@@ -395,7 +396,7 @@
     if (self.publisher) {
         UIImage *image = nil;
         if (!self.publisher.image) {
-            image = self.publishImage?self.publishImage:[UIImage imageNamed:@"P0"];
+            image = self.publishImage ? self.publishImage : [UIImage imageNamed:@"P0"];
             self.publisher.image = image;
         } else {
             image = [UIImage imageNamed:@"C"];
@@ -414,7 +415,7 @@
     NSLog(@"StreamViewController::publisherOnDisconnect()");
 }
 
-- (void)publisherOnError:(LiveStreamPublisher *)publisher code:(NSString * _Nullable)code description:(NSString * _Nullable)description {
+- (void)publisherOnError:(LiveStreamPublisher *)publisher code:(NSString *_Nullable)code description:(NSString *_Nullable)description {
     NSLog(@"StreamViewController::publisherOnError(), code: %@, description: %@", code, description);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self toast:description];
@@ -425,6 +426,30 @@
 - (IBAction)browserAction:(UIButton *)sender {
     PronViewController *vc = [[PronViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - 拍照
+- (IBAction)captureAction:(UIButton *)sender {
+    UIInterfaceOrientation orientation = UIInterfaceOrientationPortrait;
+    switch (self.deviceOrientation) {
+        case UIDeviceOrientationPortrait: {
+            orientation = UIInterfaceOrientationPortrait;
+        } break;
+        case UIDeviceOrientationPortraitUpsideDown: {
+            orientation = UIInterfaceOrientationPortraitUpsideDown;
+        } break;
+        case UIDeviceOrientationLandscapeLeft: {
+            orientation = UIInterfaceOrientationLandscapeRight;
+        } break;
+        case UIDeviceOrientationLandscapeRight: {
+            orientation = UIInterfaceOrientationLandscapeLeft;
+        } break;
+    }
+
+    [self.pictureCapture capture:orientation
+                   captureFinish:^(NSString *_Nonnull filePath) {
+                       [self toast:@"OK"];
+                   }];
 }
 
 #pragma mark - 输入回调
@@ -444,7 +469,7 @@
     if (height != 0) {
         // 弹出键盘
         self.controlBottom.constant = -(height + 20);
-        
+
     } else {
         // 收起键盘
         self.controlBottom.constant = -20;
@@ -462,6 +487,7 @@
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {
+    self.isKeyboardShow = YES;
     NSDictionary *userInfo = [notification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
@@ -473,6 +499,7 @@
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
+    self.isKeyboardShow = NO;
     NSDictionary *userInfo = [notification userInfo];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
@@ -533,17 +560,21 @@
 }
 
 #pragma mark - 手势
-- (void)tapCloseKeyboardGesture:(UITapGestureRecognizer *)sender {
-    [self.textFieldAddress resignFirstResponder];
-    [self.textFieldPublishAddress resignFirstResponder];
+- (void)tapSingleGuestureAction:(UITapGestureRecognizer *)sender {
+    if (self.isKeyboardShow) {
+        [self.textFieldAddress resignFirstResponder];
+        [self.textFieldPublishAddress resignFirstResponder];
+    } else {
+        [self captureAction:nil];
+    }
 }
 
-- (void)tapGesture:(UITapGestureRecognizer *)sender {
+- (void)tapDoubleGestureAction:(UITapGestureRecognizer *)sender {
     self.isScale = !self.isScale;
     [self changeOrientation];
 }
 
-- (void)longPressGesture:(UILongPressGestureRecognizer *)sender {
+- (void)longPressGestureAction:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         self.player.playbackRate = 2.0;
     } else if (sender.state == UIGestureRecognizerStateEnded) {
@@ -628,7 +659,7 @@
 }
 
 #pragma mark - 播放本地文件
-- (void)didSelectFile:(FileItem *)fileItem {
+- (void)didPlayFile:(FileItem *)fileItem {
     self.fileItemArray = nil;
     self.fileItem = fileItem;
 
@@ -636,16 +667,18 @@
 
     self.player.cacheMS = 50;
     [self.player playFilePath:self.fileItem.filePath];
+    self.loadingView.hidden = YES;
 }
 
-- (void)didSelectAllFile:(NSArray<FileItem *> *)fileItemArray {
+- (void)didPlayAllFile:(NSArray<FileItem *> *)fileItemArray {
     self.fileItemArray = fileItemArray;
     self.player.cacheMS = 50;
-    
+
     if (self.fileItemArray.count > 0) {
         self.fileItemIndex = arc4random() % self.fileItemArray.count;
         [self playNextFileItem];
     }
+    self.loadingView.hidden = YES;
 }
 
 #pragma mark - 推送本地文件

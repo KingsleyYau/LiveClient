@@ -6,9 +6,12 @@
 //  Copyright © 2020年 net.qdating. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
+
 #import "StreamFileCollectionViewController.h"
 #import "StreamFileCollectionViewCell.h"
-#import <AVFoundation/AVFoundation.h>
+#import "FileDownloadManager.h"
+#import "RtmpPlayerOC.h"
 
 @implementation FileItem
 - (BOOL)isVideo {
@@ -19,6 +22,7 @@
 @interface StreamFileCollectionViewController ()
 @property (weak) IBOutlet UICollectionView *collectionView;
 @property (strong) NSMutableArray *items;
+@property (weak) IBOutlet UIImageView *imageView;
 
 @end
 
@@ -47,7 +51,18 @@
 
     NSInteger index = 0;
     NSArray *fileArray = [fm contentsOfDirectoryAtPath:self.inputDir error:nil];
-    for (NSString *fileName in fileArray) {
+    NSArray *sortFileArray = [fileArray sortedArrayUsingComparator:^(NSString *firstFileName, NSString *secondFileName) {
+        NSString *firstFilePath = [self.inputDir stringByAppendingPathComponent:firstFileName];
+        NSString *secondFilePath = [self.inputDir stringByAppendingPathComponent:secondFileName];
+        NSDictionary *firstFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:firstFilePath error:nil];
+        NSDictionary *secondFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:secondFilePath error:nil];
+        id firstDate = [firstFileInfo objectForKey:NSFileModificationDate];
+        id secondDate = [secondFileInfo objectForKey:NSFileModificationDate];
+        NSComparisonResult order = [secondDate compare:firstDate];
+        return order;
+    }];
+    
+    for (NSString *fileName in sortFileArray) {
         BOOL flag = YES;
         NSString *filePath = [self.inputDir stringByAppendingPathComponent:fileName];
         if ([fm fileExistsAtPath:filePath isDirectory:&flag]) {
@@ -57,15 +72,12 @@
                     FileItem *item = [[FileItem alloc] init];
                     item.fileName = fileName;
                     item.filePath = filePath;
+                    [self.items addObject:item];
+                    
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                         UIImage *image;
                         if ([fileName containsString:@".mp4"]) {
                             image = [self getThumbImage:item.filePath];
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                //                            NSLog(@"%@::viewDidLoad(), [%ld, Reload]", NSStringFromClass([self class]), index);
-                                [self.collectionView reloadItemsAtIndexPaths:@[ indexPath ]];
-                            });
                         } else {
                             image = [UIImage imageWithData:[NSData dataWithContentsOfFile:item.filePath]];
                         }
@@ -74,11 +86,17 @@
                             image = [UIImage imageNamed:@"File"];
                         }
 
-                        item.image = image;
-                        item.firstShowImage = YES;
-
+                        int ms = arc4random() % 200;
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(ms * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+                            item.image = image;
+                            item.firstShowImage = YES;
+                            
+                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                            [self.collectionView reloadItemsAtIndexPaths:@[ indexPath ]];
+                        });
                     });
-                    [self.items addObject:item];
+                    
                     index++;
                 }
             } else {
@@ -120,6 +138,8 @@
 
     self.collectionView.backgroundView = nil;
     self.collectionView.backgroundColor = [UIColor clearColor];
+    self.collectionView.bounces = YES;
+    self.collectionView.alwaysBounceVertical = YES;
 }
 
 #pragma mark - 数据逻辑
@@ -128,14 +148,14 @@
 }
 
 - (void)selectAll:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(didSelectAllFile:)]) {
+    if ([self.delegate respondsToSelector:@selector(didPlayAllFile:)]) {
         NSMutableArray *items = [NSMutableArray array];
         for (FileItem *item in self.items) {
             if (!item.isDirectory && [item.fileName hasSuffix:@".mp4"]) {
                 [items addObject:item];
             }
         }
-        [self.delegate didSelectAllFile:items];
+        [self.delegate didPlayAllFile:items];
     }
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
@@ -157,21 +177,25 @@
     //    NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show], %p", NSStringFromClass([self class]), indexPath.row, cell);
     if (indexPath.row < self.items.count) {
         FileItem *item = [self.items objectAtIndex:indexPath.row];
-        if (item.firstShowImage) {
-            //            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show First], %p", NSStringFromClass([self class]), indexPath.row, cell);
-            item.firstShowImage = NO;
-            cell.fileImageView.alpha = 0.0f;
-            [UIView animateWithDuration:1.0f
-                             animations:^{
-                                 cell.fileImageView.alpha = 1.0;
-                             }];
-        }
         cell.fileImageView.image = item.image;
         cell.fileNameLabel.text = [NSString stringWithFormat:@"%@", item.fileName];
         if (!item.isVideo) {
             cell.fileImageView.contentMode = UIViewContentModeScaleAspectFit;
         } else {
             cell.fileImageView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+        // 图片
+        if (item.firstShowImage) {
+            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show Image First], %p", NSStringFromClass([self class]), indexPath.row, cell);
+            item.firstShowImage = NO;
+            cell.fileImageView.alpha = 0.0f;
+            [UIView setAnimationsEnabled:YES];
+            [UIView animateWithDuration:1.0f
+                             animations:^{
+                                 cell.fileImageView.alpha = 1.0;
+                             }];
+        } else {
+            NSLog(@"%@::cellForItemAtIndexPath(), [%ld, Show], %p", NSStringFromClass([self class]), indexPath.row, cell);
         }
 
         // TODO:手势 - 长按弹出菜单
@@ -194,10 +218,13 @@
             [self.navigationController pushViewController:vc animated:YES];
         } else {
             if ([item isVideo]) {
-                if ([self.delegate respondsToSelector:@selector(didSelectFile:)]) {
-                    [self.delegate didSelectFile:item];
+                if ([self.delegate respondsToSelector:@selector(didPlayFile:)]) {
+                    [self.delegate didPlayFile:item];
                 }
                 [self.navigationController popToRootViewControllerAnimated:YES];
+            } else if (item.image) {
+                StreamFileCollectionViewCell *cell = (StreamFileCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+                [self showImage:item.image fromView:cell.fileImageView];
             }
         }
     }
@@ -228,7 +255,7 @@
 
         AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         gen.appliesPreferredTrackTransform = YES;
-        gen.maximumSize = CGSizeMake(640, 640);
+        gen.maximumSize = CGSizeMake(240, 240);
         NSError *error = nil;
         CMTime actualTime;
         CGImageRef image = [gen copyCGImageAtTime:coverAtTimeSec actualTime:&actualTime error:&error];
@@ -276,9 +303,16 @@
                                                                     [self presentViewController:shareVC animated:YES completion:nil];
                                                                 }];
             [alertVC addAction:shareAction];
+        } else {
+            UIAlertAction *combineAction = [UIAlertAction actionWithTitle:@"Combine"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction *_Nonnull action) {
+                                                                      [self combineFrag:item];
+                                                                  }];
+            [alertVC addAction:combineAction];
         }
 
-        if (!item.isDirectory && !item.isVideo && item.image) {
+        if (!item.isDirectory && item.image) {
             UIAlertAction *publishImageAction = [UIAlertAction actionWithTitle:@"Publish"
                                                                          style:UIAlertActionStyleDefault
                                                                        handler:^(UIAlertAction *_Nonnull action) {
@@ -313,4 +347,29 @@
     return UIInterfaceOrientationPortrait;
 }
 
+- (void)combineFrag:(FileItem *)item {
+    if (item.isDirectory) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSMutableArray *srcFilePaths = [NSMutableArray array];
+            [[FileDownloadManager class] getAllVideo:item.filePath outputFilePaths:srcFilePaths];
+
+            NSString *dstFilePath = [NSString stringWithFormat:@"%@/../%@.mp4", item.filePath, item.fileName];
+            NSArray *sortPaths = [srcFilePaths sortedArrayUsingComparator:^(NSString *firstPath, NSString *secondPath) {
+                NSDictionary *firstFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:firstPath error:nil];
+                NSDictionary *secondFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:secondPath error:nil];
+                id firstData = [firstFileInfo objectForKey:NSFileModificationDate];
+                id secondData = [secondFileInfo objectForKey:NSFileModificationDate];
+                return [firstData compare:secondData];
+            }];
+
+            [RtmpPlayerOC combine:sortPaths dstFilePath:dstFilePath];
+            
+            NSLog(@"%@::combineFrag(), [Finish]", NSStringFromClass([self class]));
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *tips = [NSString stringWithFormat:@"Combined %@", dstFilePath];
+                [self toast:tips];
+            });
+        });
+    }
+}
 @end

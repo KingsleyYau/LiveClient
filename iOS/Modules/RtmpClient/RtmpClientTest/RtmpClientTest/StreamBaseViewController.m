@@ -13,6 +13,8 @@
 
 @interface StreamBaseViewController ()
 @property (weak) StreamToastView *taostView;
+@property (assign) CGRect fromRect;
+@property (assign) UIView *fromView;
 @end
 
 @implementation StreamBaseViewController
@@ -60,22 +62,71 @@
 
 - (void)toast:(NSString *)msg {
     [self.taostView removeFromSuperview];
-    
+
     self.taostView = [StreamToastView view];
     [self.view addSubview:self.taostView];
-    
+
     self.taostView.msgLabel.text = msg;
     CGSize size = [self.taostView.msgLabel sizeThatFits:CGSizeZero];
     [self.taostView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).offset(10);
+        make.right.equalTo(self.view).offset(-10);
         make.center.equalTo(self.view);
     }];
     [self.taostView.msgLabel sizeToFit];
-//    [self.view layoutIfNeeded];
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.taostView removeFromSuperview];
         self.taostView = nil;
     });
+}
+
+#pragma mark - 全屏图片预览
+- (void)showImage:(UIImage *)image fromView:(UIView *)fromView {
+    // Convert to window
+    CGRect fromRect = [fromView convertRect:fromView.bounds toView:nil];
+    self.fromRect = fromRect;
+    // 全屏幕图片
+    UIView *container = [UIApplication sharedApplication].delegate.window;
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:fromRect];
+    imageView.backgroundColor = [UIColor blackColor];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.userInteractionEnabled = YES;
+    imageView.image = image;
+    [container addSubview:imageView];
+
+    // TODO:手势 - 单击收起全屏
+    UITapGestureRecognizer *tapSingleGuesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSingleGuestureAction:)];
+    tapSingleGuesture.numberOfTapsRequired = 1;
+    [imageView addGestureRecognizer:tapSingleGuesture];
+
+    self.fromView = fromView;
+    self.fromView.hidden = YES;
+    NSTimeInterval duration = 0.18;
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         // Make all constraint changes here, Called on parent view
+                         imageView.frame = container.frame;
+                     }
+                     completion:^(BOOL finished){
+                     }];
+}
+
+- (void)tapSingleGuestureAction:(UITapGestureRecognizer *)sender {
+    UIImageView *imageView = (UIImageView *)sender.view;
+
+    NSTimeInterval duration = 0.18;
+    imageView.backgroundColor = [UIColor clearColor];
+    [UIView animateWithDuration:duration
+        animations:^{
+            // Make all constraint changes here, Called on parent view
+            imageView.frame = self.fromRect;
+        }
+        completion:^(BOOL finished) {
+            [imageView removeFromSuperview];
+            self.fromView.hidden = NO;
+            self.fromView = nil;
+        }];
 }
 
 - (BOOL)shouldAutorotate {

@@ -252,42 +252,45 @@ static FileDownloadManager *gManager = nil;
 #pragma mark - HLS
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
     NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), location: %@, url: %@", location, assetDownloadTask.URLAsset.URL.absoluteString);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *ouputDir = [NSString stringWithFormat:@"%@/download", cacheDir];
+        NSString *ouputFile = [NSString stringWithFormat:@"%@/%@", ouputDir, [FileDownloadManager getMd5FromString:assetDownloadTask.URLAsset.URL.absoluteString]];
 
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *ouputDir = [NSString stringWithFormat:@"%@/download", cacheDir];
-    NSString *ouputFile = [NSString stringWithFormat:@"%@/%@", ouputDir, [FileDownloadManager getMd5FromString:assetDownloadTask.URLAsset.URL.absoluteString]];
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSError *error;
+        [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
+        [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
 
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSError *error;
-    [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
-    [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
+        NSMutableArray *srcFilePaths = [NSMutableArray array];
+        [[self class] getAllVideo:ouputFile outputFilePaths:srcFilePaths];
 
-    NSMutableArray *srcFilePaths = [NSMutableArray array];
-    [[self class] getAllVideo:ouputFile outputFilePaths:srcFilePaths];
-
-    NSString *dstFilePath = [NSString stringWithFormat:@"%@/%lu.mp4", ouputDir, [assetDownloadTask hash]];
-    NSArray *sortPaths = [srcFilePaths sortedArrayUsingComparator:^(NSString *firstPath, NSString *secondPath) {
-        NSDictionary *firstFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:firstPath error:nil];
-        NSDictionary *secondFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:secondPath error:nil];
-        id firstData = [firstFileInfo objectForKey:NSFileModificationDate];
-        id secondData = [secondFileInfo objectForKey:NSFileModificationDate];
-        return [firstData compare:secondData];
-    }];
-    [RtmpPlayerOC combine:sortPaths dstFilePath:dstFilePath];
-
-    [fm removeItemAtPath:ouputFile error:&error];
-    if (error) {
-        NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), error: %@", error);
-    }
-
-    for (NSValue *value in self.delegates) {
-        id<AVAssetDownloadDelegate> delegate = value.nonretainedObjectValue;
-        if ([delegate respondsToSelector:@selector(URLSession:assetDownloadTask:didFinishDownloadingToURL:)]) {
-            [delegate URLSession:session
-                        assetDownloadTask:assetDownloadTask
-                didFinishDownloadingToURL:location];
+        NSString *dstFilePath = [NSString stringWithFormat:@"%@/%lu.mp4", ouputDir, [assetDownloadTask hash]];
+        NSArray *sortPaths = [srcFilePaths sortedArrayUsingComparator:^(NSString *firstPath, NSString *secondPath) {
+            NSDictionary *firstFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:firstPath error:nil];
+            NSDictionary *secondFileInfo = [[NSFileManager defaultManager] attributesOfItemAtPath:secondPath error:nil];
+            id firstDate = [firstFileInfo objectForKey:NSFileModificationDate];
+            id secondDate = [secondFileInfo objectForKey:NSFileModificationDate];
+            return [firstDate compare:secondDate];
+        }];
+        
+        [RtmpPlayerOC combine:sortPaths dstFilePath:dstFilePath];
+        
+        [fm removeItemAtPath:ouputFile error:&error];
+        if (error) {
+            NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), error: %@", error);
         }
-    }
+
+        for (NSValue *value in self.delegates) {
+            id<AVAssetDownloadDelegate> delegate = value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(URLSession:assetDownloadTask:didFinishDownloadingToURL:)]) {
+                [delegate URLSession:session
+                            assetDownloadTask:assetDownloadTask
+                    didFinishDownloadingToURL:location];
+            }
+        }
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {

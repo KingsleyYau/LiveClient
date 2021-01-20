@@ -15,6 +15,7 @@
 		507118962563B158001F14CC /* StreamToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 507118952563B158001F14CC /* StreamToastView.m */; };
 		507118992563B18C001F14CC /* StreamToastView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507118982563B18C001F14CC /* StreamToastView.xib */; };
 		508029B725A8037E003E0D8A /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 508029B625A8037E003E0D8A /* libbz2.tbd */; };
+		508029E725AD323F003E0D8A /* LivePictureCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 508029E625AD323B003E0D8A /* LivePictureCapture.m */; };
 		5080C84A2558EB5E00F5E4F3 /* StreamNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5080C8492558EB5E00F5E4F3 /* StreamNavigationController.m */; };
 		509187432542AAA00073BECA /* PronViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187412542AAA00073BECA /* PronViewController.m */; };
 		509187442542AAA00073BECA /* PronViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509187422542AAA00073BECA /* PronViewController.xib */; };
@@ -91,6 +92,8 @@
 		507118952563B158001F14CC /* StreamToastView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StreamToastView.m; sourceTree = "<group>"; };
 		507118982563B18C001F14CC /* StreamToastView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamToastView.xib; sourceTree = "<group>"; };
 		508029B625A8037E003E0D8A /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		508029E525AD323B003E0D8A /* LivePictureCapture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LivePictureCapture.h; sourceTree = "<group>"; };
+		508029E625AD323B003E0D8A /* LivePictureCapture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LivePictureCapture.m; sourceTree = "<group>"; };
 		5080C8482558EB5E00F5E4F3 /* StreamNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamNavigationController.h; sourceTree = "<group>"; };
 		5080C8492558EB5E00F5E4F3 /* StreamNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StreamNavigationController.m; sourceTree = "<group>"; };
 		509187402542AAA00073BECA /* PronViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PronViewController.h; sourceTree = "<group>"; };
@@ -282,6 +285,8 @@
 				50DAEF94213641E900FB374D /* ImageCVPixelBufferInput.m */,
 				50DAEF92213641E900FB374D /* LFGPUImageBeautyFilter.h */,
 				50DAEF8D213641E900FB374D /* LFGPUImageBeautyFilter.m */,
+				508029E525AD323B003E0D8A /* LivePictureCapture.h */,
+				508029E625AD323B003E0D8A /* LivePictureCapture.m */,
 				50DAEF97213641E900FB374D /* LiveStreamPlayer.h */,
 				50DAEF90213641E900FB374D /* LiveStreamPlayer.m */,
 				50DAEF95213641E900FB374D /* LiveStreamPublisher.h */,
@@ -500,6 +505,7 @@
 				50701DAB25A597B5007F56DF /* LSImageMovie.m in Sources */,
 				50DAEF99213641E900FB374D /* LFGPUImageBeautyFilter.m in Sources */,
 				50DAEF98213641E900FB374D /* GPUImageBeautifyFilter.m in Sources */,
+				508029E725AD323F003E0D8A /* LivePictureCapture.m in Sources */,
 				50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */,
 				50701D8225A44F10007F56DF /* LSImagePictureFilter.m in Sources */,
 				50E8AF7E25358E5700DECC7D /* StreamFileCollectionViewController.m in Sources */,

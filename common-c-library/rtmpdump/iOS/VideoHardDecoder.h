@@ -60,6 +60,8 @@ private:
     void DestroyContext();
     char* FindSlice(char* start, int size, int& sliceSize);
     bool CheckVideoSize();
+    bool CheckVideoSizeH264();
+    bool CheckVideoSizeHEVC();
     
 private:
     VideoDecoderCallback* mpCallback;

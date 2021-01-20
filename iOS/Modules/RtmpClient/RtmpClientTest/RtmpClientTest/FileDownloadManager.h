@@ -34,6 +34,7 @@ typedef enum FileDownloadItemStatus {
 - (AVAssetDownloadTask *)downloadHLSURL:(NSString *)url;
 - (void)cancel;
 + (NSString *)getMd5FromString:(NSString *)string;
++ (void)getAllVideo:(NSString *)inputDir outputFilePaths:(NSMutableArray *)outputFilePaths;
 @end
 
 NS_ASSUME_NONNULL_END

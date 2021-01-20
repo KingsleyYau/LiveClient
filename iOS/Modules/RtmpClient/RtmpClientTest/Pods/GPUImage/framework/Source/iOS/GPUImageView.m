@@ -28,6 +28,9 @@
 
 @property (assign, nonatomic) CGRect viewBounds;
 
+@property (nonatomic, strong) CALayer  *glLayer;
+
+@property(nonatomic) BOOL keepLastFrame;
 // Initialization and teardown
 - (void)commonInit;
 
@@ -95,7 +98,7 @@
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
 
     self.enabled = YES;
-    
+    self.glLayer = self.layer;
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
         
@@ -143,6 +146,7 @@
             [self destroyDisplayFramebuffer];
             [self createDisplayFramebuffer];
             [self recalculateViewGeometry];
+//            [self newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
         });
     }
 }
@@ -150,6 +154,10 @@
 - (void)dealloc
 {
     runSynchronouslyOnVideoProcessingQueue(^{
+        if (inputFramebufferForDisplay) {
+            [inputFramebufferForDisplay unlock];
+            inputFramebufferForDisplay = nil;
+        }
         [self destroyDisplayFramebuffer];
     });
 }
@@ -167,7 +175,7 @@
     glGenRenderbuffers(1, &displayRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, displayRenderbuffer);
 	
-    [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
+    [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.glLayer];
 	
     GLint backingWidth, backingHeight;
 
@@ -388,8 +396,11 @@
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
         [self presentFramebuffer];
-        [inputFramebufferForDisplay unlock];
-        inputFramebufferForDisplay = nil;
+        
+//        if (!_keepLastFrame) {
+            [inputFramebufferForDisplay unlock];
+            inputFramebufferForDisplay = nil;
+//        }
     });
 }
 
@@ -400,6 +411,10 @@
 
 - (void)setInputFramebuffer:(GPUImageFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex;
 {
+//    if (inputFramebufferForDisplay) {
+//        [inputFramebufferForDisplay unlock];
+//        inputFramebufferForDisplay = nil;
+//    }
     inputFramebufferForDisplay = newInputFramebuffer;
     [inputFramebufferForDisplay lock];
 }

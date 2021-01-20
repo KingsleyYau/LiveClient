@@ -74,19 +74,21 @@
         
         outputFramebuffer = [[GPUImageFramebuffer alloc] initWithSize:CGSizeMake(bufferWidth, bufferHeight) overriddenTexture:CVOpenGLESTextureGetName(textureRef)];
         
-        for (id<GPUImageInput> currentTarget in targets) {
-            if ([currentTarget enabled]) {
-                NSInteger indexOfObject = [targets indexOfObject:currentTarget];
-                NSInteger targetTextureIndex = [[targetTextureIndices objectAtIndex:indexOfObject] integerValue];
-                if (currentTarget != self.targetToIgnoreForUpdates) {
-                    [currentTarget setInputSize:CGSizeMake(bufferWidth, bufferHeight) atIndex:targetTextureIndex];
-                    [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
-                    [currentTarget newFrameReadyAtTime:frameTime atIndex:targetTextureIndex];
-                } else {
-                    [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
+        runAsynchronouslyOnVideoProcessingQueue(^{
+            for (id<GPUImageInput> currentTarget in targets) {
+                if ([currentTarget enabled]) {
+                    NSInteger indexOfObject = [targets indexOfObject:currentTarget];
+                    NSInteger targetTextureIndex = [[targetTextureIndices objectAtIndex:indexOfObject] integerValue];
+                    if (currentTarget != self.targetToIgnoreForUpdates) {
+                        [currentTarget setInputSize:CGSizeMake(bufferWidth, bufferHeight) atIndex:targetTextureIndex];
+                        [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
+                        [currentTarget newFrameReadyAtTime:frameTime atIndex:targetTextureIndex];
+                    } else {
+                        [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
+                    }
                 }
             }
-        }
+        });
         
         CFRelease(textureRef);
     }

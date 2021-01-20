@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface StreamBaseViewController : UIViewController
 - (BOOL)isDarkStyle;
 - (void)toast:(NSString *)msg;
+- (void)showImage:(UIImage *)image fromView:(UIView *)fromView;
 @end
 
 NS_ASSUME_NONNULL_END

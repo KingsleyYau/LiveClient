@@ -347,6 +347,7 @@
     return param;
 }
 
+// TODO:切换预览界面
 - (void)setPublishView:(GPUImageView *)publishView {
     if (_publishView != publishView) {
         _publishView = publishView;

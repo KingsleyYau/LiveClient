@@ -701,6 +701,17 @@ char *VideoHardDecoder::FindSlice(char *start, int size, int &sliceSize) {
 bool VideoHardDecoder::CheckVideoSize() {
     bool bFlag = false;
 
+    if ( mVpsSize > 0 && mpVps ) {
+        bFlag = CheckVideoSizeHEVC();
+    } else {
+        bFlag = CheckVideoSizeH264();
+    }
+    return bFlag;
+}
+
+bool VideoHardDecoder::CheckVideoSizeH264() {
+    bool bFlag = false;
+    
     unsigned char *sliceData = (unsigned char *)mpSps + 1;
     int sliceLenOriginal = mSpSize - 1;
 
@@ -762,7 +773,7 @@ bool VideoHardDecoder::CheckVideoSize() {
         ) {
         FileLevelLog("rtmpdump",
                      KLog::LOG_WARNING,
-                     "VideoHardDecoder::CheckVideoSize( "
+                     "VideoHardDecoder::CheckVideoSizeH264( "
                      "this : %p, "
                      "[New Video Coded Size], "
                      "mSpSize : %d, "
@@ -826,7 +837,7 @@ bool VideoHardDecoder::CheckVideoSize() {
         if (bFlag) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
-                         "VideoHardDecoder::CheckVideoSize( "
+                         "VideoHardDecoder::CheckVideoSizeH264( "
                          "this : %p, "
                          "[New Video Display Size], "
                          "[%dx%d] => [%dx%d], "
@@ -852,7 +863,7 @@ bool VideoHardDecoder::CheckVideoSize() {
         if (bFlag) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
-                         "VideoHardDecoder::CheckVideoSize( "
+                         "VideoHardDecoder::CheckVideoSizeH264( "
                          "this : %p, "
                          "[New Video Display Size], "
                          "[%dx%d] => [%dx%d] "
@@ -872,4 +883,185 @@ bool VideoHardDecoder::CheckVideoSize() {
     
     return bFlag;
 }
+
+bool VideoHardDecoder::CheckVideoSizeHEVC() {
+    bool bFlag = false;
+    
+    unsigned char *sliceData = (unsigned char *)mpSps + 1;
+    int sliceLenOriginal = mSpSize - 1;
+
+    unsigned int startBit = 0;
+    // sps_video_parameter_set_id
+    U(4, (unsigned char *)sliceData, startBit);
+    
+    int sps_max_sub_layers_minus1 = U(3, (unsigned char *)sliceData, startBit);
+    int temporal_id_nested = U(1, (unsigned char *)sliceData, startBit);
+    
+    int profile_space               = U(2, (unsigned char *)sliceData, startBit);
+    int tier_flag                   = U(1, (unsigned char *)sliceData, startBit);
+    int profile_idc                 = U(5, (unsigned char *)sliceData, startBit);
+    int profile_compatibility_flags = U(32, (unsigned char *)sliceData, startBit);
+    int constraint_indicator_flags  = U(48, (unsigned char *)sliceData, startBit);
+    int level_idc                   = U(8, (unsigned char *)sliceData, startBit);
+    
+    static const uint8_t HEVC_MAX_SUB_LAYERS = 7;
+    uint8_t sub_layer_profile_present_flag[HEVC_MAX_SUB_LAYERS];
+    uint8_t sub_layer_level_present_flag[HEVC_MAX_SUB_LAYERS];
+    
+    for (int i = 0; i < sps_max_sub_layers_minus1; i++) {
+        sub_layer_profile_present_flag[i] = U(1, (unsigned char *)sliceData, startBit);
+        sub_layer_level_present_flag[i]   = U(1, (unsigned char *)sliceData, startBit);
+    }
+
+    if (sps_max_sub_layers_minus1 > 0)
+        for (int i = sps_max_sub_layers_minus1; i < 8; i++) {
+            // reserved_zero_2bits[i]
+            U(2, (unsigned char *)sliceData, startBit);
+        }
+
+    for (int i = 0; i < sps_max_sub_layers_minus1; i++) {
+        if (sub_layer_profile_present_flag[i]) {
+            /*
+             * sub_layer_profile_space[i]                     u(2)
+             * sub_layer_tier_flag[i]                         u(1)
+             * sub_layer_profile_idc[i]                       u(5)
+             * sub_layer_profile_compatibility_flag[i][0..31] u(32)
+             * sub_layer_progressive_source_flag[i]           u(1)
+             * sub_layer_interlaced_source_flag[i]            u(1)
+             * sub_layer_non_packed_constraint_flag[i]        u(1)
+             * sub_layer_frame_only_constraint_flag[i]        u(1)
+             * sub_layer_reserved_zero_44bits[i]              u(44)
+             */
+            U(32, (unsigned char *)sliceData, startBit);
+            U(32, (unsigned char *)sliceData, startBit);
+            U(24, (unsigned char *)sliceData, startBit);
+        }
+
+        if (sub_layer_level_present_flag[i]) {
+            U(8, (unsigned char *)sliceData, startBit);
+        }
+    }
+    
+    int sps_seq_parameter_set_id = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    int chroma_format_idc = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    if (chroma_format_idc == 3) {
+        int residual_colour_transform_flag = U(1, (unsigned char *)sliceData, startBit);
+    }
+    
+    int pic_width_in_mbs_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    int pic_height_in_map_units_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+    int frame_mbs_only_flag = U(1, (unsigned char *)sliceData, startBit);
+    
+    int width = (pic_width_in_mbs_minus1 + 1) * 16;
+    int height = (pic_height_in_map_units_minus1 + 1) * 16;
+    
+    if ( (mWidth == 0 && mHeight == 0) ||
+        ((mWidth != 0 && mHeight != 0) && (mWidth != width || mHeight != height))
+        ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "VideoHardDecoder::CheckVideoSizeHEVC( "
+                     "this : %p, "
+                     "[New Video Coded Size], "
+                     "mSpSize : %d, "
+                     "profile_idc : %d, "
+                     "[%dx%d] => [%dx%d] "
+                     ")",
+                     this,
+                     mSpSize,
+                     profile_idc,
+                     mWidth,
+                     mHeight,
+                     width,
+                     height);
+        bFlag = true;
+    }
+
+    mWidth = width;
+    mHeight = height;
+    
+    int displayWidth = width;
+    int displayHeight = height;
+    
+    int frame_cropping_flag = U(1, (unsigned char *)sliceData, startBit);
+    if (frame_cropping_flag) {
+        int frame_crop_left_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int frame_crop_right_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int frame_crop_top_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        int frame_crop_bottom_offset = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
+        
+        int crop_unit_x = 0;
+        int crop_unit_y = 0;
+        
+        if ( chroma_format_idc == -1 ) {
+            // baseline
+            crop_unit_x = 2;
+            crop_unit_y = 2;
+        } else if (0 == chroma_format_idc) {
+            // monochrome
+            crop_unit_x = 1;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        } else if (1 == chroma_format_idc) {
+            // 4:2:0
+            crop_unit_x = 2;
+            crop_unit_y = 2 * (2 - frame_mbs_only_flag);
+        } else if (2 == chroma_format_idc) {
+            // 4:2:2
+            crop_unit_x = 2;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        } else {
+            // 4:4:4
+            crop_unit_x = 1;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        }
+
+        displayWidth = mWidth - crop_unit_x * (frame_crop_left_offset + frame_crop_right_offset);
+        displayHeight = mHeight - crop_unit_y * (frame_crop_top_offset + frame_crop_bottom_offset);
+        
+        if (bFlag) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "VideoHardDecoder::CheckVideoSizeHEVC( "
+                         "this : %p, "
+                         "[New Video Display Size], "
+                         "[%dx%d] => [%dx%d], "
+                         "chroma_format_idc : %d, "
+                         "frame_crop_left_offset : %d, "
+                         "frame_crop_right_offset : %d, "
+                         "frame_crop_top_offset : %d, "
+                         "frame_crop_bottom_offset : %d "
+                         ")",
+                         this,
+                         mWidth,
+                         mHeight,
+                         displayWidth,
+                         displayHeight,
+                         chroma_format_idc,
+                         frame_crop_left_offset,
+                         frame_crop_right_offset,
+                         frame_crop_top_offset,
+                         frame_crop_bottom_offset
+                         );
+        }
+    } else {
+        if (bFlag) {
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_WARNING,
+                         "VideoHardDecoder::CheckVideoSizeH264( "
+                         "this : %p, "
+                         "[New Video Display Size], "
+                         "[%dx%d] => [%dx%d] "
+                         ")",
+                         this,
+                         mWidth,
+                         mHeight,
+                         displayWidth,
+                         displayHeight
+                         );
+        }
+    }
+        
+    return bFlag;
+}
+
 }
