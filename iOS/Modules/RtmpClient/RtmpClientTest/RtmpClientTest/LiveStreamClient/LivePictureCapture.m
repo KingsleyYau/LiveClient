@@ -117,14 +117,15 @@
         ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, weakSelf.width, weakSelf.height, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
         if (ret == kCVReturnSuccess) {
             // 生成图片
-            if (weakSelf.time++ >= 5 && !weakSelf.image) {
+            if (weakSelf.time == 5 || weakSelf.time == 10) {
                 UIImage *image = [weakSelf pixelBuffer2Image:pixelBuffer];
                 filePath = [weakSelf saveImage:image];
-                NSLog(@"LivePictureCapture::init( self: %p, [Capture Finish], filePath: %@ )", weakSelf, filePath);
+                NSLog(@"LivePictureCapture::init( self: %p, [Capture], filePath: %@ )", weakSelf, filePath);
                 
-                @synchronized (weakSelf) {
-                    weakSelf.image = image;
-                    if ( weakSelf.image ) {
+                if (weakSelf.time == 10) {
+                    NSLog(@"LivePictureCapture::init( self: %p, [Capture Finish] )", weakSelf);
+                    
+                    @synchronized (weakSelf) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             weakSelf.captureFinish(filePath);
                             [weakSelf stopCapture];
@@ -132,6 +133,8 @@
                     }
                 }
             }
+            weakSelf.time++;
+            
             CVPixelBufferRelease(pixelBuffer);
         } else {
             NSLog(@"LivePictureCapture::init( self: %p, error: %d )", weakSelf, ret);
@@ -164,7 +167,7 @@
     
     NSDate* now = [NSDate date];
     NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-    [fmt setDateFormat:@"yyyyMMdd_hhmmss"];
+    [fmt setDateFormat:@"yyyyMMdd_hhmmss_SSS"];
     NSString *dateString = [fmt stringFromDate:now];
     NSString *filePath = [NSString stringWithFormat:@"%@/%@_%@.png", captureDir, @"C", dateString];
     
