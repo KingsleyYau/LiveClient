@@ -154,7 +154,7 @@ class RequestGetRoomCallbackImp;
                     if( nameArray.count > 0 ) {
                         NSString *name = [nameArray lastObject];
                         self.playStreamName = name;
-                        playUrl = [NSString stringWithFormat:@"%@:4000/cdn_standard/%@", host, name];
+                        playUrl = [NSString stringWithFormat:@"%@:8000/cdn_standard/%@", host, name];
                         break;
                     }
                 }
@@ -169,7 +169,7 @@ class RequestGetRoomCallbackImp;
                     if( nameArray.count > 0 ) {
                         NSString *name = [nameArray lastObject];
                         self.playStreamName = name;
-                        playUrl = [NSString stringWithFormat:@"%@:4000/cdn_standard/%@", host, name];
+                        playUrl = [NSString stringWithFormat:@"%@:8000/cdn_standard/%@", host, name];
                         break;
                     }
                 }
