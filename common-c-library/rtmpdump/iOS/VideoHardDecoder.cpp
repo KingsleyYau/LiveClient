@@ -887,39 +887,40 @@ bool VideoHardDecoder::CheckVideoSizeH264() {
 bool VideoHardDecoder::CheckVideoSizeHEVC() {
     bool bFlag = false;
     
-    unsigned char *sliceData = (unsigned char *)mpSps + 1;
+    unsigned char *sliceData = (unsigned char *)mpSps + 2;
     int sliceLenOriginal = mSpSize - 1;
 
     unsigned int startBit = 0;
-    // sps_video_parameter_set_id
-    U(4, (unsigned char *)sliceData, startBit);
+    // VPS_ID - sps_video_parameter_set_id
+    int vps_id = U(4, (unsigned char *)sliceData, startBit);
     
-    int sps_max_sub_layers_minus1 = U(3, (unsigned char *)sliceData, startBit);
+    int sps_max_sub_layers_minus1 = U(3, (unsigned char *)sliceData, startBit) + 1;
     int temporal_id_nested = U(1, (unsigned char *)sliceData, startBit);
     
     int profile_space               = U(2, (unsigned char *)sliceData, startBit);
     int tier_flag                   = U(1, (unsigned char *)sliceData, startBit);
     int profile_idc                 = U(5, (unsigned char *)sliceData, startBit);
-    int profile_compatibility_flags = U(32, (unsigned char *)sliceData, startBit);
-    int constraint_indicator_flags  = U(48, (unsigned char *)sliceData, startBit);
-    int level_idc                   = U(8, (unsigned char *)sliceData, startBit);
-    
+    U(32, (unsigned char *)sliceData, startBit);
+    U(4, (unsigned char *)sliceData, startBit);
+    U(44, (unsigned char *)sliceData, startBit);
+    int level_idc = U(8, (unsigned char *)sliceData, startBit);
+
     static const uint8_t HEVC_MAX_SUB_LAYERS = 7;
-    uint8_t sub_layer_profile_present_flag[HEVC_MAX_SUB_LAYERS];
-    uint8_t sub_layer_level_present_flag[HEVC_MAX_SUB_LAYERS];
+    uint8_t sub_layer_profile_present_flag[HEVC_MAX_SUB_LAYERS] = {0};
+    uint8_t sub_layer_level_present_flag[HEVC_MAX_SUB_LAYERS] = {0};
     
-    for (int i = 0; i < sps_max_sub_layers_minus1; i++) {
+    for (int i = 0; i < sps_max_sub_layers_minus1 - 1; i++) {
         sub_layer_profile_present_flag[i] = U(1, (unsigned char *)sliceData, startBit);
         sub_layer_level_present_flag[i]   = U(1, (unsigned char *)sliceData, startBit);
     }
 
-    if (sps_max_sub_layers_minus1 > 0)
-        for (int i = sps_max_sub_layers_minus1; i < 8; i++) {
+    if (sps_max_sub_layers_minus1 - 1 > 0) {
+        for (int i = sps_max_sub_layers_minus1 - 1; i < 8; i++) {
             // reserved_zero_2bits[i]
             U(2, (unsigned char *)sliceData, startBit);
         }
-
-    for (int i = 0; i < sps_max_sub_layers_minus1; i++) {
+    }
+    for (int i = 0; i < sps_max_sub_layers_minus1 - 1; i++) {
         if (sub_layer_profile_present_flag[i]) {
             /*
              * sub_layer_profile_space[i]                     u(2)
@@ -932,9 +933,10 @@ bool VideoHardDecoder::CheckVideoSizeHEVC() {
              * sub_layer_frame_only_constraint_flag[i]        u(1)
              * sub_layer_reserved_zero_44bits[i]              u(44)
              */
+            U(8, (unsigned char *)sliceData, startBit);
             U(32, (unsigned char *)sliceData, startBit);
-            U(32, (unsigned char *)sliceData, startBit);
-            U(24, (unsigned char *)sliceData, startBit);
+            U(4, (unsigned char *)sliceData, startBit);
+            U(44, (unsigned char *)sliceData, startBit);
         }
 
         if (sub_layer_level_present_flag[i]) {
@@ -942,6 +944,7 @@ bool VideoHardDecoder::CheckVideoSizeHEVC() {
         }
     }
     
+    // SPS_ID
     int sps_seq_parameter_set_id = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
     int chroma_format_idc = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
     if (chroma_format_idc == 3) {
@@ -950,7 +953,6 @@ bool VideoHardDecoder::CheckVideoSizeHEVC() {
     
     int pic_width_in_mbs_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
     int pic_height_in_map_units_minus1 = UE((unsigned char *)sliceData, sliceLenOriginal, startBit);
-    int frame_mbs_only_flag = U(1, (unsigned char *)sliceData, startBit);
     
     int width = (pic_width_in_mbs_minus1 + 1) * 16;
     int height = (pic_height_in_map_units_minus1 + 1) * 16;
@@ -993,27 +995,27 @@ bool VideoHardDecoder::CheckVideoSizeHEVC() {
         int crop_unit_x = 0;
         int crop_unit_y = 0;
         
-        if ( chroma_format_idc == -1 ) {
-            // baseline
-            crop_unit_x = 2;
-            crop_unit_y = 2;
-        } else if (0 == chroma_format_idc) {
-            // monochrome
-            crop_unit_x = 1;
-            crop_unit_y = 2 - frame_mbs_only_flag;
-        } else if (1 == chroma_format_idc) {
-            // 4:2:0
-            crop_unit_x = 2;
-            crop_unit_y = 2 * (2 - frame_mbs_only_flag);
-        } else if (2 == chroma_format_idc) {
-            // 4:2:2
-            crop_unit_x = 2;
-            crop_unit_y = 2 - frame_mbs_only_flag;
-        } else {
-            // 4:4:4
-            crop_unit_x = 1;
-            crop_unit_y = 2 - frame_mbs_only_flag;
-        }
+//        if ( chroma_format_idc == -1 ) {
+//            // baseline
+//            crop_unit_x = 2;
+//            crop_unit_y = 2;
+//        } else if (0 == chroma_format_idc) {
+//            // monochrome
+//            crop_unit_x = 1;
+//            crop_unit_y = 2 - frame_mbs_only_flag;
+//        } else if (1 == chroma_format_idc) {
+//            // 4:2:0
+//            crop_unit_x = 2;
+//            crop_unit_y = 2 * (2 - frame_mbs_only_flag);
+//        } else if (2 == chroma_format_idc) {
+//            // 4:2:2
+//            crop_unit_x = 2;
+//            crop_unit_y = 2 - frame_mbs_only_flag;
+//        } else {
+//            // 4:4:4
+//            crop_unit_x = 1;
+//            crop_unit_y = 2 - frame_mbs_only_flag;
+//        }
 
         displayWidth = mWidth - crop_unit_x * (frame_crop_left_offset + frame_crop_right_offset);
         displayHeight = mHeight - crop_unit_y * (frame_crop_top_offset + frame_crop_bottom_offset);

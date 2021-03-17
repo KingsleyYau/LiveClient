@@ -29,6 +29,7 @@
 		50C9949C1E8F911E001E1355 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */; };
 		50C995811E8F9E1B001E1355 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995801E8F9E1B001E1355 /* libz.tbd */; };
 		50C995831E8F9E2E001E1355 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995821E8F9E2E001E1355 /* libstdc++.tbd */; };
+		50CF564B2601D811007C0AE0 /* NSObject+Property.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CF564A2601D811007C0AE0 /* NSObject+Property.m */; };
 		50DAEF842136403D00FB374D /* StreamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF812136403D00FB374D /* StreamViewController.m */; };
 		50DAEF852136403D00FB374D /* StreamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DAEF822136403D00FB374D /* StreamViewController.xib */; };
 		50DAEF98213641E900FB374D /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF8C213641E900FB374D /* GPUImageBeautifyFilter.m */; };
@@ -81,6 +82,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		50D986A725FB3B3800B2A02E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
 		5038ED772591953A004D9AE6 /* File */ = {isa = PBXFileReference; lastKnownFileType = folder; path = File; sourceTree = "<group>"; };
@@ -116,6 +130,10 @@
 		50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RtmpClient.xcodeproj; path = ../RtmpClient.xcodeproj; sourceTree = "<group>"; };
 		50C995801E8F9E1B001E1355 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		50C995821E8F9E2E001E1355 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		50CF56492601D811007C0AE0 /* NSObject+Property.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Property.h"; sourceTree = "<group>"; };
+		50CF564A2601D811007C0AE0 /* NSObject+Property.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Property.m"; sourceTree = "<group>"; };
+		50D9869825FB3B3400B2A02E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		50D9869A25FB3B3400B2A02E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		50DAEF812136403D00FB374D /* StreamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamViewController.m; sourceTree = "<group>"; };
 		50DAEF822136403D00FB374D /* StreamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamViewController.xib; sourceTree = "<group>"; };
 		50DAEF832136403D00FB374D /* StreamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamViewController.h; sourceTree = "<group>"; };
@@ -226,6 +244,7 @@
 				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
 				50DAEF8B213641E900FB374D /* LiveStreamClient */,
 				50C994951E8F911E001E1355 /* Main.storyboard */,
+				50CF56482601D7D1007C0AE0 /* Model */,
 				509187402542AAA00073BECA /* PronViewController.h */,
 				509187412542AAA00073BECA /* PronViewController.m */,
 				509187422542AAA00073BECA /* PronViewController.xib */,
@@ -272,8 +291,19 @@
 				50C995821E8F9E2E001E1355 /* libstdc++.tbd */,
 				50C995801E8F9E1B001E1355 /* libz.tbd */,
 				962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */,
+				50D9869825FB3B3400B2A02E /* WidgetKit.framework */,
+				50D9869A25FB3B3400B2A02E /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		50CF56482601D7D1007C0AE0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				50CF56492601D811007C0AE0 /* NSObject+Property.h */,
+				50CF564A2601D811007C0AE0 /* NSObject+Property.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		50DAEF8B213641E900FB374D /* LiveStreamClient */ = {
@@ -348,6 +378,7 @@
 				50C994861E8F911E001E1355 /* Frameworks */,
 				50C994871E8F911E001E1355 /* Resources */,
 				3C0D67589744FEDDF3E51281 /* [CP] Copy Pods Resources */,
+				50D986A725FB3B3800B2A02E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -366,6 +397,7 @@
 		50C994811E8F911E001E1355 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = net.qdating;
 				TargetAttributes = {
@@ -516,6 +548,7 @@
 				507118962563B158001F14CC /* StreamToastView.m in Sources */,
 				5080C84A2558EB5E00F5E4F3 /* StreamNavigationController.m in Sources */,
 				509187472542B4C10073BECA /* StreamWebView.m in Sources */,
+				50CF564B2601D811007C0AE0 /* NSObject+Property.m in Sources */,
 				50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */,
 				509CC0E72546AECA0037BA32 /* StreamBaseViewController.m in Sources */,
 				50E5E69D2216978D00D66072 /* LSImageVibrateFilter.m in Sources */,
@@ -665,6 +698,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA070A2EB98CA5A0244570A4 /* Pods-RtmpClientTest.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RtmpClientTest/RtmpClientTest.entitlements;
 				DEVELOPMENT_TEAM = MK37J4UMHH;
@@ -684,6 +718,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AE17A865FD417A671B581711 /* Pods-RtmpClientTest.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RtmpClientTest/RtmpClientTest.entitlements;
 				DEVELOPMENT_TEAM = MK37J4UMHH;

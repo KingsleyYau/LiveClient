@@ -11,6 +11,8 @@
 #import "FileDownloadManager.h"
 #import "RtmpPlayerOC.h"
 
+#import "NSObject+Property.h"
+
 @interface DownloadAttachment : NSTextAttachment
 @property (strong) NSURLSessionTask *task;
 @property (strong) NSAttributedString *statusString;
@@ -74,7 +76,7 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://cn.baidu.com/";
+    NSString *urlString = @"https://cn.baidu.com";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
@@ -120,43 +122,44 @@
     self.urlCheckDict = [NSMutableDictionary dictionary];
     self.downloadBtn.enabled = NO;
 
-    for (int i = 0; i < 6; i++) {
-        NSString *mediaKey = [NSString stringWithFormat:@"media_%d", i];
-        [self.webView evaluateJavaScript:mediaKey
-                       completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                           self.urlCheckDict[mediaKey] = @(1);
-                           if (!error) {
-                               NSLog(@"PronViewController::checkDownloadURL(), [%@], %@", mediaKey, response);
-                               self.urlDict[mediaKey] = response;
-                           }
-                           [self check:autoDownload];
-                       }];
-    }
-
-    //        NSString *js = @"document.body.innerHTML";
-    NSString *js = @"$('video').children()[0].src";
-    [self.webView evaluateJavaScript:js
+    NSString *trackVideoIdKey = @"VIDEO_SHOW.trackVideoId";
+    [self.webView evaluateJavaScript:trackVideoIdKey
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        if (!error) {
-                           NSLog(@"PronViewController::checkDownloadURL(), [ORIGINAL], %@", response);
-                           self.urlDict[@"ORIGINAL"] = response;
+                           NSString *videoId = (NSString *)response;
+                           NSLog(@"PronViewController::checkDownloadURL(), video_id: %@", response);
+                           [self checkVideoUrls:videoId autoDownload:autoDownload];
+                       }
+                   }];
+}
+
+- (void)checkVideoUrls:(NSString *)videoId autoDownload:(BOOL)autoDownload {
+    NSString *qualityItemsKey = [NSString stringWithFormat:@"qualityItems_%@", videoId];
+    [self.webView evaluateJavaScript:qualityItemsKey
+                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                       if (!error) {
+                           NSArray *items = (NSArray *)response;
+                           for (NSDictionary *dict in items) {
+                               NSString *resolution = dict[@"id"];
+                               NSString *url = dict[@"url"];
+                               NSLog(@"PronViewController::checkVideoUrls(), %@, %@", resolution, url);
+                               self.urlDict[resolution] = url;
+                           }
                            [self check:autoDownload];
-                       } else {
-                           NSLog(@"PronViewController::checkDownloadURL(), [ORIGINAL], [Error], %@", error);
                        }
                    }];
 }
 
 - (void)check:(BOOL)autoDownload {
-    NSString *original = self.urlDict[@"ORIGINAL"];
-    if (self.urlCheckDict.count >= 6 || original.length > 0) {
+//    NSString *original = self.urlDict[@"ORIGINAL"];
+//    if (self.urlDict.count >= 1 || original.length > 0) {
         self.downloadBtn.enabled = YES;
         [self selectDownloadURL];
 
         if (autoDownload && self.buttonAudoDownload.selected) {
             [self downloadAction:nil];
         }
-    }
+//    }
 }
 
 - (IBAction)cleanAction:(UIButton *)sender {
@@ -164,17 +167,17 @@
     [self.taskURLDict removeAllObjects];
     [self changeDownloadStatus];
 
-    //    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
-    //    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
-    //                     completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
-    //                         for (WKWebsiteDataRecord *record in records) {
-    //                             [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
-    //                                                                       forDataRecords:@[ record ]
-    //                                                                    completionHandler:^{
-    //                                                                        NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
-    //                                                                    }];
-    //                         }
-    //                     }];
+//        WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+//        [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+//                         completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
+//                             for (WKWebsiteDataRecord *record in records) {
+//                                 [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
+//                                                                           forDataRecords:@[ record ]
+//                                                                        completionHandler:^{
+//                                                                            NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
+//                                                                        }];
+//                             }
+//                         }];
 }
 
 - (IBAction)downloadAction:(UIButton *)sender {
@@ -320,6 +323,7 @@
     return result;
 }
 
+#pragma mark - MP4
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 
     NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
@@ -544,9 +548,11 @@
 
 #pragma mark - WebView回调
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    NSLog(@"PronViewController::decidePolicyForNavigationAction(), %ld, %@", navigationAction.navigationType, navigationAction.request.URL.absoluteString);
     decisionHandler(WKNavigationActionPolicyAllow);
-    if ([self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString] || (navigationAction.navigationType != WKNavigationTypeOther)) {
+    if ( navigationAction.targetFrame.mainFrame ) {
+        NSLog(@"PronViewController::decidePolicyForNavigationAction(), mainFrame:%d, %ld, %@", navigationAction.targetFrame.mainFrame, navigationAction.navigationType, navigationAction.request.URL.absoluteString);
+    }
+    if ([self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString] || (navigationAction.targetFrame.mainFrame)) {
         self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
     } else {
         self.title = webView.title;
@@ -653,4 +659,5 @@
     // 动画收起键盘
     [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
 }
+
 @end

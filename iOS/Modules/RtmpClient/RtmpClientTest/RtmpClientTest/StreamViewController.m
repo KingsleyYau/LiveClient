@@ -145,8 +145,9 @@
         @"demo1" : @"rtmp://52.196.96.7:4000/cdn_standard/max0",
         @"demo2" : @"rtmp://18.194.23.38:4000/cdn_standard/max0",
         @"local" : @"rtmp://172.25.32.133:4000/cdn_standard/max0",
-        @"cam" : @"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4", // Camshare
-        @"camlocal" : @"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM301&room=WW0|||PC4|||4|||v123456&site=4",
+        @"cam_demo" : @"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM32145&room=C771475|||N_PC4|||4 &site=4", // Camshare
+        @"cam_local" : @"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM4444&room=WW0|||N_PC4|||4|||v123456&site=4",
+        @"cam_pd" : @"rtmp://52.203.25.17:1935/mediaserver/camsahre?uid=MM54321&room=C773186|||N_PC4|||4|||&site=4",
     };
     NSString *url = urls[@"tn"];
 

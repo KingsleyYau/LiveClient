@@ -15,7 +15,7 @@
 
 @implementation FileItem
 - (BOOL)isVideo {
-    return [self.fileName containsString:@".mp4"];
+    return [self.fileName localizedCaseInsensitiveContainsString:@".mp4"];
 }
 @end
 
@@ -76,7 +76,7 @@
                     
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                         UIImage *image;
-                        if ([fileName containsString:@".mp4"]) {
+                        if (item.isVideo) {
                             image = [self getThumbImage:item.filePath];
                         } else {
                             image = [UIImage imageWithData:[NSData dataWithContentsOfFile:item.filePath]];

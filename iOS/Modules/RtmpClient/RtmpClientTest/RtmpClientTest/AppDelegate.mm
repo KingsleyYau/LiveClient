@@ -19,7 +19,7 @@
 - (void)firstTimeActive {
     if (NO) {
         NSURLSession *session = [NSURLSession sharedSession];
-        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http:www.baidu.com"]];
+        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
         NSURLSessionDataTask *task = [session dataTaskWithRequest:req completionHandler:^(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error) {
             if ( !error ) {
                 NSLog(@"response:%@", response);
