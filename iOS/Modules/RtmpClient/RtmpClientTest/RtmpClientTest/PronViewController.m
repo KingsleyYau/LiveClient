@@ -554,12 +554,11 @@
     }
     if ([self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString] || (navigationAction.targetFrame.mainFrame)) {
         self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
-    } else {
-        self.title = webView.title;
     }
 
     if (navigationAction.navigationType == WKNavigationTypeBackForward) {
         self.forward = NO;
+        self.title = webView.title;
     } else {
         self.forward = YES;
     }
@@ -570,9 +569,8 @@
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
-    NSLog(@"PronViewController::decidePolicyForNavigationResponse()");
+    NSLog(@"PronViewController::decidePolicyForNavigationResponse(), forMainFrame:%d", navigationResponse.forMainFrame);
     decisionHandler(WKNavigationResponsePolicyAllow);
-    //    [self checkDownloadURL];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
