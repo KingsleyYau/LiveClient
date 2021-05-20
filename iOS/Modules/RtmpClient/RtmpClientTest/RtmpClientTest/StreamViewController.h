@@ -38,7 +38,11 @@
 @property (weak) IBOutlet UIButton* button1x;
 @property (weak) IBOutlet UIButton* button2x;
 
+@property (weak) IBOutlet UIButton* buttonPlayMute;
 @property (weak) IBOutlet UIButton* buttonRecord;
 @property (weak) IBOutlet UIImageView* imageViewInput;
+@property (weak) IBOutlet UIButton* buttonPublish;
+@property (weak) IBOutlet UIButton* buttonPublishMute;
+@property (weak) IBOutlet UIButton* buttonPlay;
 @end
 

@@ -16,19 +16,31 @@
 @end
 
 @implementation AppDelegate
-- (void)firstTimeActive {
-    if (NO) {
+- (BOOL)firstTimeActive {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL firstTimeActive = [userDefaults boolForKey:@"firstTimeActive"];
+
+    if (!firstTimeActive) {
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
-        NSURLSessionDataTask *task = [session dataTaskWithRequest:req completionHandler:^(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error) {
-            if ( !error ) {
-                NSLog(@"response:%@", response);
-            } else {
-                NSLog(@"error:%@", error);
-            }
-        }];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:req
+                                                completionHandler:^(NSData *__nullable data, NSURLResponse *__nullable response, NSError *__nullable error) {
+                                                    if (!error) {
+                                                        NSLog(@"response:%@", response);
+                                                    } else {
+                                                        NSLog(@"error:%@", error);
+                                                    }
+                                                }];
         [task resume];
     }
+    
+    return firstTimeActive;
+}
+
+- (void)setFirstTimeActive:(BOOL)firstTimeActive {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:firstTimeActive forKey:@"firstTimeActive"];
+    [userDefaults synchronize];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -38,6 +50,7 @@
     KLog::SetLogLevel(KLog::LOG_WARNING);
     
     [self firstTimeActive];
+    self.firstTimeActive = YES;
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 

@@ -76,7 +76,7 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://cn.baidu.com";
+    NSString *urlString = @"https://cn.pornhub.com";
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
@@ -100,6 +100,7 @@
 }
 
 - (IBAction)goAction:(UIButton *)sender {
+    self.downloadUrlString = @"";
     self.downloadBtn.enabled = NO;
 
     NSString *urlString = self.textFieldAddress.text;
@@ -118,19 +119,21 @@
 }
 
 - (IBAction)checkDownloadURL:(BOOL)autoDownload {
-    self.urlDict = [NSMutableDictionary dictionary];
-    self.urlCheckDict = [NSMutableDictionary dictionary];
-    self.downloadBtn.enabled = NO;
+    if (self.downloadUrlString.length == 0) {
+        self.urlDict = [NSMutableDictionary dictionary];
+        self.urlCheckDict = [NSMutableDictionary dictionary];
+        self.downloadBtn.enabled = NO;
 
-    NSString *trackVideoIdKey = @"VIDEO_SHOW.trackVideoId";
-    [self.webView evaluateJavaScript:trackVideoIdKey
-                   completionHandler:^(id _Nullable response, NSError *_Nullable error) {
-                       if (!error) {
-                           NSString *videoId = (NSString *)response;
-                           NSLog(@"PronViewController::checkDownloadURL(), video_id: %@", response);
-                           [self checkVideoUrls:videoId autoDownload:autoDownload];
-                       }
-                   }];
+        NSString *trackVideoIdKey = @"VIDEO_SHOW.trackVideoId";
+        [self.webView evaluateJavaScript:trackVideoIdKey
+                       completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+                           if (!error) {
+                               NSString *videoId = (NSString *)response;
+                               NSLog(@"PronViewController::checkDownloadURL(), video_id: %@", response);
+                               [self checkVideoUrls:videoId autoDownload:autoDownload];
+                           }
+                       }];
+    }
 }
 
 - (void)checkVideoUrls:(NSString *)videoId autoDownload:(BOOL)autoDownload {
@@ -138,7 +141,7 @@
     [self.webView evaluateJavaScript:qualityItemsKey
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        if (!error) {
-                           NSArray *items = (NSArray *)response;
+                       NSArray *items = (NSArray *)response;
                            for (NSDictionary *dict in items) {
                                NSString *resolution = dict[@"id"];
                                NSString *url = dict[@"url"];
@@ -569,8 +572,9 @@
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
-    NSLog(@"PronViewController::decidePolicyForNavigationResponse(), forMainFrame:%d", navigationResponse.forMainFrame);
     decisionHandler(WKNavigationResponsePolicyAllow);
+    NSLog(@"PronViewController::decidePolicyForNavigationResponse(), forMainFrame:%d, %@, URL:%@", navigationResponse.forMainFrame, webView.title, navigationResponse.response.URL.absoluteString);
+    [self checkDownloadURL:self.forward];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
@@ -579,6 +583,8 @@
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
     NSLog(@"PronViewController::didCommitNavigation()");
+    self.title = @"Loading...";
+    self.downloadUrlString = @"";
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {

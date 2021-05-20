@@ -77,6 +77,12 @@
     self.sliderCacheMS.value = 1000;
     self.labelCacheMS.text = [NSString stringWithFormat:@"%dms", (int)(self.sliderCacheMS.value), nil];
     self.isKeyboardShow = NO;
+    
+    [self.buttonPlayMute setImage:[UIImage imageNamed:@"MuteSmallButton"] forState:UIControlStateSelected];
+    [self.buttonPublish setImage:[UIImage imageNamed:@"StopButton"] forState:UIControlStateSelected];
+    [self.buttonPublishMute setImage:[UIImage imageNamed:@"MuteButton"] forState:UIControlStateSelected];
+    [self.buttonPlay setImage:[UIImage imageNamed:@"StopButton"] forState:UIControlStateSelected];
+    
     // TODO:拍照
     self.pictureCapture = [[LivePictureCapture alloc] init];
     // TODO:是否录制
@@ -132,10 +138,11 @@
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     self.publisher.publishView = self.previewPublishView;
     self.publisherFilter = [[LSImageVibrateFilter alloc] init];
-    self.publisher.customFilter = self.publisherFilter;
+//    self.publisher.customFilter = self.publisherFilter;
 
-    self.sliderBitrate.maximumValue = self.publisher.bitrate;
-    self.sliderBitrate.value = self.sliderBitrate.maximumValue;
+//    self.sliderBitrate.maximumValue = self.publisher.bitrate;
+    self.sliderBitrate.maximumValue = 2000 * 1000;
+    self.sliderBitrate.value = self.publisher.bitrate;
     self.labelBitrate.text = [NSString stringWithFormat:@"%dkbps", (int)(self.sliderBitrate.value / 1000), nil];
 
     // TODO:链接地址
@@ -146,7 +153,7 @@
         @"demo2" : @"rtmp://18.194.23.38:4000/cdn_standard/max0",
         @"local" : @"rtmp://172.25.32.133:4000/cdn_standard/max0",
         @"cam_demo" : @"rtmp://52.196.96.7:1935/mediaserver/camsahre?uid=MM32145&room=C771475|||N_PC4|||4 &site=4", // Camshare
-        @"cam_local" : @"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=MM4444&room=WW0|||N_PC4|||4|||v123456&site=4",
+        @"cam_local" : @"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=WW0&room=WW0|||N_PC4|||4|||v123456&site=4",
         @"cam_pd" : @"rtmp://52.203.25.17:1935/mediaserver/camsahre?uid=MM54321&room=C773186|||N_PC4|||4|||&site=4",
     };
     NSString *url = urls[@"tn"];
@@ -228,11 +235,12 @@
     self.previewView.fillMode %= (kGPUImageFillModePreserveAspectRatioAndFill + 1);
 }
 
-- (IBAction)mutePlay:(UIButton *)sender {
+- (IBAction)mutePlayAction:(UIButton *)sender {
+    sender.selected = !sender.selected;
     self.player.mute = !self.player.mute;
 }
 
-- (IBAction)filterPlay:(UIButton *)sender {
+- (IBAction)filterPlayAction:(UIButton *)sender {
     if (self.player) {
         if (!self.player.customFilter) {
             self.player.customFilter = self.playerFilterArray[0];
@@ -259,7 +267,17 @@
     sender.selected = !sender.selected;
 }
 
-- (IBAction)play:(UIButton *)sender {
+- (IBAction)playAction:(UIButton *)sender {
+    if (!sender.selected) {
+        [self play];
+    } else {
+        [self stopPlay];
+    }
+    
+    sender.selected = !sender.selected;
+}
+
+- (void)play {
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
 
@@ -284,17 +302,7 @@
     self.loadingView.hidden = NO;
 }
 
-- (IBAction)playFile:(UIButton *)sender {
-    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *inputDir = [NSString stringWithFormat:@"%@", cacheDir];
-    StreamFileCollectionViewController *vc = [[StreamFileCollectionViewController alloc] init];
-    vc.delegate = self;
-    vc.inputDir = inputDir;
-    [self.navigationController pushViewController:vc animated:YES];
-    self.loadingView.hidden = YES;
-}
-
-- (IBAction)stopPlay:(UIButton *)sender {
+- (IBAction)stopPlay {
     self.fileItemArray = nil;
     [self.player stop];
     self.loadingView.hidden = YES;
@@ -309,7 +317,7 @@
 
 - (void)playerOnDisconnect:(LiveStreamPlayer *_Nonnull)player {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.player.filePath.length == 0) {
+        if (self.player.filePath.length == 0 && self.player.url.length > 0) {
             self.loadingView.hidden = NO;
         }
     });
@@ -340,7 +348,16 @@
 }
 
 #pragma mark - 推流相关
-- (IBAction)publish:(id)sender {
+- (IBAction)publishAction:(UIButton *)sender {
+    if (!sender.selected) {
+        [self publish];
+    } else {
+        [self stopPush];
+    }
+    sender.selected = !sender.selected;
+}
+
+- (void)publish {
     self.previewPublishView.hidden = NO;
 
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -355,7 +372,7 @@
     [self.publisher publishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
 }
 
-- (IBAction)stopPush:(id)sender {
+- (IBAction)stopPush {
     [self.publisher stop];
     self.previewPublishView.hidden = YES;
 
@@ -366,11 +383,12 @@
     self.publisher.beauty = !self.publisher.beauty;
 }
 
-- (IBAction)mute:(id)sender {
+- (IBAction)mutePublishAction:(UIButton *)sender {
+    sender.selected = !sender.selected;
     self.publisher.mute = !self.publisher.mute;
 }
 
-- (IBAction)roate:(id)sender {
+- (IBAction)roateAction:(UIButton *)sender {
     [self.publisher rotateCamera];
 }
 
@@ -384,7 +402,7 @@
     [self.publisher stopPreview];
 }
 
-- (IBAction)filterPublish:(id)sender {
+- (IBAction)filterPublishAction:(id)sender {
     if (self.publisher) {
         if (!self.publisher.customFilter) {
             self.publisher.customFilter = self.publisherFilter;
@@ -421,6 +439,17 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self toast:description];
     });
+}
+
+#pragma mark - 文件
+- (IBAction)fileAction:(UIButton *)sender {
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *inputDir = [NSString stringWithFormat:@"%@", cacheDir];
+    StreamFileCollectionViewController *vc = [[StreamFileCollectionViewController alloc] init];
+    vc.delegate = self;
+    vc.inputDir = inputDir;
+    [self.navigationController pushViewController:vc animated:YES];
+    self.loadingView.hidden = YES;
 }
 
 #pragma mark - 浏览器
@@ -693,7 +722,7 @@
         self.publishImage = fileItem.image;
         self.publisher.image = self.publishImage;
         self.imageViewInput.image = self.publisher.image;
-        [self publish:nil];
+        [self publishAction:nil];
     }
 }
 @end
