@@ -12,6 +12,7 @@
 #import "RtmpPlayerOC.h"
 
 #import "NSObject+Property.h"
+#import "OCTimer.h"
 
 @interface DownloadAttachment : NSTextAttachment
 @property (strong) NSURLSessionTask *task;
@@ -37,6 +38,7 @@
 @property (strong) NSMutableDictionary *taskURLDict;
 @property (strong) NSString *downloadUrlString;
 @property (assign) BOOL isHLS;
+@property (strong) OCTimer *timer;
 @end
 
 @implementation PronViewController
@@ -76,7 +78,11 @@
 
     self.taskURLDict = [NSMutableDictionary dictionary];
 
-    NSString *urlString = @"https://cn.baidu.com";
+    NSString *urlString = self.baseUrl;
+    if (urlString.length == 0) {
+        urlString = @"https://www.baidu.com";
+    }
+
     self.textFieldAddress.text = urlString;
 
     [[FileDownloadManager manager] addDelegate:self];
@@ -85,12 +91,43 @@
     [self.webView.configuration.userContentController addUserScript:usrScript];
 
     [self goAction:nil];
+
+    self.timer = [[OCTimer alloc] init];
+    [self.timer startTimer:nil
+              timeInterval:120 * NSEC_PER_SEC
+                   starNow:YES
+                    action:^{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self tryAllAD];
+                        });
+                    }];
+    
+    // 显示广告
+    [self tryAllAD];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+
+}
+
+#pragma mark - 持久化
+- (NSString *)baseUrl {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *baseUrl = [userDefaults objectForKey:@"baseUrl"];
+    return baseUrl;
+}
+
+- (void)setBaseUrl:(NSString *)baseUrl {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:baseUrl forKey:@"baseUrl"];
+    [userDefaults synchronize];
+}
+
+#pragma mark - Action
 - (IBAction)backAction:(id)sender {
     if ([self.webView canGoBack]) {
         [self.webView goBack];
@@ -107,6 +144,8 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
     [self.webView loadRequest:request];
+
+    self.baseUrl = urlString;
 }
 
 - (IBAction)viewAction:(UIButton *)sender {
@@ -129,7 +168,7 @@
                        completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                            if (!error) {
                                NSString *videoId = (NSString *)response;
-                               NSLog(@"PronViewController::checkDownloadURL(), video_id: %@", response);
+                               NSLog(@"video_id: %@", response);
                                [self checkVideoUrls:videoId autoDownload:autoDownload];
                            }
                        }];
@@ -141,11 +180,11 @@
     [self.webView evaluateJavaScript:qualityItemsKey
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
                        if (!error) {
-                       NSArray *items = (NSArray *)response;
+                           NSArray *items = (NSArray *)response;
                            for (NSDictionary *dict in items) {
                                NSString *resolution = dict[@"id"];
                                NSString *url = dict[@"url"];
-                               NSLog(@"PronViewController::checkVideoUrls(), %@, %@", resolution, url);
+                               NSLog(@"%@, %@", resolution, url);
                                self.urlDict[resolution] = url;
                            }
                            [self check:autoDownload];
@@ -154,15 +193,15 @@
 }
 
 - (void)check:(BOOL)autoDownload {
-//    NSString *original = self.urlDict[@"ORIGINAL"];
-//    if (self.urlDict.count >= 1 || original.length > 0) {
-        self.downloadBtn.enabled = YES;
-        [self selectDownloadURL];
+    //    NSString *original = self.urlDict[@"ORIGINAL"];
+    //    if (self.urlDict.count >= 1 || original.length > 0) {
+    self.downloadBtn.enabled = YES;
+    [self selectDownloadURL];
 
-        if (autoDownload && self.buttonAudoDownload.selected) {
-            [self downloadAction:nil];
-        }
-//    }
+    if (autoDownload && self.buttonAudoDownload.selected) {
+        [self downloadAction:nil];
+    }
+    //    }
 }
 
 - (IBAction)cleanAction:(UIButton *)sender {
@@ -170,17 +209,17 @@
     [self.taskURLDict removeAllObjects];
     [self changeDownloadStatus];
 
-//        WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
-//        [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
-//                         completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
-//                             for (WKWebsiteDataRecord *record in records) {
-//                                 [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
-//                                                                           forDataRecords:@[ record ]
-//                                                                        completionHandler:^{
-//                                                                            NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
-//                                                                        }];
-//                             }
-//                         }];
+    //        WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+    //        [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+    //                         completionHandler:^(NSArray<WKWebsiteDataRecord *> *__nonnull records) {
+    //                             for (WKWebsiteDataRecord *record in records) {
+    //                                 [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
+    //                                                                           forDataRecords:@[ record ]
+    //                                                                        completionHandler:^{
+    //                                                                            NSLog(@"PronViewController::cleanAction(), %@", record.displayName);
+    //                                                                        }];
+    //                             }
+    //                         }];
 }
 
 - (IBAction)downloadAction:(UIButton *)sender {
@@ -188,10 +227,10 @@
         [self toast:@"No video urls can be download."];
         return;
     }
-    
+
     self.webView.hidden = YES;
     self.downloadTextView.hidden = NO;
-    
+
     NSURLSessionTask *task;
     if (self.isHLS) {
         task = [[FileDownloadManager manager] downloadHLSURL:self.downloadUrlString];
@@ -241,7 +280,7 @@
                 if (range.length > 0) {
                     NSRange range1 = NSMakeRange(range.location, range.length - 1);
                     NSString *resolution = [path substringWithRange:range1];
-                    NSLog(@"PronViewController::selectDownloadURL(), [MP4], resolution: %@", resolution);
+                    NSLog(@"[MP4], resolution: %@", resolution);
                     if (maxResolution < [resolution intValue]) {
                         maxResolution = [resolution intValue];
                         urlString = value;
@@ -269,7 +308,7 @@
                 if (range.length > 0) {
                     NSRange range1 = NSMakeRange(range.location, range.length - 1);
                     NSString *resolution = [path substringWithRange:range1];
-                    NSLog(@"PronViewController::selectDownloadURL(), [HLS], resolution: %@", resolution);
+                    NSLog(@"[HLS], resolution: %@", resolution);
                     if (maxResolution < [resolution intValue]) {
                         maxResolution = [resolution intValue];
                         urlString = value;
@@ -283,13 +322,13 @@
         }
     }
 
-    NSLog(@"PronViewController::selectDownloadURL(), [Select], %@", urlString);
+    NSLog(@"[Select], %@", urlString);
     self.downloadUrlString = urlString;
-    
-//    if (urlString.length > 0) {
-//        NSString *tips = [NSString stringWithFormat:@"%@ Found!", self.downloadUrlString];
-//        [self toast:tips];
-//    }
+
+    //    if (urlString.length > 0) {
+    //        NSString *tips = [NSString stringWithFormat:@"%@ Found!", self.downloadUrlString];
+    //        [self toast:tips];
+    //    }
 }
 
 - (void)changeDownloadStatus {
@@ -367,7 +406,7 @@
     NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     float percent = 1.0 * fileOffset / expectedTotalBytes;
     NSString *percentString = [NSString stringWithFormat:@"(%@/%@) %.0f%%", [self readableSize:fileOffset], [self readableSize:expectedTotalBytes], percent * 100];
-    NSLog(@"PronViewController::didResumeAtOffset(), %@", percentString);
+    NSLog(@"percentString: %@", percentString);
 
     DownloadAttachment *att = [[DownloadAttachment alloc] init];
     att.task = downloadTask;
@@ -408,7 +447,7 @@
     NSError *error;
     [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
     [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
-    NSLog(@"PronViewController::didFinishDownloadingToURL(), %@", downloadTask.response.suggestedFilename);
+    NSLog(@"%@", downloadTask.response.suggestedFilename);
 
     NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     DownloadAttachment *att = [[DownloadAttachment alloc] init];
@@ -439,20 +478,21 @@
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    NSLog(@"PronViewController::didCompleteWithError(), %@", error);
+    NSLog(@"%@", error);
     if (error) {
         AVAssetDownloadTask *assetDownloadTask = nil;
-        if ( [task isKindOfClass:[AVAssetDownloadTask class]] ) {
+        if ([task isKindOfClass:[AVAssetDownloadTask class]]) {
             assetDownloadTask = (AVAssetDownloadTask *)task;
         }
-        NSString *urlString = assetDownloadTask?assetDownloadTask.URLAsset.URL.absoluteString:task.currentRequest.URL.absoluteString;
+        NSString *urlString = assetDownloadTask ? assetDownloadTask.URLAsset.URL.absoluteString : task.currentRequest.URL.absoluteString;
         DownloadAttachment *att = [[DownloadAttachment alloc] init];
         att.task = task;
         NSMutableAttributedString *line = [[NSMutableAttributedString alloc] initWithString:@"[Error]"
                                                                                  attributes:@{
                                                                                      NSForegroundColorAttributeName : [UIColor redColor]
                                                                                  }];
-        NSString *suggestedFilename = assetDownloadTask?[NSString stringWithFormat:@"%ld", [assetDownloadTask hash]]:[NSString stringWithFormat:@"%@", task.response.suggestedFilename];;
+        NSString *suggestedFilename = assetDownloadTask ? [NSString stringWithFormat:@"%ld", [assetDownloadTask hash]] : [NSString stringWithFormat:@"%@", task.response.suggestedFilename];
+        ;
         NSString *content = [NSString stringWithFormat:@" %@", suggestedFilename];
         NSMutableAttributedString *contentAttStr = [[NSMutableAttributedString alloc] initWithString:content
                                                                                           attributes:@{
@@ -473,7 +513,7 @@
 }
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
-    NSLog(@"PronViewController::didBecomeInvalidWithError(), %@", error);
+    NSLog(@"%@", error);
 }
 
 #pragma mark - HLS
@@ -481,13 +521,13 @@
     NSString *urlString = assetDownloadTask.URLAsset.URL.absoluteString;
     float percent = 1.0 * CMTimeGetSeconds(timeRange.start) / CMTimeGetSeconds(timeRangeExpectedToLoad.duration);
     NSString *percentString = [NSString stringWithFormat:@"(%.0f/%.0f) seconds %.0f%%",
-                               CMTimeGetSeconds(timeRange.start),
-                               CMTimeGetSeconds(timeRangeExpectedToLoad.duration),
-                               percent * 100];
+                                                         CMTimeGetSeconds(timeRange.start),
+                                                         CMTimeGetSeconds(timeRangeExpectedToLoad.duration),
+                                                         percent * 100];
 
-    NSLog(@"PronViewController::didLoadTimeRange(), %.0f/%.0f seconds",
+    NSLog(@"%.0f/%.0f seconds",
           CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
-    
+
     DownloadAttachment *att = [[DownloadAttachment alloc] init];
     att.task = assetDownloadTask;
     NSString *attURL = [NSString stringWithFormat:@"Cancel://%lu", [assetDownloadTask hash]];
@@ -519,8 +559,8 @@
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
-    NSLog(@"PronViewController::didFinishDownloadingToURL(), location: %@", location);
-    
+    NSLog(@"location: %@", location);
+
     NSString *urlString = assetDownloadTask.URLAsset.URL.absoluteString;
     DownloadAttachment *att = [[DownloadAttachment alloc] init];
     att.task = assetDownloadTask;
@@ -552,8 +592,8 @@
 #pragma mark - WebView回调
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     decisionHandler(WKNavigationActionPolicyAllow);
-    if ( navigationAction.targetFrame.mainFrame ) {
-        NSLog(@"PronViewController::decidePolicyForNavigationAction(), mainFrame:%d, %ld, %@", navigationAction.targetFrame.mainFrame, navigationAction.navigationType, navigationAction.request.URL.absoluteString);
+    if (navigationAction.targetFrame.mainFrame) {
+        NSLog(@"mainFrame:%d, %ld, %@", navigationAction.targetFrame.mainFrame, navigationAction.navigationType, navigationAction.request.URL.absoluteString);
     }
     if ([self.textFieldAddress.text isEqual:navigationAction.request.URL.absoluteString] || (navigationAction.targetFrame.mainFrame)) {
         self.textFieldAddress.text = navigationAction.request.URL.absoluteString;
@@ -568,37 +608,38 @@
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
-    NSLog(@"PronViewController::didStartProvisionalNavigation()");
+    NSLog(@"");
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
     decisionHandler(WKNavigationResponsePolicyAllow);
-    NSLog(@"PronViewController::decidePolicyForNavigationResponse(), forMainFrame:%d, %@, URL:%@", navigationResponse.forMainFrame, webView.title, navigationResponse.response.URL.absoluteString);
+    NSLog(@"forMainFrame:%d, %@, URL:%@", navigationResponse.forMainFrame, webView.title, navigationResponse.response.URL.absoluteString);
     [self checkDownloadURL:self.forward];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-    NSLog(@"PronViewController::didFailProvisionalNavigation(), error: %@", error);
+    NSLog(@"error: %@", error);
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
-    NSLog(@"PronViewController::didCommitNavigation()");
+    NSLog(@"");
     self.title = @"Loading...";
     self.downloadUrlString = @"";
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-    NSLog(@"PronViewController::didFinishNavigation(), %@", webView.title);
+    NSLog(@"title: %@", webView.title);
     self.title = webView.title;
+    [self showBanner];
     [self checkDownloadURL:self.forward];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
-    NSLog(@"PronViewController::didFailNavigation(), error:%@", error);
+    NSLog(@"error:%@", error);
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
-    NSLog(@"PronViewController:webViewWebContentProcessDidTerminate()");
+    NSLog(@"");
 }
 
 #pragma mark - 输入回调

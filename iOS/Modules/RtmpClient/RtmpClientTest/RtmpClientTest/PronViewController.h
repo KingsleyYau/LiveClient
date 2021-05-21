@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BaseAdViewController.h"
 #import "StreamBaseViewController.h"
 #import "StreamWebView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PronViewController : StreamBaseViewController <WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
+@interface PronViewController : BaseAdViewController <WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
+@property (strong) NSString *baseUrl;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,26 +1,23 @@
 //
-//  StreamToastView.m
+//  StreamTitleView.m
 //  RtmpClientTest
 //
 //  Created by Max on 2020/11/17.
 //  Copyright © 2020 net.qdating. All rights reserved.
 //
 
-#import "StreamToastView.h"
+#import "StreamTitleView.h"
 
-@implementation StreamToastView
+@implementation StreamTitleView
 
 + (instancetype)view {
-    StreamToastView *view = [[StreamToastView alloc] init];
-    view = [[NSBundle mainBundle] loadNibNamed:@"StreamToastView" owner:nil options:nil].firstObject;
+    StreamTitleView *view = [[StreamTitleView alloc] init];
+    view = [[NSBundle mainBundle] loadNibNamed:@"StreamTitleView" owner:nil options:nil].firstObject;
     return view;
 }
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
-    self.layer.cornerRadius = 10;
-    self.layer.masksToBounds = YES;
 }
 
 /*

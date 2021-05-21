@@ -15,5 +15,6 @@
 #import "LSCommon_C_Library.h"
 
 #import "CommonDefine.h"
+#import "LogConfig.h"
 
 #endif /* PrefixHeader_pch */

@@ -11,6 +11,7 @@
 #import "StreamViewController.h"
 #import "StreamFileCollectionViewController.h"
 #import "PronViewController.h"
+#import "StreamHlsViewController.h"
 
 #import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
@@ -21,7 +22,11 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
+@import GoogleMobileAds;
+
 @interface StreamViewController () <LiveStreamPlayerDelegate, LiveStreamPublisherDelegate, StreamFileCollectionViewControllerDelegate>
+@property (strong) NSString *playUrl;
+@property (strong) NSString *publishUrl;
 
 @property (strong) NSArray<GPUImageFilter *> *playerFilterArray;
 @property (strong) LiveStreamPlayer *player;
@@ -65,6 +70,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
+    [[GADMobileAds sharedInstance] startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
+        NSLog(@"Google Ad init finish status: %@", status.adapterStatusesByClassName);
+    }];
+    
     // 界面处理
     self.title = @"Stream Player";
     // 信息
@@ -156,10 +165,25 @@
         @"cam_local" : @"rtmp://172.25.32.133:1935/mediaserver/camsahre?uid=WW0&room=WW0|||N_PC4|||4|||v123456&site=4",
         @"cam_pd" : @"rtmp://52.203.25.17:1935/mediaserver/camsahre?uid=MM54321&room=C773186|||N_PC4|||4|||&site=4",
     };
-    NSString *url = urls[@"tn"];
-
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
-    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
+    NSString *url = urls[@"tn"];;
+    if (self.playUrl.length == 0) {
+        self.textFieldAddress.text = [NSString stringWithFormat:@"%@", url, nil];
+//        self.textFieldAddress.text = @"rtmp://81.71.134.206:4000/cdn_standard/max0";
+        // 湖南卫视
+        self.textFieldAddress.text = @"rtmp://58.200.131.2:1935/livetv/hunantv";
+        // GoodTV
+        //@"rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp";
+        // USA
+        //@"rtmp://ns8.indexforce.com/home/mystream"
+        //@"rtmp://media3.scctv.net/live/scctv_800"
+    } else {
+        self.textFieldAddress.text = self.playUrl;
+    }
+    if (self.publishUrl.length == 0) {
+        self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
+    } else {
+        self.textFieldPublishAddress.text = self.publishUrl;
+    }
 
     //    [self playbackRate2x:nil];
     //    [self play:nil];
@@ -200,6 +224,31 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - 持久化
+- (NSString *)playUrl {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *playUrl = [userDefaults objectForKey:@"playUrl"];
+    return playUrl;
+}
+
+- (void)setPlayUrl:(NSString *)playUrl {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:playUrl forKey:@"playUrl"];
+    [userDefaults synchronize];
+}
+
+- (NSString *)publishUrl {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *publishUrl = [userDefaults objectForKey:@"publishUrl"];
+    return publishUrl;
+}
+
+- (void)setPublishUrl:(NSString *)publishUrl {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:publishUrl forKey:@"publishUrl"];
+    [userDefaults synchronize];
 }
 
 #pragma mark - 播放相关
@@ -269,6 +318,7 @@
 
 - (IBAction)playAction:(UIButton *)sender {
     if (!sender.selected) {
+        self.playUrl = self.textFieldAddress.text;
         [self play];
     } else {
         [self stopPlay];
@@ -350,6 +400,7 @@
 #pragma mark - 推流相关
 - (IBAction)publishAction:(UIButton *)sender {
     if (!sender.selected) {
+        self.publishUrl = self.textFieldPublishAddress.text;
         [self publish];
     } else {
         [self stopPush];
@@ -455,6 +506,12 @@
 #pragma mark - 浏览器
 - (IBAction)browserAction:(UIButton *)sender {
     PronViewController *vc = [[PronViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - TV
+- (IBAction)tvAction:(UIButton *)sender {
+    StreamHlsViewController *vc = [[StreamHlsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

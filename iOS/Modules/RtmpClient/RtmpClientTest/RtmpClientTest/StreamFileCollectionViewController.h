@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "StreamBaseViewController.h"
+#import "BaseViewController.h"
 
 @interface FileItem : NSObject
 @property (strong) NSString *fileName;
@@ -26,7 +26,7 @@
 - (void)didPublishFile:(FileItem *)fileItem;
 @end
 
-@interface StreamFileCollectionViewController : StreamBaseViewController
+@interface StreamFileCollectionViewController : BaseViewController
 @property (weak) id<StreamFileCollectionViewControllerDelegate> delegate;
 @property (strong) NSString *inputDir;
 @end

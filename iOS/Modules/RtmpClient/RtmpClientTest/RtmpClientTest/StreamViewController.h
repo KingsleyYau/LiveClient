@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "StreamBaseViewController.h"
+#import "BaseViewController.h"
 #import "GPUImage.h"
 
-@interface StreamViewController : StreamBaseViewController
+@interface StreamViewController : BaseViewController
 
 @property (strong) IBOutlet NSLayoutConstraint *previewTop;
 @property (strong) IBOutlet NSLayoutConstraint* previewViewRadio;

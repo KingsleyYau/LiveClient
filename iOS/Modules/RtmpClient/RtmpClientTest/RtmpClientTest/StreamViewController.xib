@@ -287,6 +287,13 @@
                                 <action selector="browserAction:" destination="-1" eventType="touchUpInside" id="NIn-hf-6qU"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bCe-gA-Bvl" userLabel="TV Button">
+                            <rect key="frame" x="85" y="174" width="22.666666666666671" height="22"/>
+                            <state key="normal" image="TVButton"/>
+                            <connections>
+                                <action selector="tvAction:" destination="-1" eventType="touchUpInside" id="xqJ-GE-AAW"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xjn-3p-Gfs" userLabel="Roate Button">
                             <rect key="frame" x="272" y="170" width="30" height="30"/>
                             <state key="normal" image="RoateButton"/>
@@ -324,6 +331,7 @@
                         <constraint firstItem="R83-1A-ytF" firstAttribute="leading" secondItem="Fsk-G9-zcb" secondAttribute="trailing" constant="5" id="Koa-bX-oOO"/>
                         <constraint firstItem="a1J-9n-uRh" firstAttribute="centerY" secondItem="BuY-wB-Amn" secondAttribute="centerY" id="LMz-9e-QXM"/>
                         <constraint firstItem="hU9-eE-xlQ" firstAttribute="centerY" secondItem="T6M-2C-qo0" secondAttribute="centerY" id="LsB-6Z-h5Y"/>
+                        <constraint firstItem="bCe-gA-Bvl" firstAttribute="leading" secondItem="q1y-hL-Qwg" secondAttribute="trailing" constant="10" id="MEv-55-SIC"/>
                         <constraint firstItem="Pdh-aq-JHi" firstAttribute="centerY" secondItem="nPX-Bf-Cn5" secondAttribute="centerY" id="N2e-UJ-f5z"/>
                         <constraint firstItem="YR0-La-dfT" firstAttribute="leading" secondItem="a1J-9n-uRh" secondAttribute="trailing" id="O1n-yn-9ze"/>
                         <constraint firstItem="Pdh-aq-JHi" firstAttribute="trailing" secondItem="Cb4-yG-ORS" secondAttribute="trailing" constant="-10" id="QSX-Xw-lTj"/>
@@ -349,6 +357,7 @@
                         <constraint firstItem="D4r-RD-2IJ" firstAttribute="leading" secondItem="R83-1A-ytF" secondAttribute="trailing" constant="5" id="shI-wq-ycg"/>
                         <constraint firstItem="T6M-2C-qo0" firstAttribute="leading" secondItem="Cb4-yG-ORS" secondAttribute="leading" constant="5" id="t2J-u8-WIW"/>
                         <constraint firstItem="hU9-eE-xlQ" firstAttribute="height" secondItem="Pdh-aq-JHi" secondAttribute="height" id="t9N-Ut-M1W"/>
+                        <constraint firstItem="bCe-gA-Bvl" firstAttribute="centerY" secondItem="q1y-hL-Qwg" secondAttribute="centerY" id="xdS-FV-djr"/>
                         <constraint firstItem="nPX-Bf-Cn5" firstAttribute="leading" secondItem="JTs-RJ-tmO" secondAttribute="trailing" constant="5" id="xgg-QD-rLm"/>
                     </constraints>
                 </view>
@@ -400,6 +409,7 @@
         <image name="PullButton" width="30" height="30"/>
         <image name="RoateButton" width="30" height="30"/>
         <image name="ScaleButton" width="100" height="100"/>
+        <image name="TVButton" width="22.5" height="22"/>
         <image name="UnMuteButton" width="30" height="30"/>
         <image name="UnMuteSmallButton" width="22" height="22"/>
         <systemColor name="systemBlueColor">

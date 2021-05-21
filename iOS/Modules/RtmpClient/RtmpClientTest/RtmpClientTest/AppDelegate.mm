@@ -9,8 +9,11 @@
 //
 
 #import "AppDelegate.h"
-
+#import "PronViewController.h"
 #include <common/KLog.h>
+
+#pragma mark - 跟踪
+#import <Firebase.h>
 
 @interface AppDelegate ()
 @end
@@ -43,14 +46,28 @@
     [userDefaults synchronize];
 }
 
+- (BOOL)subscribed {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL subscribed = [userDefaults boolForKey:@"subscribed"];
+    return subscribed;
+}
+
+- (void)setSubscribed:(BOOL)subscribed {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:subscribed forKey:@"subscribed"];
+    [userDefaults synchronize];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
     KLog::SetLogFileEnable(NO);
     KLog::SetLogLevel(KLog::LOG_WARNING);
     
+    [FIRApp configure];
     [self firstTimeActive];
     self.firstTimeActive = YES;
+    self.subscribed = YES;
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
@@ -77,6 +94,34 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *, id> *)options {
+    return [self handleOpenURL:url options:options];
+}
+
+- (BOOL)handleOpenURL:(NSURL *)url options:(NSDictionary<NSString *, id> *)options {
+    NSLog(@"handleOpenURL(), url: %@, options: %@", url, options);
+    BOOL bFlag = NO;
+    if (!url) {
+        return bFlag;
+    }
+    
+    NSURLComponents *cmp = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+    NSMutableArray *queryItems = [NSMutableArray arrayWithArray:cmp.queryItems];
+    for(NSURLQueryItem *item in queryItems) {
+        if ([[item.name lowercaseString] isEqualToString:@"baseurl"] && item.value.length > 0) {
+            UINavigationController *nvc = (UINavigationController *)self.window.rootViewController;
+            [nvc popToRootViewControllerAnimated:NO];
+            
+            PronViewController *vc = [[PronViewController alloc] init];
+            vc.baseUrl = item.value;
+            [nvc pushViewController:vc animated:NO];
+            break;
+        }
+    }
+    
+    return bFlag;
 }
 
 @end

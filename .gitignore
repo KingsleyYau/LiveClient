@@ -19,3 +19,6 @@ android/coollive/.classpath
 *.prefs
 
 *.a
+iOS/Modules/RtmpClient/RtmpClientTest/Pods
+iOS/Modules/RtmpClient/RtmpClientTest/Podfile.lock
+iOS/Modules/RtmpClient/RtmpClientTest/Pods/Manifest.lock

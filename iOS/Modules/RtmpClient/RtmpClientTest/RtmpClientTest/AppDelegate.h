@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#define AppShareDelegate() ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic) BOOL firstTimeActive;
+@property (assign, nonatomic) BOOL subscribed;
 @end
 
