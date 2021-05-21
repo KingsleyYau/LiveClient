@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "BaseAdViewController.h"
-#import "StreamBaseViewController.h"
 #import "StreamWebView.h"
 
 NS_ASSUME_NONNULL_BEGIN

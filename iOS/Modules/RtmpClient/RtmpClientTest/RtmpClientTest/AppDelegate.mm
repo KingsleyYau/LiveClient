@@ -67,7 +67,7 @@
     [FIRApp configure];
     [self firstTimeActive];
     self.firstTimeActive = YES;
-    self.subscribed = YES;
+    self.subscribed = NO;
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 

@@ -23,6 +23,8 @@
 		508A245A26579FD4008D378D /* ToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 508A245726579FD4008D378D /* ToastView.m */; };
 		508A24602657A024008D378D /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 508A245D2657A024008D378D /* LoadingView.m */; };
 		508A24612657A024008D378D /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508A245F2657A024008D378D /* LoadingView.xib */; };
+		508A24702657BBFE008D378D /* StreamLiveItemTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 508A246E2657BBFE008D378D /* StreamLiveItemTableViewController.m */; };
+		508A24712657BBFE008D378D /* StreamLiveItemTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508A246F2657BBFE008D378D /* StreamLiveItemTableViewController.xib */; };
 		509187432542AAA00073BECA /* PronViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187412542AAA00073BECA /* PronViewController.m */; };
 		509187442542AAA00073BECA /* PronViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509187422542AAA00073BECA /* PronViewController.xib */; };
 		509187472542B4C10073BECA /* StreamWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187462542B4C10073BECA /* StreamWebView.m */; };
@@ -133,6 +135,9 @@
 		508A245E2657A024008D378D /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		508A245F2657A024008D378D /* LoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingView.xib; sourceTree = "<group>"; };
 		508A246A2657A730008D378D /* LogConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogConfig.h; sourceTree = "<group>"; };
+		508A246D2657BBFE008D378D /* StreamLiveItemTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamLiveItemTableViewController.h; sourceTree = "<group>"; };
+		508A246E2657BBFE008D378D /* StreamLiveItemTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StreamLiveItemTableViewController.m; sourceTree = "<group>"; };
+		508A246F2657BBFE008D378D /* StreamLiveItemTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StreamLiveItemTableViewController.xib; sourceTree = "<group>"; };
 		509187402542AAA00073BECA /* PronViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PronViewController.h; sourceTree = "<group>"; };
 		509187412542AAA00073BECA /* PronViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PronViewController.m; sourceTree = "<group>"; };
 		509187422542AAA00073BECA /* PronViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PronViewController.xib; sourceTree = "<group>"; };
@@ -292,6 +297,9 @@
 				50FC551C265764480065E1D6 /* StreamHlsViewController.h */,
 				50FC551D265764480065E1D6 /* StreamHlsViewController.m */,
 				50FC551E265764480065E1D6 /* StreamHlsViewController.xib */,
+				508A246D2657BBFE008D378D /* StreamLiveItemTableViewController.h */,
+				508A246E2657BBFE008D378D /* StreamLiveItemTableViewController.m */,
+				508A246F2657BBFE008D378D /* StreamLiveItemTableViewController.xib */,
 				5080C8482558EB5E00F5E4F3 /* StreamNavigationController.h */,
 				5080C8492558EB5E00F5E4F3 /* StreamNavigationController.m */,
 				50DAEF832136403D00FB374D /* StreamViewController.h */,
@@ -540,6 +548,7 @@
 				509187442542AAA00073BECA /* PronViewController.xib in Resources */,
 				508A24612657A024008D378D /* LoadingView.xib in Resources */,
 				508A245926579FD4008D378D /* ToastView.xib in Resources */,
+				508A24712657BBFE008D378D /* StreamLiveItemTableViewController.xib in Resources */,
 				50FC5519265753690065E1D6 /* Icon-60@3x.png in Resources */,
 				50FC5520265764480065E1D6 /* StreamHlsViewController.xib in Resources */,
 				50C994971E8F911E001E1355 /* Main.storyboard in Resources */,
@@ -622,6 +631,7 @@
 				50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */,
 				509187432542AAA00073BECA /* PronViewController.m in Sources */,
 				50E8AF8825358FED00DECC7D /* StreamFileCollectionViewCell.m in Sources */,
+				508A24702657BBFE008D378D /* StreamLiveItemTableViewController.m in Sources */,
 				50FC550C26566A9C0065E1D6 /* OCTimer.m in Sources */,
 				5080C84A2558EB5E00F5E4F3 /* StreamNavigationController.m in Sources */,
 				509187472542B4C10073BECA /* StreamWebView.m in Sources */,

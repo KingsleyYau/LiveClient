@@ -7,6 +7,7 @@
 //
 
 #import "StreamHlsViewController.h"
+#import "StreamLiveItemTableViewController.h"
 #import "OCTimer.h"
 #import "LiveItem.h"
 #import "StreamTitleView.h"
@@ -39,7 +40,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackNavButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackNavButton"] style:UIBarButtonItemStylePlain target:self action:@selector(listAction:)];
+    
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
 
@@ -205,6 +208,14 @@
 
 - (IBAction)backAction:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)listAction:(id)sender {
+    StreamLiveItemTableViewController *vc = [[StreamLiveItemTableViewController alloc] initWithNibName:nil bundle:nil];
+    vc.items = self.items;
+    [self presentViewController:vc animated:YES completion:^{
+            
+    }];
 }
 
 #pragma mark 添加播放监听
