@@ -60,6 +60,10 @@
     }
 }
 
+- (void)rotateCamera {
+//    [self.videoCaptureSession rotateCamera];
+}
+
 - (void)capture:(UIInterfaceOrientation)orientation captureFinish:(CaptureFinish)captureFinish {
     // TODO:2.设置摄像头图像输出逆时针旋转90度
     self.videoCaptureSession.outputImageOrientation = orientation;

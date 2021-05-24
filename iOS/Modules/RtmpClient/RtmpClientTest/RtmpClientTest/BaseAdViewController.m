@@ -17,6 +17,7 @@
 @property (strong) GADRewardedAd *rewardedAd;
 @property (strong) GADRewardedInterstitialAd *rewardedInterstitialAd;
 @property (strong) GADBannerView *bannerView;
+@property (assign) BOOL adShowed;
 @end
 
 @implementation BaseAdViewController
@@ -28,15 +29,20 @@
     self.bannerView.adUnitID = AD_BANNER;
     self.bannerView.rootViewController = self;
     self.bannerView.delegate = self;
+    
+    self.adShowed = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self tryLoadAD];
+    if (!self.viewDidAppearEver) {
+        [self tryLoadAD];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self tryOnceAD];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -71,6 +77,12 @@
         canPresent = [self showInterstitialAD];
     }
     return canPresent;
+}
+
+- (void)tryOnceAD {
+    if (!self.adShowed) {
+        [self tryShowAD];
+    }
 }
 
 - (void)showBanner {
@@ -112,6 +124,7 @@
         if (canPresent) {
             [self.interstitial presentFromRootViewController:self];
             self.interstitial = nil;
+            self.adShowed = YES;
         } else {
             NSLog(@"Insert ad wasn't ready %@", error);
         }
@@ -148,6 +161,7 @@
                                       NSLog(@"User earn reward %@", self.rewardedAd.adReward);
                                       self.rewardedAd = nil;
                                   }];
+            self.adShowed = YES;
         } else {
             NSLog(@"Reward ad wasn't ready %@", error);
         }
@@ -184,6 +198,7 @@
                                                   NSLog(@"User earn reward %@", self.rewardedInterstitialAd.adReward);
                                                   self.rewardedInterstitialAd = nil;
                                               }];
+            self.adShowed = YES;
         } else {
             NSLog(@"Reward-Insert ad wasn't ready %@", error);
         }

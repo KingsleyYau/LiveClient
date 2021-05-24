@@ -20,6 +20,19 @@
 @end
 
 @implementation BaseViewController
+- (id)init {
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        NSLog(@"%@, %p", NSStringFromClass([self class]), self);
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    NSLog(@"%@, %p", NSStringFromClass([self class]), self);
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

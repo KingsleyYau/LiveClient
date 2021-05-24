@@ -10,6 +10,8 @@
 
 #import "AppDelegate.h"
 #import "PronViewController.h"
+#import "StreamHlsViewController.h"
+
 #include <common/KLog.h>
 
 #pragma mark - 跟踪
@@ -19,6 +21,18 @@
 @end
 
 @implementation AppDelegate
+- (BOOL)subscribed {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL subscribed = [userDefaults boolForKey:@"subscribed"];
+    return subscribed;
+}
+
+- (void)setSubscribed:(BOOL)subscribed {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:subscribed forKey:@"subscribed"];
+    [userDefaults synchronize];
+}
+
 - (BOOL)firstTimeActive {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     BOOL firstTimeActive = [userDefaults boolForKey:@"firstTimeActive"];
@@ -46,15 +60,27 @@
     [userDefaults synchronize];
 }
 
-- (BOOL)subscribed {
+- (BOOL)pornhubActive {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL subscribed = [userDefaults boolForKey:@"subscribed"];
-    return subscribed;
+    BOOL pornhubActive = [userDefaults boolForKey:@"pornhubActive"];
+    return pornhubActive;
 }
 
-- (void)setSubscribed:(BOOL)subscribed {
+- (void)setPornhubActive:(BOOL)pornhubActive {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setBool:subscribed forKey:@"subscribed"];
+    [userDefaults setBool:pornhubActive forKey:@"pornhubActive"];
+    [userDefaults synchronize];
+}
+
+- (BOOL)tvActive {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL tvActive = [userDefaults boolForKey:@"tvActive"];
+    return tvActive;
+}
+
+- (void)setTvActive:(BOOL)tvActive {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:tvActive forKey:@"tvActive"];
     [userDefaults synchronize];
 }
 
@@ -65,9 +91,11 @@
     KLog::SetLogLevel(KLog::LOG_WARNING);
     
     [FIRApp configure];
+    self.subscribed = YES;
     [self firstTimeActive];
     self.firstTimeActive = YES;
-    self.subscribed = NO;
+    self.pornhubActive = YES;
+    self.tvActive = YES;
     
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
@@ -108,17 +136,33 @@
     }
     
     NSURLComponents *cmp = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-    NSMutableArray *queryItems = [NSMutableArray arrayWithArray:cmp.queryItems];
-    for(NSURLQueryItem *item in queryItems) {
-        if ([[item.name lowercaseString] isEqualToString:@"baseurl"] && item.value.length > 0) {
-            UINavigationController *nvc = (UINavigationController *)self.window.rootViewController;
-            [nvc popToRootViewControllerAnimated:NO];
-            
-            PronViewController *vc = [[PronViewController alloc] init];
-            vc.baseUrl = item.value;
-            [nvc pushViewController:vc animated:NO];
-            break;
+    NSString *path = [cmp.path lowercaseString];
+    if ( [path isEqualToString:@"/browser"] ) {
+        NSMutableArray *queryItems = [NSMutableArray arrayWithArray:cmp.queryItems];
+        for(NSURLQueryItem *item in queryItems) {
+            if ([[item.name lowercaseString] isEqualToString:@"baseurl"] && item.value.length > 0) {
+                AppShareDelegate().pornhubActive = YES;
+                
+                UINavigationController *nvc = (UINavigationController *)self.window.rootViewController;
+                [nvc popToRootViewControllerAnimated:NO];
+                
+                PronViewController *vc = [[PronViewController alloc] init];
+                vc.baseUrl = item.value;
+                [nvc pushViewController:vc animated:NO];
+                bFlag = YES;
+                
+                break;
+            }
         }
+    } else if ( [path isEqualToString:@"/tv"] ) {
+        AppShareDelegate().tvActive = YES;
+        
+        UINavigationController *nvc = (UINavigationController *)self.window.rootViewController;
+        [nvc popToRootViewControllerAnimated:NO];
+        
+        StreamHlsViewController *vc = [[StreamHlsViewController alloc] init];
+        [nvc pushViewController:vc animated:NO];
+        bFlag = YES;
     }
     
     return bFlag;

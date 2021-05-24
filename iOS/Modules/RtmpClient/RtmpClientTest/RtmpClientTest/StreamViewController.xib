@@ -26,6 +26,7 @@
                 <outlet property="labelFps" destination="qIz-z5-ZpK" id="98D-w7-rur"/>
                 <outlet property="labelVideoSize" destination="h6A-Xk-jAV" id="kZz-44-4TP"/>
                 <outlet property="loadingView" destination="1mG-KI-R9d" id="KAn-5r-RtG"/>
+                <outlet property="pornhubButtonWidth" destination="RtW-v0-rPQ" id="S1G-io-XG6"/>
                 <outlet property="previewPublishView" destination="i4D-ha-MOA" id="swf-p4-FLT"/>
                 <outlet property="previewView" destination="lAj-db-Qml" id="lOV-Od-tLU"/>
                 <outlet property="previewViewBottom" destination="Tuf-KU-Anf" id="Kfv-Rs-PQG"/>
@@ -34,6 +35,7 @@
                 <outlet property="sliderCacheMS" destination="Uml-im-px6" id="GVK-z1-APG"/>
                 <outlet property="textFieldAddress" destination="R83-1A-ytF" id="q96-Mr-jlZ"/>
                 <outlet property="textFieldPublishAddress" destination="nPX-Bf-Cn5" id="4qv-me-KLb"/>
+                <outlet property="tvButtonWidth" destination="0aZ-Qe-4B6" id="YJI-GK-uMm"/>
                 <outlet property="view" destination="ZWE-DN-YWb" id="UEa-zx-vng"/>
             </connections>
         </placeholder>
@@ -282,13 +284,19 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1y-hL-Qwg" userLabel="Browser Button">
                             <rect key="frame" x="45" y="170" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="RtW-v0-rPQ"/>
+                            </constraints>
                             <state key="normal" image="BrowserButton"/>
                             <connections>
                                 <action selector="browserAction:" destination="-1" eventType="touchUpInside" id="NIn-hf-6qU"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bCe-gA-Bvl" userLabel="TV Button">
-                            <rect key="frame" x="85" y="174" width="22.666666666666671" height="22"/>
+                            <rect key="frame" x="85" y="174" width="30" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="0aZ-Qe-4B6"/>
+                            </constraints>
                             <state key="normal" image="TVButton"/>
                             <connections>
                                 <action selector="tvAction:" destination="-1" eventType="touchUpInside" id="xqJ-GE-AAW"/>

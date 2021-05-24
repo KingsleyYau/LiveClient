@@ -58,7 +58,7 @@
 
     // 界面处理
     self.title = @"Browser";
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackNavButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Nav-BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 24, 24);

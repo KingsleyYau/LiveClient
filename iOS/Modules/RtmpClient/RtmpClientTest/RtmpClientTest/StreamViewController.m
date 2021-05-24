@@ -76,6 +76,9 @@
     
     // 界面处理
     self.title = @"Stream Player";
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.backButtonTitle = @"Back";
+    }
     // 信息
     self.labelVideoSize.text = @"";
     self.labelFps.text = @"";
@@ -191,6 +194,20 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    if (AppShareDelegate().pornhubActive) {
+        self.pornhubButtonWidth.constant = 30;
+    } else {
+        self.pornhubButtonWidth.constant = 0;
+    }
+    
+    if (AppShareDelegate().tvActive) {
+        self.tvButtonWidth.constant = 30;
+    } else {
+        self.tvButtonWidth.constant = 0;
+    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -440,6 +457,7 @@
 }
 
 - (IBAction)roateAction:(UIButton *)sender {
+    [self.pictureCapture rotateCamera];
     [self.publisher rotateCamera];
 }
 
@@ -505,12 +523,18 @@
 
 #pragma mark - 浏览器
 - (IBAction)browserAction:(UIButton *)sender {
+    [self stopPush];
+    [self stopPlay];
+    
     PronViewController *vc = [[PronViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - TV
 - (IBAction)tvAction:(UIButton *)sender {
+    [self stopPush];
+    [self stopPlay];
+    
     StreamHlsViewController *vc = [[StreamHlsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }

@@ -10,149 +10,147 @@
 #import "StreamLiveItemTableViewController.h"
 #import "OCTimer.h"
 #import "LiveItem.h"
+#import "LiveCategory.h"
 #import "StreamTitleView.h"
+#import "LiveStreamSession.h"
+#import "FileDownloadManager.h"
+
 
 #import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
-@interface StreamHlsViewController ()
+@interface StreamHlsViewController () <StreamLiveItemTableViewControllerDelegate, AVPictureInPictureControllerDelegate, NSURLSessionDownloadDelegate>
 @property (strong) IBOutlet NSLayoutConstraint *previewTop;
 @property (strong) IBOutlet NSLayoutConstraint *previewViewRadio;
 @property (strong) IBOutlet NSLayoutConstraint *previewViewBottom;
 @property (weak) IBOutlet UIView *controlView;
+@property (weak) IBOutlet UIButton *recordButton;
 
 @property (weak) IBOutlet UIView *playerView;
-@property (strong) AVPlayerItem *item;
+@property (strong) AVPlayerItem *playerItem;
 @property (strong) AVPlayer *player;
 @property (strong) AVPlayerLayer *playerLayer;
+
+@property (strong) NSArray<LiveCategory *> *categories;
+@property (assign) NSInteger categoryIndex;
+
 @property (strong) NSArray<LiveItem *> *items;
 @property (strong) LiveItem *liveItem;
 @property (assign) NSInteger liveItemIndex;
+
 @property (strong) OCTimer *timer;
 @property (assign) UIDeviceOrientation deviceOrientation;
+
+@property (strong) AVPictureInPictureController *pictureVC;
+@property (strong) NSURLSessionTask *task;
 @end
 
 @implementation StreamHlsViewController
 - (void)dealloc {
-    [self removeObserve];
-    [self.player pause];
+    [[FileDownloadManager manager] removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackNavButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackNavButton"] style:UIBarButtonItemStylePlain target:self action:@selector(listAction:)];
-    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Nav-ListButton"] style:UIBarButtonItemStylePlain target:self action:@selector(listAction:)];
+
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
-
-    // 加载数据
-    [self reloadData];
-    // 界面处理
-    [self play];
-
+    
     self.timer = [[OCTimer alloc] init];
     [self.timer startTimer:nil
-              timeInterval:180 * NSEC_PER_SEC
+              timeInterval:60 * NSEC_PER_SEC
                    starNow:YES
                     action:^{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self tryAllAD];
+                            [self showBanner];
                         });
                     }];
-
-    // 显示广告
-    [self tryAllAD];
+    
+    [[FileDownloadManager manager] addDelegate:self];
+    
+    [self.recordButton setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     if (!self.viewDidAppearEver) {
         // 添加旋转事件
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        // 加载数据
+        [self requestCategories];
     }
     [super viewDidAppear:animated];
+    [self showBanner];
+}
 
-    self.playerLayer.frame = self.playerView.frame;
-    [self.player play];
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self stop];
+}
+
+#pragma mark - 数据
+- (void)requestCategories {
+    NSString *url = @"https://m.maxzoon.cn/tv_list";
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:req
+                                                                 completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+                                                                     if (!error) {
+                                                                         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+                                                                         NSNumber *err = dict[@"errno"];
+                                                                         if ([err isEqualToNumber:@0]) {
+                                                                             NSMutableArray *categories = [NSMutableArray array];
+                                                                             NSArray *dict_categories = dict[@"data"];
+                                                                             for(NSDictionary *dict_category in dict_categories) {
+                                                                                 LiveCategory *category = [[LiveCategory alloc] init];
+                                                                                 [categories addObject:category];
+                                                                                 
+                                                                                 category.name = dict_category[@"category"];
+                                                                                 NSMutableArray *category_items = [NSMutableArray array];
+                                                                                 NSArray *dict_category_items = dict_category[@"items"];
+                                                                                 for(NSDictionary *dict_category_item in dict_category_items) {
+                                                                                     LiveItem *item = [[LiveItem alloc] init];
+                                                                                     item.name = dict_category_item[@"name"];
+                                                                                     item.url = dict_category_item[@"url"];
+                                                                                     [category_items addObject:item];
+                                                                                 }
+                                                                                 category.items = category_items;
+                                                                             }
+                                                                             self.categories = categories;
+                                                                             
+                                                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                 [self reloadData];
+                                                                             });
+                                                                         } else {
+                                                                             NSString *errmsg = dict[@"errmsg"];
+                                                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                 NSString *tips = [NSString stringWithFormat:@"网络错误, 请稍后重试. [%@]", errmsg];
+                                                                                 [self toast:tips];
+                                                                             });
+                                                                         }
+                                                                     } else {
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             [self toast:@"网络错误, 请稍后重试."];
+                                                                         });
+                                                                     }
+                                                                 }];
+    [task resume];
 }
 
 - (void)reloadData {
+    self.categoryIndex = 0;
+    self.items = self.categories[self.categoryIndex].items;
     self.liveItemIndex = 0;
-    NSMutableArray *newItems = [NSMutableArray array];
-
-    LiveItem *liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"高清翡翠台";
-    liveItem.url = @"http://116.199.5.52:8114/index.m3u8?Fsv_chan_hls_se_idx=188&FvSeid=1&Fsv_ctype=LIVES&Fsv_otype=1&Provider_id=&Pcontent_id=.m3u8";
-    liveItem.logo = [UIImage imageNamed:@"TVB-HD"];
-    [newItems addObject:liveItem];
-
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"明珠台";
-    liveItem.url = @"http://116.199.5.52:8114/index.m3u8?Fsv_chan_hls_se_idx=12&FvSeid=1&Fsv_ctype=LIVES&Fsv_otype=1&Provider_id=&Pcontent_id=.m3u8";
-    liveItem.logo = [UIImage imageNamed:@"TVB-MZ"];
-    [newItems addObject:liveItem];
-
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"香港卫视";
-    liveItem.url = @"http://zhibo.hkstv.tv/livestream/mutfysrq/playlist.m3u8";
-    liveItem.logo = [UIImage imageNamed:@"HKS"];
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"香港电台";
-    liveItem.url = @"http://rthklive1-lh.akamaihd.net/i/rthk31_1@167495/index_2052_av-p.m3u8?sd=10&rebase=on";
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"香港开电视";
-    liveItem.url = @"http://media.fantv.hk/m3u8/archive/channel2_stream1.m3u8";
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"广州电视台综合频道";
-    liveItem.url = @"https://aplays.gztv.com/live/zhonghes.m3u8?txTime=60A77C19&txSecret=a5f6ffc19fdfa0d8ff4d3860a4da98d6";
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"广州电视台新闻频道";
-    liveItem.url = @"https://aplays.gztv.com/live/xinwen.m3u8?txTime=60A77B94&txSecret=8b7914caed9e724816849433acc3f345";
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"广州电视台影视频道";
-    liveItem.url = @"https://aplays.gztv.com/live/yingshi.m3u8?txTime=60A77B1E&txSecret=ba8171e80b21a1728239474f29bdfd12";
-    [newItems addObject:liveItem];
-
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"浙江卫视";
-    liveItem.url = @"http://hw-m-l.cztv.com/channels/lantian/channel01/360p.m3u8";
-//    liveItem.logo = [UIImage imageNamed:@"HKS"];
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"韩国CBS";
-    liveItem.url = @"http://cbs-live.gscdn.com/cbs-live/cbs-live.stream/playlist.m3u8";
-    [newItems addObject:liveItem];
-    
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"韩国KBS1";
-    liveItem.url = @"http://ebsonair.ebs.co.kr/groundwavefamilypc/familypc1m/chunklist_w1960240276.m3u8";
-    [newItems addObject:liveItem];
-
-    liveItem = [[LiveItem alloc] init];
-    liveItem.name = @"韩国EBSeHD";
-    liveItem.url = @"http://ebsonair.ebs.co.kr/plus3familypc/familypc1m/playlist.m3u8";
-    [newItems addObject:liveItem];
-
-    self.items = newItems;
     self.liveItem = [self.items objectAtIndex:self.liveItemIndex];
+    [self play];
 }
 
+#pragma mark - 界面
 - (void)reloadTitleView {
     StreamTitleView *titleView = [StreamTitleView view];
     titleView.logoImageView.image = self.liveItem.logo;
     titleView.titleLabel.text = self.liveItem.name;
-    titleView.activityView.hidden = self.item.playbackLikelyToKeepUp;
+    titleView.activityView.hidden = self.playerItem.playbackLikelyToKeepUp;
 
     [titleView.titleLabel sizeToFit];
     [titleView sizeToFit];
@@ -160,26 +158,43 @@
 }
 
 - (void)refreshLayer {
-    [self.playerLayer removeFromSuperlayer];
-    self.playerLayer = nil;
-    
-    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-    [self.playerView.layer addSublayer:self.playerLayer];
-    self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    self.playerLayer.frame = self.playerView.frame;
+    self.playerLayer.frame = CGRectMake(0, 0, self.playerView.frame.size.width, self.playerView.frame.size.height);
 }
 
+#pragma mark - 播放控制
 - (void)play {
-    [self removeObserve];
-    [self.player pause];
+    [self stop];
 
-    NSURL *url = [NSURL URLWithString:self.liveItem.url];
-    self.item = [[AVPlayerItem alloc] initWithURL:url];
-    self.player = [AVPlayer playerWithPlayerItem:self.item];
+    if (self.liveItem) {
+        NSURL *url = [NSURL URLWithString:self.liveItem.url];
+        self.playerItem = [[AVPlayerItem alloc] initWithURL:url];
+        if (self.player) {
+            [self.player replaceCurrentItemWithPlayerItem:self.playerItem];
+        } else {
+            self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
+            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+            [self.playerView.layer addSublayer:self.playerLayer];
+            self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+            self.pictureVC = [[AVPictureInPictureController alloc] initWithPlayerLayer:self.playerLayer];
+            self.pictureVC.delegate = self;
+        }
+        [self.player play];
+        
+        [self refreshLayer];
+        [self reloadTitleView];
+        [self addObserve];
+        
+        [[LiveStreamSession session] startPlay];
+    }
+}
 
-    [self refreshLayer];
-    [self reloadTitleView];
-    [self addObserve];
+- (void)stop {
+    if (self.playerItem) {
+        [self removeObserve];
+        [self.player pause];
+        self.playerItem = nil;
+        [[LiveStreamSession session] stopPlay];
+    }
 }
 
 - (IBAction)preAction:(UIButton *)sender {
@@ -206,35 +221,86 @@
     [self play];
 }
 
-- (IBAction)backAction:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (IBAction)listAction:(id)sender {
+    // TODO:节目列表
     StreamLiveItemTableViewController *vc = [[StreamLiveItemTableViewController alloc] initWithNibName:nil bundle:nil];
-    vc.items = self.items;
-    [self presentViewController:vc animated:YES completion:^{
-            
-    }];
+    vc.categories = self.categories;
+    vc.delegate = self;
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self.navigationController presentViewController:nvc
+                                            animated:YES
+                                          completion:^{
+
+                                          }];
 }
 
-#pragma mark 添加播放监听
+- (IBAction)pictureAction:(id)sender {
+    // TODO:画中画
+    if ([AVPictureInPictureController isPictureInPictureSupported]) {
+        if ([self.pictureVC isPictureInPictureActive]) {
+            [self.pictureVC stopPictureInPicture];
+        } else {
+            [self.pictureVC startPictureInPicture];
+        }
+    }
+}
+
+- (IBAction)recordAction:(UIButton *)sender {
+    // TODO:录制
+    if (sender.selected) {
+        [self.task cancel];
+    } else {
+        self.task = [[FileDownloadManager manager] downloadHLSURL:self.liveItem.url];
+    }
+    sender.selected = !sender.selected;
+}
+
+- (void)streamTableView:(StreamLiveItemTableViewController*)vc didSelectLiveItem:(LiveItem *)liveItem category:(LiveCategory *)category {
+    // TODO:选择频道
+    self.categoryIndex = [self.categories indexOfObject:category];
+    self.items = self.categories[self.categoryIndex].items;
+    self.liveItemIndex = [self.items indexOfObject:liveItem];
+    self.liveItem = [self.items objectAtIndex:self.liveItemIndex];
+    [self play];
+}
+
+#pragma mark - 画中画通知
+- (void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"");
+}
+- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"");
+}
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController failedToStartPictureInPictureWithError:(NSError *)error {
+    NSLog(@"error: %@", error);
+}
+- (void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"");
+}
+- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"");
+}
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler {
+    NSLog(@"");
+}
+
+#pragma mark - 添加播放监听
 - (void)addObserve {
-    [self.item addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-    [self.item addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
-    [self.item addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)removeObserve {
-    [self.item removeObserver:self forKeyPath:@"status"];
-    [self.item removeObserver:self forKeyPath:@"playbackBufferEmpty"];
-    [self.item removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+    [self.playerItem removeObserver:self forKeyPath:@"status"];
+    [self.playerItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
+    [self.playerItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
 }
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSString *, id> *)change context:(nullable void *)context {
-    NSLog(@"keyPath: %@, status: %d, object: %@, ", keyPath, (int)self.item.status, object);
+    NSLog(@"keyPath: %@, status: %d, object: %@, ", keyPath, (int)self.playerItem.status, object);
     if ([keyPath isEqualToString:@"status"]) {
-        if (self.item.status == AVPlayerItemStatusFailed) {
+        if (self.playerItem.status == AVPlayerItemStatusFailed) {
             NSString *tips = [NSString stringWithFormat:@"当前频道失效, 切换到下一个频道"];
             [self toast:tips];
             [self nextAction:nil];
@@ -300,6 +366,16 @@
     }
     [self.view layoutSubviews];
     [self refreshLayer];
+}
+
+#pragma mark - HLS
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
+    if (self.task == assetDownloadTask) {
+        NSLog(@"location: %@", location);
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    }
 }
 
 @end

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^CaptureFinish)(NSString *filePath);
 
 @interface LivePictureCapture : NSObject
+- (void)rotateCamera;
 - (void)capture:(UIInterfaceOrientation)orientation captureFinish:(CaptureFinish)captureFinish;
 @end
 

@@ -22,3 +22,4 @@ android/coollive/.classpath
 iOS/Modules/RtmpClient/RtmpClientTest/Pods
 iOS/Modules/RtmpClient/RtmpClientTest/Podfile.lock
 iOS/Modules/RtmpClient/RtmpClientTest/Pods/Manifest.lock
+iOS/Modules/RtmpClient/RtmpClientTest/RtmpClientTest/GoogleService-Info.plist

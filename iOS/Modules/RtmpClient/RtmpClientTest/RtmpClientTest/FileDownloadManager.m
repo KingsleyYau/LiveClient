@@ -88,13 +88,13 @@ static FileDownloadManager *gManager = nil;
 - (AVAssetDownloadTask *)downloadHLSURL:(NSString *)url {
     AVAssetDownloadTask *task = nil;
     if (self.isAssetSessionOK) {
-        NSLog(@"FileDownloadManager::downloadHLS(), [Start], %@", url);
+        NSLog(@"[Start], %@", url);
         NSURL *assetURL = [NSURL URLWithString:url];
         AVURLAsset *hlsAsset = [AVURLAsset assetWithURL:assetURL];
         task = [self.assetSession assetDownloadTaskWithURLAsset:hlsAsset assetTitle:@"hls" assetArtworkData:nil options:nil];
         [task resume];
     } else {
-        NSLog(@"FileDownloadManager::downloadHLS(), [Start Fail], %@", url);
+        NSLog(@"[Start Fail], %@", url);
     }
     return task;
 }
@@ -102,12 +102,12 @@ static FileDownloadManager *gManager = nil;
 - (NSURLSessionDownloadTask *)downloadURL:(NSString *)url {
     NSURLSessionDownloadTask *task = nil;
     if (self.isSessionOK) {
-        NSLog(@"FileDownloadManager::download(), [Start], %@", url);
+        NSLog(@"[Start], %@", url);
         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
         task = [self.session downloadTaskWithRequest:req];
         [task resume];
     } else {
-        NSLog(@"FileDownloadManager::download(), [Start Fail], %@", url);
+        NSLog(@"[Start Fail], %@", url);
     }
     return task;
 }
@@ -152,7 +152,7 @@ static FileDownloadManager *gManager = nil;
             }
         }
     } else {
-        NSLog(@"FileDownloadManager::getAllVideo(), error: %@", error);
+        NSLog(@"error: %@", error);
     }
 }
 
@@ -171,7 +171,7 @@ static FileDownloadManager *gManager = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
-    NSLog(@"FileDownloadManager::didResumeAtOffset(), fileOffset: %lld, expectedTotalBytes: %lld", fileOffset, expectedTotalBytes);
+    NSLog(@"fileOffset: %lld, expectedTotalBytes: %lld", fileOffset, expectedTotalBytes);
     for (NSValue *value in self.delegates) {
         id<NSURLSessionDownloadDelegate> delegate = value.nonretainedObjectValue;
         if ([delegate respondsToSelector:@selector(URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:)]) {
@@ -192,7 +192,7 @@ static FileDownloadManager *gManager = nil;
     NSError *error;
     [fm createDirectoryAtPath:ouputDir withIntermediateDirectories:YES attributes:nil error:&error];
     [fm moveItemAtURL:location toURL:[NSURL fileURLWithPath:ouputFile] error:&error];
-    NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), %@", downloadTask.response.suggestedFilename);
+    NSLog(@"%@", downloadTask.response.suggestedFilename);
 
     for (NSValue *value in self.delegates) {
         id<NSURLSessionDownloadDelegate> delegate = value.nonretainedObjectValue;
@@ -205,7 +205,7 @@ static FileDownloadManager *gManager = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    NSLog(@"FileDownloadManager::didCompleteWithError(), %@", error);
+    NSLog(@"%@", error);
     BOOL bCanResume = NO;
     if (error) {
         NSData *data = error.userInfo[NSURLSessionDownloadTaskResumeData];
@@ -251,7 +251,7 @@ static FileDownloadManager *gManager = nil;
 
 #pragma mark - HLS
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
-    NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), location: %@, url: %@", location, assetDownloadTask.URLAsset.URL.absoluteString);
+    NSLog(@"location: %@, url: %@", location, assetDownloadTask.URLAsset.URL.absoluteString);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -279,7 +279,7 @@ static FileDownloadManager *gManager = nil;
         
         [fm removeItemAtPath:ouputFile error:&error];
         if (error) {
-            NSLog(@"FileDownloadManager::didFinishDownloadingToURL(), error: %@", error);
+            NSLog(@"error: %@", error);
         }
 
         for (NSValue *value in self.delegates) {
@@ -294,7 +294,7 @@ static FileDownloadManager *gManager = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
-    NSLog(@"FileDownloadManager::didLoadTimeRange(), %.0f/%.0f second, %lu.mp4",
+    NSLog(@"%.0f/%.0f second, %lu.mp4",
           CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration), [assetDownloadTask hash]);
     for (NSValue *value in self.delegates) {
         id<AVAssetDownloadDelegate> delegate = value.nonretainedObjectValue;
@@ -309,19 +309,19 @@ static FileDownloadManager *gManager = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didResolveMediaSelection:(AVMediaSelection *)resolvedMediaSelection {
-    NSLog(@"FileDownloadManager::didResolveMediaSelection(), resolvedMediaSelection: %@", resolvedMediaSelection);
+    NSLog(@"resolvedMediaSelection: %@", resolvedMediaSelection);
 }
 
 - (void)URLSession:(NSURLSession *)session aggregateAssetDownloadTask:(AVAggregateAssetDownloadTask *)aggregateAssetDownloadTask willDownloadToURL:(NSURL *)location API_AVAILABLE(ios(11.0)) {
-    NSLog(@"FileDownloadManager::willDownloadToURL(), location: %@", location);
+    NSLog(@"location: %@", location);
 }
 
 - (void)URLSession:(NSURLSession *)session aggregateAssetDownloadTask:(AVAggregateAssetDownloadTask *)aggregateAssetDownloadTask didCompleteForMediaSelection:(AVMediaSelection *)mediaSelection API_AVAILABLE(ios(11.0)) {
-    NSLog(@"FileDownloadManager::didCompleteForMediaSelection(), mediaSelection: %@", mediaSelection);
+    NSLog(@"mediaSelection: %@", mediaSelection);
 }
 
 - (void)URLSession:(NSURLSession *)session aggregateAssetDownloadTask:(AVAggregateAssetDownloadTask *)aggregateAssetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad forMediaSelection:(AVMediaSelection *)mediaSelection API_AVAILABLE(ios(11.0)) {
-    NSLog(@"FileDownloadManager::didLoadTimeRange(), [Finish], loaded(%f, %f), expected(%f, %f), mediaSelection: %@",
+    NSLog(@"[Finish], loaded(%f, %f), expected(%f, %f), mediaSelection: %@",
           CMTimeGetSeconds(timeRange.start), CMTimeGetSeconds(timeRange.duration),
           CMTimeGetSeconds(timeRangeExpectedToLoad.start), CMTimeGetSeconds(timeRangeExpectedToLoad.duration),
           mediaSelection);

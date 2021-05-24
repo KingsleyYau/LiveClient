@@ -12,7 +12,9 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic) BOOL firstTimeActive;
 @property (assign, nonatomic) BOOL subscribed;
+@property (nonatomic) BOOL firstTimeActive;
+@property (nonatomic) BOOL pornhubActive;
+@property (nonatomic) BOOL tvActive;
 @end
 

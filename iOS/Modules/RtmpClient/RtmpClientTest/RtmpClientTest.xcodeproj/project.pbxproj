@@ -25,6 +25,7 @@
 		508A24612657A024008D378D /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508A245F2657A024008D378D /* LoadingView.xib */; };
 		508A24702657BBFE008D378D /* StreamLiveItemTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 508A246E2657BBFE008D378D /* StreamLiveItemTableViewController.m */; };
 		508A24712657BBFE008D378D /* StreamLiveItemTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508A246F2657BBFE008D378D /* StreamLiveItemTableViewController.xib */; };
+		508A2476265B54F0008D378D /* LiveCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 508A2475265B54F0008D378D /* LiveCategory.m */; };
 		509187432542AAA00073BECA /* PronViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187412542AAA00073BECA /* PronViewController.m */; };
 		509187442542AAA00073BECA /* PronViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509187422542AAA00073BECA /* PronViewController.xib */; };
 		509187472542B4C10073BECA /* StreamWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509187462542B4C10073BECA /* StreamWebView.m */; };
@@ -138,6 +139,8 @@
 		508A246D2657BBFE008D378D /* StreamLiveItemTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamLiveItemTableViewController.h; sourceTree = "<group>"; };
 		508A246E2657BBFE008D378D /* StreamLiveItemTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StreamLiveItemTableViewController.m; sourceTree = "<group>"; };
 		508A246F2657BBFE008D378D /* StreamLiveItemTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StreamLiveItemTableViewController.xib; sourceTree = "<group>"; };
+		508A2474265B54F0008D378D /* LiveCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveCategory.h; sourceTree = "<group>"; };
+		508A2475265B54F0008D378D /* LiveCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveCategory.m; sourceTree = "<group>"; };
 		509187402542AAA00073BECA /* PronViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PronViewController.h; sourceTree = "<group>"; };
 		509187412542AAA00073BECA /* PronViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PronViewController.m; sourceTree = "<group>"; };
 		509187422542AAA00073BECA /* PronViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PronViewController.xib; sourceTree = "<group>"; };
@@ -351,6 +354,8 @@
 				50CF564A2601D811007C0AE0 /* NSObject+Property.m */,
 				508A2441265786A0008D378D /* LiveItem.h */,
 				508A2442265786A0008D378D /* LiveItem.m */,
+				508A2474265B54F0008D378D /* LiveCategory.h */,
+				508A2475265B54F0008D378D /* LiveCategory.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -639,6 +644,7 @@
 				50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */,
 				50E5E69D2216978D00D66072 /* LSImageVibrateFilter.m in Sources */,
 				50DAEF9A213641E900FB374D /* LiveStreamPublisher.m in Sources */,
+				508A2476265B54F0008D378D /* LiveCategory.m in Sources */,
 				50E8AF8725358FED00DECC7D /* StreamFileItemLayout.m in Sources */,
 				50C9948E1E8F911E001E1355 /* main.m in Sources */,
 			);

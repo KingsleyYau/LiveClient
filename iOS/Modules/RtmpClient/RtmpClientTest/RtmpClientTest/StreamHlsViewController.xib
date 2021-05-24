@@ -16,6 +16,7 @@
                 <outlet property="previewTop" destination="IcM-HA-PUm" id="eqJ-sa-1pI"/>
                 <outlet property="previewViewBottom" destination="NOC-bY-grK" id="G98-CW-oHn"/>
                 <outlet property="previewViewRadio" destination="Bxx-1M-RFB" id="urn-Uq-5Xv"/>
+                <outlet property="recordButton" destination="f0K-rN-89T" id="Bao-oU-RZp"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -25,27 +26,45 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YT5-c1-OBd" userLabel="Player View">
-                    <rect key="frame" x="0.0" y="44" width="414" height="414"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="233"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="YT5-c1-OBd" secondAttribute="height" multiplier="1:1" id="Bxx-1M-RFB"/>
+                        <constraint firstAttribute="width" secondItem="YT5-c1-OBd" secondAttribute="height" multiplier="16:9" id="Bxx-1M-RFB"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5FC-w9-r4L" userLabel="Control View">
-                    <rect key="frame" x="0.0" y="752" width="414" height="60"/>
+                    <rect key="frame" x="0.0" y="277" width="414" height="60"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="riX-kH-mGt" userLabel="Pre Button">
-                            <rect key="frame" x="10" y="15" width="30" height="30"/>
-                            <state key="normal" title="Pre"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="riX-kH-mGt" userLabel="Pre Button">
+                            <rect key="frame" x="20" y="15" width="30" height="30"/>
+                            <state key="normal" image="PreButton"/>
                             <connections>
                                 <action selector="preAction:" destination="-1" eventType="touchUpInside" id="gJl-dW-sHq"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEL-Zm-m7M" userLabel="Next Button">
-                            <rect key="frame" x="50" y="15" width="32" height="30"/>
-                            <state key="normal" title="Next"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEL-Zm-m7M" userLabel="Next Button">
+                            <rect key="frame" x="60" y="15" width="30" height="30"/>
+                            <state key="normal" image="NextButton"/>
                             <connections>
                                 <action selector="nextAction:" destination="-1" eventType="touchUpInside" id="98W-u2-Ra0"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YuC-L0-HWj" userLabel="Picture Button">
+                            <rect key="frame" x="100" y="19" width="25" height="22"/>
+                            <state key="normal" image="AVPictureButton"/>
+                            <connections>
+                                <action selector="avPictureAction:" destination="-1" eventType="touchUpInside" id="VYo-mJ-ejh"/>
+                            </connections>
+                        </button>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f0K-rN-89T" userLabel="Record Button">
+                            <rect key="frame" x="369" y="17.5" width="25" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="25" id="3ch-aA-zsR"/>
+                                <constraint firstAttribute="width" secondItem="f0K-rN-89T" secondAttribute="height" multiplier="1:1" id="zYt-eB-zr9"/>
+                            </constraints>
+                            <state key="normal" image="CheckButton"/>
+                            <connections>
+                                <action selector="recordAction:" destination="-1" eventType="touchUpInside" id="Ump-sT-xMF"/>
                             </connections>
                         </button>
                     </subviews>
@@ -54,8 +73,12 @@
                         <constraint firstAttribute="height" constant="60" id="3VS-Ng-98n"/>
                         <constraint firstItem="dEL-Zm-m7M" firstAttribute="centerY" secondItem="5FC-w9-r4L" secondAttribute="centerY" id="Lo6-KF-blh"/>
                         <constraint firstItem="dEL-Zm-m7M" firstAttribute="leading" secondItem="riX-kH-mGt" secondAttribute="trailing" constant="10" id="PtR-C5-WhS"/>
+                        <constraint firstItem="f0K-rN-89T" firstAttribute="trailing" secondItem="5FC-w9-r4L" secondAttribute="trailing" constant="-20" id="SLF-2e-pJT"/>
+                        <constraint firstItem="YuC-L0-HWj" firstAttribute="centerY" secondItem="5FC-w9-r4L" secondAttribute="centerY" id="SeA-DL-fSt"/>
+                        <constraint firstItem="YuC-L0-HWj" firstAttribute="leading" secondItem="dEL-Zm-m7M" secondAttribute="trailing" constant="10" id="TmU-28-gvc"/>
                         <constraint firstItem="riX-kH-mGt" firstAttribute="centerY" secondItem="5FC-w9-r4L" secondAttribute="centerY" id="cGz-LB-SzB"/>
-                        <constraint firstItem="riX-kH-mGt" firstAttribute="leading" secondItem="5FC-w9-r4L" secondAttribute="leading" constant="10" id="wdT-vq-uQc"/>
+                        <constraint firstItem="f0K-rN-89T" firstAttribute="centerY" secondItem="5FC-w9-r4L" secondAttribute="centerY" id="eSK-2c-XAY"/>
+                        <constraint firstItem="riX-kH-mGt" firstAttribute="leading" secondItem="5FC-w9-r4L" secondAttribute="leading" constant="20" id="wdT-vq-uQc"/>
                     </constraints>
                 </view>
             </subviews>
@@ -69,18 +92,24 @@
                 <constraint firstItem="5FC-w9-r4L" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="LCR-NT-I7z"/>
                 <constraint firstItem="YT5-c1-OBd" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="NOC-bY-grK"/>
                 <constraint firstItem="YT5-c1-OBd" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="aIz-XU-Mfl"/>
+                <constraint firstItem="5FC-w9-r4L" firstAttribute="top" secondItem="YT5-c1-OBd" secondAttribute="bottom" id="mqn-Yg-6zk"/>
                 <constraint firstItem="5FC-w9-r4L" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" constant="-50" id="u6y-7w-4my"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
                     <exclude reference="IcM-HA-PUm"/>
                     <exclude reference="NOC-bY-grK"/>
+                    <exclude reference="u6y-7w-4my"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="-59" y="58"/>
         </view>
     </objects>
     <resources>
+        <image name="AVPictureButton" width="25" height="22"/>
+        <image name="CheckButton" width="100" height="100"/>
+        <image name="NextButton" width="30" height="30"/>
+        <image name="PreButton" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -44,5 +44,8 @@
 @property (weak) IBOutlet UIButton* buttonPublish;
 @property (weak) IBOutlet UIButton* buttonPublishMute;
 @property (weak) IBOutlet UIButton* buttonPlay;
+
+@property (strong) IBOutlet NSLayoutConstraint* pornhubButtonWidth;
+@property (strong) IBOutlet NSLayoutConstraint* tvButtonWidth;
 @end
 

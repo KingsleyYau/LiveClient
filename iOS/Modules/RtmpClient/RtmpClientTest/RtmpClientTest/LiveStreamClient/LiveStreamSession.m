@@ -110,11 +110,13 @@ static LiveStreamSession *gSession = nil;
     NSLog(@"LiveStreamSession::stopPlay()");
 
     @synchronized(self) {
-        self.playingCount--;
+        if (self.playingCount > 0) {
+            self.playingCount--;
 
-        if (self.capturingCount == 0 && self.playingCount == 0) {
-            // 禁止后台播放
-            [[LiveStreamSession session] inactiveSession];
+            if (self.capturingCount == 0 && self.playingCount == 0) {
+                // 禁止后台播放
+                [[LiveStreamSession session] inactiveSession];
+            }
         }
     }
 }
