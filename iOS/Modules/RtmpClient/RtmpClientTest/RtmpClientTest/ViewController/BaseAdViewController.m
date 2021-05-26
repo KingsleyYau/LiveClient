@@ -18,6 +18,7 @@
 @property (strong) GADRewardedInterstitialAd *rewardedInterstitialAd;
 @property (strong) GADBannerView *bannerView;
 @property (assign) BOOL adShowed;
+@property (assign) UIView *originalView;
 @end
 
 @implementation BaseAdViewController
@@ -29,7 +30,7 @@
     self.bannerView.adUnitID = AD_BANNER;
     self.bannerView.rootViewController = self;
     self.bannerView.delegate = self;
-    
+
     self.adShowed = NO;
 }
 
@@ -42,18 +43,40 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self tryOnceAD];
+    [self tryOnceAD:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.originalView = self.view;
+    UIView *containerView = [[UIView alloc] initWithFrame:self.view.frame];
+    [containerView addSubview:self.view];
+    
+    [self.view mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(containerView);
+        make.top.equalTo(containerView);
+        make.right.equalTo(containerView);
+        make.bottom.equalTo(containerView);
+    }];
+    
+    self.view = containerView;
+}
+
 #pragma mark - 广告
-- (void)tryAllAD {
-    [self tryLoadAD];
-    [self tryShowAD];
-    [self showBanner];
+- (void)tryAllAD:(AdRewardHandler)rewardHandler {
+    if (!AppShareDelegate().subscribed) {
+        [self tryLoadAD];
+        [self tryShowAD:rewardHandler];
+        [self showBanner];
+    } else {
+        if (rewardHandler) {
+            rewardHandler(YES);
+        }
+    }
 }
 
 - (void)tryLoadAD {
@@ -68,30 +91,49 @@
     }
 }
 
-- (BOOL)tryShowAD {
-    BOOL canPresent = [self showRewardInsertAD];
+- (BOOL)tryShowAD:(AdRewardHandler)rewardHandler {
+    BOOL canPresent = [self showRewardInsertAD:rewardHandler];
     if (!canPresent) {
-        canPresent = [self showRewardAD];
+        canPresent = [self showRewardAD:rewardHandler];
     }
     if (!canPresent) {
-        canPresent = [self showInterstitialAD];
+        canPresent = [self showInterstitialAD:rewardHandler];
+    }
+    if (!canPresent) {
+        if (rewardHandler) {
+            rewardHandler(NO);
+        }
     }
     return canPresent;
 }
 
-- (void)tryOnceAD {
+- (void)tryOnceAD:(AdRewardHandler)rewardHandler {
     if (!self.adShowed) {
-        [self tryShowAD];
+        [self tryShowAD:rewardHandler];
     }
 }
 
 - (void)showBanner {
     [self.bannerView removeFromSuperview];
     if (!AppShareDelegate().subscribed) {
-        [self.bannerView loadRequest:[GADRequest request]];
         [self.view addSubview:self.bannerView];
+        [self.originalView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view);
+            make.top.equalTo(self.view);
+            make.right.equalTo(self.view);
+            make.bottom.equalTo(self.bannerView.mas_top);
+        }];
         [self.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view);
+            make.right.equalTo(self.view);
+            make.bottom.equalTo(self.view);
+        }];
+        [self.view layoutIfNeeded];
+        [self.bannerView loadRequest:[GADRequest request]];
+    } else {
+        [self.originalView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view);
+            make.top.equalTo(self.view);
             make.right.equalTo(self.view);
             make.bottom.equalTo(self.view);
         }];
@@ -116,7 +158,7 @@
     }
 }
 
-- (BOOL)showInterstitialAD {
+- (BOOL)showInterstitialAD:(AdRewardHandler)rewardHandler {
     BOOL canPresent = NO;
     if (!AppShareDelegate().subscribed) {
         NSError *error;
@@ -125,6 +167,9 @@
             [self.interstitial presentFromRootViewController:self];
             self.interstitial = nil;
             self.adShowed = YES;
+            if (rewardHandler) {
+                rewardHandler(YES);
+            }
         } else {
             NSLog(@"Insert ad wasn't ready %@", error);
         }
@@ -150,7 +195,7 @@
     }
 }
 
-- (BOOL)showRewardAD {
+- (BOOL)showRewardAD:(AdRewardHandler)rewardHandler {
     BOOL canPresent = NO;
     if (!AppShareDelegate().subscribed) {
         NSError *error;
@@ -160,6 +205,9 @@
                                   userDidEarnRewardHandler:^{
                                       NSLog(@"User earn reward %@", self.rewardedAd.adReward);
                                       self.rewardedAd = nil;
+                                      if (rewardHandler) {
+                                          rewardHandler(YES);
+                                      }
                                   }];
             self.adShowed = YES;
         } else {
@@ -187,7 +235,7 @@
     }
 }
 
-- (BOOL)showRewardInsertAD {
+- (BOOL)showRewardInsertAD:(AdRewardHandler)rewardHandler {
     BOOL canPresent = NO;
     if (!AppShareDelegate().subscribed) {
         NSError *error;
@@ -197,6 +245,9 @@
                                               userDidEarnRewardHandler:^{
                                                   NSLog(@"User earn reward %@", self.rewardedInterstitialAd.adReward);
                                                   self.rewardedInterstitialAd = nil;
+                                                  if (rewardHandler) {
+                                                      rewardHandler(YES);
+                                                  }
                                               }];
             self.adShowed = YES;
         } else {

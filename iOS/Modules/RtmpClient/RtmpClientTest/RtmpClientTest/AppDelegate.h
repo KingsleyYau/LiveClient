@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PaymentManager.h"
 #define AppShareDelegate() ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

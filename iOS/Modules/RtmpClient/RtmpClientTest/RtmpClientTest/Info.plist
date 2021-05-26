@@ -20,9 +20,9 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string>Icon-60@3x.png</string>
+			<string>Icon.png</string>
 			<key>CFBundleURLName</key>
 			<string>net.maxzoon.RtmpClient</string>
 			<key>CFBundleURLSchemes</key>
@@ -30,7 +30,6 @@
 				<string>rtmpclient</string>
 			</array>
 		</dict>
-		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -47,6 +46,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs your consent to access the camera.</string>
+	<key>NSExtensionFileProviderSupportsEnumeration</key>
+	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs your consent to access the microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -191,7 +192,6 @@
 		<string>audio</string>
 		<string>fetch</string>
 		<string>newsstand-content</string>
-		<string>processing</string>
 		<string>voip</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
@@ -207,13 +207,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>

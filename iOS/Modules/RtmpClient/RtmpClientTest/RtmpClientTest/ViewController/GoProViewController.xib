@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GoProViewController">
+            <connections>
+                <outlet property="trialButton" destination="iMP-yD-ZMK" id="sbZ-dk-YkD"/>
+                <outlet property="trialTipsLabel" destination="eer-as-exS" id="XId-5k-cLC"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="ekk-Eq-ZZY" userLabel="Logo Image View">
+                    <rect key="frame" x="80" y="164" width="254" height="254"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="ekk-Eq-ZZY" secondAttribute="height" multiplier="1:1" id="yOT-fd-6Dt"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iMP-yD-ZMK" userLabel="Go Pro Button">
+                    <rect key="frame" x="97" y="681" width="220" height="50"/>
+                    <color key="backgroundColor" red="0.016958585008978844" green="0.50927227735519409" blue="0.97632128000259399" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="220" id="FRX-yO-BSY"/>
+                        <constraint firstAttribute="height" constant="50" id="IAQ-jS-k5E"/>
+                    </constraints>
+                    <state key="normal" title="Super Live 专业版 ¥60/年">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="trialAction:" destination="-1" eventType="touchUpInside" id="rbM-1m-s96"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* Super Live 专业版支持¥60/年的自动订阅，你的自动订阅会在到期前24小时内自动续费，你可以在iTunes会员中心随时取消。" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eer-as-exS" userLabel="Tips Label">
+                    <rect key="frame" x="20" y="761" width="374" height="61"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="ekk-Eq-ZZY" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="80" id="4oV-3K-dwX"/>
+                <constraint firstItem="iMP-yD-ZMK" firstAttribute="bottom" secondItem="eer-as-exS" secondAttribute="top" constant="-30" id="PxY-u8-Q8L"/>
+                <constraint firstItem="eer-as-exS" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="STk-xl-3OM"/>
+                <constraint firstItem="eer-as-exS" firstAttribute="centerX" secondItem="Q5M-cg-NOt" secondAttribute="centerX" id="Wxo-bc-Bac"/>
+                <constraint firstItem="iMP-yD-ZMK" firstAttribute="centerX" secondItem="Q5M-cg-NOt" secondAttribute="centerX" id="bha-PF-QPM"/>
+                <constraint firstItem="eer-as-exS" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" constant="-40" id="pN4-Kz-GEP"/>
+                <constraint firstItem="eer-as-exS" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-20" id="uYo-nh-hMI"/>
+                <constraint firstItem="ekk-Eq-ZZY" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="120" id="xnW-pN-7aL"/>
+                <constraint firstItem="ekk-Eq-ZZY" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" constant="-80" id="z0T-ZD-NVI"/>
+            </constraints>
+            <point key="canvasLocation" x="-48" y="66"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="logo.png" width="1024" height="1024"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

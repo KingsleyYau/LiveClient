@@ -53,7 +53,7 @@
                             <rect key="frame" x="100" y="19" width="25" height="22"/>
                             <state key="normal" image="AVPictureButton"/>
                             <connections>
-                                <action selector="avPictureAction:" destination="-1" eventType="touchUpInside" id="VYo-mJ-ejh"/>
+                                <action selector="pictureAction:" destination="-1" eventType="touchUpInside" id="jbD-SB-nUD"/>
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f0K-rN-89T" userLabel="Record Button">

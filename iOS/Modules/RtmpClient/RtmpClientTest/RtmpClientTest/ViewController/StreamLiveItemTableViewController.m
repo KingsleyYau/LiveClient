@@ -34,6 +34,12 @@
     [super viewDidAppear:animated];
 }
 
+- (IBAction)closeAction:(UIButton *)sender {
+    [self dismissViewControllerAnimated:YES completion:^{
+            
+    }];
+}
+
 #pragma mark - UITableView
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.categories.count;
@@ -45,12 +51,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.categories[section].items.count;
-}
-
-- (IBAction)closeAction:(UIButton *)sender {
-    [self dismissViewControllerAnimated:YES completion:^{
-            
-    }];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

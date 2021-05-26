@@ -15,7 +15,6 @@
 #import "LiveStreamSession.h"
 #import "FileDownloadManager.h"
 
-
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
@@ -57,7 +56,7 @@
 
     // TODO:旋转
     self.deviceOrientation = [UIDevice currentDevice].orientation;
-    
+
     self.timer = [[OCTimer alloc] init];
     [self.timer startTimer:nil
               timeInterval:60 * NSEC_PER_SEC
@@ -67,9 +66,9 @@
                             [self showBanner];
                         });
                     }];
-    
+
     [[FileDownloadManager manager] addDelegate:self];
-    
+
     [self.recordButton setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
 }
 
@@ -87,6 +86,8 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self stop];
+    [self.pictureVC stopPictureInPicture];
+    [self.timer stopTimer];
 }
 
 #pragma mark - 数据
@@ -97,37 +98,9 @@
                                                                  completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
                                                                      if (!error) {
                                                                          NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-                                                                         NSNumber *err = dict[@"errno"];
-                                                                         if ([err isEqualToNumber:@0]) {
-                                                                             NSMutableArray *categories = [NSMutableArray array];
-                                                                             NSArray *dict_categories = dict[@"data"];
-                                                                             for(NSDictionary *dict_category in dict_categories) {
-                                                                                 LiveCategory *category = [[LiveCategory alloc] init];
-                                                                                 [categories addObject:category];
-                                                                                 
-                                                                                 category.name = dict_category[@"category"];
-                                                                                 NSMutableArray *category_items = [NSMutableArray array];
-                                                                                 NSArray *dict_category_items = dict_category[@"items"];
-                                                                                 for(NSDictionary *dict_category_item in dict_category_items) {
-                                                                                     LiveItem *item = [[LiveItem alloc] init];
-                                                                                     item.name = dict_category_item[@"name"];
-                                                                                     item.url = dict_category_item[@"url"];
-                                                                                     [category_items addObject:item];
-                                                                                 }
-                                                                                 category.items = category_items;
-                                                                             }
-                                                                             self.categories = categories;
-                                                                             
-                                                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                                                 [self reloadData];
-                                                                             });
-                                                                         } else {
-                                                                             NSString *errmsg = dict[@"errmsg"];
-                                                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                                                 NSString *tips = [NSString stringWithFormat:@"网络错误, 请稍后重试. [%@]", errmsg];
-                                                                                 [self toast:tips];
-                                                                             });
-                                                                         }
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             [self handleData:dict];
+                                                                         });
                                                                      } else {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                              [self toast:@"网络错误, 请稍后重试."];
@@ -137,12 +110,47 @@
     [task resume];
 }
 
+- (void)handleData:(NSDictionary *)dict {
+    NSNumber *err = dict[@"errno"];
+    if ([err isEqualToNumber:@0]) {
+        NSMutableArray *categories = [NSMutableArray array];
+        NSArray *dict_categories = dict[@"data"];
+        for (NSDictionary *dict_category in dict_categories) {
+            LiveCategory *category = [[LiveCategory alloc] init];
+            [categories addObject:category];
+
+            category.name = dict_category[@"category"];
+            NSMutableArray *category_items = [NSMutableArray array];
+            NSArray *dict_category_items = dict_category[@"items"];
+            for (NSDictionary *dict_category_item in dict_category_items) {
+                LiveItem *item = [[LiveItem alloc] init];
+                item.name = dict_category_item[@"name"];
+                item.url = dict_category_item[@"url"];
+                [category_items addObject:item];
+            }
+            category.items = category_items;
+        }
+        self.categories = categories;
+
+        [self reloadData];
+
+    } else {
+        NSString *errmsg = dict[@"errmsg"];
+        NSString *tips = [NSString stringWithFormat:@"网络错误, 请稍后重试. [%@]", errmsg];
+        [self toast:tips];
+    }
+}
+
 - (void)reloadData {
     self.categoryIndex = 0;
-    self.items = self.categories[self.categoryIndex].items;
-    self.liveItemIndex = 0;
-    self.liveItem = [self.items objectAtIndex:self.liveItemIndex];
-    [self play];
+    if (self.categories.count > 0) {
+        self.items = self.categories[self.categoryIndex].items;
+        self.liveItemIndex = 0;
+        if (self.items.count > 0) {
+            self.liveItem = [self.items objectAtIndex:self.liveItemIndex];
+            [self play];
+        }
+    }
 }
 
 #pragma mark - 界面
@@ -179,11 +187,11 @@
             self.pictureVC.delegate = self;
         }
         [self.player play];
-        
+
         [self refreshLayer];
         [self reloadTitleView];
         [self addObserve];
-        
+
         [[LiveStreamSession session] startPlay];
     }
 }
@@ -255,7 +263,7 @@
     sender.selected = !sender.selected;
 }
 
-- (void)streamTableView:(StreamLiveItemTableViewController*)vc didSelectLiveItem:(LiveItem *)liveItem category:(LiveCategory *)category {
+- (void)streamTableView:(StreamLiveItemTableViewController *)vc didSelectLiveItem:(LiveItem *)liveItem category:(LiveCategory *)category {
     // TODO:选择频道
     self.categoryIndex = [self.categories indexOfObject:category];
     self.items = self.categories[self.categoryIndex].items;

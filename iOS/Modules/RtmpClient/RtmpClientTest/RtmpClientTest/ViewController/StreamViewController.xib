@@ -18,6 +18,7 @@
                 <outlet property="buttonPublish" destination="Pdh-aq-JHi" id="LhD-9R-HUE"/>
                 <outlet property="buttonPublishMute" destination="Wuy-Tk-XGK" id="dCb-TA-GLM"/>
                 <outlet property="buttonRecord" destination="YR0-La-dfT" id="9Hs-Xh-eDy"/>
+                <outlet property="controlBottom" destination="IF5-Dj-FHK" id="0uM-Yd-nJ4"/>
                 <outlet property="controlTop" destination="mdg-Xo-6Bu" id="f8K-Fj-Wba"/>
                 <outlet property="controlView" destination="Cb4-yG-ORS" id="u47-qy-32B"/>
                 <outlet property="imageViewInput" destination="hU9-eE-xlQ" id="jrX-Yu-x0u"/>
@@ -30,6 +31,7 @@
                 <outlet property="previewPublishView" destination="i4D-ha-MOA" id="swf-p4-FLT"/>
                 <outlet property="previewView" destination="lAj-db-Qml" id="lOV-Od-tLU"/>
                 <outlet property="previewViewBottom" destination="Tuf-KU-Anf" id="Kfv-Rs-PQG"/>
+                <outlet property="previewViewGroup" destination="PCz-ew-zQ9" id="KfX-xX-FIA"/>
                 <outlet property="previewViewRadio" destination="VzH-f5-kv6" id="cdm-7I-jaR"/>
                 <outlet property="sliderBitrate" destination="Uhq-Ic-pOx" id="UKx-9l-Nj3"/>
                 <outlet property="sliderCacheMS" destination="Uml-im-px6" id="GVK-z1-APG"/>
@@ -45,21 +47,27 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RU6-5d-zM6" userLabel="PreView Publish View Horizontal Sep">
-                    <rect key="frame" x="0.0" y="0.0" width="390" height="390"/>
+                    <rect key="frame" x="0.0" y="0.0" width="390" height="292.66666666666669"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <accessibility key="accessibilityConfiguration">
+                        <accessibilityTraits key="traits" notEnabled="YES"/>
+                    </accessibility>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="adO-XW-bnV" userLabel="PreView Publish View Vertical Sep">
-                    <rect key="frame" x="0.0" y="0.0" width="390" height="195"/>
+                    <rect key="frame" x="0.0" y="0.0" width="390" height="146.33333333333334"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <accessibility key="accessibilityConfiguration">
+                        <accessibilityTraits key="traits" notEnabled="YES"/>
+                    </accessibility>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PCz-ew-zQ9" userLabel="Preview Group View">
-                    <rect key="frame" x="0.0" y="0.0" width="390" height="390"/>
+                    <rect key="frame" x="0.0" y="0.0" width="390" height="292.66666666666669"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lAj-db-Qml" userLabel="Preview View" customClass="GPUImageView">
-                            <rect key="frame" x="0.0" y="0.0" width="390" height="390"/>
+                            <rect key="frame" x="0.0" y="0.0" width="390" height="292.66666666666669"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="lAj-db-Qml" secondAttribute="height" multiplier="1:1" id="VzH-f5-kv6"/>
+                                <constraint firstAttribute="width" secondItem="lAj-db-Qml" secondAttribute="height" multiplier="4:3" id="VzH-f5-kv6"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xgW-Zf-XcI" userLabel="Mute Button">
@@ -93,7 +101,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nDs-bv-htc" userLabel="Scale Button">
-                            <rect key="frame" x="10" y="355" width="25" height="25"/>
+                            <rect key="frame" x="10" y="257.66666666666669" width="25" height="25"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="25" id="A3a-hK-g9C"/>
                                 <constraint firstAttribute="width" secondItem="nDs-bv-htc" secondAttribute="height" multiplier="1:1" id="HtH-0h-gGn"/>
@@ -104,21 +112,21 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a9C-OX-LJ3" userLabel="0.5x Button">
-                            <rect key="frame" x="270" y="350" width="30" height="30"/>
+                            <rect key="frame" x="270" y="252.66666666666669" width="30" height="30"/>
                             <state key="normal" title="0.5x"/>
                             <connections>
                                 <action selector="playbackRate0_5x:" destination="-1" eventType="touchUpInside" id="XrB-AE-sdT"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rut-mh-Ohg" userLabel="1x Button">
-                            <rect key="frame" x="305" y="350" width="30" height="30"/>
+                            <rect key="frame" x="305" y="252.66666666666669" width="30" height="30"/>
                             <state key="normal" title="1x"/>
                             <connections>
                                 <action selector="playbackRate1x:" destination="-1" eventType="touchUpInside" id="BBl-LQ-Jol"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8DH-89-OTg" userLabel="2x Button">
-                            <rect key="frame" x="340" y="350" width="30" height="30"/>
+                            <rect key="frame" x="340" y="252.66666666666669" width="30" height="30"/>
                             <state key="normal" title="2x"/>
                             <connections>
                                 <action selector="playbackRate2x:" destination="-1" eventType="touchUpInside" id="G5k-iO-Owz"/>
@@ -152,7 +160,7 @@
                     </constraints>
                 </view>
                 <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
-                    <rect key="frame" x="195" y="195" width="195" height="195"/>
+                    <rect key="frame" x="243.66666666666663" y="146.33333333333331" width="146.33333333333337" height="146.33333333333331"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="i4D-ha-MOA" secondAttribute="height" multiplier="1:1" id="tMf-nv-u5c"/>

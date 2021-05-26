@@ -38,7 +38,7 @@
     NSArray *array = [self.inputDir componentsSeparatedByString:@"/"];
     NSString *dir = [array lastObject];
     self.title = dir;
-    UIBarButtonItem *selectAllBarItem = [[UIBarButtonItem alloc] initWithTitle:@"All" style:UIBarButtonItemStyleDone target:self action:@selector(selectAll:)];
+    UIBarButtonItem *selectAllBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Play" style:UIBarButtonItemStyleDone target:self action:@selector(selectAll:)];
     self.navigationItem.rightBarButtonItem = selectAllBarItem;
 
     // 列表

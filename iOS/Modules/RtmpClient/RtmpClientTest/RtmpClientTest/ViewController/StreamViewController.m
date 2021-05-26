@@ -12,6 +12,8 @@
 #import "StreamFileCollectionViewController.h"
 #import "PronViewController.h"
 #import "StreamHlsViewController.h"
+#import "SettingViewController.h"
+#import "GoProViewController.h"
 
 #import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
@@ -70,12 +72,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Nav-SettingButton"] style:UIBarButtonItemStylePlain target:self action:@selector(settingAction:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Pro" style:UIBarButtonItemStylePlain target:self action:@selector(proAction:)];
+    
     [[GADMobileAds sharedInstance] startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
         NSLog(@"Google Ad init finish status: %@", status.adapterStatusesByClassName);
     }];
     
     // 界面处理
-    self.title = @"Stream Player";
+    self.title = @"Super Live";
     if (@available(iOS 11.0, *)) {
         self.navigationItem.backButtonTitle = @"Back";
     }
@@ -109,7 +114,7 @@
     // TODO:手势 - 单击收起键盘
     UITapGestureRecognizer *tapSingleGuesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSingleGuestureAction:)];
     tapSingleGuesture.numberOfTapsRequired = 1;
-    [self.previewView addGestureRecognizer:tapSingleGuesture];
+    [self.view addGestureRecognizer:tapSingleGuesture];
     // TODO:手势 - 双击全屏
     UITapGestureRecognizer *tapDoubleGuesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDoubleGestureAction:)];
     tapDoubleGuesture.numberOfTapsRequired = 2;
@@ -184,6 +189,7 @@
     }
     if (self.publishUrl.length == 0) {
         self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", url, nil];
+        self.textFieldPublishAddress.text = @"";
     } else {
         self.textFieldPublishAddress.text = self.publishUrl;
     }
@@ -335,13 +341,21 @@
 
 - (IBAction)playAction:(UIButton *)sender {
     if (!sender.selected) {
-        self.playUrl = self.textFieldAddress.text;
-        [self play];
+        if (self.textFieldAddress.text > 0) {
+            [self tryAllAD:^(BOOL success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.playUrl = self.textFieldAddress.text;
+                    [self play];
+                    sender.selected = !sender.selected;
+                });
+            }];
+        } else {
+            [self toast:@"请输入拉流地址"];
+        }
     } else {
         [self stopPlay];
+        sender.selected = !sender.selected;
     }
-    
-    sender.selected = !sender.selected;
 }
 
 - (void)play {
@@ -417,12 +431,21 @@
 #pragma mark - 推流相关
 - (IBAction)publishAction:(UIButton *)sender {
     if (!sender.selected) {
-        self.publishUrl = self.textFieldPublishAddress.text;
-        [self publish];
+        if (self.textFieldPublishAddress.text.length > 0) {
+            [self tryAllAD:^(BOOL success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.publishUrl = self.textFieldPublishAddress.text;
+                    [self publish];
+                    sender.selected = !sender.selected;
+                });
+            }];
+        } else {
+            [self toast:@"请输入推流地址"];
+        }
     } else {
         [self stopPush];
+        sender.selected = !sender.selected;
     }
-    sender.selected = !sender.selected;
 }
 
 - (void)publish {
@@ -523,7 +546,9 @@
 
 #pragma mark - 浏览器
 - (IBAction)browserAction:(UIButton *)sender {
+    self.buttonPublish.selected = NO;
     [self stopPush];
+    self.buttonPlay.selected = NO;
     [self stopPlay];
     
     PronViewController *vc = [[PronViewController alloc] init];
@@ -532,11 +557,31 @@
 
 #pragma mark - TV
 - (IBAction)tvAction:(UIButton *)sender {
+    self.buttonPublish.selected = NO;
     [self stopPush];
+    self.buttonPlay.selected = NO;
     [self stopPlay];
     
     StreamHlsViewController *vc = [[StreamHlsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - 设置
+- (IBAction)settingAction:(UIButton *)sender {
+    SettingViewController *vc = [[SettingViewController alloc] initWithNibName:nil bundle:nil];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nvc animated:YES completion:nil];
+}
+
+#pragma mark - 订阅
+- (IBAction)proAction:(UIButton *)sender {
+    GoProViewController *vc = [[GoProViewController alloc] initWithNibName:nil bundle:nil];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    if (@available(iOS 13.0, *)) {
+        nvc.modalInPresentation = YES;
+        nvc.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+    [self presentViewController:nvc animated:YES completion:nil];
 }
 
 #pragma mark - 拍照
@@ -580,10 +625,11 @@
     if (height != 0) {
         // 弹出键盘
         self.controlBottom.constant = -(height + 20);
-
+        self.previewViewGroup.hidden = YES;
     } else {
         // 收起键盘
         self.controlBottom.constant = -20;
+        self.previewViewGroup.hidden = NO;
     }
 
     [UIView animateWithDuration:duration

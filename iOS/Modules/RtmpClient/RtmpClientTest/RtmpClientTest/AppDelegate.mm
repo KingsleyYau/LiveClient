@@ -91,12 +91,14 @@
     KLog::SetLogLevel(KLog::LOG_WARNING);
     
     [FIRApp configure];
-    self.subscribed = YES;
     [self firstTimeActive];
     self.firstTimeActive = YES;
-    self.pornhubActive = YES;
+//    self.pornhubActive = YES;
     self.tvActive = YES;
+//    self.subscribed = YES;
     
+    // 检查订阅信息
+    [[PaymentManager manager] verify];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
     return YES;

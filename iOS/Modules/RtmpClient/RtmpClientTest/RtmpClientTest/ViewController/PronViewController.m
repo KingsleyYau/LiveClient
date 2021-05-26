@@ -14,6 +14,8 @@
 #import "NSObject+Property.h"
 #import "OCTimer.h"
 
+#import <AVKit/AVKit.h>
+
 @interface DownloadAttachment : NSTextAttachment
 @property (strong) NSURLSessionTask *task;
 @property (strong) NSAttributedString *statusString;
@@ -26,7 +28,7 @@
 @property (weak) IBOutlet StreamWebView *webView;
 @property (weak) IBOutlet UIButton *downloadBtn;
 @property (weak) IBOutlet UITextView *downloadTextView;
-@property (weak) IBOutlet UIButton *buttonAudoDownload;
+@property (weak) IBOutlet UIButton *autoPlayButton;
 @property (assign) BOOL forward;
 
 @property (strong) NSMutableDictionary *urlDict;
@@ -39,6 +41,11 @@
 @property (strong) NSString *downloadUrlString;
 @property (assign) BOOL isHLS;
 @property (strong) OCTimer *timer;
+
+@property (strong) AVPlayerItem *playerItem;
+@property (strong) AVPlayer *player;
+
+@property (assign) BOOL autoPlay;
 @end
 
 @implementation PronViewController
@@ -60,15 +67,24 @@
     self.title = @"Browser";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Nav-BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
 
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(0, 0, 24, 24);
-    [button setImage:[UIImage imageNamed:@"DownloadButton"] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(downloadAction:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    downloadButton.frame = CGRectMake(0, 0, 24, 24);
+    [downloadButton setImage:[UIImage imageNamed:@"DownloadButton"] forState:UIControlStateNormal];
+    [downloadButton addTarget:self action:@selector(downloadAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    playButton.frame = CGRectMake(0, 0, 24, 24);
+    [playButton setImage:[UIImage imageNamed:@"PlayButton"] forState:UIControlStateNormal];
+    [playButton addTarget:self action:@selector(playAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.navigationItem.rightBarButtonItems = @[
+        [[UIBarButtonItem alloc] initWithCustomView:downloadButton],
+        [[UIBarButtonItem alloc] initWithCustomView:playButton]
+    ];
 
     // 是否自动下载
-    [self.buttonAudoDownload setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
-    self.buttonAudoDownload.selected = NO;
+    [self.autoPlayButton setImage:[UIImage imageNamed:@"CheckButtonSelected"] forState:UIControlStateSelected];
+    self.autoPlayButton.selected = self.autoPlay;
     self.downloadBtn.enabled = NO;
 
     // 浏览界面
@@ -98,12 +114,12 @@
                    starNow:YES
                     action:^{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self tryAllAD];
+                            [self tryAllAD:nil];
                         });
                     }];
     
     // 显示广告
-    [self tryAllAD];
+    [self tryAllAD:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -124,6 +140,18 @@
 - (void)setBaseUrl:(NSString *)baseUrl {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:baseUrl forKey:@"baseUrl"];
+    [userDefaults synchronize];
+}
+
+- (BOOL)autoPlay {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL autoPlay = [userDefaults boolForKey:@"autoPlay"];
+    return autoPlay;
+}
+
+- (void)setAutoPlay:(BOOL)autoPlay {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:autoPlay forKey:@"autoPlay"];
     [userDefaults synchronize];
 }
 
@@ -153,11 +181,12 @@
     self.downloadTextView.hidden = !self.downloadTextView.hidden;
 }
 
-- (IBAction)autoDownload:(UIButton *)sender {
+- (IBAction)autoPlayAction:(UIButton *)sender {
     sender.selected = !sender.selected;
+    self.autoPlay = sender.selected;
 }
 
-- (IBAction)checkDownloadURL:(BOOL)autoDownload {
+- (IBAction)checkDownloadURL:(BOOL)autoPlay {
     if (self.downloadUrlString.length == 0) {
         self.urlDict = [NSMutableDictionary dictionary];
         self.urlCheckDict = [NSMutableDictionary dictionary];
@@ -169,13 +198,13 @@
                            if (!error) {
                                NSString *videoId = (NSString *)response;
                                NSLog(@"video_id: %@", response);
-                               [self checkVideoUrls:videoId autoDownload:autoDownload];
+                               [self checkVideoUrls:videoId autoPlay:autoPlay];
                            }
                        }];
     }
 }
 
-- (void)checkVideoUrls:(NSString *)videoId autoDownload:(BOOL)autoDownload {
+- (void)checkVideoUrls:(NSString *)videoId autoPlay:(BOOL)autoPlay {
     NSString *qualityItemsKey = [NSString stringWithFormat:@"qualityItems_%@", videoId];
     [self.webView evaluateJavaScript:qualityItemsKey
                    completionHandler:^(id _Nullable response, NSError *_Nullable error) {
@@ -187,19 +216,51 @@
                                NSLog(@"%@, %@", resolution, url);
                                self.urlDict[resolution] = url;
                            }
-                           [self check:autoDownload];
+                           [self check:autoPlay];
                        }
                    }];
 }
 
-- (void)check:(BOOL)autoDownload {
+- (void)play {
+    [self stop];
+
+    if (self.downloadUrlString.length > 0) {
+        NSURL *url = [NSURL URLWithString:self.downloadUrlString];
+        AVPlayerViewController *vc = [[AVPlayerViewController alloc] init];
+        vc.view.frame = self.view.bounds;
+        vc.videoGravity = AVLayerVideoGravityResizeAspect;
+        vc.showsPlaybackControls = YES;
+        vc.allowsPictureInPicturePlayback = YES;
+        
+        self.playerItem = [[AVPlayerItem alloc] initWithURL:url];
+        if (self.player) {
+            [self.player replaceCurrentItemWithPlayerItem:self.playerItem];
+        } else {
+            self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
+        }
+        vc.player = self.player;
+        
+        [self presentViewController:vc animated:YES completion:^{
+            [self.player play];
+        }];
+    }
+}
+
+- (void)stop {
+    if (self.playerItem) {
+        [self.player pause];
+        self.playerItem = nil;
+    }
+}
+
+- (void)check:(BOOL)autoPlay {
     //    NSString *original = self.urlDict[@"ORIGINAL"];
     //    if (self.urlDict.count >= 1 || original.length > 0) {
     self.downloadBtn.enabled = YES;
     [self selectDownloadURL];
 
-    if (autoDownload && self.buttonAudoDownload.selected) {
-        [self downloadAction:nil];
+    if (autoPlay && self.autoPlayButton.selected) {
+        [self play];
     }
     //    }
 }
@@ -220,6 +281,15 @@
     //                                                                        }];
     //                             }
     //                         }];
+}
+
+- (IBAction)playAction:(UIButton *)sender {
+    if (self.downloadUrlString.length == 0) {
+        [self toast:@"No video urls can be play."];
+        return;
+    }
+    
+    [self play];
 }
 
 - (IBAction)downloadAction:(UIButton *)sender {
