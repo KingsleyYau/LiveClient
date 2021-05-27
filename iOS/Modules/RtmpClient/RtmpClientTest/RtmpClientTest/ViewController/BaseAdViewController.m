@@ -44,6 +44,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self tryOnceAD:nil];
+    [self showBanner];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

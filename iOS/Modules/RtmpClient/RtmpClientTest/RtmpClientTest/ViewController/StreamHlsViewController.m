@@ -80,7 +80,6 @@
         [self requestCategories];
     }
     [super viewDidAppear:animated];
-    [self showBanner];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
