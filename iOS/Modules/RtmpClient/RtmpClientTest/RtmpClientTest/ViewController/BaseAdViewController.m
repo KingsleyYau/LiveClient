@@ -19,6 +19,7 @@
 @property (strong) GADBannerView *bannerView;
 @property (assign) BOOL adShowed;
 @property (assign) UIView *originalView;
+@property (strong) MASConstraint *bannerViewHeight;
 @end
 
 @implementation BaseAdViewController
@@ -115,6 +116,7 @@
 }
 
 - (void)showBanner {
+    NSLog(@"");
     [self.bannerView removeFromSuperview];
     if (!AppShareDelegate().subscribed) {
         [self.view addSubview:self.bannerView];
@@ -122,9 +124,9 @@
             make.left.equalTo(self.view);
             make.top.equalTo(self.view);
             make.right.equalTo(self.view);
-            make.bottom.equalTo(self.bannerView.mas_top);
+            make.bottom.equalTo(self.view);
         }];
-        [self.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.bannerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view);
             make.right.equalTo(self.view);
             make.bottom.equalTo(self.view);
@@ -278,10 +280,26 @@
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
     NSLog(@"");
+    [self.originalView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view);
+        make.top.equalTo(self.view);
+        make.right.equalTo(self.view);
+        make.bottom.equalTo(self.bannerView.mas_top);
+    }];
+    
+    [self.view bringSubviewToFront:self.bannerView];
 }
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
     NSLog(@"%@", [error localizedDescription]);
+    [self.originalView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view);
+        make.top.equalTo(self.view);
+        make.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+    }];
+    
+    [self.view sendSubviewToBack:self.bannerView];
 }
 
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {

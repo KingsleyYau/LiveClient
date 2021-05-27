@@ -47,6 +47,7 @@
 @implementation StreamHlsViewController
 - (void)dealloc {
     [[FileDownloadManager manager] removeDelegate:self];
+    [self stop];
 }
 
 - (void)viewDidLoad {
