@@ -11,7 +11,7 @@
 #import "BaseAdViewController.h"
 #import "GPUImage.h"
 
-@interface StreamViewController : BaseAdViewController
+@interface StreamViewController : BaseViewController
 
 #pragma mark - 拉流预览
 @property (strong) IBOutlet NSLayoutConstraint *previewTop;

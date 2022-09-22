@@ -87,18 +87,22 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *logDir = [NSString stringWithFormat:@"%@/log", cacheDir];
+    KLog::SetLogDirectory([logDir UTF8String]);
     KLog::SetLogFileEnable(NO);
     KLog::SetLogLevel(KLog::LOG_WARNING);
     
-    [FIRApp configure];
     [self firstTimeActive];
     self.firstTimeActive = YES;
 //    self.pornhubActive = YES;
     self.tvActive = YES;
-//    self.subscribed = YES;
+    self.subscribed = YES;
     
+    // 跟踪
+//    [FIRApp configure];
     // 检查订阅信息
-    [[PaymentManager manager] verify];
+//    [[PaymentManager manager] verify];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
     return YES;

@@ -92,7 +92,7 @@
 
 #pragma mark - 数据
 - (void)requestCategories {
-    NSString *url = @"https://m.maxzoon.cn/tv_list";
+    NSString *url = @"https://maxzoon.cn/api/tv_list";
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:req
                                                                  completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {

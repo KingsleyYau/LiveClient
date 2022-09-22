@@ -39,12 +39,12 @@ void KLog::SetLogEnable(bool enable) {
 	gLogEnable = enable;
 }
 
-static bool gLogFileEnable = true;
+static bool gLogFileEnable = false;
 void KLog::SetLogFileEnable(bool enable) {
     gLogFileEnable = enable;
 }
 
-static string gLogDirectory = "/";
+static string gLogDirectory = "";
 void KLog::SetLogDirectory(string directory) {
 	gLogDirectory = directory;
 }
@@ -98,6 +98,10 @@ int KLog::LogToFile(const char *fileNamePre, KLog::LogLevel level, const char *l
         sLogFileDir = logDir;
     }
     string sLogFileName = fileNamePre;
+    
+    if (sLogFileDir.length() == 0) {
+        return 0;
+    }
     
     DIR* dir = opendir(sLogFileDir.c_str());
     if (dir == NULL) {

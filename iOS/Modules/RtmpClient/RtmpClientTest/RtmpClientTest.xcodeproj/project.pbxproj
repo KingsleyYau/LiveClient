@@ -30,6 +30,7 @@
 		500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 500520131E94A26200C45E22 /* libCommon-C-Library.a */; };
 		500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995221E8F930A001E1355 /* libRtmpClient.a */; };
 		50264E34265E2E2800B85592 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 50264E33265E2E2800B85592 /* Icon.png */; };
+		50264EBF266097AE00B85592 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50264EBE266097AD00B85592 /* CoreGraphics.framework */; };
 		5038ED782591953B004D9AE6 /* File in Resources */ = {isa = PBXBuildFile; fileRef = 5038ED772591953A004D9AE6 /* File */; };
 		50701D8225A44F10007F56DF /* LSImagePictureFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50701D8125A44F10007F56DF /* LSImagePictureFilter.m */; };
 		50701DAB25A597B5007F56DF /* LSImageMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = 50701DAA25A597B3007F56DF /* LSImageMovie.m */; };
@@ -151,6 +152,7 @@
 		5001380F265DECA60064B97A /* FileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManager.m; sourceTree = "<group>"; };
 		5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
 		50264E33265E2E2800B85592 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		50264EBE266097AD00B85592 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5038ED772591953A004D9AE6 /* File */ = {isa = PBXFileReference; lastKnownFileType = folder; path = File; sourceTree = "<group>"; };
 		50701D8025A44F10007F56DF /* LSImagePictureFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSImagePictureFilter.h; sourceTree = "<group>"; };
 		50701D8125A44F10007F56DF /* LSImagePictureFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSImagePictureFilter.m; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				508029B725A8037E003E0D8A /* libbz2.tbd in Frameworks */,
 				50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */,
 				50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */,
+				50264EBF266097AE00B85592 /* CoreGraphics.framework in Frameworks */,
 				500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */,
 				500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */,
 				50C995831E8F9E2E001E1355 /* libstdc++.tbd in Frameworks */,
@@ -372,6 +375,7 @@
 		50C9957F1E8F9E1B001E1355 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				50264EBE266097AD00B85592 /* CoreGraphics.framework */,
 				508029B625A8037E003E0D8A /* libbz2.tbd */,
 				50F18BFA1E94F46A00116A4B /* AVFoundation.framework */,
 				50F18BF81E94F46100116A4B /* VideoToolbox.framework */,
@@ -521,7 +525,7 @@
 				TargetAttributes = {
 					50C994881E8F911E001E1355 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 5C84LWKER6;
+						DevelopmentTeam = 88J8V5HVP4;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -839,8 +843,8 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RtmpClientTest/RtmpClientTest.entitlements;
-				CURRENT_PROJECT_VERSION = 100.4;
-				DEVELOPMENT_TEAM = 5C84LWKER6;
+				CURRENT_PROJECT_VERSION = 100.6;
+				DEVELOPMENT_TEAM = 88J8V5HVP4;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/${PRODUCT_NAME}/${PRODUCT_NAME}-PrefixHeader.pch";
 				INFOPLIST_FILE = RtmpClientTest/Info.plist;
@@ -849,7 +853,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = net.maxzoon.RtmpClient;
+				PRODUCT_BUNDLE_IDENTIFIER = net.maxzoon.RtmpClientDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -862,8 +866,8 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RtmpClientTest/RtmpClientTest.entitlements;
-				CURRENT_PROJECT_VERSION = 100.4;
-				DEVELOPMENT_TEAM = 5C84LWKER6;
+				CURRENT_PROJECT_VERSION = 100.6;
+				DEVELOPMENT_TEAM = 88J8V5HVP4;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/${PRODUCT_NAME}/${PRODUCT_NAME}-PrefixHeader.pch";
 				INFOPLIST_FILE = RtmpClientTest/Info.plist;
@@ -872,7 +876,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = net.maxzoon.RtmpClient;
+				PRODUCT_BUNDLE_IDENTIFIER = net.maxzoon.RtmpClientDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};

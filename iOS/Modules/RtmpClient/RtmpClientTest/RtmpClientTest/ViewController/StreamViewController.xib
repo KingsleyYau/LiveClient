@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -71,21 +71,21 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xgW-Zf-XcI" userLabel="Mute Button">
-                            <rect key="frame" x="5" y="5" width="22" height="22"/>
+                            <rect key="frame" x="10" y="5" width="22" height="22"/>
                             <state key="normal" image="UnMuteSmallButton"/>
                             <connections>
                                 <action selector="mutePlayAction:" destination="-1" eventType="touchUpInside" id="5xI-L8-ZJH"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hvH-pO-Kb3" userLabel="Filter Button">
-                            <rect key="frame" x="32" y="3" width="22" height="22"/>
+                            <rect key="frame" x="37" y="3" width="22" height="22"/>
                             <state key="normal" image="FilterSmallButton"/>
                             <connections>
                                 <action selector="filterPlayAction:" destination="-1" eventType="touchUpInside" id="iRQ-8G-dcu"/>
                             </connections>
                         </button>
                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="1mG-KI-R9d" userLabel="Loading Medium Activity Indicator">
-                            <rect key="frame" x="59" y="4" width="20" height="20"/>
+                            <rect key="frame" x="64" y="4" width="20" height="20"/>
                             <color key="color" red="0.076917149126529694" green="0.74882268905639648" blue="0.95623713731765747" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </activityIndicatorView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="480x360" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h6A-Xk-jAV" userLabel="Video Size Label">
@@ -141,7 +141,7 @@
                         <constraint firstItem="rut-mh-Ohg" firstAttribute="trailing" secondItem="8DH-89-OTg" secondAttribute="leading" constant="-5" id="7yT-zj-eBD"/>
                         <constraint firstItem="xgW-Zf-XcI" firstAttribute="top" secondItem="PCz-ew-zQ9" secondAttribute="top" constant="5" id="90V-e9-gxT"/>
                         <constraint firstItem="a9C-OX-LJ3" firstAttribute="centerY" secondItem="rut-mh-Ohg" secondAttribute="centerY" id="DSd-9X-6gA"/>
-                        <constraint firstItem="xgW-Zf-XcI" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="5" id="FPR-vk-5Bk"/>
+                        <constraint firstItem="xgW-Zf-XcI" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="leading" constant="10" id="FPR-vk-5Bk"/>
                         <constraint firstItem="h6A-Xk-jAV" firstAttribute="centerY" secondItem="hvH-pO-Kb3" secondAttribute="centerY" id="JhU-JG-iqh"/>
                         <constraint firstItem="qIz-z5-ZpK" firstAttribute="centerY" secondItem="h6A-Xk-jAV" secondAttribute="centerY" id="NGE-V5-svB"/>
                         <constraint firstItem="hvH-pO-Kb3" firstAttribute="centerY" secondItem="xgW-Zf-XcI" secondAttribute="centerY" constant="-2" id="OCc-TV-JbX"/>
@@ -310,6 +310,16 @@
                                 <action selector="tvAction:" destination="-1" eventType="touchUpInside" id="xqJ-GE-AAW"/>
                             </connections>
                         </button>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JOt-HD-QUA" userLabel="NFC Button">
+                            <rect key="frame" x="120" y="170" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="gFs-Zz-qgS"/>
+                            </constraints>
+                            <state key="normal" image="NfcButton"/>
+                            <connections>
+                                <action selector="nfcAction:" destination="-1" eventType="touchUpInside" id="Ymj-eJ-k8Z"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xjn-3p-Gfs" userLabel="Roate Button">
                             <rect key="frame" x="272" y="170" width="30" height="30"/>
                             <state key="normal" image="RoateButton"/>
@@ -354,6 +364,7 @@
                         <constraint firstItem="JTs-RJ-tmO" firstAttribute="leading" secondItem="Cb4-yG-ORS" secondAttribute="leading" constant="10" id="Qyn-eJ-E3p"/>
                         <constraint firstItem="BuY-wB-Amn" firstAttribute="leading" secondItem="Uml-im-px6" secondAttribute="trailing" constant="5" id="TpO-JU-jJx"/>
                         <constraint firstItem="D4r-RD-2IJ" firstAttribute="trailing" secondItem="Cb4-yG-ORS" secondAttribute="trailing" constant="-10" id="Tzv-g3-ICu"/>
+                        <constraint firstItem="JOt-HD-QUA" firstAttribute="leading" secondItem="bCe-gA-Bvl" secondAttribute="trailing" constant="5" id="Usz-bU-Wxz"/>
                         <constraint firstItem="T6M-2C-qo0" firstAttribute="bottom" secondItem="Cb4-yG-ORS" secondAttribute="bottom" id="XKa-q5-5jL"/>
                         <constraint firstItem="nPX-Bf-Cn5" firstAttribute="bottom" secondItem="R83-1A-ytF" secondAttribute="top" constant="-5" id="Xa6-Tf-RcS"/>
                         <constraint firstItem="hU9-eE-xlQ" firstAttribute="trailing" secondItem="Cb4-yG-ORS" secondAttribute="trailing" constant="-10" id="YC3-2Z-hdL"/>
@@ -361,6 +372,7 @@
                         <constraint firstItem="Pdh-aq-JHi" firstAttribute="leading" secondItem="nPX-Bf-Cn5" secondAttribute="trailing" constant="5" id="f2g-4v-Wqa"/>
                         <constraint firstAttribute="height" constant="200" id="fP3-9f-ZOv"/>
                         <constraint firstItem="Xjn-3p-Gfs" firstAttribute="centerY" secondItem="Wuy-Tk-XGK" secondAttribute="centerY" id="hFI-pI-Nd3"/>
+                        <constraint firstItem="JOt-HD-QUA" firstAttribute="centerY" secondItem="bCe-gA-Bvl" secondAttribute="centerY" id="hOI-tT-rw0"/>
                         <constraint firstItem="T6M-2C-qo0" firstAttribute="top" secondItem="Fsk-G9-zcb" secondAttribute="bottom" constant="15" id="hU6-Sr-yvk"/>
                         <constraint firstItem="Uml-im-px6" firstAttribute="bottom" secondItem="JTs-RJ-tmO" secondAttribute="top" constant="-25" id="iiT-2l-bYw"/>
                         <constraint firstItem="YR0-La-dfT" firstAttribute="centerY" secondItem="BuY-wB-Amn" secondAttribute="centerY" id="k2c-2X-IAv"/>
@@ -421,6 +433,7 @@
         <image name="FilterButton" width="30" height="30"/>
         <image name="FilterSmallButton" width="22" height="22"/>
         <image name="FolderButton" width="30" height="30"/>
+        <image name="NfcButton" width="30" height="30"/>
         <image name="PublishButton" width="30" height="30"/>
         <image name="PullButton" width="30" height="30"/>
         <image name="RoateButton" width="30" height="30"/>

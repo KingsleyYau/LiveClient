@@ -136,27 +136,6 @@
     commandCenter.previousTrackCommand.enabled = YES;
     [commandCenter.previousTrackCommand addTarget:self action:@selector(previousTrackCommand)];
 
-    // TODO:初始化播放
-    self.playbackRate = 1.0;
-    self.playerFilterArray = @[
-        [[LSImageVibrateFilter alloc] init],
-        [[LSImageVibrateFilter alloc] init],
-    ];
-    self.player = [LiveStreamPlayer instance];
-    self.player.useHardDecoder = YES;
-    self.player.delegate = self;
-    //    self.player.customFilter = self.playerFilterArray[0];
-    self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
-    [self.player addPlayView:self.previewView];
-
-    // TODO:初始化推送
-    self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x640];
-    self.publisher.delegate = self;
-    self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
-    self.publisher.publishView = self.previewPublishView;
-    self.publisherFilter = [[LSImageVibrateFilter alloc] init];
-//    self.publisher.customFilter = self.publisherFilter;
-
 //    self.sliderBitrate.maximumValue = self.publisher.bitrate;
     self.sliderBitrate.maximumValue = 2000 * 1000;
     self.sliderBitrate.value = self.publisher.bitrate;
@@ -196,11 +175,34 @@
 
     //    [self playbackRate2x:nil];
     //    [self play:nil];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (!self.viewDidAppearEver) {
+        // TODO:初始化播放
+        self.playbackRate = 1.0;
+        self.playerFilterArray = @[
+            [[LSImageVibrateFilter alloc] init],
+            [[LSImageVibrateFilter alloc] init],
+        ];
+        self.player = [LiveStreamPlayer instance];
+        self.player.useHardDecoder = YES;
+        self.player.delegate = self;
+        //    self.player.customFilter = self.playerFilterArray[0];
+        self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
+        [self.player addPlayView:self.previewView];
+
+        // TODO:初始化推送
+        self.publisher = [LiveStreamPublisher instance:LiveStreamType_480x640];
+        self.publisher.delegate = self;
+        self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
+        self.publisher.publishView = self.previewPublishView;
+        self.publisherFilter = [[LSImageVibrateFilter alloc] init];
+    //    self.publisher.customFilter = self.publisherFilter;
+    }
     
     if (AppShareDelegate().pornhubActive) {
         self.pornhubButtonWidth.constant = 30;
@@ -342,13 +344,13 @@
 - (IBAction)playAction:(UIButton *)sender {
     if (!sender.selected) {
         if (self.textFieldAddress.text > 0) {
-            [self tryAllAD:^(BOOL success) {
+//            [self tryAllAD:^(BOOL success) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.playUrl = self.textFieldAddress.text;
                     [self play];
                     sender.selected = !sender.selected;
                 });
-            }];
+//            }];
         } else {
             [self toast:@"请输入拉流地址"];
         }
@@ -432,13 +434,13 @@
 - (IBAction)publishAction:(UIButton *)sender {
     if (!sender.selected) {
         if (self.textFieldPublishAddress.text.length > 0) {
-            [self tryAllAD:^(BOOL success) {
+//            [self tryAllAD:^(BOOL success) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.publishUrl = self.textFieldPublishAddress.text;
                     [self publish];
                     sender.selected = !sender.selected;
                 });
-            }];
+//            }];
         } else {
             [self toast:@"请输入推流地址"];
         }
@@ -454,8 +456,8 @@
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
 
-    //    NSFileManager *fileManager = [NSFileManager defaultManager];
-    //    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+//        NSFileManager *fileManager = [NSFileManager defaultManager];
+//        [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
@@ -564,6 +566,10 @@
     
     StreamHlsViewController *vc = [[StreamHlsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - NFC
+- (IBAction)nfcAction:(UIButton *)sender {
 }
 
 #pragma mark - 设置
