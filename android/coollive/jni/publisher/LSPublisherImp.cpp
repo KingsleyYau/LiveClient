@@ -296,3 +296,50 @@ void LSPublisherImp::OnPublisherDisconnect(PublisherController* pc) {
 		ReleaseEnv(isAttachThread);
 	}
 }
+
+void LSPublisherImp::OnPublisherError(PublisherController *pc, const string& code, const string& description) {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_WARNING,
+			"LSPublisherImp::OnPublisherError( "
+			"this : %p, "
+			"code : %s, "
+			"description : %s "
+			")",
+			this,
+			code.c_str(),
+			description.c_str()
+			);
+
+    JNIEnv* env;
+    bool isAttachThread;
+    bool bFlag = GetEnv(&env, &isAttachThread);
+
+    if( mJniCallback != NULL ) {
+        // 反射类
+        jclass jniCallbackCls = env->GetObjectClass(mJniCallback);
+
+        if( jniCallbackCls != NULL ) {
+            // 发射方法
+            string signure = "(Ljava/lang/String;Ljava/lang/String;)V";
+            jmethodID jMethodID = env->GetMethodID(
+                    jniCallbackCls,
+                    "onError",
+                    signure.c_str()
+                    );
+
+            jstring cCode = env->NewStringUTF(code.c_str());
+            jstring cDescription = env->NewStringUTF(description.c_str());
+            // 回调
+            if( jMethodID ) {
+                env->CallVoidMethod(mJniCallback, jMethodID, cCode, cDescription);
+            }
+            env->DeleteLocalRef(cCode);
+            env->DeleteLocalRef(cDescription);
+        }
+    }
+
+    if( bFlag ) {
+        ReleaseEnv(isAttachThread);
+    }
+}

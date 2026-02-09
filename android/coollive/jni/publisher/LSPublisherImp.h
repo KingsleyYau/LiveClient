@@ -39,6 +39,7 @@ public:
 private:
     void OnPublisherConnect(PublisherController* pc);
     void OnPublisherDisconnect(PublisherController* pc);
+    void OnPublisherError(PublisherController *pc, const string& code, const string& description);
 
 private:
     void OnFilterVideoFrame(VideoFilters* filters, VideoFrame* videoFrame);
