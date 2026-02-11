@@ -52,7 +52,7 @@ public class LSVideoPlayerRenderer implements Renderer {
 	public LSVideoPlayerRenderer(FillMode fillMode) {
 		bmpFilter = new LSImageBmpFilter();
 		outputFilter = new LSImageOutputFilter();
-		outputFilter.fillMode = fillMode;
+        bmpFilter.fillMode = fillMode;
 	}
 
 	/**
@@ -60,7 +60,6 @@ public class LSVideoPlayerRenderer implements Renderer {
 	 */
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::init( this : 0x%x )", hashCode()));
-
 		bmpFilter.setFilter(outputFilter);
 	}
 
@@ -148,8 +147,8 @@ public class LSVideoPlayerRenderer implements Renderer {
         
         previewWidth = width;
         previewHeight = height;
-        
-        outputFilter.setOutputSize(previewWidth, previewHeight);
+
+        bmpFilter.setOutputSize(previewWidth, previewHeight);
 	}
 
 	@Override
