@@ -7,12 +7,12 @@ import android.opengl.GLES20;
  * @author max
  *
  */
-public class LSImageView extends LSImageFilter {
+public class LSImageOutputFilter extends LSImageFilter {
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
 
-	public LSImageView() {
+	public LSImageOutputFilter() {
 		super(LSImageShader.defaultPixelVertexShaderString, LSImageShader.dafaultPixelFragmentShaderString, LSImageVertex.filterVertex_0);
 	}
 

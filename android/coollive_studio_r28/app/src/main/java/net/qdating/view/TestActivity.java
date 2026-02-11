@@ -7,7 +7,6 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.webkit.WebView;
 import android.graphics.Bitmap;
@@ -28,7 +27,6 @@ import net.qdating.player.LSPlayerRendererBinder;
 import net.qdating.utils.Log;
 
 import java.io.File;
-import java.util.Random;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -82,14 +80,15 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 		player.init(this);
 
         LSImageGroupFilter playerFilterGroup = new LSImageGroupFilter();
-        playerFilterGroup.addFilter(new LSImageVibrateFilter());
+//        playerFilterGroup.addFilter(new LSImageBufferEmptyFilter());
         playerFilterGroup.addFilter(new LSImageConnerFilter());
 
-		playerRenderderBinder = new LSPlayerRendererBinder(surfaceView, FillMode.FillModeStretch);
+		playerRenderderBinder = new LSPlayerRendererBinder(surfaceView, FillMode.FillModeAspectRatioFill);
 		playerRenderderBinder.setCustomFilter(playerFilterGroup);
 		player.setRendererBinder(playerRenderderBinder);
+        surfaceView.requestRender();
 
-		String playerUrl = "rtmp://demo-cam.meetromance.com:8899/play_standard/MM0?userId=MM888&siteId=8";
+		String playerUrl = "rtmp://demo-cam.meetromance.com:8899/play_standard/MM1?userId=MM888&siteId=8";
 		player.playUrl(playerUrl, "", "", "");
 
 		// 推送相关
@@ -97,7 +96,7 @@ public class TestActivity extends Activity implements ILSPlayerStatusCallback {
 	             .getRotation();
 		publisher = new LSPublisher();
 		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFit, null, VideoConfigType.VideoConfigType480x640, 12, 12, 500 * 1000);
-        publisher.setCustomFilter(new LSImageVibrateFilter());
+        publisher.setCustomFilter(new LSImageVibrateFilter(0.1));
         publisher.setCustomPreviewFilter(new LSImageConnerFilter());
 
         String photoName = String.format("demo/1.png");

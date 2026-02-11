@@ -12,7 +12,7 @@ import java.util.Random;
  * @author max
  *
  */
-public class LSImageColorFilter extends LSImageBufferFilter {
+public class LSImageBlackFilter extends LSImageBufferFilter {
 	private static String vertexShaderString = ""
 			+ "// 图像顶点着色器 \n"
 			+ "// 纹理坐标(输入) \n"
@@ -30,47 +30,19 @@ public class LSImageColorFilter extends LSImageBufferFilter {
 			+ "// 图像颜色着色器 \n"
             + "precision mediump float; \n"
 			+ "uniform sampler2D uInputTexture; \n"
-			+ "uniform lowp int uColor; \n"
 			+ "// 片段着色器(输入) \n"
 			+ "varying highp vec2 vTextureCoordinate; \n"
 			+ "void main() { \n"
-			+ "		vec3 color = texture2D(uInputTexture, vTextureCoordinate).rgb; \n "
-			+ "		if( uColor == 0 ) { \n"
-			+ "			gl_FragColor = vec4(0., color.g, color.b, 1.0); \n"
-			+ "		} else if ( uColor == 1 ) { \n"
-			+ "			gl_FragColor = vec4(color.r, 0., color.b, 1.0); \n"
-			+ "		} else if ( uColor == 2 ) { \n"
-			+ "			gl_FragColor = vec4(color.r, color.g, 0., 1.0); \n"
-			+ "		} else if ( uColor == 3 ) { \n"
-			+ "			gl_FragColor = vec4(color.r, 0., 0., 1.0); \n"
-            + "		} else if ( uColor == 4 ) { \n"
-            + "			gl_FragColor = vec4(0., 0., color.b, 1.0); \n"
-            + "		} else { \n"
-			+ "			gl_FragColor = vec4(0., color.g, 0., 1.0); \n"
-			+ "		} \n"
+			+ "		gl_FragColor = vec4(1., 0., 0., 1.0); \n"
 			+ "} \n";
 
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
-	private int uColor;
 
-	private Random rnd = new Random();
-	private int index = 0;
-	private int rndNum = 0;
-	private int step = 5;
-
-	public LSImageColorFilter() {
+	public LSImageBlackFilter() {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
 		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * 设置颜色持续多少帧
-	 * @param step
-	 */
-	public void setStep(int step) {
-		this.step = step;
 	}
 
 	@Override
@@ -85,7 +57,6 @@ public class LSImageColorFilter extends LSImageBufferFilter {
 		aPosition = GLES20.glGetAttribLocation(getProgram(), "aPosition");
 		aTextureCoordinate = GLES20.glGetAttribLocation(getProgram(), "aTextureCoordinate");
 		uInputTexture = GLES20.glGetUniformLocation(getProgram(), "uInputTexture");
-		uColor = GLES20.glGetUniformLocation(getProgram(), "uColor");
 
 		// 填充着色器-顶点采样器
 		if( getVertexBuffer() != null ) {
@@ -103,13 +74,6 @@ public class LSImageColorFilter extends LSImageBufferFilter {
 
 		// 填充着色器-颜色采样器, 将纹理单元GL_TEXTURE0绑元定到采样器
 		GLES20.glUniform1i(uInputTexture, 0);
-
-		if( index++ % this.step == 0) {
-			// 填充着色器
-			int num = rnd.nextInt() % 6;
-			rndNum = num;
-		}
-		GLES20.glUniform1i(uColor, rndNum);
 	}
 
 	@Override

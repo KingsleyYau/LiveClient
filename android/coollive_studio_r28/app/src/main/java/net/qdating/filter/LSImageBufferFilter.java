@@ -9,7 +9,7 @@ import net.qdating.utils.Log;
  * @author max
  *
  */
-public abstract class LSImageBufferFilter extends LSImageFilter {
+public class LSImageBufferFilter extends LSImageFilter {
 	/**
 	 * FBO纹理Id
 	 */

@@ -7,7 +7,7 @@ import net.qdating.filter.LSImageInputCameraFilter;
 import net.qdating.filter.LSImageCropFilter;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageFlipFilter;
-import net.qdating.filter.LSImageView;
+import net.qdating.filter.LSImageOutputFilter;
 import net.qdating.filter.LSImageRecordFilter;
 import net.qdating.filter.LSImageRecordFilterCallback;
 import net.qdating.filter.LSImageRecordYuvFilter;
@@ -70,7 +70,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
     private LSImageInputCameraFilter cameraFilter = null;
     private LSImageBmpFilter bmpFilter = null;
     private LSImageCropFilter cropFilter = null;
-    private LSImageView outputFilter = null;
+    private LSImageOutputFilter outputFilter = null;
     private LSImageFlipFilter recordFlipFilter = null;
     private LSImageFlipFilter outputFlipFilter = null;
     private LSImageFilter recordFilter = null;
@@ -89,7 +89,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
         cropFilter = new LSImageCropFilter();
         recordFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
         outputFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
-        outputFilter = new LSImageView();
+        outputFilter = new LSImageOutputFilter();
 
         if (useHardEncoder) {
             // 硬编码录制滤镜

@@ -3,15 +3,15 @@ package net.qdating.player;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
+import net.qdating.filter.LSImageGroupFilter;
 import net.qdating.filter.LSImageInputYuvFilter;
-import net.qdating.filter.LSImageView;
+import net.qdating.filter.LSImageOutputFilter;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.media.MediaCodecInfo;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 
 /**
@@ -45,16 +45,23 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	 * 显示原始图片滤镜
 	 */
 	private LSImageInputYuvFilter inputYuvFilter = null;
-	private LSImageView outputFilter = null;
-
+	private LSImageOutputFilter outputFilter = null;
 	private LSImageFilter customFilter = null;
 	private boolean bCustomFilterChange = false;
 
+    private LSImageOutputFilter bgOutputFilter = null;
+    private LSImageGroupFilter bgFilterGroup = null;
+
 	public LSVideoHardPlayerRenderer(FillMode fillMode) {
         inputYuvFilter = new LSImageInputYuvFilter();
+        inputYuvFilter.fillMode = fillMode;
+		outputFilter = new LSImageOutputFilter();
+//		outputFilter.fillMode = fillMode;
 
-		outputFilter = new LSImageView();
-		outputFilter.fillMode = fillMode;
+//        bgFilterGroup = new LSImageGroupFilter();
+//        bgFilterGroup.addFilter(new LSImageBlackFilter());
+//        bgFilterGroup.addFilter(new LSImageConnerFilter());
+//        bgOutputFilter = new LSImageOutputFilter();
 	}
 
 	/**
@@ -62,8 +69,10 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	 */
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::init( this : 0x%x )", hashCode()));
-
+        // 前景
 		inputYuvFilter.setFilter(outputFilter);
+        // 背景
+//        bgFilterGroup.setFilter(bgOutputFilter);
 	}
 
 	/**
@@ -84,10 +93,10 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 				bCustomFilterChange = true;
 
 				if (this.customFilter != null) {
-					inputYuvFilter.setFilter(this.customFilter);
+                    inputYuvFilter.setFilter(this.customFilter);
 					this.customFilter.setFilter(outputFilter);
 				} else {
-					inputYuvFilter.setFilter(outputFilter);
+                    inputYuvFilter.setFilter(outputFilter);
 				}
 			}
 		}
@@ -137,8 +146,9 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 		
 		// 重绘背景为黑色
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT );
-		    
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+//        bgFilterGroup.draw(glTextureId[0], originalWidth, originalHeight);
 		synchronized (this) {
 			if( bCustomFilterChange ) {
 				if( customFilter != null ) {
@@ -169,7 +179,9 @@ public class LSVideoHardPlayerRenderer implements Renderer {
         previewWidth = width;
         previewHeight = height;
 
-		outputFilter.setOutputSize(previewWidth, previewHeight);
+        inputYuvFilter.setOutputSize(previewWidth, previewHeight);
+//		outputFilter.setOutputSize(previewWidth, previewHeight);
+//        bgOutputFilter.setOutputSize(previewWidth, previewHeight);
 	}
 
 	@Override
@@ -179,9 +191,13 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 
 		// 创建纹理
 		glTextureId = LSImageFilter.genPixelTexture();
-        
+        // 前景
 		inputYuvFilter.init();
 		outputFilter.init();
+
+//        // 背景
+//        bgFilterGroup.init();
+//        bgOutputFilter.init();
 	}
 
 }
