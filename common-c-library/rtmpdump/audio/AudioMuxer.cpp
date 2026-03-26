@@ -31,7 +31,7 @@ bool AudioMuxer::GetADTS(
     if (header != NULL && headerCapacity >= ADTS_HEADER_SIZE) {
         if (
             format == AFF_AAC &&
-            sampleRate == AFSR_KHZ_44 &&
+            (sampleRate == AFSR_KHZ_44 || sampleRate == AFSR_KHZ_48) &&
             bitPerChannel == AFSS_BIT_16
             //           && channels == AFST_MONO // 由于ffmpeg的rtmp固定发送AFST_STEREO, 不作判断
             ) {

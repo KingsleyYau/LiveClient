@@ -24087,6 +24087,7 @@ int SrsRtmpClient::connect_app2(
         if ((ret = protocol->send_and_free_packet(pkt, 0)) != ERROR_SUCCESS) {
             return ret;
         }
+        
     }
     
     // Set Window Acknowledgement size(2500000)
@@ -34370,13 +34371,15 @@ int srs_write_h264_ipb_frame(Context* context,
     //      AUD used in annexb to split frame, while SEI generally we can ignore it.
     // TODO: maybe we should group all NALUs split by AUD to a frame.
     SrsAvcNaluType nut = (SrsAvcNaluType)(frame[0] & 0x1f);
-    if (nut != SrsAvcNaluTypeIDR && nut != SrsAvcNaluTypeNonIDR) {
+    if (nut != SrsAvcNaluTypeIDR
+        && nut != SrsAvcNaluTypeSEI
+        && nut != SrsAvcNaluTypeNonIDR) {
         return ret;
     }
     
     // for IDR frame, the frame is keyframe.
     SrsCodecVideoAVCFrame frame_type = SrsCodecVideoAVCFrameInterFrame;
-    if (nut == SrsAvcNaluTypeIDR) {
+    if (nut == SrsAvcNaluTypeIDR || nut == SrsAvcNaluTypeSEI) {
         frame_type = SrsCodecVideoAVCFrameKeyFrame;
     }
     
@@ -34490,7 +34493,8 @@ int srs_write_h264_raw_frame(Context* context,
     //  7: SPS, 8: PPS, 5: I Frame, 1: P Frame, 9: AUD
     SrsAvcNaluType nut = (SrsAvcNaluType)(frame[0] & 0x1f);
     if (nut != SrsAvcNaluTypeSPS && nut != SrsAvcNaluTypePPS
-        && nut != SrsAvcNaluTypeIDR && nut != SrsAvcNaluTypeNonIDR
+        && nut != SrsAvcNaluTypeIDR && nut != SrsAvcNaluTypeSEI
+        && nut != SrsAvcNaluTypeNonIDR
         && nut != SrsAvcNaluTypeAccessUnitDelimiter
     ) {
         return ret;
@@ -35830,9 +35834,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         } else {
             skt->connected = true;
             
-            /**
-             Add by Max
-             deal with the tcp keepalive
+            // Add by Max
+            /*deal with the tcp keepalive
              iKeepAlive = 1 (check keepalive)
              iKeepIdle = 600 (active keepalive after socket has idled for 10 minutes)
              KeepInt = 60 (send keepalive every 1 minute after keepalive was actived)
@@ -35843,8 +35846,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPIDLE, (void*)&iKeepIdle, sizeof(iKeepIdle));
             setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPINTVL, (void *)&KeepInt, sizeof(KeepInt));
             setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPCNT, (void *)&iKeepCount, sizeof(iKeepCount));
-            int iSndBuf = 0;
-            setsockopt(skt->fd, SOL_SOCKET, SO_SNDBUF, (void *)&iSndBuf, sizeof(iSndBuf));
         }
         
         return ERROR_SUCCESS;

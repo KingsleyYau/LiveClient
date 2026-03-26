@@ -75,6 +75,7 @@ typedef enum AudioFrameSoundRate {
     AFSR_KHZ_11 = 1,
     AFSR_KHZ_22 = 2,
     AFSR_KHZ_44 = 3,
+    AFSR_KHZ_48 = 4,
 } AudioFrameSoundRate;
 
 typedef enum AudioFrameSoundSize {

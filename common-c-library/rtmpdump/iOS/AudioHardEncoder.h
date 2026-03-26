@@ -68,6 +68,8 @@ private:
     
     // 状态锁
     KMutex mRuningMutex;
+    
+    AudioStreamBasicDescription mInAudioStreamBasicDescription;
 };
 }
 
