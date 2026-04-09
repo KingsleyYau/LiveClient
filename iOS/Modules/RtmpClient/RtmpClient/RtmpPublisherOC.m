@@ -21,6 +21,7 @@
 #pragma mark - 软编码器
 #include <rtmpdump/video/VideoEncoderH264.h>
 #include <rtmpdump/audio/AudioEncoderAAC.h>
+#include <rtmpdump/audio/AudioResampler.h>
 
 #pragma mark - 发布控制器
 #include <rtmpdump/PublisherController.h>
@@ -53,6 +54,7 @@ class PublisherStatusCallbackImp;
 #pragma mark - 编码器
 @property (assign) VideoEncoder *videoEncoder;
 @property (assign) AudioEncoder *audioEncoder;
+@property (assign) AudioResampler *audioResampler;
 
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
@@ -230,6 +232,10 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
     NSLog(@"RtmpPublisherOC::stop()");
     // 停止推流
     self.publisher->Stop();
+    if (self.audioResampler) {
+        delete self.audioResampler;
+        self.audioResampler = NULL;
+    }
 }
 
 - (BOOL)updateVideoParam:(RtmpVideoParam *)videoParam {
@@ -277,7 +283,25 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
             CMBlockBufferReplaceDataBytes((const void *)buffer, blockBuffer, 0, size);
         }
 
-        self.publisher->PushAudioFrame(buffer, (int)size, (void *)sampleBuffer);
+        CMFormatDescriptionRef formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer);
+        const AudioStreamBasicDescription *audioDesc = CMAudioFormatDescriptionGetStreamBasicDescription(formatDesc);
+
+        if (!_useHardEncoder) {
+            //        NSLog(@"size:%d, samples:%d", size, size / audioDesc->mBytesPerPacket);
+            if (!self.audioResampler) {
+                self.audioResampler = new AudioResampler();
+                self.audioResampler->init(audioDesc->mSampleRate, audioDesc->mChannelsPerFrame, 44100, 1);
+            }
+            
+            self.audioResampler->pushPCM((uint8_t *)buffer, size / audioDesc->mBytesPerPacket);
+            uint8_t frameBuf[1024 * 2 * 2];
+            while (self.audioResampler->popFrame1024(frameBuf) == 1024) {
+                self.publisher->PushAudioFrame(frameBuf, (int)1024 * audioDesc->mBytesPerFrame * audioDesc->mChannelsPerFrame, (void *)sampleBuffer);
+            }
+        } else {
+            self.publisher->PushAudioFrame(buffer, (int)size, (void *)sampleBuffer);
+        }
+
     }
 }
 
