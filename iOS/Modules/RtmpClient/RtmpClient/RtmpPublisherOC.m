@@ -178,6 +178,9 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        	
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
     }
 
     return self;
@@ -208,6 +211,9 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    	
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
 }
 
 #pragma mark - 对外接口
@@ -328,6 +334,36 @@ class PublisherStatusCallbackImp : public PublisherStatusCallback {
         // 重置视频编码器
         self.videoEncoder->Reset();
     }
+}
+
+- (void)handleRouteChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSNumber *reasonNum = userInfo[AVAudioSessionRouteChangeReasonKey];
+    AVAudioSessionRouteChangeReason reason = [reasonNum integerValue];
+    NSLog(@"MRRtmpPublisherOC::handleRouteChange( reason : %lu )", (unsigned long)reason);
+        
+    // 3. 根据不同的变化原因处理逻辑
+    switch (reason) {
+        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
+            NSLog(@"检测到新音频设备接入");
+            break;
+        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
+            NSLog(@"检测到音频设备断开");
+            break;
+        case AVAudioSessionRouteChangeReasonCategoryChange:
+            NSLog(@"音频会话类别变化（比如从播放类切换到录音类）");
+            break;
+        case AVAudioSessionRouteChangeReasonOverride:
+            NSLog(@"音频路由被系统覆盖（比如接打电话）");
+            break;
+        case AVAudioSessionRouteChangeReasonWakeFromSleep:
+            NSLog(@"设备唤醒，音频路由重置");
+            break;
+        default:
+            NSLog(@"未知的路由变化原因");
+            break;
+    }
+    self.audioEncoder->Reset();
 }
 
 #pragma mark - 私有方法
