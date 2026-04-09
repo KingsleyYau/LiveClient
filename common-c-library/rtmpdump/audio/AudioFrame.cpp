@@ -15,7 +15,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 }
 
-#define DEFAULT_AUDIO_FRAME_SIZE 2048
+#define DEFAULT_AUDIO_FRAME_SIZE 4096
 
 namespace coollive {
 AudioFrame::AudioFrame() {
